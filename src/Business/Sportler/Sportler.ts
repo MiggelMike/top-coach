@@ -4,6 +4,7 @@ export interface ISportler {
     FertigeSessions: Array<IKonkreteSession>;
     AnstehendeSessions: Array<IKonkreteSession>;
     Koerpergewicht: Array<IKoerpergewicht>;
+    Reset(): void;
 }
 
 export class Sportler implements ISportler {
@@ -16,8 +17,8 @@ export class Sportler implements ISportler {
     constructor() {
         this.ID = 0;
         this.Geburtstag = null;
-        this.FertigeSessions = [];
         this.Koerpergewicht = [];
+        this.Reset();
     }
 
     public GetAnstehendeSessions(aMaxAnz: number | void): Array<IKonkreteSession> {
@@ -26,5 +27,10 @@ export class Sportler implements ISportler {
 
     public GetAktuellesKoerpergewicht(): IKoerpergewicht {
         return null;
+    }
+
+    public Reset(): void {
+        this.FertigeSessions = [];
+        this.AnstehendeSessions = [];
     }
 }

@@ -3,19 +3,21 @@ import { ISportler } from './Sportler/Sportler';
 // import { VirtualTimeScheduler } from 'rxjs';
 
 export class Applikation {
-    public Sportler: ISportler;
+    public Sportler: Sportler;
 
     constructor() {
         this.Init();
     }
 
     Init(): void {
-        if (!this.LadeSportler()) {
-            this.Sportler = new Sportler();
-        }
+        this.Sportler = new Sportler();
     }
 
     ProgrammWaehlen(): void {
+        const mInfo: Array<string> = [];
+        if (this.PruefungVorProgrammWahl(mInfo)) {
+            this.Sportler.Reset();
+        }
 
     }
 
