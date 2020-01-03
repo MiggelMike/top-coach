@@ -7,7 +7,6 @@ import { Applikation } from './Business/Applikation';
 
 
 const gApp = new Applikation();
-gApp.Init();
 
 if (environment.production) {
   enableProdMode();
