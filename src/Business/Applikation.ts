@@ -18,7 +18,6 @@ export class Applikation {
         if (this.PruefungVorProgrammWahl(mInfo)) {
             this.Sportler.Reset();
         }
-
     }
 
     PruefungVorProgrammWahl(aInfo: Array<string>): boolean {
