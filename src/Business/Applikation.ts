@@ -4,9 +4,9 @@ import { Local } from 'protractor/built/driverProviders';
 import { VirtualTimeScheduler } from 'rxjs';
 
 enum SpeicherOrtTyp {
-    Lokal = "Lokal",
-    Google = "Google",
-    Facebook = "Facebook"
+    Lokal = 'Lokal',
+    Google = 'Google',
+    Facebook = 'Facebook'
 }
 
 enum ProgrammTyp {
@@ -31,7 +31,7 @@ class AppData {
     public LetzterSpeicherOrt: SpeicherOrtTyp;
     public AktuellesProgramm: ProgrammTyp;
     public Daten: AppDataMap = new AppDataMap();
-    private readonly cAppData: string = "AppData";
+    private readonly cAppData: string = 'AppData';
 
     constructor() {
         // LetzterSpeicherOrt
