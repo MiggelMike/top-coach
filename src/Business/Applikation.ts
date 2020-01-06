@@ -60,10 +60,6 @@ class AppData {
         if (d != undefined) {
             this.Daten = JSON.parse(d);
             switch (this.Daten.LetzterSpeicherOrt) {
-                case SpeicherOrtTyp.Lokal:
-                    this.LadeDatenLokal();
-                    break;
-
                 case SpeicherOrtTyp.Facebook:
                     this.LadeDatenFacebook();
                     break;
@@ -73,7 +69,7 @@ class AppData {
                     break;
 
                 default:
-                    this.Daten.LetzterSpeicherOrt = SpeicherOrtTyp.Lokal;
+                    this.LadeDatenLokal();
                     break;
             }
         }
@@ -82,14 +78,43 @@ class AppData {
     private LadeDatenLokal() {
         let s = localStorage.getItem(this.cAppData);
         this.Daten = JSON.parse(s);
+        this.Daten.LetzterSpeicherOrt = SpeicherOrtTyp.Lokal;
+    }
+
+    private SpeicherDatenLokal() {
+        this.Daten.LetzterSpeicherOrt = SpeicherOrtTyp.Lokal;
     }
 
     private LadeDatenFacebook() {
+        this.Daten.LetzterSpeicherOrt = SpeicherOrtTyp.Facebook;
+    }
 
+    private SpeicherDatenFacebook() {
+        this.Daten.LetzterSpeicherOrt = SpeicherOrtTyp.Facebook;
     }
 
     private LadeDatenGoogle() {
+        this.Daten.LetzterSpeicherOrt = SpeicherOrtTyp.Google;
+    }
 
+    private SpeicherDatenGoogle() {
+        this.Daten.LetzterSpeicherOrt = SpeicherOrtTyp.Google;
+    }
+
+    public SpeicherDaten(aSpeicherort: SpeicherOrtTyp) {
+        switch (this.Daten.LetzterSpeicherOrt) {
+            case SpeicherOrtTyp.Facebook:
+                this.SpeicherDatenFacebook();
+                break;
+
+            case SpeicherOrtTyp.Google:
+                this.SpeicherDatenGoogle();
+                break;
+
+            default:
+                this.SpeicherDatenLokal();
+                break;
+        }
     }
 }
 
