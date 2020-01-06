@@ -4,9 +4,9 @@ import { Local } from 'protractor/built/driverProviders';
 import { VirtualTimeScheduler } from 'rxjs';
 
 enum SpeicherOrtTyp {
-    Lokal,
-    Google,
-    Facebook
+    Lokal = "Lokal",
+    Google = "Google",
+    Facebook = "Facebook"
 }
 
 enum ProgrammTyp {
@@ -22,7 +22,7 @@ enum StorageItemTyp {
 }
 
 class AppDataMap {
-    public LetzterSpeicherOrt: SpeicherOrtTyp;
+    public LetzterSpeicherOrt: SpeicherOrtTyp = SpeicherOrtTyp.Lokal;
     public Sessions: Array<ISession> = [];
     public AktuellesProgramm: ProgrammTyp;
 }
@@ -30,8 +30,8 @@ class AppDataMap {
 class AppData {
     public LetzterSpeicherOrt: SpeicherOrtTyp;
     public AktuellesProgramm: ProgrammTyp;
-    public readonly Daten: AppDataMap = new AppDataMap();
-    readonly cAppData: string = "AppData";
+    public Daten: AppDataMap = new AppDataMap();
+    private readonly cAppData: string = "AppData";
 
     constructor() {
         // LetzterSpeicherOrt
@@ -52,19 +52,43 @@ class AppData {
         //     this.AktuellesProgramm = ProgrammTyp[localStorage.getItem(StorageItemTyp.AktuellesProgramm.toString())];
         // }
 
-        localStorage.clear();
-        // let s = JSON.stringify(this.Daten);
-        // localStorage.setItem(this.cAppData, s);
-        // let s1 = localStorage.getItem(this.cAppData);
-        // this.Daten = JSON.parse(s);
         this.LadeDaten();
     }
 
-    public LadeDaten(){
+    public LadeDaten() {
         const d = localStorage.getItem(this.cAppData);
-        if(d != undefined){
+        if (d != undefined) {
             this.Daten = JSON.parse(d);
+            switch (this.Daten.LetzterSpeicherOrt) {
+                case SpeicherOrtTyp.Lokal:
+                    this.LadeDatenLokal();
+                    break;
+
+                case SpeicherOrtTyp.Facebook:
+                    this.LadeDatenFacebook();
+                    break;
+
+                case SpeicherOrtTyp.Google:
+                    this.LadeDatenGoogle();
+                    break;
+
+                default:
+                    this.Daten.LetzterSpeicherOrt = SpeicherOrtTyp.Lokal;
+                    break;
+            }
         }
+    }
+
+    private LadeDatenLokal() {
+        let s1 = localStorage.getItem(this.cAppData);
+        this.Daten = JSON.parse(s);
+    }
+
+    private LadeDatenFacebook() {
+
+    }
+
+    private LadeDatenGoogle() {
 
     }
 }
