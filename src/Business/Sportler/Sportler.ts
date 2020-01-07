@@ -1,3 +1,5 @@
+import { IKonkreteSession } from '../Session/Session';
+
 export interface ISportler {
     ID: number;
     Geburtstag: Date;

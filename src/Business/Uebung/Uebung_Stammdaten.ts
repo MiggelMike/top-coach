@@ -1,18 +1,25 @@
-enum UebungsTyp {
+export enum UebungsTyp {
     Kraft,
     Ausdauer,
     Dehnung,
     Custom
 }
 
-interface IStammUebung {
+export interface IStammUebung {
     ID: number;
     Name: string;
     Typ: UebungsTyp;
 }
 
-class StammUebung implements IStammUebung {
+export class StammUebung implements IStammUebung {
     ID: number;
     Name: string;
     Typ: UebungsTyp;
+
+    public static NeueStammUebung(aName: string, aTyp: UebungsTyp): IStammUebung {
+        const mUebung = new StammUebung();
+        mUebung.Name = aName;
+        mUebung.Typ = aTyp;
+        return mUebung;
+    }
 }

@@ -1,25 +1,36 @@
-interface ISatz{
+export interface ISatz {
     ID: number;
     SessionID: number;
     UebungID: number;
-    WdhAusgefuehrt: number;
-    WdhVorgabe: number;
-    GewichtAusgefuehrt: number;
-    GewichtVorgabe: number;
-    AddUebung(aUebungID: number): void;
 }
 
-abstract class Satz implements ISatz  {
+export interface IVorlageSatz extends ISatz {
+    WdhVorgabe: number;
+    GewichtVorgabe: number;
+}
+
+export interface ITrainingsSatz extends ISatz {
+    GewichtAusgefuehrt: number;
+    GewichtVorgabe: number;
+}
+
+export abstract class VorlageSatz implements IVorlageSatz  {
+    WdhVorgabe: number;
+    GewichtVorgabe: number;
     ID: number;
     SessionID: number;
     UebungID: number;
-    WdhAusgefuehrt: number;
-    WdhVorgabe: number;
-    GewichtAusgefuehrt: number;
-    GewichtVorgabe: number;
-    AddUebung(aUebungID: number): void {
-        this.UebungID = aUebungID;
-    }
 }
+
+export abstract class TrainingsSatz implements IVorlageSatz, ITrainingsSatz  {
+    ID: number;
+    SessionID: number;
+    UebungID: number;
+    GewichtAusgefuehrt: number;
+    WdhVorgabe: number;
+    GewichtVorgabe: number;
+}
+
+
 
 
