@@ -1,7 +1,9 @@
 import { Sportler } from './Sportler/Sportler';
 import { ISportler } from './Sportler/Sportler';
-import { Local } from 'protractor/built/driverProviders';
-import { VirtualTimeScheduler } from 'rxjs';
+import { GzclpProgramm  } from '../Business/TrainingsProgramm/Gzclp';
+import { IKonkreteSession, IVorlageSession } from '../Business/Session/Session';
+import { IStammUebung, StammUebung, UebungsTyp } from './Uebung/Uebung_Stammdaten';
+
 
 enum SpeicherOrtTyp {
     Lokal = 'Lokal',
@@ -22,8 +24,8 @@ enum StorageItemTyp {
 }
 
 class AppDataMap {
-    public LetzterSpeicherOrt: SpeicherOrtTyp = SpeicherOrtTyp.Lokal;
-    public Sessions: Array<ISession> = [];
+    public Sessions: Array<IKonkreteSession> = [];
+    public Uebungen: Array<IStammUebung> = [];
     public AktuellesProgramm: ProgrammTyp;
 }
 
@@ -34,75 +36,77 @@ class AppData {
     private readonly cAppData: string = 'AppData';
 
     constructor() {
-        // LetzterSpeicherOrt
-        // let x = SpeicherOrtTyp[localStorage.getItem(StorageItemTyp.LetzterSpeicherOrt.toString())];
-        // if (x === undefined) {
-        //     this.LetzterSpeicherOrt = SpeicherOrtTyp.Lokal;
-        //     localStorage.setItem(StorageItemTyp.LetzterSpeicherOrt.toString(), this.LetzterSpeicherOrt.toString());
-        // } else {
-        //     this.LetzterSpeicherOrt = SpeicherOrtTyp[localStorage.getItem(StorageItemTyp.LetzterSpeicherOrt.toString())];
-        // }
-
-        // // AktuellesProgramm
-        // x = ProgrammTyp[localStorage.getItem(StorageItemTyp.AktuellesProgramm.toString())];
-        // if (x === undefined) {
-        //     this.AktuellesProgramm = ProgrammTyp.Ohne;
-        //     localStorage.setItem(StorageItemTyp.AktuellesProgramm.toString(), this.AktuellesProgramm.toString());
-        // } else {
-        //     this.AktuellesProgramm = ProgrammTyp[localStorage.getItem(StorageItemTyp.AktuellesProgramm.toString())];
-        // }
-
         this.LadeDaten();
+        if (this.Daten.Uebungen.length === 0) {
+            this.ErzeugeUebungStammdaten();
+            this.SpeicherDaten(this.LetzterSpeicherOrt);
+        }
+    }
+
+    public ErzeugeUebungStammdaten(){
+        this.Daten.Uebungen.push(StammUebung.NeueStammUebung('Squat', UebungsTyp.Kraft));
+        this.Daten.Uebungen.push(StammUebung.NeueStammUebung('Deadlift', UebungsTyp.Kraft));
+        this.Daten.Uebungen.push(StammUebung.NeueStammUebung('Benchpress', UebungsTyp.Kraft));
+        this.Daten.Uebungen.push(StammUebung.NeueStammUebung('Overhead-Press', UebungsTyp.Kraft));
+        this.Daten.Uebungen.push(StammUebung.NeueStammUebung('Chin-Ups', UebungsTyp.Kraft));
+        this.Daten.Uebungen.push(StammUebung.NeueStammUebung('Plunks', UebungsTyp.Kraft));
+    }
+
+    private EvalLetztenSpeicherOrt() {
+        // LetzterSpeicherOrt
+        const x = SpeicherOrtTyp[localStorage.getItem(StorageItemTyp.LetzterSpeicherOrt.toString())];
+        if (x === undefined) {
+            this.LetzterSpeicherOrt = SpeicherOrtTyp.Lokal;
+            localStorage.setItem(StorageItemTyp.LetzterSpeicherOrt.toString(), this.LetzterSpeicherOrt.toString());
+        } else {
+            this.LetzterSpeicherOrt = SpeicherOrtTyp[localStorage.getItem(StorageItemTyp.LetzterSpeicherOrt.toString())];
+        }
     }
 
     public LadeDaten() {
-        const d = localStorage.getItem(this.cAppData);
-        if (d != undefined) {
-            this.Daten = JSON.parse(d);
-            switch (this.Daten.LetzterSpeicherOrt) {
-                case SpeicherOrtTyp.Facebook:
-                    this.LadeDatenFacebook();
-                    break;
+        this.EvalLetztenSpeicherOrt();
+        switch (this.LetzterSpeicherOrt) {
+            case SpeicherOrtTyp.Facebook:
+                this.LadeDatenFacebook();
+                break;
 
-                case SpeicherOrtTyp.Google:
-                    this.LadeDatenGoogle();
-                    break;
+            case SpeicherOrtTyp.Google:
+                this.LadeDatenGoogle();
+                break;
 
-                default:
-                    this.LadeDatenLokal();
-                    break;
-            }
+            default:
+                this.LadeDatenLokal();
+                break;
         }
     }
 
     private LadeDatenLokal() {
-        let s = localStorage.getItem(this.cAppData);
+        const s = localStorage.getItem(this.cAppData);
         this.Daten = JSON.parse(s);
-        this.Daten.LetzterSpeicherOrt = SpeicherOrtTyp.Lokal;
     }
 
     private SpeicherDatenLokal() {
-        this.Daten.LetzterSpeicherOrt = SpeicherOrtTyp.Lokal;
+        localStorage.setItem(StorageItemTyp.LetzterSpeicherOrt.toString(), this.LetzterSpeicherOrt.toString());
+        localStorage.setItem(this.cAppData, JSON.stringify(this.Daten));
+        this.LetzterSpeicherOrt = SpeicherOrtTyp.Lokal;
     }
 
     private LadeDatenFacebook() {
-        this.Daten.LetzterSpeicherOrt = SpeicherOrtTyp.Facebook;
     }
 
     private SpeicherDatenFacebook() {
-        this.Daten.LetzterSpeicherOrt = SpeicherOrtTyp.Facebook;
+        this.LetzterSpeicherOrt = SpeicherOrtTyp.Facebook;
     }
 
     private LadeDatenGoogle() {
-        this.Daten.LetzterSpeicherOrt = SpeicherOrtTyp.Google;
     }
 
     private SpeicherDatenGoogle() {
-        this.Daten.LetzterSpeicherOrt = SpeicherOrtTyp.Google;
+        this.LetzterSpeicherOrt = SpeicherOrtTyp.Google;
     }
 
     public SpeicherDaten(aSpeicherort: SpeicherOrtTyp) {
-        switch (this.Daten.LetzterSpeicherOrt) {
+        switch (aSpeicherort) {
             case SpeicherOrtTyp.Facebook:
                 this.SpeicherDatenFacebook();
                 break;
@@ -128,6 +132,7 @@ export class Applikation {
         this.Sportler.ID = this.LadeSportler();
         if (this.Sportler.ID > 0) {
         }
+        this.ProgrammWaehlen();
     }
 
     Init(): void {
@@ -138,6 +143,9 @@ export class Applikation {
         const mInfo: Array<string> = [];
         if (this.PruefungVorProgrammWahl(mInfo)) {
             this.Sportler.Reset();
+            const mGzclpProgramm = new GzclpProgramm();
+            const mSessions = new Array<IVorlageSession>();
+            mGzclpProgramm.Init(mSessions);
         }
     }
 

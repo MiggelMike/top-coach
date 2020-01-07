@@ -1,5 +1,11 @@
 {
   "compileOnSave": false,
+//   "compilerOptions": {
+//     "target": "es5",
+//     "module": "commonjs",
+//     "outDir": "out",
+//     "sourceMap": true
+//   }
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "dist",
@@ -7,10 +13,11 @@
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
-    "module": "esnext",
+    // "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es6",
+    "target": "es2018",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -25,3 +32,4 @@
     "strictInjectionParameters": true
   }
 }
+
