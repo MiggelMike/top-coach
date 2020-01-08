@@ -45,36 +45,58 @@ class AppData {
 
     public ErzeugeUebungStammdaten() {
         const mKategorieen01 = [];
+<<<<<<< HEAD
         let mKategorieen02 = [];
         const mGzclpKategorieen01 = StammUebung.ErzeugeGzclpKategorieen01();
+=======
+        const mGzclpKategorieen01 = StammUebung.ErzeugeGzclpKategorieen01();
+        const mKategorieen02 = [];
+        const mGzclpKategorieen02 = StammUebung.ErzeugeGzclpKategorieen02();
+>>>>>>> 70fd4dae8c0d5f20128f3774aeb9e024a12cbb3b
 
         this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
             this.Daten.Uebungen.length + 1,
             'Squat',
             UebungsTyp.Kraft,
             mKategorieen01.concat(mGzclpKategorieen01),
+<<<<<<< HEAD
             mKategorieen02.concat(StammUebung.ErzeugeGzclpTag1Kategorieen())));
+=======
+            mKategorieen02.concat(mGzclpKategorieen02)));
+>>>>>>> 70fd4dae8c0d5f20128f3774aeb9e024a12cbb3b
 
         this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
             this.Daten.Uebungen.length + 1,
             'Dead-Lift',
             UebungsTyp.Kraft,
             mKategorieen01.concat(mGzclpKategorieen01),
+<<<<<<< HEAD
             mKategorieen02.concat(StammUebung.ErzeugeGzclpTag2Kategorieen())));
+=======
+            mKategorieen02.concat(mGzclpKategorieen02)));
+>>>>>>> 70fd4dae8c0d5f20128f3774aeb9e024a12cbb3b
 
         this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
             this.Daten.Uebungen.length + 1,
             'Bench-Press',
             UebungsTyp.Kraft,
             mKategorieen01.concat(mGzclpKategorieen01),
+<<<<<<< HEAD
             mKategorieen02.concat(StammUebung.ErzeugeGzclpTag3Kategorieen())));
+=======
+            mKategorieen02.concat(mGzclpKategorieen02)));
+>>>>>>> 70fd4dae8c0d5f20128f3774aeb9e024a12cbb3b
 
         this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
             this.Daten.Uebungen.length + 1,
             'Overhead-Press',
             UebungsTyp.Kraft,
             mKategorieen01.concat(mGzclpKategorieen01),
+<<<<<<< HEAD
             mKategorieen02.concat(StammUebung.ErzeugeGzclpTag4Kategorieen())));
+=======
+            mKategorieen02.concat(mGzclpKategorieen02)));
+>>>>>>> 70fd4dae8c0d5f20128f3774aeb9e024a12cbb3b
 
         this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
             this.Daten.Uebungen.length + 1,
