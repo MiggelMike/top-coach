@@ -1,13 +1,13 @@
 import { ISatz } from '../Konfiguration/Satz';
 
 export enum SessionKategorie {
-    Konkret,
-    Vorlage,
+    Konkret = 'Konkret',
+    Vorlage = 'Vorlage',
 }
 
 export enum ProgrammTyp {
-    Gzclp,
-    Custom
+    Gzclp = 'Gzclp',
+    Custom = 'Custom'
 }
 
 export interface ISession {
