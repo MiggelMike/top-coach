@@ -82,17 +82,12 @@ export class StammUebung implements IStammUebung {
          );
     }
 
-<<<<<<< HEAD
     public static ErzeugeGzclpTag1Kategorieen(): Array<UebungsKategorie02> {
-=======
-    public static ErzeugeGzclpKategorieen02(): Array<UebungsKategorie02> {
->>>>>>> 70fd4dae8c0d5f20128f3774aeb9e024a12cbb3b
         return new Array<UebungsKategorie02>(
             UebungsKategorie02.GzclpTag1_1,
             UebungsKategorie02.GzclpTag1_2,
             UebungsKategorie02.GzclpTag1_3,
             UebungsKategorie02.GzclpTag1_4,
-<<<<<<< HEAD
         );
     }
 
@@ -122,20 +117,4 @@ export class StammUebung implements IStammUebung {
             UebungsKategorie02.GzclpTag4_4,
         );
     }
-=======
-            UebungsKategorie02.GzclpTag2_1,
-            UebungsKategorie02.GzclpTag2_2,
-            UebungsKategorie02.GzclpTag2_3,
-            UebungsKategorie02.GzclpTag2_4,
-            UebungsKategorie02.GzclpTag3_1,
-            UebungsKategorie02.GzclpTag3_2,
-            UebungsKategorie02.GzclpTag3_3,
-            UebungsKategorie02.GzclpTag3_4,
-            UebungsKategorie02.GzclpTag4_1,
-            UebungsKategorie02.GzclpTag4_2,
-            UebungsKategorie02.GzclpTag4_3,
-            UebungsKategorie02.GzclpTag4_4,
-        );
-    }
->>>>>>> 70fd4dae8c0d5f20128f3774aeb9e024a12cbb3b
 }
