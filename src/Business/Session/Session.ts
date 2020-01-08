@@ -1,13 +1,8 @@
 import { ISatz } from '../Konfiguration/Satz';
 
-export enum SessionTyp {
-    Gzclp_A1,
-    Gzclp_B1,
-    Gzclp_A2,
-    Gzclp_B2,
-    Custom,
-    Konkrete,
-    Vorlage
+export enum SessionKategorie {
+    Konkret,
+    Vorlage,
 }
 
 export enum ProgrammTyp {
@@ -15,44 +10,38 @@ export enum ProgrammTyp {
     Custom
 }
 
-
 export interface ISession {
     ID: number;
     Name: string;
     Saetze: Array<ISatz>;
-}
-
-export interface IKonkreteSession extends ISession {
     Datum: Date;
     DauerInSek: number;
-    Typ: SessionTyp;
+    Typ: SessionKategorie;
+    ProgrammTyp: ProgrammTyp;
     Init(): void;
 }
 
-export class KonkreteSession implements IKonkreteSession  {
+export class Session implements ISession  {
     public ID: number;
     public Name: string;
     public Saetze: Array<ISatz>;
     public Datum: Date;
     public DauerInSek: number;
-    public Typ: SessionTyp;
+    public Typ: SessionKategorie;
+    public ProgrammTyp: ProgrammTyp;
+
+    constructor(aPara: Session = {} as Session) {
+        this.ID = aPara.ID;
+        this.Name = aPara.Name;
+        this.Saetze = aPara.Saetze ? aPara.Saetze : [];
+        this.Datum = aPara.Datum;
+        this.DauerInSek = aPara.DauerInSek;
+        this.Typ = aPara.Typ;
+        this.ProgrammTyp = aPara.ProgrammTyp;
+    }
 
     public Init(): void {
         throw new Error('Method not implemented.');
     }
 }
-
-export interface IVorlageSession extends ISession {
-    ProgrammTyp: ProgrammTyp;
-}
-
-export abstract class VorlageSession implements IVorlageSession {
-    ID: number;
-    Name: string;
-    Saetze: Array<ISatz>;
-    ProgrammTyp: ProgrammTyp;
-    public abstract Init(): void;
-}
-
-
 

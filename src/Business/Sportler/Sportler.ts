@@ -1,10 +1,10 @@
-import { IKonkreteSession } from '../Session/Session';
+import { ISession } from '../Session/Session';
 
 export interface ISportler {
     ID: number;
     Geburtstag: Date;
-    FertigeSessions: Array<IKonkreteSession>;
-    AnstehendeSessions: Array<IKonkreteSession>;
+    FertigeSessions: Array<ISession>;
+    AnstehendeSessions: Array<ISession>;
     Koerpergewicht: Array<IKoerpergewicht>;
     Reset(): void;
 }
@@ -12,8 +12,8 @@ export interface ISportler {
 export class Sportler implements ISportler {
     public ID: number;
     public Geburtstag: Date;
-    public FertigeSessions: Array<IKonkreteSession>;
-    public AnstehendeSessions: Array<IKonkreteSession>;
+    public FertigeSessions: Array<ISession>;
+    public AnstehendeSessions: Array<ISession>;
     public Koerpergewicht: Array<IKoerpergewicht>;
 
     constructor() {
@@ -23,7 +23,7 @@ export class Sportler implements ISportler {
         this.Reset();
     }
 
-    public GetAnstehendeSessions(aMaxAnz: number | void): Array<IKonkreteSession> {
+    public GetAnstehendeSessions(aMaxAnz: number | void): Array<ISession> {
         return null;
     }
 

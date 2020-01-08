@@ -1,8 +1,8 @@
 import { Sportler } from './Sportler/Sportler';
 import { ISportler } from './Sportler/Sportler';
 import { GzclpProgramm  } from '../Business/TrainingsProgramm/Gzclp';
-import { IKonkreteSession, IVorlageSession } from '../Business/Session/Session';
-import { IStammUebung, StammUebung, UebungsTyp } from './Uebung/Uebung_Stammdaten';
+import { ISession, SessionKategorie } from '../Business/Session/Session';
+import { IStammUebung, StammUebung, UebungsTyp, UebungsKategorie } from './Uebung/Uebung_Stammdaten';
 
 
 enum SpeicherOrtTyp {
@@ -23,8 +23,8 @@ enum StorageItemTyp {
     AppData
 }
 
-class AppDataMap {
-    public Sessions: Array<IKonkreteSession> = [];
+export class AppDataMap {
+    public Sessions: Array<ISession> = [];
     public Uebungen: Array<IStammUebung> = [];
     public AktuellesProgramm: ProgrammTyp;
 }
@@ -43,13 +43,15 @@ class AppData {
         }
     }
 
-    public ErzeugeUebungStammdaten(){
-        this.Daten.Uebungen.push(StammUebung.NeueStammUebung('Squat', UebungsTyp.Kraft));
-        this.Daten.Uebungen.push(StammUebung.NeueStammUebung('Deadlift', UebungsTyp.Kraft));
-        this.Daten.Uebungen.push(StammUebung.NeueStammUebung('Benchpress', UebungsTyp.Kraft));
-        this.Daten.Uebungen.push(StammUebung.NeueStammUebung('Overhead-Press', UebungsTyp.Kraft));
-        this.Daten.Uebungen.push(StammUebung.NeueStammUebung('Chin-Ups', UebungsTyp.Kraft));
-        this.Daten.Uebungen.push(StammUebung.NeueStammUebung('Plunks', UebungsTyp.Kraft));
+    public ErzeugeUebungStammdaten() {
+        const mKategorieen = StammUebung.ErzeugeStandardKategorieen();
+        const mGzclpKategorieen = StammUebung.ErzeugeGzclpKategorieen();
+        this.Daten.Uebungen.push(StammUebung.NeueStammUebung('Squat', UebungsTyp.Kraft, mKategorieen.concat(mGzclpKategorieen)));
+        this.Daten.Uebungen.push(StammUebung.NeueStammUebung('Deadlift', UebungsTyp.Kraft, mKategorieen.concat(mGzclpKategorieen)));
+        this.Daten.Uebungen.push(StammUebung.NeueStammUebung('Benchpress', UebungsTyp.Kraft, mKategorieen.concat(mGzclpKategorieen)));
+        this.Daten.Uebungen.push(StammUebung.NeueStammUebung('Overhead-Press', UebungsTyp.Kraft, mKategorieen.concat(mGzclpKategorieen)));
+        this.Daten.Uebungen.push(StammUebung.NeueStammUebung('Chin-Ups', UebungsTyp.Kraft, mKategorieen));
+        this.Daten.Uebungen.push(StammUebung.NeueStammUebung('Plunks', UebungsTyp.Kraft, mKategorieen));
     }
 
     private EvalLetztenSpeicherOrt() {
@@ -64,6 +66,7 @@ class AppData {
     }
 
     public LadeDaten() {
+        localStorage.clear();
         this.EvalLetztenSpeicherOrt();
         switch (this.LetzterSpeicherOrt) {
             case SpeicherOrtTyp.Facebook:
@@ -77,6 +80,10 @@ class AppData {
             default:
                 this.LadeDatenLokal();
                 break;
+        }
+
+        if (!this.Daten) {
+            this.Daten = new AppDataMap();
         }
     }
 
@@ -143,8 +150,8 @@ export class Applikation {
         const mInfo: Array<string> = [];
         if (this.PruefungVorProgrammWahl(mInfo)) {
             this.Sportler.Reset();
-            const mGzclpProgramm = new GzclpProgramm();
-            const mSessions = new Array<IVorlageSession>();
+            const mGzclpProgramm = new GzclpProgramm(SessionKategorie.Konkret, this.AppData.Daten);
+            const mSessions = new Array<ISession>();
             mGzclpProgramm.Init(mSessions);
         }
     }

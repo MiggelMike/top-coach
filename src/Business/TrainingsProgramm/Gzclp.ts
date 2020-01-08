@@ -1,26 +1,120 @@
 import { ITrainingsProgramm } from './TrainingsProgramm';
 import { TrainingsProgramm } from './TrainingsProgramm';
-import { IVorlageSession } from '../Session/Session';
-import { VorlageSession } from '../Session/Session';
-import { TrainingsSatz, VorlageSatz, ITrainingsSatz, IVorlageSatz, SatzTyp } from '../Konfiguration/Satz';
+import { ISession, Session, SessionKategorie, ProgrammTyp } from '../Session/Session';
+import { Satz, SatzTyp, SatzKategorie } from '../Konfiguration/Satz';
+import { AppDataMap } from '../Applikation';
+import { UebungsKategorie } from '../Uebung/Uebung_Stammdaten';
 
 export class GzclpProgramm extends TrainingsProgramm {
-    constructor() {
-        super();
+    constructor(aSessionKategorie: SessionKategorie, aAppData: AppDataMap) {
+        super(aSessionKategorie, aAppData);
         this.Tage = 4;
     }
 
-    protected InitTag(aTagNr: number): Array<IVorlageSession> {
+    protected InitTag(aTagNr: number): Array<ISession> {
 
-        const mSessions = new Array<IVorlageSession>();
-        const mEineSession = new GzclpVorlageSession();
+        const mSessions = new Array<ISession>();
+        const mEineSession = new GzclpVorlageSession(
+            {
+                ID: 0,
+                Name: 'Tag ' + aTagNr.toString(),
+                Saetze: [],
+                Datum: null,
+                DauerInSek: 0,
+                Typ: this.SessionKategorie,
+                ProgrammTyp: ProgrammTyp.Gzclp
+            } as Session);
+
         mSessions.push(mEineSession);
         switch (aTagNr) {
-
             case 1:
-                mEineSession.Saetze.push(new GzclpT1Cycle0VorlageSatz(mEineSession.ID, 0, 1, SatzTyp.Aufwaermen));
-                mEineSession.Saetze.push(new GzclpT1Cycle0VorlageSatz(mEineSession.ID, 0, 2, SatzTyp.Aufwaermen));
-                mEineSession.Saetze.push(new GzclpT1Cycle0VorlageSatz(mEineSession.ID, 0, 3, SatzTyp.Aufwaermen));
+                // Bei Konkreter Session Aufwärmsätze erzeugen.
+                if (this.SessionKategorie === SessionKategorie.Konkret) {
+                    // Gzclp-T1-Satz-Zyklus-0
+                    // 1. Aufwärm-Satz
+                    mEineSession.Saetze.push(new Satz({
+                        ID: 0,
+                        SessionID: mEineSession.ID,
+                        UebungID: 0,
+                        SatzTyp: SatzTyp.Aufwaermen,
+                        SatzKategorie: SatzKategorie.Training,
+                        Prozent: 0,
+                        GewichtAusgefuehrt: 0,
+                        WdhAusgefuehrt: 0,
+                        GewichtVorgabe: 0,
+                        WdhVorgabe: 5
+                    }));
+                    // Gzclp-T1-Satz-Zyklus-0
+                    // 2. Aufwärm-Satz
+                    mEineSession.Saetze.push(new Satz({
+                        ID: 0,
+                        SessionID: mEineSession.ID,
+                        UebungID: 0,
+                        SatzTyp: SatzTyp.Aufwaermen,
+                        SatzKategorie: SatzKategorie.Training,
+                        Prozent: 0,
+                        GewichtAusgefuehrt: 0,
+                        WdhAusgefuehrt: 0,
+                        GewichtVorgabe: 0,
+                        WdhVorgabe: 0
+                    }));
+                    // Gzclp-T1-Satz-Zyklus-0
+                    // 3. Aufwärm-Satz
+                    mEineSession.Saetze.push(new Satz({
+                        ID: 0,
+                        SessionID: mEineSession.ID,
+                        UebungID: 0,
+                        SatzTyp: SatzTyp.Aufwaermen,
+                        SatzKategorie: SatzKategorie.Training,
+                        Prozent: 0,
+                        GewichtAusgefuehrt: 0,
+                        WdhAusgefuehrt: 0,
+                        GewichtVorgabe: 0,
+                        WdhVorgabe: 0
+                    }));
+                }
+                // Gzclp-T1-Satz-Zyklus-0
+                // 1. Arbeits-Satz
+                mEineSession.Saetze.push(new Satz({
+                    ID: 0,
+                    SessionID: mEineSession.ID,
+                    UebungID: 0,
+                    SatzTyp: SatzTyp.Training,
+                    SatzKategorie: SatzKategorie.Vorlage,
+                    Prozent: 0,
+                    GewichtAusgefuehrt: 0,
+                    WdhAusgefuehrt: 0,
+                    GewichtVorgabe: 0,
+                    WdhVorgabe: 5
+                }));
+                // Gzclp-T1-Satz-Zyklus-0
+                // 2. Arbeits-Satz
+                mEineSession.Saetze.push(new Satz({
+                    ID: 0,
+                    SessionID: mEineSession.ID,
+                    UebungID: 0,
+                    SatzTyp: SatzTyp.Training,
+                    SatzKategorie: SatzKategorie.Vorlage,
+                    Prozent: 0,
+                    GewichtAusgefuehrt: 0,
+                    WdhAusgefuehrt: 0,
+                    GewichtVorgabe: 0,
+                    WdhVorgabe: 0
+                }));
+                // Gzclp-T1-Satz-Zyklus-0
+                // 3. Arbeits-Satz
+                mEineSession.Saetze.push(new Satz({
+                    ID: 0,
+                    SessionID: mEineSession.ID,
+                    UebungID: 0,
+                    SatzTyp: SatzTyp.Training,
+                    SatzKategorie: SatzKategorie.Vorlage,
+                    Prozent: 0,
+                    GewichtAusgefuehrt: 0,
+                    WdhAusgefuehrt: 0,
+                    GewichtVorgabe: 0,
+                    WdhVorgabe: 0
+                }));
                 break;
 
             case 2:
@@ -36,72 +130,9 @@ export class GzclpProgramm extends TrainingsProgramm {
     }
 }
 
-export class GzclpVorlageSession extends VorlageSession {
+export class GzclpVorlageSession extends Session {
     public Init(): void {
         throw new Error('Method not implemented.');
     }
 }
-
-export class GzclpT1Cycle0VorlageSatz extends VorlageSatz {
-    constructor(aSessionID: number, aUebungID: number, aNrInSession: number, aSatzTyp: SatzTyp) {
-        super(aSessionID, aUebungID, aNrInSession, aSatzTyp);
-        this.WdhVorgabe = 5;
-    }
-}
-
-export class GzclpT1Cycle0TrainingsSatz extends TrainingsSatz { }
-
-export class GzclpT1Cycle1VorlageSatz extends VorlageSatz {
-    constructor(aSessionID: number, aUebungID: number, aNrInSession: number, aSatzTyp: SatzTyp) {
-        super(aSessionID, aUebungID, aNrInSession, aSatzTyp);
-        this.WdhVorgabe = 3;
-    }
-}
-
-export class GzclpT1Cycle1TrainingsSatz extends TrainingsSatz { }
-
-export class GzclpT1Cycle2VorlageSatz extends VorlageSatz {
-    constructor(aSessionID: number, aUebungID: number, aNrInSession: number, aSatzTyp: SatzTyp) {
-        super(aSessionID, aUebungID, aNrInSession, aSatzTyp);
-        this.WdhVorgabe = 1;
-    }
-}
-
-export class GzclpT1Cycle2TrainingsSatz extends TrainingsSatz { }
-
-export class GzclpT2Cycle0VorlageSatz extends VorlageSatz {
-    constructor(aSessionID: number, aUebungID: number, aNrInSession: number, aSatzTyp: SatzTyp) {
-        super(aSessionID, aUebungID, aNrInSession, aSatzTyp);
-        this.WdhVorgabe = 10;
-    }
-}
-
-export class GzclpT2Cycle0TrainingsSatz extends TrainingsSatz { }
-
-export class GzclpT2Cycle1VorlageSatz extends VorlageSatz {
-    constructor(aSessionID: number, aUebungID: number, aNrInSession: number, aSatzTyp: SatzTyp) {
-        super(aSessionID, aUebungID, aNrInSession, aSatzTyp);
-        this.WdhVorgabe = 8;
-    }
-}
-
-export class GzclpT2Cycle1TrainingsSatz extends TrainingsSatz { }
-
-export class GzclpT2Cycle2VorlageSatz extends VorlageSatz {
-    constructor(aSessionID: number, aUebungID: number, aNrInSession: number, aSatzTyp: SatzTyp) {
-        super(aSessionID, aUebungID, aNrInSession, aSatzTyp);
-        this.WdhVorgabe = 6;
-    }
-}
-
-export class GzclpT2Cycle2TrainingsSatz extends TrainingsSatz { }
-
-export class GzclpT3VorlageSatz extends VorlageSatz {
-    constructor(aSessionID: number, aUebungID: number, aNrInSession: number, aSatzTyp: SatzTyp) {
-        super(aSessionID, aUebungID, aNrInSession, aSatzTyp);
-        this.WdhVorgabe = 15;
-    }
-}
-
-export class GzclpT3TrainingsSatz extends TrainingsSatz { }
 
