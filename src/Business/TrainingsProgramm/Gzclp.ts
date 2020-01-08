@@ -98,37 +98,37 @@ export class GzclpProgramm extends TrainingsProgramm {
             for (const k of mUeb.Kategorieen02) {
                 switch (aTagNr) {
                     case 1:
-                        if (((k === UebungsKategorie02.GzclpA1_1) ||
-                            (k === UebungsKategorie02.GzclpA1_2) ||
-                            (k === UebungsKategorie02.GzclpA1_3) ||
-                            (k === UebungsKategorie02.GzclpA1_4)) &&
+                        if (((k === UebungsKategorie02.GzclpTag1_1) ||
+                            (k === UebungsKategorie02.GzclpTag1_2) ||
+                            (k === UebungsKategorie02.GzclpTag1_3) ||
+                            (k === UebungsKategorie02.GzclpTag1_4)) &&
                             (!mRelevanteUebungen.find( u => u.ID === mUeb.ID))) {
                             mRelevanteUebungen.push(mUeb);
                         }
                         break;
                     case 2:
-                        if (((k === UebungsKategorie02.GzclpA2_1) ||
-                            (k === UebungsKategorie02.GzclpA2_2) ||
-                            (k === UebungsKategorie02.GzclpA2_3) ||
-                            (k === UebungsKategorie02.GzclpA2_4)) &&
+                        if (((k === UebungsKategorie02.GzclpTag3_1) ||
+                            (k === UebungsKategorie02.GzclpTag3_2) ||
+                            (k === UebungsKategorie02.GzclpTag3_3) ||
+                            (k === UebungsKategorie02.GzclpTag3_4)) &&
                             (!mRelevanteUebungen.find(u => u.ID === mUeb.ID))) {
                             mRelevanteUebungen.push(mUeb);
                         }
                         break;
                     case 3:
-                        if (((k === UebungsKategorie02.GzclpB1_1) ||
-                            (k === UebungsKategorie02.GzclpB1_2) ||
-                            (k === UebungsKategorie02.GzclpB1_3) ||
-                            (k === UebungsKategorie02.GzclpB1_4)) &&
+                        if (((k === UebungsKategorie02.GzclpTag2_1) ||
+                            (k === UebungsKategorie02.GzclpTag2_2) ||
+                            (k === UebungsKategorie02.GzclpTag2_3) ||
+                            (k === UebungsKategorie02.GzclpTag2_4)) &&
                             (!mRelevanteUebungen.find(u => u.ID === mUeb.ID))) {
                             mRelevanteUebungen.push(mUeb);
                         }
                         break;
                     case 4:
-                        if (((k === UebungsKategorie02.GzclpB2_1) ||
-                            (k === UebungsKategorie02.GzclpB2_2) ||
-                            (k === UebungsKategorie02.GzclpB2_3) ||
-                            (k === UebungsKategorie02.GzclpB2_4)) &&
+                        if (((k === UebungsKategorie02.GzclpTag4_1) ||
+                            (k === UebungsKategorie02.GzclpTag4_2) ||
+                            (k === UebungsKategorie02.GzclpTag4_3) ||
+                            (k === UebungsKategorie02.GzclpTag4_4)) &&
                             (!mRelevanteUebungen.find(u => u.ID === mUeb.ID))) {
                             mRelevanteUebungen.push(mUeb);
                         }
@@ -137,84 +137,16 @@ export class GzclpProgramm extends TrainingsProgramm {
             }
         }
 
-        // const mRelevanteUebungen = this.AppData.Uebungen.filter(
-        //     ueb => {
-        //         return (ueb.Kategorieen01.find(
-        //             k => (
-        //                 (k === UebungsKategorie01.GzclpT1Cycle0) ||
-        //                 (k === UebungsKategorie01.GzclpT1Cycle1) ||
-        //                 (k === UebungsKategorie01.GzclpT1Cycle2) ||
-        //                 (k === UebungsKategorie01.GzclpT2Cycle0) ||
-        //                 (k === UebungsKategorie01.GzclpT2Cycle1) ||
-        //                 (k === UebungsKategorie01.GzclpT2Cycle2)
-        //             )));
-        //     }
-        // );
-
-        // mRelevanteUebungen = mRelevanteUebungen.filter(
-        //     ueb => {
-        //         return (ueb.Kategorieen02.find(
-        //             k => (
-        //                     ((aTagNr === 1) &&
-        //                         (k === UebungsKategorie02.GzclpTag1_1) ||
-        //                         (k === UebungsKategorie02.GzclpTag1_2) ||
-        //                         (k === UebungsKategorie02.GzclpTag1_3) ||
-        //                         (k === UebungsKategorie02.GzclpTag1_4)
-        //                     ) ||
-        //                     ((aTagNr === 2) &&
-        //                         (k === UebungsKategorie02.GzclpTag2_1) ||
-        //                         (k === UebungsKategorie02.GzclpTag2_2) ||
-        //                         (k === UebungsKategorie02.GzclpTag2_3) ||
-        //                         (k === UebungsKategorie02.GzclpTag2_4)
-        //                     ) ||
-        //                     ((aTagNr === 3) &&
-        //                         (k === UebungsKategorie02.GzclpTag3_1) ||
-        //                         (k === UebungsKategorie02.GzclpTag3_2) ||
-        //                         (k === UebungsKategorie02.GzclpTag3_3) ||
-        //                         (k === UebungsKategorie02.GzclpTag3_4)
-        //                     ) ||
-        //                     ((aTagNr === 4) &&
-        //                         (k === UebungsKategorie02.GzclpTag4_1) ||
-        //                         (k === UebungsKategorie02.GzclpTag4_2) ||
-        //                         (k === UebungsKategorie02.GzclpTag4_3) ||
-        //                         (k === UebungsKategorie02.GzclpTag4_4)
-        //                     )
-        //                 )
-        //             ));
-        //     }
-        // );
-
-        const mRelevanteUebungen1 = mRelevanteUebungen.filter(
-            ueb => {
-                return (ueb.Kategorieen02.find(
-                    k => {
-                        if (
-                            (k === UebungsKategorie02.GzclpA1_1) ||
-                            (k === UebungsKategorie02.GzclpA1_2) ||
-                            (k === UebungsKategorie02.GzclpA1_3) ||
-                            (k === UebungsKategorie02.GzclpA1_4)) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-                    ));
-            }
-        );
-
-
-        // .sort((a, b) => a.Kategorieen02);
-
-       // if(mRelevanteUebungen)
-
-        // mRelevanteUebungen = mRelevanteUebungen.find
-
-
-        // .sort((a, b) => {
-
-            // a.Kategorieen02
-          //  return 1;
-        // };
+        mRelevanteUebungen.sort(
+            (a, b) => {
+                if (a.Kategorieen02 > b.Kategorieen02) {
+                    return 1;
+                }
+                if (a.Kategorieen02 < b.Kategorieen02) {
+                    return -1;
+                }
+                return 0;
+            });
 
         if (this.SessionKategorie === SessionKategorie.Konkret) {
             this.ErzeugeAufwaermSaetze(aTagNr, mNeueSession);

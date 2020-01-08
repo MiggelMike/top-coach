@@ -2,7 +2,7 @@ import { Sportler } from './Sportler/Sportler';
 import { ISportler } from './Sportler/Sportler';
 import { GzclpProgramm  } from '../Business/TrainingsProgramm/Gzclp';
 import { ISession, SessionKategorie } from '../Business/Session/Session';
-import { IStammUebung, StammUebung, UebungsTyp, UebungsKategorie01 } from './Uebung/Uebung_Stammdaten';
+import { IStammUebung, StammUebung, UebungsTyp, UebungsKategorie02 } from './Uebung/Uebung_Stammdaten';
 
 
 enum SpeicherOrtTyp {
@@ -53,28 +53,40 @@ class AppData {
             'Squat',
             UebungsTyp.Kraft,
             mKategorieen01.concat(mGzclpKategorieen01),
-            mKategorieen02.concat(StammUebung.ErzeugeGzclpA1Kategorieen())));
-
-        this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
-            this.Daten.Uebungen.length + 1,
-            'Dead-Lift',
-            UebungsTyp.Kraft,
-            mKategorieen01.concat(mGzclpKategorieen01),
-            mKategorieen02.concat(StammUebung.ErzeugeGzclpA2Kategorieen())));
-
-        this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
-            this.Daten.Uebungen.length + 1,
-            'Bench-Press',
-            UebungsTyp.Kraft,
-            mKategorieen01.concat(mGzclpKategorieen01),
-            mKategorieen02.concat(StammUebung.ErzeugeGzclpB1Kategorieen())));
+            [   // Gzclp
+                UebungsKategorie02.GzclpTag1_1,
+                UebungsKategorie02.GzclpTag3_2
+            ]));
 
         this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
             this.Daten.Uebungen.length + 1,
             'Overhead-Press',
             UebungsTyp.Kraft,
             mKategorieen01.concat(mGzclpKategorieen01),
-            mKategorieen02.concat(StammUebung.ErzeugeGzclpB2Kategorieen())));
+            [  // Gzclp
+                UebungsKategorie02.GzclpTag2_1,
+                UebungsKategorie02.GzclpTag4_2
+            ]));
+
+        this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
+            this.Daten.Uebungen.length + 1,
+            'Bench-Press',
+            UebungsTyp.Kraft,
+            mKategorieen01.concat(mGzclpKategorieen01),
+            [  // Gzclp
+                UebungsKategorie02.GzclpTag3_1,
+                UebungsKategorie02.GzclpTag1_2
+            ]));
+
+        this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
+            this.Daten.Uebungen.length + 1,
+            'Dead-Lift',
+            UebungsTyp.Kraft,
+            mKategorieen01.concat(mGzclpKategorieen01),
+            [  // Gzclp
+                UebungsKategorie02.GzclpTag4_1,
+                UebungsKategorie02.GzclpTag2_2
+            ]));
 
         this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
             this.Daten.Uebungen.length + 1,
