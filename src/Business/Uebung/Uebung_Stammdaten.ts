@@ -15,22 +15,22 @@ export enum UebungsKategorie01 {
 }
 
 export enum UebungsKategorie02 {
-    GzclpTag1_1,
-    GzclpTag1_2,
-    GzclpTag1_3,
-    GzclpTag1_4,
-    GzclpTag2_1,
-    GzclpTag2_2,
-    GzclpTag2_3,
-    GzclpTag2_4,
-    GzclpTag3_1,
-    GzclpTag3_2,
-    GzclpTag3_3,
-    GzclpTag3_4,
-    GzclpTag4_1,
-    GzclpTag4_2,
-    GzclpTag4_3,
-    GzclpTag4_4,
+    GzclpA1_1,
+    GzclpA1_2,
+    GzclpA1_3,
+    GzclpA1_4,
+    GzclpA2_1,
+    GzclpA2_2,
+    GzclpA2_3,
+    GzclpA2_4,
+    GzclpB1_1,
+    GzclpB1_2,
+    GzclpB1_3,
+    GzclpB1_4,
+    GzclpB2_1,
+    GzclpB2_2,
+    GzclpB2_3,
+    GzclpB2_4,
 }
 
 class Vorgaben {
@@ -82,39 +82,37 @@ export class StammUebung implements IStammUebung {
          );
     }
 
-    public static ErzeugeGzclpTag1Kategorieen(): Array<UebungsKategorie02> {
+    public static ErzeugeGzclpAKategorieen(): Array<UebungsKategorie02> {
         return new Array<UebungsKategorie02>(
-            UebungsKategorie02.GzclpTag1_1,
-            UebungsKategorie02.GzclpTag1_2,
-            UebungsKategorie02.GzclpTag1_3,
-            UebungsKategorie02.GzclpTag1_4,
+            UebungsKategorie02.GzclpA1_1,
+            UebungsKategorie02.GzclpA2_2,
+            UebungsKategorie02.GzclpB1_1,
+            UebungsKategorie02.GzclpB2_2,
         );
     }
 
-    public static ErzeugeGzclpTag2Kategorieen(): Array<UebungsKategorie02> {
+    public static ErzeugeGzclpBKategorieen(): Array<UebungsKategorie02> {
         return new Array<UebungsKategorie02>(
-            UebungsKategorie02.GzclpTag2_1,
-            UebungsKategorie02.GzclpTag2_2,
-            UebungsKategorie02.GzclpTag2_3,
-            UebungsKategorie02.GzclpTag2_4,
+            UebungsKategorie02.GzclpB1_1,
+            UebungsKategorie02.GzclpB2_2,
         );
     }
 
-    public static ErzeugeGzclpTag3Kategorieen(): Array<UebungsKategorie02> {
+    public static ErzeugeGzclpCKategorieen(): Array<UebungsKategorie02> {
         return new Array<UebungsKategorie02>(
-            UebungsKategorie02.GzclpTag3_1,
-            UebungsKategorie02.GzclpTag3_2,
-            UebungsKategorie02.GzclpTag3_3,
-            UebungsKategorie02.GzclpTag3_4,
+            UebungsKategorie02.GzclpB1_1,
+            UebungsKategorie02.GzclpB1_2,
+            UebungsKategorie02.GzclpB1_3,
+            UebungsKategorie02.GzclpB1_4,
         );
     }
 
     public static ErzeugeGzclpTag4Kategorieen(): Array<UebungsKategorie02> {
         return new Array<UebungsKategorie02>(
-            UebungsKategorie02.GzclpTag4_1,
-            UebungsKategorie02.GzclpTag4_2,
-            UebungsKategorie02.GzclpTag4_3,
-            UebungsKategorie02.GzclpTag4_4,
+            UebungsKategorie02.GzclpB2_1,
+            UebungsKategorie02.GzclpB2_2,
+            UebungsKategorie02.GzclpB2_3,
+            UebungsKategorie02.GzclpB2_4,
         );
     }
 }

@@ -96,12 +96,43 @@ export class GzclpProgramm extends TrainingsProgramm {
         const mRelevanteUebungen = new Array<StammUebung>();
         for (const mUeb of this.AppData.Uebungen) {
             for (const k of mUeb.Kategorieen02) {
-                if ((aTagNr === 1) &&
-                    ((k === UebungsKategorie02.GzclpTag1_1) ||
-                        (k === UebungsKategorie02.GzclpTag1_2) ||
-                        (k === UebungsKategorie02.GzclpTag1_3) ||
-                        (k === UebungsKategorie02.GzclpTag1_4))) {
-                    mRelevanteUebungen.push(mUeb);
+                switch (aTagNr) {
+                    case 1:
+                        if (((k === UebungsKategorie02.GzclpA1_1) ||
+                            (k === UebungsKategorie02.GzclpA1_2) ||
+                            (k === UebungsKategorie02.GzclpA1_3) ||
+                            (k === UebungsKategorie02.GzclpA1_4)) &&
+                            (!mRelevanteUebungen.find( u => u.ID === mUeb.ID))) {
+                            mRelevanteUebungen.push(mUeb);
+                        }
+                        break;
+                    case 2:
+                        if (((k === UebungsKategorie02.GzclpA2_1) ||
+                            (k === UebungsKategorie02.GzclpA2_2) ||
+                            (k === UebungsKategorie02.GzclpA2_3) ||
+                            (k === UebungsKategorie02.GzclpA2_4)) &&
+                            (!mRelevanteUebungen.find(u => u.ID === mUeb.ID))) {
+                            mRelevanteUebungen.push(mUeb);
+                        }
+                        break;
+                    case 3:
+                        if (((k === UebungsKategorie02.GzclpB1_1) ||
+                            (k === UebungsKategorie02.GzclpB1_2) ||
+                            (k === UebungsKategorie02.GzclpB1_3) ||
+                            (k === UebungsKategorie02.GzclpB1_4)) &&
+                            (!mRelevanteUebungen.find(u => u.ID === mUeb.ID))) {
+                            mRelevanteUebungen.push(mUeb);
+                        }
+                        break;
+                    case 4:
+                        if (((k === UebungsKategorie02.GzclpB2_1) ||
+                            (k === UebungsKategorie02.GzclpB2_2) ||
+                            (k === UebungsKategorie02.GzclpB2_3) ||
+                            (k === UebungsKategorie02.GzclpB2_4)) &&
+                            (!mRelevanteUebungen.find(u => u.ID === mUeb.ID))) {
+                            mRelevanteUebungen.push(mUeb);
+                        }
+                        break;
                 }
             }
         }
@@ -158,10 +189,10 @@ export class GzclpProgramm extends TrainingsProgramm {
                 return (ueb.Kategorieen02.find(
                     k => {
                         if (
-                            (k === UebungsKategorie02.GzclpTag1_1) ||
-                            (k === UebungsKategorie02.GzclpTag1_2) ||
-                            (k === UebungsKategorie02.GzclpTag1_3) ||
-                            (k === UebungsKategorie02.GzclpTag1_4)) {
+                            (k === UebungsKategorie02.GzclpA1_1) ||
+                            (k === UebungsKategorie02.GzclpA1_2) ||
+                            (k === UebungsKategorie02.GzclpA1_3) ||
+                            (k === UebungsKategorie02.GzclpA1_4)) {
                             return true;
                         } else {
                             return false;

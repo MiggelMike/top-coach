@@ -45,7 +45,7 @@ class AppData {
 
     public ErzeugeUebungStammdaten() {
         const mKategorieen01 = [];
-        let mKategorieen02 = [];
+        const mKategorieen02 = [];
         const mGzclpKategorieen01 = StammUebung.ErzeugeGzclpKategorieen01();
 
         this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
@@ -53,28 +53,28 @@ class AppData {
             'Squat',
             UebungsTyp.Kraft,
             mKategorieen01.concat(mGzclpKategorieen01),
-            mKategorieen02.concat(StammUebung.ErzeugeGzclpTag1Kategorieen())));
+            mKategorieen02.concat(StammUebung.ErzeugeGzclpA1Kategorieen())));
 
         this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
             this.Daten.Uebungen.length + 1,
             'Dead-Lift',
             UebungsTyp.Kraft,
             mKategorieen01.concat(mGzclpKategorieen01),
-            mKategorieen02.concat(StammUebung.ErzeugeGzclpTag2Kategorieen())));
+            mKategorieen02.concat(StammUebung.ErzeugeGzclpA2Kategorieen())));
 
         this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
             this.Daten.Uebungen.length + 1,
             'Bench-Press',
             UebungsTyp.Kraft,
             mKategorieen01.concat(mGzclpKategorieen01),
-            mKategorieen02.concat(StammUebung.ErzeugeGzclpTag3Kategorieen())));
+            mKategorieen02.concat(StammUebung.ErzeugeGzclpB1Kategorieen())));
 
         this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
             this.Daten.Uebungen.length + 1,
             'Overhead-Press',
             UebungsTyp.Kraft,
             mKategorieen01.concat(mGzclpKategorieen01),
-            mKategorieen02.concat(StammUebung.ErzeugeGzclpTag4Kategorieen())));
+            mKategorieen02.concat(StammUebung.ErzeugeGzclpB2Kategorieen())));
 
         this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
             this.Daten.Uebungen.length + 1,
