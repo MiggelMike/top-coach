@@ -1,11 +1,11 @@
 import { ISession, SessionKategorie } from '../Session/Session';
-import { AppDataMap } from '../Applikation';
+import { Applikation } from '../Applikation';
 
 export interface ITrainingsProgramm {
     ID: number;
     Tage: number;
     SessionKategorie: SessionKategorie;
-    AppData: AppDataMap;
+    App: Applikation;
     Init(aSessions: Array<ISession>): void;
 }
 
@@ -13,11 +13,11 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
     public ID = 0;
     // Wird in abgeleiteten Klassen gesetzt.
     public Tage = 0;
-    public AppData: AppDataMap;
+    public App: Applikation;
     public SessionKategorie: SessionKategorie;
-    constructor(aSessionKategorie: SessionKategorie, aAppData: AppDataMap) {
+    constructor(aSessionKategorie: SessionKategorie, aApp: Applikation) {
         this.SessionKategorie = aSessionKategorie;
-        this.AppData = aAppData;
+        this.App = aApp;
     }
 
     public Init(aSessions: Array<ISession>): void {

@@ -27,9 +27,6 @@ export class AppDataMap {
     public Sessions: Array<ISession> = [];
     public Uebungen: Array<IStammUebung> = [];
     public AktuellesProgramm: ProgrammTyp;
-    public SucheUebungPerName(aName: UebungsName ): StammUebung {
-        return this.Uebungen.find( u => u.Name = aName);
-    }
 }
 
 class AppData {
@@ -44,6 +41,10 @@ class AppData {
             this.ErzeugeUebungStammdaten();
             this.SpeicherDaten(this.LetzterSpeicherOrt);
         }
+    }
+
+    public SucheUebungPerName(aName: UebungsName ): StammUebung {
+        return this.Daten.Uebungen.find( u => u.Name = aName);
     }
 
     public ErzeugeUebungStammdaten() {
@@ -72,7 +73,7 @@ class AppData {
     }
 
     public LadeDaten() {
-        localStorage.clear();
+        // localStorage.clear();
         this.EvalLetztenSpeicherOrt();
         switch (this.LetzterSpeicherOrt) {
             case SpeicherOrtTyp.Facebook:
@@ -96,6 +97,9 @@ class AppData {
     private LadeDatenLokal() {
         const s = localStorage.getItem(this.cAppData);
         this.Daten = JSON.parse(s);
+        // for (let i = 0; i < this.Daten.Uebungen.length; i++) {
+        //     this.Daten.Uebungen[i] = StammUebung.Kopiere(this.Daten.Uebungen[i] as StammUebung);
+        // }
     }
 
     private SpeicherDatenLokal() {
@@ -156,7 +160,7 @@ export class Applikation {
         const mInfo: Array<string> = [];
         if (this.PruefungVorProgrammWahl(mInfo)) {
             this.Sportler.Reset();
-            const mGzclpProgramm = new GzclpProgramm(SessionKategorie.Konkret, this.AppData.Daten);
+            const mGzclpProgramm = new GzclpProgramm(SessionKategorie.Konkret, this);
             const mSessions = new Array<ISession>();
             mGzclpProgramm.Init(mSessions);
         }
