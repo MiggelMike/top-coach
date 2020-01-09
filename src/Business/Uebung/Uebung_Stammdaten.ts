@@ -33,6 +33,14 @@ export enum UebungsKategorie02 {
     GzclpTag4_4,
 }
 
+export enum UebungsName {
+    Squat = 'Squat',
+    Deadlift = 'Deadlift',
+    Benchpress = 'Benchpress',
+    OverheadPress = 'Overhead Press',
+    AB_Rollout = 'AB Rollout'
+}
+
 class Vorgaben {
     Gzclp: {
         UebungsKategorie01: UebungsKategorie01.GzclpT1Cycle1
