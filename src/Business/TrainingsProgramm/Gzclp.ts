@@ -11,7 +11,7 @@ export class GzclpProgramm extends TrainingsProgramm {
         this.Tage = 4;
     }
 
-    private ErzeugeAufwaermSaetze(aUebung: StammUebung, aLiftTyp: LiftTyp, aSession: GzclpVorlageSession) {
+    private ErzeugeAufwaermSaetze(aUebung: StammUebung, aLiftTyp: LiftTyp, aSession: Session) {
         let mParaSatz = null;
         // Aufwärm-Saetze anfügen
         for (let i = 0; i < 3; i++) {
@@ -44,7 +44,7 @@ export class GzclpProgramm extends TrainingsProgramm {
     protected InitTag(aTagNr: number): Array<ISession> {
 
         const mSessions = new Array<ISession>();
-        const mNeueSession = new GzclpVorlageSession(
+        const mNeueSession = new Session(
             {
                 ID: 0,
                 Name: 'Tag ' + aTagNr.toString(),
@@ -137,12 +137,6 @@ export class GzclpProgramm extends TrainingsProgramm {
         }
         // Der letzte Satz ist AMRAP
         aNeueSession.Saetze[aNeueSession.Saetze.length - 1].AMRAP = true;
-    }
-}
-
-export class GzclpVorlageSession extends Session {
-    public Init(): void {
-        throw new Error('Method not implemented.');
     }
 }
 

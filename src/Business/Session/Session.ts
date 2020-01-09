@@ -18,7 +18,6 @@ export interface ISession {
     DauerInSek: number;
     Typ: SessionKategorie;
     ProgrammTyp: ProgrammTyp;
-    Init(): void;
 }
 
 export class Session implements ISession  {
@@ -38,10 +37,6 @@ export class Session implements ISession  {
         this.DauerInSek = aPara.DauerInSek;
         this.Typ = aPara.Typ;
         this.ProgrammTyp = aPara.ProgrammTyp;
-    }
-
-    public Init(): void {
-        throw new Error('Method not implemented.');
     }
 }
 
