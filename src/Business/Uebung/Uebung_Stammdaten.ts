@@ -32,7 +32,8 @@ export enum UebungsName {
     ChestSupportedRows = 'Chest Supported Rows',
     ChinUps = 'Chinups',
     CloseGripBenchPress = 'CloseGripBenchPress',
-    LatPullDowns = 'Lat Pulldowns'
+    LatPullDowns = 'Lat Pulldowns',
+    Dips = 'Dips'
 }
 
 class Vorgaben {
@@ -77,6 +78,10 @@ export class StammUebung implements IStammUebung {
             UebungsKategorie01.GzclpT2Cycle0,
             UebungsKategorie01.GzclpT2Cycle1,
             UebungsKategorie01.GzclpT2Cycle2,
-         );
+        );
+
+    }
+    public static Kopiere(aUebung: StammUebung): StammUebung {
+        return StammUebung.NeueStammUebung(aUebung.ID, aUebung.Name, aUebung.Typ, aUebung.Kategorieen01);
     }
 }

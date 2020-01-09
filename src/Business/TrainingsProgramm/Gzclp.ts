@@ -57,80 +57,86 @@ export class GzclpProgramm extends TrainingsProgramm {
 
         mSessions.push(mNeueSession);
 
-        let mUebung = null;
         switch (aTagNr) {
             case 1:
-                // T1-Lift
-                mUebung = this.AppData.SucheUebungPerName(UebungsName.Squat);
-                if (this.SessionKategorie === SessionKategorie.Konkret) {
-                    this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.GzClpT1, mNeueSession);
-                }
-                let mParaSatz = null;
-                // Arbeits-Saetze anfügen
-                for (let i = 0; i < 5; i++) {
-                    mParaSatz = new Satz();
-                    mParaSatz.Status = SatzStatus.Wartet;
-                    mParaSatz.SatzTyp = SatzTyp.Training;
-                    mParaSatz.LiftTyp = LiftTyp.GzClpT1;
-                    mParaSatz.Uebung = mUebung;
-                    mParaSatz.PausenMinZeit = SatzPausen.GzClpT1_Min;
-                    mParaSatz.PausenMaxZeit = SatzPausen.GzClpT1_Max;
-                    mParaSatz.Prozent = 100;
-                    mParaSatz.WdhVorgabe = 3;
-                    mParaSatz.AMRAP = false;
-                    mNeueSession.Saetze.push(mParaSatz);
-                }
-                // Der letzte Satz ist AMRAP
-                mNeueSession.Saetze[mNeueSession.Saetze.length - 1].AMRAP = true;
-                // T2-Lift
-                mUebung = this.AppData.SucheUebungPerName(UebungsName.Benchpress);
-                if (this.SessionKategorie === SessionKategorie.Konkret) {
-                    this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.GzClpT2, mNeueSession);
-                }
-                // Arbeits-Saetze anfügen
-                for (let i = 0; i < 3; i++) {
-                    mParaSatz = new Satz();
-                    mParaSatz.Status = SatzStatus.Wartet;
-                    mParaSatz.SatzTyp = SatzTyp.Training;
-                    mParaSatz.LiftTyp = LiftTyp.GzClpT2;
-                    mParaSatz.Uebung = mUebung;
-                    mParaSatz.PausenMinZeit = SatzPausen.GzClpT2_Min;
-                    mParaSatz.PausenMaxZeit = SatzPausen.GzClpT2_Max;
-                    mParaSatz.Prozent = 85;
-                    mParaSatz.WdhVorgabe = 10;
-                    mParaSatz.AMRAP = false;
-                    mNeueSession.Saetze.push(mParaSatz);
-                }
-                // T3-Lift
-                mUebung = this.AppData.SucheUebungPerName(UebungsName.LatPullDowns);
-                // Arbeits-Saetze anfügen
-                for (let i = 0; i < 3; i++) {
-                    mParaSatz = new Satz();
-                    mParaSatz.Status = SatzStatus.Wartet;
-                    mParaSatz.SatzTyp = SatzTyp.Training;
-                    mParaSatz.LiftTyp = LiftTyp.GzClpT3;
-                    mParaSatz.Uebung = mUebung;
-                    mParaSatz.PausenMinZeit = SatzPausen.GzClpT3_Min;
-                    mParaSatz.PausenMaxZeit = SatzPausen.GzClpT3_Max;
-                    mParaSatz.Prozent = 65;
-                    mParaSatz.WdhVorgabe = 15;
-                    mParaSatz.AMRAP = false;
-                    mNeueSession.Saetze.push(mParaSatz);
-                }
-                // Der letzte Satz ist AMRAP
-                mNeueSession.Saetze[mNeueSession.Saetze.length - 1].AMRAP = true;
+                this.ErzeugeSessions(UebungsName.Squat, UebungsName.Benchpress, UebungsName.Dips, mNeueSession);
                 break;
 
             case 2:
+                this.ErzeugeSessions(UebungsName.OverheadPress, UebungsName.Deadlift, UebungsName.ChinUps, mNeueSession);
                 break;
 
             case 3:
+                this.ErzeugeSessions(UebungsName.Benchpress, UebungsName.Squat, UebungsName.Dips, mNeueSession);
                 break;
 
             case 4:
+                this.ErzeugeSessions(UebungsName.Deadlift, UebungsName.OverheadPress, UebungsName.ChinUps, mNeueSession);
                 break;
         }
         return mSessions;
+    }
+
+    private ErzeugeSessions(aT1Uebung: UebungsName, aT2Uebung: UebungsName, aT3Uebung: UebungsName, aNeueSession: Session): void {
+        let mUebung = StammUebung.Kopiere(this.AppData.SucheUebungPerName(aT1Uebung));
+        if (this.SessionKategorie === SessionKategorie.Konkret) {
+            this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.GzClpT1, aNeueSession);
+        }
+        let mNeuerSatz = null;
+        // Arbeits-Saetze anfügen
+        for (let i = 0; i < 5; i++) {
+            mNeuerSatz = new Satz();
+            mNeuerSatz.Status = SatzStatus.Wartet;
+            mNeuerSatz.SatzTyp = SatzTyp.Training;
+            mNeuerSatz.LiftTyp = LiftTyp.GzClpT1;
+            mNeuerSatz.Uebung = mUebung;
+            mNeuerSatz.PausenMinZeit = SatzPausen.GzClpT1_Min;
+            mNeuerSatz.PausenMaxZeit = SatzPausen.GzClpT1_Max;
+            mNeuerSatz.Prozent = 100;
+            mNeuerSatz.WdhVorgabe = 3;
+            mNeuerSatz.AMRAP = false;
+            aNeueSession.Saetze.push(mNeuerSatz);
+        }
+        // Der letzte Satz ist AMRAP
+        aNeueSession.Saetze[aNeueSession.Saetze.length - 1].AMRAP = true;
+        // T2-Lift
+        mUebung = StammUebung.Kopiere(this.AppData.SucheUebungPerName(aT2Uebung));
+        if (this.SessionKategorie === SessionKategorie.Konkret) {
+            this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.GzClpT2, aNeueSession);
+        }
+        // Arbeits-Saetze anfügen
+        for (let i = 0; i < 3; i++) {
+            mNeuerSatz = new Satz();
+            mNeuerSatz.Status = SatzStatus.Wartet;
+            mNeuerSatz.SatzTyp = SatzTyp.Training;
+            mNeuerSatz.LiftTyp = LiftTyp.GzClpT2;
+            mNeuerSatz.Uebung = mUebung;
+            mNeuerSatz.PausenMinZeit = SatzPausen.GzClpT2_Min;
+            mNeuerSatz.PausenMaxZeit = SatzPausen.GzClpT2_Max;
+            mNeuerSatz.Prozent = 85;
+            mNeuerSatz.WdhVorgabe = 10;
+            mNeuerSatz.AMRAP = false;
+            aNeueSession.Saetze.push(mNeuerSatz);
+        }
+        // T3-Lift
+        mUebung = StammUebung.Kopiere(this.AppData.SucheUebungPerName(aT3Uebung));
+        // Arbeits-Saetze anfügen
+        for (let i = 0; i < 3; i++) {
+            mNeuerSatz = new Satz();
+            mNeuerSatz.Status = SatzStatus.Wartet;
+            mNeuerSatz.SatzTyp = SatzTyp.Training;
+            mNeuerSatz.LiftTyp = LiftTyp.GzClpT3;
+            mNeuerSatz.Uebung = mUebung;
+            mNeuerSatz.PausenMinZeit = SatzPausen.GzClpT3_Min;
+            mNeuerSatz.PausenMaxZeit = SatzPausen.GzClpT3_Max;
+            mNeuerSatz.Prozent = 65;
+            mNeuerSatz.WdhVorgabe = 15;
+            mNeuerSatz.AMRAP = false;
+            aNeueSession.Saetze.push(mNeuerSatz);
+        }
+        // Der letzte Satz ist AMRAP
+        aNeueSession.Saetze[aNeueSession.Saetze.length - 1].AMRAP = true;
+
     }
 }
 
