@@ -2,7 +2,7 @@ import { Sportler } from './Sportler/Sportler';
 import { ISportler } from './Sportler/Sportler';
 import { GzclpProgramm  } from '../Business/TrainingsProgramm/Gzclp';
 import { ISession, SessionKategorie } from '../Business/Session/Session';
-import { IStammUebung, StammUebung, UebungsTyp, UebungsKategorie02 } from './Uebung/Uebung_Stammdaten';
+import { IStammUebung, StammUebung, UebungsTyp, UebungsKategorie01, UebungsName } from './Uebung/Uebung_Stammdaten';
 
 
 enum SpeicherOrtTyp {
@@ -27,6 +27,9 @@ export class AppDataMap {
     public Sessions: Array<ISession> = [];
     public Uebungen: Array<IStammUebung> = [];
     public AktuellesProgramm: ProgrammTyp;
+    public SucheUebungPerName(aName: UebungsName ): StammUebung {
+        return this.Uebungen.find( u => u.Name = aName);
+    }
 }
 
 class AppData {
@@ -45,66 +48,16 @@ class AppData {
 
     public ErzeugeUebungStammdaten() {
         const mKategorieen01 = [];
-        const mKategorieen02 = [];
         const mGzclpKategorieen01 = StammUebung.ErzeugeGzclpKategorieen01();
-
-        this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
-            this.Daten.Uebungen.length + 1,
-            'Squat',
-            UebungsTyp.Kraft,
-            mKategorieen01.concat(mGzclpKategorieen01),
-            [   // Gzclp
-                UebungsKategorie02.GzclpTag1_1,
-                UebungsKategorie02.GzclpTag3_2
-            ]));
-
-        this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
-            this.Daten.Uebungen.length + 1,
-            'Overhead-Press',
-            UebungsTyp.Kraft,
-            mKategorieen01.concat(mGzclpKategorieen01),
-            [  // Gzclp
-                UebungsKategorie02.GzclpTag2_1,
-                UebungsKategorie02.GzclpTag4_2
-            ]));
-
-        this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
-            this.Daten.Uebungen.length + 1,
-            'Bench-Press',
-            UebungsTyp.Kraft,
-            mKategorieen01.concat(mGzclpKategorieen01),
-            [  // Gzclp
-                UebungsKategorie02.GzclpTag3_1,
-                UebungsKategorie02.GzclpTag1_2
-            ]));
-
-        this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
-            this.Daten.Uebungen.length + 1,
-            'Dead-Lift',
-            UebungsTyp.Kraft,
-            mKategorieen01.concat(mGzclpKategorieen01),
-            [  // Gzclp
-                UebungsKategorie02.GzclpTag4_1,
-                UebungsKategorie02.GzclpTag2_2
-            ]));
-
-        this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
-            this.Daten.Uebungen.length + 1,
-            'Chin-Ups',
-            UebungsTyp.Kraft,
-            mKategorieen01, []));
-
-        this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
-            this.Daten.Uebungen.length + 1,
-            'Plunks',
-            UebungsTyp.Kraft,
-            mKategorieen01, []));
-
-        this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
-            this.Daten.Uebungen.length + 1,
-            'Incline-Bench-Press',
-            UebungsTyp.Kraft,
-            mKategorieen01, []));
+        for (const mUeb in UebungsName) {
+            if (mUeb) {
+                this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
+                    this.Daten.Uebungen.length + 1,
+                    mUeb,
+                    UebungsTyp.Kraft,
+                    mKategorieen01.concat(mGzclpKategorieen01)));
+            }
+        }
     }
 
     private EvalLetztenSpeicherOrt() {

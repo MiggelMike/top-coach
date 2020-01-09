@@ -1,9 +1,9 @@
 import { ITrainingsProgramm } from './TrainingsProgramm';
 import { TrainingsProgramm } from './TrainingsProgramm';
 import { ISession, Session, SessionKategorie, ProgrammTyp } from '../Session/Session';
-import { Satz, SatzTyp, SatzKategorie, SatzStatus, SatzPausen } from '../Konfiguration/Satz';
+import { Satz, SatzTyp, SatzKategorie, SatzStatus, SatzPausen, LiftTyp } from '../Konfiguration/Satz';
 import { AppDataMap } from '../Applikation';
-import { UebungsKategorie01, UebungsKategorie02, StammUebung } from '../Uebung/Uebung_Stammdaten';
+import { StammUebung, UebungsName } from '../Uebung/Uebung_Stammdaten';
 
 export class GzclpProgramm extends TrainingsProgramm {
     constructor(aSessionKategorie: SessionKategorie, aAppData: AppDataMap) {
@@ -11,60 +11,60 @@ export class GzclpProgramm extends TrainingsProgramm {
         this.Tage = 4;
     }
 
-    private ErzeugeAufwaermSaetze(aTagNr: number, aSession: GzclpVorlageSession) {
+    private ErzeugeAufwaermSaetze(aTagNr: number, aUebung: StammUebung, aSession: GzclpVorlageSession) {
         switch (aTagNr) {
             case 1:
                 // Gzclp-T1-Satz-Zyklus-0
                 // 1. Aufwärm-Satz
-                aSession.Saetze.push(new Satz({
-                    ID: 0,
-                    SessionID: aSession.ID,
-                    UebungID: 0,
-                    SatzTyp: SatzTyp.Aufwaermen,
-                    SatzKategorie: SatzKategorie.Training,
-                    Prozent: 65,
-                    GewichtAusgefuehrt: 0,
-                    WdhAusgefuehrt: 0,
-                    GewichtVorgabe: 0,
-                    WdhVorgabe: 5,
-                    PausenMinZeit: SatzPausen.Standard_Min,
-                    PausenMaxZeit: SatzPausen.Standard_Max,
-                    Status: SatzStatus.Wartet
-                }));
+                // aSession.Saetze.push(new Satz({
+                //     ID: 0,
+                //     SessionID: aSession.ID,
+                //     Uebung: aUebung,
+                //     SatzTyp: SatzTyp.Aufwaermen,
+                //     SatzKategorie: SatzKategorie.Training,
+                //     Prozent: 65,
+                //     GewichtAusgefuehrt: 0,
+                //     WdhAusgefuehrt: 0,
+                //     GewichtVorgabe: 0,
+                //     WdhVorgabe: 5,
+                //     PausenMinZeit: SatzPausen.Standard_Min,
+                //     PausenMaxZeit: SatzPausen.Standard_Max,
+                //     Status: SatzStatus.Wartet
+                // }));
                 // Gzclp-T1-Satz-Zyklus-0
                 // 2. Aufwärm-Satz
-                aSession.Saetze.push(new Satz({
-                    ID: 0,
-                    SessionID: aSession.ID,
-                    UebungID: 0,
-                    SatzTyp: SatzTyp.Aufwaermen,
-                    SatzKategorie: SatzKategorie.Training,
-                    Prozent: 65,
-                    GewichtAusgefuehrt: 0,
-                    WdhAusgefuehrt: 0,
-                    GewichtVorgabe: 0,
-                    WdhVorgabe: 0,
-                    PausenMinZeit: SatzPausen.Standard_Min,
-                    PausenMaxZeit: SatzPausen.Standard_Max,
-                    Status: SatzStatus.Wartet
-                }));
+                // aSession.Saetze.push(new Satz({
+                //     ID: 0,
+                //     SessionID: aSession.ID,
+                //     Uebung: aUebung,
+                //     SatzTyp: SatzTyp.Aufwaermen,
+                //     SatzKategorie: SatzKategorie.Training,
+                //     Prozent: 65,
+                //     GewichtAusgefuehrt: 0,
+                //     WdhAusgefuehrt: 0,
+                //     GewichtVorgabe: 0,
+                //     WdhVorgabe: 0,
+                //     PausenMinZeit: SatzPausen.Standard_Min,
+                //     PausenMaxZeit: SatzPausen.Standard_Max,
+                //     Status: SatzStatus.Wartet
+                // }));
                 // Gzclp-T1-Satz-Zyklus-0
                 // 3. Aufwärm-Satz
-                aSession.Saetze.push(new Satz({
-                    ID: 0,
-                    SessionID: aSession.ID,
-                    UebungID: 0,
-                    SatzTyp: SatzTyp.Aufwaermen,
-                    SatzKategorie: SatzKategorie.Training,
-                    Prozent: 65,
-                    GewichtAusgefuehrt: 0,
-                    WdhAusgefuehrt: 0,
-                    GewichtVorgabe: 0,
-                    WdhVorgabe: 0,
-                    PausenMinZeit: SatzPausen.Standard_Min,
-                    PausenMaxZeit: SatzPausen.Standard_Max,
-                    Status: SatzStatus.Wartet
-                }));
+                // aSession.Saetze.push(new Satz({
+                //     ID: 0,
+                //     SessionID: aSession.ID,
+                //     Uebung: aUebung,
+                //     SatzTyp: SatzTyp.Aufwaermen,
+                //     SatzKategorie: SatzKategorie.Training,
+                //     Prozent: 65,
+                //     GewichtAusgefuehrt: 0,
+                //     WdhAusgefuehrt: 0,
+                //     GewichtVorgabe: 0,
+                //     WdhVorgabe: 0,
+                //     PausenMinZeit: SatzPausen.Standard_Min,
+                //     PausenMaxZeit: SatzPausen.Standard_Max,
+                //     Status: SatzStatus.Wartet
+                // }));
                 break;
 
             case 2:
@@ -93,118 +93,69 @@ export class GzclpProgramm extends TrainingsProgramm {
             } as Session);
 
         mSessions.push(mNeueSession);
-        const mRelevanteUebungen = new Array<StammUebung>();
-        for (const mUeb of this.AppData.Uebungen) {
-            for (const k of mUeb.Kategorieen02) {
-                switch (aTagNr) {
-                    case 1:
-                        if (((k === UebungsKategorie02.GzclpTag1_1) ||
-                            (k === UebungsKategorie02.GzclpTag1_2) ||
-                            (k === UebungsKategorie02.GzclpTag1_3) ||
-                            (k === UebungsKategorie02.GzclpTag1_4)) &&
-                            (!mRelevanteUebungen.find( u => u.ID === mUeb.ID))) {
-                            mRelevanteUebungen.push(mUeb);
-                        }
-                        break;
-                    case 2:
-                        if (((k === UebungsKategorie02.GzclpTag3_1) ||
-                            (k === UebungsKategorie02.GzclpTag3_2) ||
-                            (k === UebungsKategorie02.GzclpTag3_3) ||
-                            (k === UebungsKategorie02.GzclpTag3_4)) &&
-                            (!mRelevanteUebungen.find(u => u.ID === mUeb.ID))) {
-                            mRelevanteUebungen.push(mUeb);
-                        }
-                        break;
-                    case 3:
-                        if (((k === UebungsKategorie02.GzclpTag2_1) ||
-                            (k === UebungsKategorie02.GzclpTag2_2) ||
-                            (k === UebungsKategorie02.GzclpTag2_3) ||
-                            (k === UebungsKategorie02.GzclpTag2_4)) &&
-                            (!mRelevanteUebungen.find(u => u.ID === mUeb.ID))) {
-                            mRelevanteUebungen.push(mUeb);
-                        }
-                        break;
-                    case 4:
-                        if (((k === UebungsKategorie02.GzclpTag4_1) ||
-                            (k === UebungsKategorie02.GzclpTag4_2) ||
-                            (k === UebungsKategorie02.GzclpTag4_3) ||
-                            (k === UebungsKategorie02.GzclpTag4_4)) &&
-                            (!mRelevanteUebungen.find(u => u.ID === mUeb.ID))) {
-                            mRelevanteUebungen.push(mUeb);
-                        }
-                        break;
-                }
-            }
-        }
 
-        mRelevanteUebungen.sort(
-            (a, b) => {
-                if (a.Kategorieen02 > b.Kategorieen02) {
-                    return 1;
-                }
-                if (a.Kategorieen02 < b.Kategorieen02) {
-                    return -1;
-                }
-                return 0;
-            });
-
-        if (this.SessionKategorie === SessionKategorie.Konkret) {
-            this.ErzeugeAufwaermSaetze(aTagNr, mNeueSession);
-        }
-
+        let mUebung = null;
         switch (aTagNr) {
             case 1:
-                // Gzclp-T1-Satz-Zyklus-0
-                // 1. Arbeits-Satz
-                mNeueSession.Saetze.push(new Satz({
-                    ID: 0,
-                    SessionID: mNeueSession.ID,
-                    UebungID: 0,
-                    SatzTyp: SatzTyp.Training,
-                    SatzKategorie: SatzKategorie.Vorlage,
-                    Prozent: 0,
-                    GewichtAusgefuehrt: 0,
-                    WdhAusgefuehrt: 0,
-                    GewichtVorgabe: 0,
-                    WdhVorgabe: 5,
-                    PausenMinZeit: SatzPausen.Standard_Min,
-                    PausenMaxZeit: SatzPausen.Standard_Max,
-                    Status: SatzStatus.Wartet
-                }));
-                // Gzclp-T1-Satz-Zyklus-0
-                // 2. Arbeits-Satz
-                mNeueSession.Saetze.push(new Satz({
-                    ID: 0,
-                    SessionID: mNeueSession.ID,
-                    UebungID: 0,
-                    SatzTyp: SatzTyp.Training,
-                    SatzKategorie: SatzKategorie.Vorlage,
-                    Prozent: 0,
-                    GewichtAusgefuehrt: 0,
-                    WdhAusgefuehrt: 0,
-                    GewichtVorgabe: 0,
-                    WdhVorgabe: 0,
-                    PausenMinZeit: SatzPausen.GzClpT1_Min,
-                    PausenMaxZeit: SatzPausen.GzClpT1_Max,
-                    Status: SatzStatus.Wartet
-                }));
-                // Gzclp-T1-Satz-Zyklus-0
-                // 3. Arbeits-Satz
-                mNeueSession.Saetze.push(new Satz({
-                    ID: 0,
-                    SessionID: mNeueSession.ID,
-                    UebungID: 0,
-                    SatzTyp: SatzTyp.Training,
-                    SatzKategorie: SatzKategorie.Vorlage,
-                    Prozent: 0,
-                    GewichtAusgefuehrt: 0,
-                    WdhAusgefuehrt: 0,
-                    GewichtVorgabe: 0,
-                    WdhVorgabe: 0,
-                    PausenMinZeit: SatzPausen.GzClpT1_Min,
-                    PausenMaxZeit: SatzPausen.GzClpT1_Max,
-                    Status: SatzStatus.Wartet
-                }));
+                // T1-Lift
+                mUebung = this.AppData.SucheUebungPerName(UebungsName.Squat);
+                if (this.SessionKategorie === SessionKategorie.Konkret) {
+                    this.ErzeugeAufwaermSaetze(aTagNr, mUebung, mNeueSession);
+                }
+                let mParaSatz = null;
+                // Arbeits-Saetze anfügen
+                for (let i = 0; i < 5; i++) {
+                    mParaSatz = new Satz();
+                    mParaSatz.Status = SatzStatus.Wartet;
+                    mParaSatz.SatzTyp = SatzTyp.Training;
+                    mParaSatz.LiftTyp = LiftTyp.GzClpT1;
+                    mParaSatz.Uebung = mUebung;
+                    mParaSatz.PausenMinZeit = SatzPausen.GzClpT1_Min;
+                    mParaSatz.PausenMaxZeit = SatzPausen.GzClpT1_Max;
+                    mParaSatz.Prozent = 100;
+                    mParaSatz.WdhVorgabe = 3;
+                    mParaSatz.AMRAP = false;
+                    mNeueSession.Saetze.push(mParaSatz);
+                }
+                // Der letzte Satz ist AMRAP
+                mNeueSession.Saetze[mNeueSession.Saetze.length - 1].AMRAP = true;
+                // T2-Lift
+                mUebung = this.AppData.SucheUebungPerName(UebungsName.Benchpress);
+                if (this.SessionKategorie === SessionKategorie.Konkret) {
+                    this.ErzeugeAufwaermSaetze(aTagNr, mUebung, mNeueSession);
+                }
+                // Arbeits-Saetze anfügen
+                for (let i = 0; i < 3; i++) {
+                    mParaSatz = new Satz();
+                    mParaSatz.Status = SatzStatus.Wartet;
+                    mParaSatz.SatzTyp = SatzTyp.Training;
+                    mParaSatz.LiftTyp = LiftTyp.GzClpT2;
+                    mParaSatz.Uebung = mUebung;
+                    mParaSatz.PausenMinZeit = SatzPausen.GzClpT2_Min;
+                    mParaSatz.PausenMaxZeit = SatzPausen.GzClpT2_Max;
+                    mParaSatz.Prozent = 85;
+                    mParaSatz.WdhVorgabe = 10;
+                    mParaSatz.AMRAP = false;
+                    mNeueSession.Saetze.push(mParaSatz);
+                }
+                // T3-Lift
+                mUebung = this.AppData.SucheUebungPerName(UebungsName.LatPullDowns);
+                // Arbeits-Saetze anfügen
+                for (let i = 0; i < 3; i++) {
+                    mParaSatz = new Satz();
+                    mParaSatz.Status = SatzStatus.Wartet;
+                    mParaSatz.SatzTyp = SatzTyp.Training;
+                    mParaSatz.LiftTyp = LiftTyp.GzClpT3;
+                    mParaSatz.Uebung = mUebung;
+                    mParaSatz.PausenMinZeit = SatzPausen.GzClpT3_Min;
+                    mParaSatz.PausenMaxZeit = SatzPausen.GzClpT3_Max;
+                    mParaSatz.Prozent = 65;
+                    mParaSatz.WdhVorgabe = 15;
+                    mParaSatz.AMRAP = false;
+                    mNeueSession.Saetze.push(mParaSatz);
+                }
+                // Der letzte Satz ist AMRAP
+                mNeueSession.Saetze[mNeueSession.Saetze.length - 1].AMRAP = true;
                 break;
 
             case 2:

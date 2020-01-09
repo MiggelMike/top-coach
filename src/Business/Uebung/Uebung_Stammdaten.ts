@@ -14,31 +14,25 @@ export enum UebungsKategorie01 {
     GzclpT2Cycle2 = 'GzclpT2Cycle2',
 }
 
-export enum UebungsKategorie02 {
-    GzclpTag1_1,
-    GzclpTag2_1,
-    GzclpTag3_1,
-    GzclpTag4_1,
-    GzclpTag1_2,
-    GzclpTag2_2,
-    GzclpTag3_2,
-    GzclpTag4_2,
-    GzclpTag1_3,
-    GzclpTag2_3,
-    GzclpTag3_3,
-    GzclpTag4_3,
-    GzclpTag1_4,
-    GzclpTag2_4,
-    GzclpTag3_4,
-    GzclpTag4_4,
-}
-
 export enum UebungsName {
     Squat = 'Squat',
     Deadlift = 'Deadlift',
     Benchpress = 'Benchpress',
     OverheadPress = 'Overhead Press',
-    AB_Rollout = 'AB Rollout'
+    AB_Rollout = 'AB Rollout',
+    AB_Wheel = 'AB_Wheel',
+    BackExtension = 'Back Extension',
+    BarbellRow = 'Barbell Row',
+    BentOverDumbbellRaise = 'Bent over Dumbbell Raise',
+    BlastStrapPushUp = 'Blast Strap Pushup',
+    CableKickBacks = 'Cable Kickbacks',
+    CablePushDown =  'Cable Pushdown',
+    CableRow = 'Cable Row',
+    CalfRaises = 'Calf Raises',
+    ChestSupportedRows = 'Chest Supported Rows',
+    ChinUps = 'Chinups',
+    CloseGripBenchPress = 'CloseGripBenchPress',
+    LatPullDowns = 'Lat Pulldowns'
 }
 
 class Vorgaben {
@@ -53,7 +47,6 @@ export interface IStammUebung {
     Name: string;
     Typ: UebungsTyp;
     Kategorieen01: Array<UebungsKategorie01>;
-    Kategorieen02: Array<UebungsKategorie02>;
 }
 
 export class StammUebung implements IStammUebung {
@@ -61,21 +54,18 @@ export class StammUebung implements IStammUebung {
     Name: string;
     Typ: UebungsTyp;
     Kategorieen01: Array<UebungsKategorie01> = [];
-    Kategorieen02: Array<UebungsKategorie02> = [];
 
     public static NeueStammUebung(
         aID: number,
         aName: string,
         aTyp: UebungsTyp,
-        aKategorieen01: Array<UebungsKategorie01>,
-        aKategorieen02: Array<UebungsKategorie02>): IStammUebung {
+        aKategorieen01: Array<UebungsKategorie01>): IStammUebung {
         //
         const mUebung = new StammUebung();
         mUebung.ID = aID;
         mUebung.Name = aName;
         mUebung.Typ = aTyp;
         mUebung.Kategorieen01 = aKategorieen01 ? aKategorieen01 : [];
-        mUebung.Kategorieen02 = aKategorieen02 ? aKategorieen02 : [];
         return mUebung;
     }
 
@@ -88,39 +78,5 @@ export class StammUebung implements IStammUebung {
             UebungsKategorie01.GzclpT2Cycle1,
             UebungsKategorie01.GzclpT2Cycle2,
          );
-    }
-
-    public static ErzeugeGzclpAKategorieen(): Array<UebungsKategorie02> {
-        return new Array<UebungsKategorie02>(
-            UebungsKategorie02.GzclpTag1_1,
-            UebungsKategorie02.GzclpTag3_2,
-            UebungsKategorie02.GzclpTag2_1,
-            UebungsKategorie02.GzclpTag4_2,
-        );
-    }
-
-    public static ErzeugeGzclpBKategorieen(): Array<UebungsKategorie02> {
-        return new Array<UebungsKategorie02>(
-            UebungsKategorie02.GzclpTag2_1,
-            UebungsKategorie02.GzclpTag4_2,
-        );
-    }
-
-    public static ErzeugeGzclpCKategorieen(): Array<UebungsKategorie02> {
-        return new Array<UebungsKategorie02>(
-            UebungsKategorie02.GzclpTag2_1,
-            UebungsKategorie02.GzclpTag2_2,
-            UebungsKategorie02.GzclpTag2_3,
-            UebungsKategorie02.GzclpTag2_4,
-        );
-    }
-
-    public static ErzeugeGzclpTag4Kategorieen(): Array<UebungsKategorie02> {
-        return new Array<UebungsKategorie02>(
-            UebungsKategorie02.GzclpTag4_1,
-            UebungsKategorie02.GzclpTag4_2,
-            UebungsKategorie02.GzclpTag4_3,
-            UebungsKategorie02.GzclpTag4_4,
-        );
     }
 }
