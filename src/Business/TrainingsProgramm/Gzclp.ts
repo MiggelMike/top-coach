@@ -11,70 +11,33 @@ export class GzclpProgramm extends TrainingsProgramm {
         this.Tage = 4;
     }
 
-    private ErzeugeAufwaermSaetze(aTagNr: number, aUebung: StammUebung, aSession: GzclpVorlageSession) {
-        switch (aTagNr) {
-            case 1:
-                // Gzclp-T1-Satz-Zyklus-0
-                // 1. Aufwärm-Satz
-                // aSession.Saetze.push(new Satz({
-                //     ID: 0,
-                //     SessionID: aSession.ID,
-                //     Uebung: aUebung,
-                //     SatzTyp: SatzTyp.Aufwaermen,
-                //     SatzKategorie: SatzKategorie.Training,
-                //     Prozent: 65,
-                //     GewichtAusgefuehrt: 0,
-                //     WdhAusgefuehrt: 0,
-                //     GewichtVorgabe: 0,
-                //     WdhVorgabe: 5,
-                //     PausenMinZeit: SatzPausen.Standard_Min,
-                //     PausenMaxZeit: SatzPausen.Standard_Max,
-                //     Status: SatzStatus.Wartet
-                // }));
-                // Gzclp-T1-Satz-Zyklus-0
-                // 2. Aufwärm-Satz
-                // aSession.Saetze.push(new Satz({
-                //     ID: 0,
-                //     SessionID: aSession.ID,
-                //     Uebung: aUebung,
-                //     SatzTyp: SatzTyp.Aufwaermen,
-                //     SatzKategorie: SatzKategorie.Training,
-                //     Prozent: 65,
-                //     GewichtAusgefuehrt: 0,
-                //     WdhAusgefuehrt: 0,
-                //     GewichtVorgabe: 0,
-                //     WdhVorgabe: 0,
-                //     PausenMinZeit: SatzPausen.Standard_Min,
-                //     PausenMaxZeit: SatzPausen.Standard_Max,
-                //     Status: SatzStatus.Wartet
-                // }));
-                // Gzclp-T1-Satz-Zyklus-0
-                // 3. Aufwärm-Satz
-                // aSession.Saetze.push(new Satz({
-                //     ID: 0,
-                //     SessionID: aSession.ID,
-                //     Uebung: aUebung,
-                //     SatzTyp: SatzTyp.Aufwaermen,
-                //     SatzKategorie: SatzKategorie.Training,
-                //     Prozent: 65,
-                //     GewichtAusgefuehrt: 0,
-                //     WdhAusgefuehrt: 0,
-                //     GewichtVorgabe: 0,
-                //     WdhVorgabe: 0,
-                //     PausenMinZeit: SatzPausen.Standard_Min,
-                //     PausenMaxZeit: SatzPausen.Standard_Max,
-                //     Status: SatzStatus.Wartet
-                // }));
-                break;
+    private ErzeugeAufwaermSaetze(aUebung: StammUebung, aLiftTyp: LiftTyp, aSession: GzclpVorlageSession) {
+        let mParaSatz = null;
+        // Aufwärm-Saetze anfügen
+        for (let i = 0; i < 3; i++) {
+            mParaSatz = new Satz();
+            mParaSatz.SessionID = aSession.ID;
+            mParaSatz.Status = SatzStatus.Wartet;
+            mParaSatz.SatzTyp = SatzTyp.Aufwaermen;
+            mParaSatz.LiftTyp = aLiftTyp;
+            mParaSatz.Uebung = aUebung;
+            mParaSatz.PausenMinZeit = SatzPausen.Standard_Min;
+            mParaSatz.PausenMaxZeit = SatzPausen.Standard_Max;
+            mParaSatz.WdhVorgabe = 3;
+            mParaSatz.AMRAP = false;
+            switch (i) {
+                case 0:
+                    mParaSatz.Prozent = 40;
+                    break;
 
-            case 2:
-                break;
+                case 1:
+                    mParaSatz.Prozent = 50;
+                    break;
 
-            case 3:
-                break;
-
-            case 4:
-                break;
+                default:
+                    mParaSatz.Prozent = 60;
+            }
+            aSession.Saetze.push(mParaSatz);
         }
     }
 
@@ -100,7 +63,7 @@ export class GzclpProgramm extends TrainingsProgramm {
                 // T1-Lift
                 mUebung = this.AppData.SucheUebungPerName(UebungsName.Squat);
                 if (this.SessionKategorie === SessionKategorie.Konkret) {
-                    this.ErzeugeAufwaermSaetze(aTagNr, mUebung, mNeueSession);
+                    this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.GzClpT1, mNeueSession);
                 }
                 let mParaSatz = null;
                 // Arbeits-Saetze anfügen
@@ -122,7 +85,7 @@ export class GzclpProgramm extends TrainingsProgramm {
                 // T2-Lift
                 mUebung = this.AppData.SucheUebungPerName(UebungsName.Benchpress);
                 if (this.SessionKategorie === SessionKategorie.Konkret) {
-                    this.ErzeugeAufwaermSaetze(aTagNr, mUebung, mNeueSession);
+                    this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.GzClpT2, mNeueSession);
                 }
                 // Arbeits-Saetze anfügen
                 for (let i = 0; i < 3; i++) {
