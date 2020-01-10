@@ -36,10 +36,10 @@ class AppData {
     private readonly cAppData: string = 'AppData';
 
     constructor() {
-        this.LadeDaten();
+        this.LadeDaten(SpeicherOrtTyp.Lokal);
         if (this.Daten.Uebungen.length === 0) {
             this.ErzeugeUebungStammdaten();
-            this.SpeicherDaten(this.LetzterSpeicherOrt);
+            this.SpeicherDaten(SpeicherOrtTyp.Lokal);
         }
     }
 
@@ -72,10 +72,8 @@ class AppData {
         }
     }
 
-    public LadeDaten() {
-        // localStorage.clear();
-        this.EvalLetztenSpeicherOrt();
-        switch (this.LetzterSpeicherOrt) {
+    public LadeDaten(aSpeicherort: SpeicherOrtTyp) {
+        switch (aSpeicherort) {
             case SpeicherOrtTyp.Facebook:
                 this.LadeDatenFacebook();
                 break;
@@ -97,9 +95,6 @@ class AppData {
     private LadeDatenLokal() {
         const s = localStorage.getItem(this.cAppData);
         this.Daten = JSON.parse(s);
-        // for (let i = 0; i < this.Daten.Uebungen.length; i++) {
-        //     this.Daten.Uebungen[i] = StammUebung.Kopiere(this.Daten.Uebungen[i] as StammUebung);
-        // }
     }
 
     private SpeicherDatenLokal() {

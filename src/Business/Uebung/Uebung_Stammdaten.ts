@@ -36,13 +36,6 @@ export enum UebungsName {
     Dips = 'Dips'
 }
 
-class Vorgaben {
-    Gzclp: {
-        UebungsKategorie01: UebungsKategorie01.GzclpT1Cycle1
-    };
-}
-
-
 export interface IStammUebung {
     ID: number;
     Name: string;
