@@ -155,7 +155,7 @@ export class Applikation {
         const mInfo: Array<string> = [];
         if (this.PruefungVorProgrammWahl(mInfo)) {
             this.Sportler.Reset();
-            const mGzclpProgramm = new GzclpProgramm(SessionKategorie.Konkret, this);
+            const mGzclpProgramm = new GzclpProgramm(SessionKategorie.Vorlage, this);
             const mSessions = new Array<ISession>();
             mGzclpProgramm.Init(mSessions);
         }

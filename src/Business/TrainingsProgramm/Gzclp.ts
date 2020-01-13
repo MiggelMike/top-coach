@@ -79,9 +79,7 @@ export class GzclpProgramm extends TrainingsProgramm {
     private ErzeugeSessions(aT1Uebung: UebungsName, aT2Uebung: UebungsName, aT3Uebung: UebungsName, aNeueSession: Session): void {
         // T1-Lift
         let mUebung = StammUebung.Kopiere(this.App.AppData.SucheUebungPerName(aT1Uebung));
-        if (this.SessionKategorie === SessionKategorie.Konkret) {
-            this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.GzClpT1, aNeueSession);
-        }
+        this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.GzClpT1, aNeueSession);
         let mNeuerSatz = null;
         // Arbeits-Saetze anfügen
         for (let i = 0; i < 5; i++) {

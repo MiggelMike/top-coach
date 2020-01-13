@@ -29,6 +29,10 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
         }
     }
 
+    public ErzeugeKonkreteSessionAusVorlage(): void {
+
+    }
+
     protected abstract InitTag(aTagNr: number): Array<ISession>;
 }
 
