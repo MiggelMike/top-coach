@@ -3,15 +3,17 @@
 </mat-toolbar>
 
 <div class="container">
-    <div class="row">
-        <div class="col-sm">
-            One of three columns
-        </div>
-        <div class="col-sm">
-            One of three columns
-        </div>
-        <div class="col-sm">
-            One of three columns
+    <div *ngFor="let item of AnstehendeSessions">
+        <div class="row">
+            <div class="col-sm">
+                <a>{{sess.ID}}</a>
+            </div>
+            <div class="col-sm">
+                One of three columns
+            </div>
+            <div class="col-sm">
+                One of three columns
+            </div>
         </div>
     </div>
 </div>
