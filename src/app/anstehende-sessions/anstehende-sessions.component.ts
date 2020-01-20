@@ -1,18 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-<<<<<<< HEAD
-
-@Component({
-  selector: 'app-anstehende-sessions',
-  templateUrl: './anstehende-sessions.component.html',
-  styleUrls: ['./anstehende-sessions.component.scss']
-})
-export class AnstehendeSessionsComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-=======
 import { TrainingsProgrammSvcService } from '../services/trainings-programm-svc.service';
 import { Session } from '../../Business/Session/Session';
 
@@ -41,11 +27,8 @@ export class AnstehendeSessionsComponent implements OnInit {
         //         this.Kategorie = this.sensorikAttribute[0].kategorieDE01;
         //     }
         // });
-        this.trainingsProgrammSvcService.LadeAnstehendeSession().subscribe( res => {
-            this.AnstehendeSessions = res;
-        });
+        this.AnstehendeSessions = this.trainingsProgrammSvcService.LadeAnstehendeSession();
         return this.AnstehendeSessions;
     }
->>>>>>> 91d22883d3694a801e16cccd37cad8ef57b94118
 
 }

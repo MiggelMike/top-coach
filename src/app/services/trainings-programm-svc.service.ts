@@ -21,7 +21,7 @@ export class TrainingsProgrammSvcService {
 
     constructor() { }
 
-    public LadeAnstehendeSession(): Observable<Session[]> {
+    public LadeAnstehendeSession(): Session[] {
         const mResult = new Array<Session>();
         let mSession = new Session();
         mSession.ID = 1;
@@ -31,7 +31,7 @@ export class TrainingsProgrammSvcService {
         mSession.DauerInSek = 1;
         mSession.Typ = SessionKategorie.Konkret;
         mSession.ProgrammTyp = ProgrammTyp.Custom;
-
+        mResult.push(mSession);
         mSession = new Session();
         mSession.ID = 2;
         mSession.Name = 'aPara.Name2';
@@ -41,9 +41,9 @@ export class TrainingsProgrammSvcService {
         mSession.Typ = SessionKategorie.Konkret;
         mSession.ProgrammTyp = ProgrammTyp.Custom;
         mResult.push(mSession);
-        const moResult = new Observable<Session[]>();
-        //moResult
-        return mResult.map();
+      //  const moResult = new Observable<Session[]>();
+       // moResult.
+        return mResult;
     }
 
 }
