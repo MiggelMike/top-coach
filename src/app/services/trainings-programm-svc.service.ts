@@ -21,26 +21,28 @@ export class TrainingsProgrammSvcService {
 
     public AnstehendeSessionObserver;
 
-    SessionListe: Array<Session> = [
-        {
-            ID: 1,
-            Name: 'aPara.Name',
-            Saetze: [],
-            Datum: new Date(),
-            DauerInSek: 1,
-            Typ: SessionKategorie.Konkret,
-            ProgrammTyp: ProgrammTyp.Custom
-        },
-        {
-            ID: 2,
-            Name: 'aPara.Name',
-            Saetze: [],
-            Datum: new Date(),
-            DauerInSek: 2,
-            Typ: SessionKategorie.Konkret,
-            ProgrammTyp: ProgrammTyp.Custom
-        }
-    ] ;
+    ListeAnstehenderSessions: Array<Session> = [];
+    //     {
+    //         ID: 1,
+    //         TagNr: 1,
+    //         Name: 'aPara.Name',
+    //         Saetze: [],
+    //         Datum: new Date(),
+    //         DauerInSek: 1,
+    //         Typ: SessionKategorie.Konkret,
+    //         ProgrammTyp: ProgrammTyp.Custom
+    //     },
+    //     {
+    //         ID: 2,
+    //         TagNr: 2,
+    //         Name: 'aPara.Name',
+    //         Saetze: [],
+    //         Datum: new Date(),
+    //         DauerInSek: 2,
+    //         Typ: SessionKategorie.Konkret,
+    //         ProgrammTyp: ProgrammTyp.Custom
+    //     }
+    // ] ;
 
     constructor() { }
 
@@ -48,7 +50,7 @@ export class TrainingsProgrammSvcService {
         const mResult = new Observable<Session[]>(
             observer => {
                 this.AnstehendeSessionObserver = observer;
-                observer.next(this.SessionListe);
+                observer.next(this.ListeAnstehenderSessions);
             }
         );
 

@@ -12,6 +12,7 @@ export enum ProgrammTyp {
 
 export interface ISession {
     ID: number;
+    TagNr: number;
     Name: string;
     Saetze: Array<ISatz>;
     Datum: Date;
@@ -22,6 +23,7 @@ export interface ISession {
 
 export class Session implements ISession  {
     public ID: number;
+    public TagNr: number;
     public Name: string;
     public Saetze: Array<ISatz>;
     public Datum: Date;
@@ -37,6 +39,7 @@ export class Session implements ISession  {
         this.DauerInSek = aPara.DauerInSek;
         this.Typ = aPara.Typ;
         this.ProgrammTyp = aPara.ProgrammTyp;
+        this.TagNr = aPara.TagNr;
     }
 }
 

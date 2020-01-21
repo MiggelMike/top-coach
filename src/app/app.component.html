@@ -1,7 +1,30 @@
-<mat-toolbar>
-    <span>Coaching Concepts</span>
+<mat-toolbar role="toolbar" class="taskHeader">
+    <div class="container">
+        <div class="row">
+            <div class="col align-self-start">
+                <mat-icon>home</mat-icon>
+            </div>
+            <div class="col align-self-center">
+                <mat-icon>reply</mat-icon>
+            </div>
+            <div class="col align-self-center">
+                <mat-icon>list_alt</mat-icon>
+            </div>
+        </div>
+    </div>
 </mat-toolbar>
 
+
+
+
 <div class="container">
+    <!-- <div ngbDropdown class="d-inline-block">
+        <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Toggle dropdown</button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button class="dropdown-item">Action - 1</button>
+          <button class="dropdown-item">Another Action</button>
+          <button class="dropdown-item">Something else is here</button>
+        </div>
+      </div> -->
     <router-outlet></router-outlet>
 </div>

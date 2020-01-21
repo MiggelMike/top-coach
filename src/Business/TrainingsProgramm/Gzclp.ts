@@ -46,6 +46,7 @@ export class GzclpProgramm extends TrainingsProgramm {
         const mNeueSession = new Session(
             {
                 ID: 0,
+                TagNr: aTagNr,
                 Name: 'Tag ' + aTagNr.toString(),
                 Saetze: [],
                 Datum: null,
