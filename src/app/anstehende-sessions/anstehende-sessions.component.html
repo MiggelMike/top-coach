@@ -1,9 +1,10 @@
-
-
 <div class="container">
     <h4>Upcoming Sessions</h4>
     <div *ngFor="let item of NextSessions">
-        <div class="row row-height">
+
+        <!-- <div class="row row-height">
+
+
             <div class="col-sm">
                 <button class="btn btn-sm" type="submit">Button</button>
             </div>
@@ -13,12 +14,25 @@
             <div class="col-sm">
                 One of three columns
             </div>
-        </div>
+        </div> -->
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{item.ID}}
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{item.Name}}
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <p>This is the primary content of the panel.</p>
+
+        </mat-expansion-panel>
     </div>
 
     <div class="mx-auto" style="width: 200px;">
         <div class="btn-group mx-auto" role="group" aria-label="Session Buttons">
-            <button type="button" class="btn btn-secondary"  (click)="LadeSessions()" >Refresh</button>
+            <button type="button" class="btn btn-secondary" (click)="LadeSessions()">Refresh</button>
             <button type="button" class="btn btn-secondary">Middle</button>
             <button type="button" class="btn btn-secondary">Right</button>
         </div>

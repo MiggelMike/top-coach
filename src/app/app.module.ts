@@ -5,8 +5,10 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatToolbarModule  } from '@angular/material/toolbar';
+import { MatExpansionModule  } from '@angular/material/expansion';
 import { AppRoutingModule } from './app-routing.module';
 import { AnstehendeSessionsComponent } from './anstehende-sessions/anstehende-sessions.component';
+
 
 @NgModule({
   declarations: [
@@ -18,6 +20,7 @@ import { AnstehendeSessionsComponent } from './anstehende-sessions/anstehende-se
     BrowserAnimationsModule,
     MatSliderModule,
     MatToolbarModule,
+    MatExpansionModule,
     AppRoutingModule
   ],
   providers: [],

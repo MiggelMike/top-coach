@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TrainingsProgrammSvcService } from '../services/trainings-programm-svc.service';
 import { Session, SessionKategorie, ProgrammTyp } from '../../Business/Session/Session';
-import { Observable } from 'rxjs';
+declare var $: any;
 
 @Component({
     selector: 'app-anstehende-sessions',
@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
     styleUrls: ['./anstehende-sessions.component.scss']
 })
 export class AnstehendeSessionsComponent implements OnInit {
-
+    public isCollapsed = false;
     public NextSessions: Array<Session> = [];
     public AnstehendeSessionObserver;
 

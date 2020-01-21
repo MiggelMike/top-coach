@@ -4,7 +4,7 @@ import { AnstehendeSessionsComponent } from './anstehende-sessions/anstehende-se
 
 
 const routes: Routes = [
-    { path: 'AnstehendeSessions', component: AnstehendeSessionsComponent }
+    { path: '', component: AnstehendeSessionsComponent }
 ];
 
 @NgModule({
