@@ -1,0 +1,3 @@
+diff a/src/app/anstehende-sessions/anstehende-sessions.component.html b/src/app/anstehende-sessions/anstehende-sessions.component.html	(rejected hunks)
+@@ -0,0 +1 @@
++<p>anstehende-sessions works!</p>

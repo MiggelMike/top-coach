@@ -1,19 +1,27 @@
-<mat-toolbar>
-    <span>Upcoming Sessions</span>
-</mat-toolbar>
+
 
 <div class="container">
+    <h4>Upcoming Sessions</h4>
     <div *ngFor="let item of AnstehendeSessions">
-        <div class="row">
+        <div class="row row-height">
             <div class="col-sm">
-                <a>{{sess.ID}}</a>
+                <button class="btn btn-sm" type="submit">Button</button>
             </div>
             <div class="col-sm">
-                One of three columns
+                <a>{{item.ID}}</a>
             </div>
             <div class="col-sm">
                 One of three columns
             </div>
         </div>
     </div>
+
+    <div class="mx-auto" style="width: 200px;">
+        <div class="btn-group mx-auto" role="group" aria-label="Session Buttons">
+            <button type="button" class="btn btn-secondary">Left</button>
+            <button type="button" class="btn btn-secondary">Middle</button>
+            <button type="button" class="btn btn-secondary">Right</button>
+        </div>
+    </div>
+
 </div>

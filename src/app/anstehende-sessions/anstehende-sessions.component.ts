@@ -27,9 +27,7 @@ export class AnstehendeSessionsComponent implements OnInit {
         //         this.Kategorie = this.sensorikAttribute[0].kategorieDE01;
         //     }
         // });
-        this.trainingsProgrammSvcService.LadeAnstehendeSession().subscribe( res => {
-            this.AnstehendeSessions = res;
-        });
+        this.AnstehendeSessions = this.trainingsProgrammSvcService.LadeAnstehendeSession();
         return this.AnstehendeSessions;
     }
 
