@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TrainingsProgrammSvcService } from '../services/trainings-programm-svc.service';
-import { Session } from '../../Business/Session/Session';
+import { Session, SessionKategorie, ProgrammTyp } from '../../Business/Session/Session';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-anstehende-sessions',
@@ -9,26 +10,22 @@ import { Session } from '../../Business/Session/Session';
 })
 export class AnstehendeSessionsComponent implements OnInit {
 
-    public AnstehendeSessions: Session[];
+    public NextSessions: Array<Session> = [];
+    public AnstehendeSessionObserver;
 
     constructor(private trainingsProgrammSvcService: TrainingsProgrammSvcService) {
-        this.AnstehendeSessions = this.LadeSessions();
      }
 
     ngOnInit() {
-        this.AnstehendeSessions = this.LadeSessions();
+        this.AnstehendeSessionObserver = this.trainingsProgrammSvcService.LadeAnstehendeSession();
+        this.NextSessions = this.LadeSessions();
     }
 
     public LadeSessions(): Array<Session> {
-        // this.sensorikService.getAttribute()
-        // .subscribe(res => {
-        //     this.sensorikAttribute = res;
-        //     if ((this.sensorikAttribute !== undefined) && (this.sensorikAttribute.length > 0)) {
-        //         this.Kategorie = this.sensorikAttribute[0].kategorieDE01;
-        //     }
-        // });
-        this.AnstehendeSessions = this.trainingsProgrammSvcService.LadeAnstehendeSession();
-        return this.AnstehendeSessions;
+        this.AnstehendeSessionObserver.subscribe( (sessions: Array<Session>) => {
+            this.NextSessions = sessions;
+        });
+        return this.NextSessions;
     }
 
 }

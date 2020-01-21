@@ -2,7 +2,7 @@
 
 <div class="container">
     <h4>Upcoming Sessions</h4>
-    <div *ngFor="let item of AnstehendeSessions">
+    <div *ngFor="let item of NextSessions">
         <div class="row row-height">
             <div class="col-sm">
                 <button class="btn btn-sm" type="submit">Button</button>
@@ -18,7 +18,7 @@
 
     <div class="mx-auto" style="width: 200px;">
         <div class="btn-group mx-auto" role="group" aria-label="Session Buttons">
-            <button type="button" class="btn btn-secondary">Left</button>
+            <button type="button" class="btn btn-secondary"  (click)="LadeSessions()" >Refresh</button>
             <button type="button" class="btn btn-secondary">Middle</button>
             <button type="button" class="btn btn-secondary">Right</button>
         </div>
