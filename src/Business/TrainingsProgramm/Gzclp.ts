@@ -1,12 +1,12 @@
 import { TrainingsProgramm } from './TrainingsProgramm';
 import { ISession, Session, SessionKategorie, ProgrammTyp } from '../Session/Session';
 import { Satz, SatzTyp, SatzKategorie, SatzStatus, SatzPausen, LiftTyp } from '../Konfiguration/Satz';
-import { Applikation } from '../Applikation';
+import { GlobalData } from '../../app/services/global.service';
 import { StammUebung, UebungsName } from '../Uebung/Uebung_Stammdaten';
 
 export class GzclpProgramm extends TrainingsProgramm {
-    constructor(aSessionKategorie: SessionKategorie, aApp: Applikation) {
-        super(aSessionKategorie, aApp);
+    constructor(aSessionKategorie: SessionKategorie) {
+        super(aSessionKategorie);
         this.Tage = 4;
     }
 
@@ -79,7 +79,7 @@ export class GzclpProgramm extends TrainingsProgramm {
 
     private ErzeugeSessions(aT1Uebung: UebungsName, aT2Uebung: UebungsName, aT3Uebung: UebungsName, aNeueSession: Session): void {
         // T1-Lift
-        let mUebung = StammUebung.Kopiere(this.App.AppData.SucheUebungPerName(aT1Uebung));
+        let mUebung = StammUebung.Kopiere(GlobalData.AppData.SucheUebungPerName(aT1Uebung));
         this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.GzClpT1, aNeueSession);
         let mNeuerSatz = null;
         // Arbeits-Saetze anfügen
@@ -99,7 +99,7 @@ export class GzclpProgramm extends TrainingsProgramm {
         // Der letzte Satz ist AMRAP
         aNeueSession.Saetze[aNeueSession.Saetze.length - 1].AMRAP = true;
         // T2-Lift
-        mUebung = StammUebung.Kopiere(this.App.AppData.SucheUebungPerName(aT2Uebung));
+        mUebung = StammUebung.Kopiere(GlobalData.AppData.SucheUebungPerName(aT2Uebung));
         if (this.SessionKategorie === SessionKategorie.Konkret) {
             this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.GzClpT2, aNeueSession);
         }
@@ -118,7 +118,7 @@ export class GzclpProgramm extends TrainingsProgramm {
             aNeueSession.Saetze.push(mNeuerSatz);
         }
         // T3-Lift
-        mUebung = StammUebung.Kopiere(this.App.AppData.SucheUebungPerName(aT3Uebung));
+        mUebung = StammUebung.Kopiere(GlobalData.AppData.SucheUebungPerName(aT3Uebung));
         // Arbeits-Saetze anfügen
         for (let i = 0; i < 3; i++) {
             mNeuerSatz = new Satz();

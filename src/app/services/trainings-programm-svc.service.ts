@@ -3,18 +3,6 @@ import { Session, SessionKategorie, ProgrammTyp } from '../../Business/Session/S
 import { Observable, of, from } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
-})
-
-// export class SensorikService {
-//     // private sensorikURL = AppConfig.apiEndpoint + 'Sensorik/Hefegehalt';
-//     private sensorikURL = AppConfig.apiEndpoint;
-//     private stammDatenURL = 'Sensorik/Stammdaten/';
-//     constructor(private http: HttpClient ) { }
-
-//     getAttribute(): Observable<SensorikAttribut[]> {
-
-@Injectable({
     providedIn: 'root'
 })
 export class TrainingsProgrammSvcService {
@@ -53,7 +41,6 @@ export class TrainingsProgrammSvcService {
                 observer.next(this.ListeAnstehenderSessions);
             }
         );
-
         return mResult;
     }
 

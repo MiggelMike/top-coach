@@ -1,11 +1,12 @@
 import { ISession, SessionKategorie } from '../Session/Session';
-import { Applikation } from '../Applikation';
+import { GlobalData } from '../../app/services/global.service';
+
 
 export interface ITrainingsProgramm {
     ID: number;
     Tage: number;
+    Name: string;
     SessionKategorie: SessionKategorie;
-    App: Applikation;
     Init(aSessions: Array<ISession>): void;
 }
 
@@ -13,11 +14,10 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
     public ID = 0;
     // Wird in abgeleiteten Klassen gesetzt.
     public Tage = 0;
-    public App: Applikation;
+    public Name: string;
     public SessionKategorie: SessionKategorie;
-    constructor(aSessionKategorie: SessionKategorie, aApp: Applikation) {
+    constructor(aSessionKategorie: SessionKategorie) {
         this.SessionKategorie = aSessionKategorie;
-        this.App = aApp;
     }
 
     public Init(aSessions: Array<ISession>): void {
@@ -34,6 +34,9 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
     }
 
     protected abstract InitTag(aTagNr: number): Array<ISession>;
+
+
+
 }
 
 

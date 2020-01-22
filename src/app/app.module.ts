@@ -36,4 +36,4 @@ import { ProgrammWaehlenComponent } from './programm-waehlen/programm-waehlen.co
     providers: [],
     bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
