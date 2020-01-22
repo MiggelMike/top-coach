@@ -12,12 +12,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AnstehendeSessionsComponent } from './anstehende-sessions/anstehende-sessions.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { MatIconModule } from '@angular/material/icon';
+import { ProgrammWaehlenComponent } from './programm-waehlen/programm-waehlen.component';
 
 
 @NgModule({
     declarations: [
         AppComponent,
-        AnstehendeSessionsComponent
+        AnstehendeSessionsComponent,
+        ProgrammWaehlenComponent
     ],
     imports: [
         BrowserModule,
