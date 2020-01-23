@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TrainingsProgrammSvcService } from '../services/trainings-programm-svc.service';
+import { TrainingsProgrammSvc } from '../services/trainings-programm-svc.service';
 import { Session, SessionKategorie, ProgrammTyp } from '../../Business/Session/Session';
 declare var $: any;
 
@@ -13,7 +13,7 @@ export class AnstehendeSessionsComponent implements OnInit {
     public NextSessions: Array<Session> = [];
     public AnstehendeSessionObserver;
 
-    constructor(private trainingsProgrammSvcService: TrainingsProgrammSvcService) {
+    constructor(private trainingsProgrammSvcService: TrainingsProgrammSvc) {
      }
 
     ngOnInit() {

@@ -2,10 +2,16 @@ import { Injectable } from '@angular/core';
 import { Session, SessionKategorie, ProgrammTyp } from '../../Business/Session/Session';
 import { Observable, of, from } from 'rxjs';
 
+export interface ITrainingsProgrammSvc {
+    LadeProgramme(): void;
+}
+
+
 @Injectable({
     providedIn: 'root'
 })
-export class TrainingsProgrammSvcService {
+
+export class TrainingsProgrammSvc implements ITrainingsProgrammSvc {
 
     public AnstehendeSessionObserver;
 
@@ -33,6 +39,11 @@ export class TrainingsProgrammSvcService {
     // ] ;
 
     constructor() { }
+
+
+    public LadeProgramme() {
+
+    }
 
     public LadeAnstehendeSession(): Observable<Session[]> {
         const mResult = new Observable<Session[]>(

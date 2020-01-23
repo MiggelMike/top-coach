@@ -1,0 +1,20 @@
+<div *ngIf="session">
+    <div *ngFor="let satz of session.Saetze, index as i; let isOdd=odd">
+        <div class="container" [ngClass]="isOdd ? 'odd' : 'even'" >
+            <div class="row no-gutters">
+                <div class="col">
+                    <p>Satz {{i+1}}</p>
+                </div>
+                <div class="col ml-1">
+                    {{satz.Uebung.Name}}
+                </div>
+                <div class="col ml-1">
+                    {{satz.WdhVorgabe}} <a [hidden]="!satz.AMRAP">+</a>
+                </div>
+                <div class="col">
+                    {{satz.Prozent}} %
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
