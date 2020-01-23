@@ -1,9 +1,17 @@
 <div *ngIf="session">
     <div *ngFor="let satz of session.Saetze, index as i; let isOdd=odd">
-        <div class="container" [ngClass]="isOdd ? 'odd' : 'even'" >
+        <div class="container" [ngClass]="isOdd ? 'odd' : 'even'">
             <div class="row no-gutters">
                 <div class="col">
-                    <p>Satz {{i+1}}</p>
+                    <span *ngIf="satz.SatzTyp === 'Aufwaermen'; then thenBlock else elseBlock"></span>
+                    <ng-template #thenBlock>
+                        <mat-icon aria-hidden="false" aria-label="warmupset">emoji_people</mat-icon>
+                        Satz {{i+1}}
+                    </ng-template>
+                    <ng-template #elseBlock>
+                        <mat-icon aria-hidden="false" aria-label="Workset">fitness_center</mat-icon>
+                        Satz {{i+1}}
+                    </ng-template>
                 </div>
                 <div class="col ml-1">
                     {{satz.Uebung.Name}}
