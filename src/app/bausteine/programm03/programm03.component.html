@@ -3,13 +3,18 @@
         <div class="container" [ngClass]="isOdd ? 'odd' : 'even'">
             <div class="row no-gutters">
                 <div class="col">
-                    <span *ngIf="satz.SatzTyp === 'Aufwaermen'; then thenBlock else elseBlock"></span>
-                    <ng-template #thenBlock>
-                        <mat-icon aria-hidden="false" aria-label="warmupset">emoji_people</mat-icon>
+                    <span *ngIf="satz.SatzTyp === 'Aufwaermen'; then AufwaermenBlock else elseBlock"></span>
+                    <span #elseBlock *ngIf="satz.SatzTyp === 'Abwaermen'; then AbwaermenBlock else TrainingBlock"></span>
+                    <ng-template #AufwaermenBlock>
+                        <img src="../../../assets/icons/bullet_yellow.png">
                         Satz {{i+1}}
                     </ng-template>
-                    <ng-template #elseBlock>
-                        <mat-icon aria-hidden="false" aria-label="Workset">fitness_center</mat-icon>
+                    <ng-template #TrainingBlock>
+                        <img src="../../../assets/icons/bullet_red.png">
+                        Satz {{i+1}}
+                    </ng-template>
+                    <ng-template #AbwaermenBlock>
+                        <img src="../../../assets/icons/bullet_blue.png">
                         Satz {{i+1}}
                     </ng-template>
                 </div>
