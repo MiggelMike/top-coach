@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+
 import { ITrainingsProgramm } from '../../../Business/TrainingsProgramm/TrainingsProgramm';
 
 @Component({

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Session, SessionKategorie, ProgrammTyp } from '../../Business/Session/Session';
 import { Observable, of, from } from 'rxjs';
-import { ITrainingsProgramm } from '../../Business/TrainingsProgramm/TrainingsProgramm';
+import { ITrainingsProgramm, ProgrammAktion } from '../../Business/TrainingsProgramm/TrainingsProgramm';
 import { GlobalData } from '../../app/services/global.service';
 
 @Injectable({
@@ -16,6 +16,7 @@ export class ProgrammWaehlenService {
 
 
     private LadeProgramme(): void {
+        // GlobalData.StandardVorlagen.forEach( v => v.Aktion = ProgrammAktion.Auswahl);
         this.ProgrammListe = GlobalData.StandardVorlagen;
     }
 

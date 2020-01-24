@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ITrainingsProgramm } from '../../../Business/TrainingsProgramm/TrainingsProgramm';
-import { Programm02Component } from '../programm02/programm02.component';
+
 
 @Component({
   selector: 'app-programm01',
@@ -9,10 +9,13 @@ import { Programm02Component } from '../programm02/programm02.component';
 })
 
 
+
 export class Programm01Component implements OnInit {
     @Input() programm: ITrainingsProgramm;
+    @Input() programmLadeContext: number;
 
-    constructor() { }
+    constructor() {
+    }
 
     ngOnInit() {
     }

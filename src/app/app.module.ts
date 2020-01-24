@@ -16,7 +16,7 @@ import { ProgrammWaehlenComponent } from './programm-waehlen/programm-waehlen.co
 import { Programm01Component } from './bausteine/programm01/programm01.component';
 import { Programm02Component } from './bausteine/programm02/programm02.component';
 import { Programm03Component } from './bausteine/programm03/programm03.component';
-
+import { ProgrammLadeDirective } from './AppDirectives';
 
 @NgModule({
     declarations: [
@@ -25,7 +25,8 @@ import { Programm03Component } from './bausteine/programm03/programm03.component
         ProgrammWaehlenComponent,
         Programm01Component,
         Programm02Component,
-        Programm03Component
+        Programm03Component,
+        ProgrammLadeDirective
     ],
     imports: [
         BrowserModule,
@@ -38,6 +39,7 @@ import { Programm03Component } from './bausteine/programm03/programm03.component
         BsDropdownModule,
         MatIconModule,
         MatSidenavModule
+
     ],
     providers: [],
     bootstrap: [AppComponent]

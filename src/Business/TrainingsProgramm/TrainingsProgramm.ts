@@ -1,6 +1,10 @@
 import { ISession, SessionKategorie } from '../Session/Session';
 import { GlobalData } from '../../app/services/global.service';
 
+export enum ProgrammAktion {
+    Keine = 'Keine',
+    Auswahl = 'Auswahl'
+}
 
 export interface ITrainingsProgramm {
     ID: number;
@@ -8,6 +12,7 @@ export interface ITrainingsProgramm {
     Name: string;
     SessionKategorie: SessionKategorie;
     SessionListe: Array<ISession>;
+    Aktion: ProgrammAktion;
     Init(aSessions: Array<ISession>): void;
 }
 
@@ -18,6 +23,7 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
     public Name: string;
     public SessionKategorie: SessionKategorie;
     public SessionListe: Array<ISession> = new Array<ISession>();
+    public Aktion: ProgrammAktion;
     constructor(aSessionKategorie: SessionKategorie) {
         this.SessionKategorie = aSessionKategorie;
     }
