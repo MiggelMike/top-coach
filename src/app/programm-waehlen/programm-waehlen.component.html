@@ -1,5 +1,5 @@
 <p>Choose Workout</p>
 <div *ngFor="let item of LadeTrainingsProgramme()">
-    <!-- [programmLadeContext]= "0": Der Auswähl-Button für das jeweilige Workout wir gezeigt. -->
-    <app-programm01 [programmLadeContext]= "0" [programm]="item"></app-programm01>
+    <!-- [programmLadeContext]= "true": Der Auswähl-Button für das jeweilige Workout wir gezeigt. -->
+    <app-programm01 [programmLadeContext]= "true" [programm]= "item"></app-programm01>
 </div>
