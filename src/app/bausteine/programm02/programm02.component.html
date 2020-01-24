@@ -1,0 +1,28 @@
+<div *ngIf="programm">
+    <div *ngFor="let sess of programm.SessionListe, index as i">
+        <div class="accordion" id="accordionSession">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" [attr.data-target]="'#collapseSession' + i"
+                            aria-expanded="true" [attr.aria-controls]="'collapseSession' + i">
+                            {{sess.Name}}
+                         </button>
+                    </h2>
+                    <span>{{sess.name}}</span>
+                </div>
+
+                <div [id]="'collapseSession' + i" [class.show]="i==0" class="collapse" aria-labelledby="headingOne"
+                    attr.data-parent="#accordionSession">
+                    <div class="card-body">
+                        <app-programm03 [session]="sess"></app-programm03>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+

@@ -1,4 +1,4 @@
-<p>programm-waehlen works!</p>
+<p>Choose Workout</p>
 <div *ngFor="let item of LadeTrainingsProgramme()">
-    <h1>{{item.Name}}</h1>
+    <app-programm01 [programm]="item"></app-programm01>
 </div>

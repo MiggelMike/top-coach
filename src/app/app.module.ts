@@ -13,13 +13,19 @@ import { AnstehendeSessionsComponent } from './anstehende-sessions/anstehende-se
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { MatIconModule } from '@angular/material/icon';
 import { ProgrammWaehlenComponent } from './programm-waehlen/programm-waehlen.component';
+import { Programm01Component } from './bausteine/programm01/programm01.component';
+import { Programm02Component } from './bausteine/programm02/programm02.component';
+import { Programm03Component } from './bausteine/programm03/programm03.component';
 
 
 @NgModule({
     declarations: [
         AppComponent,
         AnstehendeSessionsComponent,
-        ProgrammWaehlenComponent
+        ProgrammWaehlenComponent,
+        Programm01Component,
+        Programm02Component,
+        Programm03Component
     ],
     imports: [
         BrowserModule,

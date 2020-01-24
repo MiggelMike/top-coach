@@ -1,0 +1,28 @@
+<div *ngIf="session">
+    <div *ngFor="let satz of session.Saetze, index as i; let isOdd=odd">
+        <div class="container" [ngClass]="isOdd ? 'odd' : 'even'">
+            <div class="row no-gutters">
+                <div class="col">
+                    <span *ngIf="satz.SatzTyp === 'Aufwaermen'; then thenBlock else elseBlock"></span>
+                    <ng-template #thenBlock>
+                        <mat-icon aria-hidden="false" aria-label="warmupset">emoji_people</mat-icon>
+                        Satz {{i+1}}
+                    </ng-template>
+                    <ng-template #elseBlock>
+                        <mat-icon aria-hidden="false" aria-label="Workset">fitness_center</mat-icon>
+                        Satz {{i+1}}
+                    </ng-template>
+                </div>
+                <div class="col ml-1">
+                    {{satz.Uebung.Name}}
+                </div>
+                <div class="col ml-1">
+                    {{satz.WdhVorgabe}} <a [hidden]="!satz.AMRAP">+</a>
+                </div>
+                <div class="col">
+                    {{satz.Prozent}} %
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
