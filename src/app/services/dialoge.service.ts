@@ -14,7 +14,7 @@ export class DialogeService {
     public Hinweis(aText: string): void {
         const mDialogConfig = new MatDialogConfig();
         mDialogConfig.width = '250px';
-        mDialogConfig.height = '450px';
+        mDialogConfig.height = '250px';
         mDialogConfig.disableClose = true;
         mDialogConfig.autoFocus = true;
 

@@ -1,12 +1,12 @@
 <img src="../../../assets/icons/Cute Ball - Info.png" style="object-fit: cover; height: 50px; width: 50px;">
 
-<mat-card id="card" style="text-align: center;">
 
-        <button mat-raised-button color="primary" style="margin-right:5px;">login</button>
-        <button mat-raised-button color="primary" style="margin-right:5px;">register</button>
-
-    <div mat-dialog-actions layout="row" layout-align="center center">
-        <button mat-raised-button (click)="onOkClick()"><img src="../../../assets/icons/Cute Ball - Go.png"
-                style="object-fit: cover; height: 25x; width: 25px;"></button>
+<div mat-dialog-actions layout="row" style="display: block; text-align: center; margin: auto; width: 100%; padding-top: 1em; padding-bottom: 1em;">
+    <div style="text-align: center; padding-top: 1em; padding-bottom: 1em;">
+        <h6>{{data.text}}</h6>
+        <h6>{{data.text}}</h6>
+        <h6>{{data.text}}</h6>
     </div>
-</mat-card>
+    <button mat-raised-button (click)="onOkClick()"><img src="../../../assets/icons/Cute Ball - Go.png"
+            style="object-fit: cover; height: 25x; width: 25px;"></button>
+</div>
