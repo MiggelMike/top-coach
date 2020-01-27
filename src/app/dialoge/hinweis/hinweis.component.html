@@ -1,11 +1,12 @@
-<h1 mat-dialog-title>Hi {{data.name}}</h1>
-<div mat-dialog-content>
-    <p>What's your favorite animal?</p>
-    <mat-form-field>
-        <input matInput [(ngModel)]="data.animal">
-    </mat-form-field>
-</div>
-<div mat-dialog-actions>
-    <button mat-button (click)="onNoClick()">No Thanks</button>
-    <button mat-button mat-dialog-close="data.animal" (click)="onYesClick()">Ok</button>
-</div>
+<img src="../../../assets/icons/Cute Ball - Info.png" style="object-fit: cover; height: 50px; width: 50px;">
+
+<mat-card id="card" style="text-align: center;">
+
+        <button mat-raised-button color="primary" style="margin-right:5px;">login</button>
+        <button mat-raised-button color="primary" style="margin-right:5px;">register</button>
+
+    <div mat-dialog-actions layout="row" layout-align="center center">
+        <button mat-raised-button (click)="onOkClick()"><img src="../../../assets/icons/Cute Ball - Go.png"
+                style="object-fit: cover; height: 25x; width: 25px;"></button>
+    </div>
+</mat-card>
