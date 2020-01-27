@@ -1,7 +1,7 @@
 import { Sportler } from './Sportler/Sportler';
 import { ISportler } from './Sportler/Sportler';
 import { GzclpProgramm  } from '../Business/TrainingsProgramm/Gzclp';
-import { ISession, SessionKategorie } from '../Business/Session/Session';
+import { ISession  } from '../Business/Session/Session';
 import { IStammUebung, StammUebung, UebungsTyp, UebungsKategorie01, UebungsName } from './Uebung/Uebung_Stammdaten';
 import { TrainingsProgramm } from './TrainingsProgramm/TrainingsProgramm';
 

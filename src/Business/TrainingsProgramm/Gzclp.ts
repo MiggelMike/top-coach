@@ -1,13 +1,23 @@
-import { TrainingsProgramm } from './TrainingsProgramm';
-import { ISession, Session, SessionKategorie, ProgrammTyp } from '../Session/Session';
-import { Satz, SatzTyp, SatzKategorie, SatzStatus, SatzPausen, LiftTyp } from '../Konfiguration/Satz';
-import { GlobalData } from '../../app/services/global.service';
+import { GlobalService } from './../../app/services/global.service';
+import { TrainingsProgramm, ITrainingsProgramm, ProgrammKategorie } from './TrainingsProgramm';
+import { ISession, Session } from '../Session/Session';
+import { Satz, SatzTyp, SatzStatus, SatzPausen, LiftTyp } from '../Konfiguration/Satz';
 import { StammUebung, UebungsName } from '../Uebung/Uebung_Stammdaten';
 
 export class GzclpProgramm extends TrainingsProgramm {
-    constructor(aSessionKategorie: SessionKategorie) {
-        super(aSessionKategorie);
+    constructor(private fGlobalService: GlobalService, aProgrammKategorie: ProgrammKategorie ) {
+        super(aProgrammKategorie);
         this.Tage = 4;
+    }
+
+    protected PreCopy(): ITrainingsProgramm {
+        return new GzclpProgramm(this.fGlobalService, this.ProgrammKategorie);
+    }
+
+    public ErstelleProgrammAusVorlage(): ITrainingsProgramm {
+        const mResult = this.Copy();
+        mResult.ProgrammKategorie = ProgrammKategorie.Konkret;
+        return mResult;
     }
 
     private ErzeugeAufwaermSaetze(aUebung: StammUebung, aLiftTyp: LiftTyp, aSession: Session) {
@@ -50,9 +60,7 @@ export class GzclpProgramm extends TrainingsProgramm {
                 Name: 'Tag ' + aTagNr.toString(),
                 Saetze: [],
                 Datum: null,
-                DauerInSek: 0,
-                Typ: this.SessionKategorie,
-                ProgrammTyp: ProgrammTyp.Gzclp
+                DauerInSek: 0
             } as Session);
 
         mSessions.push(mNeueSession);
@@ -79,7 +87,7 @@ export class GzclpProgramm extends TrainingsProgramm {
 
     private ErzeugeSessions(aT1Uebung: UebungsName, aT2Uebung: UebungsName, aT3Uebung: UebungsName, aNeueSession: Session): void {
         // T1-Lift
-        let mUebung = StammUebung.Kopiere(GlobalData.AppData.SucheUebungPerName(aT1Uebung));
+        let mUebung = StammUebung.Kopiere(this.fGlobalService.AppData.SucheUebungPerName(aT1Uebung));
         this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.GzClpT1, aNeueSession);
         let mNeuerSatz = null;
         // Arbeits-Saetze anfügen
@@ -99,8 +107,8 @@ export class GzclpProgramm extends TrainingsProgramm {
         // Der letzte Satz ist AMRAP
         aNeueSession.Saetze[aNeueSession.Saetze.length - 1].AMRAP = true;
         // T2-Lift
-        mUebung = StammUebung.Kopiere(GlobalData.AppData.SucheUebungPerName(aT2Uebung));
-        if (this.SessionKategorie === SessionKategorie.Konkret) {
+        mUebung = StammUebung.Kopiere(this.fGlobalService.AppData.SucheUebungPerName(aT2Uebung));
+        if (this.ProgrammKategorie === ProgrammKategorie.Konkret) {
             this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.GzClpT2, aNeueSession);
         }
         // Arbeits-Saetze anfügen
@@ -118,7 +126,7 @@ export class GzclpProgramm extends TrainingsProgramm {
             aNeueSession.Saetze.push(mNeuerSatz);
         }
         // T3-Lift
-        mUebung = StammUebung.Kopiere(GlobalData.AppData.SucheUebungPerName(aT3Uebung));
+        mUebung = StammUebung.Kopiere(this.fGlobalService.AppData.SucheUebungPerName(aT3Uebung));
         // Arbeits-Saetze anfügen
         for (let i = 0; i < 3; i++) {
             mNeuerSatz = new Satz();

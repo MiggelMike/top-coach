@@ -14,11 +14,6 @@ export enum LiftTyp {
     GzClpT3 = 'GzClpT3',
 }
 
-export enum SatzKategorie {
-    Vorlage = 'Vorlage',
-    Training = 'Training'
-}
-
 export enum SatzStatus {
     Wartet = 'Wartet',
     Laeuft = 'Läuft',
@@ -42,7 +37,6 @@ export interface ISatz {
     SessionID: number;
     Uebung: StammUebung;
     SatzTyp: SatzTyp;
-    SatzKategorie: SatzKategorie;
     Prozent: number;
     GewichtAusgefuehrt: number;
     WdhAusgefuehrt: number;
@@ -53,6 +47,7 @@ export interface ISatz {
     Status: SatzStatus;
     LiftTyp: LiftTyp;
     AMRAP: boolean;
+    Copy(): ISatz;
 }
 
 export class Satz implements ISatz {
@@ -60,7 +55,6 @@ export class Satz implements ISatz {
     public SessionID: number;
     public Uebung: StammUebung;
     public SatzTyp: SatzTyp;
-    public SatzKategorie: SatzKategorie;
     public Prozent: number;
     public GewichtAusgefuehrt: number;
     public WdhAusgefuehrt: number;
@@ -85,6 +79,23 @@ export class Satz implements ISatz {
         this.PausenMaxZeit = aPara.PausenMaxZeit ? aPara.PausenMaxZeit : SatzPausen.Standard_Max;
         this.Status = aPara.Status ? aPara.Status : SatzStatus.Wartet;
         this.AMRAP = aPara.AMRAP ? aPara.AMRAP : false;
+    }
+
+    public Copy(): ISatz {
+        const mResult = new Satz();
+        mResult.ID = this.ID;
+        mResult.LiftTyp = this.LiftTyp;
+        mResult.AMRAP = this.AMRAP;
+        mResult.PausenMaxZeit = this.PausenMaxZeit;
+        mResult.PausenMinZeit = this.PausenMinZeit;
+        mResult.Prozent = this.Prozent;
+        mResult.SatzTyp = this.SatzTyp;
+        mResult.SessionID = this.SessionID;
+        mResult.Status = this.Status;
+        mResult.Uebung = this.Uebung;
+        mResult.WdhAusgefuehrt = this.WdhAusgefuehrt;
+        mResult.WdhVorgabe = this.WdhVorgabe;
+        return mResult;
     }
 }
 

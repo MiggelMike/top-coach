@@ -1,12 +1,13 @@
+import { DialogeService } from './../../services/dialoge.service';
+import { GlobalService } from './../../services/global.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { ITrainingsProgramm } from '../../../Business/TrainingsProgramm/TrainingsProgramm';
-import { GlobalData } from '../../services/global.service';
 
 
 @Component({
-  selector: 'app-programm01',
-  templateUrl: './programm01.component.html',
-  styleUrls: ['./programm01.component.scss']
+    selector: 'app-programm01',
+    templateUrl: './programm01.component.html',
+    styleUrls: ['./programm01.component.scss']
 })
 
 
@@ -16,18 +17,21 @@ export class Programm01Component implements OnInit {
     @Input() programmLadeContext: boolean | false;
     @Input() programmtext: { value: null };
 
-    constructor() {
+    constructor(private flobalService: GlobalService, private fDialogeService: DialogeService) {
     }
 
     ngOnInit() {
     }
 
     SelectThisWorkoutClick(): void {
-        if (GlobalData.AppData.AktuellesProgramm.Programm !== null) {
-
+        this.fDialogeService.Hinweis('xx');
+        let mOk = (this.flobalService.AppData.AktuellesProgramm.Programm === undefined);
+        if (!mOk) {
+            mOk = false;
         }
-        let x = 0;
-        x++;
+        if (mOk) {
+            this.flobalService.SetzeAktuellesProgramm(this.programm);
+        }
     }
 
 }

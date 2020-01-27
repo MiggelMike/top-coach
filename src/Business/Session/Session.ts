@@ -1,14 +1,5 @@
 import { ISatz } from '../Konfiguration/Satz';
 
-export enum SessionKategorie {
-    Konkret = 'Konkret',
-    Vorlage = 'Vorlage',
-}
-
-export enum ProgrammTyp {
-    Gzclp = 'Gzclp',
-    Custom = 'Custom'
-}
 
 export interface ISession {
     ID: number;
@@ -17,19 +8,16 @@ export interface ISession {
     Saetze: Array<ISatz>;
     Datum: Date;
     DauerInSek: number;
-    Typ: SessionKategorie;
-    ProgrammTyp: ProgrammTyp;
+    Copy(): ISession;
 }
 
-export class Session implements ISession  {
+export class Session implements ISession {
     public ID: number;
     public TagNr: number;
     public Name: string;
     public Saetze: Array<ISatz>;
     public Datum: Date;
     public DauerInSek: number;
-    public Typ: SessionKategorie;
-    public ProgrammTyp: ProgrammTyp;
 
     constructor(aPara: Session = {} as Session) {
         this.ID = aPara.ID;
@@ -37,9 +25,18 @@ export class Session implements ISession  {
         this.Saetze = aPara.Saetze ? aPara.Saetze : [];
         this.Datum = aPara.Datum;
         this.DauerInSek = aPara.DauerInSek;
-        this.Typ = aPara.Typ;
-        this.ProgrammTyp = aPara.ProgrammTyp;
         this.TagNr = aPara.TagNr;
+    }
+
+    public Copy(): ISession {
+        const mResult = new Session();
+        mResult.ID = this.ID;
+        mResult.Name = this.Name;
+        mResult.Datum = this.Datum;
+        mResult.DauerInSek = this.DauerInSek;
+        mResult.TagNr = this.TagNr;
+        this.Saetze.forEach(mSatz => mResult.Saetze.push(mSatz.Copy()) );
+        return mResult;
     }
 }
 

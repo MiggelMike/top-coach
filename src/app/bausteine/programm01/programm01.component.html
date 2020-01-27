@@ -13,7 +13,11 @@
                 <span *ngIf="programmLadeContext; then AuswahlBlock"></span>
                 <ng-template #AuswahlBlock>
                     <div class="col">
-                        <button class="btn btn-secondary" type="button" (click)="SelectThisWorkoutClick()">Select this workout</button>
+                        <button class="btn btn-link" type="button" (click)="SelectThisWorkoutClick()">
+                            Select this workout
+                            <img src="../../../assets/icons/Cute Ball - Go.png" width="20" />
+                        </button>
+                        <!-- Cute Ball - Go -->
                     </div>
                     </ng-template>
             </div>

@@ -1,11 +1,10 @@
+import { GlobalService } from './global.service';
 import { Injectable } from '@angular/core';
-import { Session, SessionKategorie, ProgrammTyp } from '../../Business/Session/Session';
 import { Observable, of, from } from 'rxjs';
-import { ITrainingsProgramm, ProgrammAktion } from '../../Business/TrainingsProgramm/TrainingsProgramm';
-import { GlobalData } from '../../app/services/global.service';
+import { ITrainingsProgramm } from '../../Business/TrainingsProgramm/TrainingsProgramm';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class ProgrammWaehlenService {
 
@@ -13,11 +12,10 @@ export class ProgrammWaehlenService {
 
     ProgrammListe: Array<ITrainingsProgramm> = [];
 
-
+    constructor(private aGlobalService: GlobalService) { }
 
     private LadeProgramme(): void {
-        // GlobalData.StandardVorlagen.forEach( v => v.Aktion = ProgrammAktion.Auswahl);
-        this.ProgrammListe = GlobalData.StandardVorlagen;
+        this.ProgrammListe = this.aGlobalService.StandardVorlagen;
     }
 
     public LadeTrainingsProgramme(): Observable<ITrainingsProgramm[]> {
@@ -32,5 +30,4 @@ export class ProgrammWaehlenService {
         return mResult;
     }
 
-  constructor() { }
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Session, SessionKategorie, ProgrammTyp } from '../../Business/Session/Session';
+import { Session } from '../../Business/Session/Session';
 import { Observable, of, from } from 'rxjs';
+import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 
 export interface ITrainingsProgrammSvc {
     LadeProgramme(): void;
@@ -53,6 +54,10 @@ export class TrainingsProgrammSvc implements ITrainingsProgrammSvc {
             }
         );
         return mResult;
+    }
+
+    public ErzeugeKonkretesProgrammAusVorlage( aVorlageProgramm: ITrainingsProgramm ): void {
+        const m = aVorlageProgramm.ErstelleProgrammAusVorlage();
     }
 
 }

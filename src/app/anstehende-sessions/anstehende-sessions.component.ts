@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TrainingsProgrammSvc } from '../services/trainings-programm-svc.service';
-import { Session, SessionKategorie, ProgrammTyp } from '../../Business/Session/Session';
+import { Session } from '../../Business/Session/Session';
 declare var $: any;
 
 @Component({
