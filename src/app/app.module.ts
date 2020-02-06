@@ -26,7 +26,7 @@ import { Programm01Component } from './bausteine/programm01/programm01.component
 import { Programm02Component } from './bausteine/programm02/programm02.component';
 import { Programm03Component } from './bausteine/programm03/programm03.component';
 import { ProgrammLadeDirective } from './AppDirectives';
-import { HinweisComponent } from './dialoge/hinweis/hinweis.component';
+import { DialogComponent } from './dialoge/hinweis/hinweis.component';
 
 @NgModule({
     declarations: [
@@ -37,7 +37,7 @@ import { HinweisComponent } from './dialoge/hinweis/hinweis.component';
         Programm02Component,
         Programm03Component,
         ProgrammLadeDirective,
-        HinweisComponent
+        DialogComponent
     ],
     imports: [
         BrowserModule,
@@ -59,7 +59,7 @@ import { HinweisComponent } from './dialoge/hinweis/hinweis.component';
 
 
     ],
-    entryComponents: [HinweisComponent],
+    entryComponents: [DialogComponent],
     providers: [MatDialog],
     bootstrap: [AppComponent]
 })

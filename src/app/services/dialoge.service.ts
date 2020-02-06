@@ -1,33 +1,40 @@
 import { Injectable } from '@angular/core';
-import { HinweisComponent } from '../dialoge/hinweis/hinweis.component';
+import { DialogComponent, DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MatDialogConfig, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+export enum DialogTyp {
+    Hinweis = 'Hinweis',
+    Frage = 'Frage'
+}
+
 
 @Injectable({
     providedIn: 'root'
 })
 export class DialogeService {
 
-    name: string;
-    animal: string;
     constructor(public fDialog: MatDialog) { }
 
-    public Hinweis(aText: string): void {
+    private DialogBasis(aDialogData: DialogData): void {
         const mDialogConfig = new MatDialogConfig();
-        mDialogConfig.width = '250px';
-        mDialogConfig.height = '250px';
+        mDialogConfig.width = 'auto';
+        mDialogConfig.height = '280px';
         mDialogConfig.disableClose = true;
         mDialogConfig.autoFocus = true;
+        mDialogConfig.data = aDialogData;
 
-        mDialogConfig.data = {
-            text: 'aText',
-            name: this.name,
-            animal: this.animal,
-            ok: false
-        };
-
-        const dialogRef = this.fDialog.open(HinweisComponent, mDialogConfig );
+        const dialogRef = this.fDialog.open(DialogComponent, mDialogConfig );
         dialogRef.afterClosed().subscribe(result => {
-            this.animal = result;
         });
+    }
+
+    public Hinweis(aDialogData: DialogData): void {
+        aDialogData.typ = DialogTyp.Hinweis;
+        this.DialogBasis(aDialogData);
+    }
+
+    public JaNein(aDialogData: DialogData): void {
+        aDialogData.typ = DialogTyp.Frage;
+        this.DialogBasis(aDialogData);
     }
 }

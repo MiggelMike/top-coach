@@ -1,24 +1,45 @@
+import { DialogTyp } from './../../services/dialoge.service';
 import { Component, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-export interface DialogData {
-    animal: string;
-    name: string;
+interface IOkCallback {
+    () : void;
 }
+
+
+export class DialogData {
+    textZeilen: Array<string> = [];
+    typ: DialogTyp;
+    OkFn: IOkCallback;
+    CancelFn: any;
+    OkData: any;
+    CancelData: any;
+}
+
+
 
 @Component({
     selector: 'app-hinweis',
     templateUrl: './hinweis.component.html',
     styleUrls: ['./hinweis.component.scss']
 })
+    
+    
 
-export class HinweisComponent {
+export class DialogComponent {
 
     constructor(
-        public dialogRef: MatDialogRef<HinweisComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
+        public dialogRef: MatDialogRef<DialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: DialogData
+    ) { }
 
     onOkClick(): void {
+        this.dialogRef.close();
+        if (this.data.OkFn !== undefined)
+            this.data.OkFn();
+    }
+
+    onCancelClick(): void {
         this.dialogRef.close();
     }
 }
