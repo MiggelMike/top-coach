@@ -1,7 +1,6 @@
+import { GlobalService } from './../services/global.service';
 import { Component, OnInit } from '@angular/core';
-import { TrainingsProgrammSvc } from '../services/trainings-programm-svc.service';
 import { Session } from '../../Business/Session/Session';
-declare var $: any;
 
 @Component({
     selector: 'app-anstehende-sessions',
@@ -13,11 +12,11 @@ export class AnstehendeSessionsComponent implements OnInit {
     public NextSessions: Array<Session> = [];
     public AnstehendeSessionObserver;
 
-    constructor(private trainingsProgrammSvcService: TrainingsProgrammSvc) {
+    constructor(private globalService: GlobalService ) {
      }
 
     ngOnInit() {
-        this.AnstehendeSessionObserver = this.trainingsProgrammSvcService.LadeAnstehendeSession();
+        this.AnstehendeSessionObserver = this.globalService.LadeAnstehendeSession();// .Daten.AktuellesProgramm.Programm.SessionListe;// .trainingsProgrammSvcService.LadeAnstehendeSession();
         this.NextSessions = this.LadeSessions();
     }
 

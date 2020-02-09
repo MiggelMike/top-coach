@@ -1,11 +1,13 @@
+import { TrainingsProgrammSvc } from './trainings-programm-svc.service';
+import { UebungService } from './uebung.service';
+import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Injectable } from '@angular/core';
 import { Sportler, ISportler } from '../../Business/Sportler/Sportler';
-import { GzclpProgramm  } from '../../Business/TrainingsProgramm/Gzclp';
-import { ISession  } from '../../Business/Session/Session';
-import { IStammUebung, StammUebung, UebungsTyp, UebungsKategorie01, UebungsName } from '../../Business/Uebung/Uebung_Stammdaten';
-import { TrainingsProgramm, ITrainingsProgramm, ProgrammKategorie } from '../../Business/TrainingsProgramm/TrainingsProgramm';
-import { TrainingsProgrammSvc } from './trainings-programm-svc.service';
-import { DialogeService } from './dialoge.service';
+// import { GzclpProgramm  } from '../../Business/TrainingsProgramm/Gzclp';
+import { ISession } from '../../Business/Session/Session';
+import { IStammUebung } from '../../Business/Uebung/Uebung_Stammdaten';
+import { Observable, of, from } from 'rxjs';
+import { JsonProperty, deserialize, serialize } from '@peerlancers/json-serialization';
 
 export enum SpeicherOrtTyp {
     Lokal = 'Lokal',
@@ -26,13 +28,16 @@ export enum StorageItemTyp {
 }
 
 export class AktuellesProgramm {
+    @JsonProperty()
     ProgrammTyp: ProgrammTyp;
+    @JsonProperty()
     Programm: ITrainingsProgramm;
 }
 
 export class AppDataMap {
     public Sessions: Array<ISession> = [];
-    public Uebungen: Array<IStammUebung> = [];
+    // public Uebungen: Array<IStammUebung> = [];
+    @JsonProperty()
     public AktuellesProgramm = new AktuellesProgramm();
 }
 
@@ -43,15 +48,18 @@ export class AppDataMap {
 })
 export class GlobalService {
     public Sportler: Sportler;
+    public AnstehendeSessionObserver;
     public StandardVorlagen = new Array<ITrainingsProgramm>();
     // public AktuellesProgramm = new AktuellesProgramm();
     public Daten: AppDataMap = new AppDataMap();
-    private readonly cAppData: string = 'AppData';
+    // private readonly cAppData: string = 'AppData';
+    private readonly cAktuellesTrainingsProgramm: string = 'AktuellesTrainingsProgramm';
 
-    constructor(private fTrainingsProgrammSvc: TrainingsProgrammSvc, private fDialogeService: DialogeService) {
+
+    constructor(private fUebungService: UebungService, private fTrainingsProgrammSvc: TrainingsProgrammSvc) {
         this.LadeDaten(SpeicherOrtTyp.Lokal);
-        if (this.Daten.Uebungen.length === 0) {
-            this.ErzeugeUebungStammdaten();
+        if (this.fUebungService.Uebungen.length === 0) {
+            this.fUebungService.ErzeugeUebungStammdaten();
             this.SpeicherDaten(SpeicherOrtTyp.Lokal);
         }
         this.Init();
@@ -62,16 +70,9 @@ export class GlobalService {
 
     Init(): void {
         this.Sportler = new Sportler();
-        this.ErzeugeStandardVorlagen();
+        this.StandardVorlagen = this.fTrainingsProgrammSvc.ErzeugeStandardVorlagen();
     }
-
-    ErzeugeStandardVorlagen(): void {
-        const mGzclpProgramm = new GzclpProgramm(this, ProgrammKategorie.Vorlage);
-        mGzclpProgramm.Name = 'GZCLP - Standard';
-        const mSessions = new Array<ISession>();
-        mGzclpProgramm.Init(mSessions);
-        this.StandardVorlagen.push(mGzclpProgramm);
-    }
+    
 
     ProgrammWaehlen(): void {
         const mInfo: Array<string> = [];
@@ -92,29 +93,26 @@ export class GlobalService {
     SetzeAktuellesProgramm(aAktuellesProgramm: ITrainingsProgramm): void {
         this.Daten.AktuellesProgramm.Programm = aAktuellesProgramm.ErstelleProgrammAusVorlage();
         this.SpeicherDaten(SpeicherOrtTyp.Lokal);
-        // aAktuellesProgramm. ErzeugeKonkretesProgrammAusVorlage
-        // this.AppData.AktuellesProgramm.Programm = new
-        // let y = aAktuellesProgramm;
     }
 
-
-    public SucheUebungPerName(aName: UebungsName ): StammUebung {
-        return this.Daten.Uebungen.find( u => u.Name = aName);
-    }
-
-    public ErzeugeUebungStammdaten() {
-        const mKategorieen01 = [];
-        const mGzclpKategorieen01 = StammUebung.ErzeugeGzclpKategorieen01();
-        for (const mUeb in UebungsName) {
-            if (mUeb) {
-                this.Daten.Uebungen.push(StammUebung.NeueStammUebung(
-                    this.Daten.Uebungen.length + 1,
-                    mUeb,
-                    UebungsTyp.Kraft,
-                    mKategorieen01.concat(mGzclpKategorieen01)));
+    public LadeAnstehendeSession(): Observable<ISession[]> {
+        const mResult = new Observable<ISession[]>(
+            observer => {
+                this.AnstehendeSessionObserver = observer;
+                if ((this.Daten.AktuellesProgramm.Programm !== null) &&
+                    (this.Daten.AktuellesProgramm.Programm !== undefined) &&
+                    (this.Daten.AktuellesProgramm.Programm.SessionListe !== undefined))
+                    observer.next(this.Daten.AktuellesProgramm.Programm.SessionListe);
+                else
+                    observer.next([]);
             }
-        }
+        );
+        return mResult;
     }
+
+
+
+   
 
     public LadeDaten(aSpeicherort: SpeicherOrtTyp) {
         switch (aSpeicherort) {
@@ -137,12 +135,24 @@ export class GlobalService {
     }
 
     private LadeDatenLokal() {
-        const s = localStorage.getItem(this.cAppData);
-        this.Daten = JSON.parse(s);
+        const s = localStorage.getItem(this.cAktuellesTrainingsProgramm);
+        if (s !== 'undefined') {
+            const mProgramm = JSON.parse(s);
+            if (mProgramm !== null)
+                this.Daten.AktuellesProgramm.Programm = mProgramm;
+        }
+        // if (s !== '{}') {
+        //     const m = new AppDataMap();
+        //     this.Daten = deserialize(AppDataMap, AppDataMap);
+        //     // this.Daten = JSON.parse(s);
+        // }
     }
 
     private SpeicherDatenLokal() {
-        localStorage.setItem(this.cAppData, JSON.stringify(this.Daten));
+        if (this.Daten.AktuellesProgramm.Programm !== undefined) {
+            let mStoreData = serialize(this.Daten.AktuellesProgramm.Programm);
+            localStorage.setItem(this.cAktuellesTrainingsProgramm, JSON.stringify(mStoreData));
+        }
     }
 
     private LadeDatenFacebook() {
@@ -172,6 +182,11 @@ export class GlobalService {
                 break;
         }
     }
+
+    public Kopiere(aUebung: IStammUebung): IStammUebung {
+        return this.fUebungService.Kopiere(aUebung);
+    }
+
 
 }
 

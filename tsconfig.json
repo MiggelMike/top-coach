@@ -12,6 +12,7 @@
     "importHelpers": true,
     "target": "es2015",
     "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
     "typeRoots": [
       "node_modules/@types"
     ],

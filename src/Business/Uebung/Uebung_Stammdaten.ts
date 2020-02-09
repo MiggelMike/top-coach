@@ -1,3 +1,5 @@
+import { JsonProperty } from '@peerlancers/json-serialization';
+
 export enum UebungsTyp {
     Custom = 'Custom',
     Kraft = 'Kraft',
@@ -44,9 +46,13 @@ export interface IStammUebung {
 }
 
 export class StammUebung implements IStammUebung {
+    @JsonProperty()
     ID: number;
+    @JsonProperty()
     Name: string;
+    @JsonProperty()
     Typ: UebungsTyp;
+    @JsonProperty()
     Kategorieen01: Array<UebungsKategorie01> = [];
 
     public static NeueStammUebung(
@@ -74,7 +80,6 @@ export class StammUebung implements IStammUebung {
         );
 
     }
-    public static Kopiere(aUebung: StammUebung): StammUebung {
-        return StammUebung.NeueStammUebung(aUebung.ID, aUebung.Name, aUebung.Typ, aUebung.Kategorieen01);
-    }
+
+ 
 }

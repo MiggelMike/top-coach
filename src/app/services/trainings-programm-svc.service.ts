@@ -1,7 +1,11 @@
+import { UebungService } from './uebung.service';
+import { GzclpProgramm } from './../../Business/TrainingsProgramm/Gzclp';
 import { Injectable } from '@angular/core';
-import { Session } from '../../Business/Session/Session';
+import { ISession } from '../../Business/Session/Session';
 import { Observable, of, from } from 'rxjs';
-import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
+import { ITrainingsProgramm, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
+
+
 
 export interface ITrainingsProgrammSvc {
     LadeProgramme(): void;
@@ -14,9 +18,7 @@ export interface ITrainingsProgrammSvc {
 
 export class TrainingsProgrammSvc implements ITrainingsProgrammSvc {
 
-    public AnstehendeSessionObserver;
-
-    ListeAnstehenderSessions: Array<Session> = [];
+    // ListeAnstehenderSessions: Array<Session> = [];
     //     {
     //         ID: 1,
     //         TagNr: 1,
@@ -39,25 +41,27 @@ export class TrainingsProgrammSvc implements ITrainingsProgrammSvc {
     //     }
     // ] ;
 
-    constructor() { }
+    constructor(private fUebungService: UebungService) { }
 
 
     public LadeProgramme() {
 
     }
 
-    public LadeAnstehendeSession(): Observable<Session[]> {
-        const mResult = new Observable<Session[]>(
-            observer => {
-                this.AnstehendeSessionObserver = observer;
-                observer.next(this.ListeAnstehenderSessions);
-            }
-        );
-        return mResult;
-    }
+
 
     public ErzeugeKonkretesProgrammAusVorlage( aVorlageProgramm: ITrainingsProgramm ): void {
         const m = aVorlageProgramm.ErstelleProgrammAusVorlage();
+    }
+
+    public ErzeugeStandardVorlagen(): Array<ITrainingsProgramm>{
+        const mResult = new Array<ITrainingsProgramm>();
+        const mGzclpProgramm = new GzclpProgramm(this.fUebungService, ProgrammKategorie.Vorlage);
+        mGzclpProgramm.Name = 'GZCLP - Standard';
+        const mSessions = new Array<ISession>();
+        mGzclpProgramm.Init(mSessions);
+        mResult.push(mGzclpProgramm);
+        return mResult;
     }
 
 }
