@@ -1,8 +1,8 @@
 <div class="container">
     <h4>Upcoming Sessions</h4>
-
-
     <div *ngFor="let item of NextSessions">
+        <!-- [programmLadeContext]= "false": Der Auswähl-Button für das jeweilige Workout wir NICHT gezeigt. -->
+        <app-programm01 [programmLadeContext]="false" [programm]="item"></app-programm01>
 
         <!-- <div class="row row-height">
 
@@ -19,10 +19,9 @@
         </div> -->
 
 
-        <mat-expansion-panel>
+        <!-- <mat-expansion-panel>
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    {{item.TagNr}}
                 </mat-panel-title>
                 <mat-panel-description>
                     {{item.Name}}
@@ -30,7 +29,7 @@
             </mat-expansion-panel-header>
 
             <p>This is the primary content of the panel.</p>
-        </mat-expansion-panel>
+        </mat-expansion-panel> -->
     </div>
 
 

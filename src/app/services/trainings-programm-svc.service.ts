@@ -2,9 +2,7 @@ import { UebungService } from './uebung.service';
 import { GzclpProgramm } from './../../Business/TrainingsProgramm/Gzclp';
 import { Injectable } from '@angular/core';
 import { ISession } from '../../Business/Session/Session';
-import { Observable, of, from } from 'rxjs';
 import { ITrainingsProgramm, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
-
 
 
 export interface ITrainingsProgrammSvc {
@@ -18,31 +16,7 @@ export interface ITrainingsProgrammSvc {
 
 export class TrainingsProgrammSvc implements ITrainingsProgrammSvc {
 
-    // ListeAnstehenderSessions: Array<Session> = [];
-    //     {
-    //         ID: 1,
-    //         TagNr: 1,
-    //         Name: 'aPara.Name',
-    //         Saetze: [],
-    //         Datum: new Date(),
-    //         DauerInSek: 1,
-    //         Typ: SessionKategorie.Konkret,
-    //         ProgrammTyp: ProgrammTyp.Custom
-    //     },
-    //     {
-    //         ID: 2,
-    //         TagNr: 2,
-    //         Name: 'aPara.Name',
-    //         Saetze: [],
-    //         Datum: new Date(),
-    //         DauerInSek: 2,
-    //         Typ: SessionKategorie.Konkret,
-    //         ProgrammTyp: ProgrammTyp.Custom
-    //     }
-    // ] ;
-
     constructor(private fUebungService: UebungService) { }
-
 
     public LadeProgramme() {
 

@@ -1,6 +1,9 @@
-import { GlobalService } from './../services/global.service';
+import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
+import { ISession } from './../../Business/Session/Session';
+import { GlobalService, AktuellesProgramm } from './../services/global.service';
 import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
+import { Subscriber, Observable } from 'rxjs';
 
 @Component({
     selector: 'app-anstehende-sessions',
@@ -9,20 +12,28 @@ import { Session } from '../../Business/Session/Session';
 })
 export class AnstehendeSessionsComponent implements OnInit {
     public isCollapsed = false;
-    public NextSessions: Array<Session> = [];
-    public AnstehendeSessionObserver;
+    public AktuellesProgramm: ITrainingsProgramm;
+    public NextSessions: Array<ISession> = [];
+    public AnstehendeSessionObserver: Observable<ISession[]>;
 
-    constructor(private globalService: GlobalService ) {
+    constructor(private globalService: GlobalService) {
      }
 
     ngOnInit() {
-        this.AnstehendeSessionObserver = this.globalService.LadeAnstehendeSession();// .Daten.AktuellesProgramm.Programm.SessionListe;// .trainingsProgrammSvcService.LadeAnstehendeSession();
+        this.AktuellesProgramm = this.globalService.Daten.AktuellesProgramm.Programm;
+        if (this.AktuellesProgramm !== undefined)
+            this.AktuellesProgramm.SessionListe = [];
+        this.AnstehendeSessionObserver = this.globalService.LadeAnstehendeSession();
+        // .Daten.AktuellesProgramm.Programm.SessionListe;// .trainingsProgrammSvcService.LadeAnstehendeSession();
         this.NextSessions = this.LadeSessions();
     }
 
     public LadeSessions(): Array<Session> {
-        this.AnstehendeSessionObserver.subscribe( (sessions: Array<Session>) => {
-            this.NextSessions = sessions;
+        this.AnstehendeSessionObserver.subscribe((sessions: Array<Session>) => {
+            if (sessions === null)
+                this.NextSessions = [];
+            else
+                this.NextSessions = sessions;
         });
         return this.NextSessions;
     }

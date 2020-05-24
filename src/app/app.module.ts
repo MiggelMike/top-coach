@@ -28,6 +28,13 @@ import { Programm03Component } from './bausteine/programm03/programm03.component
 import { ProgrammLadeDirective } from './AppDirectives';
 import { DialogComponent } from './dialoge/hinweis/hinweis.component';
 
+import { OverlayModule } from '@angular/cdk/overlay';
+import { FilePreviewOverlayComponent } from './file-preview-overlay/file-preview-overlay.component';
+import { FilePreviewOverlayService } from './services/file-preview-overlay.service';
+import { ReactiveFormsModule } from '@angular/forms';
+
+// var sqlite3 = require('sqlite3');
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -37,7 +44,8 @@ import { DialogComponent } from './dialoge/hinweis/hinweis.component';
         Programm02Component,
         Programm03Component,
         ProgrammLadeDirective,
-        DialogComponent
+        DialogComponent,
+        FilePreviewOverlayComponent
     ],
     imports: [
         BrowserModule,
@@ -55,12 +63,26 @@ import { DialogComponent } from './dialoge/hinweis/hinweis.component';
         MatInputModule,
         MatRippleModule,
         FormsModule,
-        MatDialogModule
+        MatDialogModule,
+        OverlayModule,
+        ReactiveFormsModule
 
 
     ],
-    entryComponents: [DialogComponent],
-    providers: [MatDialog],
+
+    entryComponents: [
+        // DialogComponent,
+        FilePreviewOverlayComponent
+    ],
+    providers: [MatDialog, FilePreviewOverlayService],
     bootstrap: [AppComponent]
 })
-export class AppModule {}
+    
+    
+export class AppModule {
+
+
+
+}
+
+

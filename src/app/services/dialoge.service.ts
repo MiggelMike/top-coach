@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DialogComponent, DialogData } from '../dialoge/hinweis/hinweis.component';
-import { MatDialogConfig, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogConfig, MatDialog, DialogPosition, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export enum DialogTyp {
     Hinweis = 'Hinweis',
@@ -13,7 +13,8 @@ export enum DialogTyp {
 })
 export class DialogeService {
 
-    constructor(public fDialog: MatDialog) { }
+    constructor(public fDialog: MatDialog) {
+     }
 
     private DialogBasis(aDialogData: DialogData): void {
         const mDialogConfig = new MatDialogConfig();
@@ -22,6 +23,8 @@ export class DialogeService {
         mDialogConfig.disableClose = true;
         mDialogConfig.autoFocus = true;
         mDialogConfig.data = aDialogData;
+        mDialogConfig.hasBackdrop = false;
+        
 
         const dialogRef = this.fDialog.open(DialogComponent, mDialogConfig );
         dialogRef.afterClosed().subscribe(result => {

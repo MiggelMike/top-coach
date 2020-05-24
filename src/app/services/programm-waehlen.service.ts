@@ -10,7 +10,7 @@ export class ProgrammWaehlenService {
 
     public ProgrammWahlObserver;
 
-    ProgrammListe: Array<ITrainingsProgramm> = [];
+    public ProgrammListe: Array<ITrainingsProgramm> = [];
 
     constructor(private aGlobalService: GlobalService) { }
 
@@ -26,7 +26,6 @@ export class ProgrammWaehlenService {
                 observer.next(this.ProgrammListe);
             }
         );
-
         return mResult;
     }
 

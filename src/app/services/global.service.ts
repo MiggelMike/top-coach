@@ -6,7 +6,7 @@ import { Sportler, ISportler } from '../../Business/Sportler/Sportler';
 // import { GzclpProgramm  } from '../../Business/TrainingsProgramm/Gzclp';
 import { ISession } from '../../Business/Session/Session';
 import { IStammUebung } from '../../Business/Uebung/Uebung_Stammdaten';
-import { Observable, of, from } from 'rxjs';
+import { Observable, of, from, Subscriber } from 'rxjs';
 import { JsonProperty, deserialize, serialize } from '@peerlancers/json-serialization';
 
 export enum SpeicherOrtTyp {
@@ -22,7 +22,7 @@ export enum ProgrammTyp {
 }
 
 export enum StorageItemTyp {
-    LetzterSpeicherOrt,
+    LetzterSpeicherOrt,   
     AktuellesProgramm,
     AppData
 }
@@ -35,10 +35,18 @@ export class AktuellesProgramm {
 }
 
 export class AppDataMap {
+    @JsonProperty()
+    public LetzteProgrammID: number = 0;
+    @JsonProperty()
+    public LetzteSessionID: number = 0;
+    @JsonProperty()
+    public LetzteSatzID: number = 0;
+    @JsonProperty()
     public Sessions: Array<ISession> = [];
     // public Uebungen: Array<IStammUebung> = [];
     @JsonProperty()
     public AktuellesProgramm = new AktuellesProgramm();
+    public TrainingsHistorie = [];
 }
 
 
@@ -48,15 +56,16 @@ export class AppDataMap {
 })
 export class GlobalService {
     public Sportler: Sportler;
-    public AnstehendeSessionObserver;
+    public AnstehendeSessionObserver : Subscriber<ISession[]>;
     public StandardVorlagen = new Array<ITrainingsProgramm>();
-    // public AktuellesProgramm = new AktuellesProgramm();
     public Daten: AppDataMap = new AppDataMap();
-    // private readonly cAppData: string = 'AppData';
+    public DB: any;
+    
     private readonly cAktuellesTrainingsProgramm: string = 'AktuellesTrainingsProgramm';
 
 
     constructor(private fUebungService: UebungService, private fTrainingsProgrammSvc: TrainingsProgrammSvc) {
+    
         this.LadeDaten(SpeicherOrtTyp.Lokal);
         if (this.fUebungService.Uebungen.length === 0) {
             this.fUebungService.ErzeugeUebungStammdaten();
@@ -110,10 +119,6 @@ export class GlobalService {
         return mResult;
     }
 
-
-
-   
-
     public LadeDaten(aSpeicherort: SpeicherOrtTyp) {
         switch (aSpeicherort) {
             case SpeicherOrtTyp.Facebook:
@@ -135,6 +140,7 @@ export class GlobalService {
     }
 
     private LadeDatenLokal() {
+       // localStorage.clear();
         const s = localStorage.getItem(this.cAktuellesTrainingsProgramm);
         if (s !== 'undefined') {
             const mProgramm = JSON.parse(s);
