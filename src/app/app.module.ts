@@ -71,7 +71,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     ],
 
     entryComponents: [
-        // DialogComponent,
+        DialogComponent,
         FilePreviewOverlayComponent
     ],
     providers: [MatDialog, FilePreviewOverlayService],

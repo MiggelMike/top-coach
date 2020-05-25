@@ -15,27 +15,25 @@ export class Programm01Component implements OnInit {
     @Input() programmLadeContext: boolean | false;
     @Input() programmtext: { value: null };
 
-    constructor(private fDialogeService: DialogeService) {
-    //constructor() {
-        // constructor(private flobalService: GlobalService, private fDialogeService: DialogeService) {
+    constructor(private flobalService: GlobalService, private fDialogeService: DialogeService) {
     }
 
     ngOnInit() {
     }
 
     SelectThisWorkoutClick(): void {
-        // if (this.flobalService.Daten.AktuellesProgramm.Programm !== undefined) {
-        //     const mDialogData = new DialogData();
-        //     mDialogData.textZeilen.push(`Replace current Program "${this.flobalService.Daten.AktuellesProgramm.Programm.Name}" with "${this.programm.Name}" ?`);
-        //     mDialogData.OkData = this.programm;
-        //     mDialogData.OkFn = () => {
-        //         this.flobalService.SetzeAktuellesProgramm(mDialogData.OkData);
-        //     };
+        if (this.flobalService.Daten.AktuellesProgramm.Programm !== undefined) {
+            const mDialogData = new DialogData();
+            mDialogData.textZeilen.push(`Replace current Program "${this.flobalService.Daten.AktuellesProgramm.Programm.Name}" with "${this.programm.Name}" ?`);
+            mDialogData.OkData = this.programm;
+            mDialogData.OkFn = () => {
+                this.flobalService.SetzeAktuellesProgramm(mDialogData.OkData);
+            };
 
-        //     this.fDialogeService.JaNein(mDialogData)
-        // }else{
-        //     this.flobalService.SetzeAktuellesProgramm(this.programm);
-        // }
+            this.fDialogeService.JaNein(mDialogData)
+        }else{
+            this.flobalService.SetzeAktuellesProgramm(this.programm);
+        }
     }
 
 }

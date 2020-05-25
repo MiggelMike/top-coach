@@ -6,7 +6,6 @@ interface IOkCallback {
     () : void;
 }
 
-
 export class DialogData {
     textZeilen: Array<string> = [];
     typ: DialogTyp;
@@ -16,15 +15,11 @@ export class DialogData {
     CancelData: any;
 }
 
-
-
 @Component({
     selector: 'app-hinweis',
     templateUrl: './hinweis.component.html',
     styleUrls: ['./hinweis.component.scss']
 })
-    
-    
 
 export class DialogComponent {
 

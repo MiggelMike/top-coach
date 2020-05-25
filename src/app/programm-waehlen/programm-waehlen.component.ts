@@ -41,19 +41,4 @@ export class ProgrammWaehlenComponent implements OnInit {
     public TrainingsProgrammeVorhanden(): Boolean {
         return (this.ProgrammListe.length > 0);
     }
-
-    SelectThisWorkoutClick(): void {
-        // if (this.flobalService.Daten.AktuellesProgramm.Programm !== undefined) {
-        //     const mDialogData = new DialogData();
-        //     mDialogData.textZeilen.push(`Replace current Program "${this.flobalService.Daten.AktuellesProgramm.Programm.Name}" with "${aProgramm.Name}" ?`);
-        //     mDialogData.OkData = this.ProgrammListe;
-        //     mDialogData.OkFn = () => {
-        //         this.flobalService.SetzeAktuellesProgramm(mDialogData.OkData);
-        //     };
-
-        //     this.fDialogeService.JaNein(mDialogData)
-        // }else{
-        //     this.flobalService.SetzeAktuellesProgramm(aProgramm);
-        // }
-    }
 }
