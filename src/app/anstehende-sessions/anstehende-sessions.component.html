@@ -1,14 +1,15 @@
 <div class="container">
     <h4>Upcoming Sessions</h4>
-
-
+    <div *ngIf="AktuellesProgramm">
+        <h6>{{AktuellesProgramm.Name}}</h6>
+    </div>
     <div *ngIf="((AktuellesProgramm) && (AktuellesProgramm.SessionListe) && (AktuellesProgramm.SessionListe.length > 0))">
         <div *ngFor="let sess of AktuellesProgramm.SessionListe, index as i">
             <mat-accordion>
-                <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel [expanded]="true" >
                     <mat-expansion-panel-header>
                         <h2 class="mb-0">
-                            <button class="btn btn-link" type="button" data-toggle="collapse"
+                            <button class="btn btn-link" type="button" data-toggle="expand"
                                 [attr.data-target]="'#collapseSession' + i" aria-expanded="true"
                                 [attr.aria-controls]="'collapseSession' + i">
                                 {{sess.Name}}
@@ -17,7 +18,7 @@
                         <span>{{sess.name}}</span>
                     </mat-expansion-panel-header>
     
-                    <div [id]="'collapseSession' + i" aria-labelledby="headingOne" attr.data-parent="#accordionSession">
+                    <div [id]="'collapseSession' + i" class="expand" aria-labelledby="headingOne" attr.data-parent="#accordionSession">
                         <div class="card-body">
                             <!-- session an Sub-Komponente durchreichen -->
                             <app-programm03 [session]="sess"></app-programm03>

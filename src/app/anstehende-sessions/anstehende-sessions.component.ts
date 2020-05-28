@@ -1,12 +1,9 @@
-import { MatAccordion } from '@angular/material/expansion';
-import { MatExpansionPanel } from '@angular/material/expansion';
 import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { ISession } from './../../Business/Session/Session';
-import { GlobalService, AktuellesProgramm } from './../services/global.service';
-import { Component, OnInit, ViewChild, ViewChildren, QueryList, ChangeDetectorRef, NgZone } from '@angular/core';
+import { GlobalService } from './../services/global.service';
+import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
-import { Subscriber, Observable } from 'rxjs';
-import { MatGridTileHeaderCssMatStyler } from '@angular/material';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -21,7 +18,7 @@ export class AnstehendeSessionsComponent implements OnInit {
     public NextSessions: Array<ISession> = [];
     public AnstehendeSessionObserver: Observable<ISession[]>;
  
-    constructor(private fZone: NgZone, private globalService: GlobalService ) {
+    constructor( private globalService: GlobalService ) {
         
     }
 
@@ -30,7 +27,7 @@ export class AnstehendeSessionsComponent implements OnInit {
         this.AnstehendeSessionObserver = this.globalService.LadeAnstehendeSession();
         this.AktuellesProgramm.SessionListe = this.LadeSessions();
     }
-    
+
     public LadeSessions(): Array<Session> {
         this.AnstehendeSessionObserver.subscribe((sessions: Array<Session>) => {
             if (sessions === null)
