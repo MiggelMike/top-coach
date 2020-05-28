@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import { ITrainingsProgramm } from '../../../Business/TrainingsProgramm/TrainingsProgramm';
+
+import { ISession } from 'src/Business/Session/Session';
 
 @Component({
   selector: 'app-programm02',
@@ -8,11 +9,23 @@ import { ITrainingsProgramm } from '../../../Business/TrainingsProgramm/Training
   styleUrls: ['./programm02.component.scss']
 })
 export class Programm02Component implements OnInit {
-   @Input() programm: ITrainingsProgramm;
+  @Input() SessionListe: Array<ISession> = [];
+  //  @ViewChild('sessionAccordion') accordionSession: MatAccordion;
 
   constructor() { }
 
+
   ngOnInit() {
+  }
+
+  ngAfterViewInit() {
+    // if (this.matExpansionPanelQueryList) {
+    //   this.matExpansionPanelQueryList.changes.subscribe(
+    //     change => {
+    //       change.open();
+    //     }
+    //   );
+    // }
   }
 
 }

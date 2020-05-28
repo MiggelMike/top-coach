@@ -22,7 +22,7 @@ export enum ProgrammTyp {
 }
 
 export enum StorageItemTyp {
-    LetzterSpeicherOrt,   
+    LetzterSpeicherOrt,
     AktuellesProgramm,
     AppData
 }
@@ -45,8 +45,11 @@ export class AppDataMap {
     public Sessions: Array<ISession> = [];
     // public Uebungen: Array<IStammUebung> = [];
     @JsonProperty()
+    public TrainingsHistorie: Array<ISession> = [];
+    @JsonProperty()
     public AktuellesProgramm = new AktuellesProgramm();
-    public TrainingsHistorie = [];
+    @JsonProperty()
+    public AktuelleSession: ISession;
 }
 
 
@@ -56,16 +59,17 @@ export class AppDataMap {
 })
 export class GlobalService {
     public Sportler: Sportler;
-    public AnstehendeSessionObserver : Subscriber<ISession[]>;
+    public AnstehendeSessionObserver: Subscriber<ISession[]>;
     public StandardVorlagen = new Array<ITrainingsProgramm>();
     public Daten: AppDataMap = new AppDataMap();
     public DB: any;
-    
+
     private readonly cAktuellesTrainingsProgramm: string = 'AktuellesTrainingsProgramm';
+    private readonly cTrainingsHistorie: string = 'TrainingsHistorie';
 
 
     constructor(private fUebungService: UebungService, private fTrainingsProgrammSvc: TrainingsProgrammSvc) {
-    
+
         this.LadeDaten(SpeicherOrtTyp.Lokal);
         if (this.fUebungService.Uebungen.length === 0) {
             this.fUebungService.ErzeugeUebungStammdaten();
@@ -81,7 +85,7 @@ export class GlobalService {
         this.Sportler = new Sportler();
         this.StandardVorlagen = this.fTrainingsProgrammSvc.ErzeugeStandardVorlagen();
     }
-    
+
 
     ProgrammWaehlen(): void {
         const mInfo: Array<string> = [];
@@ -110,13 +114,22 @@ export class GlobalService {
                 this.AnstehendeSessionObserver = observer;
                 if ((this.Daten.AktuellesProgramm.Programm !== null) &&
                     (this.Daten.AktuellesProgramm.Programm !== undefined) &&
-                    (this.Daten.AktuellesProgramm.Programm.SessionListe !== undefined))
-                    observer.next(this.Daten.AktuellesProgramm.Programm.SessionListe);
+                    (this.Daten.AktuellesProgramm.Programm.SessionListe !== undefined)) {
+                    // Es gibt anstehende Sessions.
+                    // Jetzt muss geprüft werden, welche angezeigt werden. 
+                    // Letzte Sessions laden.
+                    if (this.LadeSessionHistorieLokal()) {
+                        
+                    } else {
+                        observer.next(this.Daten.AktuellesProgramm.Programm.SessionListe);
+                    }
+                }
                 else
-                    observer.next([]);
+                    observer. next([]);
+                    
             }
         );
-        return mResult;
+        return mResult; 
     }
 
     public LadeDaten(aSpeicherort: SpeicherOrtTyp) {
@@ -140,13 +153,16 @@ export class GlobalService {
     }
 
     private LadeDatenLokal() {
-       // localStorage.clear();
+        // localStorage.clear();
         const s = localStorage.getItem(this.cAktuellesTrainingsProgramm);
         if (s !== 'undefined') {
-            const mProgramm = JSON.parse(s);
-            if (mProgramm !== null)
-                this.Daten.AktuellesProgramm.Programm = mProgramm;
+            const mParseResult = JSON.parse(s);
+            if (mParseResult !== null)
+                this.Daten.AktuellesProgramm.Programm = mParseResult;
         }
+
+        this.LadeSessionHistorieLokal();
+
         // if (s !== '{}') {
         //     const m = new AppDataMap();
         //     this.Daten = deserialize(AppDataMap, AppDataMap);
@@ -154,10 +170,36 @@ export class GlobalService {
         // }
     }
 
+    private LadeSessionHistorieLokal(): Boolean {
+        let s = localStorage.getItem(this.cTrainingsHistorie);
+        if (s !== 'undefined') {
+            const mParseResult = JSON.parse(s);
+            if ((mParseResult !== null) && (Array.isArray(mParseResult))) {
+                this.Daten.TrainingsHistorie = mParseResult;
+                return ((this.Daten.TrainingsHistorie !== undefined) && (this.Daten.TrainingsHistorie.length > 0));
+            }
+        }
+        return false;
+    }
+
+    private LadeLetzteSessionIdLokal(): number {
+        if (this.LadeSessionHistorieLokal()) {
+            const mSession = this.Daten.TrainingsHistorie[this.Daten.TrainingsHistorie.length - 1] as ISession;
+            this.Daten.LetzteSessionID = mSession.ID;
+        } else {
+            this.Daten.LetzteSessionID = 0;
+        }
+        return this.Daten.LetzteSessionID;
+    }
+
     private SpeicherDatenLokal() {
         if (this.Daten.AktuellesProgramm.Programm !== undefined) {
+            // Aktuelles Trainingsprogramm 
             let mStoreData = serialize(this.Daten.AktuellesProgramm.Programm);
             localStorage.setItem(this.cAktuellesTrainingsProgramm, JSON.stringify(mStoreData));
+            // TrainingsHistorie 
+            mStoreData = serialize(this.Daten.TrainingsHistorie);
+            localStorage.setItem(this.cTrainingsHistorie, JSON.stringify(mStoreData));
         }
     }
 

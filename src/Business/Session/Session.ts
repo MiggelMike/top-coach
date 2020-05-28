@@ -31,7 +31,7 @@ export class Session implements ISession {
 
     constructor(aPara: Session = {} as Session) {
         this.ID = aPara.ID;
-        this.Name = aPara.Name;
+        this.Name = aPara.Name ? aPara.Name : 'Day ' + aPara.TagNr.toString(),
         this.Saetze = aPara.Saetze ? aPara.Saetze : [];
         this.Datum = aPara.Datum;
         this.DauerInSek = aPara.DauerInSek;
@@ -40,13 +40,16 @@ export class Session implements ISession {
     }
 
     public Copy(): ISession {
-        const mResult = new Session();
-        mResult.ID = this.ID;
-        mResult.Name = this.Name;
-        mResult.Datum = this.Datum;
-        mResult.DauerInSek = this.DauerInSek;
-        mResult.TagNr = this.TagNr;
-        mResult.FK_Programm = this.FK_Programm;
+        const mResult = new Session(
+            {
+                    ID: this.ID,
+                    TagNr: this.TagNr,
+                    Saetze: [],
+                    Datum: this.Datum,
+                    DauerInSek: this.DauerInSek,
+                    FK_Programm: this.FK_Programm
+            } as Session
+        );
         this.Saetze.forEach(mSatz => mResult.Saetze.push(mSatz.Copy()) );
         return mResult;
     }

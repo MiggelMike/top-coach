@@ -4,7 +4,6 @@ import { ISession, Session } from '../Session/Session';
 import { Satz, SatzTyp, SatzStatus, SatzPausen, LiftTyp } from '../Konfiguration/Satz';
 import { StammUebung, UebungsName } from '../Uebung/Uebung_Stammdaten';
 import { deserialize } from '@peerlancers/json-serialization';
-import { GlobalService } from 'src/app/services/global.service';
 
 export class GzclpProgramm extends TrainingsProgramm {
     constructor(private fUebungService: UebungService, aProgrammKategorie: ProgrammKategorie ) {
@@ -25,7 +24,6 @@ export class GzclpProgramm extends TrainingsProgramm {
     public DeserializeProgramm(aJsonData : Object): ITrainingsProgramm {
         const s = deserialize( GzclpProgramm, aJsonData);
         return s;
-            // localStorage.setItem(this.cAktuellesTrainingsProgramm, JSON.stringify(mStoreData));        
     }
 
     private ErzeugeAufwaermSaetze(aUebung: StammUebung, aLiftTyp: LiftTyp, aSession: Session) {
@@ -65,10 +63,10 @@ export class GzclpProgramm extends TrainingsProgramm {
             {
                 ID: 0,
                 TagNr: aTagNr,
-                Name: 'Tag ' + aTagNr.toString(),
                 Saetze: [],
                 Datum: null,
-                DauerInSek: 0
+                DauerInSek: 0,
+                FK_Programm: this.ID
             } as Session);
 
         mSessions.push(mNeueSession);
