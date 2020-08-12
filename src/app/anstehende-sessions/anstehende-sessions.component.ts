@@ -1,9 +1,11 @@
+import { MatExpansionPanel } from '@angular/material/expansion';
 import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { ISession } from './../../Business/Session/Session';
 import { GlobalService } from './../services/global.service';
 import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
 import { Observable } from 'rxjs';
+
 
 
 @Component({
@@ -22,20 +24,33 @@ export class AnstehendeSessionsComponent implements OnInit {
         
     }
 
+    beforePanelOpened(aSess: Session) {
+        aSess.Expanded = true;
+    }
+
+    beforePanelClosed(aSess: Session) {
+        aSess.Expanded = false;
+    }
+
     ngOnInit() {
         this.AktuellesProgramm = this.globalService.Daten.AktuellesProgramm.Programm;
         this.AnstehendeSessionObserver = this.globalService.LadeAnstehendeSession();
-        this.AktuellesProgramm.SessionListe = this.LadeSessions();
+        if (this.AktuellesProgramm !== undefined)
+            this.AktuellesProgramm.SessionListe = this.LadeSessions();
     }
 
     public LadeSessions(): Array<Session> {
         this.AnstehendeSessionObserver.subscribe((sessions: Array<Session>) => {
+            if (this.AktuellesProgramm === undefined)
+                return [];
             if (sessions === null)
                 this.AktuellesProgramm.SessionListe = [];
             else {
                 this.AktuellesProgramm.SessionListe = sessions;
             }
         });
+        if (this.AktuellesProgramm === undefined)
+            return [];
         return this.AktuellesProgramm.SessionListe;
     }
 

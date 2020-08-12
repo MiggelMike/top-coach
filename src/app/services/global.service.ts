@@ -1,13 +1,15 @@
-import { TrainingsProgrammSvc } from './trainings-programm-svc.service';
+import { AppModule } from './../app.module';
 import { UebungService } from './uebung.service';
 import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
-import { Injectable } from '@angular/core';
+import { TrainingServiceModule } from '../../modules/training-service.module'
+import { NgModule, Injectable,  Optional, SkipSelf  } from '@angular/core';
 import { Sportler, ISportler } from '../../Business/Sportler/Sportler';
 // import { GzclpProgramm  } from '../../Business/TrainingsProgramm/Gzclp';
 import { ISession } from '../../Business/Session/Session';
 import { IStammUebung } from '../../Business/Uebung/Uebung_Stammdaten';
 import { Observable, of, from, Subscriber } from 'rxjs';
 import { JsonProperty, deserialize, serialize } from '@peerlancers/json-serialization';
+
 
 export enum SpeicherOrtTyp {
     Lokal = 'Lokal',
@@ -53,7 +55,6 @@ export class AppDataMap {
 }
 
 
-
 @Injectable({
     providedIn: 'root'
 })
@@ -68,8 +69,8 @@ export class GlobalService {
     private readonly cTrainingsHistorie: string = 'TrainingsHistorie';
 
 
-    constructor(private fUebungService: UebungService, private fTrainingsProgrammSvc: TrainingsProgrammSvc) {
-
+    constructor(private fUebungService: UebungService, private aTrainingServiceModule: TrainingServiceModule) {
+        
         this.LadeDaten(SpeicherOrtTyp.Lokal);
         if (this.fUebungService.Uebungen.length === 0) {
             this.fUebungService.ErzeugeUebungStammdaten();
@@ -83,7 +84,7 @@ export class GlobalService {
 
     Init(): void {
         this.Sportler = new Sportler();
-        this.StandardVorlagen = this.fTrainingsProgrammSvc.ErzeugeStandardVorlagen();
+        this.StandardVorlagen = this.aTrainingServiceModule.trainingsProgrammSvc.ErzeugeStandardVorlagen();
     }
 
 

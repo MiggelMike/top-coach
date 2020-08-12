@@ -1,17 +1,16 @@
 <!-- <div *ngIf="((SessionListe !== undefined) && (SessionListe.length > 0))"> -->
 <div *ngIf="(SessionListe.length > 0)">
     <div *ngFor="let sess of SessionListe, index as i">
-        <mat-accordion multi="true">
-            <mat-expansion-panel>
+        <mat-accordion multi="true" id="accordionSession">
+            <mat-expansion-panel hideToggle>
                 <mat-expansion-panel-header>
                     <h2 class="mb-0">
-                        <button class="btn btn-link" type="button" data-toggle="collapse"
+                        <button class="btn btn-link" type="button"  data-toggle="collapse"
                             [attr.data-target]="'#collapseSession' + i" aria-expanded="true"
                             [attr.aria-controls]="'collapseSession' + i">
                             {{sess.Name}}
                         </button>
                     </h2>
-                    <span>{{sess.name}}</span>
                 </mat-expansion-panel-header>
 
                 <div [id]="'collapseSession' + i" class="collapse" aria-labelledby="headingOne"

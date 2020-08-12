@@ -1,3 +1,4 @@
+import { TrainingServiceModule } from './../modules/training-service.module';
 import { GlobalService } from './services/global.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -33,6 +34,7 @@ import { FilePreviewOverlayComponent } from './file-preview-overlay/file-preview
 import { FilePreviewOverlayService } from './services/file-preview-overlay.service';
 import { ReactiveFormsModule } from '@angular/forms';
 
+
 // var sqlite3 = require('sqlite3');
 
 @NgModule({
@@ -50,7 +52,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        MatSliderModule,
+        MatSliderModule,  
         MatToolbarModule,
         MatExpansionModule,
         MatMenuModule,
@@ -66,9 +68,9 @@ import { ReactiveFormsModule } from '@angular/forms';
         MatDialogModule,
         OverlayModule,
         ReactiveFormsModule
-
-
     ],
+
+   // exports: [TrainingServiceModule],
 
     entryComponents: [
         DialogComponent,

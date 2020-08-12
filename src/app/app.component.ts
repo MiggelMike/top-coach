@@ -2,6 +2,7 @@ import { GlobalService } from 'src/app/services/global.service';
 import { Component, NgModule, OnInit } from '@angular/core';
 import { FilePreviewOverlayService } from './services/file-preview-overlay.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TrainingServiceModule } from './../modules/training-service.module';
 
 // import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
@@ -22,7 +23,10 @@ export class AppComponent implements OnInit {
   // zip: number;
   // city: string;
   
-  constructor(private previewDialog: FilePreviewOverlayService, private svc: GlobalService, private fb: FormBuilder) {
+  constructor(private previewDialog: FilePreviewOverlayService, private svc: GlobalService, private fb: FormBuilder, private aTrainingServiceModule: TrainingServiceModule) {
+    const y = 0;
+    aTrainingServiceModule.setX(123);
+    console.log('>>> app component x has been set to ', aTrainingServiceModule.getX());
   }
 
   public clickEventHandler() {

@@ -3,10 +3,13 @@
     <div *ngIf="AktuellesProgramm">
         <h6>{{AktuellesProgramm.Name}}</h6>
     </div>
-    <div *ngIf="((AktuellesProgramm) && (AktuellesProgramm.SessionListe) && (AktuellesProgramm.SessionListe.length > 0))">
-        <div *ngFor="let sess of AktuellesProgramm.SessionListe, index as i">
+    <div *ngIf="AktuellesProgramm">
+        <div *ngFor="let sess of AktuellesProgramm.LadeSessions(), index as i">
             <mat-accordion>
-                <mat-expansion-panel [expanded]="true" >
+                <mat-expansion-panel  [expanded]="sess.Expanded"
+                 (opened)="beforePanelOpened(sess)" 
+                 (closed)="beforePanelClosed(sess)" 
+                 >
                     <mat-expansion-panel-header>
                         <h2 class="mb-0">
                             <button class="btn btn-link" type="button" data-toggle="expand"
