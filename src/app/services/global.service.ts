@@ -6,7 +6,7 @@ import { NgModule, Injectable,  Optional, SkipSelf  } from '@angular/core';
 import { Sportler, ISportler } from '../../Business/Sportler/Sportler';
 // import { GzclpProgramm  } from '../../Business/TrainingsProgramm/Gzclp';
 import { ISession } from '../../Business/Session/Session';
-import { IStammUebung } from '../../Business/Uebung/Uebung_Stammdaten';
+import { IUebung } from '../../Business/Uebung/Uebung';
 import { Observable, of, from, Subscriber } from 'rxjs';
 import { JsonProperty, deserialize, serialize } from '@peerlancers/json-serialization';
 
@@ -232,7 +232,7 @@ export class GlobalService {
         }
     }
 
-    public Kopiere(aUebung: IStammUebung): IStammUebung {
+    public Kopiere(aUebung: IUebung): IUebung {
         return this.fUebungService.Kopiere(aUebung);
     }
 

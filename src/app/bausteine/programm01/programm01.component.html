@@ -12,11 +12,12 @@
                             </button>
                         </h2>
                     </div>
+                    <!-- Soll ein Work-Out gewaehlt werden? -->
                     <span *ngIf="programmLadeContext; then AuswahlBlock"></span>
                     <ng-template #AuswahlBlock>
                         <div class="col-6">
                             <button class="btn btn-link" type="button" (click)="SelectThisWorkoutClick()">
-                                Select this workout
+                                Select Walorkout
                                 <img src="../../../assets/icons/Cute Ball - Go.png" width="20" />
                             </button>
                         </div>

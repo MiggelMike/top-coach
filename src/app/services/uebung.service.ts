@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { serialize, deserialize, JsonProperty, IJsonObject } from '@peerlancers/json-serialization';
-import { IStammUebung, StammUebung, UebungsName, UebungsTyp } from './../../Business/Uebung/Uebung_Stammdaten';
+import { IStammUebung, Uebung_Stamm } from '../../Business/Uebung/Uebung_Stamm';
+import { UebungsName, UebungsTyp } from './../../Business/Uebung/Uebung';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class UebungService {
   }
 
   public Kopiere(aUebung: IStammUebung): IStammUebung {
-    return StammUebung.NeueStammUebung(aUebung.ID, aUebung.Name, aUebung.Typ, aUebung.Kategorieen01);
+    return Uebung_Stamm.NeueStammUebung(aUebung.ID, aUebung.Name, aUebung.Typ, aUebung.Kategorieen01);
   }
 
   public LadeLetzteID(): number {
@@ -30,7 +31,7 @@ export class UebungService {
     localStorage.setItem(this.cLetzteUebungID, this.LetzteUebungID.toString());
   }
 
-  public SucheUebungPerName(aName: UebungsName): StammUebung {
+  public SucheUebungPerName(aName: UebungsName): Uebung_Stamm {
     const mUebung = this.Uebungen.find(u => u.Name === aName);
     return mUebung === undefined ? null : mUebung;
   }
@@ -51,7 +52,7 @@ export class UebungService {
 
   public ErzeugeUebungStammdaten() {
     const mKategorieen01 = [];
-    const mGzclpKategorieen01 = StammUebung.ErzeugeGzclpKategorieen01();
+    const mGzclpKategorieen01 = Uebung_Stamm.ErzeugeGzclpKategorieen01();
     const mDummy = this.LadeStammUebungen();
     this.LadeLetzteID();
     try {
@@ -61,7 +62,7 @@ export class UebungService {
         if (mUeb) {
           let mUebung = this.SucheUebungPerName(mUeb as UebungsName);
           if (mUebung === null) {
-            mUebung = StammUebung.NeueStammUebung(
+            mUebung = Uebung_Stamm.NeueStammUebung(
               ++this.LetzteUebungID,
               mUeb,
               UebungsTyp.Kraft,

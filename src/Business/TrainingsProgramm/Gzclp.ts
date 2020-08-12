@@ -2,8 +2,9 @@ import { UebungService } from './../../app/services/uebung.service';
 import { TrainingsProgramm, ITrainingsProgramm, ProgrammKategorie } from './TrainingsProgramm';
 import { ISession, Session } from '../Session/Session';
 import { Satz, SatzTyp, SatzStatus, SatzPausen, LiftTyp } from '../Konfiguration/Satz';
-import { StammUebung, UebungsName } from '../Uebung/Uebung_Stammdaten';
+import { UebungsName } from '../Uebung/Uebung';
 import { deserialize } from '@peerlancers/json-serialization';
+import { Uebung_Stamm } from '../Uebung/Uebung_Stamm';
 
 export class GzclpProgramm extends TrainingsProgramm {
     constructor(private fUebungService: UebungService, aProgrammKategorie: ProgrammKategorie ) {
@@ -26,7 +27,7 @@ export class GzclpProgramm extends TrainingsProgramm {
         return s;
     }
 
-    private ErzeugeAufwaermSaetze(aUebung: StammUebung, aLiftTyp: LiftTyp, aSession: Session) {
+    private ErzeugeAufwaermSaetze(aUebung: Uebung_Stamm, aLiftTyp: LiftTyp, aSession: Session) {
         let mParaSatz = null;
         // Aufwärm-Saetze anfügen
         for (let i = 0; i < 3; i++) {

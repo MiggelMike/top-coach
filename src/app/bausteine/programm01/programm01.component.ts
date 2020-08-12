@@ -22,6 +22,7 @@ export class Programm01Component implements OnInit {
     }
 
     SelectThisWorkoutClick(): void {
+        // Soll das aktuelle Work-Out durch ein anderes ersetzt werden?
         if (this.flobalService.Daten.AktuellesProgramm.Programm !== undefined) {
             const mDialogData = new DialogData();
             mDialogData.textZeilen.push(`Replace current Program "${this.flobalService.Daten.AktuellesProgramm.Programm.Name}" with "${this.programm.Name}" ?`);
