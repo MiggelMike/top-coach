@@ -10,6 +10,7 @@ export interface ISession {
     Saetze: Array<ISatz>;
     Datum: Date;
     DauerInSek: number;
+    Expanded: Boolean;
     Copy(): ISession;
 }
 
@@ -28,6 +29,7 @@ export class Session implements ISession {
     public Datum: Date;
     @JsonProperty()
     public DauerInSek: number;
+    public Expanded: Boolean;
 
     constructor(aPara: Session = {} as Session) {
         this.ID = aPara.ID;
@@ -37,17 +39,19 @@ export class Session implements ISession {
         this.DauerInSek = aPara.DauerInSek;
         this.TagNr = aPara.TagNr;
         this.FK_Programm = aPara.FK_Programm;
+        this.Expanded = aPara.Expanded ? aPara.Expanded : true;
     }
 
     public Copy(): ISession {
         const mResult = new Session(
             {
-                    ID: this.ID,
-                    TagNr: this.TagNr,
-                    Saetze: [],
-                    Datum: this.Datum,
-                    DauerInSek: this.DauerInSek,
-                    FK_Programm: this.FK_Programm
+                ID: this.ID,
+                TagNr: this.TagNr,
+                Saetze: [],
+                Datum: this.Datum,
+                DauerInSek: this.DauerInSek,
+                FK_Programm: this.FK_Programm,
+                Expanded: this.Expanded
             } as Session
         );
         this.Saetze.forEach(mSatz => mResult.Saetze.push(mSatz.Copy()) );
