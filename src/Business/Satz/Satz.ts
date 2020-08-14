@@ -1,4 +1,4 @@
-import { Uebung_Stamm } from '../Uebung/Uebung_Stamm';
+import { IUebung } from '../Uebung/Uebung';
 
 export enum SatzTyp {
     Aufwaermen = 'Aufwaermen',
@@ -35,7 +35,7 @@ export enum SatzPausen {
 export interface ISatz {
     ID: number;
     SessionID: number;
-    Uebung: Uebung_Stamm;
+    Uebung: IUebung;
     SatzTyp: SatzTyp;
     Prozent: number;
     GewichtAusgefuehrt: number;
@@ -53,7 +53,7 @@ export interface ISatz {
 export class Satz implements ISatz {
     public ID: number;
     public SessionID: number;
-    public Uebung: Uebung_Stamm;
+    public Uebung: IUebung;
     public SatzTyp: SatzTyp;
     public Prozent: number;
     public GewichtAusgefuehrt: number;

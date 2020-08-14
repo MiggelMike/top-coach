@@ -1,4 +1,4 @@
-import { ISatz } from '../Konfiguration/Satz';
+import { ISatz } from '../Satz/Satz';
 import { JsonProperty } from '@peerlancers/json-serialization';
 
 
