@@ -1,19 +1,20 @@
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { JsonProperty } from "@peerlancers/json-serialization";
 
 export enum UebungsTyp {
-    Custom = 'Custom',
-    Kraft = 'Kraft',
-    Ausdauer = 'Ausdauer',
-    Dehnung = 'Dehnung',
+    Undefined = "Undefined",
+    Custom = "Custom",
+    Kraft = "Kraft",
+    Ausdauer = "Ausdauer",
+    Dehnung = "Dehnung",
 }
 
 export enum UebungsKategorie01 {
-    GzclpT1Cycle0 = 'GzclpT1Cycle0',
-    GzclpT1Cycle1 = 'GzclpT1Cycle1',
-    GzclpT1Cycle2 = 'GzclpT1Cycle2',
-    GzclpT2Cycle0 = 'GzclpT2Cycle0',
-    GzclpT2Cycle1 = 'GzclpT2Cycle1',
-    GzclpT2Cycle2 = 'GzclpT2Cycle2',
+    GzclpT1Cycle0 = "GzclpT1Cycle0",
+    GzclpT1Cycle1 = "GzclpT1Cycle1",
+    GzclpT1Cycle2 = "GzclpT1Cycle2",
+    GzclpT2Cycle0 = "GzclpT2Cycle0",
+    GzclpT2Cycle1 = "GzclpT2Cycle1",
+    GzclpT2Cycle2 = "GzclpT2Cycle2",
 }
 
 export interface IUebung {
@@ -21,37 +22,50 @@ export interface IUebung {
     Name: string;
     Typ: UebungsTyp;
     Kategorieen01: Array<UebungsKategorie01>;
+    Copy(): IUebung;
 }
 
 export enum UebungsName {
-    Squat = 'Squat',
-    Deadlift = 'Deadlift',
-    Benchpress = 'Benchpress',
-    OverheadPress = 'OverheadPress',
-    AB_Rollout = 'AB_Rollout',
-    AB_Wheel = 'AB_Wheel',
-    BackExtension = 'BackExtension',
-    BarbellRow = 'BarbellRow',
-    BentOverDumbbellRaise = 'BentOverDumbbellRaise',
-    BlastStrapPushUp = 'BlastStrapPushUp',
-    CableKickBacks = 'CableKickBacks',
-    CablePushDown =  'CablePushDown',
-    CableRow = 'CableRow',
-    CalfRaises = 'CalfRaises',
-    ChestSupportedRows = 'ChestSupportedRows',
-    ChinUps = 'ChinUps',
-    CloseGripBenchPress = 'CloseGripBenchPress',
-    LatPullDowns = 'LatPulldowns',
-    Dips = 'Dips'
+    Squat = "Squat",
+    Deadlift = "Deadlift",
+    Benchpress = "Benchpress",
+    OverheadPress = "OverheadPress",
+    AB_Rollout = "AB_Rollout",
+    AB_Wheel = "AB_Wheel",
+    BackExtension = "BackExtension",
+    BarbellRow = "BarbellRow",
+    BentOverDumbbellRaise = "BentOverDumbbellRaise",
+    BlastStrapPushUp = "BlastStrapPushUp",
+    CableKickBacks = "CableKickBacks",
+    CablePushDown = "CablePushDown",
+    CableRow = "CableRow",
+    CalfRaises = "CalfRaises",
+    ChestSupportedRows = "ChestSupportedRows",
+    ChinUps = "ChinUps",
+    CloseGripBenchPress = "CloseGripBenchPress",
+    LatPullDowns = "LatPulldowns",
+    Dips = "Dips",
 }
 
 export class Uebung implements IUebung {
     @JsonProperty()
-    ID: number;
+    public ID: number = 0 ;
     @JsonProperty()
-    Name: string;
+    public Name: string = '';
     @JsonProperty()
-    Typ: UebungsTyp;
+    public Typ: UebungsTyp = UebungsTyp.Undefined;
     @JsonProperty()
-    Kategorieen01: Array<UebungsKategorie01> = [];
+    public Kategorieen01: Array<UebungsKategorie01> = [];
+
+    constructor() { };
+
+    public Copy(): IUebung {
+        let mUebung = new Uebung();
+        mUebung.ID = this.ID;
+        mUebung.Name = this.Name;
+        mUebung.Typ = this.Typ;
+        mUebung.Kategorieen01 = [];
+        this.Kategorieen01.forEach(val => mUebung.Kategorieen01.push(Object.assign({}, val)));
+        return mUebung;
+    }
 }

@@ -1,11 +1,8 @@
 import { UebungsTyp, UebungsKategorie01, Uebung, IUebung } from './Uebung';
 // import { JsonProperty } from '@peerlancers/json-serialization';
 
-export interface IStammUebung extends IUebung{
 
-} 
-
-export class Uebung_Stamm extends Uebung implements IUebung {
+export class Uebung_Stamm extends Uebung {
 
     public static NeueStammUebung(
         aID: number,
