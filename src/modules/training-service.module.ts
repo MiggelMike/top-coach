@@ -36,7 +36,7 @@ export class TrainingServiceModule {
         return this.x;
     }
 
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<TrainingServiceModule> {
         return {
             ngModule: TrainingServiceModule,
             providers: [TrainingsProgrammSvc],
