@@ -1,34 +1,67 @@
 <div *ngIf="session">
-    <div *ngFor="let satz of session.Saetze, index as i; let isOdd=odd">
-        <div class="container" [ngClass]="isOdd ? 'odd' : 'even'">
-            <div class="row no-gutters">
-                <div class="col">
-                    <span *ngIf="satz.SatzTyp === 'Aufwaermen'; then AufwaermenBlock"></span>
-                    <ng-template #AufwaermenBlock>
-                        <img src="../../../assets/icons/bullet_yellow.png">
-                        Satz {{i+1}}
-                    </ng-template>
-                    <span *ngIf="satz.SatzTyp === 'Training'; then TrainingBlock"></span>
-                    <ng-template #TrainingBlock>
-                        <img src="../../../assets/icons/bullet_red.png">
-                        Satz {{i+1}}
-                    </ng-template>
-                    <span *ngIf="satz.SatzTyp === 'Abwaermen'; then AbwaermenBlock"></span>
-                    <ng-template #AbwaermenBlock>
-                        <img src="../../../assets/icons/bullet_blue.png">
-                        Satz {{i+1}}
-                    </ng-template>
+    <div *ngFor="let SessUeb of session.UebungsListe, index as i; let isOdd=odd">
+        <mat-accordion multi="true">
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <h6>{{SessUeb.Uebung.Name}}</h6>
+                </mat-expansion-panel-header>
+                <div class="card-body">
+                    <div *ngIf="SessUeb.AufwaermSatzListe.length > 0">
+                        <mat-accordion multi="true">
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                    <div>Warm up</div>
+                                </mat-expansion-panel-header>
+                                <div *ngFor="let satz of SessUeb.AufwaermSatzListe">
+                                    <div class="card-body">
+                                        <h6>{{satz.ID}}</h6>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+
+                    <div *ngIf="SessUeb.ArbeitsSatzListe.length > 0">
+                        <mat-accordion multi="true">
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                    <div>Work</div>
+                                </mat-expansion-panel-header>
+                                <div *ngFor="let satz of SessUeb.ArbeitsSatzListe">
+                                    <div layout="row">
+                                        <div flex="20">[flex="20"]</div>
+                                        <div flex="70">[flex="70"]</div>
+                                        <div flex hide-sm hide-xs></div>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+
+                    <div *ngIf="SessUeb.AbwaermSatzListe.length > 0">
+                        <mat-accordion multi="true">
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                    <div>Cool down</div>
+                                </mat-expansion-panel-header>
+                                <div *ngFor="let satz of SessUeb.AbwaermSatzListe">
+                                    <div class="card-body">
+                                        <h6>{{satz.ID}}</h6>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
                 </div>
-                <div class="col ml-1">
-                    {{satz.Uebung.Name}}
-                </div>
-                <div class="col ml-1">
-                    {{satz.WdhVorgabe}} <a [hidden]="!satz.AMRAP">+</a>
-                </div>
-                <div class="col">
-                    {{satz.Prozent}} %
-                </div>
-            </div>
-        </div>
+            </mat-expansion-panel>
+        </mat-accordion>
     </div>
 </div>
+
+
+<!-- <div class="container" [ngClass]="isOdd ? 'odd' : 'even'">
+    <div class="row no-gutters">
+        <h6>{{SessUeb.Uebung.Name}}</h6>
+    </div>
+</div> -->
+

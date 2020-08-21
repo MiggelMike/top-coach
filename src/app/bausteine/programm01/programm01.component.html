@@ -4,20 +4,13 @@
         <mat-expansion-panel>
             <mat-expansion-panel-header>
                 <div class="row justify-content-start">
-                    <div class="col-6">
-                        <h2 class="mb-0">
-                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
-                                aria-expanded="true" aria-controls="collapseOne">
-                                {{programm.Name}}
-                            </button>
-                        </h2>
-                    </div>
+                    <h6 class="ml-20">{{programm.Name}}</h6> 
                     <!-- Soll ein Work-Out gewaehlt werden? -->
                     <span *ngIf="programmLadeContext; then AuswahlBlock"></span>
                     <ng-template #AuswahlBlock>
-                        <div class="col-6">
+                        <div class="col-4">
                             <button class="btn btn-link" type="button" (click)="SelectThisWorkoutClick()">
-                                Select Walorkout
+                                Select Workout
                                 <img src="../../../assets/icons/Cute Ball - Go.png" width="20" />
                             </button>
                         </div>
@@ -25,10 +18,9 @@
                 </div>
             </mat-expansion-panel-header>
             <div class="card-body">
-                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionProgramme">
+                <!-- <div id="collapseOne" aria-labelledby="headingOne" data-parent="#accordionProgramme" style="margin:0;padding:0;"> -->
                     <!-- SessionListe an Sub-Komponente durchreichen -->
                     <app-programm02 [SessionListe]="programm.SessionListe"></app-programm02>
-                </div>
             </div>
         </mat-expansion-panel>
     </mat-accordion>

@@ -20,13 +20,16 @@
                         </h2>
                         <span>{{sess.name}}</span>
                     </mat-expansion-panel-header>
-    
-                    <div [id]="'collapseSession' + i" class="expand" aria-labelledby="headingOne" attr.data-parent="#accordionSession">
-                        <div class="card-body">
-                            <!-- session an Sub-Komponente durchreichen -->
-                            <app-programm03 [session]="sess"></app-programm03>
-                        </div>
-                    </div>
+                    
+                    <mat-accordion>
+                        <!-- <div *ngFor="let uebung_sess of sess.UebungsListe, index as u"> -->
+                            <mat-expansion-panel  [expanded]="false">
+                                <mat-expansion-panel-header><h3>Uebung</h3>
+                                    
+                                </mat-expansion-panel-header>
+                            </mat-expansion-panel>
+                        <!-- </div> -->
+                    </mat-accordion>
                 </mat-expansion-panel>
             </mat-accordion>
         </div>

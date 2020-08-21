@@ -2,7 +2,6 @@
 @import "~bootstrap/scss/bootstrap";
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 
-
 html,
 body {
     height: 100%;
@@ -51,4 +50,6 @@ body {
     height: 50px;
 }
 
-
+.ml-20 {
+    margin-left: 20px;
+}

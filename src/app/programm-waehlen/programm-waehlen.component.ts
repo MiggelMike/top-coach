@@ -28,7 +28,7 @@ export class ProgrammWaehlenComponent implements OnInit {
     }
 
     public LadeTrainingsProgramme(): Array<TrainingsProgramm> {
-        this.ProgrammListeObserver.subscribe((programme: Array<TrainingsProgramm>) =>    {
+        this.ProgrammListeObserver.subscribe((programme: Array<TrainingsProgramm>) =>  {
             this.ProgrammListe = programme;
         });
         return this.ProgrammListe;

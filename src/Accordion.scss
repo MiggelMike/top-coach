@@ -1,0 +1,11 @@
+::ng-deep .mat-expansion-panel,
+::ng-deep .mat-expansion-panel-header,
+::ng-deep .mat-expansion-panel-body {
+  padding: 3px !important;
+  margin: 0 !important;
+}
+
+div {
+  padding: 0 !important;
+  margin-bottom: 2px !important;  
+}

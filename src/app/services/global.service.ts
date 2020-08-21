@@ -105,7 +105,7 @@ export class GlobalService {
     }
 
     SetzeAktuellesProgramm(aAktuellesProgramm: ITrainingsProgramm): void {
-        this.Daten.AktuellesProgramm.Programm = aAktuellesProgramm.ErstelleProgrammAusVorlage();
+        this.Daten.AktuellesProgramm.Programm = aAktuellesProgramm.ErstelleSessionsAusVorlage();
         this.SpeicherDaten(SpeicherOrtTyp.Lokal);
     }
 
@@ -154,7 +154,7 @@ export class GlobalService {
     }
 
     private LadeDatenLokal() {
-        // localStorage.clear();
+      //  localStorage.clear();
         const s = localStorage.getItem(this.cAktuellesTrainingsProgramm);
         if (s !== 'undefined') {
             const mParseResult = JSON.parse(s);

@@ -1,3 +1,4 @@
+import { ISession } from 'src/Business/Session/Session';
 import { IUebung } from '../Uebung/Uebung';
 
 export enum SatzTyp {
@@ -32,11 +33,24 @@ export enum SatzPausen {
     GzClpT3_Max = 90,
 }
 
+export interface INeuerSatz {
+    NeuerSatz(
+        aSatzTyp: SatzTyp,
+        aLiftTyp: LiftTyp,
+        aWdhVorgabe: number,
+        aProzent: number,
+        aSession: ISession,
+        aUebung: IUebung,
+        aAmrap: boolean
+    ): ISatz
+}
+
 export interface ISatz {
     ID: number;
     SessionID: number;
     Uebung: IUebung;
     SatzTyp: SatzTyp;
+    SatzGruppenNr: number;
     Prozent: number;
     GewichtAusgefuehrt: number;
     WdhAusgefuehrt: number;
@@ -51,20 +65,21 @@ export interface ISatz {
 }
 
 export class Satz implements ISatz {
-    public ID: number;
-    public SessionID: number;
-    public Uebung: IUebung;
-    public SatzTyp: SatzTyp;
-    public Prozent: number;
+    public ID: number = 0;
+    public SessionID: number = 0;
+    public Uebung: IUebung = null;
+    public SatzTyp: SatzTyp = SatzTyp.Training;
+    public Prozent: number = 0;
     public GewichtAusgefuehrt: number;
-    public WdhAusgefuehrt: number;
-    public GewichtVorgabe: number;
-    public WdhVorgabe: number;
-    public PausenMinZeit: number;
-    public PausenMaxZeit: number;
-    public Status: SatzStatus;
-    public LiftTyp: LiftTyp;
-    public AMRAP: boolean;
+    public WdhAusgefuehrt: number = 0;
+    public GewichtVorgabe: number = 0;
+    public WdhVorgabe: number = 0;
+    public PausenMinZeit: number = 0;
+    public PausenMaxZeit: number = 0;
+    public Status: SatzStatus = SatzStatus.Wartet;
+    public LiftTyp: LiftTyp = LiftTyp.Custom;
+    public AMRAP: boolean = false;
+    public SatzGruppenNr: number = 0;
 
     constructor(aPara: Satz = {} as Satz ) {
         this.SessionID = aPara.SessionID ? aPara.SessionID : 0;
