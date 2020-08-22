@@ -1,4 +1,6 @@
-import { TrainingsProgrammSvc } from "./../app/services/trainings-programm-svc.service";
+import { TrainingsProgrammSvc } from './../app/services/trainings-programm-svc.service';
+// import { TrainingsProgrammSvc } from "./../app/services/trainings-programm-svc.service";
+// import { TrainingsProgrammSvc } from "./../app/services/trainings-programm-svc.service";
 import {
     ModuleWithProviders,
     NgModule,
@@ -10,8 +12,8 @@ import { Injectable } from "@angular/core";
 
 @Injectable({ providedIn: "root" })
 @NgModule({
-    imports: [CommonModule],
-    declarations: [TrainingsProgrammSvc],
+    imports: [CommonModule, TrainingsProgrammSvc],
+    // declarations: [TrainingsProgrammSvc],
     exports: [TrainingsProgrammSvc],
 })
 export class TrainingServiceModule {

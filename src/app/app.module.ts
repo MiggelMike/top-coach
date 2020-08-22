@@ -36,7 +36,7 @@ import { FilePreviewOverlayService } from './services/file-preview-overlay.servi
 import { ReactiveFormsModule } from '@angular/forms';
 
 
-// var sqlite3 = require('sqlite3');
+// var sqlite3 = require('sqlite3');1
 
 @NgModule({
     declarations: [
@@ -51,6 +51,8 @@ import { ReactiveFormsModule } from '@angular/forms';
         FilePreviewOverlayComponent
     ],
     imports: [
+       
+        FlexLayoutModule,
         BrowserModule,
         BrowserAnimationsModule,
         MatSliderModule,  

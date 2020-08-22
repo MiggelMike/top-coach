@@ -1,9 +1,4 @@
 <p>Choose Workout</p>
-<div layout="row">
-    <div flex="20">[flex="20"]</div>
-    <div flex="70">[flex="70"]</div>
-    <div flex hide-sm hide-xs></div>
-</div>
 <div *ngIf="TrainingsProgrammeVorhanden()">
     <div *ngFor="let item of LadeTrainingsProgramme()">
         <!-- [programmLadeContext]= "true": Der Auswähl-Button für das jeweilige Workout wird gezeigt. -->

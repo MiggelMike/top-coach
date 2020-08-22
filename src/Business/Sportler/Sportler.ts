@@ -1,11 +1,12 @@
 import { ISession } from '../Session/Session';
+import { IKoerpergewicht } from '../Konfiguration/Gewicht';
 
 export interface ISportler {
     ID: number;
     Geburtstag: Date;
     FertigeSessions: Array<ISession>;
     AnstehendeSessions: Array<ISession>;
-    Koerpergewicht: Array<IKoerpergewicht>;
+    Koerpergewicht: Array<number>;
     Reset(): void;
 }
 
@@ -14,7 +15,7 @@ export class Sportler implements ISportler {
     public Geburtstag: Date;
     public FertigeSessions: Array<ISession>;
     public AnstehendeSessions: Array<ISession>;
-    public Koerpergewicht: Array<IKoerpergewicht>;
+    public Koerpergewicht: Array<number>;
 
     constructor() {
         this.ID = 0;

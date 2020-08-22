@@ -1,21 +1,24 @@
 import { UebungService } from './uebung.service';
 import { GzclpProgramm } from './../../Business/TrainingsProgramm/Gzclp';
-import { Injectable,  Optional, SkipSelf ,  ModuleWithProviders } from '@angular/core';
+import { Injectable, NgModule, Pipe,  Optional, SkipSelf ,  ModuleWithProviders } from '@angular/core';
 import { ISession } from '../../Business/Session/Session';
 import { ITrainingsProgramm, SessionKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
-
 
 export interface ITrainingsProgrammSvc {
     LadeProgramme(): void;
 }
 
-
 @Injectable({
     providedIn: 'root'
 })
 
+@NgModule({})
 export class TrainingsProgrammSvc implements ITrainingsProgrammSvc {
-
+//export declare class TrainingsProgrammSvc {
+    declarations: [ TrainingsProgrammSvc]
+    exports: [ TrainingsProgrammSvc]
+           
+    
     constructor(private fUebungService: UebungService, @Optional() @SkipSelf() parentModule?: TrainingsProgrammSvc) {
         if (parentModule) {
             throw new Error(
@@ -45,10 +48,10 @@ export class TrainingsProgrammSvc implements ITrainingsProgrammSvc {
     }
 
     public ErzeugeStandardVorlagen(): Array<ITrainingsProgramm> {
-        const mResult = new Array<ITrainingsProgramm>();
-        const mGzclpProgramm = new GzclpProgramm(this.fUebungService, SessionKategorie.Vorlage);
+        const mResult: Array<ITrainingsProgramm> = new Array<ITrainingsProgramm>();
+        const mGzclpProgramm: GzclpProgramm  = new GzclpProgramm(this.fUebungService, SessionKategorie.Vorlage);
         mGzclpProgramm.Name = 'GZCLP - Standard';
-        const mSessions = new Array<ISession>();
+        const mSessions: Array<ISession> = new Array<ISession>();
         mGzclpProgramm.Init(mSessions);
         mResult.push(mGzclpProgramm);
         return mResult;
@@ -64,3 +67,6 @@ export class TrainingsProgrammSvc implements ITrainingsProgrammSvc {
     //     };
     // }
 }
+
+
+
