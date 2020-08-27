@@ -1,5 +1,6 @@
 import { TrainingServiceModule } from './../modules/training-service.module';
 import { GlobalService } from './services/global.service';
+import { MatCardModule } from '@angular/material/card';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
@@ -34,6 +35,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { FilePreviewOverlayComponent } from './file-preview-overlay/file-preview-overlay.component';
 import { FilePreviewOverlayService } from './services/file-preview-overlay.service';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SatzSimpleComponent } from './bausteine/satz-simple/satz-simple.component';
 
 
 // var sqlite3 = require('sqlite3');1
@@ -48,10 +50,11 @@ import { ReactiveFormsModule } from '@angular/forms';
         Programm03Component,
         ProgrammLadeDirective,
         DialogComponent,
-        FilePreviewOverlayComponent
+        FilePreviewOverlayComponent,
+        SatzSimpleComponent
     ],
     imports: [
-       
+        MatCardModule,
         FlexLayoutModule,
         BrowserModule,
         BrowserAnimationsModule,

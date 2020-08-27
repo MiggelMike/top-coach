@@ -21,21 +21,22 @@
                         </mat-accordion>
                     </div>
 
-                    <div *ngIf="SessUeb.ArbeitsSatzListe.length > 0">
+                    <ng-container *ngIf="SessUeb.ArbeitsSatzListe.length > 0">
                         <mat-accordion multi="true">
                             <mat-expansion-panel>
                                 <mat-expansion-panel-header>
                                     <div>Work</div>
                                 </mat-expansion-panel-header>
-                                <div *ngFor="let satz of SessUeb.ArbeitsSatzListe">
-                                    <div fxLayout="row" fxLayoutAlign="space-evenly center" >
-                                        <div>a</div>
-                                        <div>b</div>
-                                    </div>
+                                <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">
+                                    <ng-container *ngFor="let satz of SessUeb.ArbeitsSatzListe">
+                                        <app-satz-simple  [satz]="satz" fxFlex="0 1 calc(100% / 8)">
+                                        </app-satz-simple>
+                                
+                                    </ng-container>
                                 </div>
                             </mat-expansion-panel>
                         </mat-accordion>
-                    </div>
+                    </ng-container>
 
                     <div *ngIf="SessUeb.AbwaermSatzListe.length > 0">
                         <mat-accordion multi="true">

@@ -1,7 +1,7 @@
 <p>Choose Workout</p>
-<div *ngIf="TrainingsProgrammeVorhanden()">
-    <div *ngFor="let item of LadeTrainingsProgramme()">
+<ng-container *ngIf="TrainingsProgrammeVorhanden()">
+    <ng-container *ngFor="let item of LadeTrainingsProgramme()">
         <!-- [programmLadeContext]= "true": Der Auswähl-Button für das jeweilige Workout wird gezeigt. -->
         <app-programm01 [programmLadeContext]="true" [programm]="item"></app-programm01>
-    </div>
-</div>
+    </ng-container>
+</ng-container>

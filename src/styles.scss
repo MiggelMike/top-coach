@@ -53,3 +53,55 @@ body {
 .ml-20 {
     margin-left: 20px;
 }
+
+div.kreis {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    background-color: red;
+    color: lightgray;
+}
+
+div.stern {
+    width: 0;
+    height: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    border-bottom: 100px solid #ffc800;
+    position: relative;
+  }
+
+div.stern:after {
+    width: 0;
+    height: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    border-top: 100px solid #ffc800;
+    position: absolute;
+    content: "";
+    top: 30px;
+    left: -50px;
+  }
+
+  div.herz {
+    position: relative;
+  }
+ 
+  div.herz:before, div.herz:after {
+    position: absolute;
+    content: "";
+    left: 50px;
+    top: 0;
+    width: 50px;
+    height: 80px;
+    background: red;
+    border-radius: 50px 50px 0 0;
+    transform: rotate(-45deg);
+    transform-origin: 0 100%;
+  }
+ 
+  div.herz:after {
+    left: 0;
+    transform: rotate(45deg);
+    transform-origin: 100% 100%;
+  } 
