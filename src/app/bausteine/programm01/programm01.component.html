@@ -4,24 +4,25 @@
         <mat-expansion-panel>
             <mat-expansion-panel-header>
                 <div fxLayout="row wrap" fxLayoutAlign="center center">
-                    <div>{{programm.Name}}</div> 
+                    <div>{{programm.Name}}</div>
                     <!-- Soll ein Work-Out gewaehlt werden? -->
                     <ng-container *ngIf="programmLadeContext; then AuswahlBlock"></ng-container>
                     <ng-template #AuswahlBlock>
-                            <button class="btn btn-link" type="button" (click)="SelectThisWorkoutClick()">
-                                <span class="tc-font-size-small">Select</span>
-                            </button>
-                            <button class="btn btn-link" type="button" (click)="SelectThisWorkoutClick()">
-                                <span class="tc-font-size-small">Edit</span>
-                            </button>
+                        <button class="btn btn-link" type="button" (click)="SelectThisWorkoutClick()">
+                            <span class="tc-font-size-small">Select</span>
+                        </button>
+
+                        <!-- { path: 'programmedit', component: WorkoutFormComponent }, -->
+                        <a class="nav-link" href="/workoutform"><span class="tc-font-size-small">Edit</span></a>
+                        
                     </ng-template>
 
                 </div>
             </mat-expansion-panel-header>
             <div class="card-body">
                 <!-- <div id="collapseOne" aria-labelledby="headingOne" data-parent="#accordionProgramme" style="margin:0;padding:0;"> -->
-                    <!-- SessionListe an Sub-Komponente durchreichen -->
-                    <app-programm02 [SessionListe]="programm.SessionListe"></app-programm02>
+                <!-- SessionListe an Sub-Komponente durchreichen -->
+                <app-programm02 [SessionListe]="programm.SessionListe"></app-programm02>
             </div>
         </mat-expansion-panel>
     </mat-accordion>

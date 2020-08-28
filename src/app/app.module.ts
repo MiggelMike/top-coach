@@ -36,6 +36,8 @@ import { FilePreviewOverlayComponent } from './file-preview-overlay/file-preview
 import { FilePreviewOverlayService } from './services/file-preview-overlay.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SatzSimpleComponent } from './bausteine/satz-simple/satz-simple.component';
+import { SessionFormComponent } from './bausteine/session-form/session-form.component';
+import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.component';
 
 
 // var sqlite3 = require('sqlite3');1
@@ -51,7 +53,9 @@ import { SatzSimpleComponent } from './bausteine/satz-simple/satz-simple.compone
         ProgrammLadeDirective,
         DialogComponent,
         FilePreviewOverlayComponent,
-        SatzSimpleComponent
+        SatzSimpleComponent,
+        SessionFormComponent,
+        WorkoutFormComponent
     ],
     imports: [
         MatCardModule,

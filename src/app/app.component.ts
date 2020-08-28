@@ -1,5 +1,5 @@
 import { GlobalService } from 'src/app/services/global.service';
-import { Component, NgModule, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FilePreviewOverlayService } from './services/file-preview-overlay.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TrainingServiceModule } from './../modules/training-service.module';
