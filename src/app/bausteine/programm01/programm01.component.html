@@ -3,18 +3,19 @@
     <mat-accordion multi="true">
         <mat-expansion-panel>
             <mat-expansion-panel-header>
-                <div class="row justify-content-start">
-                    <h6 class="ml-20">{{programm.Name}}</h6> 
+                <div fxLayout="row wrap" fxLayoutAlign="center center">
+                    <div>{{programm.Name}}</div> 
                     <!-- Soll ein Work-Out gewaehlt werden? -->
-                    <span *ngIf="programmLadeContext; then AuswahlBlock"></span>
+                    <ng-container *ngIf="programmLadeContext; then AuswahlBlock"></ng-container>
                     <ng-template #AuswahlBlock>
-                        <div class="col-4">
                             <button class="btn btn-link" type="button" (click)="SelectThisWorkoutClick()">
-                                Select Workout
-                                <img src="../../../assets/icons/Cute Ball - Go.png" width="20" />
+                                <span class="tc-font-size-small">Select</span>
                             </button>
-                        </div>
+                            <button class="btn btn-link" type="button" (click)="SelectThisWorkoutClick()">
+                                <span class="tc-font-size-small">Edit</span>
+                            </button>
                     </ng-template>
+
                 </div>
             </mat-expansion-panel-header>
             <div class="card-body">
