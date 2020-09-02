@@ -29,16 +29,56 @@
                                     <div>Work</div>
                                 </mat-expansion-panel-header>
                                 <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">
-                                    <ng-container *ngFor="let satz of SessUeb.ArbeitsSatzListe">
+                                    <ng-container *ngFor="let satz of SessUeb.ArbeitsSatzListe, index as i">
 
                                         <ng-container *ngIf='session.getKategorie01() === "NurLesen"'>
                                             <app-satz-simple [satz]="satz" fxFlex="0 1 calc(100% / 24)"></app-satz-simple>
                                         </ng-container>
 
                                         <ng-container *ngIf='session.getKategorie01() === "Bearbeitbar"'>
-                                            <app-satz-edit [satz]="satz" fxFlex="0 1 100%"></app-satz-edit>
+                                            <div fxLayout="column" fxFlex="100%">
+                                                <div fxLayout="row" fxLayoutGap="2px" fxFlex="100%">
+                                                    <ng-container *ngIf="i === 0">
+                                                        <div fxLayout="column" fxFlex="25px">
+                                                            #
+                                                        </div>
+                                                        <div fxLayout="column" fxFlex="65px">
+                                                            Weight
+                                                        </div>
+                                                        <div fxLayout="column" fxFlex="65px">
+                                                            Reps
+                                                        </div>
+                                                        <div fxLayout="column" fxFlex="65px">
+                                                            AMRAP
+                                                        </div>
+                                                    </ng-container>
+                                                </div>
+                                                <!-- <div fxLayout="row" fxLayoutGap="2px" fxFlex="100%" fxFlex.gt-sm="25%" fxHide.md> -->
+                                        
+                                                <div fxLayout="row" fxLayoutGap="2px" fxFlex="100%">
+                                                    <div class="center-item" fxFlex="25px">
+                                                        <mat-label>{{i+1}}</mat-label>
+                                                    </div>
+                                                
+                                                    <mat-form-field class="align-right" fxFlex="65px">
+                                                        <input matInput [(ngModel)]="satz.GewichtVorgabe" type="number">
+                                                    </mat-form-field>
+                                                
+                                                    <mat-form-field class="align-right" fxFlex="65px">
+                                                        <input matInput [(ngModel)]="satz.WdhVorgabe" type="number">
+                                                    </mat-form-field>
+                                                
+                                                    <div class="center-item" layout-align="center center" fxFlex="50px">
+                                                        <mat-checkbox [(ngModel)]="satz.AMRAP"></mat-checkbox>
+                                                    </div>
+                                                
+                                                    <!-- <div layout="row" layout-align="center center" style="height: 100vh">
+                                                                                                                                            <a mat-flat-button>Delete</a>
+                                                                                                                                        </div> -->
+                                                </div>
+                                            </div>
+                                            <!-- <app-satz-edit [satz]="satz" fxFlex="0 1 100%"></app-satz-edit> -->
                                         </ng-container>
-
                                     </ng-container>
                                 </div>
                             </mat-expansion-panel>

@@ -22,6 +22,10 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+.align-right { 
+    text-align: right; 
+}
+
 .height-10 {
     height: 10px;
 }
@@ -48,6 +52,10 @@ body {
 
 .height-50 {
     height: 50px;
+}
+
+.width-65 {
+    width: 65px;
 }
 
 .ml-20 {
@@ -108,4 +116,18 @@ div.stern:after {
 
   .tc-font-size-small {
       font-size: 14px;
+  }
+
+  .check-box {
+    margin-top: 10px;
+    margin-left: 20px;  
+    vertical-align: middle;
+    justify-content: center;
+  }
+
+  .center-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
   }

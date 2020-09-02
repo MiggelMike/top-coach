@@ -23,6 +23,7 @@ import { MatRippleModule } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material';
+import { MatCheckboxModule } from "@angular/material/checkbox"; 
 
 import { ProgrammWaehlenComponent } from './programm-waehlen/programm-waehlen.component';
 import { Programm01Component } from './bausteine/programm01/programm01.component';
@@ -60,6 +61,7 @@ import { SatzEditComponent } from './bausteine/satz-edit/satz-edit.component';
         SatzEditComponent
     ],
     imports: [
+        MatCheckboxModule,
         MatCardModule,
         FlexLayoutModule,
         BrowserModule,
