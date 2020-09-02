@@ -10,6 +10,8 @@ import { ISession } from 'src/Business/Session/Session';
 })
 export class Programm02Component implements OnInit {
   @Input() SessionListe: Array<ISession> = [];
+  @Input() ShowButtons: Boolean = false;
+
   //  @ViewChild('sessionAccordion') accordionSession: MatAccordion;
 
   constructor() { }

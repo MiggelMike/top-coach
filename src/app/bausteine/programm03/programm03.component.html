@@ -5,6 +5,7 @@
                 <mat-expansion-panel-header>
                     <h6>{{SessUeb.Uebung.Name}}</h6>
                 </mat-expansion-panel-header>
+
                 <div class="card-body">
                     <div *ngIf="SessUeb.AufwaermSatzListe.length > 0">
                         <mat-accordion multi="true">
@@ -31,13 +32,11 @@
                                     <ng-container *ngFor="let satz of SessUeb.ArbeitsSatzListe">
 
                                         <ng-container *ngIf='session.getKategorie01() === "NurLesen"'>
-                                            <app-satz-simple [satz]="satz" fxFlex="0 1 calc(100% / 24)">
-                                            </app-satz-simple>
+                                            <app-satz-simple [satz]="satz" fxFlex="0 1 calc(100% / 24)"></app-satz-simple>
                                         </ng-container>
 
                                         <ng-container *ngIf='session.getKategorie01() === "Bearbeitbar"'>
-                                            <app-satz-edit [satz]="satz" fxFlex="0 1 100%">
-                                            </app-satz-edit>
+                                            <app-satz-edit [satz]="satz" fxFlex="0 1 100%"></app-satz-edit>
                                         </ng-container>
 
                                     </ng-container>

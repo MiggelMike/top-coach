@@ -3,6 +3,7 @@ import { DialogData } from '../../dialoge/hinweis/hinweis.component';
 import { GlobalService } from './../../services/global.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { ITrainingsProgramm } from '../../../Business/TrainingsProgramm/TrainingsProgramm';
+import { SessionStatus } from 'src/Business/Session/Session';
 
 @Component({
     selector: "app-programm01",
@@ -41,5 +42,6 @@ export class Programm01Component implements OnInit {
 
     EditThisWorkoutClick(): void { 
         this.flobalService.EditWorkout = this.programm;
+        this.flobalService.EditWorkout.SessionListe.forEach(sess => sess.Kategorie01 = SessionStatus.Bearbeitbar);
     }
 }

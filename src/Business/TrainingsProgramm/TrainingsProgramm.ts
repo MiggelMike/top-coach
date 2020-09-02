@@ -23,6 +23,7 @@ export interface ITrainingsProgramm {
     Name: string;
     ProgrammKategorie: SessionKategorie;
     SessionListe: Array<ISession>;
+    Bearbeitbar: Boolean;  
     Init(aSessions: Array<ISession>): void;
     Copy(): ITrainingsProgramm;
     ErstelleSessionsAusVorlage(): ITrainingsProgramm;
@@ -50,6 +51,9 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
     public ProgrammKategorie: SessionKategorie;
     @JsonProperty()
     public SessionListe: Array<ISession> = new Array<ISession>();
+
+    public Bearbeitbar: Boolean = false;  
+
     constructor(aProgrammKategorie: SessionKategorie) {
         this.ProgrammKategorie = aProgrammKategorie;
     }
@@ -84,6 +88,8 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
         mResult.Tage = this.Tage;
         mResult.ProgrammKategorie = this.ProgrammKategorie;
         mResult.Name = this.Name;
+        mResult.Bearbeitbar = this.Bearbeitbar;
+        
         this.SessionListe.forEach((mSess) =>
             mResult.SessionListe.push(mSess.Copy())
         );
