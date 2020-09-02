@@ -29,9 +29,17 @@
                                 </mat-expansion-panel-header>
                                 <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">
                                     <ng-container *ngFor="let satz of SessUeb.ArbeitsSatzListe">
-                                        <app-satz-simple  [satz]="satz" fxFlex="0 1 calc(100% / 24)">
-                                        </app-satz-simple>
-                                
+
+                                        <ng-container *ngIf='session.getKategorie01() === "NurLesen"'>
+                                            <app-satz-simple [satz]="satz" fxFlex="0 1 calc(100% / 24)">
+                                            </app-satz-simple>
+                                        </ng-container>
+
+                                        <ng-container *ngIf='session.getKategorie01() === "Bearbeitbar"'>
+                                            <app-satz-edit [satz]="satz" fxFlex="0 1 100%">
+                                            </app-satz-edit>
+                                        </ng-container>
+
                                     </ng-container>
                                 </div>
                             </mat-expansion-panel>
@@ -64,4 +72,3 @@
         <h6>{{SessUeb.Uebung.Name}}</h6>
     </div>
 </div> -->
-

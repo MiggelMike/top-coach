@@ -22,6 +22,7 @@ export interface IUebung {
     Name: string;
     Typ: UebungsTyp;
     Kategorieen01: Array<UebungsKategorie01>;
+    Kategorie02: string;
     Copy(): IUebung;
 }
 
@@ -56,6 +57,8 @@ export class Uebung implements IUebung {
     public Typ: UebungsTyp = UebungsTyp.Undefined;
     @JsonProperty()
     public Kategorieen01: Array<UebungsKategorie01> = [];
+    @JsonProperty()
+    public Kategorie02: string = '';
 
     constructor() { };
 
@@ -65,6 +68,7 @@ export class Uebung implements IUebung {
         mUebung.Name = this.Name;
         mUebung.Typ = this.Typ;
         mUebung.Kategorieen01 = [];
+        mUebung.Kategorie02 = this.Kategorie02;
         this.Kategorieen01.forEach(val => mUebung.Kategorieen01.push(Object.assign({}, val)));
         return mUebung;
     }

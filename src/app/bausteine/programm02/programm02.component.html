@@ -1,6 +1,6 @@
 <!-- <div *ngIf="((SessionListe !== undefined) && (SessionListe.length > 0))"> -->
-<div *ngIf="(SessionListe.length > 0)">
-    <div *ngFor="let sess of SessionListe, index as i">
+<ng-container  *ngIf="(SessionListe.length > 0)">
+    <ng-container *ngFor="let sess of SessionListe, index as i">
         <mat-accordion multi="true" id="accordionSession">
             <mat-expansion-panel>
                 <mat-expansion-panel-header>
@@ -18,5 +18,5 @@
                 </div>
             </mat-expansion-panel>
         </mat-accordion>
-    </div>
-</div>
+    </ng-container>
+</ng-container>

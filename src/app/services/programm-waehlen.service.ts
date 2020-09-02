@@ -1,7 +1,7 @@
+import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { GlobalService } from './global.service';
 import { Injectable } from '@angular/core';
 import { Observable, of, from } from 'rxjs';
-import { ITrainingsProgramm } from '../../Business/TrainingsProgramm/TrainingsProgramm';
 import { TrainingServiceModule } from '../../modules/training-service.module';
 
 @Injectable({
@@ -21,6 +21,16 @@ export class ProgrammWaehlenService {
     private LadeProgramme(): void {
         this.ProgrammListe = this.aGlobalService.StandardVorlagen;
     }
+
+    public LadeProgramm(aProgrammID: number): ITrainingsProgramm {
+        for (let index = 0; index < this.ProgrammListe.length; index++) {
+            if (this.ProgrammListe[index].ID == aProgrammID)
+                return this.ProgrammListe[index];
+            
+        }
+        return null;
+    }
+
 
     public LadeTrainingsProgramme(): Observable<ITrainingsProgramm[]> {
         const mResult = new Observable<ITrainingsProgramm[]>(

@@ -3,7 +3,7 @@ import { GlobalService } from './services/global.service';
 import { MatCardModule } from '@angular/material/card';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { NgModule } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA,CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
 import { FlexLayoutModule } from "@angular/flex-layout";
 
 import { AppComponent } from './app.component';
@@ -38,6 +38,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SatzSimpleComponent } from './bausteine/satz-simple/satz-simple.component';
 import { SessionFormComponent } from './bausteine/session-form/session-form.component';
 import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.component';
+import { SatzEditComponent } from './bausteine/satz-edit/satz-edit.component';
 
 
 // var sqlite3 = require('sqlite3');1
@@ -55,7 +56,8 @@ import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.comp
         FilePreviewOverlayComponent,
         SatzSimpleComponent,
         SessionFormComponent,
-        WorkoutFormComponent
+        WorkoutFormComponent,
+        SatzEditComponent
     ],
     imports: [
         MatCardModule,
@@ -79,6 +81,10 @@ import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.comp
         OverlayModule,
         ReactiveFormsModule
     ],
+    schemas: [
+        CUSTOM_ELEMENTS_SCHEMA,
+        NO_ERRORS_SCHEMA
+      ],
 
    // exports: [TrainingServiceModule],
 

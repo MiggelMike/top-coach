@@ -5,10 +5,9 @@ import { ISession } from '../../../Business/Session/Session';
     selector: 'app-programm03',
     templateUrl: './programm03.component.html',
     styleUrls: ['./programm03.component.scss'],
-    
 })
 export class Programm03Component implements OnInit {
-    
+   
     @Input() session: ISession;
     constructor() { }
 

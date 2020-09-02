@@ -2,6 +2,11 @@ import { Uebung_Sess, IUebung_Sess } from "./../Uebung/Uebung_Sess";
 import { IUebung } from "../Uebung/Uebung";
 import { JsonProperty } from "@peerlancers/json-serialization";
 
+export enum SessionStatus {
+    NurLesen,
+    Bearbeitbar,
+}
+
 export interface ISession {
     ID: number;
     FK_Programm: number;
@@ -11,8 +16,11 @@ export interface ISession {
     Datum: Date;
     DauerInSek: number;
     Expanded: Boolean;
+    Kategorie01: SessionStatus;
+    Bearbeitbar: Boolean;
     Copy(): ISession;
     NeueUebung(aUebung: IUebung): IUebung_Sess;
+    getKategorie01(): string;
 }
 
 export class Session implements ISession {
@@ -31,6 +39,15 @@ export class Session implements ISession {
     @JsonProperty()
     public DauerInSek: number;
     public Expanded: Boolean;
+    public Kategorie01: SessionStatus;
+    public Bearbeitbar: Boolean = false;
+
+    public getKategorie01(): string {
+        if (this.Kategorie01 === SessionStatus.Bearbeitbar)
+            return "Bearbeitbar";
+        if (this.Kategorie01 === SessionStatus.NurLesen) return "NurLesen";
+        return "";
+    }
 
     public NeueUebung(aUebung: IUebung): IUebung_Sess {
         const mUebung_Sess = new Uebung_Sess(aUebung);
@@ -39,12 +56,15 @@ export class Session implements ISession {
 
     constructor(aPara: Session = {} as Session) {
         this.ID = aPara.ID;
-        this.Name = aPara.Name ? aPara.Name : "Day " + aPara.TagNr.toString(),
-        this.Datum = aPara.Datum;
+        (this.Name = aPara.Name ? aPara.Name : "Day " + aPara.TagNr.toString()),
+            (this.Datum = aPara.Datum);
         this.DauerInSek = aPara.DauerInSek;
         this.TagNr = aPara.TagNr;
         this.FK_Programm = aPara.FK_Programm;
         this.Expanded = aPara.Expanded ? aPara.Expanded : true;
+        this.Kategorie01 = aPara.Kategorie01
+            ? aPara.Kategorie01
+            : SessionStatus.NurLesen;
     }
 
     public Copy(): ISession {
@@ -56,12 +76,13 @@ export class Session implements ISession {
             DauerInSek: this.DauerInSek,
             FK_Programm: this.FK_Programm,
             Expanded: this.Expanded,
+            Kategorie01: this.Kategorie01,
         } as Session);
 
         this.UebungsListe.forEach((mUebung_Sess) =>
             mResult.UebungsListe.push(mUebung_Sess.Copy())
         );
-        
+
         return mResult;
     }
 }

@@ -62,6 +62,7 @@ export class GlobalService {
     public Sportler: Sportler;
     public AnstehendeSessionObserver: Subscriber<ISession[]>;
     public StandardVorlagen = new Array<ITrainingsProgramm>();
+    public EditWorkout: ITrainingsProgramm;
     public Daten: AppDataMap = new AppDataMap();
     public DB: any;
 

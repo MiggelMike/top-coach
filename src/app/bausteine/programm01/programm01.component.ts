@@ -40,6 +40,6 @@ export class Programm01Component implements OnInit {
     }
 
     EditThisWorkoutClick(): void { 
-        
+        this.flobalService.EditWorkout = this.programm;
     }
 }
