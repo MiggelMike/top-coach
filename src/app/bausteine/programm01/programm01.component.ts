@@ -16,7 +16,7 @@ export class Programm01Component implements OnInit {
     @Input() programmtext: { value: null };
 
     constructor(
-        private flobalService: GlobalService,
+        private fGlobalService: GlobalService,
         private fDialogeService: DialogeService
     ) {}
 
@@ -24,24 +24,24 @@ export class Programm01Component implements OnInit {
 
     SelectThisWorkoutClick(): void {
         // Soll das aktuelle Work-Out durch ein anderes ersetzt werden?
-        if (this.flobalService.Daten.AktuellesProgramm.Programm !== undefined) {
+        if (this.fGlobalService.Daten.AktuellesProgramm.Programm !== undefined) {
             const mDialogData = new DialogData();
             mDialogData.textZeilen.push(
-                `Replace current Program "${this.flobalService.Daten.AktuellesProgramm.Programm.Name}" with "${this.programm.Name}" ?`
+                `Replace current Program "${this.fGlobalService.Daten.AktuellesProgramm.Programm.Name}" with "${this.programm.Name}" ?`
             );
             mDialogData.OkData = this.programm;
             mDialogData.OkFn = () => {
-                this.flobalService.SetzeAktuellesProgramm(mDialogData.OkData);
+                this.fGlobalService.SetzeAktuellesProgramm(mDialogData.OkData);
             };
 
             this.fDialogeService.JaNein(mDialogData);
         } else {
-            this.flobalService.SetzeAktuellesProgramm(this.programm);
+            this.fGlobalService.SetzeAktuellesProgramm(this.programm);
         }
     }
 
     EditThisWorkoutClick(): void { 
-        this.flobalService.EditWorkout = this.programm;
-        this.flobalService.EditWorkout.SessionListe.forEach(sess => sess.Kategorie01 = SessionStatus.Bearbeitbar);
+        this.fGlobalService.EditWorkout = this.programm;
+        this.fGlobalService.EditWorkout.SessionListe.forEach(sess => sess.Kategorie01 = SessionStatus.Bearbeitbar);
     }
 }

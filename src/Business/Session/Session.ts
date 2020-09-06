@@ -50,7 +50,7 @@ export class Session implements ISession {
     }
 
     public NeueUebung(aUebung: IUebung): IUebung_Sess {
-        const mUebung_Sess = new Uebung_Sess(aUebung);
+        const mUebung_Sess = new Uebung_Sess(this,aUebung);
         return mUebung_Sess;
     }
 

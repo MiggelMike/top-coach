@@ -22,18 +22,20 @@
                         </mat-accordion>
                     </div>
 
-                    <ng-container *ngIf="SessUeb.ArbeitsSatzListe.length > 0">
-                        <mat-accordion multi="true">
-                            <mat-expansion-panel>
-                                <mat-expansion-panel-header>
-                                    <div>Work</div>
-                                </mat-expansion-panel-header>
+                    <mat-accordion multi="true">
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <div>Work</div>
+                            </mat-expansion-panel-header>
+                    
+                            <ng-container *ngIf="SessUeb.ArbeitsSatzListe.length > 0">
+                    
                                 <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">
                                     <ng-container *ngFor="let satz of SessUeb.ArbeitsSatzListe, index as i">
                                         <ng-container *ngIf='session.getKategorie01() === "NurLesen"'>
                                             <app-satz-simple [satz]="satz" fxFlex="0 1 calc(100% / 24)"></app-satz-simple>
                                         </ng-container>
-
+                    
                                         <ng-container *ngIf='session.getKategorie01() === "Bearbeitbar"'>
                                             <div fxLayout="column" fxFlex="100%">
                                                 <div fxLayout="row" fxLayoutGap="2px" fxFlex="100%">
@@ -52,44 +54,45 @@
                                                         </div>
                                                     </ng-container>
                                                 </div>
-                                        
+                    
                                                 <div fxLayout="row" fxLayoutGap="2px" fxFlex="100%">
                                                     <div class="center-item align-right" fxFlex="25px">
                                                         <mat-label>{{i+1}}</mat-label>
                                                     </div>
-
+                    
                                                     <mat-form-field class="align-right" fxFlex="60px">
-                                                        <input matInput [textMask]="{mask: floatMask, guide: false }" 
-                                                        [ngModel]="satz.GewichtVorgabe | number: '1.1'" 
-                                                        (blur)="SetWeight($event.target.value, satz)"
-                                                        type="text">
+                                                        <input matInput [textMask]="{mask: floatMask, guide: false }"
+                                                            [ngModel]="satz.GewichtVorgabe | number: '1.1'"
+                                                            (blur)="SetWeight($event.target.value, satz)" type="text">
                                                     </mat-form-field>
-
+                    
                                                     <mat-form-field class="align-right" fxFlex="60px">
-                                                        <input matInput [textMask]="{mask: repMask, guide: false}" [(ngModel)]="satz.WdhVorgabe" type="text">
+                                                        <input matInput [textMask]="{mask: repMask, guide: false}"
+                                                            [(ngModel)]="satz.WdhVorgabe" type="text">
                                                     </mat-form-field>
-                                                
+                    
                                                     <div class="center-item" layout-align="center center" fxFlex="45px">
                                                         <mat-checkbox [(ngModel)]="satz.AMRAP"></mat-checkbox>
                                                     </div>
-
-                                                    <div  class="center-item" layout-align="center center" fxFlex="50px">
-                                                        <a mat-flat-button>Delete</a>
+                    
+                                                    <div class="center-item" layout-align="center center" fxFlex="50px">
+                                                        <a mat-flat-button (click)="DeleteSet(satz, SessUeb)">Delete</a>
                                                     </div>
                                                 </div>
                                             </div>
                                         </ng-container>
                                     </ng-container>
                                 </div>
-                                <div fxLayout="row" fxLayout.lt-sm="row" fxLayoutAlign="flex-start">
-                                    <div  class="center-item" layout-align="center center" fxFlex="50px">
-                                        <a mat-flat-button>Add Set</a>
-                                    </div>
+                            </ng-container>
+                    
+                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">
+                                <div class="center-item" layout-align="center center" fxFlex="50px">
+                                    <a mat-flat-button (click)=" AddSet(SessUeb,'Training')">Add Set</a>
                                 </div>
-                            </mat-expansion-panel>
-                        </mat-accordion>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
 
-                    </ng-container>
 
                     <div *ngIf="SessUeb.AbwaermSatzListe.length > 0">
                         <mat-accordion multi="true">

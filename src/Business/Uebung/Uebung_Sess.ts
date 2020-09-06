@@ -1,22 +1,33 @@
-import { ISession } from 'src/Business/Session/Session';
-import { ISatz, INeuerSatz, SatzTyp, LiftTyp } from './../Satz/Satz';
-import { UebungsTyp, UebungsKategorie01, Uebung, IUebung } from './Uebung';
-import { JsonProperty } from '@peerlancers/json-serialization';
+import { ISession } from "src/Business/Session/Session";
+import { ISatz, Satz, INeuerSatz, SatzTyp, LiftTyp, SatzPausen, SatzStatus } from "./../Satz/Satz";
+import { UebungsTyp, UebungsKategorie01, Uebung, IUebung } from "./Uebung";
+import { JsonProperty } from "@peerlancers/json-serialization";
 
-export interface IUebung_Sess{
+export interface IUebung_Sess {
+    Session: ISession;
+    Uebung: IUebung;
     SatzListe: Array<ISatz>;
     Copy(): IUebung_Sess;
+    NeuerSatz(
+        aSatzTyp: SatzTyp,
+        aLiftTyp: LiftTyp,
+        aWdhVorgabe: number,
+        aProzent: number,
+        aAmrap: boolean
+    ): ISatz; 
 }
 
-export class Uebung_Sess implements IUebung_Sess, INeuerSatz {
+export class Uebung_Sess implements IUebung_Sess {
+    @JsonProperty()
+    Session: ISession;
     @JsonProperty()
     public SatzListe: Array<ISatz> = new Array<ISatz>();
     @JsonProperty()
     public Uebung: IUebung;
-    
-    public get AufwaermSatzListe(): Array<ISatz>{
+
+    public get AufwaermSatzListe(): Array<ISatz> {
         const mResult = Array<ISatz>();
-        this.SatzListe.forEach(mSatz => {
+        this.SatzListe.forEach((mSatz) => {
             if (mSatz.SatzTyp == SatzTyp.Aufwaermen) {
                 mResult.push(mSatz);
             }
@@ -24,9 +35,9 @@ export class Uebung_Sess implements IUebung_Sess, INeuerSatz {
         return mResult;
     }
 
-    public get ArbeitsSatzListe(): Array<ISatz>{
+    public get ArbeitsSatzListe(): Array<ISatz> {
         const mResult = Array<ISatz>();
-        this.SatzListe.forEach(mSatz => {
+        this.SatzListe.forEach((mSatz) => {
             if (mSatz.SatzTyp == SatzTyp.Training) {
                 mResult.push(mSatz);
             }
@@ -34,9 +45,9 @@ export class Uebung_Sess implements IUebung_Sess, INeuerSatz {
         return mResult;
     }
 
-    public get AbwaermSatzListe(): Array<ISatz>{
+    public get AbwaermSatzListe(): Array<ISatz> {
         const mResult = Array<ISatz>();
-        this.SatzListe.forEach(mSatz => {
+        this.SatzListe.forEach((mSatz) => {
             if (mSatz.SatzTyp == SatzTyp.Abwaermen) {
                 mResult.push(mSatz);
             }
@@ -44,25 +55,41 @@ export class Uebung_Sess implements IUebung_Sess, INeuerSatz {
         return mResult;
     }
 
-    constructor(aUebung: IUebung) {
+    constructor(aSession: ISession, aUebung: IUebung) {
+        this.Session = aSession;
         this.Uebung = aUebung.Copy();
     }
 
-    public Copy(): IUebung_Sess{
-        const mUebung_Sess = new Uebung_Sess(this.Uebung);
-        mUebung_Sess.SatzListe.forEach(mSatz => mUebung_Sess.SatzListe.push(mSatz.Copy()));
+    public Copy(): IUebung_Sess {
+        const mUebung_Sess = new Uebung_Sess(this.Session, this.Uebung);
+        mUebung_Sess.SatzListe.forEach((mSatz) =>
+            mUebung_Sess.SatzListe.push(mSatz.Copy())
+        );
         return mUebung_Sess;
-    };
+    }
 
-    public NeuerSatz(
+    public NeuerSatz( 
         aSatzTyp: SatzTyp,
         aLiftTyp: LiftTyp,
         aWdhVorgabe: number,
         aProzent: number,
-        aSession: ISession,
-        aUebung: IUebung,
         aAmrap: boolean
-    ): ISatz{
-        return null;
+    ): ISatz {
+        const mSatz = new Satz(
+            { SessionID : this.Session.ID,
+              Uebung : this.Uebung,
+              SatzTyp : aSatzTyp,
+              Prozent : aProzent,
+              WdhVorgabe : aWdhVorgabe,
+              WdhAusgefuehrt : 0,
+              GewichtVorgabe : 0,
+              GewichtAusgefuehrt : 0,
+              PausenMinZeit : SatzPausen.Standard_Min,
+              PausenMaxZeit : SatzPausen.Standard_Max,
+              Status : SatzStatus.Wartet,
+              AMRAP : aAmrap
+            } as Satz);
+        mSatz.LiftTyp = aLiftTyp;
+        return mSatz;
     }
-} 
+}
