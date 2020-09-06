@@ -55,6 +55,7 @@ export interface ISatz {
     GewichtAusgefuehrt: number;
     WdhAusgefuehrt: number;
     GewichtVorgabe: number;
+    // getGewichtVorgabe(): string;
     WdhVorgabe: number;
     PausenMinZeit: number;
     PausenMaxZeit: number;
@@ -80,6 +81,17 @@ export class Satz implements ISatz {
     public LiftTyp: LiftTyp = LiftTyp.Custom;
     public AMRAP: boolean = false;
     public SatzGruppenNr: number = 0;
+
+    get fGewichtVorgabe(): string {
+        if (this.GewichtVorgabe === 0)
+            return '0.00';
+        return this.GewichtVorgabe.toPrecision(2);
+    }
+
+    set fGewichtVorgabe(value : string) {
+        this.GewichtVorgabe = 100;
+    }
+
 
     constructor(aPara: Satz = {} as Satz ) {
         this.SessionID = aPara.SessionID ? aPara.SessionID : 0;

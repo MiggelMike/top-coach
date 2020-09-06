@@ -30,7 +30,6 @@
                                 </mat-expansion-panel-header>
                                 <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">
                                     <ng-container *ngFor="let satz of SessUeb.ArbeitsSatzListe, index as i">
-
                                         <ng-container *ngIf='session.getKategorie01() === "NurLesen"'>
                                             <app-satz-simple [satz]="satz" fxFlex="0 1 calc(100% / 24)"></app-satz-simple>
                                         </ng-container>
@@ -39,50 +38,57 @@
                                             <div fxLayout="column" fxFlex="100%">
                                                 <div fxLayout="row" fxLayoutGap="2px" fxFlex="100%">
                                                     <ng-container *ngIf="i === 0">
-                                                        <div fxLayout="column" fxFlex="25px">
+                                                        <div class="center-item align-right" fxLayout="column" fxFlex="25px">
                                                             #
                                                         </div>
-                                                        <div fxLayout="column" fxFlex="65px">
+                                                        <div fxLayout="column" fxFlex="60px">
                                                             Weight
                                                         </div>
-                                                        <div fxLayout="column" fxFlex="65px">
+                                                        <div fxLayout="column" fxFlex="60px">
                                                             Reps
                                                         </div>
-                                                        <div fxLayout="column" fxFlex="65px">
+                                                        <div fxLayout="column" fxFlex="45px">
                                                             AMRAP
                                                         </div>
                                                     </ng-container>
                                                 </div>
-                                                <!-- <div fxLayout="row" fxLayoutGap="2px" fxFlex="100%" fxFlex.gt-sm="25%" fxHide.md> -->
                                         
                                                 <div fxLayout="row" fxLayoutGap="2px" fxFlex="100%">
-                                                    <div class="center-item" fxFlex="25px">
+                                                    <div class="center-item align-right" fxFlex="25px">
                                                         <mat-label>{{i+1}}</mat-label>
                                                     </div>
-                                                
-                                                    <mat-form-field class="align-right" fxFlex="65px">
-                                                        <input matInput [(ngModel)]="satz.GewichtVorgabe" type="number">
+
+                                                    <mat-form-field class="align-right" fxFlex="60px">
+                                                        <input matInput [textMask]="{mask: floatMask, guide: false }" 
+                                                        [ngModel]="satz.GewichtVorgabe | number: '1.1'" 
+                                                        (blur)="SetWeight($event.target.value, satz)"
+                                                        type="text">
+                                                    </mat-form-field>
+
+                                                    <mat-form-field class="align-right" fxFlex="60px">
+                                                        <input matInput [textMask]="{mask: repMask, guide: false}" [(ngModel)]="satz.WdhVorgabe" type="text">
                                                     </mat-form-field>
                                                 
-                                                    <mat-form-field class="align-right" fxFlex="65px">
-                                                        <input matInput [(ngModel)]="satz.WdhVorgabe" type="number">
-                                                    </mat-form-field>
-                                                
-                                                    <div class="center-item" layout-align="center center" fxFlex="50px">
+                                                    <div class="center-item" layout-align="center center" fxFlex="45px">
                                                         <mat-checkbox [(ngModel)]="satz.AMRAP"></mat-checkbox>
                                                     </div>
-                                                
-                                                    <!-- <div layout="row" layout-align="center center" style="height: 100vh">
-                                                                                                                                            <a mat-flat-button>Delete</a>
-                                                                                                                                        </div> -->
+
+                                                    <div  class="center-item" layout-align="center center" fxFlex="50px">
+                                                        <a mat-flat-button>Delete</a>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <!-- <app-satz-edit [satz]="satz" fxFlex="0 1 100%"></app-satz-edit> -->
                                         </ng-container>
                                     </ng-container>
                                 </div>
+                                <div fxLayout="row" fxLayout.lt-sm="row" fxLayoutAlign="flex-start">
+                                    <div  class="center-item" layout-align="center center" fxFlex="50px">
+                                        <a mat-flat-button>Add Set</a>
+                                    </div>
+                                </div>
                             </mat-expansion-panel>
                         </mat-accordion>
+
                     </ng-container>
 
                     <div *ngIf="SessUeb.AbwaermSatzListe.length > 0">

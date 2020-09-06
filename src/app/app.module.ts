@@ -40,9 +40,33 @@ import { SatzSimpleComponent } from './bausteine/satz-simple/satz-simple.compone
 import { SessionFormComponent } from './bausteine/session-form/session-form.component';
 import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.component';
 import { SatzEditComponent } from './bausteine/satz-edit/satz-edit.component';
-
+import { TextMaskModule } from 'angular2-text-mask';
+import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 
 // var sqlite3 = require('sqlite3');1
+
+//export const Firstmask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+export const Firstmask = [/[0-9,'.', [0-9, [0-9,'.']]] /];
+
+export const floatMask = createNumberMask({
+    prefix: '',
+    suffix: '', // This will put the dollar sign at the end, with a space.
+    includeThousandsSeparator: true, //  (boolean): whether or not to separate thousands. Defaults to to true.
+    integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
+    allowDecimal: true, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
+    decimalLimit: 3,
+    // requireDecimal: true,
+    // allowLeadingZeroes: true
+  })
+
+  export const repMask = createNumberMask({
+    prefix: '',
+    suffix: '', // This will put the dollar sign at the end, with a space.
+    includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
+    integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
+    allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
+  })
+
 
 @NgModule({
     declarations: [
@@ -61,6 +85,7 @@ import { SatzEditComponent } from './bausteine/satz-edit/satz-edit.component';
         SatzEditComponent
     ],
     imports: [
+        TextMaskModule,
         MatCheckboxModule,
         MatCardModule,
         FlexLayoutModule,
@@ -88,7 +113,7 @@ import { SatzEditComponent } from './bausteine/satz-edit/satz-edit.component';
         NO_ERRORS_SCHEMA
       ],
 
-   // exports: [TrainingServiceModule],
+    // exports: [TextMaskModule],
 
     entryComponents: [
         DialogComponent,
@@ -102,7 +127,8 @@ import { SatzEditComponent } from './bausteine/satz-edit/satz-edit.component';
 export class AppModule {
 
 
-
 }
+
+
 
 

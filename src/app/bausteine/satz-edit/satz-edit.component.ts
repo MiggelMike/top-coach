@@ -7,8 +7,9 @@ import { ISatz } from './../../../Business/Satz/Satz';
     styleUrls: ["./satz-edit.component.scss"],
 })
 export class SatzEditComponent implements OnInit {
-    @Input() satz: ISatz;
+  @Input() satz: ISatz;
     constructor() {}
 
-    ngOnInit(): void {}
+  ngOnInit(): void { }
+
 }
