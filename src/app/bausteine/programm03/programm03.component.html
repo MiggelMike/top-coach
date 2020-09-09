@@ -1,5 +1,5 @@
-<div *ngIf="session">
-    <div *ngFor="let SessUeb of session.UebungsListe, index as i; let isOdd=odd">
+<ng-container *ngIf="session">
+    <ng-container *ngFor="let SessUeb of session.UebungsListe, index as i; let isOdd=odd">
         <mat-accordion multi="true">
             <mat-expansion-panel>
                 <mat-expansion-panel-header>
@@ -20,7 +20,7 @@
                                 </div>
                             </mat-expansion-panel>
                         </mat-accordion>
-                    </div>
+                    </div>  
 
                     <mat-accordion multi="true">
                         <mat-expansion-panel>
@@ -55,7 +55,7 @@
                                                     </ng-container>
                                                 </div>
                     
-                                                <div fxLayout="row" fxLayoutGap="2px" fxFlex="100%">
+                                                <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
                                                     <div class="center-item align-right" fxFlex="25px">
                                                         <mat-label>{{i+1}}</mat-label>
                                                     </div>
@@ -75,8 +75,12 @@
                                                         <mat-checkbox [(ngModel)]="satz.AMRAP"></mat-checkbox>
                                                     </div>
                     
-                                                    <div class="center-item" layout-align="center center" fxFlex="50px">
-                                                        <a mat-flat-button (click)="DeleteSet(satz, SessUeb)">Delete</a>
+                                                    <div class="center-item" layout-align="center center">
+                                                        <a [ngClass]="['link-button-font-size']" mat-flat-button (click)="DeleteSet(satz, SessUeb)">Delete</a>
+                                                    </div>
+
+                                                    <div class="center-item" layout-align="center center">
+                                                        <a [ngClass]="['link-button-font-size']" mat-flat-button (click)="CopySet(satz, SessUeb)">Copy</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -84,10 +88,23 @@
                                     </ng-container>
                                 </div>
                             </ng-container>
+
+                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
+                                <div class="center-item" layout-align="center center">
+                                    <a [ngClass]="['link-button-font-size']" mat-flat-button (click)="CopyExcercise(SessUeb)">Copy Excercise</a>
+                                </div>
+                                
+                                <div class="center-item" layout-align="center center">
+                                    <a [ngClass]="['link-button-font-size']" mat-flat-button (click)="DeleteExercise(SessUeb)">Delete Exercise</a>
+                                </div>
+                            </div>
                     
-                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">
-                                <div class="center-item" layout-align="center center" fxFlex="50px">
-                                    <a mat-flat-button (click)=" AddSet(SessUeb,'Training')">Add Set</a>
+                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center"> 
+                                <div class="center-item" layout-align="center center">
+                                    <a [ngClass]="['link-button-font-size']" mat-flat-button (click)="AddSet(SessUeb,'Training')">Add Set</a>
+                                </div>
+                                <div class="center-item" layout-align="center center">
+                                    <a [ngClass]="['link-button-font-size']" mat-flat-button (click)="PasteSet(SessUeb)">Paste Set</a>
                                 </div>
                             </div>
                         </mat-expansion-panel>
@@ -109,11 +126,13 @@
                         </mat-accordion>
                     </div>
                 </div>
+
             </mat-expansion-panel>
         </mat-accordion>
-    </div>
-</div>
 
+
+    </ng-container>
+</ng-container>
 
 <!-- <div class="container" [ngClass]="isOdd ? 'odd' : 'even'">
     <div class="row no-gutters">
