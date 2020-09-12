@@ -1,3 +1,4 @@
+import { GlobalService } from 'src/app/services/global.service';
 import { Satz, SatzTyp, SatzStatus, SatzPausen } from "../Satz/Satz";
 import { IUebung } from "./../Uebung/Uebung";
 import { LiftTyp } from "../Satz/Satz";

@@ -1,7 +1,8 @@
 <ng-container  *ngIf="(SessionListe.length > 0)">
+    <a [ngClass]="['link-button-font']" mat-flat-button (click)="toggleSessions($event)">Close all Sessions</a>
     <ng-container *ngFor="let sess of SessionListe, index as i">
-        <mat-accordion multi="true" id="accordionSession">
-            <mat-expansion-panel>
+        <mat-accordion #accSession="matAccordion" multi="true">
+            <mat-expansion-panel [expanded]="true">
                 <mat-expansion-panel-header>
                     <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">
                         <h6 class="mb-0">{{sess.Name}}</h6>
@@ -17,21 +18,21 @@
             
                 <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
                     <div class="center-item" layout-align="center center">
-                        <a [ngClass]="['link-button-font-size']" mat-flat-button (click)="CopyDay()">Copy Day</a>
+                        <a [ngClass]="['link-button-font']" mat-flat-button (click)="CopyDay()">Copy Day</a>
                     </div>
 
                     <div class="center-item" layout-align="center center">
-                        <a [ngClass]="['link-button-font-size']" mat-flat-button (click)="DeleteDay()">Delete Day</a>
+                        <a [ngClass]="['link-button-font']" mat-flat-button (click)="DeleteDay()">Delete Day</a>
                     </div>
                 </div>
             
                 <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
                     <div class="center-item" layout-align="center center">
-                        <a [ngClass]="['link-button-font-size']" mat-flat-button (click)="AddExcercise()" >Add Excercise</a>
+                        <a [ngClass]="['link-button-font']" mat-flat-button (click)="AddExcercise()" >Add Excercise</a>
                     </div>
             
                     <div class="center-item" layout-align="center center">
-                        <a [ngClass]="['link-button-font-size']" mat-flat-button (click)="PasteExcercise()">Paste Excercise</a>
+                        <a [ngClass]="['link-button-font']" mat-flat-button (click)="PasteExcercise()">Paste Excercise</a>
                     </div>
         
                 </div>
@@ -41,20 +42,20 @@
     
     <ng-container *ngIf="ShowButtons">
         <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center" [style.margin-top]="'5px'">
-            <div class="center-item link-button-font-size" layout-align="center center">
-                <a class='link-button-font-size' mat-flat-button (click)="AddDay()">Add Day</a>
+            <div class="center-item link-button-font" layout-align="center center">
+                <a class='link-button-font' mat-flat-button (click)="AddDay()">Add Day</a>
             </div>
             <div class="center-item" layout-align="center center">
-                <a  class='link-button-font-size' mat-flat-button (click)="PasteDay()">Paste Day</a>
+                <a  class='link-button-font' mat-flat-button (click)="PasteDay()">Paste Day</a>
             </div>
         </div>
     
         <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center" [style.margin-top]="'5px'">
             <div class="center-item" layout-align="center center">
-                <a class='link-button-font-size' mat-flat-button (click)="SaveChanges()">Save</a>
+                <a class='link-button-font' mat-flat-button (click)="SaveChanges()">Save</a>
             </div>
             <div class="center-item" layout-align="center center">
-                <a class='link-button-font-size' mat-flat-button (click)="CancelChanges()">Cancel</a>
+                <a class='link-button-font' mat-flat-button (click)="CancelChanges()">Cancel</a>
             </div>
         </div>
     </ng-container>

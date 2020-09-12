@@ -1,14 +1,12 @@
-import { DialogeService } from './../../services/dialoge.service';
-import { DialogData } from './../../dialoge/hinweis/hinweis.component';
-import {
-    Uebung_Sess,
-    IUebung_Sess,
-} from "./../../../Business/Uebung/Uebung_Sess";
+import { GlobalService } from "src/app/services/global.service";
+import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
+import { DialogeService } from "./../../services/dialoge.service";
+import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
+import { IUebung_Sess } from "./../../../Business/Uebung/Uebung_Sess";
 import { ISatz, SatzTyp, LiftTyp } from "./../../../Business/Satz/Satz";
 import { repMask, floatMask } from "./../../app.module";
 import { Component, OnInit, Input } from "@angular/core";
 import { ISession } from "../../../Business/Session/Session";
-import { GlobalService } from './../../services/global.service';
 
 @Component({
     selector: "app-programm03",
@@ -19,12 +17,16 @@ export class Programm03Component implements OnInit {
     public floatMask = floatMask;
     public repMask = repMask;
     @Input() satz: ISatz;
-
+    @Input() programm: ITrainingsProgramm;
     @Input() session: ISession;
 
-    ngOnInit() {}
+    ngOnInit() {
+    }
 
-    constructor(private fDialogService: DialogeService) {}
+    constructor(
+        private fDialogService: DialogeService,
+        private fGlobalService: GlobalService
+    ) {}
 
     public SetWeight(value: number, satz: ISatz) {
         satz.GewichtVorgabe = value;
@@ -45,20 +47,30 @@ export class Programm03Component implements OnInit {
     }
 
     public PasteSet(aUebung_Sess: IUebung_Sess) {
-        alert("PasteSet");
+        if (this.fGlobalService.SatzCopy === null) {
+            const mDialoData = new DialogData();
+            mDialoData.textZeilen.push("No data to paste!");
+            this.fDialogService.Hinweis(mDialoData);
+            return;
+        }
+
+        const mSatz: ISatz = this.fGlobalService.SatzCopy;
+        mSatz.SessionID = aUebung_Sess.Session.ID;
+        mSatz.Uebung = aUebung_Sess.Uebung;
+        aUebung_Sess.SatzListe.push(mSatz);
     }
-    
-    public CopySet(aUebung_Sess: IUebung_Sess, aSatzTyp: string) {
-        alert("CopySet");
-    }    
+
+    public CopySet(aSatz: ISatz) {
+        this.fGlobalService.SatzCopy = aSatz.Copy();
+    }
 
     public DeleteExercise(aUebung_Sess: IUebung_Sess) {
         alert("DeleteExercise");
-    }  
-    
+    }
+
     public CopyExcercise(aUebung_Sess: IUebung_Sess) {
         alert("CopyExcercise");
-    }  
+    }
 
     public DeleteSet(aSatz: ISatz, aUebung_Sess: IUebung_Sess) {
         const mDialogData = new DialogData();

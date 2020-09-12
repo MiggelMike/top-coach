@@ -17,4 +17,7 @@ export class WorkoutFormComponent implements OnInit {
     ngOnInit() {
         this.programm = this.fGlobalService.EditWorkout;
     }
+
+
+
 }

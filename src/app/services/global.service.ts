@@ -1,4 +1,5 @@
-import { AppModule } from './../app.module';
+import { ISessionTag } from './../../Business/SessionTag/SessionTag';
+import { ISatz } from './../../Business/Satz/Satz';
 import { UebungService } from './uebung.service';
 import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { TrainingServiceModule } from '../../modules/training-service.module'
@@ -8,7 +9,7 @@ import { Sportler, ISportler } from '../../Business/Sportler/Sportler';
 import { ISession } from '../../Business/Session/Session';
 import { IUebung } from '../../Business/Uebung/Uebung';
 import { Observable, of, from, Subscriber } from 'rxjs';
-import { JsonProperty, deserialize, serialize } from '@peerlancers/json-serialization';
+import { JsonProperty, serialize } from '@peerlancers/json-serialization';
 
 
 export enum SpeicherOrtTyp {
@@ -65,6 +66,11 @@ export class GlobalService {
     public EditWorkout: ITrainingsProgramm;
     public Daten: AppDataMap = new AppDataMap();
     public DB: any;
+    public WorkoutCopy: ITrainingsProgramm = null;
+    public SessionCopy: ISession = null;
+    public SatzCopy: ISatz = null;
+    public SessionTagCopy: ISessionTag = null;
+
 
     private readonly cAktuellesTrainingsProgramm: string = 'AktuellesTrainingsProgramm';
     private readonly cTrainingsHistorie: string = 'TrainingsHistorie';

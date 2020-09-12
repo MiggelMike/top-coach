@@ -1,9 +1,10 @@
 import { DialogeService } from './../../services/dialoge.service';
 import { DialogData } from '../../dialoge/hinweis/hinweis.component';
 import { GlobalService } from './../../services/global.service';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { ITrainingsProgramm } from '../../../Business/TrainingsProgramm/TrainingsProgramm';
 import { SessionStatus } from 'src/Business/Session/Session';
+
 
 @Component({
     selector: "app-programm01",
@@ -22,9 +23,12 @@ export class Programm01Component implements OnInit {
 
     ngOnInit() {}
 
-    SelectThisWorkoutClick(): void {
+    SelectThisWorkoutClick($event : any): void {
+        $event.stopPropagation();
         // Soll das aktuelle Work-Out durch ein anderes ersetzt werden?
-        if (this.fGlobalService.Daten.AktuellesProgramm.Programm !== undefined) {
+        if (
+            this.fGlobalService.Daten.AktuellesProgramm.Programm !== undefined
+        ) {
             const mDialogData = new DialogData();
             mDialogData.textZeilen.push(
                 `Replace current Program "${this.fGlobalService.Daten.AktuellesProgramm.Programm.Name}" with "${this.programm.Name}" ?`
@@ -40,8 +44,12 @@ export class Programm01Component implements OnInit {
         }
     }
 
-    EditThisWorkoutClick(): void { 
+
+    EditThisWorkoutClick($event): void {
+        $event.stopPropagation();
         this.fGlobalService.EditWorkout = this.programm;
-        this.fGlobalService.EditWorkout.SessionListe.forEach(sess => sess.Kategorie01 = SessionStatus.Bearbeitbar);
+        this.fGlobalService.EditWorkout.SessionListe.forEach(
+            (sess) => (sess.Kategorie01 = SessionStatus.Bearbeitbar)
+        );
     }
 }

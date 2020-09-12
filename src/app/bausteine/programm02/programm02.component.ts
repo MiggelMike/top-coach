@@ -1,7 +1,8 @@
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
-import { Component, OnInit, Input } from "@angular/core";
-
+import { Component, OnInit, Input, ViewChild, ViewChildren, QueryList } from "@angular/core";
 import { ISession } from "src/Business/Session/Session";
+import { MatAccordion } from '@angular/material';
+
 
 @Component({
     selector: "app-programm02",
@@ -12,8 +13,10 @@ export class Programm02Component implements OnInit {
     @Input() SessionListe: Array<ISession> = [];
     @Input() ShowButtons: Boolean = false;
     @Input() Programm: ITrainingsProgramm = null;
+    //@ViewChild('accSession') accSession: MatAccordion;
+    @ViewChildren('accSession') accSession: QueryList<MatAccordion>
 
-    //  @ViewChild('sessionAccordion') accordionSession: MatAccordion;
+    private isExpanded: Boolean = true;
 
     constructor() {}
 
@@ -63,5 +66,18 @@ export class Programm02Component implements OnInit {
 
     public PasteExcercise() {
         alert("PasteExcercise");
+    }
+
+    toggleSessions($event: any): void {
+        if (this.isExpanded) {
+            this.accSession.forEach( acc => acc.closeAll());
+            this.isExpanded = false;
+            $event.currentTarget.innerText = "Open all Sessions";
+        } else {
+            this.accSession.forEach( acc => acc.openAll());
+            this.isExpanded = true;
+            $event.currentTarget.innerText = "Close all Sessions";
+        }
+        // $event.stopPropagation();
     }
 }

@@ -1,1 +1,46 @@
-<p>satz-edit works!</p>
+<div fxLayout="column" fxFlex="100%">
+    <div fxLayout="row" fxLayoutGap="2px" fxFlex="100%">
+        <ng-container *ngIf="rowNum === 0">
+            <div class="center-item align-right" fxLayout="column" fxFlex="25px">
+                #
+            </div>
+            <div fxLayout="column" fxFlex="60px">
+                Weight
+            </div>
+            <div fxLayout="column" fxFlex="60px">
+                Reps
+            </div>
+            <div fxLayout="column" fxFlex="45px">
+                AMRAP
+            </div>
+        </ng-container>
+    </div>
+
+    <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
+        <div class="center-item align-right" fxFlex="25px">
+            <mat-label>{{rowNum+1}}</mat-label>
+        </div>
+
+        <mat-form-field class="align-right" fxFlex="60px">
+            <input matInput [textMask]="{mask: floatMask, guide: false }"
+                [ngModel]="satz.GewichtVorgabe | number: '1.1'" (blur)="SetWeight($event.target.value, satz)"
+                type="text">
+        </mat-form-field>
+
+        <mat-form-field class="align-right" fxFlex="60px">
+            <input matInput [textMask]="{mask: repMask, guide: false}" [(ngModel)]="satz.WdhVorgabe" type="text">
+        </mat-form-field>
+
+        <div class="center-item" layout-align="center center" fxFlex="45px">
+            <mat-checkbox [(ngModel)]="satz.AMRAP"></mat-checkbox>
+        </div>
+
+        <div class="center-item" layout-align="center center">
+            <a [ngClass]="['link-button-font']" mat-flat-button (click)="DeleteSet(satz, SessUeb)">Delete</a>
+        </div>
+
+        <div class="center-item" layout-align="center center">
+            <a [ngClass]="['link-button-font']" mat-flat-button (click)="CopySet(satz)">Copy</a>
+        </div>
+    </div>
+</div>

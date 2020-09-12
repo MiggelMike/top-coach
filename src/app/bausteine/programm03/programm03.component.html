@@ -1,138 +1,35 @@
 <ng-container *ngIf="session">
     <ng-container *ngFor="let SessUeb of session.UebungsListe, index as i; let isOdd=odd">
         <mat-accordion multi="true">
-            <mat-expansion-panel>
+            <mat-expansion-panel  [expanded]="true">
                 <mat-expansion-panel-header>
                     <h6>{{SessUeb.Uebung.Name}}</h6>
                 </mat-expansion-panel-header>
 
                 <div class="card-body">
                     <div *ngIf="SessUeb.AufwaermSatzListe.length > 0">
-                        <mat-accordion multi="true">
-                            <mat-expansion-panel>
-                                <mat-expansion-panel-header>
-                                    <div>Warm up</div>
-                                </mat-expansion-panel-header>
-                                <div *ngFor="let satz of SessUeb.AufwaermSatzListe">
-                                    <div class="card-body">
-                                        <h6>{{satz.ID}}</h6>
-                                    </div>
-                                </div>
-                            </mat-expansion-panel>
-                        </mat-accordion>
-                    </div>  
+                        <app-sess-uebung [satzTypText]="'Warm Up'" [satzListe]="SessUeb.AufwaermSatzListe" [satz]="satz" [session]="session"
+                            [sessUebung]="SessUeb">
+                        </app-sess-uebung>
+                    </div>
 
-                    <mat-accordion multi="true">
-                        <mat-expansion-panel>
-                            <mat-expansion-panel-header>
-                                <div>Work</div>
-                            </mat-expansion-panel-header>
-                    
-                            <ng-container *ngIf="SessUeb.ArbeitsSatzListe.length > 0">
-                    
-                                <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">
-                                    <ng-container *ngFor="let satz of SessUeb.ArbeitsSatzListe, index as i">
-                                        <ng-container *ngIf='session.getKategorie01() === "NurLesen"'>
-                                            <app-satz-simple [satz]="satz" fxFlex="0 1 calc(100% / 24)"></app-satz-simple>
-                                        </ng-container>
-                    
-                                        <ng-container *ngIf='session.getKategorie01() === "Bearbeitbar"'>
-                                            <div fxLayout="column" fxFlex="100%">
-                                                <div fxLayout="row" fxLayoutGap="2px" fxFlex="100%">
-                                                    <ng-container *ngIf="i === 0">
-                                                        <div class="center-item align-right" fxLayout="column" fxFlex="25px">
-                                                            #
-                                                        </div>
-                                                        <div fxLayout="column" fxFlex="60px">
-                                                            Weight
-                                                        </div>
-                                                        <div fxLayout="column" fxFlex="60px">
-                                                            Reps
-                                                        </div>
-                                                        <div fxLayout="column" fxFlex="45px">
-                                                            AMRAP
-                                                        </div>
-                                                    </ng-container>
-                                                </div>
-                    
-                                                <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
-                                                    <div class="center-item align-right" fxFlex="25px">
-                                                        <mat-label>{{i+1}}</mat-label>
-                                                    </div>
-                    
-                                                    <mat-form-field class="align-right" fxFlex="60px">
-                                                        <input matInput [textMask]="{mask: floatMask, guide: false }"
-                                                            [ngModel]="satz.GewichtVorgabe | number: '1.1'"
-                                                            (blur)="SetWeight($event.target.value, satz)" type="text">
-                                                    </mat-form-field>
-                    
-                                                    <mat-form-field class="align-right" fxFlex="60px">
-                                                        <input matInput [textMask]="{mask: repMask, guide: false}"
-                                                            [(ngModel)]="satz.WdhVorgabe" type="text">
-                                                    </mat-form-field>
-                    
-                                                    <div class="center-item" layout-align="center center" fxFlex="45px">
-                                                        <mat-checkbox [(ngModel)]="satz.AMRAP"></mat-checkbox>
-                                                    </div>
-                    
-                                                    <div class="center-item" layout-align="center center">
-                                                        <a [ngClass]="['link-button-font-size']" mat-flat-button (click)="DeleteSet(satz, SessUeb)">Delete</a>
-                                                    </div>
-
-                                                    <div class="center-item" layout-align="center center">
-                                                        <a [ngClass]="['link-button-font-size']" mat-flat-button (click)="CopySet(satz, SessUeb)">Copy</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </ng-container>
-                                    </ng-container>
-                                </div>
-                            </ng-container>
-
-                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
-                                <div class="center-item" layout-align="center center">
-                                    <a [ngClass]="['link-button-font-size']" mat-flat-button (click)="CopyExcercise(SessUeb)">Copy Excercise</a>
-                                </div>
-                                
-                                <div class="center-item" layout-align="center center">
-                                    <a [ngClass]="['link-button-font-size']" mat-flat-button (click)="DeleteExercise(SessUeb)">Delete Exercise</a>
-                                </div>
-                            </div>
-                    
-                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center"> 
-                                <div class="center-item" layout-align="center center">
-                                    <a [ngClass]="['link-button-font-size']" mat-flat-button (click)="AddSet(SessUeb,'Training')">Add Set</a>
-                                </div>
-                                <div class="center-item" layout-align="center center">
-                                    <a [ngClass]="['link-button-font-size']" mat-flat-button (click)="PasteSet(SessUeb)">Paste Set</a>
-                                </div>
-                            </div>
-                        </mat-expansion-panel>
-                    </mat-accordion>
-
+                    <ng-container *ngIf="SessUeb.ArbeitsSatzListe.length > 0">
+                        <app-sess-uebung [satzTypText]="'Work'" [satzListe]="SessUeb.ArbeitsSatzListe" [satz]="satz" [session]="session"
+                            [sessUebung]="SessUeb">
+                        </app-sess-uebung>
+                    </ng-container>
 
                     <div *ngIf="SessUeb.AbwaermSatzListe.length > 0">
-                        <mat-accordion multi="true">
-                            <mat-expansion-panel>
-                                <mat-expansion-panel-header>
-                                    <div>Cool down</div>
-                                </mat-expansion-panel-header>
-                                <div *ngFor="let satz of SessUeb.AbwaermSatzListe">
-                                    <div class="card-body">
-                                        <h6>{{satz.ID}}</h6>
-                                    </div>
-                                </div>
-                            </mat-expansion-panel>
-                        </mat-accordion>
+                        <app-sess-uebung [satzTypText]="'Cool Down'" [satzListe]="SessUeb.AbwaermSatzListe" [satz]="satz" [session]="session"
+                            [sessUebung]="SessUeb">
+                        </app-sess-uebung>
                     </div>
                 </div>
-
             </mat-expansion-panel>
         </mat-accordion>
-
-
     </ng-container>
 </ng-container>
+
 
 <!-- <div class="container" [ngClass]="isOdd ? 'odd' : 'even'">
     <div class="row no-gutters">

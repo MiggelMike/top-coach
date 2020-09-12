@@ -42,6 +42,8 @@ import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.comp
 import { SatzEditComponent } from './bausteine/satz-edit/satz-edit.component';
 import { TextMaskModule } from 'angular2-text-mask';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
+import { SatzComponent } from './bausteine/satz/satz.component';
+import { SessUebungComponent } from './bausteine/sess-uebung/sess-uebung.component';
 
 // var sqlite3 = require('sqlite3');1
 
@@ -82,7 +84,9 @@ export const floatMask = createNumberMask({
         SatzSimpleComponent,
         SessionFormComponent,
         WorkoutFormComponent,
-        SatzEditComponent
+        SatzEditComponent,
+        SatzComponent,
+        SessUebungComponent
     ],
     imports: [
         TextMaskModule,
