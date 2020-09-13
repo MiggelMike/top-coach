@@ -34,20 +34,20 @@ export class Programm02Component implements OnInit {
         // }
     }
 
-    public AddDay() {
-        alert("AddDay");
+    public AddSession() {
+        alert("AddSession");
     }
 
-    public CopyDay() {
-        alert("CopyDay");
+    public CopySession() {
+        alert("CopySession");
     }
 
-    public DeleteDay() {
-        alert("DeleteDay");
+    public DeleteSession() {
+        alert("DeleteSession");
     }
 
-    public PasteDay() {
-        alert("PasteDay");
+    public PasteSession() {
+        alert("PasteSession");
     }
 
     public SaveChanges() {

@@ -18,21 +18,21 @@
             
                 <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
                     <div class="center-item" layout-align="center center">
-                        <a [ngClass]="['link-button-font']" mat-flat-button (click)="CopyDay()">Copy Day</a>
+                        <a [ngClass]="'link-button-font'" mat-flat-button (click)="CopySession()">Copy Session</a>
                     </div>
 
                     <div class="center-item" layout-align="center center">
-                        <a [ngClass]="['link-button-font']" mat-flat-button (click)="DeleteDay()">Delete Day</a>
+                        <a [ngClass]="'link-button-font'" mat-flat-button (click)="DeleteSession()">Delete Session</a>
                     </div>
                 </div>
             
                 <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
                     <div class="center-item" layout-align="center center">
-                        <a [ngClass]="['link-button-font']" mat-flat-button (click)="AddExcercise()" >Add Excercise</a>
+                        <a [ngClass]="'link-button-font'" mat-flat-button (click)="AddExcercise()" >Add Excercise</a>
                     </div>
             
                     <div class="center-item" layout-align="center center">
-                        <a [ngClass]="['link-button-font']" mat-flat-button (click)="PasteExcercise()">Paste Excercise</a>
+                        <a [ngClass]="'link-button-font'" mat-flat-button (click)="PasteExcercise()">Paste Excercise</a>
                     </div>
         
                 </div>
@@ -43,10 +43,10 @@
     <ng-container *ngIf="ShowButtons">
         <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center" [style.margin-top]="'5px'">
             <div class="center-item link-button-font" layout-align="center center">
-                <a class='link-button-font' mat-flat-button (click)="AddDay()">Add Day</a>
+                <a class='link-button-font' mat-flat-button (click)="AddSession()">Add Session</a>
             </div>
             <div class="center-item" layout-align="center center">
-                <a  class='link-button-font' mat-flat-button (click)="PasteDay()">Paste Day</a>
+                <a  class='link-button-font' mat-flat-button (click)="PasteSession()">Paste Session</a>
             </div>
         </div>
     

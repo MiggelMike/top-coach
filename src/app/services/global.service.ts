@@ -1,4 +1,3 @@
-import { ISessionTag } from './../../Business/SessionTag/SessionTag';
 import { ISatz } from './../../Business/Satz/Satz';
 import { UebungService } from './uebung.service';
 import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
@@ -69,7 +68,6 @@ export class GlobalService {
     public WorkoutCopy: ITrainingsProgramm = null;
     public SessionCopy: ISession = null;
     public SatzCopy: ISatz = null;
-    public SessionTagCopy: ISessionTag = null;
 
 
     private readonly cAktuellesTrainingsProgramm: string = 'AktuellesTrainingsProgramm';
