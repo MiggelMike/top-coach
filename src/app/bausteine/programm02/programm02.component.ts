@@ -2,7 +2,7 @@ import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProg
 import { Component, OnInit, Input, ViewChild, ViewChildren, QueryList } from "@angular/core";
 import { ISession } from "src/Business/Session/Session";
 import { MatAccordion } from '@angular/material';
-
+import { MatExpansionPanel } from '@angular/material/expansion';
 
 @Component({
     selector: "app-programm02",
@@ -13,10 +13,12 @@ export class Programm02Component implements OnInit {
     @Input() SessionListe: Array<ISession> = [];
     @Input() ShowButtons: Boolean = false;
     @Input() Programm: ITrainingsProgramm = null;
-    //@ViewChild('accSession') accSession: MatAccordion;
-    @ViewChildren('accSession') accSession: QueryList<MatAccordion>
+    @ViewChildren('accSession') accSession: QueryList<MatAccordion>;
+    @ViewChildren('panSession') panUebung: QueryList<MatExpansionPanel>;
+    
 
     private isExpanded: Boolean = true;
+    public ToggleButtonText: string = 'Close all sessions';
 
     constructor() {}
 
@@ -68,16 +70,35 @@ export class Programm02Component implements OnInit {
         alert("PasteExcercise");
     }
 
-    toggleSessions($event: any): void {
+    toggleSessions(): void {
         if (this.isExpanded) {
             this.accSession.forEach( acc => acc.closeAll());
             this.isExpanded = false;
-            $event.currentTarget.innerText = "Open all Sessions";
+            this.ToggleButtonText = "Open all Sessions";
         } else {
             this.accSession.forEach( acc => acc.openAll());
             this.isExpanded = true;
-            $event.currentTarget.innerText = "Close all Sessions";
+            this.ToggleButtonText = "Close all Sessions";
         }
-        // $event.stopPropagation();
+    }
+
+    accCheckSessionPanels() {
+        let mAllClosed = true;
+
+        const mPanUebungListe = this.panUebung.toArray();
+        for (let index = 0; index < mPanUebungListe.length; index++) {
+            if (mPanUebungListe[index].expanded) {
+                mAllClosed = false;
+                break;
+            }
+        }
+
+        if (mAllClosed) {
+            this.isExpanded = false;
+            this.ToggleButtonText = "Open all sessions";
+        } else {
+            this.isExpanded = true;
+            this.ToggleButtonText = "Close all sessions";
+        }
     }
 }

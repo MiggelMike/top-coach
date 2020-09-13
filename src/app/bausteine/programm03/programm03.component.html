@@ -1,7 +1,8 @@
 <ng-container *ngIf="session">
+    <a [ngClass]="['link-button-font']" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
     <ng-container *ngFor="let SessUeb of session.UebungsListe, index as i; let isOdd=odd">
-        <mat-accordion multi="true">
-            <mat-expansion-panel  [expanded]="true">
+        <mat-accordion #accUebung='matAccordion' multi="true">
+            <mat-expansion-panel #panUebung='matExpansionPanel' [expanded]="true"  (closed)="accCheckUebungPanels()" (opened)="accCheckUebungPanels()">
                 <mat-expansion-panel-header>
                     <h6>{{SessUeb.Uebung.Name}}</h6>
                 </mat-expansion-panel-header>

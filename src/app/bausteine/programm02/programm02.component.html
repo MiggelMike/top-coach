@@ -1,8 +1,8 @@
 <ng-container  *ngIf="(SessionListe.length > 0)">
-    <a [ngClass]="['link-button-font']" mat-flat-button (click)="toggleSessions($event)">Close all Sessions</a>
+    <a [ngClass]="['link-button-font']" mat-flat-button (click)="toggleSessions()">{{ToggleButtonText}}</a>
     <ng-container *ngFor="let sess of SessionListe, index as i">
         <mat-accordion #accSession="matAccordion" multi="true">
-            <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel #panSession='matExpansionPanel' [expanded]="true" (closed)="accCheckSessionPanels()" (opened)="accCheckSessionPanels()">
                 <mat-expansion-panel-header>
                     <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">
                         <h6 class="mb-0">{{sess.Name}}</h6>

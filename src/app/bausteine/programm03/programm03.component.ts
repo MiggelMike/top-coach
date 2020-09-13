@@ -1,3 +1,6 @@
+import { MatAccordion } from '@angular/material';
+import { MatExpansionPanel } from '@angular/material/expansion';
+import { ISession } from './../../../Business/Session/Session';
 import { GlobalService } from "src/app/services/global.service";
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { DialogeService } from "./../../services/dialoge.service";
@@ -5,8 +8,7 @@ import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { IUebung_Sess } from "./../../../Business/Uebung/Uebung_Sess";
 import { ISatz, SatzTyp, LiftTyp } from "./../../../Business/Satz/Satz";
 import { repMask, floatMask } from "./../../app.module";
-import { Component, OnInit, Input } from "@angular/core";
-import { ISession } from "../../../Business/Session/Session";
+import { Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";
 
 @Component({
     selector: "app-programm03",
@@ -19,6 +21,12 @@ export class Programm03Component implements OnInit {
     @Input() satz: ISatz;
     @Input() programm: ITrainingsProgramm;
     @Input() session: ISession;
+    @ViewChildren('accUebung') accUebung: QueryList<MatAccordion>;
+    @ViewChildren('panUebung') panUebung: QueryList<MatExpansionPanel>;
+
+    private isExpanded: Boolean = true;
+    public ToggleButtonText = 'Close all excercises';
+
 
     ngOnInit() {
     }
@@ -83,5 +91,37 @@ export class Programm03Component implements OnInit {
         };
 
         this.fDialogService.JaNein(mDialogData);
+    }
+
+    toggleUebungen(): void {
+        if (this.isExpanded) {
+            this.accUebung.forEach( acc => acc.closeAll());
+            this.isExpanded = false;
+            this.ToggleButtonText = "Open all excercises";
+        } else {
+            this.accUebung.forEach( acc => acc.openAll());
+            this.isExpanded = true;
+            this.ToggleButtonText = "Close all excercises";
+        }
+    }
+
+    accCheckUebungPanels() {
+        let mAllClosed = true;
+
+        const mPanUebungListe = this.panUebung.toArray();
+        for (let index = 0; index < mPanUebungListe.length; index++) {
+            if (mPanUebungListe[index].expanded) {
+                mAllClosed = false;
+                break;
+            }
+        }
+
+        if (mAllClosed) {
+            this.isExpanded = false;
+            this.ToggleButtonText = "Open all excercises";
+        } else {
+            this.isExpanded = true;
+            this.ToggleButtonText = "Close all excercises";
+        }
     }
 }
