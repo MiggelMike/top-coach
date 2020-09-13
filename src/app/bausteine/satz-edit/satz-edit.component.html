@@ -23,12 +23,12 @@
 
         <mat-form-field class="align-right" fxFlex="60px">
             <input matInput [textMask]="{mask: floatMask, guide: false }"
-                [ngModel]="satz.GewichtVorgabe | number: '1.1'" (blur)="SetWeight($event.target.value, satz)"
+                [ngModel]="satz.GewichtVorgabe | number: '1.1'" (blur)="SetWeight($event.target.value)"
                 type="text">
         </mat-form-field>
 
         <mat-form-field class="align-right" fxFlex="60px">
-            <input matInput [textMask]="{mask: repMask, guide: false}" [(ngModel)]="satz.WdhVorgabe" type="text">
+            <input matInput [textMask]="{mask: repMask, guide: false}" [ngModel]="satz.WdhVorgabe" (blur)="SetWdhVorgabe($event.target.value)" type="text">
         </mat-form-field>
 
         <div class="center-item" layout-align="center center" fxFlex="45px">
@@ -36,11 +36,11 @@
         </div>
 
         <div class="center-item" layout-align="center center">
-            <a [ngClass]="['link-button-font']" mat-flat-button (click)="DeleteSet(satz)">Delete</a>
+            <a [ngClass]="['link-button-font']" mat-flat-button (click)="DeleteSet()">Delete</a>
         </div>
 
         <div class="center-item" layout-align="center center">
-            <a [ngClass]="['link-button-font']" mat-flat-button (click)="CopySet(satz)">Copy</a>
+            <a [ngClass]="['link-button-font']" mat-flat-button (click)="CopySet(this)">Copy</a>
         </div>
     </div>
 </div>

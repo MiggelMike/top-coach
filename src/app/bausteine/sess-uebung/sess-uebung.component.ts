@@ -30,11 +30,9 @@ export class SessUebungComponent implements OnInit {
 
     ngOnInit(): void {}
 
-    public SetWeight(value: number, satz: ISatz) {
-        satz.GewichtVorgabe = value;
-    }
 
-    public PasteSet(aUebung_Sess: IUebung_Sess) {
+
+    public PasteSet() {
         if (this.fGlobalService.SatzKopie === null) {
             const mDialoData = new DialogData();
             mDialoData.textZeilen.push("No data to paste!");
@@ -42,10 +40,24 @@ export class SessUebungComponent implements OnInit {
             return;
         }
 
-        const mSatz: ISatz = this.fGlobalService.SatzKopie;
-        mSatz.SessionID = aUebung_Sess.Session.ID;
-        mSatz.Uebung = aUebung_Sess.Uebung;
-        aUebung_Sess.SatzListe.push(mSatz);
+        const mSatz: ISatz = this.fGlobalService.SatzKopie.Copy();
+        mSatz.SessionID = this.sessUebung.Session.ID;
+        mSatz.Uebung = this.sessUebung.Uebung;
+        
+        switch (this.satzTypText) {
+            case "Warm Up":
+                mSatz.SatzTyp = SatzTyp.Aufwaermen;
+                break;
+
+            case "Cool Down":
+                mSatz.SatzTyp = SatzTyp.Abwaermen;  
+                break;
+            
+            default:
+                mSatz.SatzTyp = SatzTyp.Training;
+                break;
+        } //switch        
+        this.sessUebung.SatzListe.push(mSatz);
     }
 
     public DeleteExercise(aUebung_Sess: IUebung_Sess) {
@@ -56,18 +68,41 @@ export class SessUebungComponent implements OnInit {
         alert("CopyExcercise");
     }
 
-    public AddSet(aUebung_Sess: IUebung_Sess, aSatzTyp: string) {
+    public AddSet() {
         let mSatz: ISatz;
-        if (aSatzTyp === "Training")
-            mSatz = this.sessUebung.NeuerSatz(
-                SatzTyp.Training,
-                LiftTyp.Custom,
-                0,
-                0,
-                false
-            );
+        switch (this.satzTypText) {
+            case "Warm Up":
+                mSatz = this.sessUebung.NeuerSatz(
+                    SatzTyp.Aufwaermen,
+                    LiftTyp.Custom,
+                    0,
+                    0,
+                    false
+                );
+                break;
+
+                case "Cool Down":
+                    mSatz = this.sessUebung.NeuerSatz(
+                        SatzTyp.Abwaermen,
+                        LiftTyp.Custom,
+                        0,
+                        0,
+                        false
+                    );
+                break;
+            
+            default:
+                mSatz = this.sessUebung.NeuerSatz(
+                    SatzTyp.Training,
+                    LiftTyp.Custom,
+                    0,
+                    0,
+                    false
+                );
+                break;
+        } //switch
         
-            this.sessUebung.SatzListe.push(mSatz);
+        this.sessUebung.SatzListe.push(mSatz);
         return mSatz;
     }
 }

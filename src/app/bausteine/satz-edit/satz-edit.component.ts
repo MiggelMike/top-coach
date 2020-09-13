@@ -25,20 +25,28 @@ export class SatzEditComponent implements OnInit {
 
     ngOnInit(): void {}
 
-    public DeleteSet(aSatz: ISatz) {
+    public DeleteSet() {
         const mDialogData = new DialogData();
         mDialogData.textZeilen.push("Delete set?");
         mDialogData.OkFn = () => {
-            const index: number = this.sessUebung.SatzListe.indexOf(aSatz);
+            const index: number = this.sessUebung.SatzListe.indexOf(this.satz);
             if (index !== -1) {
                 this.sessUebung.SatzListe.splice(index, 1);
             }
-        };
+        };   
 
         this.fDialogService.JaNein(mDialogData);
     }
 
-    public CopySet(aSatz: ISatz) {
-        this.fGlobalService.SatzKopie = aSatz.Copy();
+    public SetWeight(value: number) {
+        this.satz.GewichtVorgabe = value;
+    }
+
+    public SetWdhVorgabe(value: number) {
+        this.satz.WdhVorgabe = value;
+    }    
+
+    public CopySet(aSatz : any) {
+        this.fGlobalService.SatzKopie = this.satz.Copy();
     }
 }

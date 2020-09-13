@@ -122,6 +122,8 @@ export class Satz implements ISatz {
         mResult.Uebung = this.Uebung;
         mResult.WdhAusgefuehrt = this.WdhAusgefuehrt;
         mResult.WdhVorgabe = this.WdhVorgabe;
+        mResult.GewichtVorgabe = this.GewichtVorgabe;
+        mResult.GewichtAusgefuehrt = this.GewichtAusgefuehrt;
         return mResult;
     }
 }
