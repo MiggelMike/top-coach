@@ -67,7 +67,7 @@ export class GlobalService {
     public DB: any;
     public WorkoutCopy: ITrainingsProgramm = null;
     public SessionCopy: ISession = null;
-    public SatzCopy: ISatz = null;
+    public SatzKopie: ISatz = null;
 
 
     private readonly cAktuellesTrainingsProgramm: string = 'AktuellesTrainingsProgramm';
