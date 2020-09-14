@@ -60,8 +60,17 @@ export class SessUebungComponent implements OnInit {
         this.sessUebung.SatzListe.push(mSatz);
     }
 
-    public DeleteExercise(aUebung_Sess: IUebung_Sess) {
-        alert("DeleteExercise");
+    public DeleteExercise() {
+        const mDialogData = new DialogData();
+        mDialogData.textZeilen.push("Delete excercise?");
+        mDialogData.OkFn = () => {
+            const index: number = this.session.UebungsListe.indexOf(this.sessUebung);
+            if (index !== -1) {
+                this.session.UebungsListe.splice(index, 1);
+            }
+        };   
+
+        this.fDialogService.JaNein(mDialogData);
     }
 
     public CopyExcercise(aUebung_Sess: IUebung_Sess) {
