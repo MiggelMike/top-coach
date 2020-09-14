@@ -62,7 +62,7 @@ export class SessUebungComponent implements OnInit {
 
     public DeleteExercise() {
         const mDialogData = new DialogData();
-        mDialogData.textZeilen.push("Delete excercise?");
+        mDialogData.textZeilen.push(`Delete excercise "${this.sessUebung.Uebung.Name}" ?`);
         mDialogData.OkFn = () => {
             const index: number = this.session.UebungsListe.indexOf(this.sessUebung);
             if (index !== -1) {

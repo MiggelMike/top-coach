@@ -27,7 +27,7 @@ export class SatzEditComponent implements OnInit {
 
     public DeleteSet() {
         const mDialogData = new DialogData();
-        mDialogData.textZeilen.push("Delete set?");
+        mDialogData.textZeilen.push(`Delete set #${this.rowNum + 1} ?`);
         mDialogData.OkFn = () => {
             const index: number = this.sessUebung.SatzListe.indexOf(this.satz);
             if (index !== -1) {
