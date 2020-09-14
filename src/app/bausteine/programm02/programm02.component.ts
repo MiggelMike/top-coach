@@ -108,10 +108,12 @@ export class Programm02Component implements OnInit {
     }
 
     public AddSession() {
+        const mDate = new Date();
+
         const mSession: ISession = new Session(
             {
                 ID: 0,
-                Name: `Session #${this.SessionListe.length + 1}`,
+                Name: `Session ${mDate.toLocaleString()}`,
                 Datum: new Date(),
                 DauerInSek: 0,
                 SessionNr: this.SessionListe.length + 1,
