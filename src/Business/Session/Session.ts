@@ -10,7 +10,7 @@ export enum SessionStatus {
 export interface ISession {
     ID: number;
     FK_Programm: number;
-    TagNr: number;
+    SessionNr: number;
     Name: string;
     UebungsListe: Array<IUebung_Sess>;
     Datum: Date;
@@ -29,7 +29,7 @@ export class Session implements ISession {
     @JsonProperty()
     public FK_Programm: number;
     @JsonProperty()
-    public TagNr: number;
+    public SessionNr: number;
     @JsonProperty()
     public Name: string;
     @JsonProperty()
@@ -50,16 +50,16 @@ export class Session implements ISession {
     }
 
     public NeueUebung(aUebung: IUebung): IUebung_Sess {
-        const mUebung_Sess = new Uebung_Sess(this,aUebung);
+        const mUebung_Sess = new Uebung_Sess(this, aUebung);
         return mUebung_Sess;
     }
 
     constructor(aPara: Session = {} as Session) {
         this.ID = aPara.ID;
-        (this.Name = aPara.Name ? aPara.Name : "Day " + aPara.TagNr.toString()),
-            (this.Datum = aPara.Datum);
+        (this.Name = aPara.Name ? aPara.Name : "Day " + aPara.SessionNr.toString()),
+        this.Datum = aPara.Datum;
         this.DauerInSek = aPara.DauerInSek;
-        this.TagNr = aPara.TagNr;
+        this.SessionNr = aPara.SessionNr;
         this.FK_Programm = aPara.FK_Programm;
         this.Expanded = aPara.Expanded ? aPara.Expanded : true;
         this.Kategorie01 = aPara.Kategorie01
@@ -70,7 +70,7 @@ export class Session implements ISession {
     public Copy(): ISession {
         const mResult = new Session({
             ID: this.ID,
-            TagNr: this.TagNr,
+            SessionNr: this.SessionNr,
             UebungsListe: this.UebungsListe,
             Datum: this.Datum,
             DauerInSek: this.DauerInSek,

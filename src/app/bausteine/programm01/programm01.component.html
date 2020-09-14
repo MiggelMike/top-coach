@@ -22,8 +22,10 @@
                 </div>
             </mat-expansion-panel-header>
             <div class="card-body">
-                <!-- SessionListe an Sub-Komponente durchreichen -->
-                <app-programm02 [Programm]="programm" [SessionListe]="programm.SessionListe" [ShowButtons]="false"></app-programm02>
+                <!-- Daten an Sub-Komponente durchreichen -->
+                <ng-container *ngIf="programm && programm.SessionListe">
+                    <app-programm02 [programm]="programm" [SessionListe]="programm.SessionListe"></app-programm02>
+                </ng-container>
             </div>
         </mat-expansion-panel>
     </mat-accordion>

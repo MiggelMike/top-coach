@@ -67,7 +67,7 @@ export class GlobalService {
     public Daten: AppDataMap = new AppDataMap();
     public DB: any;
     public WorkoutCopy: ITrainingsProgramm = null;
-    public SessionCopy: ISession = null;
+    public SessionKopie: ISession = null;
     public SatzKopie: ISatz = null;
     public SessUebungKopie: IUebung_Sess = null;
 

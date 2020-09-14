@@ -1,10 +1,9 @@
-import { DialogeService } from './../../services/dialoge.service';
-import { DialogData } from '../../dialoge/hinweis/hinweis.component';
-import { GlobalService } from './../../services/global.service';
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { ITrainingsProgramm } from '../../../Business/TrainingsProgramm/TrainingsProgramm';
-import { SessionStatus } from 'src/Business/Session/Session';
-
+import { DialogeService } from "./../../services/dialoge.service";
+import { DialogData } from "../../dialoge/hinweis/hinweis.component";
+import { GlobalService } from "./../../services/global.service";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { ITrainingsProgramm } from "../../../Business/TrainingsProgramm/TrainingsProgramm";
+import { SessionStatus } from "src/Business/Session/Session";
 
 @Component({
     selector: "app-programm01",
@@ -14,6 +13,7 @@ import { SessionStatus } from 'src/Business/Session/Session';
 export class Programm01Component implements OnInit {
     @Input() programm: ITrainingsProgramm;
     @Input() programmLadeContext: boolean | false;
+    @Input() showButtons: boolean | false;
     @Input() programmtext: { value: null };
 
     constructor(
@@ -21,9 +21,9 @@ export class Programm01Component implements OnInit {
         private fDialogeService: DialogeService
     ) {}
 
-    ngOnInit() {}
-
-    SelectThisWorkoutClick($event : any): void {
+    ngOnInit() { }
+    
+    SelectThisWorkoutClick($event: any): void {
         $event.stopPropagation();
         // Soll das aktuelle Work-Out durch ein anderes ersetzt werden?
         if (
@@ -44,7 +44,6 @@ export class Programm01Component implements OnInit {
         }
     }
 
-
     EditThisWorkoutClick($event): void {
         $event.stopPropagation();
         this.fGlobalService.EditWorkout = this.programm;
@@ -52,4 +51,8 @@ export class Programm01Component implements OnInit {
             (sess) => (sess.Kategorie01 = SessionStatus.Bearbeitbar)
         );
     }
+
+
+
+  
 }

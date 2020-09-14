@@ -97,11 +97,11 @@ export class GzclpProgramm extends TrainingsProgramm {
         // }
     }
 
-    protected InitTag(aTagNr: number): Array<ISession> {
+    protected InitTag(aSessionNr: number): Array<ISession> {
         const mSessions = new Array<ISession>();
         const mNeueSession = new Session({
             ID: 0,
-            TagNr: aTagNr,
+            SessionNr: aSessionNr,
             Datum: null,
             DauerInSek: 0,
             FK_Programm: this.ID,
@@ -109,7 +109,7 @@ export class GzclpProgramm extends TrainingsProgramm {
 
         mSessions.push(mNeueSession);
 
-        switch (aTagNr) {
+        switch (aSessionNr) {
             case 1:
                 this.ErzeugeSessions(
                     UebungsName.Squat,

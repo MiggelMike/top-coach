@@ -1,4 +1,4 @@
-import { ISession } from './../../../Business/Session/Session';
+import { ISession, Session, SessionStatus } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit, Input, ViewChild, ViewChildren, QueryList } from "@angular/core";
 import { MatAccordion } from '@angular/material';
@@ -14,9 +14,9 @@ import { IUebung_Sess } from 'src/Business/Uebung/Uebung_Sess';
     styleUrls: ["./programm02.component.scss"],
 })
 export class Programm02Component implements OnInit {
+    @Input() programm: ITrainingsProgramm = null;
     @Input() SessionListe: Array<ISession> = [];
     @Input() ShowButtons: Boolean = false;
-    @Input() Programm: ITrainingsProgramm = null;
     @ViewChildren("accSession") accSession: QueryList<MatAccordion>;
     @ViewChildren("panSession") panUebung: QueryList<MatExpansionPanel>;
 
@@ -30,22 +30,8 @@ export class Programm02Component implements OnInit {
 
     ngOnInit() {}
 
-    ngAfterViewInit() {
-        // if (this.matExpansionPanelQueryList) {
-        //   this.matExpansionPanelQueryList.changes.subscribe(
-        //     change => {
-        //       change.open();
-        //     }
-        //   );
-        // }
-    }
-
-    public AddSession() {
-        alert("AddSession");
-    }
-
-    public CopySession() {
-        alert("CopySession");
+    public CopySession(aSession: ISession) {
+        this.fGlobalService.SessionKopie = aSession.Copy();
     }
 
     public DeleteSession(aSession : ISession, aRowNum: number) {
@@ -61,18 +47,6 @@ export class Programm02Component implements OnInit {
         this.fDialogService.JaNein(mDialogData);        
     }
 
-    public PasteSession() {
-        alert("PasteSession");
-    }
-
-    public SaveChanges() {
-        alert("SaveChanges");
-    }
-
-    public CancelChanges() {
-        alert("CancelChanges");
-    }
-
     public AddExcercise() {
         alert("Add Excercise");
     }
@@ -80,6 +54,7 @@ export class Programm02Component implements OnInit {
     public CopyExcercise() {
         alert("Copy Excercise");
     }
+  
 
     public PasteExcercise(aSession : ISession) {
         if (this.fGlobalService.SessUebungKopie === null) {
@@ -94,7 +69,10 @@ export class Programm02Component implements OnInit {
         aSession.UebungsListe.push(mSessUebung);
     }
 
-    toggleSessions(): void {
+    public toggleSessions(): void {
+        if (!this.accSession)
+            return;
+
         if (this.isExpanded) {
             this.accSession.forEach((acc) => acc.closeAll());
             this.isExpanded = false;
@@ -106,7 +84,10 @@ export class Programm02Component implements OnInit {
         }
     }
 
-    accCheckSessionPanels() {
+    public accCheckSessionPanels() {
+        if (!this.panUebung)
+            return;
+        
         let mAllClosed = true;
 
         const mPanUebungListe = this.panUebung.toArray();
@@ -124,5 +105,43 @@ export class Programm02Component implements OnInit {
             this.isExpanded = true;
             this.ToggleButtonText = "Close all sessions";
         }
+    }
+
+    public AddSession() {
+        const mSession: ISession = new Session(
+            {
+                ID: 0,
+                Name: `Session #${this.SessionListe.length + 1}`,
+                Datum: new Date(),
+                DauerInSek: 0,
+                SessionNr: this.SessionListe.length + 1,
+                FK_Programm: this.programm.ID,
+                Kategorie01: SessionStatus.Bearbeitbar
+            } as Session);
+
+        mSession.FK_Programm = this.programm.ID;
+        this.SessionListe.push(mSession);        
+    }
+
+    public PasteSession() {
+        if (this.fGlobalService.SessionKopie === null) {
+            const mDialoData = new DialogData();
+            mDialoData.textZeilen.push("No data to paste!");
+            this.fDialogService.Hinweis(mDialoData);
+            return;
+        }
+
+        const mSession: ISession = this.fGlobalService.SessionKopie.Copy();
+        mSession.FK_Programm = this.programm.ID;
+        this.SessionListe.push(mSession);        
+
+    }
+
+    public SaveChanges() {
+        alert("SaveChanges");
+    }
+
+    public CancelChanges() {
+        alert("CancelChanges");
     }
 }

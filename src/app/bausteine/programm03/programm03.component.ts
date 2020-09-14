@@ -37,6 +37,9 @@ export class Programm03Component implements OnInit {
     }
 
     accCheckUebungPanels() {
+        if (!this.panUebung)
+            return;
+
         let mAllClosed = true;
 
         const mPanUebungListe = this.panUebung.toArray();
