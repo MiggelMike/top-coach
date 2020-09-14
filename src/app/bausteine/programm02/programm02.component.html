@@ -2,7 +2,7 @@
     <a [ngClass]="['link-button-font']" mat-flat-button (click)="toggleSessions()">{{ToggleButtonText}}</a>
     <ng-container *ngFor="let sess of SessionListe, index as i">
         <mat-accordion #accSession="matAccordion" multi="true">
-            <mat-expansion-panel #panSession='matExpansionPanel'  [Session]="sess" [expanded]="true" (closed)="accCheckSessionPanels()" (opened)="accCheckSessionPanels()">
+            <mat-expansion-panel #panSession='matExpansionPanel'  [expanded]="true" (closed)="accCheckSessionPanels()" (opened)="accCheckSessionPanels()">
                 <mat-expansion-panel-header>
                     <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">
                         <h6 class="mb-0">{{sess.Name}}</h6>
@@ -22,7 +22,7 @@
                     </div>
 
                     <div class="center-item" layout-align="center center">
-                        <a [ngClass]="'link-button-font'" mat-flat-button (click)="DeleteSession()">Delete Session</a>
+                        <a [ngClass]="'link-button-font'" mat-flat-button (click)="DeleteSession(sess,i)">Delete Session</a>
                     </div>
                 </div>
             

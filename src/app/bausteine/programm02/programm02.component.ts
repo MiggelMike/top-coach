@@ -15,7 +15,6 @@ import { IUebung_Sess } from 'src/Business/Uebung/Uebung_Sess';
 })
 export class Programm02Component implements OnInit {
     @Input() SessionListe: Array<ISession> = [];
-    @Input() Session: ISession;
     @Input() ShowButtons: Boolean = false;
     @Input() Programm: ITrainingsProgramm = null;
     @ViewChildren("accSession") accSession: QueryList<MatAccordion>;
@@ -49,8 +48,17 @@ export class Programm02Component implements OnInit {
         alert("CopySession");
     }
 
-    public DeleteSession() {
-        alert("DeleteSession");
+    public DeleteSession(aSession : ISession, aRowNum: number) {
+        const mDialogData = new DialogData();
+        mDialogData.textZeilen.push(`Delete session #${aRowNum + 1} "${aSession.Name}" ?`);
+        mDialogData.OkFn = () => {
+            const index: number = this.SessionListe.indexOf(aSession);
+            if (index !== -1) {
+                this.SessionListe.splice(index, 1);
+            }
+        };   
+
+        this.fDialogService.JaNein(mDialogData);        
     }
 
     public PasteSession() {
