@@ -62,7 +62,7 @@ export class Uebung_Sess implements IUebung_Sess {
 
     public Copy(): IUebung_Sess {
         const mUebung_Sess = new Uebung_Sess(this.Session, this.Uebung);
-        mUebung_Sess.SatzListe.forEach((mSatz) =>
+        this.SatzListe.forEach((mSatz) =>
             mUebung_Sess.SatzListe.push(mSatz.Copy())
         );
         return mUebung_Sess;

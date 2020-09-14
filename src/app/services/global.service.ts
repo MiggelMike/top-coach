@@ -1,3 +1,4 @@
+import { IUebung_Sess } from './../../Business/Uebung/Uebung_Sess';
 import { ISatz } from './../../Business/Satz/Satz';
 import { UebungService } from './uebung.service';
 import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
@@ -68,7 +69,7 @@ export class GlobalService {
     public WorkoutCopy: ITrainingsProgramm = null;
     public SessionCopy: ISession = null;
     public SatzKopie: ISatz = null;
-
+    public SessUebungKopie: IUebung_Sess = null;
 
     private readonly cAktuellesTrainingsProgramm: string = 'AktuellesTrainingsProgramm';
     private readonly cTrainingsHistorie: string = 'TrainingsHistorie';

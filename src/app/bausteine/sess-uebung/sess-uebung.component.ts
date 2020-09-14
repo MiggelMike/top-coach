@@ -73,8 +73,8 @@ export class SessUebungComponent implements OnInit {
         this.fDialogService.JaNein(mDialogData);
     }
 
-    public CopyExcercise(aUebung_Sess: IUebung_Sess) {
-        alert("CopyExcercise");
+    public CopyExcercise() {
+        this.fGlobalService.SessUebungKopie = this.sessUebung.Copy();
     }
 
     public AddSet() {
