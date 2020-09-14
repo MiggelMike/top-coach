@@ -22,6 +22,7 @@ export class SessUebungComponent implements OnInit {
     @Input() session: ISession = null;
     @Input() sessUebung: IUebung_Sess;
     @Input() satzListe: Array<ISatz>;
+    @Input() rowNum: number = 0;
 
     constructor(
         private fDialogService: DialogeService,
@@ -62,7 +63,7 @@ export class SessUebungComponent implements OnInit {
 
     public DeleteExercise() {
         const mDialogData = new DialogData();
-        mDialogData.textZeilen.push(`Delete excercise "${this.sessUebung.Uebung.Name}" ?`);
+        mDialogData.textZeilen.push(`Delete excercise #${this.rowNum + 1} "${this.sessUebung.Uebung.Name}" ?`);
         mDialogData.OkFn = () => {
             const index: number = this.session.UebungsListe.indexOf(this.sessUebung);
             if (index !== -1) {

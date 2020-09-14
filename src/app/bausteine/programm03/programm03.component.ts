@@ -12,6 +12,7 @@ import { Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core
 export class Programm03Component implements OnInit {
     @Input() programm: ITrainingsProgramm;
     @Input() session: ISession;
+    @Input() rowNum: number = 0;
     @ViewChildren('accUebung') accUebung: QueryList<MatAccordion>;
     @ViewChildren('panUebung') panUebung: QueryList<MatExpansionPanel>;
 

@@ -9,19 +9,19 @@
 
                 <div class="card-body">
                     <div *ngIf="SessUeb.AufwaermSatzListe.length > 0">
-                        <app-sess-uebung [satzTypText]="'Warm Up'" [satzListe]="SessUeb.AufwaermSatzListe" [satz]="satz" [session]="session"
+                        <app-sess-uebung [rowNum]="i" [satzTypText]="'Warm Up'" [satzListe]="SessUeb.AufwaermSatzListe" [satz]="satz" [session]="session"
                             [sessUebung]="SessUeb">
                         </app-sess-uebung>
                     </div>
 
                     <ng-container *ngIf="SessUeb.ArbeitsSatzListe.length > 0">
-                        <app-sess-uebung [satzTypText]="'Work'" [satzListe]="SessUeb.ArbeitsSatzListe" [satz]="satz" [session]="session"
+                        <app-sess-uebung [rowNum]="i" [satzTypText]="'Work'" [satzListe]="SessUeb.ArbeitsSatzListe" [satz]="satz" [session]="session"
                             [sessUebung]="SessUeb">
                         </app-sess-uebung>
                     </ng-container>
 
                     <div *ngIf="SessUeb.AbwaermSatzListe.length > 0">
-                        <app-sess-uebung [satzTypText]="'Cool Down'" [satzListe]="SessUeb.AbwaermSatzListe" [satz]="satz" [session]="session"
+                        <app-sess-uebung [rowNum]="i" [satzTypText]="'Cool Down'" [satzListe]="SessUeb.AbwaermSatzListe" [satz]="satz" [session]="session"
                             [sessUebung]="SessUeb">
                         </app-sess-uebung>
                     </div>
