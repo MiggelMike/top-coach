@@ -1,12 +1,13 @@
 import { ISession, Session, SessionStatus } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
-import { Component, OnInit, Input, ViewChild, ViewChildren, QueryList } from "@angular/core";
+import { Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";
 import { MatAccordion } from '@angular/material';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
 import { IUebung_Sess } from 'src/Business/Uebung/Uebung_Sess';
+import { of } from 'rxjs';
 
 @Component({
     selector: "app-programm02",
@@ -28,8 +29,8 @@ export class Programm02Component implements OnInit {
         private fGlobalService: GlobalService
     ) {}
 
-    ngOnInit() {}
-
+    ngOnInit() { }
+    
     public CopySession(aSession: ISession) {
         this.fGlobalService.SessionKopie = aSession.Copy();
     }
@@ -42,6 +43,13 @@ export class Programm02Component implements OnInit {
             if (index !== -1) {
                 this.SessionListe.splice(index, 1);
             }
+            
+            if (this.fGlobalService.Comp03PanelUebungObserver != null) {
+                //this.panUebung.expanded = false;
+                of(this.panUebung).subscribe(
+                    this.fGlobalService.Comp03PanelUebungObserver
+                );
+            }
         };   
 
         this.fDialogService.JaNein(mDialogData);        
@@ -50,11 +58,6 @@ export class Programm02Component implements OnInit {
     public AddExcercise() {
         alert("Add Excercise");
     }
-
-    public CopyExcercise() {
-        alert("Copy Excercise");
-    }
-  
 
     public PasteExcercise(aSession : ISession) {
         if (this.fGlobalService.SessUebungKopie === null) {

@@ -1,3 +1,4 @@
+import { MyObserver } from './../../Observers/MyObservers';
 import { IUebung_Sess } from './../../Business/Uebung/Uebung_Sess';
 import { ISatz } from './../../Business/Satz/Satz';
 import { UebungService } from './uebung.service';
@@ -10,7 +11,6 @@ import { ISession } from '../../Business/Session/Session';
 import { IUebung } from '../../Business/Uebung/Uebung';
 import { Observable, of, from, Subscriber } from 'rxjs';
 import { JsonProperty, serialize } from '@peerlancers/json-serialization';
-
 
 export enum SpeicherOrtTyp {
     Lokal = 'Lokal',
@@ -70,6 +70,8 @@ export class GlobalService {
     public SessionKopie: ISession = null;
     public SatzKopie: ISatz = null;
     public SessUebungKopie: IUebung_Sess = null;
+    public Observers: Array<any> = new Array<any>();
+    public Comp03PanelUebungObserver: MyObserver = null;
 
     private readonly cAktuellesTrainingsProgramm: string = 'AktuellesTrainingsProgramm';
     private readonly cTrainingsHistorie: string = 'TrainingsHistorie';

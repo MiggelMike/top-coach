@@ -5,6 +5,7 @@ import { ISatz } from "./../../../Business/Satz/Satz";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
+import { floatMask, repMask } from './../../app.module';
 
 @Component({
     selector: "app-satz-edit",
@@ -17,6 +18,8 @@ export class SatzEditComponent implements OnInit {
     @Input() satz: ISatz;
     @Input() rowNum: number;
     @Input() satzTyp: string;
+    public floatMask = floatMask;
+    public repMask = repMask;    
 
     constructor(
         private fDialogService: DialogeService,

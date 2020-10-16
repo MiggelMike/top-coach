@@ -45,7 +45,8 @@ export class Session implements ISession {
     public getKategorie01(): string {
         if (this.Kategorie01 === SessionStatus.Bearbeitbar)
             return "Bearbeitbar";
-        if (this.Kategorie01 === SessionStatus.NurLesen) return "NurLesen";
+        if (this.Kategorie01 === SessionStatus.NurLesen)
+            return "NurLesen";
         return "";
     }
 

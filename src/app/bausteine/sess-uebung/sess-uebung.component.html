@@ -3,39 +3,45 @@
         <mat-expansion-panel-header>
             <div>{{satzTypText}}</div>
         </mat-expansion-panel-header>
-
-        <div fxLayout="column" fxLayout.lt-sm="column" fxLayoutAlign="flex-start">
-            <ng-container *ngFor="let satz of satzListe, index as i">
-                <ng-container *ngI f='session.getKategorie01() === "NurLesen"'>
-                    <app-satz-simple [satz]="satz" fxFlex="0 1 calc(100% / 24)"></app-satz-simple>
+    
+        <ng-container *ngIf='session.getKategorie01() === "NurLesen"; then NurLesenBlock else BearbeitbarBlock'></ng-container>
+        <!-- Nur Lesen -->
+        <ng-template #NurLesenBlock>
+            <div fxLayout="row" fxLayout.lt-sm="row" fxLayoutAlign="flex-start">
+                <ng-container *ngFor="let satz of satzListe, index as i">
+                    <app-satz-simple [satz]="satz"></app-satz-simple>
                 </ng-container>
-
-                <ng-container *ngIf='session.getKategorie01() === "Bearbeitbar"'>
-
+            </div>
+        </ng-template>
+        <!-- Bearbeitbar -->
+        <ng-template #BearbeitbarBlock>
+            <div fxLayout="column" fxLayout.lt-sm="column" fxLayoutAlign="flex-start">
+                <ng-container *ngFor="let satz of satzListe, index as i">
                     <app-satz-edit [rowNum]="i" [sessUebung]="sessUebung" [satz]="satz">
                     </app-satz-edit>
                 </ng-container>
-            </ng-container>
-            
-            
-            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
-                <div class="center-item" layout-align="center center">
-                    <a [ngClass]="['link-button-font']" mat-flat-button (click)="CopyExcercise()">Copy Excercise</a>
+        
+        
+                <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
+                    <div class="center-item" layout-align="center center">
+                        <a [ngClass]="['link-button-font']" mat-flat-button (click)="CopyExcercise()">Copy Excercise</a>
+                    </div>
+        
+                    <div class="center-item" layout-align="center center">
+                        <a [ngClass]="['link-button-font']" mat-flat-button (click)="DeleteExercise()">Delete Exercise</a>
+                    </div>
                 </div>
-                
-                <div class="center-item" layout-align="center center">
-                    <a [ngClass]="['link-button-font']" mat-flat-button (click)="DeleteExercise()">Delete Exercise</a>
-                </div>
-            </div> 
-            
-            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
-                <div class="center-item" layout-align="center center">
-                    <a [ngClass]="['link-button-font']" mat-flat-button (click)="AddSet()">Add Set</a>
-                </div>
-                <div class="center-item" layout-align="center center">
-                    <a [ngClass]="['link-button-font']" mat-flat-button (click)="PasteSet()">Paste Set</a>
+        
+                <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
+                    <div class="center-item" layout-align="center center">
+                        <a [ngClass]="['link-button-font']" mat-flat-button (click)="AddSet()">Add Set</a>
+                    </div>
+                    <div class="center-item" layout-align="center center">
+                        <a [ngClass]="['link-button-font']" mat-flat-button (click)="PasteSet()">Paste Set</a>
+                    </div>
                 </div>
             </div>
-        </div>
+        </ng-template>
+
     </mat-expansion-panel>
 </mat-accordion>

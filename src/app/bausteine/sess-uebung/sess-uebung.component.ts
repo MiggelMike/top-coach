@@ -1,13 +1,13 @@
+import { of } from 'rxjs';
 import { IUebung_Sess } from './../../../Business/Uebung/Uebung_Sess';
 import { ISession } from './../../../Business/Session/Session';
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, ViewChild } from "@angular/core";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
 import { ISatz, SatzTyp, LiftTyp } from "./../../../Business/Satz/Satz";
 import { repMask, floatMask } from "./../../app.module";
-
-
+import { MatExpansionPanel } from '@angular/material/expansion';
 
 @Component({
     selector: "app-sess-uebung",
@@ -23,15 +23,16 @@ export class SessUebungComponent implements OnInit {
     @Input() sessUebung: IUebung_Sess;
     @Input() satzListe: Array<ISatz>;
     @Input() rowNum: number = 0;
+    @Input() panUebung1: MatExpansionPanel;
 
     constructor(
         private fDialogService: DialogeService,
         private fGlobalService: GlobalService
     ) {}
 
-    ngOnInit(): void {}
-
-
+    ngOnInit(): void {
+        const x = 0;
+    }
 
     public PasteSet() {
         if (this.fGlobalService.SatzKopie === null) {
@@ -65,9 +66,23 @@ export class SessUebungComponent implements OnInit {
         const mDialogData = new DialogData();
         mDialogData.textZeilen.push(`Delete excercise #${this.rowNum + 1} "${this.sessUebung.Uebung.Name}" ?`);
         mDialogData.OkFn = () => {
-            const index: number = this.session.UebungsListe.indexOf(this.sessUebung);
+            // Index der SessUeb in Liste suchen.
+            const index: number = this.session.UebungsListe.indexOf(
+                this.sessUebung
+            );
+
+            // SessUeb-Index gefunden?
             if (index !== -1) {
+                // SessUeb-Index gefunden
+                // SessUeb aus Liste entfernen.
                 this.session.UebungsListe.splice(index, 1);
+            }
+
+            if (this.fGlobalService.Comp03PanelUebungObserver != null) {
+                this.panUebung1.expanded = false;
+                of(this.panUebung1).subscribe(
+                    this.fGlobalService.Comp03PanelUebungObserver
+                );
             }
         };   
 
