@@ -1,6 +1,4 @@
-import { Uebung_Sess, IUebung_Sess } from "./../Uebung/Uebung_Sess";
-import { IUebung } from "../Uebung/Uebung";
-import { JsonProperty } from "@peerlancers/json-serialization";
+import { IUebung, Uebung } from "../Uebung/Uebung";
 
 export enum SessionStatus {
     NurLesen,
@@ -12,35 +10,26 @@ export interface ISession {
     FK_Programm: number;
     SessionNr: number;
     Name: string;
-    UebungsListe: Array<IUebung_Sess>;
     Datum: Date;
     DauerInSek: number;
     Expanded: Boolean;
     Kategorie01: SessionStatus;
     Bearbeitbar: Boolean;
+    UebungsListe: Array<IUebung>;
     Copy(): ISession;
-    NeueUebung(aUebung: IUebung): IUebung_Sess;
-    getKategorie01(): string;
 }
 
 export class Session implements ISession {
-    @JsonProperty()
     public ID: number;
-    @JsonProperty()
     public FK_Programm: number;
-    @JsonProperty()
     public SessionNr: number;
-    @JsonProperty()
     public Name: string;
-    @JsonProperty()
-    public UebungsListe: Array<IUebung_Sess> = new Array<Uebung_Sess>();
-    @JsonProperty()
     public Datum: Date;
-    @JsonProperty()
     public DauerInSek: number;
     public Expanded: Boolean;
     public Kategorie01: SessionStatus;
     public Bearbeitbar: Boolean = false;
+    public UebungsListe: Array<IUebung> = new Array<IUebung>();
 
     public getKategorie01(): string {
         if (this.Kategorie01 === SessionStatus.Bearbeitbar)
@@ -50,13 +39,7 @@ export class Session implements ISession {
         return "";
     }
 
-    public NeueUebung(aUebung: IUebung): IUebung_Sess {
-        const mUebung_Sess = new Uebung_Sess(this, aUebung);
-        return mUebung_Sess;
-    }
-
     constructor(aPara: Session = {} as Session) {
-        this.ID = aPara.ID;
         (this.Name = aPara.Name ? aPara.Name : "Day " + aPara.SessionNr.toString()),
         this.Datum = aPara.Datum;
         this.DauerInSek = aPara.DauerInSek;
@@ -70,7 +53,6 @@ export class Session implements ISession {
 
     public Copy(): ISession {
         const mResult = new Session({
-            ID: this.ID,
             SessionNr: this.SessionNr,
             UebungsListe: this.UebungsListe,
             Datum: this.Datum,

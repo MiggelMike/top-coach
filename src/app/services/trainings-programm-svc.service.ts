@@ -1,8 +1,9 @@
+import { ProgrammKategorie } from './../../Business/TrainingsProgramm/TrainingsProgramm';
 import { UebungService } from './uebung.service';
 import { GzclpProgramm } from './../../Business/TrainingsProgramm/Gzclp';
 import { Injectable, NgModule, Pipe,  Optional, SkipSelf ,  ModuleWithProviders } from '@angular/core';
 import { ISession } from '../../Business/Session/Session';
-import { ITrainingsProgramm, SessionKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
+import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 
 export interface ITrainingsProgrammSvc {
     LadeProgramme(): void;
@@ -49,7 +50,7 @@ export class TrainingsProgrammSvc implements ITrainingsProgrammSvc {
 
     public ErzeugeStandardVorlagen(): Array<ITrainingsProgramm> {
         const mResult: Array<ITrainingsProgramm> = new Array<ITrainingsProgramm>();
-        const mGzclpProgramm: GzclpProgramm  = new GzclpProgramm(this.fUebungService, SessionKategorie.Vorlage);
+        const mGzclpProgramm: GzclpProgramm  = new GzclpProgramm(this.fUebungService, ProgrammKategorie.Vorlage);
         mGzclpProgramm.Name = 'GZCLP - Standard';
         const mSessions: Array<ISession> = new Array<ISession>();
         mGzclpProgramm.Init(mSessions);

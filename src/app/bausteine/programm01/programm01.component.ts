@@ -3,7 +3,7 @@ import { DialogData } from "../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "./../../services/global.service";
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { ITrainingsProgramm } from "../../../Business/TrainingsProgramm/TrainingsProgramm";
-import { SessionStatus } from "src/Business/Session/Session";
+import { SessionStatus } from 'src/Business/Session/Session';
 
 @Component({
     selector: "app-programm01",
@@ -27,11 +27,11 @@ export class Programm01Component implements OnInit {
         $event.stopPropagation();
         // Soll das aktuelle Work-Out durch ein anderes ersetzt werden?
         if (
-            this.fGlobalService.Daten.AktuellesProgramm.Programm !== undefined
+            this.fGlobalService.DB.AktuellesProgramm !== undefined
         ) {
             const mDialogData = new DialogData();
             mDialogData.textZeilen.push(
-                `Replace current Program "${this.fGlobalService.Daten.AktuellesProgramm.Programm.Name}" with "${this.programm.Name}" ?`
+                `Replace current Program "${this.fGlobalService.DB.AktuellesProgramm.Name}" with "${this.programm.Name}" ?`
             );
             mDialogData.OkData = this.programm;
             mDialogData.OkFn = () => {

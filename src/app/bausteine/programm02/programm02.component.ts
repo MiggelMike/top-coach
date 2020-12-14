@@ -8,6 +8,7 @@ import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
 import { IUebung_Sess } from 'src/Business/Uebung/Uebung_Sess';
 import { of } from 'rxjs';
+import { IUebung } from 'src/Business/Uebung/Uebung';
 
 @Component({
     selector: "app-programm02",
@@ -67,8 +68,8 @@ export class Programm02Component implements OnInit {
             return;
         }
 
-        const mSessUebung: IUebung_Sess = this.fGlobalService.SessUebungKopie.Copy();
-        mSessUebung.Session = aSession;
+        const mSessUebung: IUebung = this.fGlobalService.SessUebungKopie.Copy();
+        mSessUebung.SessionID = aSession.ID;
         aSession.UebungsListe.push(mSessUebung);
     }
 
@@ -115,16 +116,14 @@ export class Programm02Component implements OnInit {
 
         const mSession: ISession = new Session(
             {
-                ID: 0,
                 Name: `Session ${mDate.toLocaleString()}`,
                 Datum: new Date(),
                 DauerInSek: 0,
                 SessionNr: this.SessionListe.length + 1,
-                FK_Programm: this.programm.ID,
                 Kategorie01: SessionStatus.Bearbeitbar
             } as Session);
 
-        mSession.FK_Programm = this.programm.ID;
+        //mSession.FK_Programm = this.programm.ID;
         this.SessionListe.push(mSession);        
     }
 
@@ -137,7 +136,7 @@ export class Programm02Component implements OnInit {
         }
 
         const mSession: ISession = this.fGlobalService.SessionKopie.Copy();
-        mSession.FK_Programm = this.programm.ID;
+        //mSession.FK_Programm = this.programmID;
         this.SessionListe.push(mSession);        
 
     }

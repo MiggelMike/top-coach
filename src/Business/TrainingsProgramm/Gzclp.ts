@@ -1,11 +1,9 @@
 import { IUebung_Sess } from './../Uebung/Uebung_Sess';
-import { IUebung } from "./../Uebung/Uebung";
+import { IUebung, Uebung } from "./../Uebung/Uebung";
 import { UebungService } from "./../../app/services/uebung.service";
-import {
-    TrainingsProgramm,
-    ITrainingsProgramm,
-    SessionKategorie,
-} from "./TrainingsProgramm";
+import { TrainingsProgramm, ITrainingsProgramm } from "./TrainingsProgramm";
+import { ProgrammKategorie, ProgrammTyp } from "./TrainingsProgramm";
+
 import { ISession, Session } from "../Session/Session";
 
 import {
@@ -19,14 +17,13 @@ import {
 
 import { UebungsName } from "../Uebung/Uebung";
 import { deserialize } from "@peerlancers/json-serialization";
-import { Uebung_Stamm } from "../Uebung/Uebung_Stamm";
 
 export class GzclpProgramm extends TrainingsProgramm {
     constructor(
         private fUebungService: UebungService,
-        aProgrammKategorie: SessionKategorie
+        aProgrammKategorie: ProgrammKategorie
     ) {
-        super(aProgrammKategorie);
+        super(ProgrammTyp.Gzclp, aProgrammKategorie);
         this.Tage = 4;
     }
 
@@ -36,7 +33,7 @@ export class GzclpProgramm extends TrainingsProgramm {
 
     public ErstelleSessionsAusVorlage(): ITrainingsProgramm {
         const mResult = this.Copy();
-        mResult.ProgrammKategorie = SessionKategorie.Konkret;
+        mResult.ProgrammKategorie = ProgrammKategorie.Konkret;
         return mResult;
     }
 
@@ -46,7 +43,7 @@ export class GzclpProgramm extends TrainingsProgramm {
     }
 
     private ErzeugeAufwaermSaetze(
-        aUebung: Uebung_Stamm,
+        aUebung: Uebung,
         aLiftTyp: LiftTyp,
         aUebung_Sess: IUebung_Sess
     ) {
@@ -100,11 +97,9 @@ export class GzclpProgramm extends TrainingsProgramm {
     protected InitTag(aSessionNr: number): Array<ISession> {
         const mSessions = new Array<ISession>();
         const mNeueSession = new Session({
-            ID: 0,
             SessionNr: aSessionNr,
             Datum: null,
             DauerInSek: 0,
-            FK_Programm: this.ID,
         } as Session);
 
         mSessions.push(mNeueSession);
@@ -161,23 +156,22 @@ export class GzclpProgramm extends TrainingsProgramm {
         );
         // this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.Custom, aNeueSession);
 
-        let mUebung_Sess: IUebung_Sess = aNeueSession.NeueUebung(mUebung);
         // Arbeits-Saetze anfügen
         let mAnzSaetze = 5;
         for (let i = 0; i < mAnzSaetze; i++) {
-            mUebung_Sess.SatzListe.push(
-                this.NeuerSatz(
+            mUebung.SatzListe.push(
+                Satz.NeuerSatz(
                     SatzTyp.Training,
-                    LiftTyp.GzClpT1,
-                    3,
-                    100,
-                    aNeueSession,
-                    mUebung,
+                    LiftTyp.GzClpT3,
+                    3, // Wdh-Vorgabe
+                    100, // Prozent
+                    0, // SessionID
+                    0, // UebungID
                     i == mAnzSaetze - 1 // Der letzte Satz ist AMRAP
                 )
             );
         }
-        aNeueSession.UebungsListe.push(mUebung_Sess);
+        aNeueSession.UebungsListe.push(mUebung);
 
         // T2-Lift
         mUebung = this.fUebungService.Kopiere(
@@ -187,44 +181,42 @@ export class GzclpProgramm extends TrainingsProgramm {
         // if (this.ProgrammKategorie === SessionKategorie.Konkret) {
         //     this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.GzClpT2, aNeueSession);
         // }
-        mUebung_Sess = aNeueSession.NeueUebung(mUebung);
         // Arbeits-Saetze anfügen
         mAnzSaetze = 3;
         for (let i = 0; i < mAnzSaetze; i++) {
-            mUebung_Sess.SatzListe.push(
-                this.NeuerSatz(
+            mUebung.SatzListe.push(
+                Satz.NeuerSatz(
                     SatzTyp.Training,
-                    LiftTyp.GzClpT2,
-                    10,
-                    85,
-                    aNeueSession,
-                    mUebung,
-                    false
+                    LiftTyp.GzClpT3,
+                    10, // Wdh-Vorgabe
+                    85, // Prozent
+                    0, // SessionID
+                    0, // UebungID
+                    false // Kein AMRAP
                 )
             );
         }
-        aNeueSession.UebungsListe.push(mUebung_Sess);
+        aNeueSession.UebungsListe.push(mUebung);
 
         // T3-Lift
         mUebung = this.fUebungService.Kopiere(
             this.fUebungService.SucheUebungPerName(aT3Uebung)
         );
 
-        mUebung_Sess = aNeueSession.NeueUebung(mUebung);
         // Arbeits-Saetze anfügen
         for (let i = 0; i < 3; i++) {
-            mUebung_Sess.SatzListe.push(
-                this.NeuerSatz(
+            mUebung.SatzListe.push(
+                Satz.NeuerSatz(
                     SatzTyp.Training,
                     LiftTyp.GzClpT3,
-                    15,
-                    65,
-                    aNeueSession,
-                    mUebung,
+                    15, // Wdh-Vorgabe
+                    65, // Prozent
+                    0, // SessionID
+                    0, // UebungID
                     i == mAnzSaetze - 1 // Der letzte Satz ist AMRAP
                 )
             );
         }
-        aNeueSession.UebungsListe.push(mUebung_Sess);
+        aNeueSession.UebungsListe.push(mUebung);
     }
 }

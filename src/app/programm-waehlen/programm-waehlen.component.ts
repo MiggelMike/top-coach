@@ -1,5 +1,4 @@
 import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
-// import { ITrainingsProgramm } from './../../Business/TrainingsProgramm/TrainingsProgramm';
 import { Observable } from 'rxjs';
 import { Component, OnInit, Input } from '@angular/core';
 

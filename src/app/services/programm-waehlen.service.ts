@@ -23,11 +23,11 @@ export class ProgrammWaehlenService {
     }
 
     public LadeProgramm(aProgrammID: number): ITrainingsProgramm {
-        for (let index = 0; index < this.ProgrammListe.length; index++) {
-            if (this.ProgrammListe[index].ID == aProgrammID)
-                return this.ProgrammListe[index];
+        // for (let index = 0; index < this.ProgrammListe.length; index++) {
+        //     if (this.ProgrammListe[index].ID == aProgrammID)
+        //         return this.ProgrammListe[index];
             
-        }
+        // }
         return null;
     }
 

@@ -2,7 +2,7 @@ import { GlobalService } from 'src/app/services/global.service';
 import { Component, OnInit } from '@angular/core';
 import { FilePreviewOverlayService } from './services/file-preview-overlay.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TrainingServiceModule } from './../modules/training-service.module';
+import { TrainingServiceModule } from '../modules/training-service.module';
 
 // import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 

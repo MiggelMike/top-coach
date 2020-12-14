@@ -1,5 +1,4 @@
-import { TrainingServiceModule } from './../modules/training-service.module';
-import { GlobalService } from './services/global.service';
+import { DBModule } from './../modules/db/db.module';
 import { MatCardModule } from '@angular/material/card';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -41,9 +40,11 @@ import { SessionFormComponent } from './bausteine/session-form/session-form.comp
 import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.component';
 import { SatzEditComponent } from './bausteine/satz-edit/satz-edit.component';
 import { TextMaskModule } from 'angular2-text-mask';
-import createNumberMask from 'text-mask-addons/dist/createNumberMask';
+import  createNumberMask  from 'text-mask-addons/dist/createNumberMask';
 import { SatzComponent } from './bausteine/satz/satz.component';
 import { SessUebungComponent } from './bausteine/sess-uebung/sess-uebung.component';
+import { Dexie } from 'dexie';
+
 
 // var sqlite3 = require('sqlite3');1
 
@@ -110,14 +111,15 @@ export const floatMask = createNumberMask({
         FormsModule,
         MatDialogModule,
         OverlayModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        DBModule
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA,
         NO_ERRORS_SCHEMA
       ],
 
-    // exports: [TextMaskModule],
+    exports: [DBModule],
 
     entryComponents: [
         DialogComponent,

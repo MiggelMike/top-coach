@@ -76,8 +76,7 @@ export class Uebung_Sess implements IUebung_Sess {
         aAmrap: boolean
     ): ISatz {
         const mSatz = new Satz(
-            { SessionID : this.Session.ID,
-              Uebung : this.Uebung,
+            { UebungID : this.Uebung.ID,
               SatzTyp : aSatzTyp,
               Prozent : aProzent,
               WdhVorgabe : aWdhVorgabe,

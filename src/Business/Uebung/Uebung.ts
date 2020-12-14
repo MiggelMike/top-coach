@@ -1,5 +1,4 @@
-import { JsonProperty } from "@peerlancers/json-serialization";
-
+import { ISatz } from './../Satz/Satz';
 export enum UebungsTyp {
     Undefined = "Undefined",
     Custom = "Custom",
@@ -23,6 +22,8 @@ export interface IUebung {
     Typ: UebungsTyp;
     Kategorieen01: Array<UebungsKategorie01>;
     Kategorie02: string;
+    SessionID: number;
+    SatzListe: Array<ISatz>;
     Copy(): IUebung;
 }
 
@@ -49,27 +50,54 @@ export enum UebungsName {
 }
 
 export class Uebung implements IUebung {
-    @JsonProperty()
-    public ID: number = 0 ;
-    @JsonProperty()
-    public Name: string = '';
-    @JsonProperty()
+    public ID: number;
+    public Name: string = "";
     public Typ: UebungsTyp = UebungsTyp.Undefined;
-    @JsonProperty()
     public Kategorieen01: Array<UebungsKategorie01> = [];
-    @JsonProperty()
-    public Kategorie02: string = '';
+    public Kategorie02: string = "";
+    public SessionID: number;
+    public SatzListe: Array<ISatz> = [];
 
-    constructor() { };
+    constructor() {}
 
     public Copy(): IUebung {
         let mUebung = new Uebung();
-        mUebung.ID = this.ID;
         mUebung.Name = this.Name;
         mUebung.Typ = this.Typ;
         mUebung.Kategorieen01 = [];
         mUebung.Kategorie02 = this.Kategorie02;
-        this.Kategorieen01.forEach(val => mUebung.Kategorieen01.push(Object.assign({}, val)));
+        this.Kategorieen01.forEach((val) =>
+            mUebung.Kategorieen01.push(Object.assign({}, val))
+        );
+        mUebung.SessionID = this.SessionID;
+        this.SatzListe.forEach( 
+            s => mUebung.SatzListe.push(Object.assign({}, s))
+        )
+        mUebung.SatzListe
         return mUebung;
     }
+
+    public static ErzeugeGzclpKategorieen01(): Array<UebungsKategorie01> {
+        return new Array<UebungsKategorie01>(
+            UebungsKategorie01.GzclpT1Cycle0,
+            UebungsKategorie01.GzclpT1Cycle1,
+            UebungsKategorie01.GzclpT1Cycle2,
+            UebungsKategorie01.GzclpT2Cycle0,
+            UebungsKategorie01.GzclpT2Cycle1,
+            UebungsKategorie01.GzclpT2Cycle2,
+        );
+    }
+
+    public static StaticNeueStammUebung(
+        aName: string,
+        aTyp: UebungsTyp,
+        aKategorieen01: Array<UebungsKategorie01>): IUebung {
+        //
+        const mUebung = new Uebung();
+        mUebung.Name = aName;
+        mUebung.Typ = aTyp;
+        mUebung.Kategorieen01 = aKategorieen01 ? aKategorieen01 : [];
+        return mUebung;
+    }
+
 }

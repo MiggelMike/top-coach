@@ -33,13 +33,13 @@ export class AnstehendeSessionsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.AktuellesProgramm = this.globalService.Daten.AktuellesProgramm.Programm;
+        this.AktuellesProgramm = this.globalService.DB.AktuellesProgramm;
         this.AnstehendeSessionObserver = this.globalService.LadeAnstehendeSession();
         if (this.AktuellesProgramm !== undefined)
             this.AktuellesProgramm.SessionListe = this.LadeSessions();
     }
 
-    public LadeSessions(): Array<Session> {
+    public LadeSessions(): Array<ISession> {
         this.AnstehendeSessionObserver.subscribe((sessions: Array<Session>) => {
             if (this.AktuellesProgramm === undefined)
                 return [];
