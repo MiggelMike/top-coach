@@ -16,13 +16,13 @@ export enum ProgrammKategorie {
 }
 
 export interface ITrainingsProgramm {
-    ID: number;
+    id: number;
     Tage: number;
     Name: string;
     ProgrammKategorie: ProgrammKategorie;
     ProgrammTyp: ProgrammTyp;
-    Bearbeitbar: Boolean; 
     SessionListe: Array<ISession>;
+    Bearbeitbar: Boolean; 
     Init(aSessions: Array<ISession>): void;
     Copy(): ITrainingsProgramm;
     ErstelleSessionsAusVorlage(): ITrainingsProgramm;
@@ -31,9 +31,9 @@ export interface ITrainingsProgramm {
 
 export abstract class TrainingsProgramm implements ITrainingsProgramm {
     // Wird in abgeleiteten Klassen gesetzt.
-    public ID: number = 0;
+    public id: number;
     public Tage: number = 0;
-    public Name: string;
+    public Name: string = '';
     public ProgrammKategorie: ProgrammKategorie = ProgrammKategorie.Konkret;
     public ProgrammTyp: ProgrammTyp = ProgrammTyp.Custom;
     public Bearbeitbar: Boolean = true; 

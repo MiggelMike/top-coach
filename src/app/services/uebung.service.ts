@@ -1,4 +1,4 @@
-import { Uebung_Sess } from './../../Business/Uebung/Uebung_Sess';
+import { SessUebung } from '../../Business/Uebung/SessUebung';
 import { Injectable } from '@angular/core';
 import { serialize, deserialize, JsonProperty, IJsonObject } from '@peerlancers/json-serialization';
 import { UebungsName, UebungsTyp, IUebung, Uebung } from './../../Business/Uebung/Uebung';
@@ -18,7 +18,7 @@ export class UebungService {
     constructor() {}
 
     public Kopiere(aUebung: IUebung): IUebung {
-        return Uebung.StaticNeueStammUebung(
+        return Uebung.StaticNeueUebung(
             aUebung.Name,
             aUebung.Typ,
             aUebung.Kategorieen01
@@ -68,7 +68,7 @@ export class UebungService {
                 if (mUeb) {
                     let mUebung = this.SucheUebungPerName(mUeb as UebungsName);
                     if (mUebung === null) {
-                        mUebung = Uebung.StaticNeueStammUebung(
+                        mUebung = Uebung.StaticNeueUebung(
                             mUeb,
                             UebungsTyp.Kraft,
                             mKategorieen01.concat(mGzclpKategorieen01)

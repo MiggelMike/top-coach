@@ -1,4 +1,4 @@
-import { IUebung_Sess } from './../Uebung/Uebung_Sess';
+import { ISessUebung } from './../Uebung/SessUebung';
 import { IUebung, Uebung } from "./../Uebung/Uebung";
 import { UebungService } from "./../../app/services/uebung.service";
 import { TrainingsProgramm, ITrainingsProgramm } from "./TrainingsProgramm";
@@ -45,7 +45,7 @@ export class GzclpProgramm extends TrainingsProgramm {
     private ErzeugeAufwaermSaetze(
         aUebung: Uebung,
         aLiftTyp: LiftTyp,
-        aUebung_Sess: IUebung_Sess
+        aUebung_Sess: ISessUebung
     ) {
         // Aufwärm-Saetze anfügen
         // for (let i = 0; i < 3; i++) {
@@ -151,7 +151,7 @@ export class GzclpProgramm extends TrainingsProgramm {
         aNeueSession: Session
     ): void {
         // T1-Lift
-        let mUebung = this.fUebungService.Kopiere(
+        let mUebung: IUebung = this.fUebungService.Kopiere(
             this.fUebungService.SucheUebungPerName(aT1Uebung)
         );
         // this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.Custom, aNeueSession);
@@ -171,7 +171,7 @@ export class GzclpProgramm extends TrainingsProgramm {
                 )
             );
         }
-        aNeueSession.UebungsListe.push(mUebung);
+        aNeueSession.UebungsListe.push(mUebung as ISessUebung);
 
         // T2-Lift
         mUebung = this.fUebungService.Kopiere(
@@ -196,7 +196,7 @@ export class GzclpProgramm extends TrainingsProgramm {
                 )
             );
         }
-        aNeueSession.UebungsListe.push(mUebung);
+        aNeueSession.UebungsListe.push(mUebung as ISessUebung);
 
         // T3-Lift
         mUebung = this.fUebungService.Kopiere(
@@ -217,6 +217,6 @@ export class GzclpProgramm extends TrainingsProgramm {
                 )
             );
         }
-        aNeueSession.UebungsListe.push(mUebung);
+        aNeueSession.UebungsListe.push(mUebung as ISessUebung);
     }
 }

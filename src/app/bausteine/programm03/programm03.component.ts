@@ -1,4 +1,4 @@
-import { IUebung_Sess } from 'src/Business/Uebung/Uebung_Sess';
+import { ISessUebung } from 'src/Business/Uebung/SessUebung';
 import { of } from 'rxjs';
 import { MyObserver } from './../../../Observers/MyObservers';
 import { GlobalService } from 'src/app/services/global.service';

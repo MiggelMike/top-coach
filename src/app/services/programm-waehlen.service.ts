@@ -1,3 +1,4 @@
+import { DBModule } from './../../modules/db/db.module';
 import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { GlobalService } from './global.service';
 import { Injectable } from '@angular/core';
@@ -13,21 +14,16 @@ export class ProgrammWaehlenService {
 
     public ProgrammListe: Array<ITrainingsProgramm> = [];
 
-    constructor(private aGlobalService: GlobalService,  private aTrainingServiceModule: TrainingServiceModule) {
+    constructor(private aGlobalService: GlobalService,  private aTrainingServiceModule: TrainingServiceModule, private fDbModule: DBModule) {
         console.log('>>> ProgrammWaehlenService x is ', aTrainingServiceModule.getX());
-    
      }
 
-    private LadeProgramme(): void {
-        this.ProgrammListe = this.aGlobalService.StandardVorlagen;
-    }
-
     public LadeProgramm(aProgrammID: number): ITrainingsProgramm {
-        // for (let index = 0; index < this.ProgrammListe.length; index++) {
-        //     if (this.ProgrammListe[index].ID == aProgrammID)
-        //         return this.ProgrammListe[index];
+        for (let index = 0; index < this.ProgrammListe.length; index++) {
+            if (this.ProgrammListe[index].id == aProgrammID)
+                return this.ProgrammListe[index];
             
-        // }
+        }
         return null;
     }
 
@@ -35,9 +31,13 @@ export class ProgrammWaehlenService {
     public LadeTrainingsProgramme(): Observable<ITrainingsProgramm[]> {
         const mResult = new Observable<ITrainingsProgramm[]>(
             observer => {
-                this.ProgrammWahlObserver = observer;
-                this.LadeProgramme();
-                observer.next(this.ProgrammListe);
+                this.fDbModule.LadeProgramme().then(
+                    () => {
+                        this.ProgrammWahlObserver = observer;
+                        this.ProgrammListe = this.fDbModule.Programme;
+                        observer.next(this.ProgrammListe);
+                    }
+                )
             }
         );
         return mResult;

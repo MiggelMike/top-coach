@@ -1,6 +1,6 @@
 import { DBModule } from './../../modules/db/db.module';
 import { MyObserver } from './../../Observers/MyObservers';
-import { IUebung_Sess } from './../../Business/Uebung/Uebung_Sess';
+import { ISessUebung } from '../../Business/Uebung/SessUebung';
 import { ISatz } from './../../Business/Satz/Satz';
 import { UebungService } from './uebung.service';
 import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
@@ -63,7 +63,7 @@ export class GlobalService {
     public WorkoutCopy: ITrainingsProgramm = null;
     public SessionKopie: ISession = null;
     public SatzKopie: ISatz = null;
-    public SessUebungKopie: IUebung = null;
+    public SessUebungKopie: ISessUebung = null;
     public Observers: Array<any> = new Array<any>();
     public Comp03PanelUebungObserver: MyObserver = null;
     public DatabaseName: string = 'ConceptCoach';  

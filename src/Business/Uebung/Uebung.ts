@@ -88,7 +88,7 @@ export class Uebung implements IUebung {
         );
     }
 
-    public static StaticNeueStammUebung(
+    public static StaticNeueUebung(
         aName: string,
         aTyp: UebungsTyp,
         aKategorieen01: Array<UebungsKategorie01>): IUebung {

@@ -8,24 +8,24 @@
                 <mat-expansion-panel #panUebung='matExpansionPanel' [expanded]="true" (closed)="accCheckUebungPanels()"
                     (opened)="accCheckUebungPanels()">
                     <mat-expansion-panel-header>
-                        <h6>#{{i+1}} {{SessUeb.Uebung.Name}}</h6>
+                        <h6>#{{i+1}} {{SessUeb.Name}}</h6>
                     </mat-expansion-panel-header>
 
                     <div class="card-body">
-                        <div *ngIf="SessUeb.AufwaermSatzListe.length > 0">
+                        <div *ngIf="SessUeb.AufwaermSatzListe && (SessUeb.AufwaermSatzListe.length > 0)">
                             <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Warm Up'"
                                 [satzListe]="SessUeb.AufwaermSatzListe" [satz]="satz" [session]="session"
                                 [sessUebung]="SessUeb">
                             </app-sess-uebung>
                         </div>
 
-                        <ng-container *ngIf="SessUeb.ArbeitsSatzListe.length > 0">
+                        <ng-container *ngIf="SessUeb.ArbeitsSatzListe && (SessUeb.ArbeitsSatzListe.length > 0)">
                             <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Work'" [satzListe]="SessUeb.ArbeitsSatzListe"
                                 [satz]="satz" [session]="session" [sessUebung]="SessUeb">
                             </app-sess-uebung>
                         </ng-container>
 
-                        <div *ngIf="SessUeb.AbwaermSatzListe.length > 0">
+                        <div *ngIf="SessUeb.AbwaermSatzListe && (SessUeb.AbwaermSatzListe.length > 0)">
                             <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Cool Down'"
                                 [satzListe]="SessUeb.AbwaermSatzListe" [satz]="satz" [session]="session"
                                 [sessUebung]="SessUeb">

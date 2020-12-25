@@ -1,3 +1,4 @@
+import { ISessUebung } from './../../../Business/Uebung/SessUebung';
 import { of } from 'rxjs';
 import { ISession } from './../../../Business/Session/Session';
 import { Component, OnInit, Input, ViewChild } from "@angular/core";
@@ -7,7 +8,6 @@ import { GlobalService } from "src/app/services/global.service";
 import { ISatz, Satz, SatzTyp, LiftTyp } from "./../../../Business/Satz/Satz";
 import { repMask, floatMask } from "./../../app.module";
 import { MatExpansionPanel } from '@angular/material/expansion';
-import { IUebung } from 'src/Business/Uebung/Uebung';
 
 @Component({
     selector: "app-sess-uebung",
@@ -20,7 +20,7 @@ export class SessUebungComponent implements OnInit {
     @Input() satzTypText: string = "";
     @Input() satz: ISatz = null;
     @Input() session: ISession = null;
-    @Input() sessUebung: IUebung;
+    @Input() sessUebung: ISessUebung;
     @Input() satzListe: Array<ISatz>;
     @Input() rowNum: number = 0;
     @Input() panUebung1: MatExpansionPanel;
@@ -43,7 +43,7 @@ export class SessUebungComponent implements OnInit {
         }
 
         const mSatz: ISatz = this.fGlobalService.SatzKopie.Copy();
-        mSatz.UebungID = this.sessUebung.ID;
+        mSatz.UebungID = this.sessUebung.Uebung.ID;
         
         switch (this.satzTypText) {
             case "Warm Up":
@@ -63,12 +63,10 @@ export class SessUebungComponent implements OnInit {
 
     public DeleteExercise() {
         const mDialogData = new DialogData();
-        mDialogData.textZeilen.push(`Delete excercise #${this.rowNum + 1} "${this.sessUebung.Name}" ?`);
+        mDialogData.textZeilen.push(`Delete excercise #${this.rowNum + 1} "${this.sessUebung.Uebung.Name}" ?`);
         mDialogData.OkFn = () => {
             // Index der SessUeb in Liste suchen.
-            const index: number = this.session.UebungsListe.indexOf(
-                this.sessUebung
-            );
+            const index: number = this.session.UebungsListe.indexOf( this.sessUebung );
 
             // SessUeb-Index gefunden?
             if (index !== -1) {
@@ -101,8 +99,8 @@ export class SessUebungComponent implements OnInit {
                     LiftTyp.Custom,
                     0,
                     0,
-                    this.session.ID,
-                    this.sessUebung.ID,
+                    this.session.id,
+                    this.sessUebung.Uebung.ID,
                     false
                 );
                 break;
@@ -113,8 +111,8 @@ export class SessUebungComponent implements OnInit {
                         LiftTyp.Custom,
                         0,
                         0,
-                        this.session.ID,
-                        this.sessUebung.ID,
+                        this.session.id,
+                        this.sessUebung.Uebung.ID,
                         false
                         );
                 break;
@@ -125,8 +123,8 @@ export class SessUebungComponent implements OnInit {
                     LiftTyp.Custom,
                     0,
                     0,
-                    this.session.ID,
-                    this.sessUebung.ID,
+                    this.session.id,
+                    this.sessUebung.Uebung.ID,
                     false
                 );
                 break;

@@ -32,8 +32,8 @@ export class DBModule extends Dexie {
     SatzTable: Dexie.Table<Satz, number>;
     ProgrammTable: Dexie.Table<TrainingsProgramm, number>;
     SessionTable: Dexie.Table<Session, number>;
+    Programme: Array<ITrainingsProgramm> = [];
     public UebungsDaten: Array<Uebung> = new Array<Uebung>();
-    public StandardProgramme: Array<TrainingsProgramm> = new Array<TrainingsProgramm>();
 
     constructor(
         private fUebungService: UebungService,
@@ -47,13 +47,13 @@ export class DBModule extends Dexie {
             );
         }
 
-        // Dexie.delete("ConceptCoach");
+      //   Dexie.delete("ConceptCoach");
 
         this.version(1).stores({
             AppData: "++id",
             Uebung: "++ID,Name,Typ",
-            Programm: "++ID,Name",
-            Session: "++ID,Name,Datum",
+            Programm: "++id,Name",
+            Session: "++id,Name,Datum",
             Satz: "++id",
         });
 
@@ -67,7 +67,7 @@ export class DBModule extends Dexie {
         await this.InitSatz();
         await this.InitSession();
         await this.LadeStammUebungen();
-        await this.LadeStandardProgramme();
+        await this.LadeProgramme();
     }
 
     private async InitSession() {
@@ -85,10 +85,10 @@ export class DBModule extends Dexie {
         this.SatzTable.mapToClass(Satz);
     }
 
-    private NeueStammUebung(aName: string): Uebung {
+    private NeueUebung(aName: string): Uebung {
         const mGzclpKategorieen01 = Uebung.ErzeugeGzclpKategorieen01();
         const mKategorieen01 = [].concat(mGzclpKategorieen01);
-        return Uebung.StaticNeueStammUebung(
+        return Uebung.StaticNeueUebung(
             aName,
             UebungsTyp.Kraft,
             mKategorieen01
@@ -110,7 +110,7 @@ export class DBModule extends Dexie {
                         mUebungen.find((mUebung) => mUebung.Name === mUeb) ===
                         undefined
                     ) {
-                        const mNeueUebung = this.NeueStammUebung(mUeb);
+                        const mNeueUebung = this.NeueUebung(mUeb);
                         mNeueUebung.SatzListe = [];
                         mAnlegen.push(mNeueUebung);
                     }
@@ -136,12 +136,18 @@ export class DBModule extends Dexie {
 
     public LadeProgrammSessions(aProgramm: ITrainingsProgramm): PromiseExtended {
         return this.table(this.cSession)
-            .filter((s) => s.FK_Programm === aProgramm.ID)
+            .filter( (s) => s.FK_Programm === aProgramm.id)
             .toArray();
     }
 
-    public async LadeStandardProgramme() {
-        this.StandardProgramme = [];
+    public LadeSessionUebungem(aSession: ISession): PromiseExtended {
+        return this.table(this.cUebung)
+            .filter((mUebung) => mUebung.SessionID === aSession.id)
+            .toArray();
+    }
+
+    public async LadeProgramme() {
+        this.Programme = [];
         const mAnlegen: Array<ProgrammTyp.Gzclp> = new Array<ProgrammTyp.Gzclp>();
         await this.table(this.cProgramm)
             .filter(
@@ -150,19 +156,14 @@ export class DBModule extends Dexie {
             )
             .toArray()
             .then((mProgramme) => {
-                const mProg: TrainingsProgramm = mProgramme.find(
-                    (p) => p.ProgrammTyp === ProgrammTyp.Gzclp
-                );
+                const mProg: TrainingsProgramm = mProgramme.find((p) => p.ProgrammTyp === ProgrammTyp.Gzclp);
 
-                if (mProg === undefined) mAnlegen.push(ProgrammTyp.Gzclp);
+                if (mProg === undefined)
+                    mAnlegen.push(ProgrammTyp.Gzclp);
                 else {
-                    if (
-                        this.StandardProgramme.find(
-                            (p) => p.ProgrammTyp === ProgrammTyp.Gzclp
-                        ) === undefined
-                    ) {
+                    if (this.Programme.find((p) => p.ProgrammTyp === ProgrammTyp.Gzclp) === undefined) {
                         // Standard-Programm gefunden
-                        this.StandardProgramme.push(mProg);
+                        this.Programme.push(mProg);
                     }
                 }
             })
@@ -173,10 +174,20 @@ export class DBModule extends Dexie {
         for (let index = 0; index < mAnlegen.length; index++) 
             this.VorlageProgrammSpeichern(mAnlegen[index]);
 
-        for (let index = 0; index < this.StandardProgramme.length; index++) {
-            await this.LadeProgrammSessions(this.StandardProgramme[index])
+        for (let index = 0; index < this.Programme.length; index++) {
+            await this.LadeProgrammSessions(this.Programme[index])
                 .then((mSessions) => {
-                    this.StandardProgramme[index].SessionListe = mSessions;
+                    if (this.Programme[index]) {
+                        this.Programme[index].SessionListe = mSessions;
+                        this.Programme[index].SessionListe.forEach((mSession) => {
+                            this.LadeSessionUebungem(mSession).then(
+                                (mUebungen) => {
+                                    // mSession.UebungsListe = mUebungen;
+                                    // this.Lade
+                                }
+                            );
+                        });
+                    }
                 })
                 .catch((err) => console.error(err));
         }
@@ -242,9 +253,9 @@ export class DBModule extends Dexie {
                     .then(
                         // Programm ist gespeichert.
                         // ProgrammID in die Sessions eintragen
-                        (mProgramID) => {
+                        (id) => {
                             mSessions.forEach((mEineSession) => {
-                                mEineSession.FK_Programm = mProgramID;
+                                mEineSession.FK_Programm = id;
                                 this.SessionSpeichern(mEineSession);
                             });
                         }

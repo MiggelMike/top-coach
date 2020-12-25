@@ -1,13 +1,13 @@
 import { ISession } from "src/Business/Session/Session";
-import { ISatz, Satz, INeuerSatz, SatzTyp, LiftTyp, SatzPausen, SatzStatus } from "./../Satz/Satz";
+import { ISatz, Satz, INeuerSatz, SatzTyp, LiftTyp, SatzPausen, SatzStatus } from "../Satz/Satz";
 import { UebungsTyp, UebungsKategorie01, Uebung, IUebung } from "./Uebung";
 import { JsonProperty } from "@peerlancers/json-serialization";
 
-export interface IUebung_Sess {
+export interface ISessUebung extends IUebung {
     Session: ISession;
     Uebung: IUebung;
     SatzListe: Array<ISatz>;
-    Copy(): IUebung_Sess;
+    Copy(): ISessUebung;
     NeuerSatz(
         aSatzTyp: SatzTyp,
         aLiftTyp: LiftTyp,
@@ -17,13 +17,17 @@ export interface IUebung_Sess {
     ): ISatz; 
 }
 
-export class Uebung_Sess implements IUebung_Sess {
+export class SessUebung extends Uebung implements ISessUebung {
     @JsonProperty()
     Session: ISession;
     @JsonProperty()
     public SatzListe: Array<ISatz> = new Array<ISatz>();
     @JsonProperty()
     public Uebung: IUebung;
+
+    get Name():string {
+        return this.Uebung.Name;
+    }
 
     public get AufwaermSatzListe(): Array<ISatz> {
         const mResult = Array<ISatz>();
@@ -56,12 +60,13 @@ export class Uebung_Sess implements IUebung_Sess {
     }
 
     constructor(aSession: ISession, aUebung: IUebung) {
+        super();
         this.Session = aSession;
         this.Uebung = aUebung.Copy();
     }
 
-    public Copy(): IUebung_Sess {
-        const mUebung_Sess = new Uebung_Sess(this.Session, this.Uebung);
+    public Copy(): ISessUebung {
+        const mUebung_Sess = new SessUebung(this.Session, this.Uebung);
         this.SatzListe.forEach((mSatz) =>
             mUebung_Sess.SatzListe.push(mSatz.Copy())
         );

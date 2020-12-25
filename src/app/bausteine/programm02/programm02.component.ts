@@ -6,7 +6,7 @@ import { MatExpansionPanel } from '@angular/material/expansion';
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
-import { IUebung_Sess } from 'src/Business/Uebung/Uebung_Sess';
+import { ISessUebung } from 'src/Business/Uebung/SessUebung';
 import { of } from 'rxjs';
 import { IUebung } from 'src/Business/Uebung/Uebung';
 
@@ -17,7 +17,7 @@ import { IUebung } from 'src/Business/Uebung/Uebung';
 })
 export class Programm02Component implements OnInit {
     @Input() programm: ITrainingsProgramm = null;
-    @Input() SessionListe: Array<ISession> = [];
+    @Input() SessionListe: Array<Session> = [];
     @Input() ShowButtons: Boolean = false;
     @ViewChildren("accSession") accSession: QueryList<MatAccordion>;
     @ViewChildren("panSession") panUebung: QueryList<MatExpansionPanel>;
@@ -32,11 +32,11 @@ export class Programm02Component implements OnInit {
 
     ngOnInit() { }
     
-    public CopySession(aSession: ISession) {
+    public CopySession(aSession: Session) {
         this.fGlobalService.SessionKopie = aSession.Copy();
     }
 
-    public DeleteSession(aSession : ISession, aRowNum: number) {
+    public DeleteSession(aSession : Session, aRowNum: number) {
         const mDialogData = new DialogData();
         mDialogData.textZeilen.push(`Delete session #${aRowNum + 1} "${aSession.Name}" ?`);
         mDialogData.OkFn = () => {
@@ -60,7 +60,7 @@ export class Programm02Component implements OnInit {
         alert("Add Excercise");
     }
 
-    public PasteExcercise(aSession : ISession) {
+    public PasteExcercise(aSession : Session) {
         if (this.fGlobalService.SessUebungKopie === null) {
             const mDialoData = new DialogData();
             mDialoData.textZeilen.push("No data to paste!");
@@ -68,8 +68,8 @@ export class Programm02Component implements OnInit {
             return;
         }
 
-        const mSessUebung: IUebung = this.fGlobalService.SessUebungKopie.Copy();
-        mSessUebung.SessionID = aSession.ID;
+        const mSessUebung: ISessUebung = this.fGlobalService.SessUebungKopie.Copy();
+        mSessUebung.Session.id = aSession.id;
         aSession.UebungsListe.push(mSessUebung);
     }
 
@@ -114,7 +114,7 @@ export class Programm02Component implements OnInit {
     public AddSession() {
         const mDate = new Date();
 
-        const mSession: ISession = new Session(
+        const mSession: Session = new Session(
             {
                 Name: `Session ${mDate.toLocaleString()}`,
                 Datum: new Date(),
@@ -135,7 +135,7 @@ export class Programm02Component implements OnInit {
             return;
         }
 
-        const mSession: ISession = this.fGlobalService.SessionKopie.Copy();
+        const mSession: Session = this.fGlobalService.SessionKopie.Copy();
         //mSession.FK_Programm = this.programmID;
         this.SessionListe.push(mSession);        
 

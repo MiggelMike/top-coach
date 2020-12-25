@@ -1,8 +1,10 @@
-<div fxLayout="row" fxLayoutAlign="flex-center">
-    <div><strong>{{programm.Name}}</strong></div>
-</div>
-
-<ng-container *ngIf="programm && programm.SessionListe">
-    <app-programm02 [programm]="programm" [SessionListe]="programm.SessionListe" [ShowButtons]="true"></app-programm02>
+<ng-container *ngIf="programm">
+    <div fxLayout="row" fxLayoutAlign="flex-center">
+        <div><strong>{{programm.Name}}</strong></div>
+    </div>
+    
+    <ng-container *ngIf="programm.SessionListe">
+        <app-programm02 [programm]="programm" [SessionListe]="programm.SessionListe" [ShowButtons]="true"></app-programm02>
+    </ng-container>
 </ng-container>
 
