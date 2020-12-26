@@ -58,6 +58,7 @@ export class Programm03Component implements OnInit {
     }
 
     accCheckUebungPanels() {
+        return;
         if (!this.panUebung) return;
 
         let mAllClosed = true;

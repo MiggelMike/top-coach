@@ -60,14 +60,14 @@ export class DBModule extends Dexie {
         this.InitAll();
     }
 
-    private async InitAll() {
-        await this.InitAppData();
-        await this.InitProgramm();
-        await this.InitUebung();
-        await this.InitSatz();
-        await this.InitSession();
-        await this.LadeStammUebungen();
-        await this.LadeProgramme();
+    private InitAll() {
+        this.InitAppData();
+        this.InitProgramm();
+        this.InitUebung();
+        this.InitSatz();
+        this.InitSession();
+        this.LadeStammUebungen();
+        this.LadeProgramme();
     }
 
     private async InitSession() {
@@ -137,19 +137,42 @@ export class DBModule extends Dexie {
     public LadeProgrammSessions(aProgramm: ITrainingsProgramm): PromiseExtended {
         return this.table(this.cSession)
             .filter( (s) => s.FK_Programm === aProgramm.id)
-            .toArray();
+            .toArray().then(
+                (mSessionListe) => { 
+                    aProgramm.SessionListe = mSessionListe;
+                    mSessionListe.forEach(
+                        (mSession) => {
+                            this.LadeSessionUebungen(mSession).then(
+                                (mUebungen) => {
+                                    mSession.UebungsListe = mUebungen;
+                                    // mUebungen.forEach( mUebung => {
+                                    //     this.LadeUebungsSaetze(mUebung).then(
+                                    //         (mSaetze) => mUebung.SatzListe = mSaetze 
+                                    //     )
+                                    // });
+                                }
+                            );
+                        })
+                }
+            );
     }
 
-    public LadeSessionUebungem(aSession: ISession): PromiseExtended {
+    public LadeSessionUebungen(aSession: ISession): PromiseExtended {
         return this.table(this.cUebung)
             .filter((mUebung) => mUebung.SessionID === aSession.id)
             .toArray();
     }
 
-    public async LadeProgramme() {
+    public LadeUebungsSaetze(aUebung: IUebung): PromiseExtended {
+        return this.table(this.cSatz)
+            .filter((mSatz) => ( mSatz.UebungID === aUebung.ID ) && (mSatz.SessionID === aUebung.SessionID) )
+            .toArray();
+    }
+
+    public LadeProgramme() {
         this.Programme = [];
         const mAnlegen: Array<ProgrammTyp.Gzclp> = new Array<ProgrammTyp.Gzclp>();
-        await this.table(this.cProgramm)
+        this.table(this.cProgramm)
             .filter(
                 (a) =>
                     a.ProgrammKategorie === ProgrammKategorie.Vorlage.toString()
@@ -166,31 +189,19 @@ export class DBModule extends Dexie {
                         this.Programme.push(mProg);
                     }
                 }
+
+                for (let index = 0; index < mAnlegen.length; index++) 
+                    this.VorlageProgrammSpeichern(mAnlegen[index]);
+        
+                for (let index = 0; index < this.Programme.length; index++) {
+                    this.LadeProgrammSessions(this.Programme[index])
+                        .catch((err) => console.error(err));
+                }
             })
             .catch((error) => {
                 console.error(error);
             });
 
-        for (let index = 0; index < mAnlegen.length; index++) 
-            this.VorlageProgrammSpeichern(mAnlegen[index]);
-
-        for (let index = 0; index < this.Programme.length; index++) {
-            await this.LadeProgrammSessions(this.Programme[index])
-                .then((mSessions) => {
-                    if (this.Programme[index]) {
-                        this.Programme[index].SessionListe = mSessions;
-                        this.Programme[index].SessionListe.forEach((mSession) => {
-                            this.LadeSessionUebungem(mSession).then(
-                                (mUebungen) => {
-                                    // mSession.UebungsListe = mUebungen;
-                                    // this.Lade
-                                }
-                            );
-                        });
-                    }
-                })
-                .catch((err) => console.error(err));
-        }
     }
 
     public async SatzSpeichern(aSatz: ISatz) {

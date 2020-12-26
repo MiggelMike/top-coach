@@ -21,14 +21,12 @@ export class Programm01Component implements OnInit {
         private fDialogeService: DialogeService
     ) {}
 
-    ngOnInit() { }
-    
+    ngOnInit() {}
+
     SelectThisWorkoutClick($event: any): void {
         $event.stopPropagation();
         // Soll das aktuelle Work-Out durch ein anderes ersetzt werden?
-        if (
-            this.fGlobalService.DB.AktuellesProgramm !== undefined
-        ) {
+        if (this.fGlobalService.DB.AktuellesProgramm !== undefined) {
             const mDialogData = new DialogData();
             mDialogData.textZeilen.push(
                 `Replace current Program "${this.fGlobalService.DB.AktuellesProgramm.Name}" with "${this.programm.Name}" ?`
@@ -47,12 +45,9 @@ export class Programm01Component implements OnInit {
     EditThisWorkoutClick($event): void {
         $event.stopPropagation();
         this.fGlobalService.EditWorkout = this.programm;
-        this.fGlobalService.EditWorkout.SessionListe.forEach(
-            (sess) => (sess.Kategorie01 = SessionStatus.Bearbeitbar)
-        );
+        if (this.fGlobalService.EditWorkout.SessionListe)
+            this.fGlobalService.EditWorkout.SessionListe.forEach(
+                (sess) => (sess.Kategorie01 = SessionStatus.Bearbeitbar)
+            );
     }
-
-
-
-  
 }

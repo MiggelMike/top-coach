@@ -42,7 +42,7 @@ export class SessUebung extends Uebung implements ISessUebung {
     public get ArbeitsSatzListe(): Array<ISatz> {
         const mResult = Array<ISatz>();
         this.SatzListe.forEach((mSatz) => {
-            if (mSatz.SatzTyp == SatzTyp.Training) {
+            if (mSatz.SatzTyp === SatzTyp.Training) {
                 mResult.push(mSatz);
             }
         });
