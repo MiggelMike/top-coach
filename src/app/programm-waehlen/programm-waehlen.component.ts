@@ -37,6 +37,11 @@ export class ProgrammWaehlenComponent implements OnInit {
     }
 
     public TrainingsProgrammeVorhanden(): Boolean {
-        return this.ProgrammListe.length > 0;
+        // if (
+        //     this.ProgrammListe.length > 0 &&
+        //     this.ProgrammListe[0].SessionListe.length > 0
+        // )
+        //     console.log(this.ProgrammListe.length);
+        return (this.ProgrammListe.length > 0);
     }
 }

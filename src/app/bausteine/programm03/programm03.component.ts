@@ -1,6 +1,5 @@
-import { ISessUebung } from 'src/Business/Uebung/SessUebung';
-import { of } from 'rxjs';
-import { MyObserver } from './../../../Observers/MyObservers';
+import { Uebung } from './../../../Business/Uebung/Uebung';
+import { DBModule } from './../../../modules/db/db.module';
 import { GlobalService } from 'src/app/services/global.service';
 import { ISatz } from './../../../Business/Satz/Satz';
 import { MatAccordion } from '@angular/material';
@@ -18,6 +17,7 @@ export class Programm03Component implements OnInit {
     @Input() programm: ITrainingsProgramm;
     @Input() session: ISession;
     @Input() satz: ISatz;
+    @Input() sessionUebung: Uebung;
     @Input() rowNum: number = 0;
     @ViewChildren("accUebung") accUebung: QueryList<MatAccordion>;
     @ViewChildren("panUebung") panUebung: QueryList<MatExpansionPanel>;
@@ -33,9 +33,16 @@ export class Programm03Component implements OnInit {
         complete: () => console.log("Observer got a complete notification"),
     };
 
-    ngOnInit() {}
+    ngOnInit() {
+        if (this.session)
+            this.fDbModule
+                .LadeSessionUebungen(this.session)
+                .then((mUebungen) => {
+                    this.session.UebungsListe = mUebungen;
+                });
+    }
 
-    constructor(private fGlobalService: GlobalService) {
+    constructor(private fGlobalService: GlobalService, private fDbModule: DBModule) {
         if (this.fGlobalService.Comp03PanelUebungObserver === null)
             this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;
     }
@@ -58,7 +65,6 @@ export class Programm03Component implements OnInit {
     }
 
     accCheckUebungPanels() {
-        return;
         if (!this.panUebung) return;
 
         let mAllClosed = true;

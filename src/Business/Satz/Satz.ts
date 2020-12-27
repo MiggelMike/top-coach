@@ -62,7 +62,7 @@ export interface ISatz {
     Status: SatzStatus;
     LiftTyp: LiftTyp;
     AMRAP: boolean;
-    Copy(): ISatz;
+    Copy(): Satz;
 }
 
 export class Satz implements ISatz {
@@ -111,7 +111,7 @@ export class Satz implements ISatz {
         this.AMRAP = aPara.AMRAP ? aPara.AMRAP : false;
     }
 
-    public Copy(): ISatz {
+    public Copy(): Satz {
         const mResult = new Satz();
         mResult.LiftTyp = this.LiftTyp;
         mResult.AMRAP = this.AMRAP;
@@ -137,8 +137,8 @@ export class Satz implements ISatz {
         aSessionID: number,
         aUebungID: number,
         aAmrap: boolean
-    ): ISatz {
-        const mSatz: ISatz = new Satz();
+    ): Satz {
+        const mSatz: Satz = new Satz();
         mSatz.SatzTyp = aSatzTyp;
         mSatz.LiftTyp = aLiftTyp;
         mSatz.WdhVorgabe = aWdhVorgabe;

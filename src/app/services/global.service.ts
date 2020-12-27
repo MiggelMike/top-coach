@@ -1,6 +1,5 @@
 import { DBModule } from './../../modules/db/db.module';
 import { MyObserver } from './../../Observers/MyObservers';
-import { ISessUebung } from '../../Business/Uebung/SessUebung';
 import { ISatz } from './../../Business/Satz/Satz';
 import { UebungService } from './uebung.service';
 import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
@@ -9,7 +8,7 @@ import { Injectable } from '@angular/core';
 import { Sportler, ISportler } from '../../Business/Sportler/Sportler';
 // import { GzclpProgramm  } from '../../Business/TrainingsProgramm/Gzclp';
 import { ISession } from '../../Business/Session/Session';
-import { IUebung } from '../../Business/Uebung/Uebung';
+import { Uebung } from '../../Business/Uebung/Uebung';
 import { Observable, of, from, Subscriber } from 'rxjs';
 import { JsonProperty, serialize } from '@peerlancers/json-serialization';
 
@@ -63,7 +62,7 @@ export class GlobalService {
     public WorkoutCopy: ITrainingsProgramm = null;
     public SessionKopie: ISession = null;
     public SatzKopie: ISatz = null;
-    public SessUebungKopie: ISessUebung = null;
+    public SessUebungKopie: Uebung = null;
     public Observers: Array<any> = new Array<any>();
     public Comp03PanelUebungObserver: MyObserver = null;
     public DatabaseName: string = 'ConceptCoach';  
@@ -234,7 +233,7 @@ export class GlobalService {
         }
     }
 
-    public Kopiere(aUebung: IUebung): IUebung {
+    public Kopiere(aUebung: Uebung): Uebung {
         return this.fUebungService.Kopiere(aUebung);
     }
 

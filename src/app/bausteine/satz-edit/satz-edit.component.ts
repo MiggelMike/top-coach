@@ -1,7 +1,7 @@
+import { Uebung } from './../../../Business/Uebung/Uebung';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
-import { ISessUebung } from "../../../Business/Uebung/SessUebung";
 import { Component, OnInit, Input } from "@angular/core";
-import { ISatz } from "./../../../Business/Satz/Satz";
+import { Satz } from "./../../../Business/Satz/Satz";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
@@ -14,8 +14,8 @@ import { floatMask, repMask } from './../../app.module';
 })
 export class SatzEditComponent implements OnInit {
     @Input() programm: ITrainingsProgramm;
-    @Input() sessUebung: ISessUebung;
-    @Input() satz: ISatz;
+    @Input() sessUebung: Uebung;
+    @Input() satz: Satz;
     @Input() rowNum: number;
     @Input() satzTyp: string;
     public floatMask = floatMask;

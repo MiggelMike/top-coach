@@ -1,7 +1,6 @@
-import { SessUebung } from '../../Business/Uebung/SessUebung';
 import { Injectable } from '@angular/core';
 import { serialize, deserialize, JsonProperty, IJsonObject } from '@peerlancers/json-serialization';
-import { UebungsName, UebungsTyp, IUebung, Uebung } from './../../Business/Uebung/Uebung';
+import { UebungsName, UebungsTyp, Uebung } from './../../Business/Uebung/Uebung';
 
 
 @Injectable({
@@ -11,13 +10,13 @@ export class UebungService {
     public readonly cStammUebungen: string = "StammUebungen";
     public readonly cLetzteUebungID: string = "LetzteUebungID";
     @JsonProperty()
-    public Uebungen: Array<IUebung> = [];
+    public Uebungen: Array<Uebung> = [];
     @JsonProperty()
     public LetzteUebungID: number = 0;
 
     constructor() {}
 
-    public Kopiere(aUebung: IUebung): IUebung {
+    public Kopiere(aUebung: Uebung): Uebung {
         return Uebung.StaticNeueUebung(
             aUebung.Name,
             aUebung.Typ,
@@ -43,12 +42,12 @@ export class UebungService {
         return mUebung === undefined ? null : mUebung;
     }
 
-    public LadeStammUebungen(): Array<IUebung> {
+    public LadeStammUebungen(): Array<Uebung> {
         const s = localStorage.getItem(this.cStammUebungen);
         if (s === null) return null;
         const mObject = JSON.parse(s);
         let mResult = Object.values(mObject);
-        return mResult as Array<IUebung>;
+        return mResult as Array<Uebung>;
     }
 
     public SpeicherStammUebungen(): void {
@@ -83,7 +82,7 @@ export class UebungService {
         }
     }
 
-    public AddUebung(aUebung: IUebung) {
+    public AddUebung(aUebung: Uebung) {
         this.Uebungen.push(aUebung);
     }
 }

@@ -6,9 +6,8 @@ import { MatExpansionPanel } from '@angular/material/expansion';
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
-import { ISessUebung } from 'src/Business/Uebung/SessUebung';
 import { of } from 'rxjs';
-import { IUebung } from 'src/Business/Uebung/Uebung';
+import { Uebung } from 'src/Business/Uebung/Uebung';
 
 @Component({
     selector: "app-programm02",
@@ -68,8 +67,8 @@ export class Programm02Component implements OnInit {
             return;
         }
 
-        const mSessUebung: ISessUebung = this.fGlobalService.SessUebungKopie.Copy();
-        mSessUebung.Session.id = aSession.id;
+        const mSessUebung: Uebung = this.fGlobalService.SessUebungKopie.Copy();
+        mSessUebung.SessionID = aSession.id;
         aSession.UebungsListe.push(mSessUebung);
     }
 

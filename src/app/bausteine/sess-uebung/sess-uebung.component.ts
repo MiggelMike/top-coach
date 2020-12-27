@@ -1,4 +1,4 @@
-import { ISessUebung } from './../../../Business/Uebung/SessUebung';
+import { Uebung } from 'src/Business/Uebung/Uebung';
 import { of } from 'rxjs';
 import { ISession } from './../../../Business/Session/Session';
 import { Component, OnInit, Input, ViewChild } from "@angular/core";
@@ -20,7 +20,7 @@ export class SessUebungComponent implements OnInit {
     @Input() satzTypText: string = "";
     @Input() satz: ISatz = null;
     @Input() session: ISession = null;
-    @Input() sessUebung: ISessUebung;
+    @Input() sessUebung: Uebung;
     @Input() satzListe: Array<ISatz>;
     @Input() rowNum: number = 0;
     @Input() panUebung1: MatExpansionPanel;
@@ -31,7 +31,7 @@ export class SessUebungComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        const x = 0;
+        console.log('ngOnInit');
     }
 
     public PasteSet() {
@@ -42,8 +42,8 @@ export class SessUebungComponent implements OnInit {
             return;
         }
 
-        const mSatz: ISatz = this.fGlobalService.SatzKopie.Copy();
-        mSatz.UebungID = this.sessUebung.Uebung.ID;
+        const mSatz: Satz = this.fGlobalService.SatzKopie.Copy();
+        mSatz.UebungID = this.sessUebung.ID;
         
         switch (this.satzTypText) {
             case "Warm Up":
@@ -63,7 +63,7 @@ export class SessUebungComponent implements OnInit {
 
     public DeleteExercise() {
         const mDialogData = new DialogData();
-        mDialogData.textZeilen.push(`Delete excercise #${this.rowNum + 1} "${this.sessUebung.Uebung.Name}" ?`);
+        mDialogData.textZeilen.push(`Delete excercise #${this.rowNum + 1} "${this.sessUebung.Name}" ?`);
         mDialogData.OkFn = () => {
             // Index der SessUeb in Liste suchen.
             const index: number = this.session.UebungsListe.indexOf( this.sessUebung );
@@ -91,7 +91,7 @@ export class SessUebungComponent implements OnInit {
     }
 
     public AddSet() {
-        let mSatz: ISatz;
+        let mSatz: Satz;
         switch (this.satzTypText) {
             case "Warm Up":
                 mSatz = Satz.NeuerSatz(
@@ -100,7 +100,7 @@ export class SessUebungComponent implements OnInit {
                     0,
                     0,
                     this.session.id,
-                    this.sessUebung.Uebung.ID,
+                    this.sessUebung.ID,
                     false
                 );
                 break;
@@ -112,7 +112,7 @@ export class SessUebungComponent implements OnInit {
                         0,
                         0,
                         this.session.id,
-                        this.sessUebung.Uebung.ID,
+                        this.sessUebung.ID,
                         false
                         );
                 break;
@@ -124,7 +124,7 @@ export class SessUebungComponent implements OnInit {
                     0,
                     0,
                     this.session.id,
-                    this.sessUebung.Uebung.ID,
+                    this.sessUebung.ID,
                     false
                 );
                 break;

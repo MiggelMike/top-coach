@@ -1,5 +1,4 @@
-import { ISessUebung } from './../Uebung/SessUebung';
-import { IUebung, Uebung } from "../Uebung/Uebung";
+import { Uebung } from "../Uebung/Uebung";
 
 export enum SessionStatus {
     NurLesen,
@@ -16,14 +15,14 @@ export interface ISession {
     Expanded: Boolean;
     Kategorie01: SessionStatus;
     Bearbeitbar: Boolean;
-    UebungsListe: Array<ISessUebung>;
+    UebungsListe: Array<Uebung>;
     Copy(): Session;
     getKategorie01():string;
 }
 
 export class Session implements ISession {
     public id: number;
-    public FK_Programm: number;
+    public FK_Programm: number = 0;
     public SessionNr: number;
     public Name: string;
     public Datum: Date;
@@ -31,7 +30,7 @@ export class Session implements ISession {
     public Expanded: Boolean;
     public Kategorie01: SessionStatus;
     public Bearbeitbar: Boolean = false;
-    public UebungsListe: Array<ISessUebung> = new Array<ISessUebung>();
+    public UebungsListe: Array<Uebung> = new Array<Uebung>();
 
     public getKategorie01(): string {
         if (this.Kategorie01 === SessionStatus.Bearbeitbar)

@@ -7,7 +7,7 @@ import { AppData, IAppData } from './../../Business/Coach/Coach';
 import { Dexie, PromiseExtended } from 'dexie';
 import { CommonModule } from '@angular/common';
 import { Injectable, NgModule, Pipe, Optional, SkipSelf } from '@angular/core';
-import { UebungsTyp, Uebung, UebungsName, IUebung } from "../../Business/Uebung/Uebung";
+import { UebungsTyp, Uebung, UebungsName } from "../../Business/Uebung/Uebung";
 
 
 @Injectable({
@@ -47,7 +47,7 @@ export class DBModule extends Dexie {
             );
         }
 
-      //   Dexie.delete("ConceptCoach");
+        // Dexie.delete("ConceptCoach");
 
         this.version(1).stores({
             AppData: "++id",
@@ -88,11 +88,7 @@ export class DBModule extends Dexie {
     private NeueUebung(aName: string): Uebung {
         const mGzclpKategorieen01 = Uebung.ErzeugeGzclpKategorieen01();
         const mKategorieen01 = [].concat(mGzclpKategorieen01);
-        return Uebung.StaticNeueUebung(
-            aName,
-            UebungsTyp.Kraft,
-            mKategorieen01
-        );
+        return Uebung.StaticNeueUebung(aName, UebungsTyp.Kraft, mKategorieen01);
     }
 
     public InsertUebungen(aUebungsListe: Array<Uebung>): PromiseExtended {
@@ -131,30 +127,28 @@ export class DBModule extends Dexie {
     private async InitProgramm() {
         this.ProgrammTable = this.table(this.cProgramm);
         this.ProgrammTable.mapToClass(TrainingsProgramm);
-        // this.ProgrammTable.clear();
+        //this.ProgrammTable.clear();
     }
 
-    public LadeProgrammSessions(aProgramm: ITrainingsProgramm): PromiseExtended {
+    public LadeProgrammSessions(
+        aProgramm: ITrainingsProgramm
+    ): PromiseExtended {
         return this.table(this.cSession)
-            .filter( (s) => s.FK_Programm === aProgramm.id)
-            .toArray().then(
-                (mSessionListe) => { 
-                    aProgramm.SessionListe = mSessionListe;
-                    mSessionListe.forEach(
-                        (mSession) => {
-                            this.LadeSessionUebungen(mSession).then(
-                                (mUebungen) => {
-                                    mSession.UebungsListe = mUebungen;
-                                    // mUebungen.forEach( mUebung => {
-                                    //     this.LadeUebungsSaetze(mUebung).then(
-                                    //         (mSaetze) => mUebung.SatzListe = mSaetze 
-                                    //     )
-                                    // });
-                                }
+            .filter((s) => s.FK_Programm === aProgramm.id)
+            .toArray()
+            .then((mSessionListe) => {
+                aProgramm.SessionListe = mSessionListe;
+                mSessionListe.forEach((mSession) => {
+                    this.LadeSessionUebungen(mSession).then((mUebungen) => {
+                        mSession.UebungsListe = mUebungen;
+                        mUebungen.forEach((mUebung) => {
+                            this.LadeUebungsSaetze(mUebung).then(
+                                (mSaetze) => (mUebung.SatzListe = mSaetze)
                             );
-                        })
-                }
-            );
+                        });
+                    });
+                });
+            });
     }
 
     public LadeSessionUebungen(aSession: ISession): PromiseExtended {
@@ -163,10 +157,12 @@ export class DBModule extends Dexie {
             .toArray();
     }
 
-    public LadeUebungsSaetze(aUebung: IUebung): PromiseExtended {
-        return this.table(this.cSatz)
-            .filter((mSatz) => ( mSatz.UebungID === aUebung.ID ) && (mSatz.SessionID === aUebung.SessionID) )
-            .toArray();
+    public LadeUebungsSaetze(aUebung: Uebung): PromiseExtended {
+        return (
+            this.table(this.cSatz)
+                .filter((mSatz) => ( mSatz.UebungID === aUebung.ID ) && (mSatz.SessionID === aUebung.SessionID) )
+                .toArray()
+        );
     }
 
     public LadeProgramme() {
@@ -179,29 +175,34 @@ export class DBModule extends Dexie {
             )
             .toArray()
             .then((mProgramme) => {
-                const mProg: TrainingsProgramm = mProgramme.find((p) => p.ProgrammTyp === ProgrammTyp.Gzclp);
+                const mProg: TrainingsProgramm = mProgramme.find(
+                    (p) => p.ProgrammTyp === ProgrammTyp.Gzclp
+                );
 
-                if (mProg === undefined)
-                    mAnlegen.push(ProgrammTyp.Gzclp);
+                if (mProg === undefined) mAnlegen.push(ProgrammTyp.Gzclp);
                 else {
-                    if (this.Programme.find((p) => p.ProgrammTyp === ProgrammTyp.Gzclp) === undefined) {
+                    if (
+                        this.Programme.find(
+                            (p) => p.ProgrammTyp === ProgrammTyp.Gzclp
+                        ) === undefined
+                    ) {
                         // Standard-Programm gefunden
                         this.Programme.push(mProg);
                     }
                 }
 
-                for (let index = 0; index < mAnlegen.length; index++) 
+                for (let index = 0; index < mAnlegen.length; index++)
                     this.VorlageProgrammSpeichern(mAnlegen[index]);
-        
+
                 for (let index = 0; index < this.Programme.length; index++) {
-                    this.LadeProgrammSessions(this.Programme[index])
-                        .catch((err) => console.error(err));
+                    this.LadeProgrammSessions(
+                        this.Programme[index]
+                    ).catch((err) => console.error(err));
                 }
             })
             .catch((error) => {
                 console.error(error);
             });
-
     }
 
     public async SatzSpeichern(aSatz: ISatz) {
@@ -212,8 +213,8 @@ export class DBModule extends Dexie {
         return await this.SatzTable.bulkPut(aSaetze as Array<Satz>);
     }
 
-    public async UebungSpeichern(aUebung: IUebung) {
-        const mUebung: IUebung = aUebung.Copy();
+    public async UebungSpeichern(aUebung: Uebung) {
+        const mUebung: Uebung = aUebung.Copy();
         mUebung.SatzListe = [];
         return this.transaction("rw", this.UebungTable, this.SatzTable, () => {
             this.UebungTable.put(aUebung as Uebung).then((mUebungID) => {
@@ -221,6 +222,7 @@ export class DBModule extends Dexie {
                 // UebungsID in Saetze eintragen.
                 aUebung.SatzListe.forEach((mSatz) => {
                     mSatz.UebungID = mUebungID;
+                    mSatz.SessionID = aUebung.SessionID;
                 });
                 this.SaetzeSpeichern(aUebung.SatzListe);
             });
@@ -228,7 +230,7 @@ export class DBModule extends Dexie {
     }
 
     public async SessionSpeichern(aSession: ISession) {
-        const mSession: ISession = aSession.Copy();
+        const mSession: Session = aSession.Copy();
         mSession.UebungsListe = [];
         return this.transaction(
             "rw",
@@ -236,7 +238,7 @@ export class DBModule extends Dexie {
             this.UebungTable,
             this.SatzTable,
             () => {
-                this.SessionTable.put(mSession as Session).then(
+                this.SessionTable.put(mSession).then(
                     // Session ist gespeichert
                     // SessionID in Uebungen eintragen
                     (mSessionID) => {
@@ -260,21 +262,20 @@ export class DBModule extends Dexie {
             () => {
                 const mSessions = aTrainingsProgramm.SessionListe;
                 aTrainingsProgramm.SessionListe = [];
-                this.ProgrammTable.put(aTrainingsProgramm as TrainingsProgramm)
-                    .then(
-                        // Programm ist gespeichert.
-                        // ProgrammID in die Sessions eintragen
-                        (id) => {
-                            mSessions.forEach((mEineSession) => {
-                                mEineSession.FK_Programm = id;
-                                this.SessionSpeichern(mEineSession);
-                            });
-                        }
-                    );
+                this.ProgrammTable.put(
+                    aTrainingsProgramm as TrainingsProgramm
+                ).then(
+                    // Programm ist gespeichert.
+                    // ProgrammID in die Sessions eintragen
+                    (id) => {
+                        mSessions.forEach((mEineSession) => {
+                            mEineSession.FK_Programm = id;
+                            this.SessionSpeichern(mEineSession);
+                        });
+                    }
+                );
             }
-        ).catch(
-            (err) => console.error(err)
-        )
+        ).catch((err) => console.error(err));
     }
 
     public VorlageProgrammSpeichern(aProgrammTyp: ProgrammTyp) {
