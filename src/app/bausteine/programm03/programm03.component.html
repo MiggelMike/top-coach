@@ -13,24 +13,24 @@
                     </mat-expansion-panel-header>
 
                     <div class="card-body">
-                        <div *ngIf="SessUeb.AufwaermSatzListe">
-                            <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Warm up sets'"
-                                [satzListe]="SessUeb.AufwaermSatzListe" [satz]="satz" [session]="session"
-                                [sessUebung]="SessUeb">
-                            </app-sess-uebung>
-                        </div>
-
-                        <ng-container *ngIf="SessUeb.ArbeitsSatzListe">
-                            <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Work sets'" [satzListe]="SessUeb.ArbeitsSatzListe"
-                                [satz]="satz" [session]="session" [sessUebung]="SessUeb">
-                            </app-sess-uebung>
-                        </ng-container>
-
-                        <div *ngIf="SessUeb.AbwaermSatzListe">
-                            <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Cool down sets'"
-                                [satzListe]="SessUeb.AbwaermSatzListe" [satz]="satz" [session]="session"
-                                [sessUebung]="SessUeb">
-                            </app-sess-uebung>
+                        <div fxLayout="column" fxLayoutGap="2px" fxFlex="100%">
+                            <ng-container *ngIf="SessUeb.AufwaermSatzListe">
+                                <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Warm up sets'"
+                                    [satzListe]="SessUeb.AufwaermSatzListe" [satz]="satz" [session]="session" [sessUebung]="SessUeb">
+                                </app-sess-uebung>
+                            </ng-container>
+                        
+                            <ng-container *ngIf="SessUeb.ArbeitsSatzListe">
+                                <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Work sets'"
+                                    [satzListe]="SessUeb.ArbeitsSatzListe" [satz]="satz" [session]="session" [sessUebung]="SessUeb">
+                                </app-sess-uebung>
+                            </ng-container>
+                        
+                            <ng-container *ngIf="SessUeb.AbwaermSatzListe">
+                                <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Cool down sets'"
+                                    [satzListe]="SessUeb.AbwaermSatzListe" [satz]="satz" [session]="session" [sessUebung]="SessUeb">
+                                </app-sess-uebung>
+                            </ng-container>
                         </div>
                     </div>
                 </mat-expansion-panel>
