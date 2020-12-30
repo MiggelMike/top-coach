@@ -91,7 +91,7 @@ export class SessUebungComponent implements OnInit {
     public AddSet() {
         let mSatz: Satz;
         switch (this.satzTypText) {
-            case "Warm Up":
+            case "Warm up sets":
                 mSatz = Satz.NeuerSatz(
                     SatzTyp.Aufwaermen,
                     LiftTyp.Custom,
@@ -103,7 +103,7 @@ export class SessUebungComponent implements OnInit {
                 );
                 break;
 
-                case "Cool Down":
+                case "Cool down sets":
                     mSatz = Satz.NeuerSatz(
                         SatzTyp.Abwaermen,
                         LiftTyp.Custom,
