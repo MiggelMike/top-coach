@@ -1,8 +1,13 @@
+import { UebungWaehlenComponent } from './../uebung-waehlen/uebung-waehlen.component';
 import { Injectable } from '@angular/core';
 import { serialize, deserialize, JsonProperty, IJsonObject } from '@peerlancers/json-serialization';
 import { UebungsName, UebungsTyp, Uebung } from './../../Business/Uebung/Uebung';
+import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 
+@Injectable({
+    providedIn: "root",
+})
 @Injectable({
     providedIn: "root",
 })
@@ -13,8 +18,23 @@ export class UebungService {
     public Uebungen: Array<Uebung> = [];
     @JsonProperty()
     public LetzteUebungID: number = 0;
+    private fDialogConfig: MatDialogConfig;
 
-    constructor() {}
+    constructor(
+        private fDialog: MatDialog
+    ) {
+        this.fDialogConfig = new MatDialogConfig();
+        this.fDialogConfig.width = "400px";
+        this.fDialogConfig.height = "280px";
+        this.fDialogConfig.disableClose = true;
+        this.fDialogConfig.autoFocus = true;
+        this.fDialogConfig.data = '';
+        this.fDialogConfig.hasBackdrop = false;
+    }
+
+    public UebungWaehlen() {
+        this.fDialog.open(UebungWaehlenComponent, this.fDialogConfig);
+    }
 
     public Kopiere(aUebung: Uebung): Uebung {
         return Uebung.StaticNeueUebung(

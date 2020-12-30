@@ -44,6 +44,7 @@ import  createNumberMask  from 'text-mask-addons/dist/createNumberMask';
 import { SatzComponent } from './bausteine/satz/satz.component';
 import { SessUebungComponent } from './bausteine/sess-uebung/sess-uebung.component';
 import { Dexie } from 'dexie';
+import { UebungWaehlenComponent } from './uebung-waehlen/uebung-waehlen.component';
 
 
 // var sqlite3 = require('sqlite3');1
@@ -87,7 +88,8 @@ export const floatMask = createNumberMask({
         WorkoutFormComponent,
         SatzEditComponent,
         SatzComponent,
-        SessUebungComponent
+        SessUebungComponent,
+        UebungWaehlenComponent
     ],
     imports: [
         TextMaskModule,
@@ -123,7 +125,8 @@ export const floatMask = createNumberMask({
 
     entryComponents: [
         DialogComponent,
-        FilePreviewOverlayComponent
+        FilePreviewOverlayComponent,
+        UebungWaehlenComponent
     ],
     providers: [MatDialog, FilePreviewOverlayService],
     bootstrap: [AppComponent]

@@ -9,6 +9,7 @@ import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
 import { of } from 'rxjs';
 import { Uebung } from 'src/Business/Uebung/Uebung';
+import { UebungService } from 'src/app/services/uebung.service';
 
 @Component({
     selector: "app-programm02",
@@ -28,6 +29,7 @@ export class Programm02Component implements OnInit {
     constructor(
         private fDialogService: DialogeService,
         private fGlobalService: GlobalService,
+        private fUebungService: UebungService,
         private fDbModule: DBModule
     ) {}
 
@@ -58,7 +60,8 @@ export class Programm02Component implements OnInit {
     }
 
     public AddExcercise() {
-        alert("Add Excercise");
+        this.fUebungService.UebungWaehlen();
+        // alert("Add Excercise");
     }
 
     public PasteExcercise(aSession : Session) {

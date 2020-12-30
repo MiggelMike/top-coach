@@ -104,11 +104,11 @@ export class GzclpProgramm extends TrainingsProgramm {
                 break;
 
             case 1:
-                mNeueSession.Name += "Overhead press";
+                mNeueSession.Name += "Overhead-Press";
                 break;
 
             case 2:
-                mNeueSession.Name += "Bench press";
+                mNeueSession.Name += "Bench-Press";
                 break;
 
             case 3:
