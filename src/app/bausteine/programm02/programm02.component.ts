@@ -1,5 +1,6 @@
+import { DBModule } from './../../../modules/db/db.module';
 import { ISession, Session, SessionStatus } from './../../../Business/Session/Session';
-import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
+import { TrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";
 import { MatAccordion } from '@angular/material';
 import { MatExpansionPanel } from '@angular/material/expansion';
@@ -15,7 +16,7 @@ import { Uebung } from 'src/Business/Uebung/Uebung';
     styleUrls: ["./programm02.component.scss"],
 })
 export class Programm02Component implements OnInit {
-    @Input() programm: ITrainingsProgramm = null;
+    @Input() programm: TrainingsProgramm = null;
     @Input() SessionListe: Array<Session> = [];
     @Input() ShowButtons: Boolean = false;
     @ViewChildren("accSession") accSession: QueryList<MatAccordion>;
@@ -26,7 +27,8 @@ export class Programm02Component implements OnInit {
 
     constructor(
         private fDialogService: DialogeService,
-        private fGlobalService: GlobalService
+        private fGlobalService: GlobalService,
+        private fDbModule: DBModule
     ) {}
 
     ngOnInit() { }
@@ -68,7 +70,7 @@ export class Programm02Component implements OnInit {
         }
 
         const mSessUebung: Uebung = this.fGlobalService.SessUebungKopie.Copy();
-        mSessUebung.SessionID = aSession.id;
+        mSessUebung.SessionID = aSession.ID;
         aSession.UebungsListe.push(mSessUebung);
     }
 
@@ -112,16 +114,12 @@ export class Programm02Component implements OnInit {
 
     public AddSession() {
         const mDate = new Date();
-
-        const mSession: Session = new Session(
-            {
-                Name: `Session ${mDate.toLocaleString()}`,
-                Datum: new Date(),
-                DauerInSek: 0,
-                SessionNr: this.SessionListe.length + 1,
-                Kategorie01: SessionStatus.Bearbeitbar
-            } as Session);
-
+        const mSession: Session = new Session();
+        mSession.Name = `Session ${mDate.toLocaleString()}`;
+        mSession.Datum = new Date();
+        mSession.DauerInSek = 0;
+        mSession.SessionNr = this.SessionListe.length + 1;
+        mSession.Kategorie01 = SessionStatus.Bearbeitbar;
         //mSession.FK_Programm = this.programm.ID;
         this.SessionListe.push(mSession);        
     }
@@ -141,7 +139,7 @@ export class Programm02Component implements OnInit {
     }
 
     public SaveChanges() {
-        alert("SaveChanges");
+        this.fDbModule.ProgrammSpeichern(this.programm);
     }
 
     public CancelChanges() {

@@ -26,11 +26,10 @@ export class Programm03Component implements OnInit {
     public ToggleButtonText = "Close all excercises";
     private UebungPanelsObserver = {
         next: (x: MatExpansionPanel) => {
-
-                this.accCheckUebungPanels();
-            },
-        error: (err) => console.error("Observer got an error: " + err),
-        complete: () => console.log("Observer got a complete notification"),
+            this.accCheckUebungPanels();
+        },
+        error: (err) => console.error("UebungPanelsObserver got an error: " + err),
+        complete: () => console.log("UebungPanelsObserver got a complete notification"),
     };
 
     ngOnInit() {
@@ -38,11 +37,19 @@ export class Programm03Component implements OnInit {
             this.fDbModule
                 .LadeSessionUebungen(this.session)
                 .then((mUebungen) => {
+                    mUebungen.forEach((mUebung) => {
+                        this.fDbModule
+                            .LadeUebungsSaetze(mUebung)
+                            .then((mSaetze) => (mUebung.SatzListe = mSaetze));
+                    });
                     this.session.UebungsListe = mUebungen;
                 });
     }
 
-    constructor(private fGlobalService: GlobalService, private fDbModule: DBModule) {
+    constructor(
+        private fGlobalService: GlobalService,
+        private fDbModule: DBModule
+    ) {
         if (this.fGlobalService.Comp03PanelUebungObserver === null)
             this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;
     }
@@ -63,7 +70,7 @@ export class Programm03Component implements OnInit {
             this.ToggleButtonText = "Close all excercises";
         }
     }
-
+    
     accCheckUebungPanels() {
         if (!this.panUebung) return;
 

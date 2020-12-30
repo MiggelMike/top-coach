@@ -24,9 +24,9 @@ export class SatzEditComponent implements OnInit {
     constructor(
         private fDialogService: DialogeService,
         private fGlobalService: GlobalService
-    ) {}
-
-    ngOnInit(): void {}
+    ) { }
+    
+    ngOnInit() {}
 
     public DeleteSet() {
         const mDialogData = new DialogData();

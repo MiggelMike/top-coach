@@ -6,7 +6,7 @@ export enum SessionStatus {
 }
 
 export interface ISession {
-    id: number;
+    ID: number;
     FK_Programm: number;
     SessionNr: number;
     Name: string;
@@ -21,14 +21,14 @@ export interface ISession {
 }
 
 export class Session implements ISession {
-    public id: number;
+    public ID: number;
     public FK_Programm: number = 0;
     public SessionNr: number;
     public Name: string;
-    public Datum: Date;
-    public DauerInSek: number;
+    public Datum: Date = new Date();
+    public DauerInSek: number = 0;
     public Expanded: Boolean;
-    public Kategorie01: SessionStatus;
+    public Kategorie01: SessionStatus = SessionStatus.Bearbeitbar;
     public Bearbeitbar: Boolean = false;
     public UebungsListe: Array<Uebung> = new Array<Uebung>();
 
@@ -40,32 +40,28 @@ export class Session implements ISession {
         return "";
     }
 
-    constructor(aPara: Session = {} as Session) {
-        (this.Name = aPara.Name ? aPara.Name : "Day " + aPara.SessionNr.toString()),
-        this.Datum = aPara.Datum;
-        this.DauerInSek = aPara.DauerInSek;
-        this.SessionNr = aPara.SessionNr;
-        this.FK_Programm = aPara.FK_Programm;
-        this.Expanded = aPara.Expanded ? aPara.Expanded : true;
-        this.Kategorie01 = aPara.Kategorie01
-            ? aPara.Kategorie01
-            : SessionStatus.NurLesen;
-    }
+    constructor() {}
+
+    // constructor(aPara: Session = {} as Session) {
+    //     (this.Name = aPara.Name ? aPara.Name : "Day " + aPara.SessionNr.toString()),
+    //     this.Datum = aPara.Datum;
+    //     this.DauerInSek = aPara.DauerInSek;
+    //     this.SessionNr = aPara.SessionNr;
+    //     this.FK_Programm = aPara.FK_Programm;
+    //     this.Expanded = aPara.Expanded ? aPara.Expanded : true;
+    //     this.Kategorie01 = aPara.Kategorie01
+    //         ? aPara.Kategorie01
+    //         : SessionStatus.NurLesen;
+    // }
+
 
     public Copy(): Session {
-        const mResult = new Session({
-            SessionNr: this.SessionNr,
-            UebungsListe: this.UebungsListe,
-            Datum: this.Datum,
-            DauerInSek: this.DauerInSek,
-            FK_Programm: this.FK_Programm,
-            Expanded: this.Expanded,
-            Kategorie01: this.Kategorie01,
-        } as Session);
+        const mResult = Object.assign({}, this);
+        //mUebung.Kategorieen01.push(Object.assign({}, val));
 
-        this.UebungsListe.forEach((mUebung_Sess) =>
-            mResult.UebungsListe.push(mUebung_Sess.Copy())
-        );
+        // this.UebungsListe.forEach((mUebung_Sess) =>
+        //     mResult.UebungsListe.push(mUebung_Sess.Copy())
+        // );
 
         return mResult;
     }

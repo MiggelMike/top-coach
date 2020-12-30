@@ -62,18 +62,20 @@ export class Uebung implements IUebung {
 
     public Copy(): Uebung {
         let mUebung = new Uebung();
+        mUebung.ID = this.ID;
+        mUebung.SessionID = this.SessionID;
         mUebung.Name = this.Name;
         mUebung.Typ = this.Typ;
         mUebung.Kategorieen01 = [];
         mUebung.Kategorie02 = this.Kategorie02;
+
         this.Kategorieen01.forEach((val) =>
             mUebung.Kategorieen01.push(Object.assign({}, val))
         );
-        mUebung.SessionID = this.SessionID;
+
         this.SatzListe.forEach( 
             s => mUebung.SatzListe.push(Object.assign({}, s))
         )
-        mUebung.SatzListe
         return mUebung;
     }
 

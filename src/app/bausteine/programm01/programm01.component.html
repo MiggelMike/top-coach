@@ -1,8 +1,8 @@
 <!-- "programm" wird in Eltern-Komponente gesetzt. -->
 <div *ngIf="programm" class="accordion" id="accordionProgramme">
     <mat-accordion #accordion="matAccordion" multi="true">
-        <mat-expansion-panel>
-            <mat-expansion-panel-header (click)="$event.stopPropagation()" >
+        <mat-expansion-panel #panProgramm='matExpansionPanel'>
+            <mat-expansion-panel-header (click)="$event.stopPropagation()">
                 <div fxLayout="row wrap" fxLayoutAlign="center center">
                     <div>{{programm.Name}}</div>
                     <!-- <a [ngClass]="['link-button-font']" mat-flat-button  (click)="togglePanels($event)">Open all</a> -->
@@ -15,9 +15,8 @@
                         </button>
 
                         <!-- { path: 'programmedit', component: WorkoutFormComponent }, -->
-                        <a class="nav-link" [routerLink]="['/workoutform']" (click)="EditThisWorkoutClick($event)" ><span class="tc-font-size-small">Edit</span></a>
-                          
-                    </ng-template>
+                        <a class="nav-link" [routerLink]="['/workoutform']" (click)="EditThisWorkoutClick($event)"><span class="tc-font-size-small">Edit</span></a>
+                     </ng-template>
 
                 </div>
             </mat-expansion-panel-header>

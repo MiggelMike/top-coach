@@ -30,9 +30,7 @@ export class SessUebungComponent implements OnInit {
         private fGlobalService: GlobalService
     ) {}
 
-    ngOnInit(): void {
-        console.log('ngOnInit');
-    }
+    ngOnInit(): void {}
 
     public PasteSet() {
         if (this.fGlobalService.SatzKopie === null) {
@@ -99,7 +97,7 @@ export class SessUebungComponent implements OnInit {
                     LiftTyp.Custom,
                     0,
                     0,
-                    this.session.id,
+                    this.session.ID,
                     this.sessUebung.ID,
                     false
                 );
@@ -111,7 +109,7 @@ export class SessUebungComponent implements OnInit {
                         LiftTyp.Custom,
                         0,
                         0,
-                        this.session.id,
+                        this.session.ID,
                         this.sessUebung.ID,
                         false
                         );
@@ -123,7 +121,7 @@ export class SessUebungComponent implements OnInit {
                     LiftTyp.Custom,
                     0,
                     0,
-                    this.session.id,
+                    this.session.ID,
                     this.sessUebung.ID,
                     false
                 );

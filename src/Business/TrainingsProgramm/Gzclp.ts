@@ -95,11 +95,9 @@ export class GzclpProgramm extends TrainingsProgramm {
 
     protected InitTag(aSessionNr: number): Array<ISession> {
         const mSessions = new Array<ISession>();
-        const mNeueSession = new Session({
-            SessionNr: aSessionNr,
-            Datum: null,
-            DauerInSek: 0,
-        } as Session);
+        const mNeueSession = new Session();
+        mNeueSession.SessionNr = aSessionNr;
+        mNeueSession.Datum = null;
 
         mSessions.push(mNeueSession);
 
