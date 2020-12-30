@@ -47,7 +47,7 @@ export class DBModule extends Dexie {
             );
         }
 
-    //    Dexie.delete("ConceptCoach");
+        // Dexie.delete("ConceptCoach");
 
         this.version(1).stores({
             AppData: "++id",
@@ -128,9 +128,7 @@ export class DBModule extends Dexie {
         //this.ProgrammTable.clear();
     }
 
-    public LadeProgrammSessions(
-        aProgramm: ITrainingsProgramm
-    ): PromiseExtended {
+    public LadeProgrammSessions(aProgramm: ITrainingsProgramm): PromiseExtended {
         return this.table(this.cSession)
             .filter((s) => s.FK_Programm === aProgramm.id)
             .toArray()

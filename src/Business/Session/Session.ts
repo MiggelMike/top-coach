@@ -42,27 +42,7 @@ export class Session implements ISession {
 
     constructor() {}
 
-    // constructor(aPara: Session = {} as Session) {
-    //     (this.Name = aPara.Name ? aPara.Name : "Day " + aPara.SessionNr.toString()),
-    //     this.Datum = aPara.Datum;
-    //     this.DauerInSek = aPara.DauerInSek;
-    //     this.SessionNr = aPara.SessionNr;
-    //     this.FK_Programm = aPara.FK_Programm;
-    //     this.Expanded = aPara.Expanded ? aPara.Expanded : true;
-    //     this.Kategorie01 = aPara.Kategorie01
-    //         ? aPara.Kategorie01
-    //         : SessionStatus.NurLesen;
-    // }
-
-
     public Copy(): Session {
-        const mResult = Object.assign({}, this);
-        //mUebung.Kategorieen01.push(Object.assign({}, val));
-
-        // this.UebungsListe.forEach((mUebung_Sess) =>
-        //     mResult.UebungsListe.push(mUebung_Sess.Copy())
-        // );
-
-        return mResult;
+        return Object.assign({}, this);
     }
 }

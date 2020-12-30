@@ -31,7 +31,7 @@ export class Programm02Component implements OnInit {
         private fDbModule: DBModule
     ) {}
 
-    ngOnInit() { }
+    ngOnInit() {}
     
     public CopySession(aSession: Session) {
         this.fGlobalService.SessionKopie = aSession.Copy();

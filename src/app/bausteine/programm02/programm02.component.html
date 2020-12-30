@@ -7,7 +7,11 @@
                     (closed)="accCheckSessionPanels()" (opened)="accCheckSessionPanels()">
                     <mat-expansion-panel-header>
                         <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">
-                            <h6 class="mb-0">#{{i+1}} {{sess.Name}}</h6>
+                            <!-- <h6 class="mb-0">#{{i+1}} {{sess.Name}}</h6> -->
+                            <!-- <mat-label [ngModel]="sess.Name"></mat-label> -->
+                            <mat-form-field class="align-left"  [style.width.px]=400>
+                                <input matInput [(ngModel)]="sess.Name" type="text" maxlength="40" (click)="$event.stopPropagation()"> 
+                            </mat-form-field>
                         </div>
                     </mat-expansion-panel-header>
 

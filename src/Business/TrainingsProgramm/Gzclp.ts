@@ -96,6 +96,28 @@ export class GzclpProgramm extends TrainingsProgramm {
     protected InitTag(aSessionNr: number): Array<ISession> {
         const mSessions = new Array<ISession>();
         const mNeueSession = new Session();
+        mNeueSession.Name = `Day #${aSessionNr}  --- `;
+        // `0${month}
+        switch (aSessionNr-1 % 4) {
+            case 0:
+                mNeueSession.Name += "Squat";
+                break;
+
+            case 1:
+                mNeueSession.Name += "Overhead press";
+                break;
+
+            case 2:
+                mNeueSession.Name += "Bench press";
+                break;
+
+            case 3:
+                mNeueSession.Name += "Deadlift";
+                break;
+            default:
+                break;
+        }
+        
         mNeueSession.SessionNr = aSessionNr;
         mNeueSession.Datum = null;
 
