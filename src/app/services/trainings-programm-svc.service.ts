@@ -1,8 +1,4 @@
-import { ProgrammKategorie } from './../../Business/TrainingsProgramm/TrainingsProgramm';
-import { UebungService } from './uebung.service';
-import { GzclpProgramm } from './../../Business/TrainingsProgramm/Gzclp';
 import { Injectable, NgModule, Pipe,  Optional, SkipSelf ,  ModuleWithProviders } from '@angular/core';
-import { ISession } from '../../Business/Session/Session';
 import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 
 export interface ITrainingsProgrammSvc {
@@ -20,8 +16,8 @@ export class TrainingsProgrammSvc implements ITrainingsProgrammSvc {
     exports: [ TrainingsProgrammSvc]
            
     
-    constructor(private fUebungService: UebungService, @Optional() @SkipSelf() parentModule?: TrainingsProgrammSvc) {
-        if (parentModule) {
+    constructor(@Optional() @SkipSelf() parentTrainingProgrammSvc?: TrainingsProgrammSvc ) {
+        if (parentTrainingProgrammSvc) {
             throw new Error(
               'TrainingsProgrammSvc is already loaded. Import it in the AppModule only');
           }
@@ -48,15 +44,15 @@ export class TrainingsProgrammSvc implements ITrainingsProgrammSvc {
         const m = aVorlageProgramm.ErstelleSessionsAusVorlage();
     }
 
-    public ErzeugeStandardVorlagen(): Array<ITrainingsProgramm> {
-        const mResult: Array<ITrainingsProgramm> = new Array<ITrainingsProgramm>();
-        const mGzclpProgramm: GzclpProgramm  = new GzclpProgramm(this.fUebungService, ProgrammKategorie.Vorlage);
-        mGzclpProgramm.Name = 'GZCLP - Standard';
-        const mSessions: Array<ISession> = new Array<ISession>();
-        mGzclpProgramm.Init(mSessions);
-        mResult.push(mGzclpProgramm);
-        return mResult;
-    }
+    // public ErzeugeStandardVorlagen(aDbModule: DBModule): Array<ITrainingsProgramm> {
+    //     const mResult: Array<ITrainingsProgramm> = new Array<ITrainingsProgramm>();
+    //     const mGzclpProgramm: GzclpProgramm  = new GzclpProgramm(ProgrammKategorie.Vorlage, aDbModule);
+    //     mGzclpProgramm.Name = 'GZCLP - Standard';
+    //     const mSessions: Array<ISession> = new Array<ISession>();
+    //     mGzclpProgramm.Init(mSessions);
+    //     mResult.push(mGzclpProgramm);
+    //     return mResult;
+    // }
 
 
     // static forRoot(config: TrainingsProgrammSvc): ModuleWithProviders {

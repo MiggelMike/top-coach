@@ -1,3 +1,4 @@
+import { DBModule } from './../../modules/db/db.module';
 import { Satz, SatzTyp, SatzStatus, SatzPausen } from "../Satz/Satz";
 import { IUebung } from "./../Uebung/Uebung";
 import { LiftTyp } from "../Satz/Satz";
@@ -39,9 +40,10 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
     public Bearbeitbar: Boolean = true; 
     public SessionListe: Array<ISession> = new Array<ISession>();
 
-    constructor(aProgrammTyp: ProgrammTyp, aProgrammKategorie: ProgrammKategorie) {
+    constructor(aProgrammTyp: ProgrammTyp, aProgrammKategorie: ProgrammKategorie, public pDbModule: DBModule) {
         this.ProgrammKategorie = aProgrammKategorie;
         this.ProgrammTyp = aProgrammTyp;
+        Object.defineProperty(this, 'pDbModule', { enumerable: false });
     }
 
     protected abstract PreCopy(): ITrainingsProgramm;

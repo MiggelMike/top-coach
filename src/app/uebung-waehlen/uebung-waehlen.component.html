@@ -1,1 +1,10 @@
-<p>uebung-waehlen works!</p>
+<h1 mat-dialog-title>Select exercise</h1>
+<div mat-dialog-content>
+    <div fxLayout="column" fxFlex="100%">
+        <ng-container *ngFor="let uebung of data.UebungsListe, index as i">
+            <div fxLayout="row" fxFlex="100%" [ngClass]="{'HG-01': i % 2 === 0}">
+                <span (click)="data.RowClickFn()">{{uebung.Name}}</span>
+            </div>
+        </ng-container>
+    </div>
+</div>

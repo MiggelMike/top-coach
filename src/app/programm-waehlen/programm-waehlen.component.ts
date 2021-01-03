@@ -1,9 +1,6 @@
 import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Component, OnInit, Input } from '@angular/core';
-
-import { ProgrammWaehlenService } from '../services/programm-waehlen.service';
-import { TrainingsProgramm } from '../../Business/TrainingsProgramm/TrainingsProgramm';
 import { DBModule } from './../../modules/db/db.module';
 
 @Component({
@@ -16,32 +13,27 @@ export class ProgrammWaehlenComponent implements OnInit {
     public ProgrammListe: Array<ITrainingsProgramm> = [];
 
     constructor(
-        private ProgWahlSvc: ProgrammWaehlenService,
         private fDbModule: DBModule
-    ) {
-        this.ProgrammListeObserver = this.ProgWahlSvc.LadeTrainingsProgramme();
-    }
+    ) {}
 
     ngOnInit() {
-        this.fDbModule.LadeProgramme();
-        this.ProgrammListe = this.fDbModule.Programme;
+        this.ProgrammListeObserver = of(this.ProgrammListe);
+        this.LadeTrainingsProgramme();
     }
 
-    public LadeTrainingsProgramme(): Array<ITrainingsProgramm> {
+    public LadeTrainingsProgramme(): void {
         this.ProgrammListeObserver.subscribe(
-            (programme: Array<TrainingsProgramm>) => {
-                this.ProgrammListe = programme;
+            () => {
+                this.fDbModule.LadeProgramme().then(
+                    () => {
+                        this.ProgrammListe = this.fDbModule.Programme;
+                    }
+                )
             }
         );
-        return this.ProgrammListe;
     }
 
     public TrainingsProgrammeVorhanden(): Boolean {
-        // if (
-        //     this.ProgrammListe.length > 0 &&
-        //     this.ProgrammListe[0].SessionListe.length > 0
-        // )
-        //     console.log(this.ProgrammListe.length);
         return (this.ProgrammListe.length > 0);
     }
 }

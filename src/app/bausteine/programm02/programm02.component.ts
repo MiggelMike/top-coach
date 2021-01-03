@@ -60,7 +60,10 @@ export class Programm02Component implements OnInit {
     }
 
     public AddExcercise() {
-        this.fUebungService.UebungWaehlen();
+        if (this.fDbModule.UebungsDaten.length === 0)
+            this.fDbModule.LadeStammUebungen();
+        else
+            this.fUebungService.UebungWaehlen(this.fDbModule.UebungsDaten)
         // alert("Add Excercise");
     }
 

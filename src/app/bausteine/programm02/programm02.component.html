@@ -3,7 +3,7 @@
         <a [ngClass]="['link-button-font']" mat-flat-button (click)="toggleSessions()">{{ToggleButtonText}}</a>
         <ng-container *ngFor="let sess of SessionListe, index as i">
             <mat-accordion #accSession="matAccordion" multi="true">
-                <mat-expansion-panel #panSession='matExpansionPanel' [expanded]="true"  class="session-panel"
+                <mat-expansion-panel #panSession='matExpansionPanel' [expanded]="true"  class="HG-01"
                     (closed)="accCheckSessionPanels()" (opened)="accCheckSessionPanels()">
                     <mat-expansion-panel-header>
                         <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">

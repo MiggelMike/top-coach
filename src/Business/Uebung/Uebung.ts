@@ -16,12 +16,16 @@ export enum UebungsKategorie01 {
     GzclpT2Cycle2 = "GzclpT2Cycle2",
 }
 
+export enum UebungsKategorie02 {
+    Stamm, Session
+}
+
 export interface IUebung {
     ID: number;
     Name: string;
     Typ: UebungsTyp;
     Kategorieen01: Array<UebungsKategorie01>;
-    Kategorie02: string;
+    Kategorie02: UebungsKategorie02;
     SessionID: number;
     SatzListe: Array<Satz>;
     Copy(): Uebung;
@@ -54,11 +58,13 @@ export class Uebung implements IUebung {
     public Name: string = "";
     public Typ: UebungsTyp = UebungsTyp.Undefined;
     public Kategorieen01: Array<UebungsKategorie01> = [];
-    public Kategorie02: string = "";
+    public Kategorie02: UebungsKategorie02 = UebungsKategorie02.Stamm;
     public SessionID: number = 0;
     public SatzListe: Array<Satz> = [];
 
-    constructor() {}
+    constructor() {
+        Object.defineProperty(this, 'SatzListe', { enumerable: false });
+    } 
 
     public Copy(): Uebung {
         let mUebung = new Uebung();

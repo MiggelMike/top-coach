@@ -40,7 +40,9 @@ export class Session implements ISession {
         return "";
     }
 
-    constructor() {}
+    constructor() {
+        Object.defineProperty(this, 'UebungsListe', { enumerable: false });
+    }
 
     public Copy(): Session {
         return Object.assign({}, this);

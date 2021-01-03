@@ -9,8 +9,8 @@ import { Sportler, ISportler } from '../../Business/Sportler/Sportler';
 // import { GzclpProgramm  } from '../../Business/TrainingsProgramm/Gzclp';
 import { ISession } from '../../Business/Session/Session';
 import { Uebung } from '../../Business/Uebung/Uebung';
-import { Observable, of, from, Subscriber } from 'rxjs';
-import { JsonProperty, serialize } from '@peerlancers/json-serialization';
+import { Observable, Subscriber } from 'rxjs';
+import { JsonProperty } from '@peerlancers/json-serialization';
 
 export enum SpeicherOrtTyp {
     Lokal = 'Lokal',
@@ -70,17 +70,16 @@ export class GlobalService {
     private readonly cAktuellesTrainingsProgramm: string = 'AktuellesTrainingsProgramm';
     private readonly cTrainingsHistorie: string = 'TrainingsHistorie';
 
-    constructor(private fUebungService: UebungService, private aTrainingServiceModule: TrainingServiceModule, public DB : DBModule) {
-        
-        this.LadeDaten(SpeicherOrtTyp.Lokal);
-        if (this.fUebungService.Uebungen.length === 0) {
-            this.fUebungService.ErzeugeUebungStammdaten();
-            this.SpeicherDaten(SpeicherOrtTyp.Lokal);
-        }
-        this.Init();
-        this.Sportler.ID = this.LadeSportler();
-        if (this.Sportler.ID > 0) {
-        }
+    constructor(private fUebungService: UebungService, private aTrainingServiceModule: TrainingServiceModule, public fDbModule: DBModule ) {
+        // this.LadeDaten(SpeicherOrtTyp.Lokal);
+        // if (this.fUebungService.Uebungen.length === 0) {
+        //     this.fUebungService.ErzeugeUebungStammdaten();
+        //     this.SpeicherDaten(SpeicherOrtTyp.Lokal);
+        // }
+        // this.Init();
+        // this.Sportler.ID = this.LadeSportler();
+        // if (this.Sportler.ID > 0) {
+        // }
     }
 
     Init(): void {
@@ -234,7 +233,7 @@ export class GlobalService {
     }
 
     public Kopiere(aUebung: Uebung): Uebung {
-        return this.fUebungService.Kopiere(aUebung);
+        return UebungService.Kopiere(aUebung);
     }
 
 

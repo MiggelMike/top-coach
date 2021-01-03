@@ -1,8 +1,8 @@
-import { IUebung, Uebung } from "./../Uebung/Uebung";
+import { Uebung } from './../Uebung/Uebung';
+import { DBModule } from './../../modules/db/db.module';
 import { UebungService } from "./../../app/services/uebung.service";
 import { TrainingsProgramm, ITrainingsProgramm } from "./TrainingsProgramm";
 import { ProgrammKategorie, ProgrammTyp } from "./TrainingsProgramm";
-
 import { ISession, Session } from "../Session/Session";
 
 import {
@@ -18,16 +18,14 @@ import { UebungsName } from "../Uebung/Uebung";
 import { deserialize } from "@peerlancers/json-serialization";
 
 export class GzclpProgramm extends TrainingsProgramm {
-    constructor(
-        private fUebungService: UebungService,
-        aProgrammKategorie: ProgrammKategorie
-    ) {
-        super(ProgrammTyp.Gzclp, aProgrammKategorie);
+    constructor(aProgrammKategorie: ProgrammKategorie, public pDbModule: DBModule)
+    {
+        super(ProgrammTyp.Gzclp, aProgrammKategorie, pDbModule);
         this.Tage = 4;
     }
 
     protected PreCopy(): ITrainingsProgramm {
-        return new GzclpProgramm(this.fUebungService, this.ProgrammKategorie);
+        return new GzclpProgramm(this.ProgrammKategorie, this.pDbModule);
     }
 
     public ErstelleSessionsAusVorlage(): ITrainingsProgramm {
@@ -170,8 +168,8 @@ export class GzclpProgramm extends TrainingsProgramm {
         aNeueSession: Session
     ): void {
         // T1-Lift
-        let mUebung: Uebung = this.fUebungService.Kopiere(
-            this.fUebungService.SucheUebungPerName(aT1Uebung)
+        let mUebung: Uebung = UebungService.Kopiere(
+            this.pDbModule.SucheUebungPerName(aT1Uebung)
         );
         // this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.Custom, aNeueSession);
 
@@ -193,8 +191,8 @@ export class GzclpProgramm extends TrainingsProgramm {
         aNeueSession.UebungsListe.push(mUebung);
 
         // T2-Lift
-        mUebung = this.fUebungService.Kopiere(
-            this.fUebungService.SucheUebungPerName(aT2Uebung)
+        mUebung = UebungService.Kopiere(
+            this.pDbModule.SucheUebungPerName(aT2Uebung)
         );
 
         // if (this.ProgrammKategorie === SessionKategorie.Konkret) {
@@ -218,8 +216,8 @@ export class GzclpProgramm extends TrainingsProgramm {
         aNeueSession.UebungsListe.push(mUebung);
 
         // T3-Lift
-        mUebung = this.fUebungService.Kopiere(
-            this.fUebungService.SucheUebungPerName(aT3Uebung)
+        mUebung = UebungService.Kopiere(
+            this.pDbModule.SucheUebungPerName(aT3Uebung)
         );
 
         // Arbeits-Saetze anfügen
@@ -237,5 +235,13 @@ export class GzclpProgramm extends TrainingsProgramm {
             );
         }
         aNeueSession.UebungsListe.push(mUebung);
+    }
+
+    public static ErzeugeGzclpVorlage(aDbModule: DBModule): TrainingsProgramm {
+        const mGzclpVorlage: GzclpProgramm = new GzclpProgramm(ProgrammKategorie.Vorlage, aDbModule);
+        mGzclpVorlage.Name = "GZCLP - Standard";
+        const mSessions: Array<ISession> = new Array<ISession>();
+        mGzclpVorlage.Init(mSessions);
+        return mGzclpVorlage;
     }
 }

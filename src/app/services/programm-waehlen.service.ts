@@ -1,9 +1,7 @@
 import { DBModule } from './../../modules/db/db.module';
 import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
-import { GlobalService } from './global.service';
 import { Injectable } from '@angular/core';
 import { Observable, of, from } from 'rxjs';
-import { TrainingServiceModule } from '../../modules/training-service.module';
 
 @Injectable({
     providedIn: "root",
@@ -14,14 +12,8 @@ export class ProgrammWaehlenService {
     public ProgrammListe: Array<ITrainingsProgramm> = [];
 
     constructor(
-        private aGlobalService: GlobalService,
-        private aTrainingServiceModule: TrainingServiceModule,
         private fDbModule: DBModule
     ) {
-        console.log(
-            ">>> ProgrammWaehlenService x is ",
-            aTrainingServiceModule.getX()
-        );
     }
 
     public LadeProgramm(aProgrammID: number): ITrainingsProgramm {
