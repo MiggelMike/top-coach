@@ -1,4 +1,4 @@
-import { Uebung } from 'src/Business/Uebung/Uebung';
+import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
 import { UebungWaehlenComponent, UebungWaehlenData } from './../uebung-waehlen/uebung-waehlen.component';
 import { Injectable } from '@angular/core';
 import { serialize, JsonProperty } from '@peerlancers/json-serialization';
@@ -35,11 +35,12 @@ export class UebungService {
         this.fDialog.open(UebungWaehlenComponent, mDialogConfig);
     }
 
-    public static Kopiere(aUebung: Uebung): Uebung {
+    public static Kopiere(aUebung: Uebung, aKategorie02: UebungsKategorie02): Uebung {
         return Uebung.StaticNeueUebung(
             aUebung.Name,
             aUebung.Typ,
-            aUebung.Kategorieen01
+            aUebung.Kategorieen01,
+            aKategorie02
         );
     }
 

@@ -1,5 +1,5 @@
+import { DexieSvcService } from './../../services/dexie-svc.service';
 import { Uebung } from './../../../Business/Uebung/Uebung';
-import { DBModule } from './../../../modules/db/db.module';
 import { GlobalService } from 'src/app/services/global.service';
 import { ISatz } from './../../../Business/Satz/Satz';
 import { MatAccordion } from '@angular/material';
@@ -48,7 +48,7 @@ export class Programm03Component implements OnInit {
 
     constructor(
         private fGlobalService: GlobalService,
-        private fDbModule: DBModule
+        private fDbModule: DexieSvcService
     ) {
         if (this.fGlobalService.Comp03PanelUebungObserver === null)
             this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;

@@ -1,4 +1,4 @@
-import { DBModule } from './../../modules/db/db.module';
+import { DexieSvcService } from './dexie-svc.service';
 import { MyObserver } from './../../Observers/MyObservers';
 import { ISatz } from './../../Business/Satz/Satz';
 import { UebungService } from './uebung.service';
@@ -70,7 +70,7 @@ export class GlobalService {
     private readonly cAktuellesTrainingsProgramm: string = 'AktuellesTrainingsProgramm';
     private readonly cTrainingsHistorie: string = 'TrainingsHistorie';
 
-    constructor(private fUebungService: UebungService, private aTrainingServiceModule: TrainingServiceModule, public fDbModule: DBModule ) {
+    constructor(private fUebungService: UebungService, private aTrainingServiceModule: TrainingServiceModule, public fDbModule: DexieSvcService ) {
         // this.LadeDaten(SpeicherOrtTyp.Lokal);
         // if (this.fUebungService.Uebungen.length === 0) {
         //     this.fUebungService.ErzeugeUebungStammdaten();
@@ -105,7 +105,7 @@ export class GlobalService {
     }
 
     SetzeAktuellesProgramm(aAktuellesProgramm: ITrainingsProgramm): void {
-        this.DB.AktuellesProgramm = aAktuellesProgramm.ErstelleSessionsAusVorlage();
+        this.fDbModule.AktuellesProgramm = aAktuellesProgramm.ErstelleSessionsAusVorlage();
         this.SpeicherDaten(SpeicherOrtTyp.Lokal);
     }
 
@@ -113,16 +113,16 @@ export class GlobalService {
         const mResult = new Observable<ISession[]>(
             observer => {
                 this.AnstehendeSessionObserver = observer;
-                if ((this.DB.AktuellesProgramm !== null) &&
-                    (this.DB.AktuellesProgramm !== undefined) &&
-                    (this.DB.AktuellesProgramm.SessionListe !== undefined)) {
+                if ((this.fDbModule.AktuellesProgramm !== null) &&
+                    (this.fDbModule.AktuellesProgramm !== undefined) &&
+                    (this.fDbModule.AktuellesProgramm.SessionListe !== undefined)) {
                     // Es gibt anstehende Sessions.
                     // Jetzt muss geprüft werden, welche angezeigt werden. 
                     // Letzte Sessions laden.
                     if (this.LadeSessionHistorieLokal()) {
                         
                     } else {
-                        observer.next(this.DB.AktuellesProgramm.SessionListe);
+                        observer.next(this.fDbModule.AktuellesProgramm.SessionListe);
                     }
                 }
                 else
@@ -194,7 +194,7 @@ export class GlobalService {
     }
 
     private SpeicherDatenLokal() {
-        if (this.DB.AktuellesProgramm !== undefined) {
+        if (this.fDbModule.AktuellesProgramm !== undefined) {
             // Aktuelles Trainingsprogramm 
             // let mStoreData = serialize(this.fDB.AktuellesProgramm);
             // localStorage.setItem(this.cAktuellesTrainingsProgramm, JSON.stringify(mStoreData));
@@ -231,12 +231,6 @@ export class GlobalService {
                 break;
         }
     }
-
-    public Kopiere(aUebung: Uebung): Uebung {
-        return UebungService.Kopiere(aUebung);
-    }
-
-
 }
 
 // export const GlobalData = new GlobalService();

@@ -1,4 +1,5 @@
-import { DBModule } from './../modules/db/db.module';
+import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
+import { DexieSvcService } from './services/dexie-svc.service';
 import { MatCardModule } from '@angular/material/card';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -43,7 +44,6 @@ import { TextMaskModule } from 'angular2-text-mask';
 import  createNumberMask  from 'text-mask-addons/dist/createNumberMask';
 import { SatzComponent } from './bausteine/satz/satz.component';
 import { SessUebungComponent } from './bausteine/sess-uebung/sess-uebung.component';
-import { Dexie } from 'dexie';
 import { UebungWaehlenComponent } from './uebung-waehlen/uebung-waehlen.component';
 
 
@@ -114,27 +114,35 @@ export const floatMask = createNumberMask({
         MatDialogModule,
         OverlayModule,
         ReactiveFormsModule,
-        DBModule
+        DexieSvcService
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA,
         NO_ERRORS_SCHEMA
       ],
 
-    exports: [DBModule],
+    exports: [],
 
     entryComponents: [
         DialogComponent,
         FilePreviewOverlayComponent,
         UebungWaehlenComponent
     ],
-    providers: [MatDialog, FilePreviewOverlayService],
+    providers: [MatDialog, FilePreviewOverlayService, DexieSvcService],
     bootstrap: [AppComponent]
-})
+})  
     
     
 export class AppModule {
+    public ProgrammListe: Array<ITrainingsProgramm> = [];
 
+    constructor(public pDexieSvc: DexieSvcService) {
+        // this.pDexieSvc.LadeProgramme().then(
+        //     () => {
+        //         this.ProgrammListe = this.pDexieSvc.Programme;
+        //     }
+        // )
+    }
 
 }
 

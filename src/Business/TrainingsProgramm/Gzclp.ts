@@ -1,5 +1,5 @@
-import { Uebung } from './../Uebung/Uebung';
-import { DBModule } from './../../modules/db/db.module';
+import { DexieSvcService } from './../../app/services/dexie-svc.service';
+import { Uebung, UebungsKategorie02 } from './../Uebung/Uebung';
 import { UebungService } from "./../../app/services/uebung.service";
 import { TrainingsProgramm, ITrainingsProgramm } from "./TrainingsProgramm";
 import { ProgrammKategorie, ProgrammTyp } from "./TrainingsProgramm";
@@ -18,7 +18,7 @@ import { UebungsName } from "../Uebung/Uebung";
 import { deserialize } from "@peerlancers/json-serialization";
 
 export class GzclpProgramm extends TrainingsProgramm {
-    constructor(aProgrammKategorie: ProgrammKategorie, public pDbModule: DBModule)
+    constructor(aProgrammKategorie: ProgrammKategorie, public pDbModule: DexieSvcService)
     {
         super(ProgrammTyp.Gzclp, aProgrammKategorie, pDbModule);
         this.Tage = 4;
@@ -169,7 +169,7 @@ export class GzclpProgramm extends TrainingsProgramm {
     ): void {
         // T1-Lift
         let mUebung: Uebung = UebungService.Kopiere(
-            this.pDbModule.SucheUebungPerName(aT1Uebung)
+            this.pDbModule.SucheUebungPerName(aT1Uebung), UebungsKategorie02.Session
         );
         // this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.Custom, aNeueSession);
 
@@ -192,7 +192,7 @@ export class GzclpProgramm extends TrainingsProgramm {
 
         // T2-Lift
         mUebung = UebungService.Kopiere(
-            this.pDbModule.SucheUebungPerName(aT2Uebung)
+            this.pDbModule.SucheUebungPerName(aT2Uebung), UebungsKategorie02.Session
         );
 
         // if (this.ProgrammKategorie === SessionKategorie.Konkret) {
@@ -217,7 +217,7 @@ export class GzclpProgramm extends TrainingsProgramm {
 
         // T3-Lift
         mUebung = UebungService.Kopiere(
-            this.pDbModule.SucheUebungPerName(aT3Uebung)
+            this.pDbModule.SucheUebungPerName(aT3Uebung), UebungsKategorie02.Session
         );
 
         // Arbeits-Saetze anfügen
@@ -237,7 +237,7 @@ export class GzclpProgramm extends TrainingsProgramm {
         aNeueSession.UebungsListe.push(mUebung);
     }
 
-    public static ErzeugeGzclpVorlage(aDbModule: DBModule): TrainingsProgramm {
+    public static ErzeugeGzclpVorlage(aDbModule: DexieSvcService): TrainingsProgramm {
         const mGzclpVorlage: GzclpProgramm = new GzclpProgramm(ProgrammKategorie.Vorlage, aDbModule);
         mGzclpVorlage.Name = "GZCLP - Standard";
         const mSessions: Array<ISession> = new Array<ISession>();

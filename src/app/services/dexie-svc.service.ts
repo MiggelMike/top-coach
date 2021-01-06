@@ -1,23 +1,23 @@
-import { of, Observable, Observer } from 'rxjs';
+import { of, Observable } from 'rxjs';
 import { ISatz, Satz } from './../../Business/Satz/Satz';
 import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
 import { ISession, Session } from './../../Business/Session/Session';
 import { ITrainingsProgramm, TrainingsProgramm, ProgrammTyp, ProgrammKategorie  } from './../../Business/TrainingsProgramm/TrainingsProgramm';
 import { AppData, IAppData } from './../../Business/Coach/Coach';
 import { Dexie, PromiseExtended } from 'dexie';
-import { CommonModule } from '@angular/common';
 import { Injectable, NgModule, Pipe, Optional, SkipSelf } from '@angular/core';
-import { UebungsTyp, Uebung, UebungsName } from "../../Business/Uebung/Uebung";
-
+import { UebungsTyp, Uebung, UebungsName, UebungsKategorie02 } from "../../Business/Uebung/Uebung";
 
 @Injectable({
-    providedIn: "root",
+  providedIn: 'root'
 })
+
 @NgModule({
-    declarations: [],
-    imports: [CommonModule],
+    providers: [DexieSvcService],
 })
-export class DBModule extends Dexie {
+        
+    
+export class DexieSvcService extends Dexie {
     readonly cUebung: string = "Uebung";
     readonly cSatz: string = "Satz";
     readonly cProgramm: string = "Programm";
@@ -33,21 +33,22 @@ export class DBModule extends Dexie {
     ProgrammTable: Dexie.Table<TrainingsProgramm, number>;
     SessionTable: Dexie.Table<Session, number>;
     public Programme: Array<TrainingsProgramm> = [];
-    public ProgrammeObservable: Observable<Array<TrainingsProgramm>>;
     public UebungsDaten: Array<Uebung> = [];
-    public UebungsObservable: Observable<any>;
+
+    //public ProgrammListeObserver: Observable<TrainingsProgramm[]>;
+    //public ProgrammListe: Array<TrainingsProgramm> = [];
 
     constructor(
-        @Optional() @SkipSelf() parentModule?: DBModule
+        @Optional() @SkipSelf() parentModule?: DexieSvcService
     ) {
         super("ConceptCoach");
         if (parentModule) {
             throw new Error(
-                "DBModule is already loaded. Import it in the AppModule only"
-                );
-            }
+                "DexieSvcService is already loaded. Import it in the AppModule only"
+            );
+        }
 
-    //   Dexie.delete("ConceptCoach");
+        //   Dexie.delete("ConceptCoach");
 
         this.version(1).stores({
             AppData: "++id",
@@ -59,49 +60,7 @@ export class DBModule extends Dexie {
 
         this.InitAll();
         this.LadeStammUebungen();
-        
-        this.UebungsObservable = of(this.UebungsDaten);
-        // this.UebungsObservable.subscribe({
-        //     next: (x) => {
-        //         this.UebungsDaten = [];
-        //         const mAnlegen: Array<Uebung> = new Array<Uebung>();
-        //         this.LadeStammUebungen()
-        //             .then((mUebungen) => {
-        //                 for (const mUeb in UebungsName) {
-        //                     if (
-        //                         mUebungen.find(
-        //                             (mUebung) => mUebung.Name === mUeb
-        //                         ) === undefined
-        //                     ) {
-        //                         const mNeueUebung = this.NeueUebung(mUeb);
-        //                         mNeueUebung.SatzListe = [];
-        //                         mAnlegen.push(mNeueUebung);
-        //                     }
-        //                 }
-
-        //                 if (mAnlegen.length > 0) {
-        //                     this.InsertUebungen(mAnlegen);
-        //                     this.LadeStammUebungen();
-        //                 mUebungen.forEach((mUebung) =>
-        //                         this.UebungsDaten.push(mUebung)
-        //                     );
-        //                     this.LadeProgramme();
-        //                 }
-        //             })
-        //             .catch((err) => {
-        //                 console.error(err);
-        //             });
-        //     }
-        // });
-
-        // this.ProgrammeObservable = of(this.Programme);
-        // this.ProgrammeObservable.subscribe({
-        //     next: x => {
-        //         this.LadeStammUebungen();
-        //     }
-        // })
-        
-    }
+    }        
 
     private InitAll() {
         this.InitAppData();
@@ -126,10 +85,10 @@ export class DBModule extends Dexie {
         this.SatzTable.mapToClass(Satz);
     }
 
-    private NeueUebung(aName: string): Uebung {
+    private NeueUebung(aName: string, aKategorie02: UebungsKategorie02): Uebung {
         const mGzclpKategorieen01 = Uebung.ErzeugeGzclpKategorieen01();
         const mKategorieen01 = [].concat(mGzclpKategorieen01);
-        return Uebung.StaticNeueUebung(aName, UebungsTyp.Kraft, mKategorieen01);
+        return Uebung.StaticNeueUebung(aName, UebungsTyp.Kraft, mKategorieen01, aKategorie02);
     }
 
     public InsertUebungen(aUebungsListe: Array<Uebung>): PromiseExtended {
@@ -139,28 +98,33 @@ export class DBModule extends Dexie {
     public LadeStammUebungen() {
         this.UebungsDaten = [];
         const mAnlegen: Array<Uebung> = new Array<Uebung>();
-        this.table(this.cUebung).toArray()
-        .then((mUebungen) => {
-            for (const mUeb in UebungsName) {
-                if (
-                    mUebungen.find(
-                        (mUebung) => mUebung.Name === mUeb
-                    ) === undefined
-                ) {
-                    const mNeueUebung = this.NeueUebung(mUeb);
-                    mNeueUebung.SatzListe = [];
-                    mAnlegen.push(mNeueUebung);
+        this.table(this.cUebung)
+            .filter( (mUebung) => mUebung.Kategorie02 === UebungsKategorie02.Stamm)
+            .toArray()
+            .then((mUebungen) => {
+                for (const mUeb in UebungsName) {
+                    if (
+                        mUebungen.find(
+                            (mUebung) => mUebung.Name === mUeb
+                        ) === undefined
+                    ) {
+                        const mNeueUebung = this.NeueUebung(mUeb, UebungsKategorie02.Stamm);
+                        mNeueUebung.SatzListe = [];
+                        mAnlegen.push(mNeueUebung);
+                    }
                 }
-            }
 
-            if (mAnlegen.length > 0) {
-                this.InsertUebungen(mAnlegen);
-                this.LadeStammUebungen();
-            }
-            else {
-                mUebungen.forEach((mUebung) => this.UebungsDaten.push(mUebung));
-                    this.LadeProgramme();
-            }
+                if (mAnlegen.length > 0) {
+                    this.InsertUebungen(mAnlegen).then(
+                        () => {
+                            this.LadeStammUebungen();
+                        }
+                    );
+                }
+                else {
+                    mUebungen.forEach((mUebung) => this.UebungsDaten.push(mUebung));
+                        this.LadeProgramme();
+                }
         })
     }
 
@@ -224,7 +188,8 @@ export class DBModule extends Dexie {
                     (p) => p.ProgrammTyp === ProgrammTyp.Gzclp
                 );
 
-                if (mProg === undefined) mAnlegen.push(ProgrammTyp.Gzclp);
+                if (mProg === undefined)
+                    mAnlegen.push(ProgrammTyp.Gzclp);
                 else {
                     if (
                         this.Programme.find((p) => p.ProgrammTyp === ProgrammTyp.Gzclp) === undefined
@@ -234,19 +199,18 @@ export class DBModule extends Dexie {
                     }
                 }
 
+                for (let index = 0; index < mAnlegen.length; index++)
+                    this.VorlageProgrammSpeichern(mAnlegen[index]);
+                
+                for (let index = 0; index < this.Programme.length; index++) {
+                    this.LadeProgrammSessions(this.Programme[index]).catch((err) =>
+                        console.error(err)
+                    );
+                }
             })
             .catch((error) => {
                 console.error(error);
             });
-        
-        for (let index = 0; index < mAnlegen.length; index++)
-            await this.VorlageProgrammSpeichern(mAnlegen[index]);
-        
-        for (let index = 0; index < this.Programme.length; index++) {
-            await this.LadeProgrammSessions(this.Programme[index]).catch((err) =>
-                console.error(err)
-            );
-        }
     }
 
     public SatzSpeichern(aSatz: ISatz) {

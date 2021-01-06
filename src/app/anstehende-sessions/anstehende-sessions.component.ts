@@ -1,4 +1,3 @@
-import { MatExpansionPanel } from '@angular/material/expansion';
 import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { ISession } from './../../Business/Session/Session';
 import { GlobalService } from './../services/global.service';
@@ -33,7 +32,7 @@ export class AnstehendeSessionsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.AktuellesProgramm = this.globalService.DB.AktuellesProgramm;
+        this.AktuellesProgramm = this.globalService.fDbModule.AktuellesProgramm;
         this.AnstehendeSessionObserver = this.globalService.LadeAnstehendeSession();
         if (this.AktuellesProgramm !== undefined)
             this.AktuellesProgramm.SessionListe = this.LadeSessions();

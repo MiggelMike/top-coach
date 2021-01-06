@@ -26,10 +26,10 @@ export class Programm01Component implements OnInit {
     SelectThisWorkoutClick($event: any): void {
         $event.stopPropagation();
         // Soll das aktuelle Work-Out durch ein anderes ersetzt werden?
-        if (this.fGlobalService.DB.AktuellesProgramm !== undefined) {
+        if (this.fGlobalService.fDbModule.AktuellesProgramm !== undefined) {
             const mDialogData = new DialogData();
             mDialogData.textZeilen.push(
-                `Replace current Program "${this.fGlobalService.DB.AktuellesProgramm.Name}" with "${this.programm.Name}" ?`
+                `Replace current Program "${this.fGlobalService.fDbModule.AktuellesProgramm.Name}" with "${this.programm.Name}" ?`
             );
             mDialogData.OkData = this.programm;
             mDialogData.OkFn = () => {

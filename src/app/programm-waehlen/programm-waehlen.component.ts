@@ -1,7 +1,7 @@
-import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
+import { DexieSvcService } from './../services/dexie-svc.service';
+import { TrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Observable, of } from 'rxjs';
-import { Component, OnInit, Input } from '@angular/core';
-import { DBModule } from './../../modules/db/db.module';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
     selector: "app-programm-waehlen",
@@ -9,11 +9,10 @@ import { DBModule } from './../../modules/db/db.module';
     styleUrls: ["./programm-waehlen.component.scss"],
 })
 export class ProgrammWaehlenComponent implements OnInit {
-    public ProgrammListeObserver: Observable<ITrainingsProgramm[]>;
-    public ProgrammListe: Array<ITrainingsProgramm> = [];
+    public ProgrammListeObserver: Observable<TrainingsProgramm[]>;
+    public ProgrammListe: Array<TrainingsProgramm> = [];
 
-    constructor(
-        private fDbModule: DBModule
+    constructor(public fDbModule: DexieSvcService
     ) {}
 
     ngOnInit() {
@@ -25,10 +24,8 @@ export class ProgrammWaehlenComponent implements OnInit {
         this.ProgrammListeObserver.subscribe(
             () => {
                 this.fDbModule.LadeProgramme().then(
-                    () => {
-                        this.ProgrammListe = this.fDbModule.Programme;
-                    }
-                )
+                    () => this.ProgrammListe = this.fDbModule.Programme
+                );
             }
         );
     }

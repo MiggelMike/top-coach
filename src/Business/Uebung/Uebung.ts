@@ -63,7 +63,7 @@ export class Uebung implements IUebung {
     public SatzListe: Array<Satz> = [];
 
     constructor() {
-        Object.defineProperty(this, 'SatzListe', { enumerable: false });
+       Object.defineProperty(this, 'SatzListe', { enumerable: false });
     } 
 
     public Copy(): Uebung {
@@ -99,12 +99,15 @@ export class Uebung implements IUebung {
     public static StaticNeueUebung(
         aName: string,
         aTyp: UebungsTyp,
-        aKategorieen01: Array<UebungsKategorie01>): Uebung {
+        aKategorieen01: Array<UebungsKategorie01>,
+        aKategorie02: UebungsKategorie02
+        ): Uebung {
         //
         const mUebung = new Uebung();
         mUebung.Name = aName;
         mUebung.Typ = aTyp;
         mUebung.Kategorieen01 = aKategorieen01 ? aKategorieen01 : [];
+        mUebung.Kategorie02 = aKategorie02;
         return mUebung;
     }
 

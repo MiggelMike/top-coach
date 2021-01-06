@@ -1,5 +1,5 @@
-import { DBModule } from './../../../modules/db/db.module';
-import { ISession, Session, SessionStatus } from './../../../Business/Session/Session';
+import { DexieSvcService } from './../../services/dexie-svc.service';
+import { Session, SessionStatus } from './../../../Business/Session/Session';
 import { TrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";
 import { MatAccordion } from '@angular/material';
@@ -30,7 +30,7 @@ export class Programm02Component implements OnInit {
         private fDialogService: DialogeService,
         private fGlobalService: GlobalService,
         private fUebungService: UebungService,
-        private fDbModule: DBModule
+        private fDbModule: DexieSvcService
     ) {}
 
     ngOnInit() {}
