@@ -1,4 +1,4 @@
-import { Uebung } from "../Uebung/Uebung";
+import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
 
 export enum SessionStatus {
     NurLesen,
@@ -17,7 +17,8 @@ export interface ISession {
     Bearbeitbar: Boolean;
     UebungsListe: Array<Uebung>;
     Copy(): Session;
-    getKategorie01():string;
+    getKategorie01(): string;
+    addUebung(aUebung: Uebung);
 }
 
 export class Session implements ISession {
@@ -47,4 +48,10 @@ export class Session implements ISession {
     public Copy(): Session {
         return Object.assign({}, this);
     }
+
+    public addUebung(aUebung: Uebung) {
+        aUebung.Kategorie02 = UebungsKategorie02.Session;
+        this.UebungsListe.push(aUebung);
+    }
+
 }

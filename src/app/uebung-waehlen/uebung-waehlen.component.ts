@@ -1,10 +1,15 @@
-import { Uebung } from './../../Business/Uebung/Uebung';
+import { Session } from 'src/Business/Session/Session';
+import { Uebung  } from './../../Business/Uebung/Uebung';
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+type UebungWaehlenDelegate = (aUebung: Uebung) => void;
 
 export class UebungWaehlenData {
-    UebungsListe: Array<Uebung>;
-    RowClickFn: any;
+    fUebungsListe: Array<Uebung>;
+    fSession: Session;
+    RowClickFn: UebungWaehlenDelegate;
+    fMatDialog: MatDialogRef<UebungWaehlenComponent>;
 }
 
 

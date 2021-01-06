@@ -174,4 +174,15 @@ export class Uebung implements IUebung {
         return mSatz;
     }
 
+    public static StaticKopiere(aUebung: Uebung, aKategorie02: UebungsKategorie02): Uebung {
+        return Uebung.StaticNeueUebung(
+            aUebung.Name,
+            aUebung.Typ,
+            aUebung.Kategorieen01,
+            aKategorie02
+        );
+    }
+
 }
+
+

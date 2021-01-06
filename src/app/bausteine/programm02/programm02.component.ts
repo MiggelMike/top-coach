@@ -1,5 +1,6 @@
+import { UebungsKategorie02 } from './../../../Business/Uebung/Uebung';
 import { DexieSvcService } from './../../services/dexie-svc.service';
-import { Session, SessionStatus } from './../../../Business/Session/Session';
+import { ISession, Session, SessionStatus } from './../../../Business/Session/Session';
 import { TrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";
 import { MatAccordion } from '@angular/material';
@@ -8,7 +9,7 @@ import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
 import { of } from 'rxjs';
-import { Uebung } from 'src/Business/Uebung/Uebung';
+import { Uebung, IUebung } from 'src/Business/Uebung/Uebung';
 import { UebungService } from 'src/app/services/uebung.service';
 
 @Component({
@@ -59,11 +60,17 @@ export class Programm02Component implements OnInit {
         this.fDialogService.JaNein(mDialogData);        
     }
 
-    public AddExcercise() {
+    private SelectUebungDelegate(aUebung: Uebung) {
+        this.fSession.addUebung(Uebung.StaticKopiere(aUebung, UebungsKategorie02.Session));
+        this.fMatDialog.close();
+        // alert('XXXX');
+    };
+
+    public AddExcercise(aSession: Session) {
         if (this.fDbModule.UebungsDaten.length === 0)
             this.fDbModule.LadeStammUebungen();
         else
-            this.fUebungService.UebungWaehlen(this.fDbModule.UebungsDaten)
+            this.fUebungService.UebungWaehlen(this.fDbModule.UebungsDaten, aSession, this.SelectUebungDelegate);
         // alert("Add Excercise");
     }
 

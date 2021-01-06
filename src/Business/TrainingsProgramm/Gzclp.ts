@@ -168,7 +168,7 @@ export class GzclpProgramm extends TrainingsProgramm {
         aNeueSession: Session
     ): void {
         // T1-Lift
-        let mUebung: Uebung = UebungService.Kopiere(
+        let mUebung: Uebung = Uebung.StaticKopiere(
             this.pDbModule.SucheUebungPerName(aT1Uebung), UebungsKategorie02.Session
         );
         // this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.Custom, aNeueSession);
@@ -191,7 +191,7 @@ export class GzclpProgramm extends TrainingsProgramm {
         aNeueSession.UebungsListe.push(mUebung);
 
         // T2-Lift
-        mUebung = UebungService.Kopiere(
+        mUebung = Uebung.StaticKopiere(
             this.pDbModule.SucheUebungPerName(aT2Uebung), UebungsKategorie02.Session
         );
 
@@ -216,7 +216,7 @@ export class GzclpProgramm extends TrainingsProgramm {
         aNeueSession.UebungsListe.push(mUebung);
 
         // T3-Lift
-        mUebung = UebungService.Kopiere(
+        mUebung = Uebung.StaticKopiere(
             this.pDbModule.SucheUebungPerName(aT3Uebung), UebungsKategorie02.Session
         );
 
