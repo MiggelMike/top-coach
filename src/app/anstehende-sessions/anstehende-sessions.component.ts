@@ -19,9 +19,7 @@ export class AnstehendeSessionsComponent implements OnInit {
     public NextSessions: Array<ISession> = [];
     public AnstehendeSessionObserver: Observable<ISession[]>;
  
-    constructor( private globalService: GlobalService ) {
-        
-    }
+    constructor( private globalService: GlobalService ) {}
 
     beforePanelOpened(aSess: Session) {
         aSess.Expanded = true;

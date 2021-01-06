@@ -145,7 +145,7 @@ export class DexieSvcService extends Dexie {
             .toArray()
             .then((mSessionListe) => {
                 aProgramm.SessionListe = mSessionListe;
-                mSessionListe.forEach((mSession) => {
+                aProgramm.SessionListe.forEach((mSession) => {
                     this.LadeSessionUebungen(mSession).then((mUebungen) => {
                         mSession.UebungsListe = mUebungen;
                         mUebungen.forEach((mUebung) => {

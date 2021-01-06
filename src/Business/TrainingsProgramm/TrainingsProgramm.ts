@@ -38,12 +38,13 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
     public ProgrammKategorie: ProgrammKategorie = ProgrammKategorie.Konkret;
     public ProgrammTyp: ProgrammTyp = ProgrammTyp.Custom;
     public Bearbeitbar: Boolean = true; 
-    public SessionListe: Array<ISession> = new Array<ISession>();
+    public SessionListe: Array<ISession> = [];
 
     constructor(aProgrammTyp: ProgrammTyp, aProgrammKategorie: ProgrammKategorie, public pDbModule: DexieSvcService) {
         this.ProgrammKategorie = aProgrammKategorie;
         this.ProgrammTyp = aProgrammTyp;
         Object.defineProperty(this, 'pDbModule', { enumerable: false });
+        Object.defineProperty(this, 'SessionListe', { enumerable: false });
     }
 
     protected abstract PreCopy(): ITrainingsProgramm;

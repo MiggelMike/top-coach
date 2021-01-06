@@ -30,7 +30,7 @@ export class Session implements ISession {
     public Expanded: Boolean;
     public Kategorie01: SessionStatus = SessionStatus.Bearbeitbar;
     public Bearbeitbar: Boolean = false;
-    public UebungsListe: Array<Uebung> = new Array<Uebung>();
+    public UebungsListe: Array<Uebung> = [];
 
     public getKategorie01(): string {
         if (this.Kategorie01 === SessionStatus.Bearbeitbar)

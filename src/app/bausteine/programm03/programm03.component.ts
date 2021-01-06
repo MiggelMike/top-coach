@@ -32,23 +32,10 @@ export class Programm03Component implements OnInit {
         complete: () => console.log("UebungPanelsObserver got a complete notification"),
     };
 
-    ngOnInit() {
-        if (this.session)
-            this.fDbModule
-                .LadeSessionUebungen(this.session)
-                .then((mUebungen) => {
-                    mUebungen.forEach((mUebung) => {
-                        this.fDbModule
-                            .LadeUebungsSaetze(mUebung)
-                            .then((mSaetze) => (mUebung.SatzListe = mSaetze));
-                    });
-                    this.session.UebungsListe = mUebungen;
-                });
-    }
+    ngOnInit() {}
 
     constructor(
         private fGlobalService: GlobalService,
-        private fDbModule: DexieSvcService
     ) {
         if (this.fGlobalService.Comp03PanelUebungObserver === null)
             this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;
