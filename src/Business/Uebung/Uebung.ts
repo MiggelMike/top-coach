@@ -112,7 +112,10 @@ export class Uebung implements IUebung {
     }
 
     public get AufwaermSatzListe(): Array<Satz> {
-        const mResult = Array<Satz>();
+        const mResult = new Array<Satz>();
+        if (!this.SatzListe)
+            return mResult;
+        
         this.SatzListe.forEach((mSatz) => {
             if (mSatz.SatzTyp == SatzTyp.Aufwaermen) {
                 mResult.push(mSatz);
@@ -122,7 +125,10 @@ export class Uebung implements IUebung {
     }
 
     public get ArbeitsSatzListe(): Array<Satz> {
-        const mResult = Array<Satz>();
+        const mResult = new Array<Satz>();
+        if (!this.SatzListe)
+            return mResult;
+        
         this.SatzListe.forEach((mSatz) => {
             if (mSatz.SatzTyp === SatzTyp.Training) {
                 mResult.push(mSatz);
@@ -132,7 +138,10 @@ export class Uebung implements IUebung {
     }
 
     public get AbwaermSatzListe(): Array<Satz> {
-        const mResult = Array<Satz>();
+        const mResult = new Array<Satz>();
+        if (!this.SatzListe)
+            return mResult;
+
         this.SatzListe.forEach((mSatz) => {
             if (mSatz.SatzTyp == SatzTyp.Abwaermen) {
                 mResult.push(mSatz);
