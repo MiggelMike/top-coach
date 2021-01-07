@@ -45,6 +45,9 @@ import  createNumberMask  from 'text-mask-addons/dist/createNumberMask';
 import { SatzComponent } from './bausteine/satz/satz.component';
 import { SessUebungComponent } from './bausteine/sess-uebung/sess-uebung.component';
 import { UebungWaehlenComponent } from './uebung-waehlen/uebung-waehlen.component';
+import { RouterModule } from '@angular/router';
+import { routes } from "./app-routing.module";
+import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
 
 
 // var sqlite3 = require('sqlite3');1
@@ -92,6 +95,7 @@ export const floatMask = createNumberMask({
         UebungWaehlenComponent
     ],
     imports: [
+        RouterModule.forRoot(routes),
         TextMaskModule,
         MatCheckboxModule,
         MatCardModule,
@@ -115,6 +119,7 @@ export const floatMask = createNumberMask({
         OverlayModule,
         ReactiveFormsModule,
         DexieSvcService
+
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA,
@@ -128,7 +133,7 @@ export const floatMask = createNumberMask({
         FilePreviewOverlayComponent,
         UebungWaehlenComponent
     ],
-    providers: [MatDialog, FilePreviewOverlayService, DexieSvcService],
+    providers: [MatDialog, FilePreviewOverlayService, DexieSvcService, CanDeactivateGuard],
     bootstrap: [AppComponent]
 })  
     
