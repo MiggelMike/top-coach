@@ -1,6 +1,6 @@
 import { Session } from 'src/Business/Session/Session';
 import { Uebung  } from './../../Business/Uebung/Uebung';
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject  } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 type UebungWaehlenDelegate = (aUebung: Uebung) => void;
