@@ -1,8 +1,9 @@
+import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
 import { DexieSvcService } from './dexie-svc.service';
 import { MyObserver } from './../../Observers/MyObservers';
 import { ISatz } from './../../Business/Satz/Satz';
 import { UebungService } from './uebung.service';
-import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
+import { ITrainingsProgramm, ProgrammTyp, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { TrainingServiceModule } from '../../modules/training-service.module'
 import { Injectable } from '@angular/core';
 import { Sportler, ISportler } from '../../Business/Sportler/Sportler';
@@ -10,7 +11,7 @@ import { Sportler, ISportler } from '../../Business/Sportler/Sportler';
 import { ISession } from '../../Business/Session/Session';
 import { Uebung } from '../../Business/Uebung/Uebung';
 import { Observable, Subscriber } from 'rxjs';
-import { JsonProperty } from '@peerlancers/json-serialization';
+
 
 export enum SpeicherOrtTyp {
     Lokal = 'Lokal',
@@ -18,11 +19,6 @@ export enum SpeicherOrtTyp {
     Facebook = 'Facebook'
 }
 
-export enum ProgrammTyp {
-    Ohne,
-    Custom,
-    Gzclp
-}
 
 export enum StorageItemTyp {
     LetzterSpeicherOrt,
@@ -31,20 +27,14 @@ export enum StorageItemTyp {
 }
 
 export class AppDataMap {
-    @JsonProperty()
     public LetzteProgrammID: number = 0;
-    @JsonProperty()
     public LetzteSessionID: number = 0;
-    @JsonProperty()
     public LetzteSatzID: number = 0;
-    @JsonProperty()
     public Sessions: Array<ISession> = [];
     // public Uebungen: Array<IStammUebung> = [];
-    @JsonProperty()
     public TrainingsHistorie: Array<ISession> = [];
     // @JsonProperty()
     // public AktuellesProgramm = new AktuellesProgramm();
-    @JsonProperty()
     public AktuelleSession: ISession;
 }
 
@@ -86,7 +76,6 @@ export class GlobalService {
         this.Sportler = new Sportler();
       //  this.StandardVorlagen = this.aTrainingServiceModule.trainingsProgrammSvc.ErzeugeStandardVorlagen();
     }
-
 
     ProgrammWaehlen(): void {
         const mInfo: Array<string> = [];

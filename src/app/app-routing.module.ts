@@ -1,4 +1,4 @@
-import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
+// import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
 import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -9,8 +9,7 @@ import { ProgrammWaehlenComponent } from './programm-waehlen/programm-waehlen.co
 export const routes: Routes = [
     { path: '', component: AnstehendeSessionsComponent },
     { path: 'programmwaehlen', component: ProgrammWaehlenComponent },
-    { path: 'workoutform', component: WorkoutFormComponent, canDeactivate: [CanDeactivateGuard] },
-    
+    { path: 'workoutform', component: WorkoutFormComponent },
 ];
 
 @NgModule({

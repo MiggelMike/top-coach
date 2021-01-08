@@ -1,16 +1,13 @@
-import { Injectable, NgModule, Pipe,  Optional, SkipSelf ,  ModuleWithProviders } from '@angular/core';
-import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
-
-export interface ITrainingsProgrammSvc {
-    LadeProgramme(): void;
-}
+import { DexieSvcService } from './dexie-svc.service';
+import { Injectable, NgModule, Pipe,  Optional, SkipSelf, ModuleWithProviders } from '@angular/core';
+import { ProgrammTyp, ProgrammKategorie, ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 
 @Injectable({
     providedIn: 'root'
 })
 
 @NgModule({})
-export class TrainingsProgrammSvc implements ITrainingsProgrammSvc {
+export class TrainingsProgrammSvc {
 //export declare class TrainingsProgrammSvc {
     declarations: [ TrainingsProgrammSvc]
     exports: [ TrainingsProgrammSvc]
@@ -24,7 +21,7 @@ export class TrainingsProgrammSvc implements ITrainingsProgrammSvc {
 
   
     }
-    
+
     // static forRoot(config: TrainingsProgrammSvc): ModuleWithProviders {
     //     return {
     //       ngModule: TrainingsProgrammSvc,
@@ -33,10 +30,6 @@ export class TrainingsProgrammSvc implements ITrainingsProgrammSvc {
     //       ]
     //     };
     //   }
-
-    public LadeProgramme() {
-
-    }
 
 
 

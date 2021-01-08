@@ -1,5 +1,5 @@
 import 'hammerjs';
-import 'Sql-Lite/server.js';
+// import 'Sql-Lite/server.js';
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 

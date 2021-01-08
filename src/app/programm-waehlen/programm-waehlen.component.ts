@@ -1,5 +1,5 @@
 import { DexieSvcService } from './../services/dexie-svc.service';
-import { TrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
+import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Observable, of } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 
@@ -9,8 +9,8 @@ import { Component, OnInit } from '@angular/core';
     styleUrls: ["./programm-waehlen.component.scss"],
 })
 export class ProgrammWaehlenComponent implements OnInit {
-    public ProgrammListeObserver: Observable<TrainingsProgramm[]>;
-    public ProgrammListe: Array<TrainingsProgramm> = [];
+    public ProgrammListeObserver: Observable<ITrainingsProgramm[]>;
+    public ProgrammListe: Array<ITrainingsProgramm> = [];
 
     constructor(public fDbModule: DexieSvcService
     ) {}

@@ -1,4 +1,3 @@
-import { of, Observable } from 'rxjs';
 import { ISatz, Satz } from './../../Business/Satz/Satz';
 import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
 import { ISession, Session } from './../../Business/Session/Session';
@@ -30,9 +29,9 @@ export class DexieSvcService extends Dexie {
     AppDataTable: Dexie.Table<AppData, number>;
     UebungTable: Dexie.Table<Uebung, number>;
     SatzTable: Dexie.Table<Satz, number>;
-    ProgrammTable: Dexie.Table<TrainingsProgramm, number>;
+    ProgrammTable: Dexie.Table<ITrainingsProgramm, number>;
     SessionTable: Dexie.Table<Session, number>;
-    public Programme: Array<TrainingsProgramm> = [];
+    public Programme: Array<ITrainingsProgramm> = [];
     public UebungsDaten: Array<Uebung> = [];
 
     //public ProgrammListeObserver: Observable<TrainingsProgramm[]>;
@@ -55,7 +54,7 @@ export class DexieSvcService extends Dexie {
             Uebung: "++ID,Name,Typ",
             Programm: "++id,Name",
             Session: "++ID,Name,Datum",
-            Satz: "++id",
+            Satz: "++ID",
         });
 
         this.InitAll();
@@ -139,23 +138,23 @@ export class DexieSvcService extends Dexie {
         //this.ProgrammTable.clear();
     }
 
-    public LadeProgrammSessions(aProgramm: ITrainingsProgramm): PromiseExtended {
-        return this.table(this.cSession)
+    public async LadeProgrammSessions(aProgramm: ITrainingsProgramm) {
+        return await this.table(this.cSession)
             .filter((s) => s.FK_Programm === aProgramm.id)
-            .toArray()
-            .then((mSessionListe) => {
-                aProgramm.SessionListe = mSessionListe;
-                aProgramm.SessionListe.forEach((mSession) => {
-                    this.LadeSessionUebungen(mSession).then((mUebungen) => {
-                        mSession.UebungsListe = mUebungen;
-                        mUebungen.forEach((mUebung) => {
-                            this.LadeUebungsSaetze(mUebung).then(
-                                (mSaetze) => (mUebung.SatzListe = mSaetze)
-                            );
-                        });
-                    });
-                });
-            });
+            .toArray();
+            // .then((mSessionListe) => {
+            //     aProgramm.SessionListe = mSessionListe;
+            //     aProgramm.SessionListe.forEach((mSession) => {
+            //         this.LadeSessionUebungen(mSession).then((mUebungen) => {
+            //             mSession.UebungsListe = mUebungen;
+            //             mUebungen.forEach((mUebung) => {
+            //                 this.LadeUebungsSaetze(mUebung).then(
+            //                     (mSaetze) => (mUebung.SatzListe = mSaetze)
+            //                 );
+            //             });
+            //         });
+            //     });
+            // });
     }
 
     public LadeSessionUebungen(aSession: ISession): PromiseExtended {
@@ -184,7 +183,7 @@ export class DexieSvcService extends Dexie {
             )
             .toArray()
             .then((mProgramme) => {
-                const mProg: TrainingsProgramm = mProgramme.find(
+                const mProg: ITrainingsProgramm = mProgramme.find(
                     (p) => p.ProgrammTyp === ProgrammTyp.Gzclp
                 );
 
@@ -202,15 +201,42 @@ export class DexieSvcService extends Dexie {
                 for (let index = 0; index < mAnlegen.length; index++)
                     this.VorlageProgrammSpeichern(mAnlegen[index]);
                 
-                for (let index = 0; index < this.Programme.length; index++) {
-                    this.LadeProgrammSessions(this.Programme[index]).catch((err) =>
-                        console.error(err)
-                    );
-                }
             })
             .catch((error) => {
                 console.error(error);
             });
+        
+        for (let index = 0; index < this.Programme.length; index++) {
+            // Programm
+            const mProgramm = this.Programme[index];
+            mProgramm.SessionListe = await this.LadeProgrammSessions(mProgramm);
+            for (let j = 0; j < mProgramm.SessionListe.length; j++) {
+                // Session
+                const mSession = mProgramm.SessionListe[j];
+                mSession.UebungsListe = await this.LadeSessionUebungen(mSession);
+                for (let z = 0; z < mSession.UebungsListe.length; z++) {
+                    // Uebung
+                    const mUebung = mSession.UebungsListe[z];
+                    mUebung.SatzListe = await this.LadeUebungsSaetze(mUebung);
+                }
+            }
+        }
+                    //.toArray();
+            // .then((mSessionListe) => {
+            //     aProgramm.SessionListe = mSessionListe;
+            //     aProgramm.SessionListe.forEach((mSession) => {
+            //         this.LadeSessionUebungen(mSession).then((mUebungen) => {
+            //             mSession.UebungsListe = mUebungen;
+            //             mUebungen.forEach((mUebung) => {
+            //                 this.LadeUebungsSaetze(mUebung).then(
+            //                     (mSaetze) => (mUebung.SatzListe = mSaetze)
+            //                 );
+            //             });
+            //         });
+            //     });
+            // });
+
+    
     }
 
     public SatzSpeichern(aSatz: ISatz) {
@@ -256,7 +282,7 @@ export class DexieSvcService extends Dexie {
         );
     }
 
-    public ProgrammSpeichern(aTrainingsProgramm: TrainingsProgramm) { 
+    public ProgrammSpeichern(aTrainingsProgramm: ITrainingsProgramm) { 
         return this.transaction(
             "rw",
             this.ProgrammTable,
@@ -292,7 +318,7 @@ export class DexieSvcService extends Dexie {
     }
 
     public VorlageProgrammSpeichern(aProgrammTyp: ProgrammTyp) {
-        let mTrainingsProgramm: TrainingsProgramm = null;
+        let mTrainingsProgramm: ITrainingsProgramm = null;
 
         if (aProgrammTyp === ProgrammTyp.Gzclp) {
             mTrainingsProgramm = GzclpProgramm.ErzeugeGzclpVorlage(this);

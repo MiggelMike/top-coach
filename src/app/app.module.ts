@@ -47,7 +47,7 @@ import { SessUebungComponent } from './bausteine/sess-uebung/sess-uebung.compone
 import { UebungWaehlenComponent } from './uebung-waehlen/uebung-waehlen.component';
 import { RouterModule } from '@angular/router';
 import { routes } from "./app-routing.module";
-import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
+// import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
 
 
 // var sqlite3 = require('sqlite3');1
@@ -133,7 +133,7 @@ export const floatMask = createNumberMask({
         FilePreviewOverlayComponent,
         UebungWaehlenComponent
     ],
-    providers: [MatDialog, FilePreviewOverlayService, DexieSvcService, CanDeactivateGuard],
+    providers: [MatDialog, FilePreviewOverlayService, DexieSvcService],
     bootstrap: [AppComponent]
 })  
     

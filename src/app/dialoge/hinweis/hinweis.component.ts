@@ -3,14 +3,19 @@ import { Component, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 interface IOkCallback {
-    () : void;
+    ():void;
 }
+
+interface ICancelCallback {
+    ():void;
+}
+
 
 export class DialogData {
     textZeilen: Array<string> = [];
     typ: DialogTyp;
     OkFn: IOkCallback;
-    CancelFn: any;
+    CancelFn: ICancelCallback;
     OkData: any;
     CancelData: any;
 }

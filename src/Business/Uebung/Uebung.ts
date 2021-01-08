@@ -1,4 +1,5 @@
-import { Satz,  SatzTyp, LiftTyp, SatzPausen, SatzStatus } from './../Satz/Satz';
+import { Satz, ISatz, SatzTyp, LiftTyp, SatzPausen, SatzStatus } from './../Satz/Satz';
+
 export enum UebungsTyp {
     Undefined = "Undefined",
     Custom = "Custom",
@@ -29,6 +30,7 @@ export interface IUebung {
     SessionID: number;
     SatzListe: Array<Satz>;
     Copy(): Uebung;
+    hasChanged(aCmpUebung: IUebung): Boolean;
 }
 
 export enum UebungsName {
@@ -53,6 +55,7 @@ export enum UebungsName {
     Dips = "Dips",
 }
 
+// Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
 export class Uebung implements IUebung {
     public ID: number;
     public Name: string = "";
@@ -66,23 +69,38 @@ export class Uebung implements IUebung {
        Object.defineProperty(this, 'SatzListe', { enumerable: false });
     } 
 
+    public hasChanged(aCmpUebung: IUebung): Boolean {
+        if (this.ID != aCmpUebung.ID) return true;
+        if (this.Kategorie02 != aCmpUebung.Kategorie02) return true;
+        if (this.Kategorieen01 != aCmpUebung.Kategorieen01) return true;
+        if (this.Name != aCmpUebung.Name) return true;
+        if (this.Typ != aCmpUebung.Typ) return true;
+
+        if ((this.SatzListe) && (aCmpUebung.SatzListe)) {
+            if (this.SatzListe.length != aCmpUebung.SatzListe.length)
+                return true;
+            
+            for (let index = 0; index < this.SatzListe.length; index++) {
+                if (this.SatzListe[index].hasChanged(aCmpUebung.SatzListe[index])) {
+                    console.log('Set #' + index.toString() + ' has changed.');
+                    return true;
+                }
+                
+            }
+        }
+
+        return false;
+    }
+
     public Copy(): Uebung {
-        let mUebung = new Uebung();
-        mUebung.ID = this.ID;
-        mUebung.SessionID = this.SessionID;
-        mUebung.Name = this.Name;
-        mUebung.Typ = this.Typ;
-        mUebung.Kategorieen01 = [];
-        mUebung.Kategorie02 = this.Kategorie02;
-
-        this.Kategorieen01.forEach((val) =>
-            mUebung.Kategorieen01.push(Object.assign({}, val))
-        );
-
-        this.SatzListe.forEach( 
-            s => mUebung.SatzListe.push(Object.assign({}, s))
-        )
-        return mUebung;
+        const mResult: Uebung = Object.assign({}, this);
+        mResult.SatzListe = new Array<Satz>();
+        if (this.SatzListe) {
+            for (let index = 0; index < this.SatzListe.length; index++) {
+                mResult.SatzListe.push(this.SatzListe[index].Copy());
+            }
+        }
+        return mResult;
     }
 
     public static ErzeugeGzclpKategorieen01(): Array<UebungsKategorie01> {

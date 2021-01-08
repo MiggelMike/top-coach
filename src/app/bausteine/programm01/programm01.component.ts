@@ -32,7 +32,7 @@ export class Programm01Component implements OnInit {
                 `Replace current Program "${this.fGlobalService.fDbModule.AktuellesProgramm.Name}" with "${this.programm.Name}" ?`
             );
             mDialogData.OkData = this.programm;
-            mDialogData.OkFn = () => {
+            mDialogData.OkFn = ():void => {
                 this.fGlobalService.SetzeAktuellesProgramm(mDialogData.OkData);
             };
 

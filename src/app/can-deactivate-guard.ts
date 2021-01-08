@@ -4,17 +4,17 @@ import { CanDeactivate } from '@angular/router';
 import { ComponentCanDeactivate } from './component-can-deactivate';
 
 
-@Injectable()
-export class CanDeactivateGuard implements CanDeactivate<WorkoutFormComponent> {
-  canDeactivate(component: WorkoutFormComponent): boolean {
-   
-    if(!component.canDeactivate()){
-        if (confirm("You have unsaved changes! If you leave, your changes will be lost.")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    return true;
-  }
-}
+// @Injectable()
+// export class CanDeactivateGuard implements CanDeactivate<WorkoutFormComponent> {
+// //   canDeactivate(component: WorkoutFormComponent): boolean {
+
+// //       if (!component.canDeactivate($event: Event)) {
+// //         if (confirm("You have unsaved changes! If you leave, your changes will be lost.")) {
+// //             return true;
+// //         } else {
+// //             return false;
+// //         }
+// //     }
+// //     return true;
+// //   }
+// }

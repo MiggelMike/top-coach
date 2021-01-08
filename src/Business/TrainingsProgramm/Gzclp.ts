@@ -1,8 +1,6 @@
 import { DexieSvcService } from './../../app/services/dexie-svc.service';
 import { Uebung, UebungsKategorie02 } from './../Uebung/Uebung';
-import { UebungService } from "./../../app/services/uebung.service";
-import { TrainingsProgramm, ITrainingsProgramm } from "./TrainingsProgramm";
-import { ProgrammKategorie, ProgrammTyp } from "./TrainingsProgramm";
+import { ProgrammKategorie, ProgrammTyp, TrainingsProgramm, ITrainingsProgramm } from "./TrainingsProgramm";
 import { ISession, Session } from "../Session/Session";
 
 import {
@@ -17,6 +15,7 @@ import {
 import { UebungsName } from "../Uebung/Uebung";
 import { deserialize } from "@peerlancers/json-serialization";
 
+
 export class GzclpProgramm extends TrainingsProgramm {
     constructor(aProgrammKategorie: ProgrammKategorie, public pDbModule: DexieSvcService)
     {
@@ -24,7 +23,7 @@ export class GzclpProgramm extends TrainingsProgramm {
         this.Tage = 4;
     }
 
-    protected PreCopy(): ITrainingsProgramm {
+    public PreCopy(): ITrainingsProgramm {
         return new GzclpProgramm(this.ProgrammKategorie, this.pDbModule);
     }
 
@@ -237,8 +236,8 @@ export class GzclpProgramm extends TrainingsProgramm {
         aNeueSession.UebungsListe.push(mUebung);
     }
 
-    public static ErzeugeGzclpVorlage(aDbModule: DexieSvcService): TrainingsProgramm {
-        const mGzclpVorlage: GzclpProgramm = new GzclpProgramm(ProgrammKategorie.Vorlage, aDbModule);
+    public static ErzeugeGzclpVorlage(aDbModule: DexieSvcService): ITrainingsProgramm {
+        const mGzclpVorlage: ITrainingsProgramm = new GzclpProgramm(ProgrammKategorie.Vorlage, aDbModule);
         mGzclpVorlage.Name = "GZCLP - Standard";
         const mSessions: Array<ISession> = new Array<ISession>();
         mGzclpVorlage.Init(mSessions);

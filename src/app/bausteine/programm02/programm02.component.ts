@@ -1,7 +1,7 @@
 import { UebungsKategorie02 } from './../../../Business/Uebung/Uebung';
 import { DexieSvcService } from './../../services/dexie-svc.service';
 import { ISession, Session, SessionStatus } from './../../../Business/Session/Session';
-import { TrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
+import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";
 import { MatAccordion } from '@angular/material';
 import { MatExpansionPanel } from '@angular/material/expansion';
@@ -18,7 +18,7 @@ import { UebungService } from 'src/app/services/uebung.service';
     styleUrls: ["./programm02.component.scss"],
 })
 export class Programm02Component implements OnInit {
-    @Input() programm: TrainingsProgramm = null;
+    @Input() programm: ITrainingsProgramm = null;
     @Input() SessionListe: Array<Session> = [];
     @Input() ShowButtons: Boolean = false;
     @ViewChildren("accSession") accSession: QueryList<MatAccordion>;
@@ -43,7 +43,7 @@ export class Programm02Component implements OnInit {
     public DeleteSession(aSession : Session, aRowNum: number) {
         const mDialogData = new DialogData();
         mDialogData.textZeilen.push(`Delete session #${aRowNum + 1} "${aSession.Name}" ?`);
-        mDialogData.OkFn = () => {
+        mDialogData.OkFn = ():void => {
             const index: number = this.SessionListe.indexOf(aSession);
             if (index !== -1) {
                 this.SessionListe.splice(index, 1);
