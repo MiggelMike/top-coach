@@ -29,11 +29,19 @@ export class UebungService {
         mDialogConfig.height = "85%";
         mDialogConfig.disableClose = false;
         mDialogConfig.autoFocus = true;
+
+        aUebungsListe.forEach(
+            (mUebung) => {
+                if (!mUebung.Selected)
+                    mUebung.Selected = false;
+            }
+        );
+
         mDialogConfig.data = mUebungWaehlenData;
         mDialogConfig.hasBackdrop = true;
 
         mUebungWaehlenData.fUebungsListe = aUebungsListe;
-        mUebungWaehlenData.RowClickFn = aSelectFn;
+        mUebungWaehlenData.OkClickFn = aSelectFn;
         mUebungWaehlenData.fSession = aSession;
         // mUebungWaehlenData.fMatDialog = this.fDialog;
 

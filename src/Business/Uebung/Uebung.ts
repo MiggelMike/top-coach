@@ -29,6 +29,7 @@ export interface IUebung {
     Kategorie02: UebungsKategorie02;
     SessionID: number;
     SatzListe: Array<Satz>;
+    Selected: boolean;
     Copy(): Uebung;
     hasChanged(aCmpUebung: IUebung): Boolean;
 }
@@ -64,9 +65,12 @@ export class Uebung implements IUebung {
     public Kategorie02: UebungsKategorie02 = UebungsKategorie02.Stamm;
     public SessionID: number = 0;
     public SatzListe: Array<Satz> = [];
+    public Selected: boolean = false;
 
     constructor() {
-       Object.defineProperty(this, 'SatzListe', { enumerable: false });
+        // Nicht in Dexie-DB-Speichern -> enumerable: false
+        Object.defineProperty(this, 'SatzListe', { enumerable: false });
+        Object.defineProperty(this, 'Selected', { enumerable: false });
     } 
 
     public hasChanged(aCmpUebung: IUebung): Boolean {

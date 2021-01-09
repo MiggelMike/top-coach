@@ -3,12 +3,12 @@ import { Uebung  } from './../../Business/Uebung/Uebung';
 import { Component, OnInit, Inject  } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-type UebungWaehlenDelegate = (aUebung: Uebung) => void;
+type UebungWaehlenDelegate = (aUebungWaehlenData: UebungWaehlenData ) => void;
 
 export class UebungWaehlenData {
     fUebungsListe: Array<Uebung>;
     fSession: Session;
-    RowClickFn: UebungWaehlenDelegate;
+    OkClickFn: UebungWaehlenDelegate;
     fMatDialog: MatDialogRef<UebungWaehlenComponent>;
 }
 
@@ -21,11 +21,21 @@ export class UebungWaehlenData {
     
 export class UebungWaehlenComponent implements OnInit {
 
+
     constructor(
         public dialogRef: MatDialogRef<UebungWaehlenComponent>,
         @Inject(MAT_DIALOG_DATA) public data: UebungWaehlenData
-    ) { }
+    ) {}
 
     ngOnInit(): void { 
     }
+
+    public OkButtonClick() {
+       this.data.OkClickFn(this.data);
+    }
+
+    public CancelClickFn() {
+        this.dialogRef.close();
+     };
+
 }

@@ -1,6 +1,7 @@
+import { UebungWaehlenData } from './../../uebung-waehlen/uebung-waehlen.component';
 import { UebungsKategorie02 } from './../../../Business/Uebung/Uebung';
 import { DexieSvcService } from './../../services/dexie-svc.service';
-import { ISession, Session, SessionStatus } from './../../../Business/Session/Session';
+import { Session, SessionStatus } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";
 import { MatAccordion } from '@angular/material';
@@ -61,9 +62,15 @@ export class Programm02Component implements OnInit {
     }
 
     // Wird an "AddExercise" als Parameter uebergeben
-    private SelectUebungDelegate(aUebung: Uebung) {
-        // this.fSession.addUebung(Uebung.StaticKopiere(aUebung, UebungsKategorie02.Session));
-        // this.fMatDialog.close();
+    private SelectUebungDelegate(aUebungWaehlenData: UebungWaehlenData) {
+        aUebungWaehlenData.fUebungsListe.forEach(
+            (mUebung => {
+                if (mUebung.Selected) {
+                    aUebungWaehlenData.fSession.addUebung(Uebung.StaticKopiere(mUebung, UebungsKategorie02.Session));
+                }
+            })
+        );
+        aUebungWaehlenData.fMatDialog.close();
     };
 
     public AddExercise(aSession: Session) {
