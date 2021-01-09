@@ -56,7 +56,6 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
             if (this.ProgrammKategorie != aCmpProgramm.ProgrammKategorie) return true;
             if (this.ProgrammTyp != aCmpProgramm.ProgrammTyp) return true;
             if (this.Tage != aCmpProgramm.Tage) return true;
-            console.log('Programm has changed.');
             
             for (let index = 0; index < this.SessionListe.length; index++) {
                 if (this.SessionListe[index].hasChanged(aCmpProgramm.SessionListe[index]) === true) {
