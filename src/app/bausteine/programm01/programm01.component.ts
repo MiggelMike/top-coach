@@ -1,7 +1,7 @@
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "./../../services/global.service";
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
 import { ITrainingsProgramm } from "../../../Business/TrainingsProgramm/TrainingsProgramm";
 import { SessionStatus } from 'src/Business/Session/Session';
 
@@ -27,6 +27,7 @@ export class Programm01Component implements OnInit {
         $event.stopPropagation();
         // Soll das aktuelle Work-Out durch ein anderes ersetzt werden?
         if (this.fGlobalService.fDbModule.AktuellesProgramm !== undefined) {
+             // Das aktuelle Work-Out soll durch ein anderes ersetzt werden.
             const mDialogData = new DialogData();
             mDialogData.textZeilen.push(
                 `Replace current Program "${this.fGlobalService.fDbModule.AktuellesProgramm.Name}" with "${this.programm.Name}" ?`
@@ -38,7 +39,8 @@ export class Programm01Component implements OnInit {
 
             this.fDialogeService.JaNein(mDialogData);
         } else {
-            this.fGlobalService.SetzeAktuellesProgramm(this.programm);
+             // Es gibt kein aktuelles Work-Out.
+             this.fGlobalService.SetzeAktuellesProgramm(this.programm);
         }
     }
 

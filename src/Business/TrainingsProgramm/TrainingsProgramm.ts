@@ -7,7 +7,7 @@ export enum ProgrammTyp {
 }
 
 export enum ProgrammKategorie {
-    Konkret = "Konkret",
+    AktuellesProgramm = "AktuellesProgramm",
     Vorlage = "Vorlage",
 }
 
@@ -21,7 +21,7 @@ export interface ITrainingsProgramm {
     Bearbeitbar: Boolean; 
     Init(aSessions: Array<ISession>): void;
     Copy(): ITrainingsProgramm;
-    ErstelleSessionsAusVorlage(): ITrainingsProgramm;
+    ErstelleSessionsAusVorlage(aProgrammKategorie: ProgrammKategorie): ITrainingsProgramm;
     DeserializeProgramm(aJsonData: Object): ITrainingsProgramm;
     hasChanged(aCmpProgramm: ITrainingsProgramm): Boolean;
 }
@@ -32,7 +32,7 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
     public id: number;
     public Tage: number = 0;
     public Name: string = "";
-    public ProgrammKategorie: ProgrammKategorie = ProgrammKategorie.Konkret;
+    public ProgrammKategorie: ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
     public ProgrammTyp: ProgrammTyp = ProgrammTyp.Custom;
     public Bearbeitbar: Boolean = true;
     public SessionListe: Array<ISession> = [];
@@ -73,13 +73,16 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
         if (this.SessionListe) {
             for (let index = 0; index < this.SessionListe.length; index++) {
                 mResult.SessionListe.push(this.SessionListe[index].Copy());
-                const x = 0;
             }
         }
         return mResult;
     }
 
-    public abstract ErstelleSessionsAusVorlage(): ITrainingsProgramm;
+    public ErstelleSessionsAusVorlage(aProgrammKategorie : ProgrammKategorie): ITrainingsProgramm {
+        const mResult = this.Copy();
+        mResult.ProgrammKategorie = aProgrammKategorie;
+        return mResult;
+    }
 
     public Init(aSessions: Array<ISession>): void {
         for (

@@ -1,4 +1,4 @@
-import { Uebung, IUebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
+import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
 
 export enum SessionStatus {
     NurLesen,

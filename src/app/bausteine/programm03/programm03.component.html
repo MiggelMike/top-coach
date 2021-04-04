@@ -1,8 +1,8 @@
 <ng-container *ngIf="session">
     <ng-container *ngIf="session.UebungsListe">
-        <!-- <ng-container *ngIf="session.UebungsListe && (session.UebungsListe.length > 0)" >
-            <a [ngClass]="['link-button-font']" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
-        </ng-container> -->
+        <ng-container *ngIf="session.UebungsListe && (session.UebungsListe.length > 0)" >
+            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
+        </ng-container>
         <ng-container *ngFor="let SessUeb of session.UebungsListe, index as i; let isOdd=odd">
             <ng-container [sessionUebung] = "SessUeb"></ng-container> 
             <mat-accordion #accUebung='matAccordion' multi="true">

@@ -33,9 +33,9 @@ export class TrainingsProgrammSvc {
 
 
 
-    public ErzeugeKonkretesProgrammAusVorlage(aVorlageProgramm: ITrainingsProgramm): void {
-        const m = aVorlageProgramm.ErstelleSessionsAusVorlage();
-    }
+    // public ErzeugeKonkretesProgrammAusVorlage(aVorlageProgramm: ITrainingsProgramm): void {
+    //     const m = aVorlageProgramm.ErstelleSessionsAusVorlage();
+    // }
 
     // public ErzeugeStandardVorlagen(aDbModule: DBModule): Array<ITrainingsProgramm> {
     //     const mResult: Array<ITrainingsProgramm> = new Array<ITrainingsProgramm>();

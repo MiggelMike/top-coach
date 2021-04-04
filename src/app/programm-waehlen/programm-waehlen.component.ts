@@ -1,5 +1,5 @@
 import { DexieSvcService } from './../services/dexie-svc.service';
-import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
+import { ITrainingsProgramm, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Observable, of } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 
@@ -23,7 +23,7 @@ export class ProgrammWaehlenComponent implements OnInit {
     public LadeTrainingsProgramme(): void {
         this.ProgrammListeObserver.subscribe(
             () => {
-                this.fDbModule.LadeProgramme().then(
+                this.fDbModule.LadeProgramme(ProgrammKategorie.Vorlage).then(
                     () => this.ProgrammListe = this.fDbModule.Programme
                 );
             }

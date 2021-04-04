@@ -122,7 +122,7 @@ export class DexieSvcService extends Dexie {
                 }
                 else {
                     mUebungen.forEach((mUebung) => this.UebungsDaten.push(mUebung));
-                        this.LadeProgramme();
+                        this.LadeProgramme(ProgrammKategorie.Vorlage);
                 }
         })
     }
@@ -173,70 +173,86 @@ export class DexieSvcService extends Dexie {
             .toArray();
     }
 
-    public async LadeProgramme() {
-        this.Programme = [];
+    private DoVorlage(aProgramme: Array<TrainingsProgramm>) { 
         const mAnlegen: Array<ProgrammTyp.Gzclp> = new Array<ProgrammTyp.Gzclp>();
+        const mProg: ITrainingsProgramm = aProgramme.find(
+            (p) => p.ProgrammTyp === ProgrammTyp.Gzclp
+            );
+
+        if (mProg === undefined)
+            mAnlegen.push(ProgrammTyp.Gzclp);
+        else {
+            if (
+                this.Programme.find((p) => p.ProgrammTyp === ProgrammTyp.Gzclp) === undefined
+            ) {
+                // Standard-Programm gefunden
+                this.Programme.push(mProg);
+            }
+        }
+
+        for (let index = 0; index < mAnlegen.length; index++)
+            this.VorlageProgrammSpeichern(mAnlegen[index]);
+    }
+
+    public async LadeProgramme(aProgrammKategorie: ProgrammKategorie) {
+        this.Programme = [];
         await this.table(this.cProgramm)
             .filter(
                 (a) =>
-                    a.ProgrammKategorie === ProgrammKategorie.Vorlage.toString()
+                    a.ProgrammKategorie === aProgrammKategorie.toString()
             )
             .toArray()
             .then((mProgramme) => {
-                const mProg: ITrainingsProgramm = mProgramme.find(
-                    (p) => p.ProgrammTyp === ProgrammTyp.Gzclp
-                );
-
-                if (mProg === undefined)
-                    mAnlegen.push(ProgrammTyp.Gzclp);
-                else {
-                    if (
-                        this.Programme.find((p) => p.ProgrammTyp === ProgrammTyp.Gzclp) === undefined
-                    ) {
-                        // Standard-Programm gefunden
-                        this.Programme.push(mProg);
-                    }
+                switch (aProgrammKategorie) {
+                    case ProgrammKategorie.Vorlage:
+                        this.DoVorlage(mProgramme);
+                        for (let index = 0; index < this.Programme.length; index++) {
+                            // Programm
+                            this.FuelleProgramm(this.Programme[index]);
+                        }
+                        break;
+                    case ProgrammKategorie.AktuellesProgramm:
+                        this.AktuellesProgramm = mProgramme[0];
+                        // this.FuelleProgramm(this.AktuellesProgramm);
+                        const x = 0;
+                        break;
                 }
-
-                for (let index = 0; index < mAnlegen.length; index++)
-                    this.VorlageProgrammSpeichern(mAnlegen[index]);
-                
             })
             .catch((error) => {
                 console.error(error);
             });
         
-        for (let index = 0; index < this.Programme.length; index++) {
-            // Programm
-            const mProgramm = this.Programme[index];
-            mProgramm.SessionListe = await this.LadeProgrammSessions(mProgramm);
-            for (let j = 0; j < mProgramm.SessionListe.length; j++) {
-                // Session
-                const mSession = mProgramm.SessionListe[j];
-                mSession.UebungsListe = await this.LadeSessionUebungen(mSession);
-                for (let z = 0; z < mSession.UebungsListe.length; z++) {
-                    // Uebung
-                    const mUebung = mSession.UebungsListe[z];
-                    mUebung.SatzListe = await this.LadeUebungsSaetze(mUebung);
-                }
+        // for (let index = 0; index < this.Programme.length; index++) {
+        //     // Programm
+        //     const mProgramm = this.Programme[index];
+        //     this.FuelleProgramm(mProgramm);
+            // mProgramm.SessionListe = await this.LadeProgrammSessions(mProgramm);
+            // for (let j = 0; j < mProgramm.SessionListe.length; j++) {
+            //     // Session
+            //     const mSession = mProgramm.SessionListe[j];
+            //     mSession.UebungsListe = await this.LadeSessionUebungen(mSession);
+            //     for (let z = 0; z < mSession.UebungsListe.length; z++) {
+            //         // Uebung
+            //         const mUebung = mSession.UebungsListe[z];
+            //         mUebung.SatzListe = await this.LadeUebungsSaetze(mUebung);
+            //     }
+            // }
+//        }
+    }
+
+    private async FuelleProgramm(aProgramm: ITrainingsProgramm) {
+        aProgramm.SessionListe = await this.LadeProgrammSessions(aProgramm);
+        for (let j = 0; j < aProgramm.SessionListe.length; j++) {
+            // Session
+            const mSession = aProgramm.SessionListe[j];
+            mSession.UebungsListe = await this.LadeSessionUebungen(mSession);
+            for (let z = 0; z < mSession.UebungsListe.length; z++) {
+                // Uebung
+                const mUebung = mSession.UebungsListe[z];
+                mUebung.SatzListe = await this.LadeUebungsSaetze(mUebung);
             }
         }
-                    //.toArray();
-            // .then((mSessionListe) => {
-            //     aProgramm.SessionListe = mSessionListe;
-            //     aProgramm.SessionListe.forEach((mSession) => {
-            //         this.LadeSessionUebungen(mSession).then((mUebungen) => {
-            //             mSession.UebungsListe = mUebungen;
-            //             mUebungen.forEach((mUebung) => {
-            //                 this.LadeUebungsSaetze(mUebung).then(
-            //                     (mSaetze) => (mUebung.SatzListe = mSaetze)
-            //                 );
-            //             });
-            //         });
-            //     });
-            // });
-
-    
+   
     }
 
     public SatzSpeichern(aSatz: ISatz) {

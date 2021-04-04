@@ -61,7 +61,7 @@ export class SessUebungComponent implements OnInit {
 
     public DeleteExercise() {
         const mDialogData = new DialogData();
-        mDialogData.textZeilen.push(`Delete excercise #${this.rowNum + 1} "${this.sessUebung.Name}" ?`);
+        mDialogData.textZeilen.push(`Delete exercise #${this.rowNum + 1} "${this.sessUebung.Name}" ?`);
         mDialogData.OkFn = ():void => {
             // Index der SessUeb in Liste suchen.
             const index: number = this.session.UebungsListe.indexOf( this.sessUebung );

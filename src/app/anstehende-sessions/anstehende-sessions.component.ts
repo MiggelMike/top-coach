@@ -1,9 +1,11 @@
+import { DexieSvcService } from './../services/dexie-svc.service';
 import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { ISession } from './../../Business/Session/Session';
 import { GlobalService } from './../services/global.service';
 import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
 import { Observable } from 'rxjs';
+import { DexieSvcService } from './../../app/services/dexie-svc.service';
 
 
 
@@ -15,11 +17,14 @@ import { Observable } from 'rxjs';
     
 export class AnstehendeSessionsComponent implements OnInit {
     public isCollapsed = false;
-    public AktuellesProgramm: ITrainingsProgramm;
+    public get AktuellesProgramm(): ITrainingsProgramm{
+        return this.fDexiSvcService.AktuellesProgramm;
+    }
+    
     public NextSessions: Array<ISession> = [];
     public AnstehendeSessionObserver: Observable<ISession[]>;
  
-    constructor( private globalService: GlobalService ) {}
+    constructor(private globalService: GlobalService, private fDexiSvcService: DexieSvcService ) {}
 
     beforePanelOpened(aSess: Session) {
         aSess.Expanded = true;
@@ -30,10 +35,12 @@ export class AnstehendeSessionsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.AktuellesProgramm = this.globalService.fDbModule.AktuellesProgramm;
         this.AnstehendeSessionObserver = this.globalService.LadeAnstehendeSession();
-        if (this.AktuellesProgramm !== undefined)
-            this.AktuellesProgramm.SessionListe = this.LadeSessions();
+        this.LadeSessions();
+        // this.AktuellesProgramm = this.globalService.fDbModule.AktuellesProgramm;
+        // this.AnstehendeSessionObserver.subscribe()
+        // if (this.AktuellesProgramm !== undefined)
+        //     this.AktuellesProgramm.SessionListe = this.LadeSessions();
     }
 
     public LadeSessions(): Array<ISession> {

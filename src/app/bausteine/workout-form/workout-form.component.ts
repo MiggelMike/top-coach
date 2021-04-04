@@ -21,8 +21,8 @@ export class WorkoutFormComponent extends ComponentCanDeactivate implements OnIn
         super();
     }
 
-    canDeactivate($event: Event):Boolean {
-        if (this.programm.hasChanged(this.cmpProgramm) === false) 
+    canDeactivate($event: Event): Boolean {
+        if((this.programm.hasChanged) && (this.programm.hasChanged(this.cmpProgramm) === false)) 
             return true;
         return false;
     }
@@ -30,7 +30,8 @@ export class WorkoutFormComponent extends ComponentCanDeactivate implements OnIn
 
     ngOnInit() {
         this.programm = this.fGlobalService.EditWorkout;
-        this.cmpProgramm = this.fGlobalService.EditWorkout.Copy();
+        if(this.fGlobalService.EditWorkout)
+            this.cmpProgramm = this.fGlobalService.EditWorkout.Copy();
     }
 }
 

@@ -27,12 +27,6 @@ export class GzclpProgramm extends TrainingsProgramm {
         return new GzclpProgramm(this.ProgrammKategorie, this.pDbModule);
     }
 
-    public ErstelleSessionsAusVorlage(): ITrainingsProgramm {
-        const mResult = this.Copy();
-        mResult.ProgrammKategorie = ProgrammKategorie.Konkret;
-        return mResult;
-    }
-
     public DeserializeProgramm(aJsonData: Object): ITrainingsProgramm {
         const s = deserialize(GzclpProgramm, aJsonData);
         return s;

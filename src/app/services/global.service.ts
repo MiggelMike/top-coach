@@ -94,7 +94,7 @@ export class GlobalService {
     }
 
     SetzeAktuellesProgramm(aAktuellesProgramm: ITrainingsProgramm): void {
-        this.fDbModule.AktuellesProgramm = aAktuellesProgramm.ErstelleSessionsAusVorlage();
+        this.fDbModule.AktuellesProgramm = aAktuellesProgramm.ErstelleSessionsAusVorlage(ProgrammKategorie.AktuellesProgramm);
         this.SpeicherDaten(SpeicherOrtTyp.Lokal);
     }
 
@@ -102,6 +102,7 @@ export class GlobalService {
         const mResult = new Observable<ISession[]>(
             observer => {
                 this.AnstehendeSessionObserver = observer;
+                this.fDbModule.LadeProgramme(ProgrammKategorie.AktuellesProgramm)
                 if ((this.fDbModule.AktuellesProgramm !== null) &&
                     (this.fDbModule.AktuellesProgramm !== undefined) &&
                     (this.fDbModule.AktuellesProgramm.SessionListe !== undefined)) {
@@ -184,7 +185,8 @@ export class GlobalService {
 
     private SpeicherDatenLokal() {
         if (this.fDbModule.AktuellesProgramm !== undefined) {
-            // Aktuelles Trainingsprogramm 
+            this.fDbModule.ProgrammSpeichern(this.fDbModule.AktuellesProgramm);
+            // Aktuelles Trainingsprogramm
             // let mStoreData = serialize(this.fDB.AktuellesProgramm);
             // localStorage.setItem(this.cAktuellesTrainingsProgramm, JSON.stringify(mStoreData));
             // // TrainingsHistorie 
