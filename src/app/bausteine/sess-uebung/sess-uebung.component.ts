@@ -1,5 +1,4 @@
 import { Uebung, IUebung } from 'src/Business/Uebung/Uebung';
-import { of } from 'rxjs';
 import { ISession, Session } from './../../../Business/Session/Session';
 import { Component, OnInit, Input } from "@angular/core";
 import { DialogeService } from "./../../services/dialoge.service";
@@ -61,34 +60,7 @@ export class SessUebungComponent implements OnInit {
     }
 
      
-    public DeleteExercise() {
-        const mDialogData = new DialogData();
-        mDialogData.textZeilen.push(`Delete exercise #${this.rowNum + 1} "${this.sessUebung.Name}" ?`);
-        mDialogData.OkFn = ():void => {
-            // Index der SessUeb in Liste suchen.
-            const index: number = this.session.UebungsListe.indexOf( this.sessUebung );
 
-            // SessUeb-Index gefunden?
-            if (index !== -1) {
-                // SessUeb-Index gefunden
-                // SessUeb aus Liste entfernen.
-                this.session.UebungsListe.splice(index, 1);
-            }
-
-            if (this.fGlobalService.Comp03PanelUebungObserver != null) {
-                this.panUebung1.expanded = false;
-                of(this.panUebung1).subscribe(
-                    this.fGlobalService.Comp03PanelUebungObserver
-                );
-            }
-        };   
-
-        this.fDialogService.JaNein(mDialogData);
-    }
-
-    public CopyExcercise() {
-        this.fGlobalService.SessUebungKopie = this.sessUebung.Copy();
-    }
 
 
     public AddSet() {

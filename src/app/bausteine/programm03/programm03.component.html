@@ -4,7 +4,6 @@
             <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
         </ng-container>
         <ng-container *ngFor="let SessUeb of session.UebungsListe, index as i; let isOdd=odd">
-            <ng-container [sessionUebung] = "SessUeb"></ng-container> 
             <mat-accordion #accUebung='matAccordion' multi="true">
                 <mat-expansion-panel #panUebung='matExpansionPanel' [expanded]="true" (closed)="accCheckUebungPanels()"
                     (opened)="accCheckUebungPanels()">
@@ -31,6 +30,17 @@
                                     [satzListe]="SessUeb.AbwaermSatzListe" [satz]="satz" [session]="session" [sessUebung]="SessUeb" [bearbeitbar] = "bearbeitbar">
                                 </app-sess-uebung>
                             </ng-container>
+
+                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
+                                <div class="center-item" layout-align="center center">
+                                    <a [ngClass]="['link-button-font']" mat-flat-button (click)="CopyExcercise(SessUeb)">Copy exercise</a>
+                                </div>
+        
+                                <div class="center-item" layout-align="center center">
+                                    <a [ngClass]="['link-button-font']" mat-flat-button (click)="DeleteExercise(i+1,SessUeb)">Delete Exercise</a>
+                                </div>
+                            </div>
+        
                         </div>
                     </div>
                 </mat-expansion-panel>

@@ -1,5 +1,7 @@
 import { Satz, ISatz, SatzTyp, LiftTyp, SatzPausen, SatzStatus } from './../Satz/Satz';
 
+var cloneDeep = require('lodash.clonedeep');
+
 export enum UebungsTyp {
     Undefined = "Undefined",
     Custom = "Custom",
@@ -100,14 +102,7 @@ export class Uebung implements IUebung {
     }
 
     public Copy(): Uebung {
-        const mResult: Uebung = Object.assign({}, this);
-        mResult.SatzListe = new Array<Satz>();
-        if (this.SatzListe) {
-            for (let index = 0; index < this.SatzListe.length; index++) {
-                mResult.SatzListe.push(this.SatzListe[index].Copy());
-            }
-        }
-        return mResult;
+        return cloneDeep(this); 
     }
 
     public static ErzeugeGzclpKategorieen01(): Array<UebungsKategorie01> {

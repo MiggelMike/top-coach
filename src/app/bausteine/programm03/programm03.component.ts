@@ -6,6 +6,10 @@ import { MatExpansionPanel } from '@angular/material/expansion';
 import { ISession } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";
+import { DialogeService } from "./../../services/dialoge.service";
+import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
+import { of } from 'rxjs';
+
 
 @Component({
     selector: "app-programm03",
@@ -16,9 +20,9 @@ export class Programm03Component implements OnInit {
     @Input() programm: ITrainingsProgramm;
     @Input() session: ISession;
     @Input() satz: ISatz;
-    @Input() sessionUebung: Uebung;
     @Input() rowNum: number = 0;
     @Input() bearbeitbar: Boolean;
+    @Input() panUebung1: MatExpansionPanel;
     @ViewChildren("accUebung") accUebung: QueryList<MatAccordion>;
     @ViewChildren("panUebung") panUebung: QueryList<MatExpansionPanel>;
 
@@ -37,7 +41,8 @@ export class Programm03Component implements OnInit {
     ngOnInit() {}
 
     constructor(
-        private fGlobalService: GlobalService
+        private fGlobalService: GlobalService,
+        private fDialogService: DialogeService,
     ) {
         if (this.fGlobalService.Comp03PanelUebungObserver === null)
             this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;
@@ -61,7 +66,7 @@ export class Programm03Component implements OnInit {
     }
 
     accCheckUebungPanels() {
-        if (!this.panUebung) return;
+        if (!this.panUebung1) return;
 
         let mAllClosed = true;
 
@@ -82,5 +87,34 @@ export class Programm03Component implements OnInit {
             this.isExpanded = true;
             this.ToggleButtonText = "Close all excercises";
         }
+    }
+
+    public DeleteExercise(aRowNum: number, aUebung: Uebung) {
+        const mDialogData = new DialogData();
+        mDialogData.textZeilen.push(`Delete exercise #${aRowNum} "${aUebung.Name}" ?`);
+        mDialogData.OkFn = ():void => {
+            // Index der SessUeb in Liste suchen.
+            const index: number = this.session.UebungsListe.indexOf( aUebung );
+
+            // SessUeb-Index gefunden?
+            if (index !== -1) {
+                // SessUeb-Index gefunden
+                // SessUeb aus Liste entfernen.
+                this.session.UebungsListe.splice(index, 1);
+            }
+
+            if (this.fGlobalService.Comp03PanelUebungObserver != null) {
+                this.panUebung1.expanded = false;
+                of(this.panUebung1).subscribe(
+                    this.fGlobalService.Comp03PanelUebungObserver
+                );
+            }
+        };   
+
+        this.fDialogService.JaNein(mDialogData);
+    }
+
+    public CopyExcercise(aUebung: Uebung) {
+        this.fGlobalService.SessUebungKopie = aUebung.Copy();
     }
 }
