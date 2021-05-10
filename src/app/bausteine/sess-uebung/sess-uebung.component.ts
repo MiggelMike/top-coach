@@ -60,6 +60,7 @@ export class SessUebungComponent implements OnInit {
         this.sessUebung.SatzListe.push(mSatz);
     }
 
+     
     public DeleteExercise() {
         const mDialogData = new DialogData();
         mDialogData.textZeilen.push(`Delete exercise #${this.rowNum + 1} "${this.sessUebung.Name}" ?`);
@@ -88,6 +89,7 @@ export class SessUebungComponent implements OnInit {
     public CopyExcercise() {
         this.fGlobalService.SessUebungKopie = this.sessUebung.Copy();
     }
+
 
     public AddSet() {
         let mSatz: Satz;

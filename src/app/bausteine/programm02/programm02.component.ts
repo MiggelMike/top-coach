@@ -23,6 +23,7 @@ export class Programm02Component implements OnInit {
     @Input() SessionListe: Array<Session> = [];
     @Input() ShowButtons: Boolean = false;
     @Input() bearbeitbar: Boolean = false;
+    @Input() session: Session = null;
     @ViewChildren("accSession") accSession: QueryList<MatAccordion>;
     @ViewChildren("panSession") panUebung: QueryList<MatExpansionPanel>;
 
@@ -157,6 +158,7 @@ export class Programm02Component implements OnInit {
         this.SessionListe.push(mSession);        
 
     }
+  
 
     public SaveChanges() {
         this.fDbModule.ProgrammSpeichern(this.programm);
