@@ -1,30 +1,37 @@
 import { DexieSvcService } from './../services/dexie-svc.service';
-import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
-import { ISession } from './../../Business/Session/Session';
+import { ITrainingsProgramm, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
+import { ISession, SessionStatus } from './../../Business/Session/Session';
 import { GlobalService } from './../services/global.service';
 import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
 import { Observable } from 'rxjs';
-import { DexieSvcService } from './../../app/services/dexie-svc.service';
 
 
 
 @Component({
-    selector: 'app-anstehende-sessions',
-    templateUrl: './anstehende-sessions.component.html',
-    styleUrls: ['./anstehende-sessions.component.scss'],
+    selector: "app-anstehende-sessions",
+    templateUrl: "./anstehende-sessions.component.html",
+    styleUrls: ["./anstehende-sessions.component.scss"],
 })
-    
 export class AnstehendeSessionsComponent implements OnInit {
     public isCollapsed = false;
-    public get AktuellesProgramm(): ITrainingsProgramm{
-        return this.fDexiSvcService.AktuellesProgramm;
+    public get AktuellesProgramm(): ITrainingsProgramm {
+        return this.fDbModule.AktuellesProgramm;
     }
-    
+
     public NextSessions: Array<ISession> = [];
     public AnstehendeSessionObserver: Observable<ISession[]>;
- 
-    constructor(private globalService: GlobalService, private fDexiSvcService: DexieSvcService ) {}
+
+    constructor(
+        private globalService: GlobalService,
+        private fDbModule: DexieSvcService
+    ) {
+        this.AnstehendeSessionObserver = this.globalService.LadeAnstehendeSession();
+        this.LadeSessions();
+    }
+
+    ngOnInit() {
+    }
 
     beforePanelOpened(aSess: Session) {
         aSess.Expanded = true;
@@ -34,28 +41,17 @@ export class AnstehendeSessionsComponent implements OnInit {
         aSess.Expanded = false;
     }
 
-    ngOnInit() {
-        this.AnstehendeSessionObserver = this.globalService.LadeAnstehendeSession();
-        this.LadeSessions();
-        // this.AktuellesProgramm = this.globalService.fDbModule.AktuellesProgramm;
-        // this.AnstehendeSessionObserver.subscribe()
-        // if (this.AktuellesProgramm !== undefined)
-        //     this.AktuellesProgramm.SessionListe = this.LadeSessions();
-    }
-
-    public LadeSessions(): Array<ISession> {
-        this.AnstehendeSessionObserver.subscribe((sessions: Array<Session>) => {
-            if (this.AktuellesProgramm === undefined)
-                return [];
-            if (sessions === null)
-                this.AktuellesProgramm.SessionListe = [];
-            else {
-                this.AktuellesProgramm.SessionListe = sessions;
+    public LadeSessions():void {
+        this.AnstehendeSessionObserver.subscribe(
+            (sessions: Array<ISession>) => {
+                this.fDbModule
+                    .LadeProgramme(ProgrammKategorie.AktuellesProgramm)
+                    .then(() => {
+                        sessions.forEach(
+                            (s) => (s.Kategorie01 =  SessionStatus.NurLesen)
+                        );
+                    });
             }
-        });
-        if (this.AktuellesProgramm === undefined)
-            return [];
-        return this.AktuellesProgramm.SessionListe;
+        );
     }
-
 }

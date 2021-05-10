@@ -1,7 +1,7 @@
-import { Uebung } from 'src/Business/Uebung/Uebung';
+import { Uebung, IUebung } from 'src/Business/Uebung/Uebung';
 import { of } from 'rxjs';
-import { ISession } from './../../../Business/Session/Session';
-import { Component, OnInit, Input, ViewChild } from "@angular/core";
+import { ISession, Session } from './../../../Business/Session/Session';
+import { Component, OnInit, Input } from "@angular/core";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
@@ -24,6 +24,7 @@ export class SessUebungComponent implements OnInit {
     @Input() satzListe: Array<ISatz>;
     @Input() rowNum: number = 0;
     @Input() panUebung1: MatExpansionPanel;
+    @Input() bearbeitbar: Boolean;
 
     constructor(
         private fDialogService: DialogeService,

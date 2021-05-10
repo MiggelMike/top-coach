@@ -18,31 +18,33 @@
                     <div [id]="'collapseSession' + i" aria-labelledby="headingOne" attr.data-parent="#accordionSession">
                         <div class="card-body">
                             <!-- session an Sub-Komponente durchreichen -->
-                            <app-programm03 [session]="sess"></app-programm03>
+                            <app-programm03 [session]="sess" [bearbeitbar] = "bearbeitbar"></app-programm03>
                         </div>
                     </div>
 
-                    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
-                        <div class="center-item" layout-align="center center">
-                            <a [ngClass]="'link-button-font'" mat-flat-button (click)="CopySession(sess)">Copy
-                                Session</a>
-                        </div>
-
-                        <div class="center-item" layout-align="center center">
-                            <a [ngClass]="'link-button-font'" mat-flat-button (click)="DeleteSession(sess,i)">Delete Session</a>
-                        </div>
-                    </div>
-
-                    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
-                        <div class="center-item" layout-align="center center">
-                            <a [ngClass]="'link-button-font'" mat-flat-button (click)="AddExercise(sess)">Add exercise</a>
+                    <ng-container *ngIf="ShowButtons">
+                        <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
+                            <div class="center-item" layout-align="center center">
+                                <a [ngClass]="'link-button-font'" mat-flat-button (click)="CopySession(sess)">Copy
+                                    Session</a>
+                            </div>
+                    
+                            <div class="center-item" layout-align="center center">
+                                <a [ngClass]="'link-button-font'" mat-flat-button (click)="DeleteSession(sess,i)">Delete Session</a>
+                            </div>
                         </div>
                     
-                        <div class="center-item" layout-align="center center">
-                            <a [ngClass]="'link-button-font'" mat-flat-button (click)="PasteExcercise(sess)">Paste
-                                Exercise</a>
+                        <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
+                            <div class="center-item" layout-align="center center">
+                                <a [ngClass]="'link-button-font'" mat-flat-button (click)="AddExercise(sess)">Add exercise</a>
+                            </div>
+                    
+                            <div class="center-item" layout-align="center center">
+                                <a [ngClass]="'link-button-font'" mat-flat-button (click)="PasteExcercise(sess)">Paste
+                                    Exercise</a>
+                            </div>
                         </div>
-                    </div>
+                    </ng-container>
                 </mat-expansion-panel>
             </mat-accordion>
         </ng-container>
