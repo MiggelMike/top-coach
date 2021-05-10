@@ -29,6 +29,9 @@ export interface IUebung {
     Kategorie02: UebungsKategorie02;
     SessionID: number;
     SatzListe: Array<Satz>;
+    AufwaermSatzListe: Array<Satz>;
+    ArbeitsSatzListe: Array<Satz>;
+    AbwaermSatzListe: Array<Satz>;
     Selected: boolean;
     Copy(): Uebung;
     hasChanged(aCmpUebung: IUebung): Boolean;

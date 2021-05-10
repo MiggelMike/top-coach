@@ -1,5 +1,4 @@
-import { DexieSvcService } from './../../services/dexie-svc.service';
-import { Uebung } from './../../../Business/Uebung/Uebung';
+import { Uebung, IUebung } from './../../../Business/Uebung/Uebung';
 import { GlobalService } from 'src/app/services/global.service';
 import { ISatz } from './../../../Business/Satz/Satz';
 import { MatAccordion } from '@angular/material';
@@ -19,6 +18,7 @@ export class Programm03Component implements OnInit {
     @Input() satz: ISatz;
     @Input() sessionUebung: Uebung;
     @Input() rowNum: number = 0;
+    @Input() bearbeitbar: Boolean;
     @ViewChildren("accUebung") accUebung: QueryList<MatAccordion>;
     @ViewChildren("panUebung") panUebung: QueryList<MatExpansionPanel>;
 
@@ -28,14 +28,16 @@ export class Programm03Component implements OnInit {
         next: (x: MatExpansionPanel) => {
             this.accCheckUebungPanels();
         },
-        error: (err) => console.error("UebungPanelsObserver got an error: " + err),
-        complete: () => console.log("UebungPanelsObserver got a complete notification"),
+        error: (err) =>
+            console.error("UebungPanelsObserver got an error: " + err),
+        complete: () =>
+            console.log("UebungPanelsObserver got a complete notification"),
     };
 
     ngOnInit() {}
 
     constructor(
-        private fGlobalService: GlobalService,
+        private fGlobalService: GlobalService
     ) {
         if (this.fGlobalService.Comp03PanelUebungObserver === null)
             this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;
@@ -57,7 +59,7 @@ export class Programm03Component implements OnInit {
             this.ToggleButtonText = "Close all excercises";
         }
     }
-    
+
     accCheckUebungPanels() {
         if (!this.panUebung) return;
 

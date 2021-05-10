@@ -1,37 +1,7 @@
 <div class="container">
     <h4>Upcoming Sessions</h4>
-    <div *ngIf="AktuellesProgramm">
+    <ng-container  *ngIf="AktuellesProgramm">
         <h6>{{AktuellesProgramm.Name}}</h6>
-    </div>
-    <div *ngIf="AktuellesProgramm">
-        <div *ngFor="let sess of AktuellesProgramm.SessionListe, index as i">
-            <mat-accordion  hideToggle>
-                <mat-expansion-panel  [expanded]="sess.Expanded"
-                 (opened)="beforePanelOpened(sess)" 
-                 (closed)="beforePanelClosed(sess)" 
-                 >
-                    <mat-expansion-panel-header>
-                        <h2 class="mb-0">
-                            <button class="btn btn-link" type="button" data-toggle="expand"
-                                [attr.data-target]="'#collapseSession' + i" aria-expanded="true"
-                                [attr.aria-controls]="'collapseSession' + i">
-                                {{sess.Name}}
-                            </button>
-                        </h2>
-                        <span>{{sess.name}}</span>
-                    </mat-expansion-panel-header>
-                    
-                    <mat-accordion>
-                        <!-- <div *ngFor="let uebung_sess of sess.UebungsListe, index as u"> -->
-                            <mat-expansion-panel  [expanded]="false">
-                                <mat-expansion-panel-header><h3>Uebung</h3>
-                                    
-                                </mat-expansion-panel-header>
-                            </mat-expansion-panel>
-                        <!-- </div> -->
-                    </mat-accordion>
-                </mat-expansion-panel>
-            </mat-accordion>
-        </div>
-    </div>
+        <app-programm02 [ShowButtons]="false" [programm]="AktuellesProgramm" [SessionListe]="AktuellesProgramm.SessionListe" [bearbeitbar]="false"></app-programm02>
+    </ng-container>
 </div>

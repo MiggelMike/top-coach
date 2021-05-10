@@ -22,6 +22,7 @@ export class Programm02Component implements OnInit {
     @Input() programm: ITrainingsProgramm = null;
     @Input() SessionListe: Array<Session> = [];
     @Input() ShowButtons: Boolean = false;
+    @Input() bearbeitbar: Boolean = false;
     @ViewChildren("accSession") accSession: QueryList<MatAccordion>;
     @ViewChildren("panSession") panUebung: QueryList<MatExpansionPanel>;
 
