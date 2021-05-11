@@ -4,14 +4,14 @@
             <div class="center-item align-right" fxLayout="column" fxFlex="25px">
                 #
             </div>
-            <div fxLayout="column" fxFlex="60px">
+            <div class="center-item" fxLayout="column" fxFlex="45px">
                 Weight
             </div>
-            <div fxLayout="column" fxFlex="60px">
-                Reps
+            <div class="center-item" fxLayout="column" fxFlex="30px">
+                RP.
             </div>
-            <div fxLayout="column" fxFlex="45px">
-                AMRAP
+            <div class="center-item" fxLayout="column" fxFlex="35px">
+                AR.
             </div>
         </ng-container>
     </div>
@@ -21,17 +21,17 @@
             <mat-label>{{rowNum+1}}</mat-label>
         </div>
 
-        <mat-form-field class="align-right" fxFlex="60px">
+        <mat-form-field class="align-right" fxFlex="45px">
             <input matInput [textMask]="{mask: floatMask, guide: false }"
                 [ngModel]="satz.GewichtVorgabe | number: '1.1'" (blur)="SetWeight($event.target.value)"
                 type="text">
         </mat-form-field>
 
-        <mat-form-field class="align-right" fxFlex="60px">
+        <mat-form-field class="align-right" fxFlex="30px">
             <input matInput [textMask]="{mask: repMask, guide: false}" [ngModel]="satz.WdhVorgabe" (blur)="SetWdhVorgabe($event.target.value)" type="text">
         </mat-form-field>
 
-        <div class="center-item" layout-align="center center" fxFlex="45px">
+        <div class="center-item" layout-align="center center" fxFlex="35px">
             <mat-checkbox [(ngModel)]="satz.AMRAP"></mat-checkbox>
         </div>
 

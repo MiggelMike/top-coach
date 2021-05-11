@@ -1,4 +1,5 @@
 import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
+var cloneDeep = require('lodash.clonedeep');
 
 export enum SessionStatus {
     NurLesen,
@@ -48,15 +49,16 @@ export class Session implements ISession {
     }
 
     public Copy(): Session {
-        const mResult: Session = Object.assign({}, this); 
-        const mUebungsListe: Array<Uebung> = [];
-        if (this.UebungsListe) {
-            for (let index = 0; index < this.UebungsListe.length; index++) {
-                const mUebung = this.UebungsListe[index];
-                mUebungsListe.push(mUebung.Copy());
-            }
-        }
-        mResult.UebungsListe = mUebungsListe;
+        
+        const mResult: Session = cloneDeep(this); 
+        // const mUebungsListe: Array<Uebung> = [];
+        // if (this.UebungsListe) {
+        //     for (let index = 0; index < this.UebungsListe.length; index++) {
+        //         const mUebung = this.UebungsListe[index];
+        //         mUebungsListe.push(mUebung.Copy());
+        //     }
+        // }
+        // mResult.UebungsListe = mUebungsListe;
         return mResult;
     }
 

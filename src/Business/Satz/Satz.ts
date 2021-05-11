@@ -1,5 +1,7 @@
 import { ISession } from 'src/Business/Session/Session';
 import { IUebung } from '../Uebung/Uebung';
+var cloneDeep = require('lodash.clonedeep');
+
 
 export enum SatzTyp {
     Aufwaermen = 'Aufwaermen',
@@ -134,7 +136,7 @@ export class Satz implements ISatz {
     }
 
     public Copy(): Satz {
-        const mResult: Satz = Object.assign({}, this);
+        return cloneDeep(this); 
         // const mResult = new Satz();
         // mResult.LiftTyp = this.LiftTyp;
         // mResult.AMRAP = this.AMRAP;
@@ -150,7 +152,6 @@ export class Satz implements ISatz {
         // mResult.GewichtVorgabe = this.GewichtVorgabe;
         // mResult.GewichtAusgefuehrt = this.GewichtAusgefuehrt;
         // mResult.AMRAP = true;
-        return mResult;
     }
 
     public static NeuerSatz(

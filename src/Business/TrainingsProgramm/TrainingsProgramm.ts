@@ -1,5 +1,6 @@
 import { ISession } from 'src/Business/Session/Session';
 import { DexieSvcService } from './../../app/services/dexie-svc.service';
+var cloneDeep = require('lodash.clonedeep');
 
 export enum ProgrammTyp {
     Custom = "Custom",
@@ -68,13 +69,13 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
     }
 
     public Copy(): ITrainingsProgramm {
-        const mResult: ITrainingsProgramm = Object.assign({}, this);
-        mResult.SessionListe = new Array<ISession>();
-        if (this.SessionListe) {
-            for (let index = 0; index < this.SessionListe.length; index++) {
-                mResult.SessionListe.push(this.SessionListe[index].Copy());
-            }
-        }
+        const mResult: ITrainingsProgramm = cloneDeep(this);
+        // mResult.SessionListe = new Array<ISession>();
+        // if (this.SessionListe) {
+        //     for (let index = 0; index < this.SessionListe.length; index++) {
+        //         mResult.SessionListe.push(this.SessionListe[index].Copy());
+        //     }
+        // }
         return mResult;
     }
 

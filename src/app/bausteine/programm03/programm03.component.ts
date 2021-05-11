@@ -1,3 +1,4 @@
+import { Session } from 'src/Business/Session/Session';
 import { Uebung, IUebung } from './../../../Business/Uebung/Uebung';
 import { GlobalService } from 'src/app/services/global.service';
 import { ISatz } from './../../../Business/Satz/Satz';
@@ -88,6 +89,7 @@ export class Programm03Component implements OnInit {
             this.ToggleButtonText = "Close all excercises";
         }
     }
+
 
     public DeleteExercise(aRowNum: number, aUebung: Uebung) {
         const mDialogData = new DialogData();

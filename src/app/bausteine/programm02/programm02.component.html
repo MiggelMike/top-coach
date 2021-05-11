@@ -15,12 +15,19 @@
                                 <ng-template #NurLesenBlock>
                                     <input matInput [(ngModel)]="sess.Name" type="text" maxlength="40" (click)="$event.stopPropagation()" readonly>
                                 </ng-template>
-                            
+                        
                                 <!-- Bearbeitbar -->
                                 <ng-template #BearbeitbarBlock>
                                     <input matInput [(ngModel)]="sess.Name" type="text" maxlength="40" (click)="$event.stopPropagation()">
                                 </ng-template>
                             </mat-form-field>
+                                                
+                            <ng-container *ngIf='StartButtonVisible'>
+                                <div class="center-item" layout-align="center center">
+                                    <a [ngClass]="['link-button-font', 'HG-Transparent']" mat-flat-button
+                                        (click)="startSession($event,sess)">Start</a>
+                                </div>
+                            </ng-container>
                         </div>
                     </mat-expansion-panel-header>
 

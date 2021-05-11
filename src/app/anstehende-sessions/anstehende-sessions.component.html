@@ -2,6 +2,10 @@
     <h4>Upcoming Sessions</h4>
     <ng-container  *ngIf="AktuellesProgramm">
         <h6>{{AktuellesProgramm.Name}}</h6>
-        <app-programm02 [ShowButtons]="false" [programm]="AktuellesProgramm" [SessionListe]="AktuellesProgramm.SessionListe" [bearbeitbar]="false"></app-programm02>
+        <app-programm02 [ShowButtons]="false" 
+                        [programm]="AktuellesProgramm" 
+                        [SessionListe]="AktuellesProgramm.SessionListe" 
+                        [bearbeitbar]="false"
+                        [StartButtonVisible] ="true"></app-programm02>
     </ng-container>
 </div>

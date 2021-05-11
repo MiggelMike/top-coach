@@ -24,6 +24,7 @@ export class Programm02Component implements OnInit {
     @Input() ShowButtons: Boolean = false;
     @Input() bearbeitbar: Boolean = false;
     @Input() session: Session = null;
+    @Input() StartButtonVisible: Boolean = false;
     @ViewChildren("accSession") accSession: QueryList<MatAccordion>;
     @ViewChildren("panSession") panUebung: QueryList<MatExpansionPanel>;
 
@@ -158,6 +159,12 @@ export class Programm02Component implements OnInit {
         this.SessionListe.push(mSession);        
 
     }
+
+    public startSession(aEvent: Event, aSession : Session) { 
+        aEvent.stopPropagation();
+    }
+
+
   
 
     public SaveChanges() {
