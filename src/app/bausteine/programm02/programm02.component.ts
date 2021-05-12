@@ -25,11 +25,23 @@ export class Programm02Component implements OnInit {
     @Input() bearbeitbar: Boolean = false;
     @Input() session: Session = null;
     @Input() StartButtonVisible: Boolean = false;
+    @Input() SessionPanelsExpanded: Boolean = false;
     @ViewChildren("accSession") accSession: QueryList<MatAccordion>;
     @ViewChildren("panSession") panUebung: QueryList<MatExpansionPanel>;
 
     private isExpanded: Boolean = true;
-    public ToggleButtonText: string = "Close all sessions";
+    public ToggleButtonText: string;
+    public StartButtonText(aSess: Session): string {
+        if (aSess.Kategorie02 === undefined)
+            aSess.Kategorie02 = SessionStatus.Wartet; 
+        
+        switch (aSess.Kategorie02) {
+            case SessionStatus.Wartet: return "Start"; 
+            case SessionStatus.Laueft:
+            case SessionStatus.Pause: return "Go ahead";
+            default: return "?";
+        }
+    }
 
     constructor(
         private fDialogService: DialogeService,
@@ -39,51 +51,57 @@ export class Programm02Component implements OnInit {
     ) {}
 
     ngOnInit() {}
-    
+
     public CopySession(aSession: Session) {
         this.fGlobalService.SessionKopie = aSession.Copy();
     }
 
-    public DeleteSession(aSession : Session, aRowNum: number) {
+    public DeleteSession(aSession: Session, aRowNum: number) {
         const mDialogData = new DialogData();
-        mDialogData.textZeilen.push(`Delete session #${aRowNum + 1} "${aSession.Name}" ?`);
-        mDialogData.OkFn = ():void => {
+        mDialogData.textZeilen.push(
+            `Delete session #${aRowNum + 1} "${aSession.Name}" ?`
+        );
+        mDialogData.OkFn = (): void => {
             const index: number = this.SessionListe.indexOf(aSession);
             if (index !== -1) {
                 this.SessionListe.splice(index, 1);
             }
-            
+
             if (this.fGlobalService.Comp03PanelUebungObserver != null) {
                 //this.panUebung.expanded = false;
                 of(this.panUebung).subscribe(
                     this.fGlobalService.Comp03PanelUebungObserver
                 );
             }
-        };   
+        };
 
-        this.fDialogService.JaNein(mDialogData);        
+        this.fDialogService.JaNein(mDialogData);
     }
 
     // Wird an "AddExercise" als Parameter uebergeben
     private SelectUebungDelegate(aUebungWaehlenData: UebungWaehlenData) {
-        aUebungWaehlenData.fUebungsListe.forEach(
-            (mUebung => {
-                if (mUebung.Selected) {
-                    aUebungWaehlenData.fSession.addUebung(Uebung.StaticKopiere(mUebung, UebungsKategorie02.Session));
-                }
-            })
-        );
+        aUebungWaehlenData.fUebungsListe.forEach((mUebung) => {
+            if (mUebung.Selected) {
+                aUebungWaehlenData.fSession.addUebung(
+                    Uebung.StaticKopiere(mUebung, UebungsKategorie02.Session)
+                );
+            }
+        });
         aUebungWaehlenData.fMatDialog.close();
-    };
+    }
 
     public AddExercise(aSession: Session) {
         if (this.fDbModule.UebungsDaten.length === 0)
             this.fDbModule.LadeStammUebungen();
         else
-            this.fUebungService.UebungWaehlen(this.fDbModule.UebungsDaten, aSession, this.SelectUebungDelegate);
+            this.fUebungService.UebungWaehlen(
+                this.fDbModule.UebungsDaten,
+                aSession,
+                this.SelectUebungDelegate
+            );
     }
 
-    public PasteExcercise(aSession : Session) {
+    public PasteExcercise(aSession: Session) {
         if (this.fGlobalService.SessUebungKopie === null) {
             const mDialoData = new DialogData();
             mDialoData.textZeilen.push("No data to paste!");
@@ -97,8 +115,7 @@ export class Programm02Component implements OnInit {
     }
 
     public toggleSessions(): void {
-        if (!this.accSession)
-            return;
+        if (!this.accSession) return;
 
         if (this.isExpanded) {
             this.accSession.forEach((acc) => acc.closeAll());
@@ -112,9 +129,8 @@ export class Programm02Component implements OnInit {
     }
 
     public accCheckSessionPanels() {
-        if (!this.panUebung)
-            return;
-        
+        if (!this.panUebung) return;
+
         let mAllClosed = true;
 
         const mPanUebungListe = this.panUebung.toArray();
@@ -143,7 +159,7 @@ export class Programm02Component implements OnInit {
         mSession.SessionNr = this.SessionListe.length + 1;
         mSession.Kategorie01 = SessionStatus.Bearbeitbar;
         //mSession.FK_Programm = this.programm.ID;
-        this.SessionListe.push(mSession);        
+        this.SessionListe.push(mSession);
     }
 
     public PasteSession() {
@@ -156,16 +172,20 @@ export class Programm02Component implements OnInit {
 
         const mSession: Session = this.fGlobalService.SessionKopie.Copy();
         //mSession.FK_Programm = this.programmID;
-        this.SessionListe.push(mSession);        
-
+        this.SessionListe.push(mSession);
     }
 
-    public startSession(aEvent: Event, aSession : Session) { 
+    public startSession(aEvent: Event, aSession: Session) {
         aEvent.stopPropagation();
+        
+        if (aSession.Kategorie02 === SessionStatus.Fertig) return;
+
+        switch (aSession.Kategorie02) {
+            case SessionStatus.Wartet:
+            case SessionStatus.Pause: aSession.Kategorie02 = SessionStatus.Laueft; break;
+            case SessionStatus.Laueft: aSession.Kategorie02 = SessionStatus.Pause; break;
+        }
     }
-
-
-  
 
     public SaveChanges() {
         this.fDbModule.ProgrammSpeichern(this.programm);
@@ -173,5 +193,12 @@ export class Programm02Component implements OnInit {
 
     public CancelChanges() {
         alert("CancelChanges");
+    }
+
+    private CheckStatus() {}
+
+    ngDoCheck() {
+        this.CheckStatus();
+        this.accCheckSessionPanels();
     }
 }

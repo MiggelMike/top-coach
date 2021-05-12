@@ -1,6 +1,6 @@
 import { ISatz, Satz } from './../../Business/Satz/Satz';
 import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
-import { ISession, Session } from './../../Business/Session/Session';
+import { ISession, Session, SessionStatus } from './../../Business/Session/Session';
 import { ITrainingsProgramm, TrainingsProgramm, ProgrammTyp, ProgrammKategorie  } from './../../Business/TrainingsProgramm/TrainingsProgramm';
 import { AppData, IAppData } from './../../Business/Coach/Coach';
 import { Dexie, PromiseExtended } from 'dexie';
@@ -237,6 +237,10 @@ export class DexieSvcService extends Dexie {
         for (let j = 0; j < aProgramm.SessionListe.length; j++) {
             // Session
             const mSession = aProgramm.SessionListe[j];
+
+            if (mSession.Kategorie02 = undefined)
+                mSession.Kategorie02 = SessionStatus.Wartet;
+            
             mSession.UebungsListe = await this.LadeSessionUebungen(mSession);
             for (let z = 0; z < mSession.UebungsListe.length; z++) {
                 // Uebung

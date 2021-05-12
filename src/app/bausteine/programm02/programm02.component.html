@@ -3,8 +3,7 @@
         <a [ngClass]="['link-button-font']" mat-flat-button (click)="toggleSessions()">{{ToggleButtonText}}</a>
         <ng-container *ngFor="let sess of SessionListe, index as i">
             <mat-accordion #accSession="matAccordion" multi="true">
-                <mat-expansion-panel #panSession='matExpansionPanel' [expanded]="true"  class="HG-01"
-                    (closed)="accCheckSessionPanels()" (opened)="accCheckSessionPanels()">
+                <mat-expansion-panel #panSession='matExpansionPanel' [expanded]="SessionPanelsExpanded"  class="HG-01">
                     <mat-expansion-panel-header>
                         <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">
                             <!-- <h6 class="mb-0">#{{i+1}} {{sess.Name}}</h6> -->
@@ -25,7 +24,7 @@
                             <ng-container *ngIf='StartButtonVisible'>
                                 <div class="center-item" layout-align="center center">
                                     <a [ngClass]="['link-button-font', 'HG-Transparent']" mat-flat-button
-                                        (click)="startSession($event,sess)">Start</a>
+                                        (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
                                 </div>
                             </ng-container>
                         </div>

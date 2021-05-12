@@ -69,14 +69,13 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
     }
 
     public Copy(): ITrainingsProgramm {
-        const mResult: ITrainingsProgramm = cloneDeep(this);
+        return cloneDeep(this);
         // mResult.SessionListe = new Array<ISession>();
         // if (this.SessionListe) {
         //     for (let index = 0; index < this.SessionListe.length; index++) {
         //         mResult.SessionListe.push(this.SessionListe[index].Copy());
         //     }
         // }
-        return mResult;
     }
 
     public ErstelleSessionsAusVorlage(aProgrammKategorie : ProgrammKategorie): ITrainingsProgramm {

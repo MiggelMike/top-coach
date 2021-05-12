@@ -4,6 +4,10 @@ var cloneDeep = require('lodash.clonedeep');
 export enum SessionStatus {
     NurLesen,
     Bearbeitbar,
+    Wartet,
+    Pause,
+    Laueft,
+    Fertig
 }
 
 export interface ISession {
@@ -15,10 +19,10 @@ export interface ISession {
     DauerInSek: number;
     Expanded: Boolean;
     Kategorie01: SessionStatus;
+    Kategorie02: SessionStatus;
     Bearbeitbar: Boolean;
     UebungsListe: Array<Uebung>;
     Copy(): Session;
-    getKategorie01(): string;
     addUebung(aUebung: Uebung);
     hasChanged(aCmpSession: ISession): Boolean;
 }
@@ -33,33 +37,16 @@ export class Session implements ISession {
     public DauerInSek: number = 0;
     public Expanded: Boolean;
     public Kategorie01: SessionStatus = SessionStatus.Bearbeitbar;
+    public Kategorie02: SessionStatus = SessionStatus.Wartet;
     public Bearbeitbar: Boolean = false;
     public UebungsListe: Array<Uebung> = [];
-
-    public getKategorie01(): string {
-        if (this.Kategorie01 === SessionStatus.Bearbeitbar)
-            return "Bearbeitbar";
-        if (this.Kategorie01 === SessionStatus.NurLesen)
-            return "NurLesen";
-        return "";
-    }
 
     constructor() {
         Object.defineProperty(this, 'UebungsListe', { enumerable: false });
     }
 
     public Copy(): Session {
-        
-        const mResult: Session = cloneDeep(this); 
-        // const mUebungsListe: Array<Uebung> = [];
-        // if (this.UebungsListe) {
-        //     for (let index = 0; index < this.UebungsListe.length; index++) {
-        //         const mUebung = this.UebungsListe[index];
-        //         mUebungsListe.push(mUebung.Copy());
-        //     }
-        // }
-        // mResult.UebungsListe = mUebungsListe;
-        return mResult;
+        return cloneDeep(this); 
     }
 
     public addUebung(aUebung: Uebung) {
