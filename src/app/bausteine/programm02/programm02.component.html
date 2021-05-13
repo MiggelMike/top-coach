@@ -1,5 +1,4 @@
-<ng-container *ngIf="SessionListe">
-    <ng-container *ngIf="(SessionListe.length > 0)">
+<ng-container *ngIf="SessionListe && (SessionListe.length > 0)">
         <a [ngClass]="['link-button-font']" mat-flat-button (click)="toggleSessions()">{{ToggleButtonText}}</a>
         <ng-container *ngFor="let sess of SessionListe, index as i">
             <mat-accordion #accSession="matAccordion" multi="true">
@@ -61,7 +60,6 @@
                     </ng-container>
                 </mat-expansion-panel>
             </mat-accordion>
-        </ng-container>
     </ng-container>
 </ng-container>
 

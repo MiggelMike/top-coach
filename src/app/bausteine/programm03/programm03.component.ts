@@ -67,7 +67,7 @@ export class Programm03Component implements OnInit {
     }
 
     accCheckUebungPanels() {
-        if (!this.panUebung1) return;
+        if (!this.panUebung) return;
 
         let mAllClosed = true;
 
@@ -118,5 +118,9 @@ export class Programm03Component implements OnInit {
 
     public CopyExcercise(aUebung: Uebung) {
         this.fGlobalService.SessUebungKopie = aUebung.Copy();
+    }
+
+    ngDoCheck() {
+      //  this.accCheckUebungPanels();
     }
 }

@@ -4,7 +4,11 @@
         </div>
         
         <ng-container *ngIf="programm.SessionListe">
-            <app-programm02 [programm]="programm" [SessionListe]="programm.SessionListe" [ShowButtons]="true" [bearbeitbar]="true"></app-programm02>
+            <app-programm02 [programm]="programm" 
+                            [SessionListe]="programm.SessionListe" 
+                            [ShowButtons]="true" 
+                            [bearbeitbar]="true">
+            </app-programm02>
         </ng-container>
     </ng-container>
 

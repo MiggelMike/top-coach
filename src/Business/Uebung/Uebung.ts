@@ -35,6 +35,8 @@ export interface IUebung {
     ArbeitsSatzListe: Array<Satz>;
     AbwaermSatzListe: Array<Satz>;
     Selected: boolean;
+    WarmUpVisible: boolean; 
+    CooldownVisible: boolean;
     Copy(): Uebung;
     hasChanged(aCmpUebung: IUebung): Boolean;
 }
@@ -71,6 +73,8 @@ export class Uebung implements IUebung {
     public SessionID: number = 0;
     public SatzListe: Array<Satz> = [];
     public Selected: boolean = false;
+    public WarmUpVisible: boolean = true; 
+    public CooldownVisible: boolean = true;
 
     constructor() {
         // Nicht in Dexie-DB-Speichern -> enumerable: false

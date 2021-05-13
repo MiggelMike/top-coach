@@ -47,6 +47,7 @@ import { SessUebungComponent } from './bausteine/sess-uebung/sess-uebung.compone
 import { UebungWaehlenComponent } from './uebung-waehlen/uebung-waehlen.component';
 import { RouterModule } from '@angular/router';
 import { routes } from "./app-routing.module";
+import { SessionComponent } from './bausteine/session/session.component';
 // import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
 
 
@@ -92,7 +93,8 @@ export const floatMask = createNumberMask({
         SatzEditComponent,
         SatzComponent,
         SessUebungComponent,
-        UebungWaehlenComponent
+        UebungWaehlenComponent,
+        SessionComponent
     ],
     imports: [
         RouterModule.forRoot(routes),

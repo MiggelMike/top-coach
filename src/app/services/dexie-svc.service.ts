@@ -245,6 +245,13 @@ export class DexieSvcService extends Dexie {
             for (let z = 0; z < mSession.UebungsListe.length; z++) {
                 // Uebung
                 const mUebung = mSession.UebungsListe[z];
+                
+                if (mUebung.WarmUpVisible === undefined)
+                    mUebung.WarmUpVisible = true;
+                
+                if (mUebung.CooldownVisible === undefined)
+                    mUebung.CooldownVisible = true;
+                
                 mUebung.SatzListe = await this.LadeUebungsSaetze(mUebung);
             }
         }

@@ -26,6 +26,8 @@ export class Programm02Component implements OnInit {
     @Input() session: Session = null;
     @Input() StartButtonVisible: Boolean = false;
     @Input() SessionPanelsExpanded: Boolean = false;
+    @Input() showWarmUpCheckBox: Boolean = true;
+    @Input() showCoolDownCheckBox: Boolean = true;    
     @ViewChildren("accSession") accSession: QueryList<MatAccordion>;
     @ViewChildren("panSession") panUebung: QueryList<MatExpansionPanel>;
 
