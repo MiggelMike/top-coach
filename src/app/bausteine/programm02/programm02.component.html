@@ -7,7 +7,7 @@
                         <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">
                             <!-- <h6 class="mb-0">#{{i+1}} {{sess.Name}}</h6> -->
                             <!-- <mat-label [ngModel]="sess.Name"></mat-label> -->
-                            <mat-form-field class="align-left" [style.width.px]=400>
+                            <mat-form-field class="align-left" fxFlex="70%">
                                 <ng-container *ngIf='bearbeitbar; then  BearbeitbarBlock else NurLesenBlock'></ng-container>
                                 <!-- Nur Lesen -->
                                 <ng-template #NurLesenBlock>
@@ -21,8 +21,9 @@
                             </mat-form-field>
                                                 
                             <ng-container *ngIf='StartButtonVisible'>
-                                <div class="center-item" layout-align="center center">
-                                    <a [ngClass]="['link-button-font', 'HG-Transparent']" mat-flat-button
+                                <div class="center-item" layout-align="center center" fxFlex="0 0 auto">
+                                    <a [ngClass]="['link-button-font', 'nav-link', 'HG-Transparent']" 
+                                        mat-flat-button
                                         (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
                                 </div>
                             </ng-container>

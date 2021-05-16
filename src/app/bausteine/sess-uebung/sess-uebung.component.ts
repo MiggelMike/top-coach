@@ -17,7 +17,6 @@ export class SessUebungComponent implements OnInit {
     public floatMask = floatMask;
     public repMask = repMask;
     @Input() satzTypText: string = "";
-    @Input() satz: ISatz = null;
     @Input() session: ISession = null;
     @Input() sessUebung: Uebung;
     @Input() satzListe: Array<ISatz>;
@@ -28,7 +27,8 @@ export class SessUebungComponent implements OnInit {
     constructor(
         private fDialogService: DialogeService,
         private fGlobalService: GlobalService
-    ) {}
+    ) {
+    }
 
     ngOnInit(): void {}
 
@@ -58,10 +58,6 @@ export class SessUebungComponent implements OnInit {
         } //switch        
         this.sessUebung.SatzListe.push(mSatz);
     }
-
-     
-
-
 
     public AddSet() {
         let mSatz: Satz;

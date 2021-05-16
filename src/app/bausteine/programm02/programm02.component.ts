@@ -12,6 +12,7 @@ import { GlobalService } from "src/app/services/global.service";
 import { of } from 'rxjs';
 import { Uebung, IUebung } from 'src/Business/Uebung/Uebung';
 import { UebungService } from 'src/app/services/uebung.service';
+import { Router, NavigationExtras } from '@angular/router';
 
 @Component({
     selector: "app-programm02",
@@ -33,6 +34,7 @@ export class Programm02Component implements OnInit {
 
     private isExpanded: Boolean = true;
     public ToggleButtonText: string;
+
     public StartButtonText(aSess: Session): string {
         if (aSess.Kategorie02 === undefined)
             aSess.Kategorie02 = SessionStatus.Wartet; 
@@ -49,7 +51,8 @@ export class Programm02Component implements OnInit {
         private fDialogService: DialogeService,
         private fGlobalService: GlobalService,
         private fUebungService: UebungService,
-        private fDbModule: DexieSvcService
+        private fDbModule: DexieSvcService,
+        private router: Router
     ) {}
 
     ngOnInit() {}
@@ -187,6 +190,13 @@ export class Programm02Component implements OnInit {
             case SessionStatus.Pause: aSession.Kategorie02 = SessionStatus.Laueft; break;
             case SessionStatus.Laueft: aSession.Kategorie02 = SessionStatus.Pause; break;
         }
+
+        const navigationExtras: NavigationExtras = {
+            state: {
+              sess: aSession
+            }
+          };
+        this.router.navigate(['sessionFormComponent'], { state: { sess: aSession } } );
     }
 
     public SaveChanges() {
@@ -197,10 +207,14 @@ export class Programm02Component implements OnInit {
         alert("CancelChanges");
     }
 
-    private CheckStatus() {}
+    private CheckStatus() {
+        for (let index = 0; index < this.SessionListe.length; index++) {
+            this.StartButtonText(this.SessionListe[index]);
+        }
+    }
 
     ngDoCheck() {
-        this.CheckStatus();
+        // this.CheckStatus();
         this.accCheckSessionPanels();
     }
 }

@@ -1,4 +1,3 @@
-import { Session } from 'src/Business/Session/Session';
 import { Uebung, IUebung } from './../../../Business/Uebung/Uebung';
 import { GlobalService } from 'src/app/services/global.service';
 import { ISatz } from './../../../Business/Satz/Satz';
@@ -20,7 +19,7 @@ import { of } from 'rxjs';
 export class Programm03Component implements OnInit {
     @Input() programm: ITrainingsProgramm;
     @Input() session: ISession;
-    @Input() satz: ISatz;
+    // @Input() satz: ISatz;
     @Input() rowNum: number = 0;
     @Input() bearbeitbar: Boolean;
     @Input() panUebung1: MatExpansionPanel;
@@ -47,6 +46,7 @@ export class Programm03Component implements OnInit {
     ) {
         if (this.fGlobalService.Comp03PanelUebungObserver === null)
             this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;
+        
     }
 
     ngOnDestroy() {

@@ -37,6 +37,7 @@ export interface IUebung {
     Selected: boolean;
     WarmUpVisible: boolean; 
     CooldownVisible: boolean;
+    AddBodyWeight: boolean;
     Copy(): Uebung;
     hasChanged(aCmpUebung: IUebung): Boolean;
 }
@@ -75,6 +76,7 @@ export class Uebung implements IUebung {
     public Selected: boolean = false;
     public WarmUpVisible: boolean = true; 
     public CooldownVisible: boolean = true;
+    public AddBodyWeight: boolean = false;
 
     constructor() {
         // Nicht in Dexie-DB-Speichern -> enumerable: false

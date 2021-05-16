@@ -1,7 +1,6 @@
 <ng-container *ngIf="session && session.UebungsListe && (session.UebungsListe.length > 0)" >
     <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
     <ng-container *ngFor="let SessUeb of session.UebungsListe, index as i; let isOdd=odd">
-
         <mat-accordion #accUebung='matAccordion' multi="true">
             <mat-expansion-panel #panUebung='matExpansionPanel' 
                 [expanded]="true" 
@@ -13,13 +12,27 @@
                             <h6 flex>#{{i+1}} {{SessUeb.Name}}</h6>
                         </div>
 
-                        <div class="center-item" layout-align="end center" fxFlex="0 0 14%">
-                            <mat-checkbox [(ngModel)]="SessUeb.WarmUpVisible" (click)="$event.stopPropagation()">Show Warmup</mat-checkbox>
-                        </div>
+                        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu" (click)="$event.stopPropagation()">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
 
-                        <div class="center-item" layout-align="end center" fxFlex="0 0 14%">
-                            <mat-checkbox [(ngModel)]="SessUeb.CoolDownVisible" (click)="$event.stopPropagation()">Show Cooldown</mat-checkbox>
-                        </div>
+                        <mat-menu #menu="matMenu" class="center-item" layout-align="end center">
+                            <div [ngClass]="['mg-5']" layout-align="start" fxFlex="1 0 auto">
+                                <div layout-align="start" layout-margin>
+                                    <mat-checkbox [(ngModel)]="SessUeb.WarmUpVisible" (click)="$event.stopPropagation()">Show Warmup</mat-checkbox>
+                                </div>
+                            
+                                <div layout-align="start" layout-margin>
+                                    <mat-checkbox [(ngModel)]="SessUeb.CoolDownVisible" (click)="$event.stopPropagation()">Show Cooldown
+                                    </mat-checkbox>
+                                </div>
+
+                                <div layout-align="start" layout-margin>
+                                    <mat-checkbox [(ngModel)]="SessUeb.AddBodyWeight" (click)="$event.stopPropagation()">Add Bodyweight
+                                    </mat-checkbox>
+                                </div>
+                            </div>
+                        </mat-menu>
                     </div>
                 </mat-expansion-panel-header>
                 <ng-container [panUebung1]=panUebung></ng-container>
@@ -28,19 +41,19 @@
                     <div fxLayout="column" fxLayoutGap="2px" fxFlex="100%">
                         <ng-container *ngIf="SessUeb.AufwaermSatzListe && SessUeb.WarmUpVisible">
                             <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Warm up sets'"
-                                [satzListe]="SessUeb.AufwaermSatzListe" [satz]="satz" [session]="session" [sessUebung]="SessUeb" [bearbeitbar] = "bearbeitbar">
+                                [satzListe]="SessUeb.AufwaermSatzListe" [session]="session" [sessUebung]="SessUeb" [bearbeitbar] = "bearbeitbar">
                             </app-sess-uebung>
                         </ng-container>
                 
                         <ng-container *ngIf="SessUeb.ArbeitsSatzListe">
                             <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Work sets'"
-                                [satzListe]="SessUeb.ArbeitsSatzListe" [satz]="satz" [session]="session" [sessUebung]="SessUeb" [bearbeitbar] = "bearbeitbar">
+                                [satzListe]="SessUeb.ArbeitsSatzListe" [session]="session" [sessUebung]="SessUeb" [bearbeitbar] = "bearbeitbar">
                             </app-sess-uebung>
                         </ng-container>
                 
                         <ng-container *ngIf="SessUeb.AbwaermSatzListe  && SessUeb.CoolDownVisible">
                             <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Cool down sets'"
-                                [satzListe]="SessUeb.AbwaermSatzListe" [satz]="satz" [session]="session" [sessUebung]="SessUeb" [bearbeitbar] = "bearbeitbar">
+                                [satzListe]="SessUeb.AbwaermSatzListe" [session]="session" [sessUebung]="SessUeb" [bearbeitbar] = "bearbeitbar">
                             </app-sess-uebung>
                         </ng-container>
 
@@ -60,10 +73,3 @@
         
     </ng-container>
 </ng-container>
-
-
-<!-- <div class="container" [ngClass]="isOdd ? 'odd' : 'even'">
-    <div class="row no-gutters">
-        <h6>{{SessUeb.Uebung.Name}}</h6>
-    </div>
-</div> -->

@@ -252,6 +252,9 @@ export class DexieSvcService extends Dexie {
                 if (mUebung.CooldownVisible === undefined)
                     mUebung.CooldownVisible = true;
                 
+                if (mUebung.AddBodyWeight === undefined)
+                    mUebung.AddBodyWeight = false;
+                
                 mUebung.SatzListe = await this.LadeUebungsSaetze(mUebung);
             }
         }
