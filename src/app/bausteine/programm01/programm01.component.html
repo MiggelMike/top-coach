@@ -10,7 +10,7 @@
                     <ng-container *ngIf="programmLadeContext; then AuswahlBlock"></ng-container>
 
                     <ng-template #AuswahlBlock>
-                        <button class="btn btn-link" type="button" (click)="SelectThisWorkoutClick($event)">
+                        <button class="btn btn-link" type="button" (click)="SelectThisWorkoutClick(programm,$event)">
                             <span class="tc-font-size-small">Select</span>
                         </button>
 

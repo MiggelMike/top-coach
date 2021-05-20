@@ -1,11 +1,17 @@
+import { ITrainingsProgramm, TrainingsProgramm, ProgrammTyp, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
+import { DialogeService } from './dialoge.service';
 import { ISatz, Satz } from './../../Business/Satz/Satz';
 import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
 import { ISession, Session, SessionStatus } from './../../Business/Session/Session';
-import { ITrainingsProgramm, TrainingsProgramm, ProgrammTyp, ProgrammKategorie  } from './../../Business/TrainingsProgramm/TrainingsProgramm';
 import { AppData, IAppData } from './../../Business/Coach/Coach';
 import { Dexie, PromiseExtended } from 'dexie';
 import { Injectable, NgModule, Pipe, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, UebungsName, UebungsKategorie02 } from "../../Business/Uebung/Uebung";
+import { DialogData } from '../dialoge/hinweis/hinweis.component';
+
+export interface AktuellesProgramFn {
+    (): void;
+}
 
 @Injectable({
     providedIn: "root",
@@ -21,7 +27,7 @@ export class DexieSvcService extends Dexie {
     readonly cSession: string = "Session";
 
     AktuellerProgrammTyp: ProgrammTyp;
-    AktuellesProgramm: ITrainingsProgramm;
+    AktuellesProgramm: ITrainingsProgramm; 
     AppRec: IAppData;
     AppDataTable: Dexie.Table<AppData, number>;
     UebungTable: Dexie.Table<Uebung, number>;
@@ -34,7 +40,9 @@ export class DexieSvcService extends Dexie {
     //public ProgrammListeObserver: Observable<TrainingsProgramm[]>;
     //public ProgrammListe: Array<TrainingsProgramm> = [];
 
-    constructor(@Optional() @SkipSelf() parentModule?: DexieSvcService) {
+    constructor(
+        private fDialogeService: DialogeService,
+        @Optional() @SkipSelf() parentModule?: DexieSvcService) {
         super("ConceptCoach");
         if (parentModule) {
             throw new Error(
@@ -201,8 +209,52 @@ export class DexieSvcService extends Dexie {
             this.VorlageProgrammSpeichern(mAnlegen[index]);
     }
 
-    public async LadeProgramme(aProgrammKategorie: ProgrammKategorie) {
-        this.Programme = [];
+    private DoAktuellesProgramm(aNeuesAktuellesProgramm: ITrainingsProgramm, aAltesAktuellesProgramm?: ITrainingsProgramm): void {
+        if (aAltesAktuellesProgramm) {
+            aAltesAktuellesProgramm.ProgrammKategorie = ProgrammKategorie.Fertig;
+            this.ProgrammSpeichern(aAltesAktuellesProgramm);
+        }
+        const mNeu = aNeuesAktuellesProgramm.ErstelleSessionsAusVorlage(ProgrammKategorie.AktuellesProgramm);
+        this.ProgrammSpeichern(mNeu);
+        this.AktuellesProgramm = mNeu;
+    }
+
+    public CheckAktuellesProgram(aNeuesAktuellesProgramm: ITrainingsProgramm, aAltesAktuellesProgramm?: ITrainingsProgramm ):void {
+        // Soll das aktuelle Work-Out durch ein anderes ersetzt werden?
+        if (aAltesAktuellesProgramm !== undefined) {
+            const mDialogData = new DialogData();
+            mDialogData.OkData = aNeuesAktuellesProgramm;
+            mDialogData.OkFn = (): void => {
+                // Es gibt ein aktuelles Work-Out, aber der Anwender will es ersetzen. 
+                this.DoAktuellesProgramm(aNeuesAktuellesProgramm, aAltesAktuellesProgramm);
+            };
+
+            // Sind altes und neues Programm gleich?
+            if (aNeuesAktuellesProgramm.Name === aAltesAktuellesProgramm.Name) {
+                // Altes und neues Programm sind gleich
+                mDialogData.textZeilen.push(
+                    `This program is already active!`
+                );
+                mDialogData.textZeilen.push(
+                    `Select it anyway?`
+                );
+                
+            } else {
+                // Das aktuelle Work-Out soll durch ein anderes ersetzt werden.
+                mDialogData.textZeilen.push(
+                    `Replace current Program "${aAltesAktuellesProgramm.Name}" with "${aNeuesAktuellesProgramm.Name}" ?`
+                );
+            }
+    
+            this.fDialogeService.JaNein(mDialogData);
+        } else {
+            // Es gibt kein aktuelles Work-Out.
+            this.DoAktuellesProgramm(aNeuesAktuellesProgramm);
+        }
+    }
+
+    public async LadeProgramme(aProgrammKategorie: ProgrammKategorie, aNeuesAktuellesProgram?: ITrainingsProgramm) {
+        this.Programme = []
         await this.table(this.cProgramm)
             .filter(
                 (a) => a.ProgrammKategorie === aProgrammKategorie.toString()
@@ -222,8 +274,24 @@ export class DexieSvcService extends Dexie {
                         }
                         break;
                     case ProgrammKategorie.AktuellesProgramm:
-                        this.FuelleProgramm(mProgramme[0]);
-                        this.AktuellesProgramm = mProgramme[0];
+                        // Gibt es schon ein aktuelles Programm?
+                        if (mProgramme.length > 0) {
+                            this.FuelleProgramm(mProgramme[0]);
+                            // Es gibt schon ein aktuelles Programm.
+                            // Soll ein anderes aktuelles Programm gewaehlt werden?
+                            if (aNeuesAktuellesProgram !== undefined)
+                                // Es soll ein anderes aktuelles Programm gewaehlt werden.
+                                this.CheckAktuellesProgram(aNeuesAktuellesProgram, mProgramme[0]);
+                            else 
+                                // Es soll kein anderes aktuelles Programm gewaehlt werden.
+                                this.AktuellesProgramm = mProgramme[0];
+                        } else {
+                            // Es gibt kein aktuelles Programm.
+                            // Soll ein aktuelles Programm gewaehlt werden?
+                            if (aNeuesAktuellesProgram !== undefined)
+                                // Es soll ein aktuelles Programm gewaehlt werden
+                                this.CheckAktuellesProgram(aNeuesAktuellesProgram);
+                        }
                         break;
                 }
             })

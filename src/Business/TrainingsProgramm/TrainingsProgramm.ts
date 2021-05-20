@@ -10,6 +10,7 @@ export enum ProgrammTyp {
 export enum ProgrammKategorie {
     AktuellesProgramm = "AktuellesProgramm",
     Vorlage = "Vorlage",
+    Fertig = "Fertig",
 }
 
 export interface ITrainingsProgramm {

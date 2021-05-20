@@ -1,8 +1,9 @@
+import { DexieSvcService } from './../../services/dexie-svc.service';
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "./../../services/global.service";
 import { Component, OnInit, Input } from "@angular/core";
-import { ITrainingsProgramm } from "../../../Business/TrainingsProgramm/TrainingsProgramm";
+import { ITrainingsProgramm, ProgrammKategorie } from "../../../Business/TrainingsProgramm/TrainingsProgramm";
 import { SessionStatus } from 'src/Business/Session/Session';
 
 @Component({
@@ -18,30 +19,15 @@ export class Programm01Component implements OnInit {
 
     constructor(
         private fGlobalService: GlobalService,
-        private fDialogeService: DialogeService
+        private fDialogeService: DialogeService,
+        private fDexieService: DexieSvcService
     ) {}
 
-    ngOnInit() {}
-
-    SelectThisWorkoutClick($event: any): void {
+    ngOnInit() { }
+    
+    SelectThisWorkoutClick(aProgram: ITrainingsProgramm, $event: any): void {
         $event.stopPropagation();
-        // Soll das aktuelle Work-Out durch ein anderes ersetzt werden?
-        if (this.fGlobalService.fDbModule.AktuellesProgramm !== undefined) {
-             // Das aktuelle Work-Out soll durch ein anderes ersetzt werden.
-            const mDialogData = new DialogData();
-            mDialogData.textZeilen.push(
-                `Replace current Program "${this.fGlobalService.fDbModule.AktuellesProgramm.Name}" with "${this.programm.Name}" ?`
-            );
-            mDialogData.OkData = this.programm;
-            mDialogData.OkFn = ():void => {
-                this.fGlobalService.SetzeAktuellesProgramm(mDialogData.OkData);
-            };
-
-            this.fDialogeService.JaNein(mDialogData);
-        } else {
-             // Es gibt kein aktuelles Work-Out.
-             this.fGlobalService.SetzeAktuellesProgramm(this.programm);
-        }
+        this.fDexieService.LadeProgramme(ProgrammKategorie.AktuellesProgramm, aProgram);
     }
 
     EditThisWorkoutClick($event): void {

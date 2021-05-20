@@ -102,11 +102,6 @@ export class GlobalService {
         return (s === null) || (s.length === 0) ? 0 : Number(s);
     }
 
-    SetzeAktuellesProgramm(aAktuellesProgramm: ITrainingsProgramm): void {
-        this.fDbModule.AktuellesProgramm = aAktuellesProgramm.ErstelleSessionsAusVorlage(ProgrammKategorie.AktuellesProgramm);
-        this.SpeicherDaten(SpeicherOrtTyp.Lokal);
-    }
-
     public LadeAnstehendeSession(): Observable<ISession[]> {
         const mResult = new Observable<ISession[]>(
             observer => {
