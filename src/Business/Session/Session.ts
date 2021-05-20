@@ -22,6 +22,7 @@ export interface ISession {
     Kategorie02: SessionStatus;
     Bearbeitbar: Boolean;
     UebungsListe: Array<Uebung>;
+    LiftedWeight: number;
     Copy(): Session;
     addUebung(aUebung: Uebung);
     hasChanged(aCmpSession: ISession): Boolean;
@@ -40,6 +41,17 @@ export class Session implements ISession {
     public Kategorie02: SessionStatus = SessionStatus.Wartet;
     public Bearbeitbar: Boolean = false;
     public UebungsListe: Array<Uebung> = [];
+
+    public get LiftedWeight():number {
+        let mResult: number = 0;
+        this.UebungsListe.forEach(u => mResult + u.LiftedWeight);
+
+        for (let index = 0; index < this.UebungsListe.length; index++) {
+            const mUebung = this.UebungsListe[index];
+            mResult = mResult + mUebung.LiftedWeight;
+        }
+        return mResult;
+    }
 
     constructor() {
         Object.defineProperty(this, 'UebungsListe', { enumerable: false });

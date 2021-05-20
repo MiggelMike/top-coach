@@ -1,18 +1,42 @@
 <div fxLayout="column" fxFlex="100%">
+    <!-- Spalten-Titel -->
     <div fxLayout="row" fxLayoutGap="2px" fxFlex="100%">
         <ng-container *ngIf="rowNum === 0">
-            <div class="center-item align-right" fxLayout="column" fxFlex="25px">
-                #
-            </div>
-            <div class="center-item" fxLayout="column" fxFlex="45px">
-                Weight
-            </div>
-            <div class="center-item" fxLayout="column" fxFlex="30px">
-                RP.
-            </div>
-            <div class="center-item" fxLayout="column" fxFlex="35px">
-                AR.
-            </div>
+            <ng-container *ngIf="(sess.Kategorie02 === 4); then TitelSessionLaueft else TitelSessionLaueftNicht"></ng-container>
+                <!-- Spalten-Titel waehrend des Trainings  -->
+                <ng-template #TitelSessionLaueft> 
+                    <div class="center-item align-right" fxLayout="column" fxFlex="25px">
+                        #
+                    </div>
+                    <div class="center-item" fxLayout="column" fxFlex="45px">
+                        Weight
+                    </div>
+                    <div class="center-item" fxLayout="column" fxFlex="30px">
+                        RP.
+                    </div>
+                    <div class="center-item" fxLayout="column" fxFlex="35px">
+                        AR.
+                    </div>
+                    <div class="center-item" fxLayout="column" fxFlex="35px">
+                        Done
+                    </div>
+                </ng-template>
+
+                <!-- Spalten-Titel, wenn kein Training laeuft  -->
+                <ng-template #TitelSessionLaueftNicht> 
+                    <div class="center-item align-right" fxLayout="column" fxFlex="25px">
+                        #
+                    </div>
+                    <div class="center-item" fxLayout="column" fxFlex="45px">
+                        Weight
+                    </div>
+                    <div class="center-item" fxLayout="column" fxFlex="30px">
+                        RP.
+                    </div>
+                    <div class="center-item" fxLayout="column" fxFlex="35px">
+                        AR.
+                    </div>
+                </ng-template>
         </ng-container>
     </div>
 
@@ -21,19 +45,49 @@
             <mat-label>{{rowNum+1}}</mat-label>
         </div>
 
-        <mat-form-field class="align-right" fxFlex="45px">
-            <input matInput [textMask]="{mask: floatMask, guide: false }"
-                [ngModel]="satz.GewichtVorgabe | number: '1.1'" (blur)="SetWeight($event.target.value)"
-                type="text">
-        </mat-form-field>
+        <ng-container *ngIf="(sess.Kategorie02 === 4); then SessionLaueft else SessionLaueftNicht"></ng-container>
+            <!-- Training laeuft -->
+            <ng-template #SessionLaueft>
+                <!-- Ausgefuehrtes-Gewicht -->
+                <mat-form-field class="align-right" fxFlex="45px">
+                    <mat-label>{{satz.GewichtVorgabe | number: '1.1'}}</mat-label>
+                    <input matInput [textMask]="{mask: floatMask, guide: false }"
+                    [ngModel]="satz.GewichtAusgefuehrt | number: '1.1'" (blur)="SetWeightAusgefuehrt($event.target.value)"
+                    type="text">
+                </mat-form-field>
+                <!-- Ausgefuerte Wdh. -->
+                <mat-form-field class="align-right" fxFlex="30px">
+                    <input matInput [textMask]="{mask: repMask, guide: false}" [ngModel]="satz.WdhAusgefuehrt" (blur)="SetWdhAusgefuehrt($event.target.value)" type="text">
+                </mat-form-field>
+                <!-- AMRAP  -->
+                <div class="center-item" layout-align="center center" fxFlex="30px">
+                    <mat-checkbox [(ngModel)]="satz.AMRAP"></mat-checkbox>
+                </div>
+                <!-- Satz Fertig-Flag -->
+                <div class="center-item" layout-align="center center" fxFlex="30px">
+                    <mat-checkbox [(ngModel)]="SatzFertig"></mat-checkbox>
+                </div>
+            </ng-template>
 
-        <mat-form-field class="align-right" fxFlex="30px">
-            <input matInput [textMask]="{mask: repMask, guide: false}" [ngModel]="satz.WdhVorgabe" (blur)="SetWdhVorgabe($event.target.value)" type="text">
-        </mat-form-field>
+            <!-- Training laeuft nicht -->
+            <ng-template #SessionLaueftNicht>
+                <!-- Geplantes Vorgabe-Gewicht -->
+                <mat-form-field class="align-right" fxFlex="45px">
+                    <input matInput [textMask]="{mask: floatMask, guide: false }"
+                    [ngModel]="satz.GewichtVorgabe | number: '1.1'" (blur)="SetWeightVorgabe($event.target.value)"
+                    type="text">
+                </mat-form-field>
 
-        <div class="center-item" layout-align="center center" fxFlex="35px">
-            <mat-checkbox [(ngModel)]="satz.AMRAP"></mat-checkbox>
-        </div>
+                <!-- Geplante Vorgabe-Wdh. -->
+                <mat-form-field class="align-right" fxFlex="30px">
+                    <input matInput [textMask]="{mask: repMask, guide: false}" [ngModel]="satz.WdhVorgabe" (blur)="SetWdhVorgabe($event.target.value)" type="text">
+                </mat-form-field>
+
+                <!-- AMRAP  -->
+                <div class="center-item" layout-align="center center" fxFlex="35px">
+                    <mat-checkbox [(ngModel)]="satz.AMRAP"></mat-checkbox>
+                </div>
+            </ng-template>
 
         <div class="center-item" layout-align="center center">
             <a [ngClass]="['link-button-font']" mat-flat-button (click)="DeleteSet()">Delete</a>

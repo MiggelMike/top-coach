@@ -1,7 +1,8 @@
+import { ISession } from 'src/Business/Session/Session';
 import { Uebung } from './../../../Business/Uebung/Uebung';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit, Input } from "@angular/core";
-import { Satz } from "./../../../Business/Satz/Satz";
+import { Satz, SatzStatus } from "./../../../Business/Satz/Satz";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
@@ -14,6 +15,7 @@ import { floatMask, repMask } from './../../app.module';
 })
 export class SatzEditComponent implements OnInit {
     @Input() programm: ITrainingsProgramm;
+    @Input() sess: ISession;
     @Input() sessUebung: Uebung;
     @Input() satz: Satz;
     @Input() rowNum: number;
@@ -24,7 +26,7 @@ export class SatzEditComponent implements OnInit {
     constructor(
         private fDialogService: DialogeService,
         private fGlobalService: GlobalService
-    ) { }
+    ) {}
     
     ngOnInit() {}
 
@@ -41,7 +43,15 @@ export class SatzEditComponent implements OnInit {
         this.fDialogService.JaNein(mDialogData);
     }
 
-    public SetWeight(value: number) {
+    public get SatzFertig(): Boolean{
+        return (this.satz.Status === SatzStatus.Fertig);
+    }
+
+    public set SatzFertig(value) {
+        this.satz.Status = value ? SatzStatus.Fertig : SatzStatus.Wartet;
+    } 
+
+    public SetWeightVorgabe(value: number) {
         this.satz.GewichtVorgabe = value;
     }
 
@@ -49,7 +59,21 @@ export class SatzEditComponent implements OnInit {
         this.satz.WdhVorgabe = value;
     }    
 
+    public SetWeightAusgefuehrt(value: number) {
+        this.satz.GewichtAusgefuehrt = value;
+    }
+
+    public SetWdhAusgefuehrt(value: number) {
+        this.satz.WdhAusgefuehrt = value;
+    }    
+
     public CopySet(aSatz : any) {
         this.fGlobalService.SatzKopie = this.satz.Copy();
+    }
+
+    ngDoCheck() {
+        const x = this.sess.LiftedWeight;
+            // if (this.fSessionStatsOverlayComponent)
+            //     this.fSessionStatsOverlayComponent.sess.LiftedWeight;
     }
 }

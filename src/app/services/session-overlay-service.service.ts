@@ -1,10 +1,14 @@
+import { SessionStatsOverlayComponent } from './../session-stats-overlay/session-stats-overlay.component';
+import { BaseOverlayRef } from 'src/app/services/global.service';
 import { ISession, Session } from './../../Business/Session/Session';
-import { FilePreviewOverlayComponent } from './../file-preview-overlay/file-preview-overlay.component';
 import { Injectable, InjectionToken, ComponentRef, Injector } from '@angular/core';
 import { Overlay, OverlayConfig, OverlayRef  } from '@angular/cdk/overlay';
-import { ComponentPortal, PortalInjector  } from '@angular/cdk/portal';
+import { ComponentPortal, PortalInjector } from '@angular/cdk/portal';
 
-export interface FilePreviewDialogConfig {
+export class SessionOverlayRef extends BaseOverlayRef {}
+
+
+export interface SessionOverlayConfig {
     panelClass?: string;
     hasBackdrop?: boolean;
     backdropClass?: string;
@@ -13,18 +17,9 @@ export interface FilePreviewDialogConfig {
     session?: Session
 }
 
-export const FILE_PREVIEW_DIALOG_DATA = new InjectionToken<Session>('FILE_PREVIEW_DIALOG_DATA');
+export const cSessionStatsOverlayData = new InjectionToken<ISession>('Session_Stats_Overlay_Component');
 
-export class FilePreviewOverlayRef {
-
-    constructor(private overlayRef: OverlayRef) { }
-  
-    close(): void {
-      this.overlayRef.dispose();
-    }
-  }
-
-const DEFAULT_CONFIG: FilePreviewDialogConfig = {
+const DEFAULT_CONFIG: SessionOverlayConfig = {
     hasBackdrop: false,
     backdropClass: 'dark-backdrop',
     session: null
@@ -41,48 +36,48 @@ const DEFAULT_CONFIG: FilePreviewDialogConfig = {
     // }`
 }
 
-@Injectable({ providedIn: "root" })
-export class FilePreviewOverlayService {
 
+@Injectable({
+  providedIn: 'root'
+})
+export class SessionOverlayServiceService {
     public SessOverlayRef: OverlayRef = null;
-    
 
     constructor(private overlay: Overlay, private injector: Injector) { }
     
-    private createInjector(config: FilePreviewDialogConfig, dialogRef: FilePreviewOverlayRef): PortalInjector {
+    private createInjector(aConfig: SessionOverlayConfig, aSessionRef: SessionOverlayRef): PortalInjector {
         // Instantiate new WeakMap for our custom injection tokens
         const injectionTokens = new WeakMap();
     
         // Set custom injection tokens
-        injectionTokens.set(FilePreviewOverlayRef, dialogRef);
-        injectionTokens.set(FILE_PREVIEW_DIALOG_DATA, config.session);
+        injectionTokens.set(SessionOverlayRef, aSessionRef);
+        injectionTokens.set(cSessionStatsOverlayData, aConfig.session);
     
         // Instantiate new PortalInjector
         return new PortalInjector(this.injector, injectionTokens);
     }
     
-    private attachDialogContainer(overlayRef: OverlayRef, config: FilePreviewDialogConfig, dialogRef: FilePreviewOverlayRef) {
-        const injector = this.createInjector(config, dialogRef);
+    private attachDialogContainer(aOverlayRef: OverlayRef, aConfig: SessionOverlayConfig, aDialogRef: SessionOverlayRef):SessionStatsOverlayComponent {
+        const injector = this.createInjector(aConfig, aDialogRef);
     
-        const containerPortal = new ComponentPortal(FilePreviewOverlayComponent, null, injector);
+        const containerPortal = new ComponentPortal(SessionStatsOverlayComponent, null, injector);
         try {
-            const containerRef: ComponentRef<FilePreviewOverlayComponent> = overlayRef.attach(containerPortal);
+            const containerRef: ComponentRef<SessionStatsOverlayComponent> = aOverlayRef.attach(containerPortal);
             return containerRef.instance;
         } catch (error) {
             alert(error);
         } 
     }
-    
 
-    open(config: FilePreviewDialogConfig = {}) {
-        const dialogConfig = { ...DEFAULT_CONFIG, ...config };
+    open(aConfig: SessionOverlayConfig = {}):SessionStatsOverlayComponent {
+        const dialogConfig = { ...DEFAULT_CONFIG, ...aConfig };
 
         // Returns an OverlayRef which is a PortalHost
         this.SessOverlayRef = this.createOverlay(dialogConfig);
-        const dialogRef = new FilePreviewOverlayRef(this.SessOverlayRef);
-        this.attachDialogContainer(this.SessOverlayRef, dialogConfig, dialogRef);
+        const dialogRef = new SessionOverlayRef(this.SessOverlayRef);
+        return this.attachDialogContainer(this.SessOverlayRef, dialogConfig, dialogRef);
       //  this.SessOverlayRef.backdropClick().subscribe(_ => dialogRef.close());
-        return this.SessOverlayRef;
+        // return this.SessOverlayRef;
     }
 
     close() {
@@ -90,19 +85,20 @@ export class FilePreviewOverlayService {
         this.SessOverlayRef = null;
     }
 
-    private getOverlayConfig(config: FilePreviewDialogConfig): OverlayConfig {
+    private getOverlayConfig(aConfig: SessionOverlayConfig): OverlayConfig {
         const positionStrategy = this.overlay
             .position()
             .global()
-            .left("150px")
-            .right("150px");
+            .top("100px")
+            // .left("150px")
+            // .right("150px");
         // .centerHorizontally()
         // .centerVertically();
 
         const overlayConfig = new OverlayConfig({
-            hasBackdrop: config.hasBackdrop,
-            backdropClass: config.backdropClass,
-            panelClass: config.panelClass,
+            hasBackdrop: aConfig.hasBackdrop,
+            backdropClass: aConfig.backdropClass,
+            panelClass: aConfig.panelClass,
             scrollStrategy: this.overlay.scrollStrategies.reposition(),
             positionStrategy,
         });
@@ -110,11 +106,12 @@ export class FilePreviewOverlayService {
         return overlayConfig;
     }
 
-    private createOverlay(config: FilePreviewDialogConfig) {
+    private createOverlay(aConfig: SessionOverlayConfig) {
         // Returns an OverlayConfig
-        const overlayConfig = this.getOverlayConfig(config);
+        const overlayConfig = this.getOverlayConfig(aConfig);
 
         // Returns an OverlayRef
         return this.overlay.create(overlayConfig);
     }
 }
+

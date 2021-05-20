@@ -1,30 +1,33 @@
+import { SessionOverlayServiceService, SessionOverlayConfig } from './../../services/session-overlay-service.service';
+import { OverlayRef, CdkOverlayOrigin, OverlayConfig } from '@angular/cdk/overlay';
 import { Uebung, IUebung } from './../../../Business/Uebung/Uebung';
 import { GlobalService } from 'src/app/services/global.service';
-import { ISatz } from './../../../Business/Satz/Satz';
 import { MatAccordion } from '@angular/material';
 import { MatExpansionPanel } from '@angular/material/expansion';
-import { ISession } from './../../../Business/Session/Session';
+import { ISession, Session } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
-import { Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";
+import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, ElementRef } from "@angular/core";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { of } from 'rxjs';
-
 
 @Component({
     selector: "app-programm03",
     templateUrl: "./programm03.component.html",
     styleUrls: ["./programm03.component.scss"],
 })
+    
 export class Programm03Component implements OnInit {
     @Input() programm: ITrainingsProgramm;
     @Input() session: ISession;
-    // @Input() satz: ISatz;
     @Input() rowNum: number = 0;
     @Input() bearbeitbar: Boolean;
     @Input() panUebung1: MatExpansionPanel;
+    @Input() ShowStats: Boolean = false;
     @ViewChildren("accUebung") accUebung: QueryList<MatAccordion>;
     @ViewChildren("panUebung") panUebung: QueryList<MatExpansionPanel>;
+    @ViewChild(CdkOverlayOrigin) cdkOverlayOrigin: CdkOverlayOrigin;
+    @ViewChild('Session') div: ElementRef;
 
     private isExpanded: Boolean = true;
     public ToggleButtonText = "Close all excercises";
@@ -38,15 +41,19 @@ export class Programm03Component implements OnInit {
             console.log("UebungPanelsObserver got a complete notification"),
     };
 
-    ngOnInit() {}
+    ngOnInit() { }
 
     constructor(
         private fGlobalService: GlobalService,
         private fDialogService: DialogeService,
+        private fSessionOverlayServiceService: SessionOverlayServiceService,
     ) {
         if (this.fGlobalService.Comp03PanelUebungObserver === null)
             this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;
-        
+    }
+
+    doStats() {
+        this.fSessionOverlayServiceService.open({ session: this.session } as SessionOverlayConfig);
     }
 
     ngOnDestroy() {
@@ -94,9 +101,9 @@ export class Programm03Component implements OnInit {
     public DeleteExercise(aRowNum: number, aUebung: Uebung) {
         const mDialogData = new DialogData();
         mDialogData.textZeilen.push(`Delete exercise #${aRowNum} "${aUebung.Name}" ?`);
-        mDialogData.OkFn = ():void => {
+        mDialogData.OkFn = (): void => {
             // Index der SessUeb in Liste suchen.
-            const index: number = this.session.UebungsListe.indexOf( aUebung );
+            const index: number = this.session.UebungsListe.indexOf(aUebung);
 
             // SessUeb-Index gefunden?
             if (index !== -1) {
@@ -111,7 +118,7 @@ export class Programm03Component implements OnInit {
                     this.fGlobalService.Comp03PanelUebungObserver
                 );
             }
-        };   
+        };
 
         this.fDialogService.JaNein(mDialogData);
     }
@@ -119,8 +126,5 @@ export class Programm03Component implements OnInit {
     public CopyExcercise(aUebung: Uebung) {
         this.fGlobalService.SessUebungKopie = aUebung.Copy();
     }
-
-    ngDoCheck() {
-      //  this.accCheckUebungPanels();
-    }
 }
+  

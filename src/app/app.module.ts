@@ -33,7 +33,7 @@ import { ProgrammLadeDirective } from './AppDirectives';
 import { DialogComponent } from './dialoge/hinweis/hinweis.component';
 
 import { OverlayModule } from '@angular/cdk/overlay';
-import { FilePreviewOverlayComponent } from './file-preview-overlay/file-preview-overlay.component';
+import { FilePreviewOverlayComponent  } from './file-preview-overlay/file-preview-overlay.component';
 import { FilePreviewOverlayService } from './services/file-preview-overlay.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SatzSimpleComponent } from './bausteine/satz-simple/satz-simple.component';
@@ -47,6 +47,9 @@ import { SessUebungComponent } from './bausteine/sess-uebung/sess-uebung.compone
 import { UebungWaehlenComponent } from './uebung-waehlen/uebung-waehlen.component';
 import { RouterModule } from '@angular/router';
 import { routes } from "./app-routing.module";
+import { SessionStatsOverlayComponent } from './session-stats-overlay/session-stats-overlay.component';
+
+
 // import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
 
 
@@ -92,7 +95,8 @@ export const floatMask = createNumberMask({
         SatzEditComponent,
         SatzComponent,
         SessUebungComponent,
-        UebungWaehlenComponent
+        UebungWaehlenComponent,
+        SessionStatsOverlayComponent
     ],
     imports: [
         RouterModule.forRoot(routes),
@@ -131,7 +135,8 @@ export const floatMask = createNumberMask({
     entryComponents: [
         DialogComponent,
         FilePreviewOverlayComponent,
-        UebungWaehlenComponent
+        UebungWaehlenComponent,
+        SessionStatsOverlayComponent
     ],
     providers: [MatDialog, FilePreviewOverlayService, DexieSvcService],
     bootstrap: [AppComponent]

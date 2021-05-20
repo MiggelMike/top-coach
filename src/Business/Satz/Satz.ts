@@ -86,13 +86,16 @@ export class Satz implements ISatz {
     public AMRAP: boolean = false;
     public SatzGruppenNr: number = 0;
 
-    get fGewichtVorgabe(): string {
-        if (this.GewichtVorgabe === 0) return "0.00";
-        return this.GewichtVorgabe.toPrecision(2);
+    public get LiftedWeight(): number {
+        if (this.Status === SatzStatus.Fertig)
+            return this.WdhAusgefuehrt * this.GewichtAusgefuehrt;
+        return 0;
     }
 
-    set fGewichtVorgabe(value: string) {
-        this.GewichtVorgabe = 100;
+    get fGewichtVorgabe(): string {
+        if (this.GewichtVorgabe === 0)
+            return "0.00";
+        return this.GewichtVorgabe.toPrecision(2);
     }
 
     constructor(aPara: Satz = {} as Satz) {
@@ -137,21 +140,6 @@ export class Satz implements ISatz {
 
     public Copy(): Satz {
         return cloneDeep(this); 
-        // const mResult = new Satz();
-        // mResult.LiftTyp = this.LiftTyp;
-        // mResult.AMRAP = this.AMRAP;
-        // mResult.PausenMaxZeit = this.PausenMaxZeit;
-        // mResult.PausenMinZeit = this.PausenMinZeit;
-        // mResult.Prozent = this.Prozent;
-        // mResult.SatzTyp = this.SatzTyp;
-        // mResult.SessionID = this.SessionID;
-        // mResult.Status = this.Status;
-        // mResult.UebungID = this.UebungID;
-        // mResult.WdhAusgefuehrt = this.WdhAusgefuehrt;
-        // mResult.WdhVorgabe = this.WdhVorgabe;
-        // mResult.GewichtVorgabe = this.GewichtVorgabe;
-        // mResult.GewichtAusgefuehrt = this.GewichtAusgefuehrt;
-        // mResult.AMRAP = true;
     }
 
     public static NeuerSatz(

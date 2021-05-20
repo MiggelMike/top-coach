@@ -3,7 +3,6 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { Router } from '@angular/router';
 
 
-
 @Component({
     selector: "app-session-form",
     templateUrl: "./session-form.component.html",
@@ -12,7 +11,8 @@ import { Router } from '@angular/router';
 export class SessionFormComponent implements OnInit {
     public Session: Session;
 
-    constructor(private router: Router) {
+    constructor(private router: Router
+        ) {
         const mNavigation = this.router.getCurrentNavigation();
         const mState = mNavigation.extras.state as {
             sess: Session
@@ -24,8 +24,5 @@ export class SessionFormComponent implements OnInit {
     }
 
     ngOnInit(): void { 
-    }
-
-    ngDoCheck() {
     }
 }

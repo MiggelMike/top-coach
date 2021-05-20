@@ -11,6 +11,7 @@ import { Sportler, ISportler } from '../../Business/Sportler/Sportler';
 import { ISession } from '../../Business/Session/Session';
 import { Uebung } from '../../Business/Uebung/Uebung';
 import { Observable, Subscriber } from 'rxjs';
+import {  OverlayRef  } from '@angular/cdk/overlay';
 
 
 export enum SpeicherOrtTyp {
@@ -18,6 +19,14 @@ export enum SpeicherOrtTyp {
     Google = 'Google',
     Facebook = 'Facebook'
 }
+
+export class BaseOverlayRef {
+    constructor(private overlayRef: OverlayRef) { }
+  
+    close(): void {
+      this.overlayRef.dispose();
+    }
+  }
 
 
 export enum StorageItemTyp {

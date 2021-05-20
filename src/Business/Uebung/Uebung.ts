@@ -1,4 +1,5 @@
 import { Satz, ISatz, SatzTyp, LiftTyp, SatzPausen, SatzStatus } from './../Satz/Satz';
+import { isFormattedError } from '@angular/compiler';
 
 var cloneDeep = require('lodash.clonedeep');
 
@@ -37,7 +38,11 @@ export interface IUebung {
     Selected: boolean;
     WarmUpVisible: boolean; 
     CooldownVisible: boolean;
-    AddBodyWeight: boolean;
+    IncludeBodyWeight: boolean;
+    IncludeWarmupWeight: boolean;
+    IncludeCoolDownWeight: boolean;
+    LiftedWeightVisible: boolean;
+    LiftedWeight: number;
     Copy(): Uebung;
     hasChanged(aCmpUebung: IUebung): Boolean;
 }
@@ -74,15 +79,18 @@ export class Uebung implements IUebung {
     public SessionID: number = 0;
     public SatzListe: Array<Satz> = [];
     public Selected: boolean = false;
-    public WarmUpVisible: boolean = true; 
+    public WarmUpVisible: boolean = true;
     public CooldownVisible: boolean = true;
-    public AddBodyWeight: boolean = false;
+    public IncludeBodyWeight: boolean = false;
+    public LiftedWeightVisible: boolean = true;
+    public IncludeWarmupWeight: boolean = false;
+    public IncludeCoolDownWeight: boolean = false;
 
     constructor() {
         // Nicht in Dexie-DB-Speichern -> enumerable: false
-        Object.defineProperty(this, 'SatzListe', { enumerable: false });
-        Object.defineProperty(this, 'Selected', { enumerable: false });
-    } 
+        Object.defineProperty(this, "SatzListe", { enumerable: false });
+        Object.defineProperty(this, "Selected", { enumerable: false });
+    }
 
     public hasChanged(aCmpUebung: IUebung): Boolean {
         if (this.ID != aCmpUebung.ID) return true;
@@ -91,16 +99,19 @@ export class Uebung implements IUebung {
         if (this.Name != aCmpUebung.Name) return true;
         if (this.Typ != aCmpUebung.Typ) return true;
 
-        if ((this.SatzListe) && (aCmpUebung.SatzListe)) {
+        if (this.SatzListe && aCmpUebung.SatzListe) {
             if (this.SatzListe.length != aCmpUebung.SatzListe.length)
                 return true;
-            
+
             for (let index = 0; index < this.SatzListe.length; index++) {
-                if (this.SatzListe[index].hasChanged(aCmpUebung.SatzListe[index])) {
-                    console.log('Set #' + index.toString() + ' has changed.');
+                if (
+                    this.SatzListe[index].hasChanged(
+                        aCmpUebung.SatzListe[index]
+                    )
+                ) {
+                    console.log("Set #" + index.toString() + " has changed.");
                     return true;
                 }
-                
             }
         }
 
@@ -108,7 +119,28 @@ export class Uebung implements IUebung {
     }
 
     public Copy(): Uebung {
-        return cloneDeep(this); 
+        const u = cloneDeep(this);
+        return cloneDeep(this);
+    }
+
+    public get LiftedWeight(): number {
+        let mResult: number = 0;
+
+        if (this.IncludeWarmupWeight)
+            this.AufwaermSatzListe.forEach(
+                (satz) => (mResult = mResult + satz.LiftedWeight)
+            );
+
+        if (this.IncludeCoolDownWeight)
+            this.AbwaermSatzListe.forEach(
+                (satz) => (mResult = mResult + satz.LiftedWeight)
+            );
+
+        this.ArbeitsSatzListe.forEach(
+            (satz) => (mResult = mResult + satz.LiftedWeight)
+        );
+        
+        return mResult;
     }
 
     public static ErzeugeGzclpKategorieen01(): Array<UebungsKategorie01> {
@@ -118,7 +150,7 @@ export class Uebung implements IUebung {
             UebungsKategorie01.GzclpT1Cycle2,
             UebungsKategorie01.GzclpT2Cycle0,
             UebungsKategorie01.GzclpT2Cycle1,
-            UebungsKategorie01.GzclpT2Cycle2,
+            UebungsKategorie01.GzclpT2Cycle2
         );
     }
 
@@ -127,7 +159,7 @@ export class Uebung implements IUebung {
         aTyp: UebungsTyp,
         aKategorieen01: Array<UebungsKategorie01>,
         aKategorie02: UebungsKategorie02
-        ): Uebung {
+    ): Uebung {
         //
         const mUebung = new Uebung();
         mUebung.Name = aName;
@@ -139,9 +171,8 @@ export class Uebung implements IUebung {
 
     public get AufwaermSatzListe(): Array<Satz> {
         const mResult = new Array<Satz>();
-        if (!this.SatzListe)
-            return mResult;
-        
+        if (!this.SatzListe) return mResult;
+
         this.SatzListe.forEach((mSatz) => {
             if (mSatz.SatzTyp == SatzTyp.Aufwaermen) {
                 mResult.push(mSatz);
@@ -152,9 +183,8 @@ export class Uebung implements IUebung {
 
     public get ArbeitsSatzListe(): Array<Satz> {
         const mResult = new Array<Satz>();
-        if (!this.SatzListe)
-            return mResult;
-        
+        if (!this.SatzListe) return mResult;
+
         this.SatzListe.forEach((mSatz) => {
             if (mSatz.SatzTyp === SatzTyp.Training) {
                 mResult.push(mSatz);
@@ -165,8 +195,7 @@ export class Uebung implements IUebung {
 
     public get AbwaermSatzListe(): Array<Satz> {
         const mResult = new Array<Satz>();
-        if (!this.SatzListe)
-            return mResult;
+        if (!this.SatzListe) return mResult;
 
         this.SatzListe.forEach((mSatz) => {
             if (mSatz.SatzTyp == SatzTyp.Abwaermen) {
@@ -176,31 +205,34 @@ export class Uebung implements IUebung {
         return mResult;
     }
 
-    public NeuerSatz( 
+    public NeuerSatz(
         aSatzTyp: SatzTyp,
         aLiftTyp: LiftTyp,
         aWdhVorgabe: number,
         aProzent: number,
         aAmrap: boolean
     ): Satz {
-        const mSatz = new Satz(
-            { UebungID : this.ID,
-              SatzTyp : aSatzTyp,
-              Prozent : aProzent,
-              WdhVorgabe : aWdhVorgabe,
-              WdhAusgefuehrt : 0,
-              GewichtVorgabe : 0,
-              GewichtAusgefuehrt : 0,
-              PausenMinZeit : SatzPausen.Standard_Min,
-              PausenMaxZeit : SatzPausen.Standard_Max,
-              Status : SatzStatus.Wartet,
-              AMRAP : aAmrap
-            } as Satz);
+        const mSatz = new Satz({
+            UebungID: this.ID,
+            SatzTyp: aSatzTyp,
+            Prozent: aProzent,
+            WdhVorgabe: aWdhVorgabe,
+            WdhAusgefuehrt: 0,
+            GewichtVorgabe: 0,
+            GewichtAusgefuehrt: 0,
+            PausenMinZeit: SatzPausen.Standard_Min,
+            PausenMaxZeit: SatzPausen.Standard_Max,
+            Status: SatzStatus.Wartet,
+            AMRAP: aAmrap,
+        } as Satz);
         mSatz.LiftTyp = aLiftTyp;
         return mSatz;
     }
 
-    public static StaticKopiere(aUebung: Uebung, aKategorie02: UebungsKategorie02): Uebung {
+    public static StaticKopiere(
+        aUebung: Uebung,
+        aKategorie02: UebungsKategorie02
+    ): Uebung {
         return Uebung.StaticNeueUebung(
             aUebung.Name,
             aUebung.Typ,
@@ -208,7 +240,6 @@ export class Uebung implements IUebung {
             aKategorie02
         );
     }
-
 }
 
 

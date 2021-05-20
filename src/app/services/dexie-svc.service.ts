@@ -248,12 +248,22 @@ export class DexieSvcService extends Dexie {
                 
                 if (mUebung.WarmUpVisible === undefined)
                     mUebung.WarmUpVisible = true;
-                
+
                 if (mUebung.CooldownVisible === undefined)
                     mUebung.CooldownVisible = true;
+
+                if (mUebung.IncludeBodyWeight === undefined)
+                    mUebung.IncludeBodyWeight = false;
+
+                if (mUebung.IncludeWarmupWeight === undefined)
+                    mUebung.IncludeWarmupWeight = false;
+
+                if (mUebung.IncludeCoolDownWeight === undefined)
+                    mUebung.IncludeCoolDownWeight = false;
                 
-                if (mUebung.AddBodyWeight === undefined)
-                    mUebung.AddBodyWeight = false;
+                // if (mUebung.LiftedWeight === undefined)
+                //     mUebung.LiftedWeight = false;
+                
                 
                 mUebung.SatzListe = await this.LadeUebungsSaetze(mUebung);
             }
