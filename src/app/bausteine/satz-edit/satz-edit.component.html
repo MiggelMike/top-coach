@@ -50,9 +50,9 @@
             <ng-template #SessionLaueft>
                 <!-- Ausgefuehrtes-Gewicht -->
                 <mat-form-field class="align-right" fxFlex="45px">
-                    <mat-label>{{satz.GewichtVorgabe | number: '1.1'}}</mat-label>
+                    <mat-label>{{satz.GewichtVorgabe | number: '1.2'}}</mat-label>
                     <input matInput [textMask]="{mask: floatMask, guide: false }"
-                    [ngModel]="satz.GewichtAusgefuehrt | number: '1.1'" (blur)="SetWeightAusgefuehrt($event.target.value)"
+                    [ngModel]="satz.GewichtAusgefuehrt | number: '1.2'" (blur)="SetWeightAusgefuehrt($event.target.value)"
                     type="text">
                 </mat-form-field>
                 <!-- Ausgefuerte Wdh. -->
@@ -75,7 +75,7 @@
                 <!-- Geplantes Vorgabe-Gewicht -->
                 <mat-form-field class="align-right" fxFlex="45px">
                     <input matInput [textMask]="{mask: floatMask, guide: false }"
-                    [ngModel]="satz.GewichtVorgabe | number: '1.1'" (blur)="SetWeightVorgabe($event.target.value)"
+                    [ngModel]="satz.GewichtVorgabe | number: '1.2'" (blur)="SetWeightVorgabe($event.target.value)"
                     type="text">
                 </mat-form-field>
 

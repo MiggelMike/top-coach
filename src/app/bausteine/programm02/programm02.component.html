@@ -5,8 +5,6 @@
                 <mat-expansion-panel #panSession='matExpansionPanel' [expanded]="SessionPanelsExpanded"  class="HG-01">
                     <mat-expansion-panel-header>
                         <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">
-                            <!-- <h6 class="mb-0">#{{i+1}} {{sess.Name}}</h6> -->
-                            <!-- <mat-label [ngModel]="sess.Name"></mat-label> -->
                             <mat-form-field class="align-left" fxFlex="70%">
                                 <ng-container *ngIf='bearbeitbar; then  BearbeitbarBlock else NurLesenBlock'></ng-container>
                                 <!-- Nur Lesen -->
