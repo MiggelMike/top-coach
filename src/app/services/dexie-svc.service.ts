@@ -220,12 +220,12 @@ export class DexieSvcService extends Dexie {
     }
 
     public CheckAktuellesProgram(aNeuesAktuellesProgramm: ITrainingsProgramm, aAltesAktuellesProgramm?: ITrainingsProgramm ):void {
-        // Soll das aktuelle Work-Out durch ein anderes ersetzt werden?
+        // Soll das aktuelle Programm durch ein anderes ersetzt werden?
         if (aAltesAktuellesProgramm !== undefined) {
             const mDialogData = new DialogData();
             mDialogData.OkData = aNeuesAktuellesProgramm;
             mDialogData.OkFn = (): void => {
-                // Es gibt ein aktuelles Work-Out, aber der Anwender will es ersetzen. 
+                // Es gibt ein aktuelles Programm, aber der Anwender will es ersetzen. 
                 this.DoAktuellesProgramm(aNeuesAktuellesProgramm, aAltesAktuellesProgramm);
             };
 

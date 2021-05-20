@@ -81,6 +81,20 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
 
     public ErstelleSessionsAusVorlage(aProgrammKategorie : ProgrammKategorie): ITrainingsProgramm {
         const mResult = this.Copy();
+        for (let index0 = 0; index0 < mResult.SessionListe.length; index0++) {
+            // Session
+            const mSession = mResult.SessionListe[index0];
+            for (let index1 = 0; index1 < mSession.UebungsListe.length; index1++) {
+                // Uebung
+                const mUebung = mSession.UebungsListe[index1];
+                for (let index2 = 0; index2 < mUebung.SatzListe.length; index2++) {
+                    // Satz
+                    const mSatz = mUebung.SatzListe[index2];
+                    mSatz.WdhAusgefuehrt = mSatz.WdhVorgabe;
+                    mSatz.GewichtAusgefuehrt = mSatz.GewichtVorgabe;
+                }
+            }
+        }
         mResult.ProgrammKategorie = aProgrammKategorie;
         return mResult;
     }
