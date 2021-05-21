@@ -15,6 +15,7 @@ export class Programm01Component implements OnInit {
     @Input() programm: ITrainingsProgramm;
     @Input() programmLadeContext: boolean | false;
     @Input() showButtons: boolean | false;
+    @Input() showSaveButtons: boolean | false;
     @Input() programmtext: { value: null };
 
     constructor(

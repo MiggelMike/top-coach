@@ -95,9 +95,14 @@ export class Uebung implements IUebung {
     public hasChanged(aCmpUebung: IUebung): Boolean {
         if (this.ID != aCmpUebung.ID) return true;
         if (this.Kategorie02 != aCmpUebung.Kategorie02) return true;
-        if (this.Kategorieen01 != aCmpUebung.Kategorieen01) return true;
         if (this.Name != aCmpUebung.Name) return true;
         if (this.Typ != aCmpUebung.Typ) return true;
+
+        if (this.Kategorieen01.length != aCmpUebung.Kategorieen01.length) return true;
+        for (let index = 0; index < this.Kategorieen01.length; index++) {
+            if (this.Kategorieen01[index] != aCmpUebung.Kategorieen01[index])
+                return true;
+        }
 
         if (this.SatzListe && aCmpUebung.SatzListe) {
             if (this.SatzListe.length != aCmpUebung.SatzListe.length)

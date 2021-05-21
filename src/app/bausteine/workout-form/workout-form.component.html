@@ -6,8 +6,10 @@
         <ng-container *ngIf="programm.SessionListe">
             <app-programm02 [programm]="programm" 
                             [SessionListe]="programm.SessionListe" 
-                            [ShowButtons]="true" 
-                            [bearbeitbar]="true">
+                            [showButtons]="true" 
+                            [showSaveButtons]="true" 
+                            [bearbeitbar]="true"
+                            (ProgrammSavedEvent)="CopyProgramm($event)">
             </app-programm02>
         </ng-container>
     </ng-container>

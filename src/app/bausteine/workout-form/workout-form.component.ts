@@ -1,7 +1,7 @@
 import { ComponentCanDeactivate } from 'src/app/component-can-deactivate';
 import { GlobalService } from "src/app/services/global.service";
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 
 
 
@@ -13,7 +13,7 @@ import { Component, OnInit } from "@angular/core";
 })
 export class WorkoutFormComponent extends ComponentCanDeactivate implements OnInit  {
     public programm: ITrainingsProgramm;
-    private cmpProgramm: ITrainingsProgramm;
+    public cmpProgramm: ITrainingsProgramm;
 
     constructor(
         private fGlobalService: GlobalService,
@@ -22,9 +22,15 @@ export class WorkoutFormComponent extends ComponentCanDeactivate implements OnIn
     }
 
     canDeactivate($event: Event): Boolean {
-        if((this.programm.hasChanged) && (this.programm.hasChanged(this.cmpProgramm) === false)) 
-            return true;
-        return false;
+        if (this.programm.hasChanged(this.cmpProgramm) === true) {
+            $event.stopPropagation();
+            return false;
+        }
+        return true;
+    }
+
+    CopyProgramm(aProgramm: ITrainingsProgramm) {
+        this.cmpProgramm = aProgramm.Copy();    
     }
 
 

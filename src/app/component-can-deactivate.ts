@@ -16,8 +16,8 @@ export abstract class ComponentCanDeactivate {
     @HostListener('window:beforeunload', ['$event'])
     unloadNotification($event: BeforeUnloadEvent) {
         if (this.canDeactivate($event) === false) {
-            // $event.preventDefault(); // for Firefox
-            // $event.returnValue = 'xxxx'; // for Chrome
+            $event.preventDefault(); // for Firefox
+            $event.returnValue = 'xxxx'; // for Chrome
             return false;
         }
         return void(0);

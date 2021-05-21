@@ -3,7 +3,7 @@ import { UebungsKategorie02 } from './../../../Business/Uebung/Uebung';
 import { DexieSvcService } from './../../services/dexie-svc.service';
 import { Session, SessionStatus } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
-import { Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";
+import { Output, EventEmitter, Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";
 import { MatAccordion } from '@angular/material';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { DialogeService } from "./../../services/dialoge.service";
@@ -21,8 +21,10 @@ import { Router, NavigationExtras } from '@angular/router';
 })
 export class Programm02Component implements OnInit {
     @Input() programm: ITrainingsProgramm = null;
+    @Output() ProgrammSavedEvent = new EventEmitter<ITrainingsProgramm>();
     @Input() SessionListe: Array<Session> = [];
-    @Input() ShowButtons: Boolean = false;
+    @Input() showButtons: Boolean = false;
+    @Input() showSaveButtons: Boolean = false;
     @Input() bearbeitbar: Boolean = false;
     @Input() session: Session = null;
     @Input() StartButtonVisible: Boolean = false;
@@ -202,6 +204,7 @@ export class Programm02Component implements OnInit {
 
     public SaveChanges() {
         this.fDbModule.ProgrammSpeichern(this.programm);
+        this.ProgrammSavedEvent.emit(this.programm);
     }
 
     public CancelChanges() {
