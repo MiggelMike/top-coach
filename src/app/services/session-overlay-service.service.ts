@@ -42,6 +42,7 @@ const DEFAULT_CONFIG: SessionOverlayConfig = {
 })
 export class SessionOverlayServiceService {
     public SessOverlayRef: OverlayRef = null;
+    public SessionStatsOverlayComponent: SessionStatsOverlayComponent;
 
     constructor(private overlay: Overlay, private injector: Injector) { }
     
@@ -75,14 +76,14 @@ export class SessionOverlayServiceService {
         // Returns an OverlayRef which is a PortalHost
         this.SessOverlayRef = this.createOverlay(dialogConfig);
         const dialogRef = new SessionOverlayRef(this.SessOverlayRef);
-        return this.attachDialogContainer(this.SessOverlayRef, dialogConfig, dialogRef);
-      //  this.SessOverlayRef.backdropClick().subscribe(_ => dialogRef.close());
-        // return this.SessOverlayRef;
+        this.SessOverlayRef.backdropClick().subscribe(_ => this.close());
+        this.SessionStatsOverlayComponent = this.attachDialogContainer(this.SessOverlayRef, dialogConfig, dialogRef);
+        return this.SessionStatsOverlayComponent;
     }
 
     close() {
-        this.SessOverlayRef.dispose();
-        this.SessOverlayRef = null;
+        this.SessionStatsOverlayComponent.close();
+        //this.SessOverlayRef.dispose();
     }
 
     private getOverlayConfig(aConfig: SessionOverlayConfig): OverlayConfig {

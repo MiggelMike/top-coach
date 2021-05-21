@@ -24,7 +24,8 @@ export class BaseOverlayRef {
     constructor(private overlayRef: OverlayRef) { }
   
     close(): void {
-      this.overlayRef.dispose();
+        this.overlayRef.dispose();
+        this.overlayRef = null;
     }
   }
 

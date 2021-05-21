@@ -1,4 +1,5 @@
 import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
+import {formatNumber} from '@angular/common';
 var cloneDeep = require('lodash.clonedeep');
 
 export enum SessionStatus {
@@ -23,6 +24,11 @@ export interface ISession {
     Bearbeitbar: Boolean;
     UebungsListe: Array<Uebung>;
     LiftedWeight: number;
+    GestartedWann: Date;
+    Dauer: string;
+    Timer: any;
+    StarteDauerTimer(): void;
+    CalcDauer(): void;
     Copy(): Session;
     addUebung(aUebung: Uebung);
     hasChanged(aCmpSession: ISession): Boolean;
@@ -41,6 +47,47 @@ export class Session implements ISession {
     public Kategorie02: SessionStatus = SessionStatus.Wartet;
     public Bearbeitbar: Boolean = false;
     public UebungsListe: Array<Uebung> = [];
+    public GestartedWann: Date = null;
+    public Dauer: string = "00:00:00"; 
+    public Timer: any; 
+
+    public CalcDauer():void {
+        const mJetzt: Date = new Date();
+        const mSekundenTotal: number =
+            Math.floor((
+                Date.UTC(
+                    mJetzt.getFullYear(),
+                    mJetzt.getMonth(),
+                    mJetzt.getDate(),
+                    mJetzt.getHours(),
+                    mJetzt.getMinutes(),
+                    mJetzt.getSeconds()
+                ) -
+                Date.UTC(
+                    this.GestartedWann.getFullYear(),
+                    this.GestartedWann.getMonth(),
+                    this.GestartedWann.getDate(),
+                    this.GestartedWann.getHours(),
+                    this.GestartedWann.getMinutes(),
+                    this.GestartedWann.getSeconds()
+                )) / 1000);
+
+        // "parseInt" entspricht einer ganzzahligen Divison
+       
+        // Stunden
+        const mStundenInt = parseInt((mSekundenTotal / 3600).toString());
+        const mStunden: string = formatNumber(mStundenInt, 'en-US', '2.0-0');
+        // Minuten
+        const mMinutenInt : number = parseInt(((mSekundenTotal / 60) % 60).toString());
+        const mMinuten: string = formatNumber(mMinutenInt, 'en-US', '2.0-0');
+        // Sekunden
+        const mSekunden: string = formatNumber(mSekundenTotal % 60, 'en-US', '2.0-0');
+        this.Dauer = mStunden + ':' + mMinuten + ':' + mSekunden;
+    }
+
+    public StarteDauerTimer(): void {
+        this.Timer = setInterval(() => this.CalcDauer(), 450);
+    }
 
     public get LiftedWeight():number {
         let mResult: number = 0;

@@ -191,6 +191,7 @@ export class Programm02Component implements OnInit {
             case SessionStatus.Laueft: aSession.Kategorie02 = SessionStatus.Pause; break;
         }
 
+        aSession.GestartedWann = new Date();
         const navigationExtras: NavigationExtras = {
             state: {
               sess: aSession

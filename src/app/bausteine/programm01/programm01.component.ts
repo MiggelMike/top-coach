@@ -19,7 +19,6 @@ export class Programm01Component implements OnInit {
 
     constructor(
         private fGlobalService: GlobalService,
-        private fDialogeService: DialogeService,
         private fDexieService: DexieSvcService
     ) {}
 

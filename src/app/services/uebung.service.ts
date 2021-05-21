@@ -1,4 +1,4 @@
-import { ISession } from 'src/Business/Session/Session';
+import { Session } from 'src/Business/Session/Session';
 import { Uebung } from 'src/Business/Uebung/Uebung';
 import { UebungWaehlenComponent, UebungWaehlenData } from './../uebung-waehlen/uebung-waehlen.component';
 import { Injectable } from '@angular/core';
@@ -20,7 +20,7 @@ export class UebungService {
 
     constructor(public fDialog?: MatDialog) {}
 
-    public UebungWaehlen(aUebungsListe: Array<Uebung>, aSession: ISession, aSelectFn: any) {
+    public UebungWaehlen(aUebungsListe: Array<Uebung>, aSession: Session, aSelectFn: any) {
         const mUebungWaehlenData: UebungWaehlenData = new UebungWaehlenData();
 
         const mDialogConfig = new MatDialogConfig();
