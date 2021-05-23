@@ -4,7 +4,7 @@ import { ComponentCanDeactivate } from 'src/app/component-can-deactivate';
 import { DexieSvcService } from './../../services/dexie-svc.service';
 import { Session } from "./../../../Business/Session/Session";
 import { Component, OnInit } from "@angular/core";
-import { Router } from '@angular/router';
+import { Router, Event } from '@angular/router';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
 
 
@@ -29,14 +29,15 @@ export class SessionFormComponent
         const mNavigation = this.fRouter.getCurrentNavigation();
         const mState = mNavigation.extras.state as { sess: Session; };
         this.Session = mState.sess;
-        this.cmpSession = mState.sess.Copy();
     }
 
     canDeactivate($event: any): Boolean {
         return this.Session.hasChanged(this.cmpSession) === false;
     }
 
-    ngAfterViewInit() {}
+    ngAfterViewInit() {
+        this.cmpSession = this.Session.Copy();
+    }
 
     ngOnInit(): void {}
 
@@ -60,8 +61,6 @@ export class SessionFormComponent
                 aPara.Session.UebungsListe.push(mUebung);
             }
 
-            aPara.cmpSession = aPara.Session.Copy();
-
             for (let index = 0; index < mUebungsListe.length; index++) {
                 const mUebung = mUebungsListe[index];
                 const mUebung1 = (aPara.Session.UebungsListe.find(u => u.ID === mUebung.ID));
@@ -71,14 +70,8 @@ export class SessionFormComponent
                     mUebung1.CooldownVisible = mUebung.CooldownVisible;
                 }
             }
-
-            aPara.DoStats();
         };
 
         aPara.fDialogService.JaNein(mDialogData);
-    }
-
-    public DoStats() {
-        
     }
 }

@@ -18,11 +18,11 @@ import { of } from 'rxjs';
     styleUrls: ["./programm03.component.scss"],
 })
     
+    
 export class Programm03Component implements OnInit {
     @Input() programm: ITrainingsProgramm;
     @Input() session: ISession;
     @Input() SessUeb: Uebung;
-    @Output() doStatsEvent = new EventEmitter<any>();
     @Input() rowNum: number = 0;
     @Input() bearbeitbar: Boolean;
     @Input() panUebung1: MatExpansionPanel;
@@ -46,9 +46,8 @@ export class Programm03Component implements OnInit {
             console.log("UebungPanelsObserver got a complete notification"),
     };
 
-    ngOnInit() {
-     }
-
+    ngOnInit() { }
+    
     constructor(
         private fGlobalService: GlobalService,
         private fDialogService: DialogeService,
@@ -150,7 +149,5 @@ export class Programm03Component implements OnInit {
     public CopyExcercise(aUebung: Uebung) {
         this.fGlobalService.SessUebungKopie = aUebung.Copy();
     }
-
-        // this.outSession.emit(this.session);
 }
   

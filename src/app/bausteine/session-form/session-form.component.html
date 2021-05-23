@@ -1,13 +1,11 @@
 <app-programm03 
     [session]="Session" 
     [bearbeitbar]="true" 
-    [ShowStats]="true"
-    (doStatsEvent)="doStats()">
+    [ShowStats]="true">
 </app-programm03>
 
 <app-data-store-buttons
     [SaveClick]="SaveChanges" 
     [CancelClick]="CancelChanges"
-    [ClickData]="this" 
-
-></app-data-store-buttons>
+    [ClickData]="this">
+</app-data-store-buttons>
