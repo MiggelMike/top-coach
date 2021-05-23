@@ -116,9 +116,7 @@ export class DexieSvcService extends Dexie {
             .then((mUebungen) => {
                 for (const mUeb in UebungsName) {
                     if (
-                        mUebungen.find((mUebung) => mUebung.Name === mUeb) ===
-                        undefined
-                    ) {
+                        mUebungen.find((mUebung) => mUebung.Name === mUeb) === undefined) {
                         const mNeueUebung = this.NeueUebung(
                             mUeb,
                             UebungsKategorie02.Stamm
@@ -329,8 +327,8 @@ export class DexieSvcService extends Dexie {
                 if (mUebung.IncludeCoolDownWeight === undefined)
                     mUebung.IncludeCoolDownWeight = false;
                 
-                // if (mUebung.LiftedWeight === undefined)
-                //     mUebung.LiftedWeight = false;
+                if (mUebung.Expanded === undefined)
+                    mUebung.Expanded = false;
                 
                 
                 mUebung.SatzListe = await this.LadeUebungsSaetze(mUebung);

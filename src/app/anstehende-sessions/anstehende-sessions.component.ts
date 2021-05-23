@@ -41,7 +41,7 @@ export class AnstehendeSessionsComponent implements OnInit {
         aSess.Expanded = false;
     }
 
-    public LadeSessions():void {
+    public LadeSessions() {
         this.AnstehendeSessionObserver.subscribe(
             (sessions: Array<ISession>) => {
                 this.fDbModule

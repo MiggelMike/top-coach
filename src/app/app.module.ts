@@ -48,6 +48,7 @@ import { UebungWaehlenComponent } from './uebung-waehlen/uebung-waehlen.componen
 import { RouterModule } from '@angular/router';
 import { routes } from "./app-routing.module";
 import { SessionStatsOverlayComponent } from './session-stats-overlay/session-stats-overlay.component';
+import { DataStoreButtonsComponent } from './bausteine/data-store-buttons/data-store-buttons.component';
 
 
 // import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
@@ -96,7 +97,8 @@ export const floatMask = createNumberMask({
         SatzComponent,
         SessUebungComponent,
         UebungWaehlenComponent,
-        SessionStatsOverlayComponent
+        SessionStatsOverlayComponent,
+        DataStoreButtonsComponent
     ],
     imports: [
         RouterModule.forRoot(routes),

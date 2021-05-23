@@ -1,4 +1,4 @@
-import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
+import { Uebung, UebungsKategorie02, IUebung } from 'src/Business/Uebung/Uebung';
 import {formatNumber} from '@angular/common';
 var cloneDeep = require('lodash.clonedeep');
 
@@ -128,6 +128,9 @@ export class Session implements ISession {
 
             if (this.UebungsListe) {
                 for (let index = 0; index < this.UebungsListe.length; index++) {
+                    if (this.UebungsListe[index].hasChanged === undefined)
+                        break;
+                    
                     if (this.UebungsListe[index].hasChanged(aCmpSession.UebungsListe[index])) {
                         console.log('Exercise #' + index.toString() + ' has changed.');
                         return true;

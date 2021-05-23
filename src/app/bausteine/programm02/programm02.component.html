@@ -74,12 +74,9 @@
 </ng-container>
 
 <ng-container *ngIf="showSaveButtons">
-    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center" [style.margin-top]="'5px'">
-        <div class="center-item" layout-align="center center">
-            <a class='link-button-font' mat-flat-button (click)="SaveChanges()">Save</a>
-        </div>
-        <div class="center-item" layout-align="center center">
-            <a class='link-button-font' mat-flat-button (click)="CancelChanges()">Cancel</a>
-        </div>
-    </div>
+    <app-data-store-buttons
+        [SaveClick]="SaveChanges" 
+        [CancelClick]="CancelChanges" 
+        [ClickData]="this" 
+    ></app-data-store-buttons>
 </ng-container>

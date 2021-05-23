@@ -1,13 +1,13 @@
 import { SessionStatsOverlayComponent } from './../../session-stats-overlay/session-stats-overlay.component';
 import { SessionOverlayServiceService, SessionOverlayConfig } from './../../services/session-overlay-service.service';
-import { OverlayRef, CdkOverlayOrigin, OverlayConfig } from '@angular/cdk/overlay';
-import { Uebung, IUebung } from './../../../Business/Uebung/Uebung';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { Uebung  } from './../../../Business/Uebung/Uebung';
 import { GlobalService } from 'src/app/services/global.service';
 import { MatAccordion } from '@angular/material';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { ISession, Session } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
-import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, ElementRef } from "@angular/core";
+import { EventEmitter, Output, Component, OnInit, Input, ViewChildren, ViewChild, QueryList, ElementRef } from "@angular/core";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { of } from 'rxjs';
@@ -21,6 +21,8 @@ import { of } from 'rxjs';
 export class Programm03Component implements OnInit {
     @Input() programm: ITrainingsProgramm;
     @Input() session: ISession;
+    @Input() SessUeb: Uebung;
+    @Output() doStatsEvent = new EventEmitter<any>();
     @Input() rowNum: number = 0;
     @Input() bearbeitbar: Boolean;
     @Input() panUebung1: MatExpansionPanel;
@@ -44,7 +46,8 @@ export class Programm03Component implements OnInit {
             console.log("UebungPanelsObserver got a complete notification"),
     };
 
-    ngOnInit() { }
+    ngOnInit() {
+     }
 
     constructor(
         private fGlobalService: GlobalService,
@@ -72,21 +75,36 @@ export class Programm03Component implements OnInit {
             this.accUebung.forEach((acc) => acc.closeAll());
             this.isExpanded = false;
             this.ToggleButtonText = "Open all excercises";
+            this.SessUeb.Expanded = false;
         } else {
             this.accUebung.forEach((acc) => acc.openAll());
             this.isExpanded = true;
             this.ToggleButtonText = "Close all excercises";
+            this.SessUeb.Expanded = true;
         }
+    }
+
+    PanelUebungOpened(aUebung: Uebung) {
+        if(aUebung.Expanded)
+            aUebung.Expanded = true;
+        this.accCheckUebungPanels();
+    }
+
+    PanelUebungClosed(aUebung: Uebung) {
+        if(aUebung.Expanded)
+            aUebung.Expanded = false;
+        this.accCheckUebungPanels();
     }
 
     accCheckUebungPanels() {
         if (!this.panUebung) return;
 
         let mAllClosed = true;
-
+       
         if (this.session.UebungsListe.length > 0) {
             const mPanUebungListe = this.panUebung.toArray();
             for (let index = 0; index < mPanUebungListe.length; index++) {
+                this.session.UebungsListe[index].Expanded = mPanUebungListe[index].expanded;
                 if (mPanUebungListe[index].expanded) {
                     mAllClosed = false;
                     break;
@@ -132,5 +150,7 @@ export class Programm03Component implements OnInit {
     public CopyExcercise(aUebung: Uebung) {
         this.fGlobalService.SessUebungKopie = aUebung.Copy();
     }
+
+        // this.outSession.emit(this.session);
 }
   

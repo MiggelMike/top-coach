@@ -43,6 +43,7 @@ export interface IUebung {
     IncludeCoolDownWeight: boolean;
     LiftedWeightVisible: boolean;
     LiftedWeight: number;
+    Expanded: boolean;
     Copy(): Uebung;
     hasChanged(aCmpUebung: IUebung): Boolean;
 }
@@ -85,11 +86,13 @@ export class Uebung implements IUebung {
     public LiftedWeightVisible: boolean = true;
     public IncludeWarmupWeight: boolean = false;
     public IncludeCoolDownWeight: boolean = false;
+    public Expanded: boolean = false;
 
     constructor() {
         // Nicht in Dexie-DB-Speichern -> enumerable: false
         Object.defineProperty(this, "SatzListe", { enumerable: false });
         Object.defineProperty(this, "Selected", { enumerable: false });
+        Object.defineProperty(this, "Expanded", { enumerable: false });
     }
 
     public hasChanged(aCmpUebung: IUebung): Boolean {
@@ -124,7 +127,6 @@ export class Uebung implements IUebung {
     }
 
     public Copy(): Uebung {
-        const u = cloneDeep(this);
         return cloneDeep(this);
     }
 

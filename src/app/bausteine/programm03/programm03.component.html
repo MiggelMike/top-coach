@@ -8,11 +8,12 @@
     </ng-container>
 
     <ng-container *ngFor="let SessUeb of session.UebungsListe, index as i; let isOdd=odd">
+        <ng-container [SessUeb]="SessUeb"></ng-container>
         <mat-accordion #accUebung='matAccordion' multi="true">
             <mat-expansion-panel #panUebung='matExpansionPanel' 
-                [expanded]="true" 
-                (closed)="accCheckUebungPanels()"
-                (opened)="accCheckUebungPanels()">
+                [expanded]="SessUeb.Expanded" 
+                (closed)="PanelUebungClosed(SessUeb)"
+                (opened)="PanelUebungOpened(SessUeb)">
                 <mat-expansion-panel-header>
                     <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxFlex="100%"> 
                         <div layout-align="start center" fxFlex="0 0 70%">
@@ -56,19 +57,19 @@
                 <div class="card-body">
                     <div fxLayout="column" fxLayoutGap="2px" fxFlex="100%">
                         <ng-container *ngIf="SessUeb.AufwaermSatzListe && SessUeb.WarmUpVisible">
-                            <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Warm up sets'"
+                            <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Warm up sets'"  
                                 [satzListe]="SessUeb.AufwaermSatzListe" [session]="session" [sessUebung]="SessUeb" [bearbeitbar] = "bearbeitbar">
                             </app-sess-uebung>
                         </ng-container>
                 
                         <ng-container *ngIf="SessUeb.ArbeitsSatzListe">
-                            <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Work sets'"
+                            <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Work sets'" 
                                 [satzListe]="SessUeb.ArbeitsSatzListe" [session]="session" [sessUebung]="SessUeb" [bearbeitbar] = "bearbeitbar">
                             </app-sess-uebung>
                         </ng-container>
                 
                         <ng-container *ngIf="SessUeb.AbwaermSatzListe  && SessUeb.CoolDownVisible">
-                            <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Cool down sets'"
+                            <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Cool down sets'" 
                                 [satzListe]="SessUeb.AbwaermSatzListe" [session]="session" [sessUebung]="SessUeb" [bearbeitbar] = "bearbeitbar">
                             </app-sess-uebung>
                         </ng-container>

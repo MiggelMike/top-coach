@@ -53,7 +53,7 @@ export class Programm02Component implements OnInit {
         private fDialogService: DialogeService,
         private fGlobalService: GlobalService,
         private fUebungService: UebungService,
-        private fDbModule: DexieSvcService,
+        public DbModule: DexieSvcService,
         private router: Router
     ) {}
 
@@ -98,11 +98,11 @@ export class Programm02Component implements OnInit {
     }
 
     public AddExercise(aSession: Session) {
-        if (this.fDbModule.UebungsDaten.length === 0)
-            this.fDbModule.LadeStammUebungen();
+        if (this.DbModule.UebungsDaten.length === 0)
+            this.DbModule.LadeStammUebungen();
         else
             this.fUebungService.UebungWaehlen(
-                this.fDbModule.UebungsDaten,
+                this.DbModule.UebungsDaten,
                 aSession,
                 this.SelectUebungDelegate
             );
@@ -202,9 +202,10 @@ export class Programm02Component implements OnInit {
         this.router.navigate(['sessionFormComponent'], { state: { sess: aSession } } );
     }
 
-    public SaveChanges() {
-        this.fDbModule.ProgrammSpeichern(this.programm);
-        this.ProgrammSavedEvent.emit(this.programm);
+    public SaveChanges(para: any) {
+        para.DbModule.ProgrammSpeichern(para.programm);
+        if (para.ProgrammSavedEvent != undefined)
+            para.ProgrammSavedEvent.emit(para.programm);
     }
 
     public CancelChanges() {
