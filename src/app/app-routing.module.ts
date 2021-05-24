@@ -13,7 +13,7 @@ export const routes: Routes = [
     { path: '', component: AnstehendeSessionsComponent },
     { path: 'programmwaehlen', component: ProgrammWaehlenComponent },
     { path: 'workoutform', component: WorkoutFormComponent },
-    { path: 'sessionFormComponent', component: SessionFormComponent },
+    { path: 'sessionFormComponent', component: SessionFormComponent, data: { title: 'welcome', toolbar: false} },
 ];
 
 @NgModule({

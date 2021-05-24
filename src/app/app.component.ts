@@ -1,3 +1,4 @@
+import { NavbarService } from './services/navbar.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { Component, OnInit } from '@angular/core';
 import { FilePreviewOverlayService } from './services/file-preview-overlay.service';
@@ -21,7 +22,7 @@ const numericNumberReg = '[0-9]';
 export class AppComponent implements OnInit {
   title = 'Top-Coach';
     public form: FormGroup;
-    public state$: Observable<{ [key:string]: string }>;
+    public state$: Observable<{ [key: string]: string }>;
   
     constructor(
         private router: Router,
@@ -29,7 +30,7 @@ export class AppComponent implements OnInit {
         private svc: GlobalService,
         private fb: FormBuilder,
         private aTrainingServiceModule: TrainingServiceModule) {
-    const y = 0;
+        const y = 0;
     aTrainingServiceModule.setX(123);
     console.log('>>> app component x has been set to ', aTrainingServiceModule.getX());
   }

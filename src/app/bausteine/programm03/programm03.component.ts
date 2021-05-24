@@ -5,12 +5,13 @@ import { Uebung  } from './../../../Business/Uebung/Uebung';
 import { GlobalService } from 'src/app/services/global.service';
 import { MatAccordion } from '@angular/material';
 import { MatExpansionPanel } from '@angular/material/expansion';
-import { ISession, Session } from './../../../Business/Session/Session';
+import { ISession } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
-import { EventEmitter, Output, Component, OnInit, Input, ViewChildren, ViewChild, QueryList, ElementRef } from "@angular/core";
+import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, ElementRef, Output } from "@angular/core";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { of } from 'rxjs';
+
 
 @Component({
     selector: "app-programm03",

@@ -1,0 +1,13 @@
+<ng-container *ngIf="isVisible">
+    <mat-toolbar [ngClass]="['link-button-font', 'HG-01']" >
+        <mat-toolbar-row>
+            <!-- <button mat-icon-button>
+                <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
+            </button> -->
+            <div>
+                <a mat-button (click)="NavCheckFn? NavCheckFn('',Data) : NavHome()"> Home </a>
+                <a mat-button (click)="NavCheckFn? NavCheckFn('/programmwaehlen',Data) : NavProgrammWaehlen()"> Select Workout </a>
+            </div>
+        </mat-toolbar-row>
+    </mat-toolbar>
+</ng-container>

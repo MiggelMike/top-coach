@@ -1,12 +1,15 @@
+import { NavbarService } from './../../services/navbar.service';
 import { Uebung } from 'src/Business/Uebung/Uebung';
 import { DialogeService } from './../../services/dialoge.service';
-import { ComponentCanDeactivate } from 'src/app/component-can-deactivate';
 import { DexieSvcService } from './../../services/dexie-svc.service';
 import { Session } from "./../../../Business/Session/Session";
-import { Component, OnInit } from "@angular/core";
+import { Input, Component, OnInit } from "@angular/core";
 import { Router, Event } from '@angular/router';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
 
+interface IBeforeNav{
+    (aPara?: any): void;
+}
 
 @Component({
     selector: "app-session-form",
@@ -14,25 +17,31 @@ import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
     styleUrls: ["./session-form.component.scss"],
 })
 export class SessionFormComponent
-    extends ComponentCanDeactivate
     implements OnInit
-{
+    {
+    @Input() doBeforeNav: IBeforeNav = null;
     public Session: Session;
     public cmpSession: Session;
 
     constructor(
-        private fRouter: Router,
+        private router: Router,
         public fDexieSvcService: DexieSvcService,
-        private fDialogService: DialogeService
+        private fDialogService: DialogeService,
+        public NavbarService: NavbarService
     ) {
-        super();
-        const mNavigation = this.fRouter.getCurrentNavigation();
+        this.NavbarService.visible = false;
+        const mNavigation = this.router.getCurrentNavigation();
         const mState = mNavigation.extras.state as { sess: Session; };
         this.Session = mState.sess;
     }
 
-    canDeactivate($event: any): Boolean {
-        return this.Session.hasChanged(this.cmpSession) === false;
+
+    leave(aNavPath: string, aPara: any) {
+        if (aPara.Session.hasChanged(aPara.cmpSession) === false) {
+            this.router.navigate([aNavPath] );
+        } else {
+            aPara.CancelChanges(aPara, aNavPath);
+        }
     }
 
     ngAfterViewInit() {
@@ -46,9 +55,7 @@ export class SessionFormComponent
         aPara.cmpSession = aPara.Session.Copy();
     }
 
-    public CancelChanges(aPara: SessionFormComponent) {
-        if (aPara.Session.hasChanged(aPara.cmpSession) === false) return;
-
+    public CancelChanges(aPara: SessionFormComponent, aNavRoute: string) {
         const mDialogData = new DialogData();
         mDialogData.textZeilen.push("Cancel unsaved changes?");
         mDialogData.OkFn = (): void => {
@@ -70,6 +77,8 @@ export class SessionFormComponent
                     mUebung1.CooldownVisible = mUebung.CooldownVisible;
                 }
             }
+            
+            this.router.navigate([aNavRoute] );
         };
 
         aPara.fDialogService.JaNein(mDialogData);

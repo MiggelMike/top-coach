@@ -11,7 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatMenuModule } from '@angular/material/menu';
 import { AppRoutingModule } from './app-routing.module';
 import { AnstehendeSessionsComponent } from './anstehende-sessions/anstehende-sessions.component';
@@ -49,6 +49,7 @@ import { RouterModule } from '@angular/router';
 import { routes } from "./app-routing.module";
 import { SessionStatsOverlayComponent } from './session-stats-overlay/session-stats-overlay.component';
 import { DataStoreButtonsComponent } from './bausteine/data-store-buttons/data-store-buttons.component';
+import { ToolbarComponent } from './bausteine/toolbar/toolbar.component';
 
 
 // import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
@@ -98,7 +99,8 @@ export const floatMask = createNumberMask({
         SessUebungComponent,
         UebungWaehlenComponent,
         SessionStatsOverlayComponent,
-        DataStoreButtonsComponent
+        DataStoreButtonsComponent,
+        ToolbarComponent
     ],
     imports: [
         RouterModule.forRoot(routes),
