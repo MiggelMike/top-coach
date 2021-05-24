@@ -1,5 +1,3 @@
-import { SessionStatsOverlayComponent } from './../../session-stats-overlay/session-stats-overlay.component';
-import { SessionOverlayServiceService, SessionOverlayConfig } from './../../services/session-overlay-service.service';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { Uebung  } from './../../../Business/Uebung/Uebung';
 import { GlobalService } from 'src/app/services/global.service';
@@ -35,7 +33,6 @@ export class Programm03Component implements OnInit {
     @ViewChild('Session') div: ElementRef;
 
     private isExpanded: Boolean = true;
-    private fSessionStatsOverlayComponent: SessionStatsOverlayComponent = null;
     public ToggleButtonText = "Close all excercises";
     private UebungPanelsObserver = {
         next: (x: MatExpansionPanel) => {
@@ -51,18 +48,10 @@ export class Programm03Component implements OnInit {
     
     constructor(
         private fGlobalService: GlobalService,
-        private fDialogService: DialogeService,
-        private fSessionOverlayServiceService: SessionOverlayServiceService,
+        private fDialogService: DialogeService
     ) {
         if (this.fGlobalService.Comp03PanelUebungObserver === null)
             this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;
-    }
-
-    doStats() {
-        if ((this.fSessionStatsOverlayComponent === null)||(this.fSessionStatsOverlayComponent.dialogRef === null))
-            this.fSessionStatsOverlayComponent = this.fSessionOverlayServiceService.open({ session: this.session } as SessionOverlayConfig);
-        else 
-            this.fSessionStatsOverlayComponent.close();
     }
 
     ngOnDestroy() {

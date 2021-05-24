@@ -1,11 +1,5 @@
 <ng-container *ngIf="session && session.UebungsListe && (session.UebungsListe.length > 0)" >
     <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
-    <ng-container *ngIf="ShowStats">
-        <a  [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
-            (click)="doStats()" 
-            >Stats
-        </a>
-    </ng-container>
 
     <ng-container *ngFor="let SessUeb of session.UebungsListe, index as i; let isOdd=odd">
         <ng-container [SessUeb]="SessUeb"></ng-container>
