@@ -1,9 +1,9 @@
-import { ComponentCanDeactivate } from 'src/app/component-can-deactivate';
+import { Router } from '@angular/router';
 import { GlobalService } from "src/app/services/global.service";
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
-import { Component, OnInit, Output, EventEmitter } from "@angular/core";
-
-
+import { Component, OnInit } from "@angular/core";
+import { DialogeService } from 'src/app/services/dialoge.service';
+import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
 
 
 @Component({
@@ -11,33 +11,44 @@ import { Component, OnInit, Output, EventEmitter } from "@angular/core";
     templateUrl: "./workout-form.component.html",
     styleUrls: ["./workout-form.component.scss"],
 })
-export class WorkoutFormComponent extends ComponentCanDeactivate implements OnInit  {
+export class WorkoutFormComponent implements OnInit  {
     public programm: ITrainingsProgramm;
     public cmpProgramm: ITrainingsProgramm;
 
     constructor(
         private fGlobalService: GlobalService,
-    ) {
-        super();
-    }
-
-    canDeactivate($event: Event): Boolean {
-        if (this.programm.hasChanged(this.cmpProgramm) === true) {
-            $event.stopPropagation();
-            return false;
-        }
-        return true;
-    }
+        private router: Router,
+        private fDialogService: DialogeService,
+    ) {}
 
     CopyProgramm(aProgramm: ITrainingsProgramm) {
         this.cmpProgramm = aProgramm.Copy();    
     }
 
-
     ngOnInit() {
         this.programm = this.fGlobalService.EditWorkout;
         if(this.fGlobalService.EditWorkout)
             this.cmpProgramm = this.fGlobalService.EditWorkout.Copy();
+    }
+
+    CancelChanges(aPara: WorkoutFormComponent, aNavRoute: string) {
+        const mDialogData = new DialogData();
+        mDialogData.textZeilen.push("Cancel unsaved changes?");
+        mDialogData.OkFn = (): void => {
+            aPara.programm.resetProgram(aPara.cmpProgramm);
+            this.router.navigate([aNavRoute] );
+        };
+
+        this.fDialogService.JaNein(mDialogData);
+    }
+
+
+    leave(aNavPath: string, aPara: any) {
+        if (aPara.programm.hasChanged(aPara.cmpProgramm) === false) {
+            this.router.navigate([aNavPath] );
+        } else {
+            aPara.CancelChanges(aPara, aNavPath);
+        }
     }
 }
 

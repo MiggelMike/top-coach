@@ -1,11 +1,11 @@
+import { GlobalService } from 'src/app/services/global.service';
 import { SessionStatsOverlayComponent } from './../../session-stats-overlay/session-stats-overlay.component';
 import { SessionOverlayServiceService, SessionOverlayConfig } from './../../services/session-overlay-service.service';
-import { NavbarService } from './../../services/navbar.service';
 import { Uebung } from 'src/Business/Uebung/Uebung';
 import { DialogeService } from './../../services/dialoge.service';
 import { DexieSvcService } from './../../services/dexie-svc.service';
 import { Session } from "./../../../Business/Session/Session";
-import { Input, Component, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Router } from '@angular/router';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
 
@@ -26,10 +26,8 @@ export class SessionFormComponent
         private router: Router,
         public fDexieSvcService: DexieSvcService,
         private fDialogService: DialogeService,
-        public NavbarService: NavbarService,
         private fSessionOverlayServiceService: SessionOverlayServiceService
     ) {
-        this.NavbarService.visible = false;
         const mNavigation = this.router.getCurrentNavigation();
         const mState = mNavigation.extras.state as { sess: Session; };
         this.Session = mState.sess;
@@ -69,28 +67,10 @@ export class SessionFormComponent
         const mDialogData = new DialogData();
         mDialogData.textZeilen.push("Cancel unsaved changes?");
         mDialogData.OkFn = (): void => {
-            const mUebungsListe: Array<Uebung> = new Array<Uebung>();
-            aPara.Session.UebungsListe.forEach(u => mUebungsListe.push(u.Copy()));
-            aPara.Session.UebungsListe = [];
-            
-            for (let index = 0; index < aPara.cmpSession.UebungsListe.length; index++) {
-                const mUebung = aPara.cmpSession.UebungsListe[index].Copy();
-                aPara.Session.UebungsListe.push(mUebung);
-            }
-
-            for (let index = 0; index < mUebungsListe.length; index++) {
-                const mUebung = mUebungsListe[index];
-                const mUebung1 = (aPara.Session.UebungsListe.find(u => u.ID === mUebung.ID));
-                if(mUebung1){
-                    mUebung1.Expanded = mUebung.Expanded;
-                    mUebung1.WarmUpVisible = mUebung.WarmUpVisible;
-                    mUebung1.CooldownVisible = mUebung.CooldownVisible;
-                }
-            }
-            
-            this.router.navigate([aNavRoute] );
+            aPara.Session.resetSession(aPara.cmpSession);
+            this.router.navigate([aNavRoute]);
         };
-
-        aPara.fDialogService.JaNein(mDialogData);
+    
+        this.fDialogService.JaNein(mDialogData);
     }
 }

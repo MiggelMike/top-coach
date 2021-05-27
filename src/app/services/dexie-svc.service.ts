@@ -358,7 +358,7 @@ export class DexieSvcService extends Dexie {
         });
     }
 
-    public SessionSpeichern(aSession: ISession) {
+    public SessionSpeichern(aSession: Session) {
         return this.transaction(
             "rw",
             this.SessionTable,
@@ -399,7 +399,7 @@ export class DexieSvcService extends Dexie {
                             aTrainingsProgramm.SessionListe.forEach(
                                 (mEineSession) => {
                                     mEineSession.FK_Programm = id;
-                                    this.SessionSpeichern(mEineSession);
+                                    this.SessionSpeichern(mEineSession as Session);
                                 }
                             );
                         }

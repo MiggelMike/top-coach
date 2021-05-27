@@ -32,6 +32,7 @@ export interface ISession {
     Copy(): Session;
     addUebung(aUebung: Uebung);
     hasChanged(aCmpSession: ISession): Boolean;
+    resetSession(aQuellSession: ISession): void;
 }
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
@@ -139,6 +140,39 @@ export class Session implements ISession {
             }
         }
         return false;
+    }
+
+    public resetSession(aQuellSession: ISession):void {
+        const mUebungsListe: Array<Uebung> = new Array<Uebung>();
+        this.UebungsListe.forEach(u => mUebungsListe.push(u.Copy()));
+        this.UebungsListe = [];
+
+        this.Datum = aQuellSession.Datum;
+        this.DauerInSek = aQuellSession.DauerInSek;
+        this.Expanded = aQuellSession.Expanded;
+        this.FK_Programm = aQuellSession.FK_Programm;
+        this.GestartedWann = aQuellSession.GestartedWann;
+        this.ID = aQuellSession.ID;
+        this.Kategorie01 = aQuellSession.Kategorie01;
+        this.Kategorie02 = aQuellSession.Kategorie02;
+        this.Name = aQuellSession.Name;
+        this.SessionNr = aQuellSession.SessionNr;
+        // aSession.Timer = aCmpSession.Timer;
+        
+        for (let index = 0; index < aQuellSession.UebungsListe.length; index++) {
+            const mUebung = aQuellSession.UebungsListe[index].Copy();
+            this.UebungsListe.push(mUebung);
+        }
+
+        for (let index = 0; index < mUebungsListe.length; index++) {
+            const mUebung = mUebungsListe[index];
+            const mUebung1 = (this.UebungsListe.find(u => u.ID === mUebung.ID));
+            if (mUebung1) {
+                mUebung1.Expanded = mUebung.Expanded;
+                mUebung1.WarmUpVisible = mUebung.WarmUpVisible;
+                mUebung1.CooldownVisible = mUebung.CooldownVisible;
+            }
+        }
     }
 
 }

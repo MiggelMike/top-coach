@@ -5,16 +5,16 @@
                 <mat-expansion-panel #panSession='matExpansionPanel' [expanded]="SessionPanelsExpanded"  class="HG-01">
                     <mat-expansion-panel-header>
                         <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">
-                            <mat-form-field class="align-left" fxFlex="70%">
+                            <mat-form-field class="align-left" fxFlex="auto">
                                 <ng-container *ngIf='bearbeitbar; then  BearbeitbarBlock else NurLesenBlock'></ng-container>
                                 <!-- Nur Lesen -->
                                 <ng-template #NurLesenBlock>
-                                    <input matInput [(ngModel)]="sess.Name" type="text" maxlength="40" (click)="$event.stopPropagation()" readonly>
+                                    <input matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" readonly>
                                 </ng-template>
                         
                                 <!-- Bearbeitbar -->
                                 <ng-template #BearbeitbarBlock>
-                                    <input matInput [(ngModel)]="sess.Name" type="text" maxlength="40" (click)="$event.stopPropagation()">
+                                    <input matInput [(ngModel)]="sess.Name" type="text"  (click)="$event.stopPropagation()">
                                 </ng-template>
                             </mat-form-field>
                                                 

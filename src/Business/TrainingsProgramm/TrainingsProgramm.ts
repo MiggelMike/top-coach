@@ -1,5 +1,6 @@
 import { ISession } from 'src/Business/Session/Session';
 import { DexieSvcService } from './../../app/services/dexie-svc.service';
+import { runInThisContext } from 'vm';
 var cloneDeep = require('lodash.clonedeep');
 
 export enum ProgrammTyp {
@@ -26,6 +27,7 @@ export interface ITrainingsProgramm {
     ErstelleSessionsAusVorlage(aProgrammKategorie: ProgrammKategorie): ITrainingsProgramm;
     DeserializeProgramm(aJsonData: Object): ITrainingsProgramm;
     hasChanged(aCmpProgramm: ITrainingsProgramm): Boolean;
+    resetProgram(aQuellProgram: ITrainingsProgramm):void
 }
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
@@ -48,6 +50,18 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
         this.ProgrammTyp = aProgrammTyp;
         Object.defineProperty(this, "pDbModule", { enumerable: false });
         Object.defineProperty(this, "SessionListe", { enumerable: false });
+    }
+
+    resetProgram(aQuellProgram: ITrainingsProgramm): void{
+        this.Name = aQuellProgram.Name;
+        this.ProgrammKategorie = aQuellProgram.ProgrammKategorie;
+        this.ProgrammTyp = aQuellProgram.ProgrammTyp;
+        for (let index = 0; index < aQuellProgram.SessionListe.length; index++) {
+            const mZielSession: ISession = this.SessionListe[index];
+            const mQuellSession: ISession = aQuellProgram.SessionListe.find(s => s.ID === mZielSession.ID);
+            if (mQuellSession)
+                mZielSession.resetSession(mQuellSession);
+        }
     }
 
     public hasChanged(aCmpProgramm: ITrainingsProgramm): Boolean {

@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
 import { DexieSvcService } from './dexie-svc.service';
 import { MyObserver } from './../../Observers/MyObservers';
@@ -11,7 +12,9 @@ import { Sportler, ISportler } from '../../Business/Sportler/Sportler';
 import { ISession } from '../../Business/Session/Session';
 import { Uebung } from '../../Business/Uebung/Uebung';
 import { Observable, Subscriber } from 'rxjs';
-import {  OverlayRef  } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
+import { DialogeService } from './dialoge.service';
 
 
 export enum SpeicherOrtTyp {
@@ -70,18 +73,10 @@ export class GlobalService {
     private readonly cAktuellesTrainingsProgramm: string = 'AktuellesTrainingsProgramm';
     private readonly cTrainingsHistorie: string = 'TrainingsHistorie';
 
-    constructor(private fUebungService: UebungService, private aTrainingServiceModule: TrainingServiceModule, public fDbModule: DexieSvcService ) {
-        // this.LadeDaten(SpeicherOrtTyp.Lokal);
-        // if (this.fUebungService.Uebungen.length === 0) {
-        //     this.fUebungService.ErzeugeUebungStammdaten();
-        //     this.SpeicherDaten(SpeicherOrtTyp.Lokal);
-        // }
-        // this.Init();
-        // this.Sportler.ID = this.LadeSportler();
-        // if (this.Sportler.ID > 0) {
-        // }
-    }
+    constructor(
+        public fDbModule: DexieSvcService) {}
 
+   
     Init(): void {
         this.Sportler = new Sportler();
       //  this.StandardVorlagen = this.aTrainingServiceModule.trainingsProgrammSvc.ErzeugeStandardVorlagen();

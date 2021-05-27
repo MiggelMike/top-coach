@@ -209,7 +209,7 @@ export class Programm02Component implements OnInit {
     }
 
     public CancelChanges() {
-        alert("CancelChanges");
+        
     }
 
     private CheckStatus() {
