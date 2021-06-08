@@ -50,7 +50,7 @@ export class DexieSvcService extends Dexie {
             );
         }
 
-        //   Dexie.delete("ConceptCoach");
+            // Dexie.delete("ConceptCoach");
 
         this.version(1).stores({
             AppData: "++id",
@@ -137,6 +137,10 @@ export class DexieSvcService extends Dexie {
                     this.LadeProgramme(ProgrammKategorie.Vorlage);
                 }
             });
+    }
+
+    public getBodyWeight(): number{
+        return 98;
     }
 
     public SucheUebungPerName(aName: UebungsName): Uebung {
@@ -304,8 +308,12 @@ export class DexieSvcService extends Dexie {
             // Session
             const mSession = aProgramm.SessionListe[j];
 
-            if (mSession.Kategorie02 = undefined)
+            if (mSession.Kategorie02 === undefined)
                 mSession.Kategorie02 = SessionStatus.Wartet;
+            
+            if (mSession.BodyWeightAtSessionStart === undefined)
+                mSession.BodyWeightAtSessionStart = 0;
+                
             
             mSession.UebungsListe = await this.LadeSessionUebungen(mSession);
             for (let z = 0; z < mSession.UebungsListe.length; z++) {
@@ -318,9 +326,6 @@ export class DexieSvcService extends Dexie {
                 if (mUebung.CooldownVisible === undefined)
                     mUebung.CooldownVisible = true;
 
-                if (mUebung.IncludeBodyWeight === undefined)
-                    mUebung.IncludeBodyWeight = false;
-
                 if (mUebung.IncludeWarmupWeight === undefined)
                     mUebung.IncludeWarmupWeight = false;
 
@@ -332,6 +337,13 @@ export class DexieSvcService extends Dexie {
                 
                 
                 mUebung.SatzListe = await this.LadeUebungsSaetze(mUebung);
+                mUebung.SatzListe.forEach(mSatz => {
+                    if (mSatz.IncludeBodyweight === undefined)
+                        mSatz.IncludeBodyweight = false;
+                    
+                    if (mSatz.BodyWeight === undefined)
+                        mSatz.BodyWeight = 0;
+                 })
             }
         }
     }
@@ -374,10 +386,13 @@ export class DexieSvcService extends Dexie {
                             this.UebungSpeichern(mUebung);
                         });
                     }
-                );
+                )
             }
-        );
+        ).catch(r => (
+            console.log(r)
+        ));
     }
+    
 
     public ProgrammSpeichern(aTrainingsProgramm: ITrainingsProgramm) {
         return this.transaction(

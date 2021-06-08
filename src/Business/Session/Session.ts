@@ -1,3 +1,4 @@
+import { DexieSvcService } from './../../app/services/dexie-svc.service';
 import { Uebung, UebungsKategorie02, IUebung } from 'src/Business/Uebung/Uebung';
 import {formatNumber} from '@angular/common';
 var cloneDeep = require('lodash.clonedeep');
@@ -20,13 +21,15 @@ export interface ISession {
     DauerInSek: number;
     Expanded: Boolean;
     Kategorie01: SessionStatus;
-    Kategorie02: SessionStatus;
+    Kategorie02: SessionStatus; 
     Bearbeitbar: Boolean;
     UebungsListe: Array<Uebung>;
     LiftedWeight: number;
     GestartedWann: Date;
     Dauer: string;
     Timer: any;
+    BodyWeight: number;
+    BodyWeightAtSessionStart: number;
     StarteDauerTimer(): void;
     CalcDauer(): void;
     Copy(): Session;
@@ -51,6 +54,14 @@ export class Session implements ISession {
     public GestartedWann: Date = null;
     public Dauer: string = "00:00:00"; 
     public Timer: any; 
+    public BodyWeightAtSessionStart: number = 0;
+
+    public get BodyWeight(): number {
+        // if (this.BodyWeightAtSessionStart === 0) {
+        //     this.BodyWeightAtSessionStart = new DexieSvcService(null).getBodyWeight();
+        // }
+        return this.BodyWeightAtSessionStart;
+    }
 
     public CalcDauer():void {
         const mJetzt: Date = new Date();
@@ -92,7 +103,7 @@ export class Session implements ISession {
 
     public get LiftedWeight():number {
         let mResult: number = 0;
-        this.UebungsListe.forEach(u => mResult + u.LiftedWeight);
+        // this.UebungsListe.forEach(u => mResult + u.LiftedWeight);
 
         for (let index = 0; index < this.UebungsListe.length; index++) {
             const mUebung = this.UebungsListe[index];

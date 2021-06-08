@@ -1,7 +1,7 @@
+import { Session, SessionStatus } from 'src/Business/Session/Session';
 import { GlobalService } from 'src/app/services/global.service';
 import { SessionStatsOverlayComponent } from './../../session-stats-overlay/session-stats-overlay.component';
 import { SessionOverlayServiceService, SessionOverlayConfig } from './../../services/session-overlay-service.service';
-import { Uebung } from 'src/Business/Uebung/Uebung';
 import { DialogeService } from './../../services/dialoge.service';
 import { DexieSvcService } from './../../services/dexie-svc.service';
 import { Session } from "./../../../Business/Session/Session";
@@ -19,6 +19,7 @@ export class SessionFormComponent
     {
     public Session: Session;
     public cmpSession: Session;
+    public BodyWeight: number = 0;
     public fSessionStatsOverlayComponent: SessionStatsOverlayComponent = null;
 
 
@@ -30,7 +31,11 @@ export class SessionFormComponent
     ) {
         const mNavigation = this.router.getCurrentNavigation();
         const mState = mNavigation.extras.state as { sess: Session; };
+        mState.sess.BodyWeightAtSessionStart = this.fDexieSvcService.getBodyWeight();
         this.Session = mState.sess;
+        if (this.Session.Kategorie02 === SessionStatus.Pause)
+            this.Session.Kategorie02 = SessionStatus.Laueft;
+        this.doStats();
     }
 
     doStats() {
@@ -41,22 +46,28 @@ export class SessionFormComponent
     }
 
     leave(aNavPath: string, aPara: any) {
-        if (aPara.Session.hasChanged(aPara.cmpSession) === false) {
-            if(aPara.fSessionStatsOverlayComponent != null)
-                aPara.fSessionStatsOverlayComponent.close();
-            this.router.navigate([aNavPath] );
-        } else {
-            if(aPara.fSessionStatsOverlayComponent != null)
-                aPara.fSessionStatsOverlayComponent.close();
-            aPara.CancelChanges(aPara, aNavPath);
-        }
+        aPara.SaveChanges(aPara);
+        if(aPara.fSessionStatsOverlayComponent != null)
+            aPara.fSessionStatsOverlayComponent.close();
+        this.router.navigate([aNavPath] );        
+        // if (aPara.Session.hasChanged(aPara.cmpSession) === false) {
+        //     if(aPara.fSessionStatsOverlayComponent != null)
+        //         aPara.fSessionStatsOverlayComponent.close();
+        //     this.router.navigate([aNavPath] );
+        // } else {
+        //     if(aPara.fSessionStatsOverlayComponent != null)
+        //         aPara.fSessionStatsOverlayComponent.close();
+        //     aPara.CancelChanges(aPara, aNavPath);
+        // }
     }
 
     ngAfterViewInit() {
         this.cmpSession = this.Session.Copy();
     }
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        this.BodyWeight = this.fDexieSvcService.getBodyWeight();
+    }
 
     public SaveChanges(aPara: any) {
         aPara.fDexieSvcService.SessionSpeichern(aPara.Session);

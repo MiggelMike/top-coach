@@ -1,5 +1,7 @@
-import { Satz, ISatz, SatzTyp, LiftTyp, SatzPausen, SatzStatus } from './../Satz/Satz';
-import { isFormattedError } from '@angular/compiler';
+import { DexieSvcService } from './../../app/services/dexie-svc.service';
+import { Satz, SatzTyp, LiftTyp, SatzPausen, SatzStatus } from './../Satz/Satz';
+import { DialogeService } from 'src/app/services/dialoge.service';
+import { MatDialog } from '@angular/material';
 
 var cloneDeep = require('lodash.clonedeep');
 
@@ -38,7 +40,6 @@ export interface IUebung {
     Selected: boolean;
     WarmUpVisible: boolean; 
     CooldownVisible: boolean;
-    IncludeBodyWeight: boolean;
     IncludeWarmupWeight: boolean;
     IncludeCoolDownWeight: boolean;
     LiftedWeightVisible: boolean;
@@ -82,10 +83,10 @@ export class Uebung implements IUebung {
     public Selected: boolean = false;
     public WarmUpVisible: boolean = true;
     public CooldownVisible: boolean = true;
-    public IncludeBodyWeight: boolean = false;
     public LiftedWeightVisible: boolean = true;
     public IncludeWarmupWeight: boolean = false;
     public IncludeCoolDownWeight: boolean = false;
+    public BodyWeight: number = 0;
     public Expanded: boolean = false;
 
     constructor() {
@@ -133,22 +134,21 @@ export class Uebung implements IUebung {
     public get LiftedWeight(): number {
         let mResult: number = 0;
 
-        if (this.IncludeWarmupWeight)
-            this.AufwaermSatzListe.forEach(
-                (satz) => (mResult = mResult + satz.LiftedWeight)
-            );
+        this.AufwaermSatzListe.forEach(
+            (satz) => (mResult = mResult + satz.LiftedWeight)
+        );
 
-        if (this.IncludeCoolDownWeight)
-            this.AbwaermSatzListe.forEach(
-                (satz) => (mResult = mResult + satz.LiftedWeight)
-            );
+        this.AbwaermSatzListe.forEach(
+            (satz) => (mResult = mResult + satz.LiftedWeight)
+        );
 
         this.ArbeitsSatzListe.forEach(
             (satz) => (mResult = mResult + satz.LiftedWeight)
         );
-        
+
         return mResult;
     }
+    
 
     public static ErzeugeGzclpKategorieen01(): Array<UebungsKategorie01> {
         return new Array<UebungsKategorie01>(

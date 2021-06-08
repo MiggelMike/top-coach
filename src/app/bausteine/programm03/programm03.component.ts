@@ -1,3 +1,4 @@
+import { DexieSvcService } from './../../services/dexie-svc.service';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { Uebung  } from './../../../Business/Uebung/Uebung';
 import { GlobalService } from 'src/app/services/global.service';
@@ -27,10 +28,11 @@ export class Programm03Component implements OnInit {
     @Input() panUebung1: MatExpansionPanel;
     @Input() ShowStats: Boolean = false;
     @Input() StatsVisible: Boolean = false;
+    
     @ViewChildren("accUebung") accUebung: QueryList<MatAccordion>;
     @ViewChildren("panUebung") panUebung: QueryList<MatExpansionPanel>;
     @ViewChild(CdkOverlayOrigin) cdkOverlayOrigin: CdkOverlayOrigin;
-    @ViewChild('Session') div: ElementRef;
+    // @ViewChild('Session') div: ElementRef;
 
     private isExpanded: Boolean = true;
     public ToggleButtonText = "Close all excercises";

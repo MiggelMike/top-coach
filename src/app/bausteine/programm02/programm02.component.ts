@@ -26,7 +26,6 @@ export class Programm02Component implements OnInit {
     @Input() showButtons: Boolean = false;
     @Input() showSaveButtons: Boolean = false;
     @Input() bearbeitbar: Boolean = false;
-    @Input() session: Session = null;
     @Input() StartButtonVisible: Boolean = false;
     @Input() SessionPanelsExpanded: Boolean = false;
     @Input() showWarmUpCheckBox: Boolean = true;
@@ -186,19 +185,24 @@ export class Programm02Component implements OnInit {
         aEvent.stopPropagation();
         
         if (aSession.Kategorie02 === SessionStatus.Fertig) return;
+        
 
         switch (aSession.Kategorie02) {
             case SessionStatus.Wartet:
+                aSession.GestartedWann = new Date();
+                aSession.Kategorie02 = SessionStatus.Laueft; 
+                break;
+            
             case SessionStatus.Pause: aSession.Kategorie02 = SessionStatus.Laueft; break;
             case SessionStatus.Laueft: aSession.Kategorie02 = SessionStatus.Pause; break;
         }
 
-        aSession.GestartedWann = new Date();
-        const navigationExtras: NavigationExtras = {
-            state: {
-              sess: aSession
-            }
-          };
+        // aSession.GestartedWann = new Date();
+        // const navigationExtras: NavigationExtras = {
+        //     state: {
+        //       sess: aSession
+        //     }
+        //   };
         this.router.navigate(['sessionFormComponent'], { state: { sess: aSession } } );
     }
 

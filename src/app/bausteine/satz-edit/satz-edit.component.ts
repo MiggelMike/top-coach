@@ -28,7 +28,9 @@ export class SatzEditComponent implements OnInit {
         private fGlobalService: GlobalService
     ) {}
     
-    ngOnInit() {}
+    ngOnInit() {
+        this.satz.BodyWeight = this.sess.BodyWeight;
+    }
 
     public DeleteSet() {
         const mDialogData = new DialogData();
@@ -72,8 +74,5 @@ export class SatzEditComponent implements OnInit {
     }
 
     ngDoCheck() {
-        const x = this.sess.LiftedWeight;
-            // if (this.fSessionStatsOverlayComponent)
-            //     this.fSessionStatsOverlayComponent.sess.LiftedWeight;
     }
 }

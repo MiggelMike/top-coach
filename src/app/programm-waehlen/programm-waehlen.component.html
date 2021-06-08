@@ -1,14 +1,17 @@
-<app-toolbar></app-toolbar>
+<div class="pad-5" >
 
-<p>Choose Workout</p>
-
-<ng-container *ngIf="TrainingsProgrammeVorhanden()">
-    <ng-container *ngFor="let programm of ProgrammListe">
-        <!-- [programmLadeContext]= "true": Der Auswähl-Button für das jeweilige Workout wird gezeigt. -->
-        <app-programm01 [programmLadeContext]="true"  
-                        [programm]="programm" 
-                        [showButtons]="false" 
-                        [showSaveButtons]="false">
-        </app-programm01>
+    <app-toolbar></app-toolbar>
+    
+    <p>Choose Workout</p>
+    
+    <ng-container *ngIf="TrainingsProgrammeVorhanden()">
+        <ng-container *ngFor="let programm of ProgrammListe">
+            <!-- [programmLadeContext]= "true": Der Auswähl-Button für das jeweilige Workout wird gezeigt. -->
+            <app-programm01 [programmLadeContext]="true"  
+                [programm]="programm" 
+                [showButtons]="false" 
+                [showSaveButtons]="false">
+            </app-programm01>
+        </ng-container>
     </ng-container>
-</ng-container>
+</div>

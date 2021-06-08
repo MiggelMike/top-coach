@@ -1,3 +1,4 @@
+import { DexieSvcService } from './../../app/services/dexie-svc.service';
 import { ISession } from 'src/Business/Session/Session';
 import { IUebung } from '../Uebung/Uebung';
 var cloneDeep = require('lodash.clonedeep');
@@ -64,6 +65,8 @@ export interface ISatz {
     Status: SatzStatus;
     LiftTyp: LiftTyp;
     AMRAP: boolean;
+    IncludeBodyweight: boolean;
+    BodyWeight: number;
     Copy(): Satz;
     hasChanged(aCmpSatz: ISatz): Boolean;
 }
@@ -85,10 +88,16 @@ export class Satz implements ISatz {
     public LiftTyp: LiftTyp = LiftTyp.Custom;
     public AMRAP: boolean = false;
     public SatzGruppenNr: number = 0;
+    public IncludeBodyweight: boolean = false;
+    public BodyWeight: number = 0;
 
     public get LiftedWeight(): number {
-        if (this.Status === SatzStatus.Fertig)
-            return this.WdhAusgefuehrt * this.GewichtAusgefuehrt;
+        if (this.Status === SatzStatus.Fertig) {
+            let mResult: number = this.WdhAusgefuehrt * this.GewichtAusgefuehrt;
+            if (this.IncludeBodyweight) 
+                mResult += this.WdhAusgefuehrt * this.BodyWeight;
+            return mResult;
+        }
         return 0;
     }
 
@@ -117,6 +126,10 @@ export class Satz implements ISatz {
             : SatzPausen.Standard_Max;
         this.Status = aPara.Status ? aPara.Status : SatzStatus.Wartet;
         this.AMRAP = aPara.AMRAP ? aPara.AMRAP : false;
+        this.BodyWeight = aPara.BodyWeight ? aPara.BodyWeight : 0;
+
+        // Nicht in Dexie-DB-Speichern -> enumerable: false        
+        Object.defineProperty(this, "BodyWeight", { enumerable: false });
     }
 
     public hasChanged(aCmpSatz: ISatz): Boolean{

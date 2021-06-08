@@ -14,11 +14,14 @@
                     <div class="center-item" fxLayout="column" fxFlex="30px">
                         RP.
                     </div>
-                    <div class="center-item" fxLayout="column" fxFlex="35px">
+                    <div class="center-item" fxLayout="column" fxFlex="33px">
                         AR.
                     </div>
-                    <div class="center-item" fxLayout="column" fxFlex="35px">
-                        Done
+                    <div class="center-item" fxLayout="column" fxFlex="22px">
+                        BW
+                    </div>
+                    <div class="center-item" fxLayout="column" fxFlex="30px">
+                        Ok
                     </div>
                 </ng-template>
 
@@ -64,8 +67,12 @@
                 <div class="center-item" layout-align="center center" fxFlex="30px">
                     <mat-checkbox [(ngModel)]="satz.AMRAP"></mat-checkbox>
                 </div>
+                <!-- Satz Include Bodyweight-Flag -->
+                <div class="center-item" layout-align="center center" fxFlex="25px">
+                    <mat-checkbox [(ngModel)]="satz.IncludeBodyweight"></mat-checkbox>
+                </div>
                 <!-- Satz Fertig-Flag -->
-                <div class="center-item" layout-align="center center" fxFlex="30px">
+                <div class="center-item" layout-align="center center" fxFlex="25px">
                     <mat-checkbox [(ngModel)]="SatzFertig"></mat-checkbox>
                 </div>
             </ng-template>
