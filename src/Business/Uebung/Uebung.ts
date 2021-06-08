@@ -148,7 +148,27 @@ export class Uebung implements IUebung {
 
         return mResult;
     }
+
+    private checkSatzIncludedBodyWeight(aSatzListe: Array<Satz>): Boolean{
+        for (let index = 0; index < aSatzListe.length; index++) {
+            const mSatz = aSatzListe[index];
+            if (mSatz.IncludeBodyweight) 
+                return true;
+        }
+        return false;
+    }
     
+    public checkWarmUpSatzIncludedBodyWeight(): Boolean{
+        return this.checkSatzIncludedBodyWeight(this.AufwaermSatzListe);
+    }
+
+    public checkCoolDownSatzIncludedBodyWeight(): Boolean{
+        return this.checkSatzIncludedBodyWeight(this.AbwaermSatzListe);
+    }
+
+    public checkArbeitsSatzIncludedBodyWeight(): Boolean{
+        return this.checkSatzIncludedBodyWeight(this.ArbeitsSatzListe);
+    }
 
     public static ErzeugeGzclpKategorieen01(): Array<UebungsKategorie01> {
         return new Array<UebungsKategorie01>(

@@ -140,7 +140,7 @@ export class DexieSvcService extends Dexie {
     }
 
     public getBodyWeight(): number{
-        return 98;
+        return 105;
     }
 
     public SucheUebungPerName(aName: UebungsName): Uebung {

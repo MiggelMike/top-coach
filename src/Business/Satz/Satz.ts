@@ -1,6 +1,6 @@
-import { DexieSvcService } from './../../app/services/dexie-svc.service';
 import { ISession } from 'src/Business/Session/Session';
 import { IUebung } from '../Uebung/Uebung';
+import {formatNumber} from '@angular/common';
 var cloneDeep = require('lodash.clonedeep');
 
 
@@ -105,6 +105,16 @@ export class Satz implements ISatz {
         if (this.GewichtVorgabe === 0)
             return "0.00";
         return this.GewichtVorgabe.toPrecision(2);
+    }
+
+    public getBodyWeightText(aPrefix?: string): string {
+        if (this.IncludeBodyweight === false)
+            return '';
+        
+        let mResult = formatNumber(this.BodyWeight, 'en-US', '2.2-2');
+        if (aPrefix)
+            mResult = aPrefix + mResult;
+        return mResult;
     }
 
     constructor(aPara: Satz = {} as Satz) {

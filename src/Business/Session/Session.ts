@@ -1,4 +1,3 @@
-import { DexieSvcService } from './../../app/services/dexie-svc.service';
 import { Uebung, UebungsKategorie02, IUebung } from 'src/Business/Uebung/Uebung';
 import {formatNumber} from '@angular/common';
 var cloneDeep = require('lodash.clonedeep');

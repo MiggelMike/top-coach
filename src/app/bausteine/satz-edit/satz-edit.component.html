@@ -11,6 +11,13 @@
                     <div class="center-item" fxLayout="column" fxFlex="45px">
                         Weight
                     </div>
+                    <ng-container *ngIf="  (satzTyp === 'Warm up sets' && sessUebung.checkWarmUpSatzIncludedBodyWeight())
+                                         ||(satzTyp === 'Work sets' && sessUebung.checkArbeitsSatzIncludedBodyWeight())
+                                         ||(satzTyp === 'Cool down sets' && sessUebung.checkCoolDownSatzIncludedBodyWeight())
+                                         ">
+                        <div class="align-right" fxLayout="column" fxFlex="60px"></div>
+                    
+                    </ng-container>
                     <div class="center-item" fxLayout="column" fxFlex="30px">
                         RP.
                     </div>
@@ -52,12 +59,23 @@
             <!-- Training laeuft -->
             <ng-template #SessionLaueft>
                 <!-- Ausgefuehrtes-Gewicht -->
-                <mat-form-field class="align-right" fxFlex="45px">
-                    <mat-label>{{satz.GewichtVorgabe | number: '1.2'}}</mat-label>
-                    <input matInput [textMask]="{mask: floatMask, guide: false }"
-                    [ngModel]="satz.GewichtAusgefuehrt | number: '1.2'" (blur)="SetWeightAusgefuehrt($event.target.value)"
-                    type="text">
-                </mat-form-field>
+                    <mat-form-field class="align-right" fxFlex="45px">
+                        <mat-label>{{satz.GewichtVorgabe | number: '1.2'}}</mat-label>
+                        <input matInput [textMask]="{mask: floatMask, guide: false }"
+                        [ngModel]="satz.GewichtAusgefuehrt | number: '1.2'" (blur)="SetWeightAusgefuehrt($event.target.value)"
+                        type="text">
+                    </mat-form-field>
+
+                    <ng-container *ngIf="  (satzTyp === 'Warm up sets' && sessUebung.checkWarmUpSatzIncludedBodyWeight())
+                                         ||(satzTyp === 'Work sets' && sessUebung.checkArbeitsSatzIncludedBodyWeight())
+                                         ||(satzTyp === 'Cool down sets' && sessUebung.checkCoolDownSatzIncludedBodyWeight())
+                                          ">
+                        <mat-form-field class="align-right" fxFlex="55px">
+                            <input matInput  [disabled]="true" [textMask]="{mask: floatMask, guide: false }"
+                            [value]="satz.getBodyWeightText('+ ')"
+                            type="text">
+                        </mat-form-field>
+                    </ng-container>
                 <!-- Ausgefuerte Wdh. -->
                 <mat-form-field class="align-right" fxFlex="30px">
                     <mat-label>{{satz.WdhVorgabe | number: '1.0'}}</mat-label>
