@@ -4,7 +4,6 @@ import { SessionStatsOverlayComponent } from './../../session-stats-overlay/sess
 import { SessionOverlayServiceService, SessionOverlayConfig } from './../../services/session-overlay-service.service';
 import { DialogeService } from './../../services/dialoge.service';
 import { DexieSvcService } from './../../services/dexie-svc.service';
-import { Session } from "./../../../Business/Session/Session";
 import { Component, OnInit } from "@angular/core";
 import { Router } from '@angular/router';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';

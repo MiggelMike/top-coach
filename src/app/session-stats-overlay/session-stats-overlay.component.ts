@@ -21,7 +21,8 @@ export class SessionStatsOverlayComponent  implements OnInit {
     
     close() {
         clearInterval(this.sess.Timer);
-        this.dialogRef.close();
+        if(this.dialogRef != null)
+            this.dialogRef.close();
         this.dialogRef = null;
     }
 }

@@ -14,31 +14,33 @@
                             <h6 flex>#{{i+1}} {{SessUeb.Name}}</h6>
                         </div>
 
-                        <a  [ngClass]="['link-button-font']" mat-flat-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">Set settings</a>
+                        
+                        <ng-container *ngIf="bearbeitbar" >
+                            <a  [ngClass]="['link-button-font']" mat-flat-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">Set settings</a>
+                            <mat-menu #menu="matMenu" class="center-item" layout-align="end center">
+                                <div [ngClass]="['mg-5']" layout-align="start" fxFlex="1 0 auto">
+                                    <div layout-align="start" layout-margin>
+                                        <mat-checkbox [(ngModel)]="SessUeb.WarmUpVisible" (click)="$event.stopPropagation()">Show Warmup
+                                        </mat-checkbox>
+                                    </div>
+                                
+                                    <div layout-align="start" layout-margin>
+                                        <mat-checkbox [(ngModel)]="SessUeb.CoolDownVisible" (click)="$event.stopPropagation()">Show Cooldown
+                                        </mat-checkbox>
+                                    </div>
 
-                        <mat-menu #menu="matMenu" class="center-item" layout-align="end center">
-                            <div [ngClass]="['mg-5']" layout-align="start" fxFlex="1 0 auto">
-                                <div layout-align="start" layout-margin>
-                                    <mat-checkbox [(ngModel)]="SessUeb.WarmUpVisible" (click)="$event.stopPropagation()">Show Warmup
-                                    </mat-checkbox>
-                                </div>
-                            
-                                <div layout-align="start" layout-margin>
-                                    <mat-checkbox [(ngModel)]="SessUeb.CoolDownVisible" (click)="$event.stopPropagation()">Show Cooldown
-                                    </mat-checkbox>
-                                </div>
+                                    <div layout-align="start" layout-margin>
+                                        <mat-checkbox [(ngModel)]="SessUeb.IncludeWarmupWeight" (click)="$event.stopPropagation()">Add Warmup-Weight
+                                        </mat-checkbox>
+                                    </div>
 
-                                <div layout-align="start" layout-margin>
-                                    <mat-checkbox [(ngModel)]="SessUeb.IncludeWarmupWeight" (click)="$event.stopPropagation()">Add Warmup-Weight
-                                    </mat-checkbox>
+                                    <div layout-align="start" layout-margin>
+                                        <mat-checkbox [(ngModel)]="SessUeb.IncludeCoolDownWeight" (click)="$event.stopPropagation()">Add Cooldown-Weight
+                                        </mat-checkbox>
+                                    </div>
                                 </div>
-
-                                <div layout-align="start" layout-margin>
-                                    <mat-checkbox [(ngModel)]="SessUeb.IncludeCoolDownWeight" (click)="$event.stopPropagation()">Add Cooldown-Weight
-                                    </mat-checkbox>
-                                </div>
-                            </div>
-                        </mat-menu>
+                            </mat-menu>
+                        </ng-container>
                     </div>
                 </mat-expansion-panel-header>
                 <ng-container [panUebung1]=panUebung></ng-container>
