@@ -33,7 +33,7 @@ export class SessionFormComponent
         mState.sess.BodyWeightAtSessionStart = this.fDexieSvcService.getBodyWeight();
         this.Session = mState.sess;
         if (this.Session.Kategorie02 === SessionStatus.Pause)
-            this.Session.Kategorie02 = SessionStatus.Laueft;
+            this.Session.StarteDauerTimer();
         this.doStats();
     }
 
@@ -45,10 +45,15 @@ export class SessionFormComponent
     }
 
     leave(aNavPath: string, aPara: any) {
+        if (aPara.Session.Kategorie02 === SessionStatus.Laueft) 
+            aPara.Session.AddPause();
+        
+
         aPara.SaveChanges(aPara);
         if(aPara.fSessionStatsOverlayComponent != null)
             aPara.fSessionStatsOverlayComponent.close();
-        this.router.navigate([aNavPath] );        
+        // this.router.navigate([aNavPath]);        
+        this.router.navigate([aNavPath], { state: { sess: aPara.Session } } );
         // if (aPara.Session.hasChanged(aPara.cmpSession) === false) {
         //     if(aPara.fSessionStatsOverlayComponent != null)
         //         aPara.fSessionStatsOverlayComponent.close();

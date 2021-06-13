@@ -1,5 +1,10 @@
 import { Uebung, UebungsKategorie02, IUebung } from 'src/Business/Uebung/Uebung';
-import {formatNumber} from '@angular/common';
+import { formatNumber, formatDate } from '@angular/common';
+import { registerLocaleData } from '@angular/common';
+import { LOCALE_ID } from '@angular/core';
+import localeES from "@angular/common/locales/es";
+registerLocaleData(localeES, "es");
+
 var cloneDeep = require('lodash.clonedeep');
 
 export enum SessionStatus {
@@ -9,6 +14,15 @@ export enum SessionStatus {
     Pause,
     Laueft,
     Fertig
+}
+
+export class Pause{
+    Von: Date;
+    Bis: Date
+    constructor(aVon: Date, aBis: Date) {
+        this.Von = aVon;
+        this.Bis = aBis;
+    }
 }
 
 export interface ISession {
@@ -25,11 +39,14 @@ export interface ISession {
     UebungsListe: Array<Uebung>;
     LiftedWeight: number;
     GestartedWann: Date;
+    PausenListe: Array<Pause>; 
+    PauseInSek: number;
     Dauer: string;
-    Timer: any;
+    DauerTimer: any;
     BodyWeight: number;
     BodyWeightAtSessionStart: number;
     StarteDauerTimer(): void;
+    AddPause(): void;
     CalcDauer(): void;
     Copy(): Session;
     addUebung(aUebung: Uebung);
@@ -45,14 +62,16 @@ export class Session implements ISession {
     public Name: string;
     public Datum: Date = new Date();
     public DauerInSek: number = 0;
+    public PauseInSek: number = 0;
     public Expanded: Boolean;
     public Kategorie01: SessionStatus = SessionStatus.Bearbeitbar;
     public Kategorie02: SessionStatus = SessionStatus.Wartet;
     public Bearbeitbar: Boolean = false;
     public UebungsListe: Array<Uebung> = [];
     public GestartedWann: Date = null;
+    public PausenListe: Array<Pause> = new Array<Pause>();
     public Dauer: string = "00:00:00"; 
-    public Timer: any; 
+    public DauerTimer: any; 
     public BodyWeightAtSessionStart: number = 0;
 
     public get BodyWeight(): number {
@@ -62,42 +81,73 @@ export class Session implements ISession {
         return this.BodyWeightAtSessionStart;
     }
 
-    public CalcDauer():void {
-        const mJetzt: Date = new Date();
-        const mSekundenTotal: number =
-            Math.floor((
-                Date.UTC(
-                    mJetzt.getFullYear(),
-                    mJetzt.getMonth(),
-                    mJetzt.getDate(),
-                    mJetzt.getHours(),
-                    mJetzt.getMinutes(),
-                    mJetzt.getSeconds()
-                ) -
-                Date.UTC(
-                    this.GestartedWann.getFullYear(),
-                    this.GestartedWann.getMonth(),
-                    this.GestartedWann.getDate(),
-                    this.GestartedWann.getHours(),
-                    this.GestartedWann.getMinutes(),
-                    this.GestartedWann.getSeconds()
-                )) / 1000);
-
-        // "parseInt" entspricht einer ganzzahligen Divison
+    private FormatDauer(aSekundenTotal : number): string{
+        // "parseInt((a/b).toString())" entspricht einer ganzzahligen Divison
        
         // Stunden
-        const mStundenInt = parseInt((mSekundenTotal / 3600).toString());
+        const mStundenInt = parseInt((aSekundenTotal / 3600).toString());
         const mStunden: string = formatNumber(mStundenInt, 'en-US', '2.0-0');
         // Minuten
-        const mMinutenInt : number = parseInt(((mSekundenTotal / 60) % 60).toString());
+        const mMinutenInt : number = parseInt(((aSekundenTotal / 60) % 60).toString());
         const mMinuten: string = formatNumber(mMinutenInt, 'en-US', '2.0-0');
         // Sekunden
-        const mSekunden: string = formatNumber(mSekundenTotal % 60, 'en-US', '2.0-0');
-        this.Dauer = mStunden + ':' + mMinuten + ':' + mSekunden;
+        const mSekunden: string = formatNumber(aSekundenTotal % 60, 'en-US', '2.0-0');
+        return mStunden + ':' + mMinuten + ':' + mSekunden;
     }
 
+    public CalcDauerPrim(aVonZeitpunkt: Date, aBisZeitpunkt: Date):number {
+        const mDauer = 
+            Math.floor((
+                Date.UTC(
+                    aBisZeitpunkt.getFullYear(),
+                    aBisZeitpunkt.getMonth(),
+                    aBisZeitpunkt.getDate(),
+                    aBisZeitpunkt.getHours(),
+                    aBisZeitpunkt.getMinutes(),
+                    aBisZeitpunkt.getSeconds()
+                ) -
+                Date.UTC(
+                    aVonZeitpunkt.getFullYear(),
+                    aVonZeitpunkt.getMonth(),
+                    aVonZeitpunkt.getDate(),
+                    aVonZeitpunkt.getHours(),
+                    aVonZeitpunkt.getMinutes(),
+                    aVonZeitpunkt.getSeconds()
+                )) / 1000);
+        return mDauer;
+    }
+
+    public CalcDauer(): void {
+        const mDauer = this.CalcDauerPrim(this.GestartedWann, new Date());
+        const mPause = this.CalcPause();
+        const mDauerMinPause = mDauer - mPause;
+        this.Dauer = this.FormatDauer(mDauerMinPause);
+    }
+
+    public CalcPause(): number {
+        let mPauseInSek = 0;
+        
+        this.PausenListe.forEach(p => {
+            mPauseInSek += this.CalcDauerPrim(p.Von, p.Bis);
+        });
+        return mPauseInSek;
+    }
+    
+    
     public StarteDauerTimer(): void {
-        this.Timer = setInterval(() => this.CalcDauer(), 450);
+        if (   (this.PausenListe.length > 0)
+            && (this.Kategorie02 === SessionStatus.Pause)) {
+                this.PausenListe[this.PausenListe.length-1].Bis = new Date();
+        }
+        this.Kategorie02 = SessionStatus.Laueft;
+        this.DauerTimer = setInterval(() => this.CalcDauer(), 450);
+    }
+
+    public AddPause(): void {
+        clearInterval(this.DauerTimer);
+        this.Kategorie02 = SessionStatus.Pause;
+        const mJetzt = new Date();
+        this.PausenListe.push(new Pause(mJetzt, mJetzt));
     }
 
     public get LiftedWeight():number {

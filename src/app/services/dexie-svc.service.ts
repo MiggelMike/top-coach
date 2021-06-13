@@ -2,7 +2,7 @@ import { ITrainingsProgramm, TrainingsProgramm, ProgrammTyp, ProgrammKategorie }
 import { DialogeService } from './dialoge.service';
 import { ISatz, Satz } from './../../Business/Satz/Satz';
 import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
-import { ISession, Session, SessionStatus } from './../../Business/Session/Session';
+import { ISession, Session, SessionStatus, Pause } from './../../Business/Session/Session';
 import { AppData, IAppData } from './../../Business/Coach/Coach';
 import { Dexie, PromiseExtended } from 'dexie';
 import { Injectable, NgModule, Pipe, Optional, SkipSelf } from '@angular/core';
@@ -314,6 +314,8 @@ export class DexieSvcService extends Dexie {
             if (mSession.BodyWeightAtSessionStart === undefined)
                 mSession.BodyWeightAtSessionStart = 0;
                 
+            if (mSession.PausenListe === undefined)
+                mSession.PausenListe = new Array<Pause>();
             
             mSession.UebungsListe = await this.LadeSessionUebungen(mSession);
             for (let z = 0; z < mSession.UebungsListe.length; z++) {
@@ -334,7 +336,6 @@ export class DexieSvcService extends Dexie {
                 
                 if (mUebung.Expanded === undefined)
                     mUebung.Expanded = false;
-                
                 
                 mUebung.SatzListe = await this.LadeUebungsSaetze(mUebung);
                 mUebung.SatzListe.forEach(mSatz => {

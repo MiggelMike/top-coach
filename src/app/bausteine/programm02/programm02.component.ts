@@ -193,8 +193,8 @@ export class Programm02Component implements OnInit {
                 aSession.Kategorie02 = SessionStatus.Laueft; 
                 break;
             
-            case SessionStatus.Pause: aSession.Kategorie02 = SessionStatus.Laueft; break;
-            case SessionStatus.Laueft: aSession.Kategorie02 = SessionStatus.Pause; break;
+            case SessionStatus.Pause: aSession.StarteDauerTimer(); break;
+            // case SessionStatus.Laueft: aSession.StartePauseTimer(); break;
         }
 
         // aSession.GestartedWann = new Date();

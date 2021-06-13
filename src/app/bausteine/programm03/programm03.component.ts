@@ -10,6 +10,7 @@ import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, ElementRe
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { of } from 'rxjs';
+import { LOCALE_ID , Inject} from '@angular/core';
 
 
 @Component({
@@ -36,6 +37,7 @@ export class Programm03Component implements OnInit {
 
     private isExpanded: Boolean = true;
     public ToggleButtonText = "Close all excercises";
+    public LocaleID: string;
     private UebungPanelsObserver = {
         next: (x: MatExpansionPanel) => {
             this.accCheckUebungPanels();
@@ -49,9 +51,11 @@ export class Programm03Component implements OnInit {
     ngOnInit() { }
     
     constructor(
+        @Inject( LOCALE_ID ) localID: string ,
         private fGlobalService: GlobalService,
         private fDialogService: DialogeService
     ) {
+        this.LocaleID = localID;
         if (this.fGlobalService.Comp03PanelUebungObserver === null)
             this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;
     }

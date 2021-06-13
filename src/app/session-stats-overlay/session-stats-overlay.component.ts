@@ -14,13 +14,9 @@ export class SessionStatsOverlayComponent  implements OnInit {
         @Inject(cSessionStatsOverlayData) public sess: ISession
     ) {}
 
-    ngOnInit(): void { 
-        this.sess.CalcDauer();
-        this.sess.StarteDauerTimer();
-    }
+    ngOnInit(): void { }
     
     close() {
-        clearInterval(this.sess.Timer);
         if(this.dialogRef != null)
             this.dialogRef.close();
         this.dialogRef = null;
