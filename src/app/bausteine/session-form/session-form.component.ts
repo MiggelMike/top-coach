@@ -32,7 +32,10 @@ export class SessionFormComponent
         const mState = mNavigation.extras.state as { sess: Session; };
         mState.sess.BodyWeightAtSessionStart = this.fDexieSvcService.getBodyWeight();
         this.Session = mState.sess;
-        if (this.Session.Kategorie02 === SessionStatus.Pause)
+        if (   (this.Session.Kategorie02 === SessionStatus.Pause)
+            || (this.Session.Kategorie02 === SessionStatus.Wartet)
+            || (this.Session.Kategorie02 === SessionStatus.Laueft)
+        )
             this.Session.StarteDauerTimer();
         this.doStats();
     }

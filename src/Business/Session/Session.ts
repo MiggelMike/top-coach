@@ -1,9 +1,6 @@
-import { Uebung, UebungsKategorie02, IUebung } from 'src/Business/Uebung/Uebung';
-import { formatNumber, formatDate } from '@angular/common';
-import { registerLocaleData } from '@angular/common';
-import { LOCALE_ID } from '@angular/core';
-import localeES from "@angular/common/locales/es";
-registerLocaleData(localeES, "es");
+
+import { Zeitraum, MaxZeitraum } from './../Dauer';
+import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
 
 var cloneDeep = require('lodash.clonedeep');
 
@@ -13,15 +10,14 @@ export enum SessionStatus {
     Wartet,
     Pause,
     Laueft,
-    Fertig
+    Fertig,
+    FertigTimeOut
+
 }
 
-export class Pause{
-    Von: Date;
-    Bis: Date
+export class Pause extends Zeitraum {
     constructor(aVon: Date, aBis: Date) {
-        this.Von = aVon;
-        this.Bis = aBis;
+        super(aVon,aBis,new MaxZeitraum(99,59,59));
     }
 }
 
@@ -41,7 +37,8 @@ export interface ISession {
     GestartedWann: Date;
     PausenListe: Array<Pause>; 
     PauseInSek: number;
-    Dauer: string;
+    DauerFormatted: string;
+    SessionDauer: Zeitraum;
     DauerTimer: any;
     BodyWeight: number;
     BodyWeightAtSessionStart: number;
@@ -70,8 +67,9 @@ export class Session implements ISession {
     public UebungsListe: Array<Uebung> = [];
     public GestartedWann: Date = null;
     public PausenListe: Array<Pause> = new Array<Pause>();
-    public Dauer: string = "00:00:00"; 
-    public DauerTimer: any; 
+    public SessionDauer: Zeitraum = null;
+    public DauerFormatted: string = '00:00:00';
+    public DauerTimer: any;
     public BodyWeightAtSessionStart: number = 0;
 
     public get BodyWeight(): number {
@@ -81,60 +79,31 @@ export class Session implements ISession {
         return this.BodyWeightAtSessionStart;
     }
 
-    private FormatDauer(aSekundenTotal : number): string{
-        // "parseInt((a/b).toString())" entspricht einer ganzzahligen Divison
-       
-        // Stunden
-        const mStundenInt = parseInt((aSekundenTotal / 3600).toString());
-        const mStunden: string = formatNumber(mStundenInt, 'en-US', '2.0-0');
-        // Minuten
-        const mMinutenInt : number = parseInt(((aSekundenTotal / 60) % 60).toString());
-        const mMinuten: string = formatNumber(mMinutenInt, 'en-US', '2.0-0');
-        // Sekunden
-        const mSekunden: string = formatNumber(aSekundenTotal % 60, 'en-US', '2.0-0');
-        return mStunden + ':' + mMinuten + ':' + mSekunden;
-    }
-
-    public CalcDauerPrim(aVonZeitpunkt: Date, aBisZeitpunkt: Date):number {
-        const mDauer = 
-            Math.floor((
-                Date.UTC(
-                    aBisZeitpunkt.getFullYear(),
-                    aBisZeitpunkt.getMonth(),
-                    aBisZeitpunkt.getDate(),
-                    aBisZeitpunkt.getHours(),
-                    aBisZeitpunkt.getMinutes(),
-                    aBisZeitpunkt.getSeconds()
-                ) -
-                Date.UTC(
-                    aVonZeitpunkt.getFullYear(),
-                    aVonZeitpunkt.getMonth(),
-                    aVonZeitpunkt.getDate(),
-                    aVonZeitpunkt.getHours(),
-                    aVonZeitpunkt.getMinutes(),
-                    aVonZeitpunkt.getSeconds()
-                )) / 1000);
-        return mDauer;
-    }
-
     public CalcDauer(): void {
-        const mDauer = this.CalcDauerPrim(this.GestartedWann, new Date());
+        const mDauer = Zeitraum.CalcDauer(this.GestartedWann, new Date());
         const mPause = this.CalcPause();
-        const mDauerMinPause = mDauer - mPause;
-        this.Dauer = this.FormatDauer(mDauerMinPause);
+        const mDauerMinusPause = mDauer - mPause;
+        if (mDauerMinusPause < this.SessionDauer.MaxDauer) {
+            this.DauerFormatted = Zeitraum.FormatDauer(this.SessionDauer.MaxDauer);
+            this.Kategorie02 = SessionStatus.FertigTimeOut;
+        }
+        else
+            this.DauerFormatted = Zeitraum.FormatDauer(mDauerMinusPause);
     }
 
     public CalcPause(): number {
         let mPauseInSek = 0;
         
         this.PausenListe.forEach(p => {
-            mPauseInSek += this.CalcDauerPrim(p.Von, p.Bis);
+            mPauseInSek += Zeitraum.CalcDauer(p.Von, p.Bis);
         });
         return mPauseInSek;
     }
     
-    
     public StarteDauerTimer(): void {
+        if (this.PausenListe === undefined)
+            this.PausenListe = new Array<Pause>();
+        
         if (   (this.PausenListe.length > 0)
             && (this.Kategorie02 === SessionStatus.Pause)) {
                 this.PausenListe[this.PausenListe.length-1].Bis = new Date();
@@ -162,9 +131,11 @@ export class Session implements ISession {
     }
 
     constructor() {
+        const mJetzt = new Date();
+        this.SessionDauer = new Zeitraum(mJetzt,mJetzt, new MaxZeitraum(99,59,59));
         Object.defineProperty(this, 'UebungsListe', { enumerable: false });
     }
-
+    
     public Copy(): Session {
         return cloneDeep(this); 
     }

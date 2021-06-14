@@ -44,6 +44,8 @@ export class Programm02Component implements OnInit {
             case SessionStatus.Wartet: return "Start"; 
             case SessionStatus.Laueft:
             case SessionStatus.Pause: return "Go ahead";
+            case SessionStatus.Fertig:
+            case SessionStatus.FertigTimeOut: return "Done";
             default: return "?";
         }
     }
@@ -184,7 +186,7 @@ export class Programm02Component implements OnInit {
     public startSession(aEvent: Event, aSession: Session) {
         aEvent.stopPropagation();
         
-        if (aSession.Kategorie02 === SessionStatus.Fertig) return;
+        if ((aSession.Kategorie02 === SessionStatus.Fertig)||(aSession.Kategorie02 === SessionStatus.FertigTimeOut) ) return;
         
 
         switch (aSession.Kategorie02) {

@@ -8,6 +8,7 @@ import { Dexie, PromiseExtended } from 'dexie';
 import { Injectable, NgModule, Pipe, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, UebungsName, UebungsKategorie02 } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
+import { IZeitraum, Zeitraum, MaxZeitraum } from 'src/Business/Dauer';
 
 export interface AktuellesProgramFn {
     (): void;
@@ -50,8 +51,8 @@ export class DexieSvcService extends Dexie {
             );
         }
 
-            // Dexie.delete("ConceptCoach");
-
+        // Dexie.delete("ConceptCoach");
+        
         this.version(1).stores({
             AppData: "++id",
             Uebung: "++ID,Name,Typ",
@@ -313,9 +314,6 @@ export class DexieSvcService extends Dexie {
             
             if (mSession.BodyWeightAtSessionStart === undefined)
                 mSession.BodyWeightAtSessionStart = 0;
-                
-            if (mSession.PausenListe === undefined)
-                mSession.PausenListe = new Array<Pause>();
             
             mSession.UebungsListe = await this.LadeSessionUebungen(mSession);
             for (let z = 0; z < mSession.UebungsListe.length; z++) {
