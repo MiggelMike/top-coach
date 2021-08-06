@@ -1,5 +1,5 @@
-import { Session, SessionStatus } from 'src/Business/Session/Session';
-import { GlobalService } from 'src/app/services/global.service';
+import { SessionStatus, SessionDB } from './../../../Business/SessionDB';
+import { Session } from 'src/Business/Session/Session';
 import { SessionStatsOverlayComponent } from './../../session-stats-overlay/session-stats-overlay.component';
 import { SessionOverlayServiceService, SessionOverlayConfig } from './../../services/session-overlay-service.service';
 import { DialogeService } from './../../services/dialoge.service';
@@ -17,7 +17,7 @@ export class SessionFormComponent
     implements OnInit
     {
     public Session: Session;
-    public cmpSession: Session;
+    public cmpSession: SessionDB;
     public BodyWeight: number = 0;
     public fSessionStatsOverlayComponent: SessionStatsOverlayComponent = null;
 

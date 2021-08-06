@@ -1,7 +1,9 @@
+import { ISessionDB } from './../../../Business/SessionDB';
+import { SessionStatus } from '../../../Business/SessionDB';
 import { UebungWaehlenData } from './../../uebung-waehlen/uebung-waehlen.component';
 import { UebungsKategorie02 } from './../../../Business/Uebung/Uebung';
 import { DexieSvcService } from './../../services/dexie-svc.service';
-import { Session, SessionStatus } from './../../../Business/Session/Session';
+import { Session } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Output, EventEmitter, Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";
 import { MatAccordion } from '@angular/material';
@@ -60,9 +62,9 @@ export class Programm02Component implements OnInit {
 
     ngOnInit() {}
 
-    public CopySession(aSession: Session) {
-        this.fGlobalService.SessionKopie = aSession.Copy();
-    }
+     public CopySession(aSession: Session) {
+    //     this.fGlobalService.SessionKopie = aSession.Copy();
+     }
 
     public DeleteSession(aSession: Session, aRowNum: number) {
         const mDialogData = new DialogData();
@@ -178,14 +180,14 @@ export class Programm02Component implements OnInit {
             return;
         }
 
-        const mSession: Session = this.fGlobalService.SessionKopie.Copy();
+        const mSession: ISessionDB = this.fGlobalService.SessionKopie.Copy();
         //mSession.FK_Programm = this.programmID;
-        this.SessionListe.push(mSession);
+        this.SessionListe.push(mSession as Session);
     }
 
     public startSession(aEvent: Event, aSession: Session) {
         aEvent.stopPropagation();
-        
+
         if ((aSession.Kategorie02 === SessionStatus.Fertig)||(aSession.Kategorie02 === SessionStatus.FertigTimeOut) ) return;
         
 

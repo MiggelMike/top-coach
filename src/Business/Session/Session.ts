@@ -1,76 +1,22 @@
-
+import { SessionDB, Pause, ISessionDB, SessionStatus } from './../SessionDB';
 import { Zeitraum, MaxZeitraum } from './../Dauer';
 import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
 
 var cloneDeep = require('lodash.clonedeep');
 
-export enum SessionStatus {
-    NurLesen,
-    Bearbeitbar,
-    Wartet,
-    Pause,
-    Laueft,
-    Fertig,
-    FertigTimeOut
-
-}
-
-export class Pause extends Zeitraum {
-    constructor(aVon: Date, aBis: Date) {
-        super(aVon,aBis,new MaxZeitraum(99,59,59));
-    }
-}
-
-export interface ISession {
-    ID: number;
-    FK_Programm: number;
-    SessionNr: number;
-    Name: string;
-    Datum: Date;
-    DauerInSek: number;
-    Expanded: Boolean;
-    Kategorie01: SessionStatus;
-    Kategorie02: SessionStatus; 
-    Bearbeitbar: Boolean;
-    UebungsListe: Array<Uebung>;
-    LiftedWeight: number;
-    GestartedWann: Date;
-    PausenListe: Array<Pause>; 
-    PauseInSek: number;
-    DauerFormatted: string;
-    SessionDauer: Zeitraum;
-    DauerTimer: any;
-    BodyWeight: number;
-    BodyWeightAtSessionStart: number;
+export interface ISession extends ISessionDB {
     StarteDauerTimer(): void;
     AddPause(): void;
     CalcDauer(): void;
-    Copy(): Session;
+    CalcPause(): void;
+    Copy(): SessionDB;
     addUebung(aUebung: Uebung);
-    hasChanged(aCmpSession: ISession): Boolean;
-    resetSession(aQuellSession: ISession): void;
+    hasChanged(aCmpSession: ISessionDB): Boolean;
+    resetSession(aQuellSession: ISessionDB): void;
 }
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
-export class Session implements ISession {
-    public ID: number;
-    public FK_Programm: number = 0;
-    public SessionNr: number;
-    public Name: string;
-    public Datum: Date = new Date();
-    public DauerInSek: number = 0;
-    public PauseInSek: number = 0;
-    public Expanded: Boolean;
-    public Kategorie01: SessionStatus = SessionStatus.Bearbeitbar;
-    public Kategorie02: SessionStatus = SessionStatus.Wartet;
-    public Bearbeitbar: Boolean = false;
-    public UebungsListe: Array<Uebung> = [];
-    public GestartedWann: Date = null;
-    public PausenListe: Array<Pause> = new Array<Pause>();
-    public SessionDauer: Zeitraum = null;
-    public DauerFormatted: string = '00:00:00';
-    public DauerTimer: any;
-    public BodyWeightAtSessionStart: number = 0;
+export class Session extends SessionDB implements ISession {
 
     public get BodyWeight(): number {
         // if (this.BodyWeightAtSessionStart === 0) {
@@ -131,12 +77,12 @@ export class Session implements ISession {
     }
 
     constructor() {
+        super();
         const mJetzt = new Date();
         this.SessionDauer = new Zeitraum(mJetzt,mJetzt, new MaxZeitraum(99,59,59));
-        Object.defineProperty(this, 'UebungsListe', { enumerable: false });
     }
     
-    public Copy(): Session {
+    public Copy(): SessionDB {
         return cloneDeep(this); 
     }
 
@@ -145,7 +91,7 @@ export class Session implements ISession {
         this.UebungsListe.push(aUebung);
     }
 
-    public hasChanged(aCmpSession: ISession): Boolean {
+    public hasChanged(aCmpSession: ISessionDB): Boolean {
         if (aCmpSession.ID != this.ID) return true;
         if (aCmpSession.Datum != this.Datum) return true;
         if (aCmpSession.DauerInSek != this.DauerInSek) return true;
@@ -173,7 +119,7 @@ export class Session implements ISession {
         return false;
     }
 
-    public resetSession(aQuellSession: ISession):void {
+    public resetSession(aQuellSession: ISessionDB):void {
         const mUebungsListe: Array<Uebung> = new Array<Uebung>();
         this.UebungsListe.forEach(u => mUebungsListe.push(u.Copy()));
         this.UebungsListe = [];

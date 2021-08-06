@@ -1,10 +1,8 @@
 import { DexieSvcService } from './../../services/dexie-svc.service';
-import { DialogeService } from "./../../services/dialoge.service";
-import { DialogData } from "../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "./../../services/global.service";
 import { Component, OnInit, Input } from "@angular/core";
 import { ITrainingsProgramm, ProgrammKategorie } from "../../../Business/TrainingsProgramm/TrainingsProgramm";
-import { SessionStatus } from 'src/Business/Session/Session';
+import { SessionStatus } from '../../../Business/SessionDB';
 
 @Component({
     selector: "app-programm01",
@@ -24,10 +22,15 @@ export class Programm01Component implements OnInit {
     ) {}
 
     ngOnInit() { }
-    
+
     SelectThisWorkoutClick(aProgram: ITrainingsProgramm, $event: any): void {
         $event.stopPropagation();
-        this.fDexieService.LadeProgramme(ProgrammKategorie.AktuellesProgramm, aProgram);
+        this.programm = aProgram;
+        this.fDexieService.LadeProgramme(ProgrammKategorie.AktuellesProgramm,
+            (aProgramme) => {
+                if(aProgramme.length > 0)
+                    this.fDexieService.AktuellesProgramm = aProgramme[0];
+            });
     }
 
     EditThisWorkoutClick($event): void {

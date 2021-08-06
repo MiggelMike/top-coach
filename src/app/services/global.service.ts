@@ -1,3 +1,4 @@
+import { ISessionDB } from './../../Business/SessionDB';
 import { Router } from '@angular/router';
 import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
 import { DexieSvcService } from './dexie-svc.service';
@@ -98,30 +99,30 @@ export class GlobalService {
         return (s === null) || (s.length === 0) ? 0 : Number(s);
     }
 
-    public LadeAnstehendeSession(): Observable<ISession[]> {
-        const mResult = new Observable<ISession[]>(
-            observer => {
-                this.AnstehendeSessionObserver = observer;
-                this.fDbModule.LadeProgramme(ProgrammKategorie.AktuellesProgramm)
-                if ((this.fDbModule.AktuellesProgramm !== null) &&
-                    (this.fDbModule.AktuellesProgramm !== undefined) &&
-                    (this.fDbModule.AktuellesProgramm.SessionListe !== undefined)) {
-                    // Es gibt anstehende Sessions.
-                    // Jetzt muss geprüft werden, welche angezeigt werden. 
-                    // Letzte Sessions laden.
-                    if (this.LadeSessionHistorieLokal()) {
+    // public LadeAnstehendeSession(): Observable<ISession[]> {
+    //     const mResult = new Observable<ISession[]>(
+    //         observer => {
+    //             this.AnstehendeSessionObserver = observer;
+    //             this.fDbModule.LadeProgramme(ProgrammKategorie.AktuellesProgramm);
+    //             if ((this.fDbModule.AktuellesProgramm !== null) &&
+    //                 (this.fDbModule.AktuellesProgramm !== undefined) &&
+    //                 (this.fDbModule.AktuellesProgramm.SessionListe !== undefined)) {
+    //                 // Es gibt anstehende Sessions.
+    //                 // Jetzt muss geprüft werden, welche angezeigt werden. 
+    //                 // Letzte Sessions laden.
+    //                 if (this.LadeSessionHistorieLokal()) {
                         
-                    } else {
-                        observer.next(this.fDbModule.AktuellesProgramm.SessionListe);
-                    }
-                }
-                else
-                    observer. next([]);
+    //                 } else {
+    //                     observer.next(this.fDbModule.AktuellesProgramm.SessionListe);
+    //                 }
+    //             }
+    //             else
+    //                 observer. next([]);
                     
-            }
-        );
-        return mResult; 
-    }
+    //         }
+    //     );
+    //     return mResult; 
+    // }
 
     public LadeDaten(aSpeicherort: SpeicherOrtTyp) {
         switch (aSpeicherort) {

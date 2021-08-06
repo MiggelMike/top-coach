@@ -91,7 +91,7 @@ export class Uebung implements IUebung {
 
     constructor() {
         // Nicht in Dexie-DB-Speichern -> enumerable: false
-        Object.defineProperty(this, "SatzListe", { enumerable: false });
+       // Object.defineProperty(this, "SatzListe", { enumerable: false });
         Object.defineProperty(this, "Selected", { enumerable: false });
         Object.defineProperty(this, "Expanded", { enumerable: false });
     }

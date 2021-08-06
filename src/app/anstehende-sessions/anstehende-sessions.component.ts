@@ -1,10 +1,11 @@
 import { DexieSvcService } from './../services/dexie-svc.service';
-import { ITrainingsProgramm, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
-import { ISession, SessionStatus } from './../../Business/Session/Session';
+import { TrainingsProgramm,ITrainingsProgramm, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
+import { ISession, } from './../../Business/Session/Session';
+
 import { GlobalService } from './../services/global.service';
 import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
-import { Observable } from 'rxjs';
+import { of,Observable } from 'rxjs';
 
 
 
@@ -20,14 +21,15 @@ export class AnstehendeSessionsComponent implements OnInit {
     }
 
     public NextSessions: Array<ISession> = [];
-    public AnstehendeSessionObserver: Observable<ISession[]>;
+    public AnstehendeSessionObserver: Observable<ITrainingsProgramm>;
 
     constructor(
-        private globalService: GlobalService,
         private fDbModule: DexieSvcService
     ) {
-        this.AnstehendeSessionObserver = this.globalService.LadeAnstehendeSession();
-        this.LadeSessions();
+        this.AnstehendeSessionObserver = of(this.fDbModule.AktuellesProgramm);
+        this.AnstehendeSessionObserver.subscribe(
+           () => (this.LadeProgrammSessions(this.fDbModule.AktuellesProgramm)) 
+        )
     }
 
     ngOnInit() {
@@ -41,17 +43,9 @@ export class AnstehendeSessionsComponent implements OnInit {
         aSess.Expanded = false;
     }
 
-    public LadeSessions() {
-        this.AnstehendeSessionObserver.subscribe(
-            (sessions: Array<ISession>) => {
-                this.fDbModule
-                    .LadeProgramme(ProgrammKategorie.AktuellesProgramm)
-                    .then(() => {
-                        sessions.forEach(
-                            (s) => (s.Kategorie01 =  SessionStatus.NurLesen)
-                        );
-                    });
-            }
-        );
+    public LadeProgrammSessions(aProgram: ITrainingsProgramm) {
+        if ((aProgram !== undefined)&&(aProgram !== null))
+            this.fDbModule.LadeProgrammSessions(aProgram, (mSessions: Array<ISession>) => (this.NextSessions = mSessions)
+            );
     }
 }

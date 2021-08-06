@@ -1,18 +1,28 @@
+import { Session, ISession } from 'src/Business/Session/Session';
+import { SessionStatus } from '../../Business/SessionDB';
 import { ITrainingsProgramm, TrainingsProgramm, ProgrammTyp, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { DialogeService } from './dialoge.service';
 import { ISatz, Satz } from './../../Business/Satz/Satz';
 import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
-import { ISession, Session, SessionStatus, Pause } from './../../Business/Session/Session';
 import { AppData, IAppData } from './../../Business/Coach/Coach';
 import { Dexie, PromiseExtended } from 'dexie';
 import { Injectable, NgModule, Pipe, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, UebungsName, UebungsKategorie02 } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
-import { IZeitraum, Zeitraum, MaxZeitraum } from 'src/Business/Dauer';
+
 
 export interface AktuellesProgramFn {
     (): void;
 }
+
+export interface LadeProgrammeFn {
+    (aProgramme: Array<TrainingsProgramm>): void;
+}
+
+export interface LadeSessionsFn {
+    (aSessions : Array<Session>): void;
+}
+
 
 @Injectable({
     providedIn: "root",
@@ -25,7 +35,7 @@ export class DexieSvcService extends Dexie {
     readonly cSatz: string = "Satz";
     readonly cProgramm: string = "Programm";
     readonly cAppData: string = "AppData";
-    readonly cSession: string = "Session";
+    readonly cSession: string = "SessionDB";
 
     AktuellerProgrammTyp: ProgrammTyp;
     AktuellesProgramm: ITrainingsProgramm; 
@@ -57,7 +67,7 @@ export class DexieSvcService extends Dexie {
             AppData: "++id",
             Uebung: "++ID,Name,Typ",
             Programm: "++id,Name",
-            Session: "++ID,Name,Datum",
+            SessionDB: "++ID,Name,Datum",
             Satz: "++ID",
         });
 
@@ -135,7 +145,7 @@ export class DexieSvcService extends Dexie {
                     mUebungen.forEach((mUebung) =>
                         this.UebungsDaten.push(mUebung)
                     );
-                    this.LadeProgramme(ProgrammKategorie.Vorlage);
+                    //this.LadeProgramme(ProgrammKategorie.Vorlage);
                 }
             });
     }
@@ -155,10 +165,13 @@ export class DexieSvcService extends Dexie {
         //this.ProgrammTable.clear();
     }
 
-    public async LadeProgrammSessions(aProgramm: ITrainingsProgramm) {
-        return await this.table(this.cSession)
+    public LadeProgrammSessions(aProgramm: ITrainingsProgramm, aLadeSessionsFn: LadeSessionsFn ): void {
+        this.table(this.cSession)
             .filter((s) => s.FK_Programm === aProgramm.id)
-            .toArray();
+            .toArray()
+            .then(
+                (mSessions) => ( aLadeSessionsFn(mSessions) )
+            )
         // .then((mSessionListe) => {
         //     aProgramm.SessionListe = mSessionListe;
         //     aProgramm.SessionListe.forEach((mSession) => {
@@ -174,7 +187,7 @@ export class DexieSvcService extends Dexie {
         // });
     }
 
-    public LadeSessionUebungen(aSession: ISession): PromiseExtended {
+    public LadeSessionUebungen(aSession: ISession): PromiseExtended<Uebung[]> {
         return this.table(this.cUebung)
             .filter((mUebung) => mUebung.SessionID === aSession.ID)
             .toArray();
@@ -196,13 +209,10 @@ export class DexieSvcService extends Dexie {
             (p) => p.ProgrammTyp === ProgrammTyp.Gzclp
         );
 
-        if (mProg === undefined) mAnlegen.push(ProgrammTyp.Gzclp);
+        if (mProg === undefined)
+            mAnlegen.push(ProgrammTyp.Gzclp);
         else {
-            if (
-                this.Programme.find(
-                    (p) => p.ProgrammTyp === ProgrammTyp.Gzclp
-                ) === undefined
-            ) {
+            if (this.Programme.find((p) => p.ProgrammTyp === ProgrammTyp.Gzclp) === undefined) {
                 // Standard-Programm gefunden
                 this.Programme.push(mProg);
             }
@@ -256,94 +266,143 @@ export class DexieSvcService extends Dexie {
         }
     }
 
-    public async LadeProgramme(aProgrammKategorie: ProgrammKategorie, aNeuesAktuellesProgram?: ITrainingsProgramm) {
-        this.Programme = []
-        await this.table(this.cProgramm)
+    public LadeVorlageProgramm(aProgramme: Array<TrainingsProgramm>): Array<TrainingsProgramm> {
+        this.DoVorlage(aProgramme);
+        for (
+            let index = 0;
+            index < this.Programme.length;
+            index++
+        ) {
+            // Programm
+            this.FuelleProgramm(this.Programme[index]);
+        }
+        return null;
+    }    
+
+    public LadeAktuellesProgramm(aProgramme: Array<TrainingsProgramm>, aNeuesAktuellesProgram?: ITrainingsProgramm): TrainingsProgramm {
+        // Gibt es schon ein aktuelles Programm?
+        if (aProgramme.length > 0) {
+            this.FuelleProgramm(aProgramme[0]);
+            // Es gibt schon ein aktuelles Programm.
+            // Soll ein anderes aktuelles Programm gewaehlt werden?
+            if (aNeuesAktuellesProgram !== undefined)
+                // Es soll ein anderes aktuelles Programm gewaehlt werden.
+                this.CheckAktuellesProgram(aNeuesAktuellesProgram, aProgramme[0]);
+            else
+                 // Es soll kein anderes aktuelles Programm gewaehlt werden.
+                return aProgramme[0];
+        } else {
+            // Es gibt kein aktuelles Programm.
+            // Soll ein aktuelles Programm gewaehlt werden?
+            if (aNeuesAktuellesProgram !== undefined)
+                 // Es soll ein aktuelles Programm gewaehlt werden
+                 this.CheckAktuellesProgram(aNeuesAktuellesProgram);
+        }
+        return null;
+    }
+
+    
+    public LadeProgramme(aProgrammKategorie: ProgrammKategorie, aLadeProgrammeFn: LadeProgrammeFn): void {
+        this.table(this.cProgramm)
             .filter(
                 (a) => a.ProgrammKategorie === aProgrammKategorie.toString()
             )
             .toArray()
-            .then((mProgramme) => {
-                switch (aProgrammKategorie) {
-                    case ProgrammKategorie.Vorlage:
-                        this.DoVorlage(mProgramme);
-                        for (
-                            let index = 0;
-                            index < this.Programme.length;
-                            index++
-                        ) {
-                            // Programm
-                            this.FuelleProgramm(this.Programme[index]);
-                        }
-                        break;
-                    case ProgrammKategorie.AktuellesProgramm:
-                        // Gibt es schon ein aktuelles Programm?
-                        if (mProgramme.length > 0) {
-                            this.FuelleProgramm(mProgramme[0]);
-                            // Es gibt schon ein aktuelles Programm.
-                            // Soll ein anderes aktuelles Programm gewaehlt werden?
-                            if (aNeuesAktuellesProgram !== undefined)
-                                // Es soll ein anderes aktuelles Programm gewaehlt werden.
-                                this.CheckAktuellesProgram(aNeuesAktuellesProgram, mProgramme[0]);
-                            else 
-                                // Es soll kein anderes aktuelles Programm gewaehlt werden.
-                                this.AktuellesProgramm = mProgramme[0];
-                        } else {
-                            // Es gibt kein aktuelles Programm.
-                            // Soll ein aktuelles Programm gewaehlt werden?
-                            if (aNeuesAktuellesProgram !== undefined)
-                                // Es soll ein aktuelles Programm gewaehlt werden
-                                this.CheckAktuellesProgram(aNeuesAktuellesProgram);
-                        }
-                        break;
-                }
-            })
+            .then(
+                (mProgramme)  => aLadeProgrammeFn(mProgramme)
+            )
             .catch((error) => {
                 console.error(error);
             });
     }
 
-    private async FuelleProgramm(aProgramm: ITrainingsProgramm) {
-        aProgramm.SessionListe = await this.LadeProgrammSessions(aProgramm);
-        for (let j = 0; j < aProgramm.SessionListe.length; j++) {
-            // Session
-            const mSession = aProgramm.SessionListe[j];
-
-            if (mSession.Kategorie02 === undefined)
-                mSession.Kategorie02 = SessionStatus.Wartet;
-            
-            if (mSession.BodyWeightAtSessionStart === undefined)
-                mSession.BodyWeightAtSessionStart = 0;
-            
-            mSession.UebungsListe = await this.LadeSessionUebungen(mSession);
-            for (let z = 0; z < mSession.UebungsListe.length; z++) {
-                // Uebung
-                const mUebung = mSession.UebungsListe[z];
-                
-                if (mUebung.WarmUpVisible === undefined)
-                    mUebung.WarmUpVisible = true;
-
-                if (mUebung.CooldownVisible === undefined)
-                    mUebung.CooldownVisible = true;
-
-                if (mUebung.IncludeWarmupWeight === undefined)
-                    mUebung.IncludeWarmupWeight = false;
-
-                if (mUebung.IncludeCoolDownWeight === undefined)
-                    mUebung.IncludeCoolDownWeight = false;
-                
-                if (mUebung.Expanded === undefined)
-                    mUebung.Expanded = false;
-                
-                mUebung.SatzListe = await this.LadeUebungsSaetze(mUebung);
-                mUebung.SatzListe.forEach(mSatz => {
-                    if (mSatz.IncludeBodyweight === undefined)
-                        mSatz.IncludeBodyweight = false;
+    private FuelleProgramm(aProgramm: ITrainingsProgramm, aCylcleCount: number = 1): void {
+        const mDoneSessionListe = new Array<Session>();
+        for (let index = 0; index < aCylcleCount; index++) {
+            this.LadeProgrammSessions(aProgramm, (mSessions: Array<ISession>) => {
+                if (mSessions === undefined)
+                    return;
                     
-                    if (mSatz.BodyWeight === undefined)
-                        mSatz.BodyWeight = 0;
-                 })
-            }
+                if (aProgramm.SessionListe === undefined)
+                    aProgramm.SessionListe = new Array<Session>();
+            
+                mSessions.forEach((s: Session) => {
+                    if (aProgramm.SessionListe !== undefined) {
+                        const mCopiedSession = s.Copy();
+                        aProgramm.SessionListe.push(mCopiedSession as Session);
+                        // Fertige Session in Extra-Liste kopieren
+                        if ((s.Kategorie02 === SessionStatus.Fertig)
+                            || (s.Kategorie02 === SessionStatus.FertigTimeOut))
+                            mDoneSessionListe.push(mCopiedSession as Session);
+                    
+                    }
+                });
+            
+                mDoneSessionListe.forEach(
+                    (mDoneSession: Session) => {
+                        const mFindSession: ISession = aProgramm.SessionListe.find((s, mIndex) => {
+                            if (s.ID === mDoneSession.ID)
+                                return s;
+                            return null;
+                        })
+
+                        if (mFindSession !== null) {
+                        
+                        }
+                    }
+                );
+        
+                    
+                for (let j = 0; j < aProgramm.SessionListe.length; j++) {
+                    // Session
+                    const mSession: ISession = aProgramm.SessionListe[j];
+
+                    if (mSession.Kategorie02 === undefined)
+                        mSession.Kategorie02 = SessionStatus.Wartet;
+            
+                    if (mSession.BodyWeightAtSessionStart === undefined)
+                        mSession.BodyWeightAtSessionStart = 0;
+            
+                    this.LadeSessionUebungen(mSession)
+                        .then(
+                            u => mSession.UebungsListe = u
+                        );
+                        
+                    for (let z = 0; z < mSession.UebungsListe.length; z++) {
+                        // Uebung
+                        const mUebung = mSession.UebungsListe[z];
+                
+                        if (mUebung.WarmUpVisible === undefined)
+                            mUebung.WarmUpVisible = true;
+
+                        if (mUebung.CooldownVisible === undefined)
+                            mUebung.CooldownVisible = true;
+
+                        if (mUebung.IncludeWarmupWeight === undefined)
+                            mUebung.IncludeWarmupWeight = false;
+
+                        if (mUebung.IncludeCoolDownWeight === undefined)
+                            mUebung.IncludeCoolDownWeight = false;
+                
+                        if (mUebung.Expanded === undefined)
+                            mUebung.Expanded = false;
+                
+                        this.LadeUebungsSaetze(mUebung)
+                            .then(
+                                (s) => mUebung.SatzListe = s
+                            );
+
+                        mUebung.SatzListe.forEach(mSatz => {
+                            if (mSatz.IncludeBodyweight === undefined)
+                                mSatz.IncludeBodyweight = false;
+                    
+                            if (mSatz.BodyWeight === undefined)
+                                mSatz.BodyWeight = 0;
+                        })
+                    }
+
+                }
+            });
         }
     }
 

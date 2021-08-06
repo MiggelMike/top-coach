@@ -22,10 +22,10 @@ export class ProgrammWaehlenComponent implements OnInit {
 
     public LadeTrainingsProgramme(): void {
         this.ProgrammListeObserver.subscribe(
-            () => {
-                this.fDbModule.LadeProgramme(ProgrammKategorie.Vorlage).then(
-                    () => this.ProgrammListe = this.fDbModule.Programme
-                );
+            (mProgramme) => {
+                this.fDbModule.LadeProgramme(ProgrammKategorie.Vorlage,
+                    (aProgramme) => { this.ProgrammListe = aProgramme }
+                )
             }
         );
     }

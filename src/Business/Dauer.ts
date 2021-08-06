@@ -12,20 +12,15 @@ export class MaxZeitraum{
     }
 }
 
-export interface IZeitraum {
+export class ZeitraumDB {
     Von: Date;
     Bis: Date;
     MaxDatum: Date;
     MaxDauer: number;
-    DauerFormated: string;
-    DauerRaw(): number;
 }
 
-export class Zeitraum implements IZeitraum {
-    public Von: Date = null;
-    public Bis: Date = null;
-    public MaxDatum: Date = null;
-    public MaxDauer: number = 0;
+
+export class Zeitraum extends ZeitraumDB  {
    
     public DauerRaw(): number {
         const mResult = Zeitraum.CalcDauer(this.Von, this.Bis);
@@ -34,7 +29,7 @@ export class Zeitraum implements IZeitraum {
         return this.MaxDauer;
     }
 
-    public get DauerFormated(): string {
+    public DauerFormated(): string {
         return Zeitraum.FormatDauer(this.DauerRaw());
     }
 
@@ -77,6 +72,7 @@ export class Zeitraum implements IZeitraum {
 
     
     constructor(aVon: Date, aBis: Date, aMaxDauer: MaxZeitraum = new MaxZeitraum(99, 59, 59)) {
+        super();
         this.Von = aVon;
         this.Bis = aBis;
         this.MaxDatum = new Date();
