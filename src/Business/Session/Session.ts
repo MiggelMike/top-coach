@@ -29,7 +29,7 @@ export class Session extends SessionDB implements ISession {
         const mDauer = Zeitraum.CalcDauer(this.GestartedWann, new Date());
         const mPause = this.CalcPause();
         const mDauerMinusPause = mDauer - mPause;
-        if (mDauerMinusPause < this.SessionDauer.MaxDauer) {
+        if (mDauerMinusPause >= this.SessionDauer.MaxDauer) {
             this.DauerFormatted = Zeitraum.FormatDauer(this.SessionDauer.MaxDauer);
             this.Kategorie02 = SessionStatus.FertigTimeOut;
         }

@@ -18,15 +18,13 @@ export class ProgrammWaehlenComponent implements OnInit {
     ngOnInit() {
         this.ProgrammListeObserver = of(this.ProgrammListe);
         this.LadeTrainingsProgramme();
+        //this.fDexieService.LadeVorlageProgramme();
+
     }
 
     public LadeTrainingsProgramme(): void {
         this.ProgrammListeObserver.subscribe(
-            (mProgramme) => {
-                this.fDbModule.LadeProgramme(ProgrammKategorie.Vorlage,
-                    (aProgramme) => { this.ProgrammListe = aProgramme }
-                )
-            }
+            () => (this.fDbModule.LadeVorlageProgramme( (mProgramme) => (this.ProgrammListe = mProgramme)))
         );
     }
 

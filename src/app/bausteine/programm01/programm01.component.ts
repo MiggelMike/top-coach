@@ -28,8 +28,25 @@ export class Programm01Component implements OnInit {
         this.programm = aProgram;
         this.fDexieService.LadeProgramme(ProgrammKategorie.AktuellesProgramm,
             (aProgramme) => {
-                if(aProgramme.length > 0)
-                    this.fDexieService.AktuellesProgramm = aProgramme[0];
+                // Gibt es schon ein aktuelles Programm?
+                if (aProgramme.length > 0)
+                    this.fDexieService.AktuellesProgramm = aProgramme[0]
+                else {
+                    // Es gibt schon ein aktuelles Programm.
+                    this.fDexieService.CheckAktuellesProgram(aProgram, this.fDexieService.AktuellesProgramm);
+                    //         else
+                    //              // Es soll kein anderes aktuelles Programm gewaehlt werden.
+                    //             return aProgramme[0];
+                    //     } else {
+                    //         // Es gibt kein aktuelles Programm.
+                    //         // Soll ein aktuelles Programm gewaehlt werden?
+                    //         if (aNeuesAktuellesProgram !== undefined)
+                    //              // Es soll ein aktuelles Programm gewaehlt werden
+                    //              this.CheckAktuellesProgram(aNeuesAktuellesProgram);
+                    //     }
+                    // this.fDexieService.AktuellesProgramm = aProgram;
+                }
+                
             });
     }
 

@@ -20,19 +20,26 @@ export class AnstehendeSessionsComponent implements OnInit {
         return this.fDbModule.AktuellesProgramm;
     }
 
-    public NextSessions: Array<ISession> = [];
     public AnstehendeSessionObserver: Observable<ITrainingsProgramm>;
 
     constructor(
         private fDbModule: DexieSvcService
     ) {
         this.AnstehendeSessionObserver = of(this.fDbModule.AktuellesProgramm);
-        this.AnstehendeSessionObserver.subscribe(
-           () => (this.LadeProgrammSessions(this.fDbModule.AktuellesProgramm)) 
-        )
     }
-
+    
     ngOnInit() {
+        this.AnstehendeSessionObserver.subscribe(
+            () => {
+                if (this.fDbModule.AktuellesProgramm === undefined) {
+                    this.fDbModule.LadeProgramme(ProgrammKategorie.AktuellesProgramm,
+                        (aProgramme) => {
+                            if (aProgramme.length > 0)
+                                this.fDbModule.AktuellesProgramm = aProgramme[0];
+                        });
+                }
+            } 
+        )
     }
 
     beforePanelOpened(aSess: Session) {
@@ -44,8 +51,7 @@ export class AnstehendeSessionsComponent implements OnInit {
     }
 
     public LadeProgrammSessions(aProgram: ITrainingsProgramm) {
-        if ((aProgram !== undefined)&&(aProgram !== null))
-            this.fDbModule.LadeProgrammSessions(aProgram, (mSessions: Array<ISession>) => (this.NextSessions = mSessions)
-            );
+        if ((aProgram !== undefined) && (aProgram !== null))
+            this.fDbModule.LadeProgrammSessions(aProgram);
     }
 }
