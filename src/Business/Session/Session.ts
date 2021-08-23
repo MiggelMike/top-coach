@@ -6,6 +6,7 @@ var cloneDeep = require('lodash.clonedeep');
 
 export interface ISession extends ISessionDB {
     StarteDauerTimer(): void;
+    SetSessionFertig();
     AddPause(): void;
     CalcDauer(): void;
     CalcPause(): void;
@@ -26,6 +27,11 @@ export class Session extends SessionDB implements ISession {
     }
 
     public CalcDauer(): void {
+        if ((this.Kategorie02 === SessionStatus.Fertig) || (this.Kategorie02 === SessionStatus.FertigTimeOut)) {
+            clearInterval(this.DauerTimer);
+            return;
+        }
+            
         const mDauer = Zeitraum.CalcDauer(this.GestartedWann, new Date());
         const mPause = this.CalcPause();
         const mDauerMinusPause = mDauer - mPause;
@@ -56,6 +62,11 @@ export class Session extends SessionDB implements ISession {
         }
         this.Kategorie02 = SessionStatus.Laueft;
         this.DauerTimer = setInterval(() => this.CalcDauer(), 450);
+    }
+
+    public SetSessionFertig(): void {
+        clearInterval(this.DauerTimer);
+        this.Kategorie02 = SessionStatus.Fertig;
     }
 
     public AddPause(): void {

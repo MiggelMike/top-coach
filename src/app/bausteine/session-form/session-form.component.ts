@@ -91,4 +91,17 @@ export class SessionFormComponent
     
         this.fDialogService.JaNein(mDialogData);
     }
+
+    public SetPause():void {
+        this.Session.Kategorie02 = SessionStatus.Pause;
+    }
+
+    public SetDone(): void {
+        this.fSessionStatsOverlayComponent.sess.SetSessionFertig();
+    }
+
+    public PauseButtonVisible(): Boolean {
+        return (this.Session.Kategorie02 !== SessionStatus.Fertig) && (this.Session.Kategorie02 !== SessionStatus.FertigTimeOut);
+    }
+
 }
