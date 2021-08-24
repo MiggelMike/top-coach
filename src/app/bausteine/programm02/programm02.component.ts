@@ -47,7 +47,7 @@ export class Programm02Component implements OnInit {
             case SessionStatus.Laueft:
             case SessionStatus.Pause: return "Go ahead";
             case SessionStatus.Fertig:
-            case SessionStatus.FertigTimeOut: return "Done";
+            case SessionStatus.FertigTimeOut: return "Finished";
             default: return "?";
         }
     }
