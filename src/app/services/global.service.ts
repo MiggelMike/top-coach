@@ -186,7 +186,7 @@ export class GlobalService {
 
     private SpeicherDatenLokal() {
         if (this.fDbModule.AktuellesProgramm !== undefined) {
-            this.fDbModule.ProgrammSpeichern(this.fDbModule.AktuellesProgramm);
+            this.fDbModule.ProgrammSpeichern(this.fDbModule.AktuellesProgramm, this.fDbModule);
             // Aktuelles Trainingsprogramm
             // let mStoreData = serialize(this.fDB.AktuellesProgramm);
             // localStorage.setItem(this.cAktuellesTrainingsProgramm, JSON.stringify(mStoreData));

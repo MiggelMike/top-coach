@@ -14,6 +14,7 @@ export interface ISession extends ISessionDB {
     addUebung(aUebung: Uebung);
     hasChanged(aCmpSession: ISessionDB): Boolean;
     resetSession(aQuellSession: ISessionDB): void;
+    init(): void;
 }
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
@@ -25,6 +26,12 @@ export class Session extends SessionDB implements ISession {
         // }
         return this.BodyWeightAtSessionStart;
     }
+
+    public init(): void {
+        this.PausenListe = [];
+        this.Kategorie02 = SessionStatus.Wartet;
+    }
+
 
     public CalcDauer(): void {
         if ((this.Kategorie02 === SessionStatus.Fertig) || (this.Kategorie02 === SessionStatus.FertigTimeOut)) {

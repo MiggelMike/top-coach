@@ -27,10 +27,10 @@ export class Programm01Component implements OnInit {
         $event.stopPropagation();
         this.programm = aProgram;
         this.fDexieService.LadeProgramme(ProgrammKategorie.AktuellesProgramm,
-            (aProgramme) => {
+            (aProgramm) => {
                 // Gibt es schon ein aktuelles Programm?
-                if (aProgramme.length > 0)
-                    this.fDexieService.AktuellesProgramm = aProgramme[0]
+                if (aProgramm !== undefined)
+                    this.fDexieService.AktuellesProgramm = aProgramm;
                 else {
                     // Es gibt schon ein aktuelles Programm.
                     this.fDexieService.CheckAktuellesProgram(aProgram, this.fDexieService.AktuellesProgramm);

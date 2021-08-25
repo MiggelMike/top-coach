@@ -21,7 +21,8 @@ export interface ITrainingsProgramm {
     ProgrammKategorie: ProgrammKategorie;
     ProgrammTyp: ProgrammTyp;
     SessionListe: Array<ISession>;
-    Bearbeitbar: Boolean; 
+    Bearbeitbar: Boolean;
+    Zyklen: number;
     Init(aSessions: Array<ISession>): void;
     Copy(): ITrainingsProgramm;
     ErstelleSessionsAusVorlage(aProgrammKategorie: ProgrammKategorie): ITrainingsProgramm;
@@ -40,6 +41,7 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
     public ProgrammTyp: ProgrammTyp = ProgrammTyp.Custom;
     public Bearbeitbar: Boolean = true;
     public SessionListe: Array<ISession> = [];
+    public Zyklen: number = 1;
 
     constructor(
         aProgrammTyp: ProgrammTyp,
