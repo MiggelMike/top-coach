@@ -27,6 +27,19 @@ export interface NoRecordFn {
     (aData?: any): void;
 }
 
+export class LadePara {
+    Data?: any;
+    fProgrammTyp?: ProgrammTyp;
+    fProgrammKategorie?: ProgrammKategorie; 
+    OnProgrammAfterLoadFn?: AfterLoadFn; 
+    OnProgrammNoRecordFn?: NoRecordFn; 
+    OnSessionAfterLoadFn?: AfterLoadFn; 
+    OnSessionNoRecordFn?: NoRecordFn; 
+    OnUebungAfterLoadFn?: AfterLoadFn; 
+    OnUebungNoRecordFn?: NoRecordFn; 
+    OnSatzAfterLoadFn?: AfterLoadFn; 
+    OnSatzNoRecordFn?: NoRecordFn; 
+}    
 
 @Injectable({
     providedIn: "root",
@@ -34,6 +47,8 @@ export interface NoRecordFn {
 @NgModule({
     providers: [DexieSvcService],
 })
+
+    
 export class DexieSvcService extends Dexie {
     readonly cUebung: string = "Uebung";
     readonly cSatz: string = "Satz";
@@ -66,7 +81,7 @@ export class DexieSvcService extends Dexie {
             );
         }
 
-//          Dexie.delete("ConceptCoach");
+         // Dexie.delete("ConceptCoach");
         
         this.version(1).stores({
             AppData: "++id",
@@ -150,7 +165,36 @@ export class DexieSvcService extends Dexie {
                     this.UebungsDaten = mUebungen;
                     // Standard-Uebungen sind vorhanden.
                     // Jetzt Standard-Vorlage-Programme laden
-                    this.LadeProgramme(ProgrammKategorie.Vorlage, this.DoVorlage, this.DoVorlage, { Programme: this.VorlageProgramme, DbModul: this } );
+                    this.LadeProgramme(
+                        {
+                            fProgrammKategorie: ProgrammKategorie.Vorlage,
+                            OnProgrammAfterLoadFn: (p: TrainingsProgramm) => {
+                                this.VorlageProgramme.push(p);
+                            }, //OnProgrammAfterLoadFn
+                            OnProgrammNoRecordFn: (aPara) => {
+                                const mProgramme: Array<TrainingsProgramm> = (aPara.Data as Array<TrainingsProgramm>);
+                                const mAnlegen: Array<ProgrammTyp.Gzclp> = new Array<ProgrammTyp.Gzclp>();
+                                const mProg: TrainingsProgramm = (mProgramme.find(
+                                    (p) => p.ProgrammTyp === ProgrammTyp.Gzclp
+                                ));
+                        
+                                if (mProg === undefined)
+                                    mAnlegen.push(ProgrammTyp.Gzclp);
+                                else {
+                                    if (mProgramme.find((p) => p.ProgrammTyp === ProgrammTyp.Gzclp) === undefined) {
+                                        // Standard-Programm gefunden
+                                        mProgramme.push(mProg);
+                                    }
+                                }
+                        
+                                for (let index = 0; index < mAnlegen.length; index++)
+                                    this.ErzeugeVorlageProgramm(mAnlegen[index], this);
+
+                            } //OnProgrammNoRecorderLoadFn
+                        
+                        
+                        } as LadePara);
+                      // this.DoVorlage, this.DoVorlage, { Programme: this.VorlageProgramme, DbModul: this });
                 }
             });
     }
@@ -170,32 +214,43 @@ export class DexieSvcService extends Dexie {
         //this.ProgrammTable.clear();
     }
 
-    public LadeProgrammSessions(aProgramm: TrainingsProgramm, aAfterLoadFn?: AfterLoadFn): void {
+    public LadeProgrammSessions(aProgramm: TrainingsProgramm, aLadePara?: LadePara): void {
         this.table(this.cSession)
             .filter((s) => s.FK_Programm === aProgramm.id)
             .toArray()
             .then(
-                (mSessions) => {
-                    aProgramm.SessionListe = mSessions;
-                    aProgramm.SessionListe.forEach((s) => (this.LadeSessionUebungen(s, aProgramm, aAfterLoadFn)));
+                (aSessions: Array<Session>) => {
+                    if (aSessions.length > 0) {
+                        aProgramm.SessionListe = aSessions;
+                        aProgramm.SessionListe.forEach((s) => (this.LadeSessionUebungen(s, aLadePara)));
+                        if ((aLadePara !== undefined) && (aLadePara.OnSessionAfterLoadFn !== undefined))
+                            aLadePara.OnSessionAfterLoadFn(aLadePara);
+                    }
+                    else if ((aLadePara !== undefined) && (aLadePara.OnSessionNoRecordFn !== undefined))
+                        aLadePara.OnSessionNoRecordFn(aLadePara);
                 });
     }
 
-    public LadeSessionUebungen(aSession: ISession, aProgramm: TrainingsProgramm, aAfterLoadFn?: AfterLoadFn): void {
+    public LadeSessionUebungen(aSession: ISession, aLadePara?: LadePara): void {
         this.table(this.cUebung)
             .filter((mUebung) => mUebung.SessionID === aSession.ID)
             .toArray()
             .then(
-                (aUebungen) => {
-                    aSession.UebungsListe = aUebungen;
-                    aSession.UebungsListe.forEach((u) => {
-                        this.LadeUebungsSaetze(u,aProgramm, aAfterLoadFn);
-                    });
+                (aUebungen: Array<Uebung>) => {
+                    if (aUebungen.length > 0) {
+                        aSession.UebungsListe = aUebungen;
+                        aSession.UebungsListe.forEach((u) => {
+                            this.LadeUebungsSaetze(u, aLadePara);
+                            if ((aLadePara !== undefined) && (aLadePara.OnUebungAfterLoadFn !== null))
+                                aLadePara.OnUebungAfterLoadFn(aLadePara);
+                        });
+                    } else if ((aLadePara !== undefined) && (aLadePara.OnUebungNoRecordFn !== null))
+                        aLadePara.OnUebungNoRecordFn(aLadePara);
                 }
             )
     }
 
-    public LadeUebungsSaetze(aUebung: Uebung, aProgramm: TrainingsProgramm, aAfterLoadFn?: AfterLoadFn) {
+    public LadeUebungsSaetze(aUebung: Uebung, aLadePara?: LadePara) {
         this.table(this.cSatz)
             .filter(
                 (mSatz) =>
@@ -204,35 +259,38 @@ export class DexieSvcService extends Dexie {
             )
             .toArray()
             .then(
-                (aSaetze) => {
-                    aUebung.SatzListe = aSaetze;
-                    aUebung.SatzListe.forEach((s) => {
-                        if ((aAfterLoadFn !== undefined) && (aAfterLoadFn !== null))
-                            aAfterLoadFn(aProgramm);
+                (aSaetze: Array<Satz>) => {
+                    if (aSaetze.length > 0) {
+                        aUebung.SatzListe = aSaetze;
+                        aUebung.SatzListe.forEach((s) => {
+                            if ((aLadePara !== undefined) && (aLadePara.OnSatzAfterLoadFn !== null))
+                                aLadePara.OnSatzAfterLoadFn(aLadePara);
                         
-                    })
+                        })
+                    } else if ((aLadePara !== undefined) && (aLadePara.OnSatzNoRecordFn !== null))
+                        aLadePara.OnSatzNoRecordFn(aLadePara);
                 }
             )
     }
 
-    private DoVorlage(aData: any) {
-        // Programme: this.VorlageProgramme, DbModul: this
+    private DoVorlage(aPara: any) {
+        const mProgramme: Array<TrainingsProgramm> = (aPara.Data as Array<TrainingsProgramm>);
         const mAnlegen: Array<ProgrammTyp.Gzclp> = new Array<ProgrammTyp.Gzclp>();
-        const mProg: TrainingsProgramm = aData.Programme.find(
+        const mProg: TrainingsProgramm = (mProgramme.find(
             (p) => p.ProgrammTyp === ProgrammTyp.Gzclp
-        );
+        ));
 
         if (mProg === undefined)
             mAnlegen.push(ProgrammTyp.Gzclp);
         else {
-            if (aData.Programme.find((p) => p.ProgrammTyp === ProgrammTyp.Gzclp) === undefined) {
+            if (mProgramme.find((p) => p.ProgrammTyp === ProgrammTyp.Gzclp) === undefined) {
                 // Standard-Programm gefunden
-                aData.Programme.push(mProg);
+                mProgramme.push(mProg);
             }
         }
 
         for (let index = 0; index < mAnlegen.length; index++)
-            aData.DbModul.ErzeugeVorlageProgramm(mAnlegen[index], aData.DbModul);
+            aPara.DbModul.ErzeugeVorlageProgramm(mAnlegen[index], aPara.DbModul);
     }  
     
 
@@ -288,10 +346,6 @@ export class DexieSvcService extends Dexie {
         }) != null;
     }
 
-    public LadeVorlageProgramme(aAfterLoadFn?: AfterLoadFn, aNoLoadFn?: NoRecordFn): void {
-        this.LadeProgramme(ProgrammKategorie.Vorlage, aAfterLoadFn, aNoLoadFn, this.VorlageProgramme);
-    }    
-
 //    public LadeAktuellesProgramm(aProgramme: Array<TrainingsProgramm>, aNeuesAktuellesProgram?: ITrainingsProgramm): TrainingsProgramm {
     //     // Gibt es schon ein aktuelles Programm?
     //     if (aProgramme.length > 0) {
@@ -315,25 +369,25 @@ export class DexieSvcService extends Dexie {
     // }
 
     public LadeAktuellesProgramm(aAktuellesProgramm: ITrainingsProgramm): void { 
-            this.LadeProgramme(ProgrammKategorie.AktuellesProgramm,
-                (mProgramm) => {
-                    if ((mProgramm !== undefined) && (mProgramm !== null)) {
-                        let mNeueSessions: Array<SessionDB> = [];
-                        let mUnDoneSessions: Array<SessionDB> = [];
-                        let mDoneSessions: Array<SessionDB> = [];
-                        // Das gefundene aktuelle Programm kopieren.
-                        this.AktuellesProgramm = mProgramm.Copy();
+            // this.LadeProgramme(ProgrammKategorie.AktuellesProgramm,
+            //     (mProgramm) => {
+            //         if ((mProgramm !== undefined) && (mProgramm !== null)) {
+            //             let mNeueSessions: Array<SessionDB> = [];
+            //             let mUnDoneSessions: Array<SessionDB> = [];
+            //             let mDoneSessions: Array<SessionDB> = [];
+            //             // Das gefundene aktuelle Programm kopieren.
+            //             this.AktuellesProgramm = mProgramm.Copy();
 
-                        // Die fertigen und nicht fertigen Sessions merken
-                        for (let i = 0; i < mProgramm.SessionListe.length; i++) {
-                            if ((mProgramm.SessionListe[i].Kategorie02 === SessionStatus.Fertig)
-                                || (mProgramm.SessionListe[i].Kategorie02 === SessionStatus.FertigTimeOut))
-                                // fertige Session
-                                mDoneSessions.push(mProgramm.SessionListe[i]);
-                            else 
-                                // Nicht fertige Session
-                                mUnDoneSessions.push(mProgramm.SessionListe[i]);
-                        }      
+            //             // Die fertigen und nicht fertigen Sessions merken
+            //             for (let i = 0; i < mProgramm.SessionListe.length; i++) {
+            //                 if ((mProgramm.SessionListe[i].Kategorie02 === SessionStatus.Fertig)
+            //                     || (mProgramm.SessionListe[i].Kategorie02 === SessionStatus.FertigTimeOut))
+            //                     // fertige Session
+            //                     mDoneSessions.push(mProgramm.SessionListe[i]);
+            //                 else 
+            //                     // Nicht fertige Session
+            //                     mUnDoneSessions.push(mProgramm.SessionListe[i]);
+            //             }      
 
                         // Sind alle Sessions des aktuellen Programms erledigt?  
                         // if (mDoneSessions.length === this.fDbModule.AktuellesProgramm.SessionListe.length) {
@@ -366,29 +420,34 @@ export class DexieSvcService extends Dexie {
                         //     }
                         // }
                     
-                    }
-                });
+                    // }
+                // });
     }
 
 
-    public LadeProgramme(aProgrammKategorie: ProgrammKategorie, aAfterLoadFn?: AfterLoadFn, aNoRecordFn?: NoRecordFn, aData?: any ): void {
+    public LadeProgramme(aLadePara: LadePara ): void {
         this.table(this.cProgramm)
             .filter(
-                (a) => a.ProgrammKategorie === aProgrammKategorie.toString()
+                (a) => a.ProgrammKategorie === aLadePara.fProgrammKategorie.toString()
             )
             .toArray()
             .then(
-                (mProgramme) => {
-                    if (mProgramme.length > 0) {
-                        mProgramme.forEach((p: TrainingsProgramm) => {
+                (aProgramme: Array<TrainingsProgramm>) => {
+                    if (aProgramme.length > 0) {
+                        aProgramme.forEach((p: TrainingsProgramm) => {
                             if (p.Zyklen === undefined)
                                 p.Zyklen = 1;
                         
-                            this.LadeProgrammSessions(p, aAfterLoadFn);
+                            this.LadeProgrammSessions(p, aLadePara);
+
+                            if ((aLadePara !== undefined) && (aLadePara.OnProgrammAfterLoadFn)) {
+                                aLadePara.OnProgrammAfterLoadFn(p);
+                            }
                         });
                     }
-                    else if (aNoRecordFn !== undefined)
-                        aNoRecordFn(aData);
+                    else if ((aLadePara !== undefined) && (aLadePara.OnProgrammNoRecordFn))
+                        aLadePara.Data = aProgramme;
+                        aLadePara.OnProgrammNoRecordFn(aLadePara);
                 }
             )
             .catch((error) => {

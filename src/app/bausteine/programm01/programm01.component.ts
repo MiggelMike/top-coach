@@ -1,8 +1,9 @@
-import { DexieSvcService } from './../../services/dexie-svc.service';
+import { DexieSvcService, LadePara } from './../../services/dexie-svc.service';
 import { GlobalService } from "./../../services/global.service";
 import { Component, OnInit, Input } from "@angular/core";
 import { ITrainingsProgramm, ProgrammKategorie } from "../../../Business/TrainingsProgramm/TrainingsProgramm";
 import { SessionStatus } from '../../../Business/SessionDB';
+
 
 @Component({
     selector: "app-programm01",
@@ -26,14 +27,17 @@ export class Programm01Component implements OnInit {
     SelectThisWorkoutClick(aProgram: ITrainingsProgramm, $event: any): void {
         $event.stopPropagation();
         this.programm = aProgram;
-        this.fDexieService.LadeProgramme(ProgrammKategorie.AktuellesProgramm,
-            (aProgramm) => {
-                // Gibt es schon ein aktuelles Programm?
-                if (aProgramm !== undefined)
-                    this.fDexieService.AktuellesProgramm = aProgramm;
-                else {
-                    // Es gibt schon ein aktuelles Programm.
-                    this.fDexieService.CheckAktuellesProgram(aProgram, this.fDexieService.AktuellesProgramm);
+        this.fDexieService.LadeProgramme(
+            { fProgrammKategorie : ProgrammKategorie.AktuellesProgramm } as LadePara
+        );
+
+            // (aProgramm) => {
+            //     // Gibt es schon ein aktuelles Programm?
+            //     if (aProgramm !== undefined)
+            //         this.fDexieService.AktuellesProgramm = aProgramm;
+            //     else {
+            //         // Es gibt schon ein aktuelles Programm.
+            //         this.fDexieService.CheckAktuellesProgram(aProgram, this.fDexieService.AktuellesProgramm);
                     //         else
                     //              // Es soll kein anderes aktuelles Programm gewaehlt werden.
                     //             return aProgramme[0];
@@ -45,9 +49,9 @@ export class Programm01Component implements OnInit {
                     //              this.CheckAktuellesProgram(aNeuesAktuellesProgram);
                     //     }
                     // this.fDexieService.AktuellesProgramm = aProgram;
-                }
                 
-            });
+                
+           
     }
 
     EditThisWorkoutClick($event): void {
