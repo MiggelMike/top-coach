@@ -1,7 +1,7 @@
 import { DexieSvcService, LadePara } from './../../services/dexie-svc.service';
 import { GlobalService } from "./../../services/global.service";
 import { Component, OnInit, Input } from "@angular/core";
-import { ITrainingsProgramm, ProgrammKategorie } from "../../../Business/TrainingsProgramm/TrainingsProgramm";
+import { TrainingsProgramm, ITrainingsProgramm, ProgrammKategorie, ProgrammTyp } from "../../../Business/TrainingsProgramm/TrainingsProgramm";
 import { SessionStatus } from '../../../Business/SessionDB';
 
 
@@ -19,16 +19,31 @@ export class Programm01Component implements OnInit {
 
     constructor(
         private fGlobalService: GlobalService,
-        private fDexieService: DexieSvcService
+        private fDbModul: DexieSvcService
     ) {}
 
     ngOnInit() { }
 
-    SelectThisWorkoutClick(aProgram: ITrainingsProgramm, $event: any): void {
+    SelectThisWorkoutClick(aSelecedProgram: ITrainingsProgramm, $event: any): void {
         $event.stopPropagation();
-        this.programm = aProgram;
-        this.fDexieService.LadeProgramme(
-            { fProgrammKategorie : ProgrammKategorie.AktuellesProgramm } as LadePara
+        this.programm = aSelecedProgram;
+        this.fDbModul.LadeProgramme(
+            {
+                fProgrammKategorie: ProgrammKategorie.AktuellesProgramm,
+
+                OnProgrammAfterLoadFn: (mProgramm: TrainingsProgramm) => {
+                    this.fDbModul.AktuellesProgramm = mProgramm;
+                }, // OnProgrammAfterLoadFn
+                
+                OnProgrammNoRecordFn: 
+                    (mProgramm: TrainingsProgramm) => {
+                        const mAktuellesProgramm: ITrainingsProgramm = aSelecedProgram.Copy(); 
+                        mAktuellesProgramm.ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
+                        this.fDbModul.AktuellesProgramm = mAktuellesProgramm;
+                        this.fDbModul.ProgrammSpeichern(mAktuellesProgramm, this.fDbModul);
+                } // OnProgrammNoRecordFn
+
+            } as LadePara
         );
 
             // (aProgramm) => {

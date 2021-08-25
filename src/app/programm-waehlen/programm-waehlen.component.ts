@@ -31,7 +31,7 @@ export class ProgrammWaehlenComponent implements OnInit {
                     fProgrammKategorie: ProgrammKategorie.Vorlage,
                     OnProgrammAfterLoadFn: (mProgramm: TrainingsProgramm) => {
                         this.ProgrammListe.push(mProgramm);
-                    }
+                    }, // OnProgrammAfterLoadFn
                 } as LadePara)
             )
             // () => {this.fDbModule.LadeProgramme(ProgrammKategorie.Vorlage,

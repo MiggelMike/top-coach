@@ -81,7 +81,7 @@ export class DexieSvcService extends Dexie {
             );
         }
 
-         // Dexie.delete("ConceptCoach");
+        //    Dexie.delete("ConceptCoach");
         
         this.version(1).stores({
             AppData: "++id",
@@ -168,9 +168,11 @@ export class DexieSvcService extends Dexie {
                     this.LadeProgramme(
                         {
                             fProgrammKategorie: ProgrammKategorie.Vorlage,
+                            
                             OnProgrammAfterLoadFn: (p: TrainingsProgramm) => {
                                 this.VorlageProgramme.push(p);
                             }, //OnProgrammAfterLoadFn
+
                             OnProgrammNoRecordFn: (aPara) => {
                                 const mProgramme: Array<TrainingsProgramm> = (aPara.Data as Array<TrainingsProgramm>);
                                 const mAnlegen: Array<ProgrammTyp.Gzclp> = new Array<ProgrammTyp.Gzclp>();
@@ -189,12 +191,8 @@ export class DexieSvcService extends Dexie {
                         
                                 for (let index = 0; index < mAnlegen.length; index++)
                                     this.ErzeugeVorlageProgramm(mAnlegen[index], this);
-
                             } //OnProgrammNoRecorderLoadFn
-                        
-                        
                         } as LadePara);
-                      // this.DoVorlage, this.DoVorlage, { Programme: this.VorlageProgramme, DbModul: this });
                 }
             });
     }
@@ -273,26 +271,6 @@ export class DexieSvcService extends Dexie {
             )
     }
 
-    private DoVorlage(aPara: any) {
-        const mProgramme: Array<TrainingsProgramm> = (aPara.Data as Array<TrainingsProgramm>);
-        const mAnlegen: Array<ProgrammTyp.Gzclp> = new Array<ProgrammTyp.Gzclp>();
-        const mProg: TrainingsProgramm = (mProgramme.find(
-            (p) => p.ProgrammTyp === ProgrammTyp.Gzclp
-        ));
-
-        if (mProg === undefined)
-            mAnlegen.push(ProgrammTyp.Gzclp);
-        else {
-            if (mProgramme.find((p) => p.ProgrammTyp === ProgrammTyp.Gzclp) === undefined) {
-                // Standard-Programm gefunden
-                mProgramme.push(mProg);
-            }
-        }
-
-        for (let index = 0; index < mAnlegen.length; index++)
-            aPara.DbModul.ErzeugeVorlageProgramm(mAnlegen[index], aPara.DbModul);
-    }  
-    
 
     private DoAktuellesProgramm(aNeuesAktuellesProgramm: ITrainingsProgramm, aAltesAktuellesProgramm?: ITrainingsProgramm): void {
         if (aAltesAktuellesProgramm) {
@@ -317,13 +295,8 @@ export class DexieSvcService extends Dexie {
             // Sind altes und neues Programm gleich?
             if (aNeuesAktuellesProgramm.Name === aAltesAktuellesProgramm.Name) {
                 // Altes und neues Programm sind gleich
-                mDialogData.textZeilen.push(
-                    `This program is already active!`
-                );
-                mDialogData.textZeilen.push(
-                    `Select it anyway?`
-                );
-                
+                mDialogData.textZeilen.push(`This program is already active!`);
+                mDialogData.textZeilen.push(`Select it anyway?`);
             } else {
                 // Das aktuelle Work-Out soll durch ein anderes ersetzt werden.
                 mDialogData.textZeilen.push(
@@ -444,10 +417,10 @@ export class DexieSvcService extends Dexie {
                                 aLadePara.OnProgrammAfterLoadFn(p);
                             }
                         });
-                    }
-                    else if ((aLadePara !== undefined) && (aLadePara.OnProgrammNoRecordFn))
+                    } else if ((aLadePara !== undefined) && (aLadePara.OnProgrammNoRecordFn)) {
                         aLadePara.Data = aProgramme;
                         aLadePara.OnProgrammNoRecordFn(aLadePara);
+                    }
                 }
             )
             .catch((error) => {

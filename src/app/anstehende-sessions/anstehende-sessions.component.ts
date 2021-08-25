@@ -15,21 +15,23 @@ import { of,Observable } from 'rxjs';
 })
 export class AnstehendeSessionsComponent implements OnInit {
     public isCollapsed = false;
-    public AktuellesProgramm: ITrainingsProgramm; 
+    public get AktuellesProgramm(): ITrainingsProgramm {
+        return this.fDbModule.AktuellesProgramm;
+    } 
 
     public AnstehendeSessionObserver: Observable<ITrainingsProgramm>;
 
     constructor(
         private fDbModule: DexieSvcService
     ) {
-        this.AnstehendeSessionObserver = of(this.fDbModule.AktuellesProgramm);
+      //  this.AnstehendeSessionObserver = of(this.fDbModule.AktuellesProgramm);
     }
     
     ngOnInit() {
-        this.AnstehendeSessionObserver.subscribe(
-            () => {
-                if (this.fDbModule.AktuellesProgramm === undefined) {
-                    this.fDbModule.LadeAktuellesProgramm(this.AktuellesProgramm);
+        // this.AnstehendeSessionObserver.subscribe(
+        //     () => {
+        //         if (this.fDbModule.AktuellesProgramm === undefined) {
+        //             this.fDbModule.LadeAktuellesProgramm(this.AktuellesProgramm);
                         // .LadeProgramme(ProgrammKategorie.AktuellesProgramm,
                         // (aProgramm) => {
                         //     if ((aProgramm !== undefined) && (aProgramm !== null)) {
@@ -77,9 +79,9 @@ export class AnstehendeSessionsComponent implements OnInit {
                             
                         //     }
                         // });
-                }
-            } 
-        )
+        //         }
+        //     } 
+        // )
     }
 
     beforePanelOpened(aSess: Session) {
