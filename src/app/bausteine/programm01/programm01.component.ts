@@ -40,7 +40,7 @@ export class Programm01Component implements OnInit {
                         const mAktuellesProgramm: ITrainingsProgramm = aSelecedProgram.Copy(); 
                         mAktuellesProgramm.ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
                         this.fDbModul.AktuellesProgramm = mAktuellesProgramm;
-                        this.fDbModul.ProgrammSpeichern(mAktuellesProgramm, this.fDbModul);
+                        this.fDbModul.ProgrammSpeichern(mAktuellesProgramm);
                 } // OnProgrammNoRecordFn
 
             } as LadePara

@@ -24,7 +24,7 @@ export class AnstehendeSessionsComponent implements OnInit {
     constructor(
         private fDbModule: DexieSvcService
     ) {
-      //  this.AnstehendeSessionObserver = of(this.fDbModule.AktuellesProgramm);
+       //this.AnstehendeSessionObserver = of(this.fDbModule.AktuellesProgramm);
     }
     
     ngOnInit() {
