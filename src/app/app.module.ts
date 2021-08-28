@@ -1,3 +1,7 @@
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {ScrollingModule} from '@angular/cdk/scrolling';
+import {CdkTableModule} from '@angular/cdk/table';
+import {CdkTreeModule} from '@angular/cdk/tree';
 import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { DexieSvcService } from './services/dexie-svc.service';
 import { MatCardModule } from '@angular/material/card';
@@ -50,7 +54,33 @@ import { routes } from "./app-routing.module";
 import { SessionStatsOverlayComponent } from './session-stats-overlay/session-stats-overlay.component';
 import { DataStoreButtonsComponent } from './bausteine/data-store-buttons/data-store-buttons.component';
 import { ToolbarComponent } from './bausteine/toolbar/toolbar.component';
+import { DragTestComponent } from './bausteine/drag-test/drag-test.component';
 
+import {
+    MatAutocompleteModule,
+    MatBadgeModule,
+    MatBottomSheetModule,
+    MatButtonToggleModule,
+    MatChipsModule,
+    MatDatepickerModule,
+    MatDividerModule,
+    MatGridListModule,
+    MatListModule,
+    MatNativeDateModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatRadioModule,
+    MatSelectModule,
+    MatSlideToggleModule,
+    MatSnackBarModule,
+    MatSortModule,
+    MatStepperModule,
+    MatTableModule,
+    MatTabsModule,
+    MatTooltipModule,
+    MatTreeModule,
+  } from '@angular/material';
 
 // import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
 
@@ -100,7 +130,8 @@ export const floatMask = createNumberMask({
         UebungWaehlenComponent,
         SessionStatsOverlayComponent,
         DataStoreButtonsComponent,
-        ToolbarComponent
+        ToolbarComponent,
+        DragTestComponent
     ],
     imports: [
         RouterModule.forRoot(routes),
@@ -110,6 +141,12 @@ export const floatMask = createNumberMask({
         FlexLayoutModule,
         BrowserModule,
         BrowserAnimationsModule,
+        RouterModule,
+        CdkTableModule,
+        CdkTreeModule,
+        DragDropModule,
+      
+        
         MatSliderModule,  
         MatToolbarModule,
         MatExpansionModule,
@@ -122,19 +159,70 @@ export const floatMask = createNumberMask({
         MatFormFieldModule,
         MatInputModule,
         MatRippleModule,
-        FormsModule,
         MatDialogModule,
-        OverlayModule,
         ReactiveFormsModule,
+        OverlayModule,
+        FormsModule,
         DexieSvcService
-
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA,
         NO_ERRORS_SCHEMA
       ],
 
-    exports:[RouterModule],
+    exports: [
+        RouterModule,
+        CdkTableModule,
+        CdkTreeModule,
+        DragDropModule,
+        ScrollingModule,
+        MatButtonModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatExpansionModule,
+        MatIconModule,
+        MatInputModule,
+        MatMenuModule,
+        MatRippleModule,
+        MatSidenavModule,
+        MatSliderModule,
+        MatAutocompleteModule,
+        MatBadgeModule,
+        MatBottomSheetModule,
+        MatButtonModule,
+        MatButtonToggleModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatChipsModule,
+        MatStepperModule,
+        MatDatepickerModule,
+        MatDialogModule,
+        MatDividerModule,
+        MatExpansionModule,
+        MatGridListModule,
+        MatIconModule,
+        MatInputModule,
+        MatListModule,
+        MatMenuModule,
+        MatNativeDateModule,
+        MatPaginatorModule,
+        MatProgressBarModule,
+        MatProgressSpinnerModule,
+        MatRadioModule,
+        MatRippleModule,
+        MatSelectModule,
+        MatSidenavModule,
+        MatSliderModule,
+        MatSlideToggleModule,
+        MatSnackBarModule,
+        MatSortModule,
+        MatTableModule,
+        MatTabsModule,
+        MatToolbarModule,
+        MatTooltipModule,
+        MatTreeModule,
+    ],
 
     entryComponents: [
         DialogComponent,
