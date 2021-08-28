@@ -5,8 +5,10 @@
         <p class="tc-font-size-smaller"><span class="font-bold">Body weight at start</span> {{sess.BodyWeight | number: '1.2'}}</p>
         <p class="tc-font-size-smaller"><span class="font-bold">Weight lifted</span> {{sess.LiftedWeight | number: '1.2'}}</p>
         <p class="tc-font-size-smaller"><span class="font-bold">Duration</span> {{sess.DauerFormatted}}</p>
-        <button class="btn btn-link" type="button" (click)="close()">
-            <span class="tc-font-size-small">close</span>
-        </button>
+        <div fxLayout="row wrap" fxLayoutAlign="center center">
+            <button class="btn btn-link" type="button" (click)="close()">
+                <span class="tc-font-size-small">close</span>
+            </button>
+        </div>
     </mat-card> 
 </div>
