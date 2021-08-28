@@ -1,10 +1,8 @@
-import { SessionDB, SessionStatus } from './../../Business/SessionDB';
 import { DexieSvcService } from './../services/dexie-svc.service';
 import { ITrainingsProgramm, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
-import { ISession, } from './../../Business/Session/Session';
 import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
-import { of,Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 
 

@@ -2,7 +2,7 @@ import { ISession } from './../../Business/Session/Session';
 import { Component, OnInit, Inject, InjectionToken, AfterViewInit,ViewContainerRef, TemplateRef, ViewChild } from '@angular/core';
 import { cSessionStatsOverlayData, SessionOverlayRef } from '../services/session-overlay-service.service';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import {TemplatePortal} from '@angular/cdk/portal';
+import { TemplatePortal } from '@angular/cdk/portal';
 
 
 

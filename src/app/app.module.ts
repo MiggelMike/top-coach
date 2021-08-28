@@ -54,7 +54,6 @@ import { routes } from "./app-routing.module";
 import { SessionStatsOverlayComponent } from './session-stats-overlay/session-stats-overlay.component';
 import { DataStoreButtonsComponent } from './bausteine/data-store-buttons/data-store-buttons.component';
 import { ToolbarComponent } from './bausteine/toolbar/toolbar.component';
-import { DragTestComponent } from './bausteine/drag-test/drag-test.component';
 
 import {
     MatAutocompleteModule,
@@ -130,8 +129,7 @@ export const floatMask = createNumberMask({
         UebungWaehlenComponent,
         SessionStatsOverlayComponent,
         DataStoreButtonsComponent,
-        ToolbarComponent,
-        DragTestComponent
+        ToolbarComponent
     ],
     imports: [
         RouterModule.forRoot(routes),
