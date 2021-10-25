@@ -7,13 +7,18 @@ export class ModalPositionService {
 
     constructor() { }
     
-        private _cache = new Map<Type<any>, Position>();
+        private _cache = new Map<Type<any>, XY_Position>();
       
-        set(dialog: Type<any>, position: Position) {
+        set(dialog: Type<any>, position: XY_Position) {
           this._cache.set(dialog, position);
         }
       
-        get(dialog: Type<any>): Position|null {
+        get(dialog: Type<any>): XY_Position|null {
           return this._cache.get(dialog);
         }
+}
+
+export interface XY_Position {
+    left: number;
+	top: number;
 }

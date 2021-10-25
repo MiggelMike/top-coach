@@ -29,5 +29,8 @@ export class ToolbarComponent implements OnInit {
         this.router.navigate(['/programmwaehlen']);
     }
     
+    NavSettings() {
+        this.router.navigate(['/settings']);
+    }
 
 }

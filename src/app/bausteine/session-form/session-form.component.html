@@ -1,34 +1,34 @@
-<app-toolbar
-    [NavCheckFn]="leave"
-    [Data]= "this">
-</app-toolbar>
+    <app-toolbar
+        [NavCheckFn]="leave"
+        [Data]= "this">
+    </app-toolbar>
 
-<a  [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
-    (click)="doStats()" 
-    >Stats
-</a>
+    <a  [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
+        (click)="doStats()" 
+        >Stats
+    </a>
 
-<app-programm03 
-    [session]="Session" 
-    [bearbeitbar]="true" 
-    [ShowStats]="true"
-    >
-</app-programm03>
+    <app-programm03 
+        [session]="Session" 
+        [bearbeitbar]="true" 
+        [ShowStats]="true"
+        >
+    </app-programm03>
 
-<div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center" [style.margin-top]="'5px'">
-    <ng-container *ngIf="PauseButtonVisible()">
+    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center" [style.margin-top]="'5px'">
+        <ng-container *ngIf="PauseButtonVisible()">
+            <div class="center-item" layout-align="center center">
+                <a class='link-button-font' mat-flat-button (click)="SetPause()">Pause</a>
+            </div>
+        </ng-container>
+
         <div class="center-item" layout-align="center center">
-            <a class='link-button-font' mat-flat-button (click)="SetPause()">Pause</a>
+            <a class='link-button-font' mat-flat-button (click)="SetDone()">Done</a>
         </div>
-    </ng-container>
-
-    <div class="center-item" layout-align="center center">
-        <a class='link-button-font' mat-flat-button (click)="SetDone()">Done</a>
     </div>
-</div>
 
-<app-data-store-buttons
-    [SaveClick]="SaveChanges" 
-    [CancelClick]="CancelChanges"
-    [ClickData]="this">
-</app-data-store-buttons>
+    <app-data-store-buttons
+        [SaveClick]="SaveChanges" 
+        [CancelClick]="CancelChanges"
+        [ClickData]="this">
+    </app-data-store-buttons>

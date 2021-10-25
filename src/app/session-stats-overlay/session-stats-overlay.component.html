@@ -1,4 +1,7 @@
-<div cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+<div #anchorRef cdkDrag cdkDragRootElement=".cdk-overlay-pane"
+    [style.top.px]="top" [style.left.px]="left"
+    (mousedown)="handleMousedown( $event )">
+
     <mat-card class="tc-font-size-smaller overlay-width" >
         <p class="tc-font-size-smaller font-bold">{{sess.Name}}</p>
         <p class="tc-font-size-smaller"><span class="font-bold">Start</span> {{sess.GestartedWann | date: 'mediumDate'}} {{sess.GestartedWann | date:'shortTime'}}</p>

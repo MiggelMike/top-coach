@@ -14,7 +14,9 @@ export interface SessionOverlayConfig {
     backdropClass?: string;
     width?: number;
     height?: number;
-    session?: Session
+    session?: Session,
+    left?: number; 
+    top?: number; 
 }
 
 export const cSessionStatsOverlayData = new InjectionToken<ISession>('Session_Stats_Overlay_Component');
@@ -78,6 +80,7 @@ export class SessionOverlayServiceService {
         const dialogRef = new SessionOverlayRef(this.SessOverlayRef);
         this.SessOverlayRef.backdropClick().subscribe(_ => this.close());
         this.SessionStatsOverlayComponent = this.attachDialogContainer(this.SessOverlayRef, dialogConfig, dialogRef);
+        this.SessionStatsOverlayComponent.fConfig = aConfig;
         return this.SessionStatsOverlayComponent;
     }
 

@@ -20,7 +20,8 @@ export class SessionFormComponent
     public cmpSession: SessionDB;
     public BodyWeight: number = 0;
     public fSessionStatsOverlayComponent: SessionStatsOverlayComponent = null;
-
+    private fSessionOverlayConfig: SessionOverlayConfig;
+    
 
     constructor(
         private router: Router,
@@ -32,17 +33,25 @@ export class SessionFormComponent
         const mState = mNavigation.extras.state as { sess: Session; };
         mState.sess.BodyWeightAtSessionStart = this.fDexieSvcService.getBodyWeight();
         this.Session = mState.sess;
-        if (   (this.Session.Kategorie02 === SessionStatus.Pause)
+        if ((this.Session.Kategorie02 === SessionStatus.Pause)
             || (this.Session.Kategorie02 === SessionStatus.Wartet)
             || (this.Session.Kategorie02 === SessionStatus.Laueft)
         )
             this.Session.StarteDauerTimer();
+        
+        this.fSessionOverlayConfig =
+            {
+                session: this.Session,
+                left: -1000,
+                top: -1000
+            } as SessionOverlayConfig;
+        
         this.doStats();
     }
 
     doStats() {
-        if ((this.fSessionStatsOverlayComponent === null)||(this.fSessionStatsOverlayComponent.dialogRef === null))
-            this.fSessionStatsOverlayComponent = this.fSessionOverlayServiceService.open({ session: this.Session } as SessionOverlayConfig);
+        if ((this.fSessionStatsOverlayComponent === null) || (this.fSessionStatsOverlayComponent.overlayRef === null)) 
+            this.fSessionStatsOverlayComponent = this.fSessionOverlayServiceService.open(this.fSessionOverlayConfig);
         else 
             this.fSessionStatsOverlayComponent.close();
     }

@@ -80,6 +80,8 @@ import {
     MatTooltipModule,
     MatTreeModule,
   } from '@angular/material';
+import { SettingsComponent } from './settings/settings.component';
+import { ExerciseComponent } from './exercise/exercise.component';
 
 // import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
 
@@ -129,7 +131,9 @@ export const floatMask = createNumberMask({
         UebungWaehlenComponent,
         SessionStatsOverlayComponent,
         DataStoreButtonsComponent,
-        ToolbarComponent
+        ToolbarComponent,
+        SettingsComponent,
+        ExerciseComponent
     ],
     imports: [
         RouterModule.forRoot(routes),
