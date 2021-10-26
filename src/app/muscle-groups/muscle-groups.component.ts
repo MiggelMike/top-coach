@@ -10,7 +10,8 @@ import { MuscleGroup } from 'src/Business/MuscleGroup/MuscleGroup';
 })
 export class MuscleGroupsComponent implements OnInit {
 
-  constructor(private fDexieSvcService : DexieSvcService,  private router: Router) { }
+    constructor(private fDexieSvcService: DexieSvcService,
+                private router: Router) { }
 
   ngOnInit(): void {
   }

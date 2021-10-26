@@ -1,3 +1,5 @@
+var cloneDeep = require('lodash.clonedeep');
+var isEqual = require('lodash.isEqual');
 
 export enum MuscleGroupKategorie01 {
     Undefiniert, Stamm, Anwender   
@@ -39,11 +41,10 @@ export class MuscleGroup implements IMuscleGroup {
     }
 
     public Copy(): MuscleGroup {
-        // const mResult: MuscleGroup =
-        const mResult = Object.keys(this).reduce(function (result, key) {
-          result[key] = key;
-           return result;
-       });
-       return null;
+        return cloneDeep(this); 
+    }
+
+    public isEqual(aOtherMuscleGroup: MuscleGroup): Boolean {
+        return isEqual(this,aOtherMuscleGroup);
     }
 }
