@@ -46,9 +46,14 @@ export class EditMuscleGroupComponent implements OnInit {
 
     SaveChanges() {
         const mTmpEditMuscleGroupComponent: EditMuscleGroupComponent = (this.ClickData as EditMuscleGroupComponent);
-        mTmpEditMuscleGroupComponent.fDexieSvcService.MuskelgruppeSpeichern(mTmpEditMuscleGroupComponent.Muskelgruppe);
-        mTmpEditMuscleGroupComponent.CmpMuskelgruppe = mTmpEditMuscleGroupComponent.Muskelgruppe.Copy();
-        mTmpEditMuscleGroupComponent.fDexieSvcService.LadeStandardMuskelGruppen();
+        mTmpEditMuscleGroupComponent.fDexieSvcService.MuskelgruppeSpeichern(mTmpEditMuscleGroupComponent.Muskelgruppe)
+            .then(mID => {
+                mTmpEditMuscleGroupComponent.Muskelgruppe.ID = mID;
+                mTmpEditMuscleGroupComponent.CmpMuskelgruppe = mTmpEditMuscleGroupComponent.Muskelgruppe.Copy();
+                mTmpEditMuscleGroupComponent.fDexieSvcService.LadeMuskelGruppen();
+            }
+            );
+        
     }
 
     CancelChanges() {

@@ -108,7 +108,7 @@ export class DexieSvcService extends Dexie {
         });
 
         this.InitAll();
-        this.LadeStandardMuskelGruppen();
+        this.PruefeStandardMuskelGruppen();
         this.LadeStandardUebungen();
     }
 
@@ -211,8 +211,17 @@ export class DexieSvcService extends Dexie {
         return this.MuskelGruppeTable.bulkPut(aMuskelGruppenListe);
     }
 
-    public LadeStandardMuskelGruppen() {
+    public LadeMuskelGruppen() {
         this.MuskelGruppenListe = [];
+        this.table(this.cMuskelGruppe)
+            .toArray()
+            .then((mMuskelgruppenListe) => {
+                    this.MuskelGruppenListe = mMuskelgruppenListe;
+            });
+    }
+
+
+    public PruefeStandardMuskelGruppen() {
         const mAnlegen: Array<MuscleGroup> = new Array<MuscleGroup>();
         this.table(this.cMuskelGruppe)
             .filter(
@@ -233,12 +242,10 @@ export class DexieSvcService extends Dexie {
 
                 if (mAnlegen.length > 0) {
                     this.InsertMuskelGruppen(mAnlegen).then(() => {
-                        this.LadeStandardMuskelGruppen();
+                        this.PruefeStandardMuskelGruppen();
                     });
-                } else {
-                    // Standard-Muskelgruppen sind vorhanden.
-                    this.MuskelGruppenListe = mMuskelgruppenListe;
                 }
+                else this.LadeMuskelGruppen();
             });
     }
 
