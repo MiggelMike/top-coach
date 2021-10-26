@@ -82,6 +82,9 @@ import {
   } from '@angular/material';
 import { SettingsComponent } from './settings/settings.component';
 import { ExerciseComponent } from './exercise/exercise.component';
+import { EditExerciseComponent } from './edit-exercise/edit-exercise.component';
+import { MuscleGroupsComponent } from './muscle-groups/muscle-groups.component';
+import { EditMuscleGroupComponent } from './edit-muscle-group/edit-muscle-group.component';
 
 // import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
 
@@ -133,7 +136,10 @@ export const floatMask = createNumberMask({
         DataStoreButtonsComponent,
         ToolbarComponent,
         SettingsComponent,
-        ExerciseComponent
+        ExerciseComponent,
+        EditExerciseComponent,
+        MuscleGroupsComponent,
+        EditMuscleGroupComponent
     ],
     imports: [
         RouterModule.forRoot(routes),

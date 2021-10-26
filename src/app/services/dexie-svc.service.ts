@@ -75,8 +75,8 @@ export class DexieSvcService extends Dexie {
     ProgrammTable: Dexie.Table<ITrainingsProgramm, number>;
     SessionTable: Dexie.Table<Session, number>;
     public Programme: Array<ITrainingsProgramm> = [];
-    public UebungsDaten: Array<Uebung> = [];
-
+    public UebungsListe: Array<Uebung> = [];
+    
     //public ProgrammListeObserver: Observable<TrainingsProgramm[]>;
     //public ProgrammListe: Array<TrainingsProgramm> = [];
 
@@ -102,6 +102,23 @@ export class DexieSvcService extends Dexie {
 
         this.InitAll();
         this.LadeStandards();
+    }
+
+    get UebungListeSortedByName(): Array<Uebung>{
+        const mResult: Array<Uebung> = this.UebungsListe.map( mUebung => mUebung );
+        mResult.sort((u1, u2) => {
+            if (u1.Name > u2.Name) {
+                return 1;
+            }
+        
+            if (u1.Name < u2.Name) {
+                return -1;
+            }
+        
+            return 0;
+        });
+
+        return mResult;
     }
 
     private InitAll() {
@@ -146,7 +163,7 @@ export class DexieSvcService extends Dexie {
     }
 
     public LadeStandards() {
-        this.UebungsDaten = [];
+        this.UebungsListe = [];
         const mAnlegen: Array<Uebung> = new Array<Uebung>();
         this.table(this.cUebung)
             .filter(
@@ -172,7 +189,7 @@ export class DexieSvcService extends Dexie {
                     });
                 } else {
                     // Standard-Uebungen sind vorhanden.
-                    this.UebungsDaten = mUebungen;
+                    this.UebungsListe = mUebungen;
                     // Standard-Vorlage-Programme laden
                     this.LadeProgramme(
                         {
@@ -278,7 +295,7 @@ export class DexieSvcService extends Dexie {
     }
 
     public SucheUebungPerName(aName: UebungsName): Uebung {
-        const mUebung = this.UebungsDaten.find((u) => u.Name === aName);
+        const mUebung = this.UebungsListe.find((u) => u.Name === aName);
         return mUebung === undefined ? null : mUebung;
     }
 

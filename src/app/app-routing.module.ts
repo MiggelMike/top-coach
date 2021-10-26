@@ -7,6 +7,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { AnstehendeSessionsComponent } from './anstehende-sessions/anstehende-sessions.component';
 import { ProgrammWaehlenComponent } from './programm-waehlen/programm-waehlen.component';
 import { ExerciseComponent } from './exercise/exercise.component';
+import { EditExerciseComponent } from './edit-exercise/edit-exercise.component';
+import { MuscleGroupsComponent } from './muscle-groups/muscle-groups.component';
+import { EditMuscleGroupComponent } from './edit-muscle-group/edit-muscle-group.component';
 
 
 export const routes: Routes = [
@@ -14,6 +17,9 @@ export const routes: Routes = [
     { path: 'programmwaehlen', component: ProgrammWaehlenComponent },
     { path: 'settings', component: SettingsComponent },
     { path: 'exercise', component:  ExerciseComponent },
+    { path: 'edit-exercise', component:  EditExerciseComponent },
+    { path: 'muscle-groups', component:  MuscleGroupsComponent },
+    { path: 'edit-muscle-groups', component:  EditMuscleGroupComponent },
     { path: 'workoutform', component: WorkoutFormComponent },
     { path: 'sessionFormComponent', component: SessionFormComponent, data: { title: 'welcome', toolbar: false} },
 ];

@@ -101,11 +101,11 @@ export class Programm02Component implements OnInit {
     }
 
     public AddExercise(aSession: Session) {
-        if (this.DbModule.UebungsDaten.length === 0)
+        if (this.DbModule.UebungsListe.length === 0)
             this.DbModule.LadeStandards();
         else
             this.fUebungService.UebungWaehlen(
-                this.DbModule.UebungsDaten,
+                this.DbModule.UebungsListe,
                 aSession,
                 this.SelectUebungDelegate
             );

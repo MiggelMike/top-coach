@@ -1,2 +1,8 @@
-    <app-toolbar></app-toolbar>
-    <p>exercise works!</p>
+<app-toolbar></app-toolbar>
+<ng-container *ngIf="UebungListeSortedByName">
+    <ng-container *ngFor="let uebung of UebungListeSortedByName" >
+        <div fxLayout="row wrap" fxLayoutAlign="center center">
+            <a mat-button (click)="EditExercise(uebung)">{{uebung.Name}}</a>
+        </div>
+    </ng-container>
+</ng-container>
