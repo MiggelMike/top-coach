@@ -4,6 +4,7 @@ import { MuscleGroup } from 'src/Business/MuscleGroup/MuscleGroup';
 import { Location } from '@angular/common'
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
+import { DexieSvcService } from '../services/dexie-svc.service';
 
 
 @Component({
@@ -18,7 +19,8 @@ export class EditMuscleGroupComponent implements OnInit {
 
     constructor(
         private router: Router,
-        public fDialogService : DialogeService,
+        public fDialogService: DialogeService,
+        public  fDexieSvcService: DexieSvcService,
         private location: Location)
     {
         const mNavigation = this.router.getCurrentNavigation();
@@ -31,7 +33,6 @@ export class EditMuscleGroupComponent implements OnInit {
     }
     
     back() {
-        let s = '';
         if (this.Muskelgruppe.isEqual(this.CmpMuskelgruppe))
             this.location.back();
         else {
@@ -44,7 +45,10 @@ export class EditMuscleGroupComponent implements OnInit {
     }
 
     SaveChanges() {
-        const s = 1;
+        const mTmpEditMuscleGroupComponent: EditMuscleGroupComponent = (this.ClickData as EditMuscleGroupComponent);
+        mTmpEditMuscleGroupComponent.fDexieSvcService.MuskelgruppeSpeichern(mTmpEditMuscleGroupComponent.Muskelgruppe);
+        mTmpEditMuscleGroupComponent.CmpMuskelgruppe = mTmpEditMuscleGroupComponent.Muskelgruppe.Copy();
+        mTmpEditMuscleGroupComponent.fDexieSvcService.LadeStandardMuskelGruppen();
     }
 
     CancelChanges() {

@@ -1,3 +1,4 @@
+import { MuscleGroup } from 'src/Business/MuscleGroup/MuscleGroup';
 import { AktuellesProgramm } from './../../Business/TrainingsProgramm/TrainingsProgramm';
 import { SessionDB, SessionStatus } from './../../Business/SessionDB';
 import { Session, ISession } from 'src/Business/Session/Session';
@@ -196,6 +197,11 @@ export class DexieSvcService extends Dexie {
     ): MuscleGroup {
         return MuscleGroup.StaticNeueMuskelGruppe(aName, aKategorie01);
     }
+
+    public MuskelgruppeSpeichern(aMuskelgruppe: MuscleGroup) {
+        return this.MuskelGruppeTable.put(aMuskelgruppe);
+    }
+
 
     public InsertUebungen(aUebungsListe: Array<Uebung>): PromiseExtended {
         return this.UebungTable.bulkPut(aUebungsListe);
