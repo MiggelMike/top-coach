@@ -14,11 +14,11 @@ import { DialogData } from '../dialoge/hinweis/hinweis.component';
 export class EditMuscleGroupComponent implements OnInit {
 
     public Muskelgruppe: MuscleGroup = null;
-    private CmpMuskelgruppe: MuscleGroup = null;
+    public CmpMuskelgruppe: MuscleGroup = null;
 
     constructor(
         private router: Router,
-        private fDialogService : DialogeService,
+        public fDialogService : DialogeService,
         private location: Location)
     {
         const mNavigation = this.router.getCurrentNavigation();
@@ -38,9 +38,22 @@ export class EditMuscleGroupComponent implements OnInit {
             const mDialogData = new DialogData();
             mDialogData.textZeilen.push("Cancel unsaved changes?");
             mDialogData.OkFn = (): void => this.location.back();
-            
+
             this.fDialogService.JaNein(mDialogData);
         }
+    }
+
+    SaveChanges() {
+        const s = 1;
+    }
+
+    CancelChanges() {
+        const mTmpEditMuscleGroupComponent: EditMuscleGroupComponent = (this.ClickData as EditMuscleGroupComponent);
+        const mDialogData = new DialogData();
+        mDialogData.textZeilen.push("Cancel unsaved changes?");
+        mDialogData.OkFn = (): void => { mTmpEditMuscleGroupComponent.Muskelgruppe = mTmpEditMuscleGroupComponent.CmpMuskelgruppe.Copy(); }
+        
+        mTmpEditMuscleGroupComponent.fDialogService.JaNein(mDialogData);
     }
 
 }
