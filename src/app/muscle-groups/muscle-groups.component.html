@@ -1,1 +1,8 @@
-<p>muscle-groups works!</p>
+<app-toolbar></app-toolbar>
+<ng-container *ngIf="MuskelGruppenListe">
+    <div class="center-item">
+        <ng-container *ngFor="let mg of MuskelGruppenListe">
+            <p><a mat-button (click)="EditMuskelGruppe(mg)" >{{mg.Name}}</a></p>
+        </ng-container>
+    </div>
+</ng-container>

@@ -19,7 +19,7 @@ export const routes: Routes = [
     { path: 'exercise', component:  ExerciseComponent },
     { path: 'edit-exercise', component:  EditExerciseComponent },
     { path: 'muscle-groups', component:  MuscleGroupsComponent },
-    { path: 'edit-muscle-groups', component:  EditMuscleGroupComponent },
+    { path: 'edit-muscle-group', component:  EditMuscleGroupComponent },
     { path: 'workoutform', component: WorkoutFormComponent },
     { path: 'sessionFormComponent', component: SessionFormComponent, data: { title: 'welcome', toolbar: false} },
 ];

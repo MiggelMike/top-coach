@@ -102,7 +102,7 @@ export class Programm02Component implements OnInit {
 
     public AddExercise(aSession: Session) {
         if (this.DbModule.UebungsListe.length === 0)
-            this.DbModule.LadeStandards();
+            this.DbModule.LadeStandardUebungen();
         else
             this.fUebungService.UebungWaehlen(
                 this.DbModule.UebungsListe,

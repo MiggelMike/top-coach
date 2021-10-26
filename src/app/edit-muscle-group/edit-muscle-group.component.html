@@ -1,1 +1,30 @@
-<p>edit-muscle-group works!</p>
+<mat-icon  (click)="back()">arrow_back</mat-icon>
+
+<div fxLayout="row wrap" fxLayoutAlign="center center">
+    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxFlex="100%"> 
+        <!-- <div layout-align="start center" fxFlex="0 0 70%">
+            <h6 flex>{{Muskelgruppe.Name}}</h6>
+        </div> -->
+
+        <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">        
+            <mat-form-field class="align-left" fxFlex="100%">
+                <mat-label>Name</mat-label>
+                <input matInput ="{guide: false }"
+                [ngModel]="Muskelgruppe.Name"
+                maxlength="30"
+                type="text">
+            </mat-form-field> 
+        </div>
+
+        <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
+            <mat-label>Comments</mat-label>
+        </div>
+
+        <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
+            <md-input-container fxFlex="100%">
+                
+                <textarea [(ngModel)]="Muskelgruppe.Bemerkung" mdInput placeholder="Comments" rows="3" fxFlex="100%"  maxlength="1000" class="colors-textarea"  ></textarea>
+            </md-input-container>
+        </div>   
+    </div>
+</div>

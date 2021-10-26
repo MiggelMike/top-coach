@@ -10,6 +10,8 @@ import { Dexie, PromiseExtended } from 'dexie';
 import { Injectable, NgModule, Pipe, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, UebungsName, UebungsKategorie02 } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
+import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02 } from '../../Business/MuscleGroup/MuscleGroup';
+import { MuscleGroupsComponent } from '../muscle-groups/muscle-groups.component';
 
 
 export interface AktuellesProgramFn {
@@ -64,6 +66,7 @@ export class DexieSvcService extends Dexie {
     readonly cProgramm: string = "Programm";
     readonly cAppData: string = "AppData";
     readonly cSession: string = "SessionDB";
+    readonly cMuskelGruppe : string = "MuskelGruppe";
 
     AktuellerProgrammTyp: ProgrammTyp;
     AktuellesProgramm: ITrainingsProgramm; 
@@ -74,8 +77,10 @@ export class DexieSvcService extends Dexie {
     SatzTable: Dexie.Table<Satz, number>;
     ProgrammTable: Dexie.Table<ITrainingsProgramm, number>;
     SessionTable: Dexie.Table<Session, number>;
+    MuskelGruppeTable: Dexie.Table<MuscleGroup, number>;
     public Programme: Array<ITrainingsProgramm> = [];
     public UebungsListe: Array<Uebung> = [];
+    public MuskelGruppenListe: Array<MuscleGroup> = [];
     
     //public ProgrammListeObserver: Observable<TrainingsProgramm[]>;
     //public ProgrammListe: Array<TrainingsProgramm> = [];
@@ -90,7 +95,7 @@ export class DexieSvcService extends Dexie {
             );
         }
 
-        //    Dexie.delete("ConceptCoach");
+            // Dexie.delete("ConceptCoach");
         
         this.version(1).stores({
             AppData: "++id",
@@ -98,10 +103,12 @@ export class DexieSvcService extends Dexie {
             Programm: "++id,Name",
             SessionDB: "++ID,Name,Datum",
             Satz: "++ID",
+            MuskelGruppe: "++ID,Name",
         });
 
         this.InitAll();
-        this.LadeStandards();
+        this.LadeStandardMuskelGruppen();
+        this.LadeStandardUebungen();
     }
 
     get UebungListeSortedByName(): Array<Uebung>{
@@ -121,13 +128,38 @@ export class DexieSvcService extends Dexie {
         return mResult;
     }
 
+    
+    get MuskelgruppeListeSortedByName(): Array<MuscleGroup>{
+        const mResult: Array<MuscleGroup> = this.MuskelGruppenListe.map( mMuskelgruppe => mMuskelgruppe );
+        mResult.sort((u1, u2) => {
+            if (u1.Name > u2.Name) {
+                return 1;
+            }
+        
+            if (u1.Name < u2.Name) {
+                return -1;
+            }
+        
+            return 0;
+        });
+
+        return mResult;
+    }
+
+
     private InitAll() {
         this.InitAppData();
         this.InitProgramm();
         this.InitSession();
+        this.InitMuskelGruppe();
         this.InitUebung();
         this.InitSatz();
     }
+
+    private InitMuskelGruppe() {
+        this.MuskelGruppeTable = this.table(this.cMuskelGruppe);
+        this.MuskelGruppeTable.mapToClass(MuscleGroup);
+    }    
 
     private InitSession() {
         this.SessionTable = this.table(this.cSession);
@@ -158,11 +190,53 @@ export class DexieSvcService extends Dexie {
         );
     }
 
+    private NeueMuskelgruppe(
+        aName: string,
+        aKategorie01: MuscleGroupKategorie01
+    ): MuscleGroup {
+        return MuscleGroup.StaticNeueMuskelGruppe(aName, aKategorie01);
+    }
+
     public InsertUebungen(aUebungsListe: Array<Uebung>): PromiseExtended {
         return this.UebungTable.bulkPut(aUebungsListe);
     }
 
-    public LadeStandards() {
+    public InsertMuskelGruppen(aMuskelGruppenListe: Array<MuscleGroup>): PromiseExtended {
+        return this.MuskelGruppeTable.bulkPut(aMuskelGruppenListe);
+    }
+
+    public LadeStandardMuskelGruppen() {
+        this.MuskelGruppenListe = [];
+        const mAnlegen: Array<MuscleGroup> = new Array<MuscleGroup>();
+        this.table(this.cMuskelGruppe)
+            .filter(
+                (mMuskelgruppe ) => mMuskelgruppe.MuscleGroupKategorie01 === MuscleGroupKategorie01.Stamm
+            )
+            .toArray()
+            .then((mMuskelgruppenListe) => {
+                for (const mMuscleGroupName in MuscleGroupKategorie02) {
+                    if (
+                        mMuskelgruppenListe.find((mMuskelgruppe2) => mMuskelgruppe2.Name === mMuscleGroupName) === undefined) {
+                        const mNeueMuskelgruppe = this.NeueMuskelgruppe(
+                            mMuscleGroupName,
+                            MuscleGroupKategorie01.Stamm
+                        );
+                        mAnlegen.push(mNeueMuskelgruppe);
+                    }
+                }
+
+                if (mAnlegen.length > 0) {
+                    this.InsertMuskelGruppen(mAnlegen).then(() => {
+                        this.LadeStandardMuskelGruppen();
+                    });
+                } else {
+                    // Standard-Muskelgruppen sind vorhanden.
+                    this.MuskelGruppenListe = mMuskelgruppenListe;
+                }
+            });
+    }
+
+    public LadeStandardUebungen() {
         this.UebungsListe = [];
         const mAnlegen: Array<Uebung> = new Array<Uebung>();
         this.table(this.cUebung)
@@ -185,7 +259,7 @@ export class DexieSvcService extends Dexie {
 
                 if (mAnlegen.length > 0) {
                     this.InsertUebungen(mAnlegen).then(() => {
-                        this.LadeStandards();
+                        this.LadeStandardUebungen();
                     });
                 } else {
                     // Standard-Uebungen sind vorhanden.
