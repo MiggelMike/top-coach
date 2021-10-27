@@ -15,7 +15,11 @@ import { DialogData } from '../dialoge/hinweis/hinweis.component';
 export class EditEquipmentComponent implements OnInit {
 
     public Equipment: Equipment = null;
-    public CmpEquipment: Equipment  = null;
+    public CmpEquipment: Equipment = null;
+    public get EquipmentTypListe(): Array<string> {
+        return this.fDexieSvcService.EquipmentTypListeSorted;
+    }
+    
 
     constructor(
         private router: Router,

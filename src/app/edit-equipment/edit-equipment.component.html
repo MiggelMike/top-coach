@@ -1,1 +1,42 @@
-<p>edit-equipment works!</p>
+<mat-icon  (click)="back()">arrow_back</mat-icon>
+<div fxLayout="row wrap" fxLayoutAlign="center center">
+    <h4>Edit equipment</h4>
+</div>
+
+<div fxLayout="row wrap" fxLayoutAlign="center center">
+    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxFlex="100%"> 
+        <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">        
+            <mat-form-field class="align-left" fxFlex="100%">
+                <mat-label>Name</mat-label>
+                <input matInput 
+                [(ngModel)]="Equipment.DisplayName"
+                maxlength="30"
+                type="text">
+            </mat-form-field> 
+        </div>
+
+        <mat-form-field >
+            <mat-label>Equipment type</mat-label>
+            <select matNativeControl>
+                <option></option> 
+                <ng-container  *ngFor="let equ of EquipmentTypListe">
+                  <option value="equ">{{equ}}</option>      
+                </ng-container>
+            </select>   
+        </mat-form-field>
+
+        <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
+            <mat-label>Comments</mat-label>
+        </div>
+
+        <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
+            <md-input-container fxFlex="100%">
+                
+                <textarea [(ngModel)]="Equipment.Bemerkung" mdInput placeholder="Comments" rows="3" fxFlex="100%"  maxlength="1000" class="colors-textarea"  ></textarea>
+            </md-input-container>
+        </div>   
+    </div>
+
+    <app-data-store-buttons [SaveClick]="SaveChanges" [CancelClick]="CancelChanges" [ClickData]="this">
+    </app-data-store-buttons>
+</div>

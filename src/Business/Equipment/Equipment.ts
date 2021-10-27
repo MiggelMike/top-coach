@@ -1,4 +1,3 @@
-import { Equipment } from './Equipment';
 import { isDefined } from '@angular/compiler/src/util';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
@@ -23,6 +22,7 @@ export interface IEquipment {
     Durchmesser: number;
     EquipmentTyp: EquipmentTyp; 
     EquipmentOrigin: EquipmentOrigin;
+    Bemerkung: string;
 }
 
 export class Equipment implements  IEquipment {
@@ -32,6 +32,7 @@ export class Equipment implements  IEquipment {
     Durchmesser: number = 0; 
     EquipmentOrigin: EquipmentOrigin = EquipmentOrigin.Unbestimmt;
     EquipmentTyp: EquipmentTyp = EquipmentTyp.Unbestimmt; 
+    Bemerkung: string = '';
 
     public static StaticNeuesEquipment(
         aName: string,

@@ -84,6 +84,35 @@ export class DexieSvcService extends Dexie {
     public MuskelGruppenListe: Array<MuscleGroup> = [];
     public EquipmentListe: Array<Equipment> = [];
     
+    public get EquipmentTypListe(): Array<string>{
+        const mResult: Array<string> = [];
+        for (const mEquipmentTyp in EquipmentTyp) {
+            if (mEquipmentTyp === EquipmentTyp.Unbestimmt)
+                continue;
+            
+            mResult.push(mEquipmentTyp);
+        }
+        
+        return mResult;
+    }
+
+    public get EquipmentTypListeSorted(): Array<string> { 
+        const mResult: Array<string> = this.EquipmentTypListe.map( mEquipmentTyp => mEquipmentTyp );
+        mResult.sort((u1, u2) => {
+            if (u1 > u2) {
+                return 1;
+            }
+        
+            if (u1 < u2) {
+                return -1;
+            }
+        
+            return 0;
+        });
+
+        return mResult;        
+    }
+    
     //public ProgrammListeObserver: Observable<TrainingsProgramm[]>;
     //public ProgrammListe: Array<TrainingsProgramm> = [];
 
