@@ -1,3 +1,4 @@
+import { Equipment } from './Equipment';
 import { isDefined } from '@angular/compiler/src/util';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
@@ -51,6 +52,14 @@ export class Equipment implements  IEquipment {
             mEquipment.Durchmesser = aDurchmesser;
         
         return mEquipment;
+    }
+
+    public Copy(): Equipment {
+        return cloneDeep(this); 
+    }
+
+    public isEqual(aOtherEquipment: Equipment): Boolean {
+        return isEqual(this,aOtherEquipment);
     }
 }
 

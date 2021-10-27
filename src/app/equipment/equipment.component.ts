@@ -10,7 +10,8 @@ import { Router } from '@angular/router';
 })
 export class EquipmentComponent implements OnInit {
 
-    constructor(private fDexieSvcService: DexieSvcService, private router: Router) {}
+    constructor(private fDexieSvcService: DexieSvcService,
+                private router: Router) { }
 
     ngOnInit(): void {}
 
