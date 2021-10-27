@@ -1,5 +1,4 @@
-import { MuscleGroup } from 'src/Business/MuscleGroup/MuscleGroup';
-import { AktuellesProgramm } from './../../Business/TrainingsProgramm/TrainingsProgramm';
+import { Equipment, EquipmentOrigin, EquipmentTyp } from './../../Business/Equipment/Equipment';
 import { SessionDB, SessionStatus } from './../../Business/SessionDB';
 import { Session, ISession } from 'src/Business/Session/Session';
 import { ITrainingsProgramm, TrainingsProgramm, ProgrammTyp, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
@@ -12,7 +11,6 @@ import { Injectable, NgModule, Pipe, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, UebungsName, UebungsKategorie02 } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02 } from '../../Business/MuscleGroup/MuscleGroup';
-import { MuscleGroupsComponent } from '../muscle-groups/muscle-groups.component';
 
 
 export interface AktuellesProgramFn {
@@ -68,6 +66,7 @@ export class DexieSvcService extends Dexie {
     readonly cAppData: string = "AppData";
     readonly cSession: string = "SessionDB";
     readonly cMuskelGruppe : string = "MuskelGruppe";
+    readonly cEquipment : string = "Equipment";
 
     AktuellerProgrammTyp: ProgrammTyp;
     AktuellesProgramm: ITrainingsProgramm; 
@@ -79,9 +78,11 @@ export class DexieSvcService extends Dexie {
     ProgrammTable: Dexie.Table<ITrainingsProgramm, number>;
     SessionTable: Dexie.Table<Session, number>;
     MuskelGruppeTable: Dexie.Table<MuscleGroup, number>;
+    EquipmentTable: Dexie.Table<Equipment, number>;
     public Programme: Array<ITrainingsProgramm> = [];
     public UebungsListe: Array<Uebung> = [];
     public MuskelGruppenListe: Array<MuscleGroup> = [];
+    public EquipmentListe: Array<Equipment> = [];
     
     //public ProgrammListeObserver: Observable<TrainingsProgramm[]>;
     //public ProgrammListe: Array<TrainingsProgramm> = [];
@@ -98,16 +99,18 @@ export class DexieSvcService extends Dexie {
 
             // Dexie.delete("ConceptCoach");
         
-        this.version(1).stores({
+        this.version(2).stores({
             AppData: "++id",
             Uebung: "++ID,Name,Typ",
             Programm: "++id,Name",
             SessionDB: "++ID,Name,Datum",
             Satz: "++ID",
             MuskelGruppe: "++ID,Name",
+            Equipment: "++ID,Name",
         });
 
         this.InitAll();
+        this.PruefeStandardEquipment();
         this.PruefeStandardMuskelGruppen();
         this.LadeStandardUebungen();
     }
@@ -147,13 +150,31 @@ export class DexieSvcService extends Dexie {
         return mResult;
     }
 
+    get EquipmentListSortedByDisplayName(): Array<Equipment>{
+        const mResult: Array<Equipment> = this.EquipmentListe.map( mEquipment => mEquipment );
+        mResult.sort((u1, u2) => {
+            if (u1.DisplayName > u2.DisplayName) {
+                return 1;
+            }
+        
+            if (u1.DisplayName < u2.DisplayName) {
+                return -1;
+            }
+        
+            return 0;
+        });
+
+        return mResult;
+    }
+
 
     private InitAll() {
         this.InitAppData();
+        this.InitEquipment();
+        this.InitUebung();
         this.InitProgramm();
         this.InitSession();
         this.InitMuskelGruppe();
-        this.InitUebung();
         this.InitSatz();
     }
 
@@ -161,6 +182,11 @@ export class DexieSvcService extends Dexie {
         this.MuskelGruppeTable = this.table(this.cMuskelGruppe);
         this.MuskelGruppeTable.mapToClass(MuscleGroup);
     }    
+
+    private InitEquipment() {
+        this.EquipmentTable = this.table(this.cEquipment);
+        this.EquipmentTable.mapToClass(Equipment);
+    }
 
     private InitSession() {
         this.SessionTable = this.table(this.cSession);
@@ -201,7 +227,6 @@ export class DexieSvcService extends Dexie {
     public MuskelgruppeSpeichern(aMuskelgruppe: MuscleGroup) {
         return this.MuskelGruppeTable.put(aMuskelgruppe);
     }
-
 
     public InsertUebungen(aUebungsListe: Array<Uebung>): PromiseExtended {
         return this.UebungTable.bulkPut(aUebungsListe);
@@ -246,6 +271,51 @@ export class DexieSvcService extends Dexie {
                     });
                 }
                 else this.LadeMuskelGruppen();
+            });
+    }
+
+    public InsertEquipment(aEquipmentListe: Array<Equipment>): PromiseExtended {
+        return this.EquipmentTable.bulkPut(aEquipmentListe);
+    }
+
+    public LadeEquipment() {
+        this.EquipmentListe = [];
+        this.table(this.cEquipment)
+            .toArray()
+            .then((mEquipmentListe) => {
+                    this.EquipmentListe = mEquipmentListe;
+            });
+    }
+
+    public PruefeStandardEquipment() {
+        const mAnlegen: Array<Equipment> = new Array<Equipment>();
+        this.table(this.cEquipment)
+            .filter(
+                (mEquipment:Equipment ) => mEquipment.EquipmentOrigin === EquipmentOrigin.Standard
+            )
+            .toArray()
+            .then((mEquipmentListe) => {
+                for (const mEquipmentTyp in EquipmentTyp) {
+                    if (mEquipmentTyp === EquipmentTyp.Unbestimmt)
+                        continue;
+                    
+                    if (
+                        mEquipmentListe.find((mEquipment:Equipment) => mEquipment.EquipmentTyp === mEquipmentTyp) === undefined) {
+                        const mNeuesEquipment = Equipment.StaticNeuesEquipment(
+                            mEquipmentTyp,
+                            EquipmentOrigin.Standard,
+                            EquipmentTyp[mEquipmentTyp]
+                        );
+                        mAnlegen.push(mNeuesEquipment);
+                    }
+                }
+
+                if (mAnlegen.length > 0) {
+                    this.InsertEquipment(mAnlegen).then(() => {
+                        this.PruefeStandardEquipment();
+                    });
+                }
+                else this.LadeEquipment();
             });
     }
 
@@ -389,7 +459,6 @@ export class DexieSvcService extends Dexie {
     private InitProgramm() {
         this.ProgrammTable = this.table(this.cProgramm);
         this.ProgrammTable.mapToClass(TrainingsProgramm);
-        //this.ProgrammTable.clear();
     }
 
     public LadeProgrammSessions(aProgramm: TrainingsProgramm, aLadePara?: LadePara): void {

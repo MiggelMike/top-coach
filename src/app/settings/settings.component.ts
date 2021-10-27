@@ -25,7 +25,6 @@ export class SettingsComponent implements OnInit {
     }
 
     NavEquipmentAssets(): void {
-        alert("EquipmentAssets - Noch nicht fertig");
-        // this.router.navigate(['/exercise']);
+        this.router.navigate(['/equipment']);
     }
 }

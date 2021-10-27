@@ -85,6 +85,8 @@ import { ExerciseComponent } from './exercise/exercise.component';
 import { EditExerciseComponent } from './edit-exercise/edit-exercise.component';
 import { MuscleGroupsComponent } from './muscle-groups/muscle-groups.component';
 import { EditMuscleGroupComponent } from './edit-muscle-group/edit-muscle-group.component';
+import { EquipmentComponent } from './equipment/equipment.component';
+import { EditEquipmentComponent } from './edit-equipment/edit-equipment.component';
 
 // import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
 
@@ -139,7 +141,9 @@ export const floatMask = createNumberMask({
         ExerciseComponent,
         EditExerciseComponent,
         MuscleGroupsComponent,
-        EditMuscleGroupComponent
+        EditMuscleGroupComponent,
+        EquipmentComponent,
+        EditEquipmentComponent
     ],
     imports: [
         RouterModule.forRoot(routes),

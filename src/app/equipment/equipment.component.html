@@ -1,0 +1,13 @@
+<app-toolbar></app-toolbar>
+
+<div fxLayout="row wrap" fxLayoutAlign="center center">
+    <h4>Equipment</h4>
+</div>
+
+<ng-container *ngIf="EquipmentListSortedByName">
+    <ng-container *ngFor="let equ of EquipmentListSortedByName" >
+        <div fxLayout="row wrap" fxLayoutAlign="center center">
+            <a mat-button (click)="EditEquipment(equ)">{{equ.DisplayName}}</a>
+        </div>
+    </ng-container>
+</ng-container>

@@ -10,6 +10,8 @@ import { ExerciseComponent } from './exercise/exercise.component';
 import { EditExerciseComponent } from './edit-exercise/edit-exercise.component';
 import { MuscleGroupsComponent } from './muscle-groups/muscle-groups.component';
 import { EditMuscleGroupComponent } from './edit-muscle-group/edit-muscle-group.component';
+import { EquipmentComponent } from './equipment/equipment.component';
+import { EditEquipmentComponent } from './edit-equipment/edit-equipment.component';
 
 
 export const routes: Routes = [
@@ -21,6 +23,8 @@ export const routes: Routes = [
     { path: 'muscle-groups', component:  MuscleGroupsComponent },
     { path: 'edit-muscle-group', component:  EditMuscleGroupComponent },
     { path: 'workoutform', component: WorkoutFormComponent },
+    { path: 'equipment', component: EquipmentComponent },
+    { path: 'edit-equipment', component: EditEquipmentComponent },
     { path: 'sessionFormComponent', component: SessionFormComponent, data: { title: 'welcome', toolbar: false} },
 ];
 
