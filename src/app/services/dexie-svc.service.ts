@@ -161,7 +161,6 @@ export class DexieSvcService extends Dexie {
         });
 
         this.InitAll();
-        this.HantelTable.clear();
         this.PruefeStandardLanghanteln();
         this.PruefeStandardEquipment();
         this.PruefeStandardMuskelGruppen();
@@ -429,7 +428,7 @@ export class DexieSvcService extends Dexie {
                                 HantelTyp[mTyp],
                                 mDurchmesser[index],
                                 false,
-                                mDisplayName + mDurchmesser[index]
+                                mDisplayName + + mDurchmesser[index],
                             );
                         
                             mAnlegen.push(mNeueHantel);

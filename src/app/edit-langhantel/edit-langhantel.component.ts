@@ -4,6 +4,7 @@ import { DexieSvcService } from '../services/dexie-svc.service';
 import { Location } from '@angular/common'
 import { Hantel } from 'src/Business/Hantel/Hantel';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
+import { Router } from '@angular/router';
 
 @Component({
     selector: "app-edit-langhantel",
@@ -17,8 +18,14 @@ export class EditLanghantelComponent implements OnInit {
     constructor(
         public fDialogService: DialogeService,
         public fDexieSvcService: DexieSvcService,
-        private location: Location
-    ) {}
+        private location: Location,
+        private router: Router
+    ) {
+        const mNavigation = this.router.getCurrentNavigation();
+        const mState = mNavigation.extras.state as { hantel: Hantel; };
+        this.Hantel = mState.hantel.Copy();
+        this.CmpHantel = mState.hantel.Copy();
+    }
 
     ngOnInit(): void {}
 
@@ -40,8 +47,8 @@ export class EditLanghantelComponent implements OnInit {
             .HantelSpeichern(mTmpEditHantelComponent.Hantel)
             .then((mID) => {
                 mTmpEditHantelComponent.Hantel.ID = mID;
-                mTmpEditHantelComponent.Hantel = mTmpEditHantelComponent.Hantel.Copy();
-                //mTmpEditHantelComponent.fDexieSvcService.LadeEquipment();
+                mTmpEditHantelComponent.CmpHantel = mTmpEditHantelComponent.Hantel.Copy();
+                mTmpEditHantelComponent.fDexieSvcService.LadeLanghanteln();
             });
     }
 
@@ -49,8 +56,7 @@ export class EditLanghantelComponent implements OnInit {
         const mTmpEditHantelComponent: EditLanghantelComponent = this.ClickData as EditLanghantelComponent;
         const mDialogData = new DialogData();
         mDialogData.textZeilen.push("Cancel unsaved changes?");
-        mDialogData.OkFn = (): void => {
-            mTmpEditHantelComponent.Hantel = mTmpEditHantelComponent.CmpHantel.Copy();
+        mDialogData.OkFn = (): void => { mTmpEditHantelComponent.Hantel = mTmpEditHantelComponent.CmpHantel.Copy();
         };
 
         mTmpEditHantelComponent.fDialogService.JaNein(mDialogData);
