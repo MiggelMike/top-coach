@@ -1,3 +1,5 @@
+import { isDefined } from '@angular/compiler/src/util';
+import { Hantel, HantelTyp } from './../../Business/Hantel/Hantel';
 import { Equipment, EquipmentOrigin, EquipmentTyp } from './../../Business/Equipment/Equipment';
 import { SessionDB, SessionStatus } from './../../Business/SessionDB';
 import { Session, ISession } from 'src/Business/Session/Session';
@@ -67,7 +69,8 @@ export class DexieSvcService extends Dexie {
     readonly cSession: string = "SessionDB";
     readonly cMuskelGruppe : string = "MuskelGruppe";
     readonly cEquipment : string = "Equipment";
-
+    readonly cHantel : string = "Hantel";
+    
     AktuellerProgrammTyp: ProgrammTyp;
     AktuellesProgramm: ITrainingsProgramm; 
     VorlageProgramme: Array<TrainingsProgramm> = []; 
@@ -78,11 +81,29 @@ export class DexieSvcService extends Dexie {
     ProgrammTable: Dexie.Table<ITrainingsProgramm, number>;
     SessionTable: Dexie.Table<Session, number>;
     MuskelGruppeTable: Dexie.Table<MuscleGroup, number>;
+    HantelTable: Dexie.Table<Hantel, number>;
     EquipmentTable: Dexie.Table<Equipment, number>;
     public Programme: Array<ITrainingsProgramm> = [];
     public UebungsListe: Array<Uebung> = [];
     public MuskelGruppenListe: Array<MuscleGroup> = [];
     public EquipmentListe: Array<Equipment> = [];
+    public LangHantelListe: Array<Hantel> = [];
+
+    public get LanghantelListeSortedByName(): Array<Hantel>{
+        const mResult: Array<Hantel> = this.LangHantelListe.map( mHantel => mHantel );
+        mResult.sort((u1, u2) => {
+            if (u1.Name > u2.Name) {
+                return 1;
+            }
+        
+            if (u1.Name < u2.Name) {
+                return -1;
+            }
+        
+            return 0;
+        });
+        return mResult;
+    }
     
     public get EquipmentTypListe(): Array<string>{
         const mResult: Array<string> = [];
@@ -128,7 +149,7 @@ export class DexieSvcService extends Dexie {
 
             // Dexie.delete("ConceptCoach");
         
-        this.version(2).stores({
+        this.version(8).stores({
             AppData: "++id",
             Uebung: "++ID,Name,Typ",
             Programm: "++id,Name",
@@ -136,9 +157,12 @@ export class DexieSvcService extends Dexie {
             Satz: "++ID",
             MuskelGruppe: "++ID,Name",
             Equipment: "++ID,Name",
+            Hantel: "++ID,Typ,Name",
         });
 
         this.InitAll();
+        this.HantelTable.clear();
+        this.PruefeStandardLanghanteln();
         this.PruefeStandardEquipment();
         this.PruefeStandardMuskelGruppen();
         this.LadeStandardUebungen();
@@ -199,6 +223,7 @@ export class DexieSvcService extends Dexie {
 
     private InitAll() {
         this.InitAppData();
+        this.InitHantel();
         this.InitEquipment();
         this.InitUebung();
         this.InitProgramm();
@@ -206,6 +231,11 @@ export class DexieSvcService extends Dexie {
         this.InitMuskelGruppe();
         this.InitSatz();
     }
+
+    private InitHantel() {
+        this.HantelTable = this.table(this.cHantel);
+        this.HantelTable.mapToClass(Hantel);
+    }  
 
     private InitMuskelGruppe() {
         this.MuskelGruppeTable = this.table(this.cMuskelGruppe);
@@ -257,6 +287,14 @@ export class DexieSvcService extends Dexie {
         return this.MuskelGruppeTable.put(aMuskelgruppe);
     }
 
+    public HantelSpeichern(aHantel: Hantel) {
+        return this.HantelTable.put(aHantel);
+    }
+
+    public InsertHanteln(aHantelListe: Array<Hantel>) {
+        return this.HantelTable.bulkPut(aHantelListe);
+    }
+
     public InsertUebungen(aUebungsListe: Array<Uebung>): PromiseExtended {
         return this.UebungTable.bulkPut(aUebungsListe);
     }
@@ -276,6 +314,7 @@ export class DexieSvcService extends Dexie {
 
 
     public PruefeStandardMuskelGruppen() {
+
         const mAnlegen: Array<MuscleGroup> = new Array<MuscleGroup>();
         this.table(this.cMuskelGruppe)
             .filter(
@@ -302,6 +341,109 @@ export class DexieSvcService extends Dexie {
                 else this.LadeMuskelGruppen();
             });
     }
+
+    public LadeLanghanteln() {
+        this.LangHantelListe = [];
+        this.table(this.cHantel)
+            .filter(
+                (mHantel: Hantel) =>
+                       (mHantel.Typ === HantelTyp.Barbell)
+                    || (mHantel.Typ === HantelTyp.CurlBar)
+                    || (mHantel.Typ === HantelTyp.HexBar)
+                    || (mHantel.Typ === HantelTyp.SwissBar)
+            )
+            .toArray()
+            .then((mHantelListe) => (
+                this.LangHantelListe  = mHantelListe
+            ));
+    }
+
+
+    // private PruefeStandardLanghanteln() {
+    //     const mAnlegen: Array<Hantel> = new Array<Hantel>();
+    //     this.LangHantelListe = [];
+    //     for (const mTyp in HantelTyp) {
+    //         this.PruefeEinenStandardLanghantelTyp(HantelTyp[mTyp], 25, mAnlegen);
+    //         this.PruefeEinenStandardLanghantelTyp(HantelTyp[mTyp], 30, mAnlegen);
+    //         this.PruefeEinenStandardLanghantelTyp(HantelTyp[mTyp], 50, mAnlegen);
+    //     }
+
+    //     if (mAnlegen.length > 0) {
+    //         this.InsertHanteln(mAnlegen).then(() => {
+    //             this.PruefeStandardLanghanteln();
+    //         });
+    //     }
+    //     else
+    //         this.LadeLanghanteln();
+    // }
+
+    
+
+    private PruefeStandardLanghanteln() {
+        const mAnlegen: Array<Hantel> = new Array<Hantel>();
+        this.table(this.cHantel)
+            .filter(
+                (mHantel: Hantel) =>
+                    // HantelTyp.Barbell
+                    (   (mHantel.Typ === HantelTyp.Barbell)
+                      &&(mHantel.Geloescht === false)
+                      &&((mHantel.Durchmesser === 50)||(mHantel.Durchmesser === 30)||(mHantel.Durchmesser === 25))
+                    ) 
+                    ||                
+                    // HantelTyp.CurlBar
+                    (   (mHantel.Typ === HantelTyp.CurlBar)
+                      &&(mHantel.Geloescht === false)
+                      &&((mHantel.Durchmesser === 50)||(mHantel.Durchmesser === 30)||(mHantel.Durchmesser === 25))
+                    ) 
+                    ||
+                    // HantelTyp.HexBar
+                    (   (mHantel.Typ === HantelTyp.HexBar)
+                      &&(mHantel.Geloescht === false)
+                      &&((mHantel.Durchmesser === 50)||(mHantel.Durchmesser === 30)||(mHantel.Durchmesser === 25))
+                    ) 
+                    ||                
+                    // HantelTyp.SwissBar
+                    (   (mHantel.Typ === HantelTyp.SwissBar)
+                    &&(mHantel.Geloescht === false)
+                    &&((mHantel.Durchmesser === 50)||(mHantel.Durchmesser === 30)||(mHantel.Durchmesser === 25))
+                    )
+            )
+            .toArray()
+            .then((mHantelListe) => {
+                const mDurchmesser: number[]  = [50, 30, 25];
+                for (const mTyp in HantelTyp) {
+                    if (mTyp === HantelTyp.Dumbbel)
+                        continue;
+
+                    for (let index = 0; index < mDurchmesser.length; index++) {
+                        let mHantel = mHantelListe.find((h: Hantel) => (h.Typ === mTyp && (h.Durchmesser === mDurchmesser[index])));
+                        if (isDefined(mHantel) === false) {
+                            let mDisplayName = mTyp + ' - ';
+                            switch (mTyp) {
+                                case HantelTyp.CurlBar: mDisplayName = 'Curl Bar - '; break;
+                                case HantelTyp.HexBar: mDisplayName = 'Hex Bar - '; break;
+                                case HantelTyp.SwissBar: mDisplayName = 'Swiss Bar - '; break;
+                            }
+                            const mNeueHantel = Hantel.StaticNeueHantel(
+                                mTyp + ' - ' + mDurchmesser[index],
+                                HantelTyp[mTyp],
+                                mDurchmesser[index],
+                                false,
+                                mDisplayName + mDurchmesser[index]
+                            );
+                        
+                            mAnlegen.push(mNeueHantel);
+                        }
+                    }
+                }
+
+                if (mAnlegen.length > 0)
+                    this.InsertHanteln(mAnlegen).then(() => this.PruefeStandardLanghanteln());
+                else
+                    this.LadeLanghanteln();
+            });
+    }
+
 
     public InsertEquipment(aEquipmentListe: Array<Equipment>): PromiseExtended {
         return this.EquipmentTable.bulkPut(aEquipmentListe);

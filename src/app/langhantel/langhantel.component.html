@@ -1,0 +1,13 @@
+<app-toolbar></app-toolbar>
+
+<div fxLayout="row wrap" fxLayoutAlign="center center">
+    <h4>Barbells</h4>
+</div>
+
+<ng-container *ngIf="LanghantelListSortedByName">
+    <ng-container *ngFor="let hantel of LanghantelListSortedByName" >
+        <div fxLayout="row wrap" fxLayoutAlign="center center">
+            <a mat-button (click)="EditLanghantel(hantel)">{{hantel.DisplayName}}</a>
+        </div>
+    </ng-container>
+</ng-container>

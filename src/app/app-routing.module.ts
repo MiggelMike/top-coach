@@ -12,6 +12,8 @@ import { MuscleGroupsComponent } from './muscle-groups/muscle-groups.component';
 import { EditMuscleGroupComponent } from './edit-muscle-group/edit-muscle-group.component';
 import { EquipmentComponent } from './equipment/equipment.component';
 import { EditEquipmentComponent } from './edit-equipment/edit-equipment.component';
+import { LanghantelComponent } from './langhantel/langhantel.component';
+import { EditLanghantelComponent } from './edit-langhantel/edit-langhantel.component';
 
 
 export const routes: Routes = [
@@ -25,6 +27,8 @@ export const routes: Routes = [
     { path: 'workoutform', component: WorkoutFormComponent },
     { path: 'equipment', component: EquipmentComponent },
     { path: 'edit-equipment', component: EditEquipmentComponent },
+    { path: 'langhantel', component: LanghantelComponent },
+    { path: 'edit-langhantel', component: EditLanghantelComponent },
     { path: 'sessionFormComponent', component: SessionFormComponent, data: { title: 'welcome', toolbar: false} },
 ];
 

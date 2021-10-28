@@ -27,4 +27,9 @@ export class SettingsComponent implements OnInit {
     NavEquipmentAssets(): void {
         this.router.navigate(['/equipment']);
     }
+
+    NavBarbells() {
+        this.router.navigate(['/langhantel']);
+       
+    }
 }
