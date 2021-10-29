@@ -89,6 +89,7 @@ import { EquipmentComponent } from './equipment/equipment.component';
 import { EditEquipmentComponent } from './edit-equipment/edit-equipment.component';
 import { LanghantelComponent } from './langhantel/langhantel.component';
 import { EditLanghantelComponent } from './edit-langhantel/edit-langhantel.component';
+import { NgxMaskModule, IConfig } from 'ngx-mask'
 
 // import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
 
@@ -100,7 +101,7 @@ export const Firstmask = [/[0-9,'.', [0-9, [0-9,'.']]] /];
 
 export const floatMask = createNumberMask({
     prefix: '',
-    suffix: '', // This will put the dollar sign at the end, with a space.
+    suffix: '', 
     includeThousandsSeparator: true, //  (boolean): whether or not to separate thousands. Defaults to to true.
     integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
     allowDecimal: true, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
@@ -111,11 +112,20 @@ export const floatMask = createNumberMask({
 
   export const repMask = createNumberMask({
     prefix: '',
-    suffix: '', // This will put the dollar sign at the end, with a space.
+    suffix: '', 
     includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
     integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
     allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
   })
+
+  export const Int2DigitMask = createNumberMask({
+    prefix: '',
+    suffix: '', 
+    includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
+    integerLimit: 2, // (number): limit the length of the integer number. Defaults to null for unlimited
+    allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
+  })
+
 
 
 @NgModule({

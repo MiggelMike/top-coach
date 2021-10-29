@@ -7,7 +7,7 @@
 <ng-container *ngIf="LanghantelListSortedByName">
     <ng-container *ngFor="let hantel of LanghantelListSortedByName" >
         <div fxLayout="row wrap" fxLayoutAlign="center center">
-            <a mat-button (click)="EditLanghantel(hantel)">{{hantel.DisplayName}}</a>
+            <a mat-button (click)="EditLanghantel(hantel)">{{hantel.Name}}</a>
         </div>
     </ng-container>
 </ng-container>

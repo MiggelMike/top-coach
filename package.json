@@ -42,7 +42,7 @@
     "nativescript-sqlite": "^2.6.4",
     "nativescript-sqlite-access": "^1.0.3",
     "ngx-bootstrap": "^5.3.2",
-    "ngx-mask": "^10.0.1",
+    "ngx-mask": "^10.0.4",
     "npm": "^7.0.15",
     "popper.js": "^1.16.0",
     "rxjs": "~6.6.2",

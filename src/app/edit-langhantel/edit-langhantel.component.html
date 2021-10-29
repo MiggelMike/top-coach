@@ -1,10 +1,10 @@
+
 <mat-icon  (click)="back()">arrow_back</mat-icon>
 <div fxLayout="row wrap" fxLayoutAlign="center center">
     <h4>Edit {{Hantel.DisplayName}}</h4>
 </div>
 
 <div fxLayout="row wrap" fxLayoutAlign="center center">
-    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxFlex="100%"> 
         <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">        
             <mat-form-field class="align-left" fxFlex="100%">
                 <mat-label>Name</mat-label>
@@ -15,28 +15,17 @@
             </mat-form-field> 
         </div>
 
-        <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">        
-            <mat-form-field class="align-left" fxFlex="100%">
-                <mat-label>Display name</mat-label>
-                <input matInput 
-                [(ngModel)]="Hantel.DisplayName"
-                maxlength="50"
-                type="text">
-            </mat-form-field> 
+
+        <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
+            <mat-form-field class="align-right" fxFlex="100%">
+                <mat-label>Diameter</mat-label>
+                <input 
+                    matInput 
+                    [textMask]="{mask: Int2DigitMask, guide: false }" 
+                    [ngModel]="Hantel.Durchmesser"
+                    type="text">
+            </mat-form-field>
         </div>
-
-
-        <!-- <mat-form-field >
-            <mat-label>Equipment type</mat-label>
-            <select matNativeControl>
-                <option></option> 
-                <ng-container  *ngFor="let equ of EquipmentTypListe">
-                  <option value="equ">{{equ}}</option>      
-                </ng-container>
-            </select>   
-        </mat-form-field> -->
-
-    </div>
 
     <app-data-store-buttons [SaveClick]="SaveChanges" [CancelClick]="CancelChanges" [ClickData]="this">
     </app-data-store-buttons>

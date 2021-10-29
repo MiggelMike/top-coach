@@ -149,7 +149,7 @@ export class DexieSvcService extends Dexie {
 
             // Dexie.delete("ConceptCoach");
         
-        this.version(8).stores({
+        this.version(9).stores({
             AppData: "++id",
             Uebung: "++ID,Name,Typ",
             Programm: "++id,Name",
@@ -160,7 +160,9 @@ export class DexieSvcService extends Dexie {
             Hantel: "++ID,Typ,Name",
         });
 
+        
         this.InitAll();
+        // this.HantelTable.clear();
         this.PruefeStandardLanghanteln();
         this.PruefeStandardEquipment();
         this.PruefeStandardMuskelGruppen();
@@ -345,11 +347,7 @@ export class DexieSvcService extends Dexie {
         this.LangHantelListe = [];
         this.table(this.cHantel)
             .filter(
-                (mHantel: Hantel) =>
-                       (mHantel.Typ === HantelTyp.Barbell)
-                    || (mHantel.Typ === HantelTyp.CurlBar)
-                    || (mHantel.Typ === HantelTyp.HexBar)
-                    || (mHantel.Typ === HantelTyp.SwissBar)
+                (mHantel: Hantel) => (mHantel.Typ === HantelTyp.Barbell)
             )
             .toArray()
             .then((mHantelListe) => (
@@ -388,24 +386,7 @@ export class DexieSvcService extends Dexie {
                       &&(mHantel.Geloescht === false)
                       &&((mHantel.Durchmesser === 50)||(mHantel.Durchmesser === 30)||(mHantel.Durchmesser === 25))
                     ) 
-                    ||                
-                    // HantelTyp.CurlBar
-                    (   (mHantel.Typ === HantelTyp.CurlBar)
-                      &&(mHantel.Geloescht === false)
-                      &&((mHantel.Durchmesser === 50)||(mHantel.Durchmesser === 30)||(mHantel.Durchmesser === 25))
-                    ) 
-                    ||
-                    // HantelTyp.HexBar
-                    (   (mHantel.Typ === HantelTyp.HexBar)
-                      &&(mHantel.Geloescht === false)
-                      &&((mHantel.Durchmesser === 50)||(mHantel.Durchmesser === 30)||(mHantel.Durchmesser === 25))
-                    ) 
-                    ||                
-                    // HantelTyp.SwissBar
-                    (   (mHantel.Typ === HantelTyp.SwissBar)
-                    &&(mHantel.Geloescht === false)
-                    &&((mHantel.Durchmesser === 50)||(mHantel.Durchmesser === 30)||(mHantel.Durchmesser === 25))
-                    )
+                    
             )
             .toArray()
             .then((mHantelListe) => {
@@ -417,18 +398,11 @@ export class DexieSvcService extends Dexie {
                     for (let index = 0; index < mDurchmesser.length; index++) {
                         let mHantel = mHantelListe.find((h: Hantel) => (h.Typ === mTyp && (h.Durchmesser === mDurchmesser[index])));
                         if (isDefined(mHantel) === false) {
-                            let mDisplayName = mTyp + ' - ';
-                            switch (mTyp) {
-                                case HantelTyp.CurlBar: mDisplayName = 'Curl Bar - '; break;
-                                case HantelTyp.HexBar: mDisplayName = 'Hex Bar - '; break;
-                                case HantelTyp.SwissBar: mDisplayName = 'Swiss Bar - '; break;
-                            }
                             const mNeueHantel = Hantel.StaticNeueHantel(
                                 mTyp + ' - ' + mDurchmesser[index],
                                 HantelTyp[mTyp],
                                 mDurchmesser[index],
-                                false,
-                                mDisplayName + + mDurchmesser[index],
+                                false
                             );
                         
                             mAnlegen.push(mNeueHantel);

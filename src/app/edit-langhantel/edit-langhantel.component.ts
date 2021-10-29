@@ -1,8 +1,9 @@
+import { floatMask, repMask, Int2DigitMask } from './../app.module';
 import { Component, OnInit } from '@angular/core';
 import { DialogeService } from '../services/dialoge.service';
 import { DexieSvcService } from '../services/dexie-svc.service';
 import { Location } from '@angular/common'
-import { Hantel } from 'src/Business/Hantel/Hantel';
+import { Hantel, HantelTyp, LanghantelTyp } from 'src/Business/Hantel/Hantel';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { Router } from '@angular/router';
 
@@ -12,8 +13,12 @@ import { Router } from '@angular/router';
     styleUrls: ["./edit-langhantel.component.scss"],
 })
 export class EditLanghantelComponent implements OnInit {
-    Hantel: Hantel;
+    Hantel: Hantel; 
     CmpHantel: Hantel;
+    SelectedTyp: HantelTyp; 
+    public floatMask = floatMask;
+    public repMask = repMask;    
+    public Int2DigitMask = Int2DigitMask;
 
     constructor(
         public fDialogService: DialogeService,
@@ -26,8 +31,18 @@ export class EditLanghantelComponent implements OnInit {
         this.Hantel = mState.hantel.Copy();
         this.CmpHantel = mState.hantel.Copy();
     }
+    
+    ngAfterViewInit() {
+        
+    }
 
-    ngOnInit(): void {}
+    ngOnChanges() {
+        
+        this.SelectedTyp = this.Hantel.Typ;
+    }
+    
+    ngOnInit(): void {
+    }
 
     back() {
         if (this.Hantel.isEqual(this.CmpHantel))
@@ -61,4 +76,9 @@ export class EditLanghantelComponent implements OnInit {
 
         mTmpEditHantelComponent.fDialogService.JaNein(mDialogData);
     }
+
+    public get LanghantelTypListe(): Array<LanghantelTyp>{
+        return LanghantelTyp.StaticLanghantelTypListe();
+    }
+    
 }
