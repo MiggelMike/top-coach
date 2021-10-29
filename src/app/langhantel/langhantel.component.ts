@@ -75,7 +75,7 @@ export class LanghantelComponent implements OnInit {
         }
     }
 
-    SaveChanges(aTmpEditHantelComponent: LanghantelComponent) {
+    SaveChanges() {
         const mTmpEditHantelComponent: LanghantelComponent = this.ClickData as LanghantelComponent;;
         mTmpEditHantelComponent.fDexieSvcService
             .InsertHanteln(mTmpEditHantelComponent.HantelListe)
@@ -90,10 +90,16 @@ export class LanghantelComponent implements OnInit {
         mTmpEditHantelComponent.fDialogService.JaNein(mDialogData);
     }
 
-    Delete(aHantel: Hantel) {
+    private DeletePrim(aHantel: Hantel) {
         this.fDexieSvcService.HantelTable.delete(aHantel.ID)
             .then(() => (this.fDexieSvcService.LadeLanghanteln(() => this.CopyHantelList())));
-        
+    }
+
+    Delete(aHantel: Hantel) {
+        const mDialogData = new DialogData();
+        mDialogData.textZeilen.push("Delete record?");
+        mDialogData.OkFn = (): void => (this.DeletePrim(aHantel));
+        this.fDialogService.JaNein(mDialogData);
     }
     
     
