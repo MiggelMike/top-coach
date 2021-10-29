@@ -162,7 +162,6 @@ export class DexieSvcService extends Dexie {
 
         
         this.InitAll();
-        // this.HantelTable.clear();
         this.PruefeStandardLanghanteln();
         this.PruefeStandardEquipment();
         this.PruefeStandardMuskelGruppen();

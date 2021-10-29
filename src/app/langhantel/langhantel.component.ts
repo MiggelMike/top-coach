@@ -90,7 +90,9 @@ export class LanghantelComponent implements OnInit {
         mTmpEditHantelComponent.fDialogService.JaNein(mDialogData);
     }
 
-    Delete(Hantel: Hantel) {
+    Delete(aHantel: Hantel) {
+        this.fDexieSvcService.HantelTable.delete(aHantel.ID)
+            .then(() => (this.fDexieSvcService.LadeLanghanteln(() => this.CopyHantelList())));
         
     }
     
