@@ -89,4 +89,10 @@ export class LanghantelComponent implements OnInit {
         mDialogData.OkFn = (): void => (mTmpEditHantelComponent.CopyHantelList());
         mTmpEditHantelComponent.fDialogService.JaNein(mDialogData);
     }
+
+    Delete(Hantel: Hantel) {
+        
+    }
+    
+    
 }
