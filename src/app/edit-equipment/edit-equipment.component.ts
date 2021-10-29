@@ -16,6 +16,8 @@ export class EditEquipmentComponent implements OnInit {
 
     public Equipment: Equipment = null;
     public CmpEquipment: Equipment = null;
+    public ClickData: EditEquipmentComponent;
+
     public get EquipmentTypListe(): Array<string> {
         return this.fDexieSvcService.EquipmentTypListeSorted;
     }
@@ -49,14 +51,14 @@ export class EditEquipmentComponent implements OnInit {
     }
 
     SaveChanges() {
-        const mTmpEditEquipmentComponent: EditEquipmentComponent = (this.ClickData as EditEquipmentComponent);
-        mTmpEditEquipmentComponent.fDexieSvcService.MuskelgruppeSpeichern(mTmpEditEquipmentComponent.Muskelgruppe)
-            .then(mID => {
-                mTmpEditEquipmentComponent.Equipment.ID = mID;
-                mTmpEditEquipmentComponent.CmpEquipment = mTmpEditEquipmentComponent.Equipment.Copy();
-                mTmpEditEquipmentComponent.fDexieSvcService.LadeEquipment();
-            }
-            );
+        // const mTmpEditEquipmentComponent: EditEquipmentComponent = (this.ClickData as EditEquipmentComponent);
+        // mTmpEditEquipmentComponent.fDexieSvcService.EquMuskelgruppeSpeichern(mTmpEditEquipmentComponent.Equipment)
+        //     .then(mID => {
+        //         mTmpEditEquipmentComponent.Equipment.ID = mID;
+        //         mTmpEditEquipmentComponent.CmpEquipment = mTmpEditEquipmentComponent.Equipment.Copy();
+        //         mTmpEditEquipmentComponent.fDexieSvcService.LadeEquipment();
+        //     }
+        //     );
         
     }
 

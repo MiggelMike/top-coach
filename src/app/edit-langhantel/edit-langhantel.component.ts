@@ -19,6 +19,7 @@ export class EditLanghantelComponent implements OnInit {
     public floatMask = floatMask;
     public repMask = repMask;    
     public Int2DigitMask = Int2DigitMask;
+    public ClickData: EditLanghantelComponent;
 
     constructor(
         public fDialogService: DialogeService,

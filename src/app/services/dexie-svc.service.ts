@@ -292,7 +292,7 @@ export class DexieSvcService extends Dexie {
         return this.HantelTable.put(aHantel);
     }
 
-    public InsertHanteln(aHantelListe: Array<Hantel>) {
+    public InsertHanteln(aHantelListe: Array<Hantel>):PromiseExtended {
         return this.HantelTable.bulkPut(aHantelListe);
     }
 
@@ -343,38 +343,20 @@ export class DexieSvcService extends Dexie {
             });
     }
 
-    public LadeLanghanteln() {
+    public LadeLanghanteln(aAfterLoadFn?: AfterLoadFn) {
         this.LangHantelListe = [];
         this.table(this.cHantel)
             .filter(
                 (mHantel: Hantel) => (mHantel.Typ === HantelTyp.Barbell)
             )
             .toArray()
-            .then((mHantelListe) => (
-                this.LangHantelListe  = mHantelListe
-            ));
+            .then((mHantelListe) => {
+                this.LangHantelListe = mHantelListe;
+
+                if (isDefined(aAfterLoadFn))
+                    aAfterLoadFn();
+            });
     }
-
-
-    // private PruefeStandardLanghanteln() {
-    //     const mAnlegen: Array<Hantel> = new Array<Hantel>();
-    //     this.LangHantelListe = [];
-    //     for (const mTyp in HantelTyp) {
-    //         this.PruefeEinenStandardLanghantelTyp(HantelTyp[mTyp], 25, mAnlegen);
-    //         this.PruefeEinenStandardLanghantelTyp(HantelTyp[mTyp], 30, mAnlegen);
-    //         this.PruefeEinenStandardLanghantelTyp(HantelTyp[mTyp], 50, mAnlegen);
-    //     }
-
-    //     if (mAnlegen.length > 0) {
-    //         this.InsertHanteln(mAnlegen).then(() => {
-    //             this.PruefeStandardLanghanteln();
-    //         });
-    //     }
-    //     else
-    //         this.LadeLanghanteln();
-    // }
-
-    
 
     private PruefeStandardLanghanteln() {
         const mAnlegen: Array<Hantel> = new Array<Hantel>();

@@ -1,13 +1,31 @@
-<app-toolbar></app-toolbar>
+<mat-icon  (click)="back()">arrow_back</mat-icon>
 
 <div fxLayout="row wrap" fxLayoutAlign="center center">
     <h4>Barbells</h4>
 </div>
 
-<ng-container *ngIf="LanghantelListSortedByName">
-    <ng-container *ngFor="let hantel of LanghantelListSortedByName" >
+<ng-container *ngIf="HantelListe">
+    <ng-container *ngFor="let Hantel of HantelListe">
         <div fxLayout="row wrap" fxLayoutAlign="center center">
-            <a mat-button (click)="EditLanghantel(hantel)">{{hantel.Name}}</a>
+            <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
+                <mat-form-field class="align-left" fxFlex="100%">
+                    <mat-label>Name</mat-label>
+                    <input matInput [(ngModel)]="Hantel.Name" maxlength="50" type="text">
+                </mat-form-field>
+            </div>
+
+
+            <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
+                <mat-form-field class="align-right" fxFlex="100%">
+                    <mat-label>Diameter</mat-label>
+                    <input matInput [textMask]="{mask: Int2DigitMask, guide: false }" [ngModel]="Hantel.Durchmesser"
+                        type="text">
+                </mat-form-field>
+            </div>
+
         </div>
     </ng-container>
+
+    <app-data-store-buttons [SaveClick]="SaveChanges" [CancelClick]="CancelChanges" [ClickData]="this"></app-data-store-buttons>
 </ng-container>
+

@@ -16,6 +16,7 @@ export class EditMuscleGroupComponent implements OnInit {
 
     public Muskelgruppe: MuscleGroup = null;
     public CmpMuskelgruppe: MuscleGroup = null;
+    public ClickData: EditMuscleGroupComponent;
 
     constructor(
         private router: Router,
