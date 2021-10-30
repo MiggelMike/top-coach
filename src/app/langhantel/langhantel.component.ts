@@ -1,6 +1,6 @@
 import { isDefined } from '@angular/compiler/src/util';
 import { Component, OnInit } from '@angular/core';
-import { Hantel } from 'src/Business/Hantel/Hantel';
+import { Hantel, HantelErstellStatus } from 'src/Business/Hantel/Hantel';
 import { DexieSvcService } from '../services/dexie-svc.service';
 import { DialogeService } from '../services/dialoge.service';
 import { floatMask, repMask, Int2DigitMask } from './../app.module';
@@ -40,7 +40,7 @@ export class LanghantelComponent implements OnInit {
     ngOnInit(): void {}
 
     get LanghantelListSortedByName(): Array<Hantel> {
-        return this.fDexieSvcService.LanghantelListeSortedByName;
+        return this.fDexieSvcService.LanghantelListeSortedByName(true);
     }
 
     private ChangesExist(): Boolean {
@@ -91,8 +91,16 @@ export class LanghantelComponent implements OnInit {
     }
 
     private DeletePrim(aHantel: Hantel) {
-        this.fDexieSvcService.HantelTable.delete(aHantel.ID)
-            .then(() => (this.fDexieSvcService.LadeLanghanteln(() => this.CopyHantelList())));
+        if (aHantel.HantelStatus === HantelErstellStatus.AutomatischErstellt) {
+            // Automaisch erstellte nicht löschen, sonder auf "Geloescht" setzen,
+            // sonst werden sie beim Programm-Start wieder erzeugt.
+            aHantel.HantelStatus = HantelErstellStatus.Geloescht;
+            this.fDexieSvcService.HantelSpeichern(aHantel)
+                .then(() => (this.fDexieSvcService.LadeLanghanteln(() => this.CopyHantelList())));
+        } else {
+            this.fDexieSvcService.HantelTable.delete(aHantel.ID)
+                .then(() => (this.fDexieSvcService.LadeLanghanteln(() => this.CopyHantelList())));
+        }
     }
 
     Delete(aHantel: Hantel) {

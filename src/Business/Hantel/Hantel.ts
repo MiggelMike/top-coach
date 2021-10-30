@@ -9,12 +9,18 @@ export enum HantelTyp {
     Dumbbel = 'Dumbbel'
 }
 
+export enum HantelErstellStatus {
+    VomAnwenderErstellt,
+    AutomatischErstellt,
+    Geloescht
+}
+
+
 export class IHantel {
-    
     Name: string;
     Typ: HantelTyp;
     Durchmesser: number;
-    Geloescht: Boolean; 
+    HantelStatus: HantelErstellStatus; 
 }
 
 export class Hantel implements IHantel {
@@ -22,19 +28,19 @@ export class Hantel implements IHantel {
     Name: string = "";
     Typ: HantelTyp = HantelTyp.Barbell;
     Durchmesser: number = 0;
-    Geloescht: Boolean = false; 
+    HantelStatus: HantelErstellStatus = HantelErstellStatus.VomAnwenderErstellt; 
 
     public static StaticNeueHantel(
         aName: string,
         aTyp: HantelTyp,
         aDurchmesser: number,
-        aGeloescht: Boolean
+        aHantelStatus: HantelErstellStatus
     ): Hantel {
         const mResult: Hantel = new Hantel();
         mResult.Name = aName;
         mResult.Typ = aTyp;
         mResult.Durchmesser = aDurchmesser;
-        mResult.Geloescht = aGeloescht;
+        mResult.HantelStatus = aHantelStatus;
         return mResult;
     }
 

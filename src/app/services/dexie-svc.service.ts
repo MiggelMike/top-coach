@@ -1,5 +1,5 @@
 import { isDefined } from '@angular/compiler/src/util';
-import { Hantel, HantelTyp } from './../../Business/Hantel/Hantel';
+import { Hantel, HantelTyp, HantelErstellStatus } from './../../Business/Hantel/Hantel';
 import { Equipment, EquipmentOrigin, EquipmentTyp } from './../../Business/Equipment/Equipment';
 import { SessionDB, SessionStatus } from './../../Business/SessionDB';
 import { Session, ISession } from 'src/Business/Session/Session';
@@ -89,8 +89,14 @@ export class DexieSvcService extends Dexie {
     public EquipmentListe: Array<Equipment> = [];
     public LangHantelListe: Array<Hantel> = [];
 
-    public get LanghantelListeSortedByName(): Array<Hantel>{
-        const mResult: Array<Hantel> = this.LangHantelListe.map( mHantel => mHantel );
+    public LanghantelListeSortedByName(aIgnorGeloeschte: Boolean = true): Array<Hantel>{
+        let mResult: Array<Hantel> = this.LangHantelListe.map(mHantel => mHantel);
+
+        if (aIgnorGeloeschte) {
+            mResult = mResult.filter(h => h.HantelStatus !== HantelErstellStatus.Geloescht);
+        }
+        
+
         mResult.sort((u1, u2) => {
             if (u1.Name > u2.Name) {
                 return 1;
@@ -149,10 +155,10 @@ export class DexieSvcService extends Dexie {
 
             // Dexie.delete("ConceptCoach");
         
-        this.version(9).stores({
+        this.version(10).stores({
             AppData: "++id",
             Uebung: "++ID,Name,Typ",
-            Programm: "++id,Name",
+            Programm: "++id,Name", 
             SessionDB: "++ID,Name,Datum",
             Satz: "++ID",
             MuskelGruppe: "++ID,Name",
@@ -162,6 +168,7 @@ export class DexieSvcService extends Dexie {
 
         
         this.InitAll();
+        //  this.HantelTable.clear();
         this.PruefeStandardLanghanteln();
         this.PruefeStandardEquipment();
         this.PruefeStandardMuskelGruppen();
@@ -361,13 +368,7 @@ export class DexieSvcService extends Dexie {
         const mAnlegen: Array<Hantel> = new Array<Hantel>();
         this.table(this.cHantel)
             .filter(
-                (mHantel: Hantel) =>
-                    // HantelTyp.Barbell
-                    (   (mHantel.Typ === HantelTyp.Barbell)
-                      &&(mHantel.Geloescht === false)
-                      &&((mHantel.Durchmesser === 50)||(mHantel.Durchmesser === 30)||(mHantel.Durchmesser === 25))
-                    ) 
-                    
+                (mHantel: Hantel) => ((mHantel.Typ === HantelTyp.Barbell) &&((mHantel.Durchmesser === 50)||(mHantel.Durchmesser === 30)||(mHantel.Durchmesser === 25))) 
             )
             .toArray()
             .then((mHantelListe) => {
@@ -383,7 +384,7 @@ export class DexieSvcService extends Dexie {
                                 mTyp + ' - ' + mDurchmesser[index],
                                 HantelTyp[mTyp],
                                 mDurchmesser[index],
-                                false
+                                HantelErstellStatus.AutomatischErstellt
                             );
                         
                             mAnlegen.push(mNeueHantel);
