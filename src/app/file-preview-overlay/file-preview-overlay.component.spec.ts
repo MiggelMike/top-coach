@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FilePreviewOverlayComponent } from './file-preview-overlay.component';
 
@@ -6,7 +6,7 @@ describe('FilePreviewOverlayComponent', () => {
   let component: FilePreviewOverlayComponent;
   let fixture: ComponentFixture<FilePreviewOverlayComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ FilePreviewOverlayComponent ]
     })

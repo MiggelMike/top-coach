@@ -10,14 +10,11 @@ import { Component, OnInit, Input } from "@angular/core";
         :host {
           display: block;
           margin: 2px;
-          // border: 1px solid black;
-          // border-radius: 8px;
-        },
-
-
+        }
         `,
-    ],
+    ]
 })
+    
 export class SatzSimpleComponent implements OnInit {
     @Input() satz: ISatz;
     constructor() {}

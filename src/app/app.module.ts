@@ -89,7 +89,6 @@ import { EquipmentComponent } from './equipment/equipment.component';
 import { EditEquipmentComponent } from './edit-equipment/edit-equipment.component';
 import { LanghantelComponent } from './langhantel/langhantel.component';
 import { EditLanghantelComponent } from './edit-langhantel/edit-langhantel.component';
-import { NgxMaskModule, IConfig } from 'ngx-mask'
 
 // import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
 
@@ -160,7 +159,7 @@ export const floatMask = createNumberMask({
         EditLanghantelComponent
     ],
     imports: [
-        RouterModule.forRoot(routes),
+        RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
         TextMaskModule,
         MatCheckboxModule,
         MatCardModule,

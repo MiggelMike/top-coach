@@ -52,13 +52,13 @@ export class SessionDB implements ISessionDB {
     Kategorie01: SessionStatus;
     Kategorie02: SessionStatus; 
     Bearbeitbar: Boolean;
-    LiftedWeight: number;
+    get LiftedWeight(): number { return 0; };
     GestartedWann: Date;
     PauseInSek: number;
     DauerFormatted: string;
     SessionDauer: Zeitraum;
     DauerTimer: any;
-    BodyWeight: number;
+    get BodyWeight(): number { return 0; };
     BodyWeightAtSessionStart: number;
     UebungsListe: Array<Uebung> = new Array<Uebung>();
     PausenListe: Array<Pause> = new Array<Pause>();

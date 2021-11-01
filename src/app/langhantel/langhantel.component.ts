@@ -76,18 +76,18 @@ export class LanghantelComponent implements OnInit {
     }
 
     SaveChanges() {
-        const mTmpEditHantelComponent: LanghantelComponent = this.ClickData as LanghantelComponent;;
-        mTmpEditHantelComponent.fDexieSvcService
-            .InsertHanteln(mTmpEditHantelComponent.HantelListe)
-            .then((mDummy) => (mTmpEditHantelComponent.fDexieSvcService.LadeLanghanteln(() => mTmpEditHantelComponent.CopyHantelList())));
+        // const mTmpEditHantelComponent: LanghantelComponent = this.ClickData as LanghantelComponent;;
+        // mTmpEditHantelComponent.fDexieSvcService
+        //     .InsertHanteln(mTmpEditHantelComponent.HantelListe)
+        //     .then((mDummy) => (mTmpEditHantelComponent.fDexieSvcService.LadeLanghanteln(() => mTmpEditHantelComponent.CopyHantelList())));
     }
 
     CancelChanges() {
-        const mTmpEditHantelComponent: LanghantelComponent = this.ClickData as LanghantelComponent;
-        const mDialogData = new DialogData();
-        mDialogData.textZeilen.push("Cancel unsaved changes?");
-        mDialogData.OkFn = (): void => (mTmpEditHantelComponent.CopyHantelList());
-        mTmpEditHantelComponent.fDialogService.JaNein(mDialogData);
+        // const mTmpEditHantelComponent: LanghantelComponent = this.ClickData as LanghantelComponent;
+        // const mDialogData = new DialogData();
+        // mDialogData.textZeilen.push("Cancel unsaved changes?");
+        // mDialogData.OkFn = (): void => (mTmpEditHantelComponent.CopyHantelList());
+        // mTmpEditHantelComponent.fDialogService.JaNein(mDialogData);
     }
 
     private DeletePrim(aHantel: Hantel) {

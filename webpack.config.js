@@ -61,7 +61,7 @@ const config = {
     mode: uglify ? "production" : "development",
     context: appFullPath,
     context: appFullPath,externals,
-    externals: extendedExternals
+    // externals: extendedExternals
 }
 
   
@@ -70,7 +70,7 @@ module.exports = {
         
         externals: {
         jquery: 'jQuery',
-        extendedExternals
+        // extendedExternals
             
         },
     
