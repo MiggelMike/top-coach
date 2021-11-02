@@ -1,7 +1,4 @@
-import { DexieSvcService } from './../../app/services/dexie-svc.service';
 import { Satz, SatzTyp, LiftTyp, SatzPausen, SatzStatus } from './../Satz/Satz';
-import { DialogeService } from 'src/app/services/dialoge.service';
-import { MatDialog } from '@angular/material';
 
 var cloneDeep = require('lodash.clonedeep');
 

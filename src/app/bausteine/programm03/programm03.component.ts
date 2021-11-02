@@ -1,8 +1,7 @@
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { Uebung  } from './../../../Business/Uebung/Uebung';
 import { GlobalService } from 'src/app/services/global.service';
-import { MatAccordion } from '@angular/material';
-import { MatExpansionPanel } from '@angular/material/expansion';
+import { MatAccordion, MatExpansionPanel } from '@angular/material/expansion';
 import { ISession } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, ElementRef, Output } from "@angular/core";

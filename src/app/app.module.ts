@@ -23,10 +23,9 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
-import { MatRippleModule } from '@angular/material';
+import { MatRippleModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDialog } from '@angular/material/dialog';
-import { MatDialogModule } from '@angular/material';
+import { MatDialog, MatDialogModule  } from '@angular/material/dialog';
 import { MatCheckboxModule } from "@angular/material/checkbox"; 
 
 import { ProgrammWaehlenComponent } from './programm-waehlen/programm-waehlen.component';
@@ -55,31 +54,31 @@ import { SessionStatsOverlayComponent } from './session-stats-overlay/session-st
 import { DataStoreButtonsComponent } from './bausteine/data-store-buttons/data-store-buttons.component';
 import { ToolbarComponent } from './bausteine/toolbar/toolbar.component';
 
-import {
-    MatAutocompleteModule,
-    MatBadgeModule,
-    MatBottomSheetModule,
-    MatButtonToggleModule,
-    MatChipsModule,
-    MatDatepickerModule,
-    MatDividerModule,
-    MatGridListModule,
-    MatListModule,
-    MatNativeDateModule,
-    MatPaginatorModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatRadioModule,
-    MatSelectModule,
-    MatSlideToggleModule,
-    MatSnackBarModule,
-    MatSortModule,
-    MatStepperModule,
-    MatTableModule,
-    MatTabsModule,
-    MatTooltipModule,
-    MatTreeModule,
-  } from '@angular/material';
+// import {
+//     MatAutocompleteModule,
+//     MatBadgeModule,
+//     MatBottomSheetModule,
+//     MatButtonToggleModule,
+//     MatChipsModule,
+//     MatDatepickerModule,
+//     MatDividerModule,
+//     MatGridListModule,
+//     MatListModule,
+//     MatNativeDateModule,
+//     MatPaginatorModule,
+//     MatProgressBarModule,
+//     MatProgressSpinnerModule,
+//     MatRadioModule,
+//     MatSelectModule,
+//     MatSlideToggleModule,
+//     MatSnackBarModule,
+//     MatSortModule,
+//     MatStepperModule,
+//     MatTableModule,
+//     MatTabsModule,
+//     MatTooltipModule,
+//     MatTreeModule,
+//   } from '@angular/material';
 import { SettingsComponent } from './settings/settings.component';
 import { ExerciseComponent } from './exercise/exercise.component';
 import { EditExerciseComponent } from './edit-exercise/edit-exercise.component';
@@ -89,6 +88,8 @@ import { EquipmentComponent } from './equipment/equipment.component';
 import { EditEquipmentComponent } from './edit-equipment/edit-equipment.component';
 import { LanghantelComponent } from './langhantel/langhantel.component';
 import { EditLanghantelComponent } from './edit-langhantel/edit-langhantel.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+//import { MatBadgeModule } from '@angular/material/m/MatBadgeModule';
 
 // import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
 
@@ -213,40 +214,40 @@ export const floatMask = createNumberMask({
         MatSidenavModule,
         MatSliderModule,
         MatAutocompleteModule,
-        MatBadgeModule,
-        MatBottomSheetModule,
+        // MatBadgeModule,
+        // MatBottomSheetModule,
         MatButtonModule,
-        MatButtonToggleModule,
+        // MatButtonToggleModule,
         MatCardModule,
         MatCheckboxModule,
-        MatChipsModule,
-        MatStepperModule,
-        MatDatepickerModule,
+        // MatChipsModule,
+        // MatStepperModule,
+        // MatDatepickerModule,
         MatDialogModule,
-        MatDividerModule,
+        // MatDividerModule,
         MatExpansionModule,
-        MatGridListModule,
+        // MatGridListModule,
         MatIconModule,
         MatInputModule,
-        MatListModule,
+        // MatListModule,
         MatMenuModule,
-        MatNativeDateModule,
-        MatPaginatorModule,
-        MatProgressBarModule,
-        MatProgressSpinnerModule,
-        MatRadioModule,
+        // MatNativeDateModule,
+        // MatPaginatorModule,
+        // MatProgressBarModule,
+        // MatProgressSpinnerModule,
+        // MatRadioModule,
         MatRippleModule,
-        MatSelectModule,
+        // MatSelectModule,
         MatSidenavModule,
         MatSliderModule,
-        MatSlideToggleModule,
-        MatSnackBarModule,
-        MatSortModule,
-        MatTableModule,
-        MatTabsModule,
+        // MatSlideToggleModule,
+        // MatSnackBarModule,
+        // MatSortModule,
+        // MatTableModule,
+        // MatTabsModule,
         MatToolbarModule,
-        MatTooltipModule,
-        MatTreeModule,
+        // MatTooltipModule,
+        // MatTreeModule,
     ],
 
     entryComponents: [
