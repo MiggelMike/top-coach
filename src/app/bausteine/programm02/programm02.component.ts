@@ -1,3 +1,4 @@
+import { ISession } from 'src/Business/Session/Session';
 import { ISessionDB } from './../../../Business/SessionDB';
 import { SessionStatus } from '../../../Business/SessionDB';
 import { UebungWaehlenData } from './../../uebung-waehlen/uebung-waehlen.component';
@@ -23,7 +24,7 @@ import { Router, NavigationExtras } from '@angular/router';
 export class Programm02Component implements OnInit {
     @Input() programm: ITrainingsProgramm = null;
     @Output() ProgrammSavedEvent = new EventEmitter<ITrainingsProgramm>();
-    @Input() SessionListe: Array<Session> = [];
+    @Input() SessionListe: Array<ISession> = [];
     @Input() showButtons: Boolean = false;
     @Input() showSaveButtons: Boolean = false;
     @Input() bearbeitbar: Boolean = false;
@@ -37,7 +38,7 @@ export class Programm02Component implements OnInit {
     private isExpanded: Boolean = true;
     public ToggleButtonText: string;
 
-    public StartButtonText(aSess: Session): string {
+    public StartButtonText(aSess: ISession): string {
         if (aSess.Kategorie02 === undefined)
             aSess.Kategorie02 = SessionStatus.Wartet; 
         
@@ -61,11 +62,11 @@ export class Programm02Component implements OnInit {
 
     ngOnInit() {}
 
-     public CopySession(aSession: Session) {
+     public CopySession(aSession: ISession) {
     //     this.fGlobalService.SessionKopie = aSession.Copy();
      }
 
-    public DeleteSession(aSession: Session, aRowNum: number) {
+    public DeleteSession(aSession: ISession, aRowNum: number) {
         const mDialogData = new DialogData();
         mDialogData.textZeilen.push(
             `Delete session #${aRowNum + 1} "${aSession.Name}" ?`
@@ -99,18 +100,18 @@ export class Programm02Component implements OnInit {
         aUebungWaehlenData.fMatDialog.close();
     }
 
-    public AddExercise(aSession: Session) {
+    public AddExercise(aSession: ISession) {
         if (this.DbModule.UebungsListe.length === 0)
             this.DbModule.LadeStandardUebungen();
         else
             this.fUebungService.UebungWaehlen(
                 this.DbModule.UebungsListe,
-                aSession,
+                aSession as Session,
                 this.SelectUebungDelegate
             );
     }
 
-    public PasteExcercise(aSession: Session) {
+    public PasteExcercise(aSession: ISession) {
         if (this.fGlobalService.SessUebungKopie === null) {
             const mDialoData = new DialogData();
             mDialoData.textZeilen.push("No data to paste!");
@@ -184,7 +185,7 @@ export class Programm02Component implements OnInit {
         this.SessionListe.push(mSession as Session);
     }
 
-    public startSession(aEvent: Event, aSession: Session) {
+    public startSession(aEvent: Event, aSession: ISession) {
         aEvent.stopPropagation();
 
         if ((aSession.Kategorie02 === SessionStatus.Fertig)||(aSession.Kategorie02 === SessionStatus.FertigTimeOut) ) return;

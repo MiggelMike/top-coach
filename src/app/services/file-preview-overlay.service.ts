@@ -70,6 +70,7 @@ export class FilePreviewOverlayService {
             return containerRef.instance;
         } catch (error) {
             alert(error);
+            return null;
         } 
     }
     

@@ -69,6 +69,7 @@ export interface ISatz {
     BodyWeight: number;
     Copy(): Satz;
     hasChanged(aCmpSatz: ISatz): Boolean;
+    getBodyWeightText(aPrefix?: string): string;
 }
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!

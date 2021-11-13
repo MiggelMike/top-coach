@@ -1,4 +1,3 @@
-import { isDefined } from '@angular/compiler/src/util';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
 
@@ -18,8 +17,8 @@ export enum EquipmentTyp {
 export interface IEquipment {
     ID: number;
     Name: string;
-    DisplayName: string;
-    Durchmesser: number;
+    DisplayName: string | undefined;
+    Durchmesser: number | undefined;
     EquipmentTyp: EquipmentTyp; 
     EquipmentOrigin: EquipmentOrigin;
     Bemerkung: string;
@@ -28,8 +27,8 @@ export interface IEquipment {
 export class Equipment implements  IEquipment {
     ID: number;
     Name: string = '';
-    DisplayName: string;
-    Durchmesser: number = 0; 
+    DisplayName: string | undefined = '';
+    Durchmesser: number | undefined = 0; 
     EquipmentOrigin: EquipmentOrigin = EquipmentOrigin.Unbestimmt;
     EquipmentTyp: EquipmentTyp = EquipmentTyp.Unbestimmt; 
     Bemerkung: string = '';
@@ -47,9 +46,9 @@ export class Equipment implements  IEquipment {
         mEquipment.EquipmentOrigin = aOrigin;
         mEquipment.Name = aName;
 
-        isDefined(aDurchmesser) ? mEquipment.DisplayName = aDisplayName : mEquipment.DisplayName = aName;
+        (aDisplayName !== undefined) ? mEquipment.DisplayName = aDisplayName : mEquipment.DisplayName = aName;
         
-        if (isDefined(aDurchmesser))
+        if (aDurchmesser !== undefined)
             mEquipment.Durchmesser = aDurchmesser;
         
         return mEquipment;

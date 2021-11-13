@@ -1,4 +1,3 @@
-import { NavbarService } from './services/navbar.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { Component, OnInit } from '@angular/core';
 import { FilePreviewOverlayService } from './services/file-preview-overlay.service';
@@ -27,12 +26,13 @@ export class AppComponent implements OnInit {
     constructor(
         private router: Router,
         private previewDialog: FilePreviewOverlayService,
-        private svc: GlobalService,
+        // private svc: GlobalService,
         private fb: FormBuilder,
-        private aTrainingServiceModule: TrainingServiceModule) {
+        // private aTrainingServiceModule: TrainingServiceModule
+    ) {
         const y = 0;
-    aTrainingServiceModule.setX(123);
-    console.log('>>> app component x has been set to ', aTrainingServiceModule.getX());
+    // aTrainingServiceModule.setX(123);
+    // console.log('>>> app component x has been set to ', aTrainingServiceModule.getX());
   }
 
   public clickEventHandler() {

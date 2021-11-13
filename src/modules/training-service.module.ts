@@ -12,7 +12,7 @@ import { Injectable } from "@angular/core";
 
 @Injectable({ providedIn: "root" })
 @NgModule({
-    imports: [CommonModule, TrainingsProgrammSvc],
+    imports: [CommonModule ],
     // declarations: [TrainingsProgrammSvc],
     exports: [TrainingsProgrammSvc],
 })
@@ -20,7 +20,7 @@ export class TrainingServiceModule {
     public x: number = 0;
 
     constructor(
-        public trainingsProgrammSvc: TrainingsProgrammSvc,
+        // public trainingsProgrammSvc: TrainingsProgrammSvc,
         @Optional() @SkipSelf() parentModule?: TrainingServiceModule
     ) {
         if (parentModule) {
@@ -41,7 +41,7 @@ export class TrainingServiceModule {
     static forRoot(): ModuleWithProviders<TrainingServiceModule> {
         return {
             ngModule: TrainingServiceModule,
-            providers: [TrainingsProgrammSvc],
+            // providers: [TrainingsProgrammSvc],
         };
     }
 }

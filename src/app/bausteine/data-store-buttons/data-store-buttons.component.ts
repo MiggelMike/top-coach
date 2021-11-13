@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 export interface IButtonClick{
-    (para?:any): Boolean;
+    (para1?: any, para2?:any): Boolean | void;
 }
 
 @Component({

@@ -1,4 +1,3 @@
-import { isDefined } from '@angular/compiler/src/util';
 import { Hantel, HantelTyp, HantelErstellStatus } from './../../Business/Hantel/Hantel';
 import { Equipment, EquipmentOrigin, EquipmentTyp } from './../../Business/Equipment/Equipment';
 import { SessionDB, SessionStatus } from './../../Business/SessionDB';
@@ -9,7 +8,7 @@ import { ISatz, Satz } from './../../Business/Satz/Satz';
 import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
 import { AppData, IAppData } from './../../Business/Coach/Coach';
 import { Dexie, PromiseExtended } from 'dexie';
-import { Injectable, NgModule, Pipe, Optional, SkipSelf } from '@angular/core';
+import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, UebungsName, UebungsKategorie02 } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02 } from '../../Business/MuscleGroup/MuscleGroup';
@@ -53,9 +52,10 @@ export class LadePara {
     OnSatzNoRecordFn?: NoRecordFn; 
 }    
 
-@Injectable({
-    providedIn: "root",
-})
+// @Injectable({
+//     providedIn: "root",
+// })
+    
 @NgModule({
     providers: [DexieSvcService],
 })
@@ -359,7 +359,7 @@ export class DexieSvcService extends Dexie {
             .then((mHantelListe) => {
                 this.LangHantelListe = mHantelListe;
 
-                if (isDefined(aAfterLoadFn))
+                if (aAfterLoadFn !== undefined)
                     aAfterLoadFn();
             });
     }
@@ -379,7 +379,7 @@ export class DexieSvcService extends Dexie {
 
                     for (let index = 0; index < mDurchmesser.length; index++) {
                         let mHantel = mHantelListe.find((h: Hantel) => (h.Typ === mTyp && (h.Durchmesser === mDurchmesser[index])));
-                        if (isDefined(mHantel) === false) {
+                        if (mHantel === undefined) {
                             const mNeueHantel = Hantel.StaticNeueHantel(
                                 mTyp + ' - ' + mDurchmesser[index],
                                 HantelTyp[mTyp],
@@ -533,6 +533,7 @@ export class DexieSvcService extends Dexie {
         const mVorlageProgramm = this.VorlageProgramme.find((p) => {
             if (p.ProgrammTyp === aProgramm.ProgrammTyp)
                 return p;
+            return null;
         });
          
                 
@@ -918,7 +919,7 @@ export class DexieSvcService extends Dexie {
 
     public UebungSpeichern(aUebung: Uebung) {
         return this.transaction("rw", this.UebungTable, this.SatzTable, () => {
-            this.UebungTable.put(aUebung).then((mUebungID) => {
+            this.UebungTable.put(aUebung).then((mUebungID:number) => {
                 // Uebung ist gespeichert.
                 // UebungsID in Saetze eintragen.
                 aUebung.SatzListe.forEach((mSatz) => {
@@ -940,7 +941,7 @@ export class DexieSvcService extends Dexie {
                 this.SessionTable.put(aSession).then(
                     // Session ist gespeichert
                     // SessionID in Uebungen eintragen
-                    (mSessionID) => {
+                    (mSessionID:number) => {
                         aSession.UebungsListe.forEach((mUebung) => {
                             mUebung.SessionID = mSessionID;
                             this.UebungSpeichern(mUebung);
@@ -993,7 +994,7 @@ export class DexieSvcService extends Dexie {
             mTrainingsProgramm = GzclpProgramm.ErzeugeGzclpVorlage(this);
         }
 
-        if (!mTrainingsProgramm) return;
+        if (!mTrainingsProgramm) return mTrainingsProgramm;
 
         this.ProgrammSpeichern(mTrainingsProgramm);
         return mTrainingsProgramm;

@@ -20,7 +20,7 @@ export interface ISession extends ISessionDB {
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
 export class Session extends SessionDB implements ISession {
 
-    public get BodyWeight(): number {
+    public override get BodyWeight(): number {
         // if (this.BodyWeightAtSessionStart === 0) {
         //     this.BodyWeightAtSessionStart = new DexieSvcService(null).getBodyWeight();
         // }
@@ -83,7 +83,7 @@ export class Session extends SessionDB implements ISession {
         this.PausenListe.push(new Pause(mJetzt, mJetzt));
     }
 
-    public get LiftedWeight():number {
+    public override get LiftedWeight():number {
         let mResult: number = 0;
         // this.UebungsListe.forEach(u => mResult + u.LiftedWeight);
 

@@ -17,7 +17,7 @@ import { deserialize } from "@peerlancers/json-serialization";
 
 
 export class GzclpProgramm extends TrainingsProgramm {
-    constructor(aProgrammKategorie: ProgrammKategorie, public pDbModule: DexieSvcService)
+    constructor(aProgrammKategorie: ProgrammKategorie, public override pDbModule: DexieSvcService)
     {
         super(ProgrammTyp.Gzclp, aProgrammKategorie, pDbModule);
         this.Tage = 4;
@@ -27,7 +27,7 @@ export class GzclpProgramm extends TrainingsProgramm {
         return new GzclpProgramm(this.ProgrammKategorie, this.pDbModule);
     }
 
-    public DeserializeProgramm(aJsonData: Object): ITrainingsProgramm {
+    public override DeserializeProgramm(aJsonData: Object): ITrainingsProgramm {
         const s = deserialize(GzclpProgramm, aJsonData);
         return s;
     }
@@ -84,7 +84,7 @@ export class GzclpProgramm extends TrainingsProgramm {
         // }
     }
 
-    protected InitTag(aSessionNr: number): Array<ISession> {
+    protected override InitTag(aSessionNr: number): Array<ISession> {
         const mSessions = new Array<ISession>();
         const mNeueSession = new Session();
         mNeueSession.Name = `Day #${aSessionNr}  --- `;

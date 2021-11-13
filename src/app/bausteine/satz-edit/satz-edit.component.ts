@@ -2,7 +2,7 @@ import { ISession } from 'src/Business/Session/Session';
 import { Uebung } from './../../../Business/Uebung/Uebung';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit, Input } from "@angular/core";
-import { Satz, SatzStatus } from "./../../../Business/Satz/Satz";
+import { Satz, ISatz, SatzStatus } from "./../../../Business/Satz/Satz";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
@@ -14,10 +14,10 @@ import { floatMask, repMask } from './../../app.module';
     styleUrls: ["./satz-edit.component.scss"],
 })
 export class SatzEditComponent implements OnInit {
-    @Input() programm: ITrainingsProgramm;
+    @Input() programm: ITrainingsProgramm = null;
     @Input() sess: ISession;
     @Input() sessUebung: Uebung;
-    @Input() satz: Satz;
+    @Input() satz: ISatz;
     @Input() rowNum: number;
     @Input() satzTyp: string;
     public floatMask = floatMask;
@@ -36,7 +36,7 @@ export class SatzEditComponent implements OnInit {
         const mDialogData = new DialogData();
         mDialogData.textZeilen.push(`Delete set #${this.rowNum + 1} ?`);
         mDialogData.OkFn = ():void => {
-            const index: number = this.sessUebung.SatzListe.indexOf(this.satz);
+            const index: number = this.sessUebung.SatzListe.indexOf(this.satz as Satz);
             if (index !== -1) {
                 this.sessUebung.SatzListe.splice(index, 1);
             }
@@ -53,23 +53,23 @@ export class SatzEditComponent implements OnInit {
         this.satz.Status = value ? SatzStatus.Fertig : SatzStatus.Wartet;
     } 
 
-    public SetWeightVorgabe(value: number) {
-        this.satz.GewichtVorgabe = value;
+    public SetWeightVorgabe(aEvent: any) {
+        this.satz.GewichtVorgabe = aEvent.target.value;
     }
 
-    public SetWdhVorgabe(value: number) {
-        this.satz.WdhVorgabe = value;
+    public SetWdhVorgabe(aEvent: any) {
+        this.satz.WdhVorgabe = aEvent.target.value;
     }    
 
-    public SetWeightAusgefuehrt(value: number) {
-        this.satz.GewichtAusgefuehrt = value;
+    public SetWeightAusgefuehrt(aEvent: any) {
+        this.satz.GewichtAusgefuehrt = aEvent.target.value;
     }
 
-    public SetWdhAusgefuehrt(value: number) {
-        this.satz.WdhAusgefuehrt = value;
+    public SetWdhAusgefuehrt(aEvent: any) {
+        this.satz.WdhAusgefuehrt = aEvent.target.value;
     }    
 
-    public CopySet(aSatz : any) {
+    public CopySet() {
         this.fGlobalService.SatzKopie = this.satz.Copy();
     }
 

@@ -19,17 +19,17 @@ export class Sportler implements ISportler {
 
     constructor() {
         this.ID = 0;
-        this.Geburtstag = null;
+        this.Geburtstag = null as any;
         this.Koerpergewicht = [];
         this.Reset();
     }
 
     public GetAnstehendeSessions(aMaxAnz: number | void): Array<ISession> {
-        return null;
+        return [];
     }
 
     public GetAktuellesKoerpergewicht(): IKoerpergewicht {
-        return null;
+        return null as any;
     }
 
     public Reset(): void {

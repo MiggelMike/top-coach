@@ -61,9 +61,10 @@
                 <!-- Ausgefuehrtes-Gewicht -->
                     <mat-form-field class="align-right" fxFlex="45px">
                         <mat-label>{{satz.GewichtVorgabe | number: '1.2'}}</mat-label>
-                        <input matInput [textMask]="{mask: floatMask, guide: false }"
-                        [ngModel]="satz.GewichtAusgefuehrt | number: '1.2'" (blur)="SetWeightAusgefuehrt($event.target.value)"
-                        type="text">
+                        <input  matInput [textMask]="{mask: floatMask, guide: false }"
+                                [ngModel]="(satz.GewichtAusgefuehrt | number: '1.2')" 
+                                (focusout)="SetWeightAusgefuehrt($event)"
+                                type="text">
                     </mat-form-field>
 
                     <ng-container *ngIf="  (satzTyp === 'Warm up sets' && sessUebung.checkWarmUpSatzIncludedBodyWeight())
@@ -79,7 +80,9 @@
                 <!-- Ausgefuerte Wdh. -->
                 <mat-form-field class="align-right" fxFlex="30px">
                     <mat-label>{{satz.WdhVorgabe | number: '1.0'}}</mat-label>
-                    <input matInput [textMask]="{mask: repMask, guide: false}" [ngModel]="satz.WdhAusgefuehrt" (blur)="SetWdhAusgefuehrt($event.target.value)" type="text">
+                    <input matInput [textMask]="{mask: repMask, guide: false}" 
+                           [ngModel]="satz.WdhAusgefuehrt" 
+                            (focusout)="SetWdhAusgefuehrt($event)" type="text">
                 </mat-form-field>
                 <!-- AMRAP  -->
                 <div class="center-item" layout-align="center center" fxFlex="30px">
@@ -99,14 +102,20 @@
             <ng-template #SessionLaueftNicht>
                 <!-- Geplantes Vorgabe-Gewicht -->
                 <mat-form-field class="align-right" fxFlex="45px">
-                    <input matInput [textMask]="{mask: floatMask, guide: false }"
-                    [ngModel]="satz.GewichtVorgabe | number: '1.2'" (blur)="SetWeightVorgabe($event.target.value)"
-                    type="text">
+                    <input  matInput [textMask]="{mask: floatMask, guide: false }"
+                            (focusout)="SetWeightVorgabe($event)"
+                            [ngModel]="satz.GewichtVorgabe | number: '1.2'" 
+                            type="text"
+                    >
                 </mat-form-field>
 
                 <!-- Geplante Vorgabe-Wdh. -->
                 <mat-form-field class="align-right" fxFlex="30px">
-                    <input matInput [textMask]="{mask: repMask, guide: false}" [ngModel]="satz.WdhVorgabe" (blur)="SetWdhVorgabe($event.target.value)" type="text">
+                    <input  matInput [textMask]="{mask: repMask, guide: false}" 
+                            [ngModel]="satz.WdhVorgabe" 
+                            (focusout)="SetWdhVorgabe($event)" 
+                            type="text"
+                    >
                 </mat-form-field>
 
                 <!-- AMRAP  -->
@@ -120,7 +129,7 @@
         </div>
 
         <div class="center-item" layout-align="center center">
-            <a [ngClass]="['link-button-font']" mat-flat-button (click)="CopySet(this)">Copy</a>
+            <a [ngClass]="['link-button-font']" mat-flat-button (click)="CopySet()">Copy</a>
         </div>
     </div>
 </div>

@@ -24,7 +24,7 @@
                                     </div>
                                 
                                     <div layout-align="start" layout-margin>
-                                        <mat-checkbox [(ngModel)]="SessUeb.CoolDownVisible" (click)="$event.stopPropagation()">Show Cooldown
+                                        <mat-checkbox [(ngModel)]="SessUeb.CooldownVisible" (click)="$event.stopPropagation()">Show Cooldown
                                         </mat-checkbox>
                                     </div>
 
@@ -58,7 +58,7 @@
                             </app-sess-uebung>
                         </ng-container>
                 
-                        <ng-container *ngIf="SessUeb.AbwaermSatzListe  && SessUeb.CoolDownVisible">
+                        <ng-container *ngIf="SessUeb.AbwaermSatzListe  && SessUeb.CooldownVisible">
                             <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Cool down sets'" 
                                 [satzListe]="SessUeb.AbwaermSatzListe" [session]="session" [sessUebung]="SessUeb" [bearbeitbar] = "bearbeitbar">
                             </app-sess-uebung>

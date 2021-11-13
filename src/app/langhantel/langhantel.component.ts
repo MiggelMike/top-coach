@@ -1,4 +1,3 @@
-import { isDefined } from '@angular/compiler/src/util';
 import { Component, OnInit } from '@angular/core';
 import { Hantel, HantelErstellStatus } from 'src/Business/Hantel/Hantel';
 import { DexieSvcService } from '../services/dexie-svc.service';
@@ -6,6 +5,7 @@ import { DialogeService } from '../services/dialoge.service';
 import { floatMask, repMask, Int2DigitMask } from './../app.module';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { Location } from '@angular/common';
+
 
 @Component({
     selector: "app-langhantel",
@@ -49,11 +49,11 @@ export class LanghantelComponent implements OnInit {
 
         for (let index = 0; index < this.HantelListe.length; index++) {
             const mHantel = this.HantelListe[index];
-            if (isDefined(mHantel.ID) === false)
+            if (mHantel.ID === undefined)
                 return true;
 
             const mCmpHantel = this.CmpHantelListe.find((h) => h.ID === mHantel.ID);
-            if (isDefined(mHantel.ID) === false)
+            if (mHantel.ID === undefined)
                 return true;
 
             if (mHantel.isEqual(mCmpHantel) === false)

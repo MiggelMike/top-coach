@@ -11,6 +11,7 @@ export enum DialogTyp {
 @Injectable({
     providedIn: 'root'
 })
+    
 export class DialogeService {
 
     constructor(public fDialog: MatDialog) {

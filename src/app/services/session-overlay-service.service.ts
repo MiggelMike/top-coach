@@ -39,9 +39,9 @@ const DEFAULT_CONFIG: SessionOverlayConfig = {
 }
 
 
-@Injectable({
-  providedIn: 'root'
-})
+// @Injectable({
+//   providedIn: 'root'
+// })
 export class SessionOverlayServiceService {
     public SessOverlayRef: OverlayRef = null;
     public SessionStatsOverlayComponent: SessionStatsOverlayComponent;
@@ -69,6 +69,7 @@ export class SessionOverlayServiceService {
             return containerRef.instance;
         } catch (error) {
             alert(error);
+            return null;
         } 
     }
 
