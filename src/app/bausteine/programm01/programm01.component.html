@@ -10,9 +10,11 @@
                     <ng-container *ngIf="programmLadeContext; then AuswahlBlock"></ng-container>
 
                     <ng-template #AuswahlBlock>
-                        <a class="btn btn-link" mat-button (click)="SelectThisWorkoutClick(programm,$event)"><span class="tc-font-size-small">Select</span></a>
-                        <!-- { path: 'programmedit', component: WorkoutFormComponent }, -->
-                        <a  class="nav-link" [routerLink]="['/workoutform']" (click)="EditThisWorkoutClick($event)"><span class="tc-font-size-small">Edit</span></a>
+                        <div class="ml-5">
+                            <a class="btn btn-link" mat-button (click)="SelectThisWorkoutClick(programm,$event)"><span class="tc-font-size-small">Select</span></a>
+                            <!-- { path: 'programmedit', component: WorkoutFormComponent }, -->
+                            <a  class="btn btn-link" mat-button [routerLink]="['/workoutform']" (click)="EditThisWorkoutClick($event)"><span class="tc-font-size-small">Edit</span></a>
+                        </div>
                      </ng-template>
 
                 </div>

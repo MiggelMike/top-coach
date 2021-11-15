@@ -18,6 +18,7 @@ export class LanghantelComponent implements OnInit {
     public Int2DigitMask = Int2DigitMask;
     HantelListe: Array<Hantel> = [];
     CmpHantelListe: Array<Hantel> = [];
+    public ClickData: LanghantelComponent;
 
     constructor(
         private fDexieSvcService: DexieSvcService,
@@ -41,6 +42,11 @@ export class LanghantelComponent implements OnInit {
 
     get LanghantelListSortedByName(): Array<Hantel> {
         return this.fDexieSvcService.LanghantelListeSortedByName(true);
+    }
+
+    NeueHantel() {
+        const mHantel: Hantel = new Hantel();
+        this.HantelListe.push(new Hantel());
     }
 
     private ChangesExist(): Boolean {
@@ -76,18 +82,18 @@ export class LanghantelComponent implements OnInit {
     }
 
     SaveChanges() {
-        // const mTmpEditHantelComponent: LanghantelComponent = this.ClickData as LanghantelComponent;;
-        // mTmpEditHantelComponent.fDexieSvcService
-        //     .InsertHanteln(mTmpEditHantelComponent.HantelListe)
-        //     .then((mDummy) => (mTmpEditHantelComponent.fDexieSvcService.LadeLanghanteln(() => mTmpEditHantelComponent.CopyHantelList())));
+        const mTmpEditHantelComponent: LanghantelComponent = this.ClickData as LanghantelComponent;;
+        mTmpEditHantelComponent.fDexieSvcService
+            .InsertHanteln(mTmpEditHantelComponent.HantelListe)
+            .then((mDummy) => (mTmpEditHantelComponent.fDexieSvcService.LadeLanghanteln(() => mTmpEditHantelComponent.CopyHantelList())));
     }
 
     CancelChanges() {
-        // const mTmpEditHantelComponent: LanghantelComponent = this.ClickData as LanghantelComponent;
-        // const mDialogData = new DialogData();
-        // mDialogData.textZeilen.push("Cancel unsaved changes?");
-        // mDialogData.OkFn = (): void => (mTmpEditHantelComponent.CopyHantelList());
-        // mTmpEditHantelComponent.fDialogService.JaNein(mDialogData);
+        const mTmpEditHantelComponent: LanghantelComponent = this.ClickData as LanghantelComponent;
+        const mDialogData = new DialogData();
+        mDialogData.textZeilen.push("Cancel unsaved changes?");
+        mDialogData.OkFn = (): void => (mTmpEditHantelComponent.CopyHantelList());
+        mTmpEditHantelComponent.fDialogService.JaNein(mDialogData);
     }
 
     private DeletePrim(aHantel: Hantel) {
