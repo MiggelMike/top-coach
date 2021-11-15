@@ -15,7 +15,8 @@
                         </div>
                         
                         <ng-container *ngIf="bearbeitbar" >
-                            <a  [ngClass]="['link-button-font']" mat-flat-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">Settings</a>
+                            <a  [ngClass]="['link-button-font','HG-Transparent']" mat-flat-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">Settings</a>
+
                             <mat-menu #menu="matMenu" class="center-item" layout-align="end center">
                                 <div [ngClass]="['mg-5']" layout-align="start" fxFlex="1 0 auto">
                                     <div layout-align="start" layout-margin>
