@@ -26,6 +26,7 @@
     "@peerlancers/json-serialization": "^0.0.15",
     "add": "^2.0.6",
     "angular2-text-mask": "^9.0.0",
+    "bootstrap": "^5.1.3",
     "dexie": "^3.0.3",
     "lodash": "^4.17.21",
     "lodash.clonedeep": "^4.5.0",
