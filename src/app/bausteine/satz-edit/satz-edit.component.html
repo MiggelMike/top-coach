@@ -71,7 +71,7 @@
                                          ||(satzTyp === 'Work sets' && sessUebung.checkArbeitsSatzIncludedBodyWeight())
                                          ||(satzTyp === 'Cool down sets' && sessUebung.checkCoolDownSatzIncludedBodyWeight())
                                           ">
-                        <mat-form-field class="align-right" fxFlex="55px">
+                        <mat-form-field  class="align-right"fxFlex="55px">
                             <input matInput  [disabled]="true" [textMask]="{mask: floatMask, guide: false }"
                             [value]="satz.getBodyWeightText('+ ')"
                             type="text">
