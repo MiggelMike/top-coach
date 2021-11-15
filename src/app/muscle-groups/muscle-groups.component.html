@@ -3,12 +3,19 @@
     <h4>Muscles</h4>
 </div>
 <ng-container *ngIf="MuskelGruppenListe">
-    <div class="center-item">
-        <ng-container *ngFor="let mg of MuskelGruppenListe">
-            <p><a mat-button (click)="EditMuskelGruppe(mg)" >{{mg.Name}}</a></p>
-        </ng-container>
-    </div>
-    <div class="center-item" layout-align="center center">
-        <a class='link-button-font' mat-flat-button (click)="NeueMuskelGruppe()" >New Musclegroup</a>
+        <div class="center-item">
+            <ng-container *ngFor="let mg of MuskelGruppenListe">
+                <div fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="2px" fxFlex="100%">
+                    <div fxLayout="column" fxFlex="75%">
+                        <a mat-button (click)="EditMuskelGruppe(mg)">{{mg.Name}}</a>
+                    </div>
+                    <div fxLayout="column" fxFlex="20%" fxLayoutAlign="center center">
+                        <a mat-button (click)="DeleteMuskel(mg)">Delete</a>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+<div class="center-item" layout-align="center center">
+        <a class='link-button-font' mat-flat-button (click)="NeueMuskelGruppe()" >New Muscle</a>
     </div>
 </ng-container>

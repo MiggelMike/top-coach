@@ -30,6 +30,10 @@ export class MuscleGroupsComponent implements OnInit {
         this.NeueMuskelgruppe = new MuscleGroup();
         this.NeueMuskelgruppe.MuscleGroupKategorie01 = MuscleGroupKategorie01.Anwender;
         this.router.navigate(["/edit-muscle-group"], { state: { mg: this.NeueMuskelgruppe } });
-    }    
+    }
+    
+    public DeleteMuskel(aMuskelGruppe: MuscleGroup){
+
+    }
 
 }
