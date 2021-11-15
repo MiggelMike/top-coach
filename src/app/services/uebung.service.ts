@@ -6,9 +6,9 @@ import { JsonProperty } from '@peerlancers/json-serialization';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
 
-// @Injectable({
-//     providedIn: "root",
-// })
+@Injectable({
+    providedIn: "root",
+})
     
 export class UebungService {
     public readonly cStammUebungen: string = "StammUebungen";

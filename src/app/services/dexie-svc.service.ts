@@ -8,7 +8,7 @@ import { ISatz, Satz } from './../../Business/Satz/Satz';
 import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
 import { AppData, IAppData } from './../../Business/Coach/Coach';
 import { Dexie, PromiseExtended } from 'dexie';
-import { NgModule, Optional, SkipSelf } from '@angular/core';
+import { Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, UebungsName, UebungsKategorie02 } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02 } from '../../Business/MuscleGroup/MuscleGroup';
@@ -52,9 +52,9 @@ export class LadePara {
     OnSatzNoRecordFn?: NoRecordFn; 
 }    
 
-// @Injectable({
-//     providedIn: "root",
-// })
+@Injectable({
+    providedIn: "root",
+})
     
 @NgModule({
     providers: [DexieSvcService],

@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
     constructor(
         private router: Router,
         private previewDialog: FilePreviewOverlayService,
-        // private svc: GlobalService,
+        private svc: GlobalService,
         private fb: FormBuilder,
         // private aTrainingServiceModule: TrainingServiceModule
     ) {

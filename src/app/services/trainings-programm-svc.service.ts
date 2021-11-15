@@ -2,9 +2,9 @@ import { DexieSvcService } from './dexie-svc.service';
 import { Injectable, NgModule, Pipe,  Optional, SkipSelf, ModuleWithProviders } from '@angular/core';
 import { ProgrammTyp, ProgrammKategorie, ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 
-// @Injectable({
-//     providedIn: 'root'
-// })
+@Injectable({
+    providedIn: 'root'
+})
 
 @NgModule({})
 export class TrainingsProgrammSvc {

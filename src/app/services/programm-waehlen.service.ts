@@ -3,9 +3,9 @@ import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProg
 import { Injectable } from '@angular/core';
 import { Observable, of, from } from 'rxjs';
 
-// @Injectable({
-//     providedIn: "root",
-// })
+@Injectable({
+    providedIn: "root",
+})
 export class ProgrammWaehlenService {
     public ProgrammWahlObserver;
 

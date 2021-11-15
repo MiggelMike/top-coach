@@ -15,6 +15,7 @@ import { of } from 'rxjs';
 import { Uebung, IUebung } from 'src/Business/Uebung/Uebung';
 import { UebungService } from 'src/app/services/uebung.service';
 import { Router, NavigationExtras } from '@angular/router';
+import { threadId } from 'worker_threads';
 
 @Component({
     selector: "app-programm02",
@@ -28,8 +29,8 @@ export class Programm02Component implements OnInit {
     @Input() showButtons: Boolean = false;
     @Input() showSaveButtons: Boolean = false;
     @Input() bearbeitbar: Boolean = false;
-    @Input() StartButtonVisible: Boolean = false;
-    @Input() SessionPanelsExpanded: Boolean = false;
+    @Input() StartButtonVisible: boolean = false;
+    @Input() SessionPanelsExpanded: boolean = false;
     @Input() showWarmUpCheckBox: Boolean = true;
     @Input() showCoolDownCheckBox: Boolean = true;    
     @ViewChildren("accSession") accSession: QueryList<MatAccordion>;
@@ -37,6 +38,12 @@ export class Programm02Component implements OnInit {
 
     private isExpanded: Boolean = true;
     public ToggleButtonText: string;
+
+    public SessionPanelsExpanded1():Boolean {
+        if (this.SessionPanelsExpanded === true)
+            return true;
+        return false;
+    }
 
     public StartButtonText(aSess: ISession): string {
         if (aSess.Kategorie02 === undefined)
@@ -58,7 +65,14 @@ export class Programm02Component implements OnInit {
         private fUebungService: UebungService,
         public DbModule: DexieSvcService,
         private router: Router
-    ) {}
+    ) {
+    }
+
+    ngAfterViewInit() {
+        this.panUebung.forEach( pan  => {
+            pan.expanded = this.SessionPanelsExpanded;
+        });
+    }
 
     ngOnInit() {}
 

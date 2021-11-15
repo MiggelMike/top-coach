@@ -12,10 +12,8 @@ import { Sportler, ISportler } from '../../Business/Sportler/Sportler';
 // import { GzclpProgramm  } from '../../Business/TrainingsProgramm/Gzclp';
 import { ISession } from '../../Business/Session/Session';
 import { Uebung } from '../../Business/Uebung/Uebung';
-import { Observable, Subscriber } from 'rxjs';
+import { Subscriber } from 'rxjs';
 import { OverlayRef } from '@angular/cdk/overlay';
-import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
-import { DialogeService } from './dialoge.service';
 
 
 export enum SpeicherOrtTyp {
