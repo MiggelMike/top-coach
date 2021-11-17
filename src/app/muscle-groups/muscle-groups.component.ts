@@ -22,8 +22,8 @@ export class MuscleGroupsComponent implements OnInit {
                 public fDialogService: DialogeService,
                 private router: Router) { }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+    }
     
     public get MuskelGruppenListe() {
         return this.fDexieSvcService.MuskelgruppeListeSortedByName;
