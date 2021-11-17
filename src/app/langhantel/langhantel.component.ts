@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Hantel, HantelErstellStatus } from 'src/Business/Hantel/Hantel';
-import { DexieSvcService } from '../services/dexie-svc.service';
+import { Hantel  } from 'src/Business/Hantel/Hantel';
+import { DexieSvcService, ErstellStatus } from '../services/dexie-svc.service';
 import { DialogeService } from '../services/dialoge.service';
 import { floatMask, repMask, Int2DigitMask } from './../app.module';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
@@ -97,10 +97,10 @@ export class LanghantelComponent implements OnInit {
     }
 
     private DeletePrim(aHantel: Hantel) {
-        if (aHantel.HantelStatus === HantelErstellStatus.AutomatischErstellt) {
-            // Automaisch erstellte nicht löschen, sonder auf "Geloescht" setzen,
+        if (aHantel.HantelStatus === ErstellStatus.AutomatischErstellt) {
+            // Automatisch erstellte nicht löschen, sonder auf "Geloescht" setzen,
             // sonst werden sie beim Programm-Start wieder erzeugt.
-            aHantel.HantelStatus = HantelErstellStatus.Geloescht;
+            aHantel.HantelStatus = ErstellStatus.Geloescht;
             this.fDexieSvcService.HantelSpeichern(aHantel)
                 .then(() => (this.fDexieSvcService.LadeLanghanteln(() => this.CopyHantelList())));
         } else {

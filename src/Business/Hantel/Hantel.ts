@@ -1,3 +1,5 @@
+import { ErstellStatus } from "src/app/services/dexie-svc.service";
+
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
 
@@ -9,18 +11,13 @@ export enum HantelTyp {
     Dumbbel = 'Dumbbel'
 }
 
-export enum HantelErstellStatus {
-    VomAnwenderErstellt,
-    AutomatischErstellt,
-    Geloescht
-}
 
 
 export class IHantel {
     Name: string;
     Typ: HantelTyp;
     Durchmesser: number;
-    HantelStatus: HantelErstellStatus; 
+    HantelStatus: ErstellStatus; 
 }
 
 export class Hantel implements IHantel {
@@ -28,13 +25,13 @@ export class Hantel implements IHantel {
     Name: string = "";
     Typ: HantelTyp = HantelTyp.Barbell;
     Durchmesser: number = 0;
-    HantelStatus: HantelErstellStatus = HantelErstellStatus.VomAnwenderErstellt; 
+    HantelStatus: ErstellStatus = ErstellStatus.VomAnwenderErstellt; 
 
     public static StaticNeueHantel(
         aName: string,
         aTyp: HantelTyp,
         aDurchmesser: number,
-        aHantelStatus: HantelErstellStatus
+        aHantelStatus: ErstellStatus
     ): Hantel {
         const mResult: Hantel = new Hantel();
         mResult.Name = aName;

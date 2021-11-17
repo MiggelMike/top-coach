@@ -1,3 +1,4 @@
+import { ErstellStatus } from 'src/app/services/dexie-svc.service';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
 
@@ -20,6 +21,7 @@ export interface IMuscleGroup {
     Name: string;
     Bemerkung: string;
     MuscleGroupKategorie01: MuscleGroupKategorie01;
+    Status: ErstellStatus;
 }
 
 export class MuscleGroup implements IMuscleGroup {
@@ -27,6 +29,7 @@ export class MuscleGroup implements IMuscleGroup {
     public Name: string = '';
     public Bemerkung: string = '';
     public MuscleGroupKategorie01: MuscleGroupKategorie01 = MuscleGroupKategorie01.Undefiniert;
+    public Status: ErstellStatus = ErstellStatus.VomAnwenderErstellt;
 
     constructor() { }
     

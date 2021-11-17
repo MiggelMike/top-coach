@@ -1,4 +1,4 @@
-import { Hantel, HantelTyp, HantelErstellStatus } from './../../Business/Hantel/Hantel';
+import { Hantel, HantelTyp } from './../../Business/Hantel/Hantel';
 import { Equipment, EquipmentOrigin, EquipmentTyp } from './../../Business/Equipment/Equipment';
 import { SessionDB, SessionStatus } from './../../Business/SessionDB';
 import { Session, ISession } from 'src/Business/Session/Session';
@@ -13,6 +13,11 @@ import { UebungsTyp, Uebung, UebungsName, UebungsKategorie02 } from "../../Busin
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02 } from '../../Business/MuscleGroup/MuscleGroup';
 
+export enum ErstellStatus {
+    VomAnwenderErstellt,
+    AutomatischErstellt,
+    Geloescht
+}
 
 export interface AktuellesProgramFn {
     (): void;
@@ -93,7 +98,7 @@ export class DexieSvcService extends Dexie {
         let mResult: Array<Hantel> = this.LangHantelListe.map(mHantel => mHantel);
 
         if (aIgnorGeloeschte) {
-            mResult = mResult.filter(h => h.HantelStatus !== HantelErstellStatus.Geloescht);
+            mResult = mResult.filter(h => h.HantelStatus !== ErstellStatus.Geloescht);
         }
         
 
@@ -310,14 +315,39 @@ export class DexieSvcService extends Dexie {
         return this.MuskelGruppeTable.bulkPut(aMuskelGruppenListe);
     }
 
-    public LadeMuskelGruppen() {
+    public LadeMuskelGruppen(aAfterLoadFn?: AfterLoadFn) {
         this.MuskelGruppenListe = [];
         this.table(this.cMuskelGruppe)
             .toArray()
             .then((mMuskelgruppenListe) => {
-                    this.MuskelGruppenListe = mMuskelgruppenListe;
+                this.MuskelGruppenListe = mMuskelgruppenListe;
+                
+                if (aAfterLoadFn !== undefined)
+                    aAfterLoadFn();
             });
     }
+
+    public MuskelListeSortedByName(aIgnorGeloeschte: Boolean = true): Array<MuscleGroup>{
+        let mResult: Array<MuscleGroup> = this.MuskelGruppenListe.map(mMuskel => mMuskel);
+
+        if (aIgnorGeloeschte) {
+            mResult = mResult.filter(h => h.Status !== ErstellStatus.Geloescht);
+        }
+        
+
+        mResult.sort((u1, u2) => {
+            if (u1.Name > u2.Name) {
+                return 1;
+            }
+        
+            if (u1.Name < u2.Name) {
+                return -1;
+            }
+        
+            return 0;
+        });
+        return mResult;
+    }    
 
 
     public PruefeStandardMuskelGruppen() {
@@ -384,7 +414,7 @@ export class DexieSvcService extends Dexie {
                                 mTyp + ' - ' + mDurchmesser[index],
                                 HantelTyp[mTyp],
                                 mDurchmesser[index],
-                                HantelErstellStatus.AutomatischErstellt
+                                ErstellStatus.AutomatischErstellt
                             );
                         
                             mAnlegen.push(mNeueHantel);
