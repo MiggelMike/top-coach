@@ -2,7 +2,7 @@
     <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
 
     <ng-container *ngFor="let SessUeb of session.UebungsListe, index as i; let isOdd=odd">
-        <ng-container [SessUeb]="SessUeb"></ng-container>
+        <!-- <ng-container [SessUeb]="SessUeb"></ng-container> -->
         <mat-accordion #accUebung='matAccordion' multi="true">
             <mat-expansion-panel #panUebung='matExpansionPanel' 
                 [expanded]="SessUeb.Expanded" 
@@ -43,7 +43,7 @@
                         </ng-container>
                     </div>
                 </mat-expansion-panel-header>
-                <ng-container [panUebung1]=panUebung></ng-container>
+                <!-- <ng-container [panUebung1]=panUebung></ng-container> -->
 
                 <div class="card-body">
                     <div fxLayout="column" fxLayoutGap="2px" fxFlex="100%">

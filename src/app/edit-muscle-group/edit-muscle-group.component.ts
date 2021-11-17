@@ -47,13 +47,26 @@ export class EditMuscleGroupComponent implements OnInit {
 
     SaveChanges() {
         const mTmpEditMuscleGroupComponent: EditMuscleGroupComponent = (this.ClickData as EditMuscleGroupComponent);
-        mTmpEditMuscleGroupComponent.fDexieSvcService.MuskelgruppeSpeichern(mTmpEditMuscleGroupComponent.Muskelgruppe)
-            .then((mID:number) => {
-                mTmpEditMuscleGroupComponent.Muskelgruppe.ID = mID;
-                mTmpEditMuscleGroupComponent.CmpMuskelgruppe = mTmpEditMuscleGroupComponent.Muskelgruppe.Copy();
-                mTmpEditMuscleGroupComponent.fDexieSvcService.LadeMuskelGruppen();
+        if (mTmpEditMuscleGroupComponent.Muskelgruppe.Name.trim() === '') {
+            const mDialogData = new DialogData();
+            mDialogData.textZeilen.push("Please enter a name!");
+            mTmpEditMuscleGroupComponent.fDialogService.Hinweis(mDialogData);
+        } else {
+            if (((mTmpEditMuscleGroupComponent.Muskelgruppe.ID === undefined)||(mTmpEditMuscleGroupComponent.Muskelgruppe.ID <= 0))
+                && mTmpEditMuscleGroupComponent.fDexieSvcService.FindMuskel(mTmpEditMuscleGroupComponent.Muskelgruppe)
+            ) {
+                const mDialogData = new DialogData();
+                mDialogData.textZeilen.push(`There is already a muscle with name "${mTmpEditMuscleGroupComponent.Muskelgruppe.Name}"!`);
+                mTmpEditMuscleGroupComponent.fDialogService.Hinweis(mDialogData);
+            } else {
+                mTmpEditMuscleGroupComponent.fDexieSvcService.MuskelgruppeSpeichern(mTmpEditMuscleGroupComponent.Muskelgruppe)
+                    .then((mID: number) => {
+                        mTmpEditMuscleGroupComponent.Muskelgruppe.ID = mID;
+                        mTmpEditMuscleGroupComponent.CmpMuskelgruppe = mTmpEditMuscleGroupComponent.Muskelgruppe.Copy();
+                        mTmpEditMuscleGroupComponent.fDexieSvcService.LadeMuskelGruppen();
+                    });
             }
-            );
+        }
         
     }
 

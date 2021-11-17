@@ -295,6 +295,18 @@ export class DexieSvcService extends Dexie {
         return MuscleGroup.StaticNeueMuskelGruppe(aName, aKategorie01);
     }
 
+    public FindMuskel(aMuskel: MuscleGroup): boolean{
+        return (this.MuskelExists(aMuskel) !== undefined)
+    }
+
+    public MuskelExists(aMuskel: MuscleGroup): MuscleGroup{
+        if (aMuskel.Name.trim() === '')
+            return undefined;
+        
+        return this.MuskelGruppenListe.find(mg => mg.Name.toUpperCase() === aMuskel.Name.toUpperCase());
+    }
+
+
     public MuskelgruppeSpeichern(aMuskelgruppe: MuscleGroup) {
         return this.MuskelGruppeTable.put(aMuskelgruppe);
     }
