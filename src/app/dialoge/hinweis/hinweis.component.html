@@ -13,11 +13,8 @@
             <h6>{{txt}}</h6>
         </div>
     </div>
-    <button mat-raised-button (click)="onOkClick()"><img src="../../../assets/icons/accept.png"
-            style="object-fit: cover; height: 25x; width: 25px;"></button>
-
-    <button *ngIf="data.typ === 'Frage'" mat-raised-button (click)="onCancelClick()"><img
-            src="../../../assets/icons/cancel.png"
-            style="object-fit: cover; height: 25x; width: 25px;"></button>
+    
+    <a class='link-button-font btn-link' mat-button (click)="onOkClick()">Yes</a>            
+    <a class='link-button-font btn-link' mat-button (click)="onCancelClick()">No</a>            
 </div>
 </div>
