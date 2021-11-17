@@ -1,5 +1,5 @@
 import { floatMask, repMask, Int2DigitMask } from './../app.module';
-import { Component, OnInit } from '@angular/core';
+import { ViewChild, Component, ElementRef, OnInit } from '@angular/core';
 import { DialogeService } from '../services/dialoge.service';
 import { DexieSvcService } from '../services/dexie-svc.service';
 import { Location } from '@angular/common'
@@ -20,6 +20,7 @@ export class EditLanghantelComponent implements OnInit {
     public repMask = repMask;    
     public Int2DigitMask = Int2DigitMask;
     public ClickData: EditLanghantelComponent;
+    @ViewChild('Name') NameField: ElementRef;
 
     constructor(
         public fDialogService: DialogeService,
@@ -34,7 +35,7 @@ export class EditLanghantelComponent implements OnInit {
     }
     
     ngAfterViewInit() {
-        
+        this.NameField.nativeElement.focus();   
     }
 
     ngOnChanges() {

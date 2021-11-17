@@ -82,10 +82,18 @@ export class LanghantelComponent implements OnInit {
     }
 
     SaveChanges() {
-        const mTmpEditHantelComponent: LanghantelComponent = this.ClickData as LanghantelComponent;;
-        mTmpEditHantelComponent.fDexieSvcService
-            .InsertHanteln(mTmpEditHantelComponent.HantelListe)
-            .then((mDummy) => (mTmpEditHantelComponent.fDexieSvcService.LadeLanghanteln(() => mTmpEditHantelComponent.CopyHantelList())));
+        const mTmpEditHantelComponent: LanghantelComponent = this.ClickData as LanghantelComponent;
+        const mOhneName: Array<Hantel> = mTmpEditHantelComponent.HantelListe.filter(h => h.Name.trim() === '');
+        
+        if (mOhneName.length > 0) {
+            const mDialogData = new DialogData();
+            mDialogData.textZeilen.push("A barbell must have a name!");
+            mTmpEditHantelComponent.fDialogService.Hinweis(mDialogData);
+        } else {
+            mTmpEditHantelComponent.fDexieSvcService
+                .InsertHanteln(mTmpEditHantelComponent.HantelListe)
+                .then((mDummy) => (mTmpEditHantelComponent.fDexieSvcService.LadeLanghanteln(() => mTmpEditHantelComponent.CopyHantelList())));
+        }
     }
 
     CancelChanges() {
@@ -104,6 +112,10 @@ export class LanghantelComponent implements OnInit {
             this.fDexieSvcService.HantelSpeichern(aHantel)
                 .then(() => (this.fDexieSvcService.LadeLanghanteln(() => this.CopyHantelList())));
         } else {
+            const mIndex = this.HantelListe.indexOf(aHantel);
+            if (mIndex > 0)
+                this.HantelListe.splice(mIndex,1);
+            
             this.fDexieSvcService.HantelTable.delete(aHantel.ID)
                 .then(() => (this.fDexieSvcService.LadeLanghanteln(() => this.CopyHantelList())));
         }

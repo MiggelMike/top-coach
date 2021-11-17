@@ -14,7 +14,14 @@
         </div>
     </div>
     
-    <a class='link-button-font btn-link' mat-button (click)="onOkClick()">Yes</a>            
-    <a class='link-button-font btn-link' mat-button (click)="onCancelClick()">No</a>            
+    <ng-container *ngIf="data.typ === 'Frage'">
+        <a class='link-button-font btn-link' mat-button (click)="onOkClick()">Yes</a>            
+        <a *ngIf="data.typ === 'Frage'"  class='link-button-font btn-link' mat-button (click)="onCancelClick()">No</a>            
+    </ng-container>
+
+    <ng-container *ngIf="data.typ !== 'Frage'">
+        <a class='link-button-font btn-link' mat-button (click)="onOkClick()">Ok</a>            
+    </ng-container>
+   
 </div>
 </div>
