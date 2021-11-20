@@ -158,7 +158,7 @@ export class DexieSvcService extends Dexie {
             );
         }
 
-      //         Dexie.delete("ConceptCoach");
+            //    Dexie.delete("ConceptCoach");
         
         this.version(12).stores({
             AppData: "++id",
@@ -662,13 +662,17 @@ export class DexieSvcService extends Dexie {
                 (aUebungen: Array<Uebung>) => {
                     if (aUebungen.length > 0) {
                         aSession.UebungsListe = aUebungen;
-                        aSession.UebungsListe.forEach((u:Uebung) => {
+                        aSession.UebungsListe.forEach((u: Uebung) => {
+                            // Session-Übungen sind keine Stamm-Übungen.
+                            // Ist der Schlüssel zur Stamm-Übung gesetzt?  
                             if (u.FkUebung > 0) {
-                                const mStammUebung = this.StammUebungsListe.find(mGefundeneUebung => mGefundeneUebung.ID === u.FkUebung);
+                            //Der Schlüssel zur Stamm-Übung ist gesetzt  
+                            const mStammUebung = this.StammUebungsListe.find(mGefundeneUebung => mGefundeneUebung.ID === u.FkUebung);
                                 if (mStammUebung !== undefined)
                                     u.Name = mStammUebung.Name;
                             } else {
-                                const mStammUebung = this.StammUebungsListe.find(mGefundeneUebung => mGefundeneUebung.Name === u.Name);
+                            // Der Schlüssel zur Stamm-Übung sollte normalewiese gesetzt?  
+                            const mStammUebung = this.StammUebungsListe.find(mGefundeneUebung => mGefundeneUebung.Name === u.Name);
                                 if (mStammUebung !== undefined)
                                     u.FkUebung = mStammUebung.ID;
                                 this.UebungSpeichern(u);

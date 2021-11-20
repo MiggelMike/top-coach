@@ -273,11 +273,30 @@ export class Uebung implements IUebung {
         aUebung: Uebung,
         aKategorie02: UebungsKategorie02
     ): Uebung {
-        return Uebung.StaticNeueUebung(
+        const mUebung = Uebung.StaticNeueUebung(
             aUebung.Name,
             aUebung.Typ,
             aUebung.Kategorieen01,
             aKategorie02
         );
+
+        // Soll eine Session-Übung erzeugt werden? 
+        if (aKategorie02 === UebungsKategorie02.Session) {
+            // Es soll eine Session-Übung erzeugt werden. 
+            // Deshalb muss der Fremd-Schlüssel zur Stamm-Übung gesetzt werden.
+
+            // Ist die zu kopierende Übung (aUebung) eine Stamm-Übung?
+            if (aUebung.Kategorie02 === UebungsKategorie02.Stamm)
+                // Die zu kopierende Übung (aUebung) ist eine Stamm-Übung
+                // Dann muss ihre ID in die neue Session-Übung gesetzt werden
+                mUebung.FkUebung = aUebung.ID;
+            else
+                // Die zu kopierende Übung (aUebung) ist keine Stamm-Übung.
+                // Dann muss ihr Fremd-Schlüssel zur Stamm-Übung gesetzt sein  
+                // und in die neue Session-Übung gesetzt werden
+                mUebung.FkUebung = aUebung.FkUebung;
+        }
+    
+        return mUebung;
     }
 }
