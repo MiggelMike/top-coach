@@ -162,7 +162,8 @@ export class GzclpProgramm extends TrainingsProgramm {
     ): void {
         // T1-Lift
         let mUebung: Uebung = Uebung.StaticKopiere(
-            this.pDbModule.SucheUebungPerName(aT1Uebung), UebungsKategorie02.Session
+            this.pDbModule.SucheUebungPerName(aT1Uebung),
+            UebungsKategorie02.Session
         );
         // this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.Custom, aNeueSession);
 
@@ -185,7 +186,8 @@ export class GzclpProgramm extends TrainingsProgramm {
 
         // T2-Lift
         mUebung = Uebung.StaticKopiere(
-            this.pDbModule.SucheUebungPerName(aT2Uebung), UebungsKategorie02.Session
+            this.pDbModule.SucheUebungPerName(aT2Uebung),
+            UebungsKategorie02.Session
         );
 
         // if (this.ProgrammKategorie === SessionKategorie.Konkret) {
@@ -210,7 +212,8 @@ export class GzclpProgramm extends TrainingsProgramm {
 
         // T3-Lift
         mUebung = Uebung.StaticKopiere(
-            this.pDbModule.SucheUebungPerName(aT3Uebung), UebungsKategorie02.Session
+            this.pDbModule.SucheUebungPerName(aT3Uebung),
+            UebungsKategorie02.Session
         );
 
         // Arbeits-Saetze anfügen

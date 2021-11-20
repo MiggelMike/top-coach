@@ -1,77 +1,89 @@
+import { DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { Satz, SatzTyp, LiftTyp, SatzPausen, SatzStatus } from './../Satz/Satz';
 
 var cloneDeep = require('lodash.clonedeep');
 
 export enum UebungsTyp {
-    Undefined = "Undefined",
-    Custom = "Custom",
-    Kraft = "Kraft",
-    Ausdauer = "Ausdauer",
-    Dehnung = "Dehnung",
+  Undefined = 'Undefined',
+  Custom = 'Custom',
+  Kraft = 'Kraft',
+  Ausdauer = 'Ausdauer',
+  Dehnung = 'Dehnung',
 }
 
 export enum UebungsKategorie01 {
-    GzclpT1Cycle0 = "GzclpT1Cycle0",
-    GzclpT1Cycle1 = "GzclpT1Cycle1",
-    GzclpT1Cycle2 = "GzclpT1Cycle2",
-    GzclpT2Cycle0 = "GzclpT2Cycle0",
-    GzclpT2Cycle1 = "GzclpT2Cycle1",
-    GzclpT2Cycle2 = "GzclpT2Cycle2",
+  Keine = 'Keine',
+  GzclpT1Cycle0 = 'GzclpT1Cycle0',
+  GzclpT1Cycle1 = 'GzclpT1Cycle1',
+  GzclpT1Cycle2 = 'GzclpT1Cycle2',
+  GzclpT2Cycle0 = 'GzclpT2Cycle0',
+  GzclpT2Cycle1 = 'GzclpT2Cycle1',
+  GzclpT2Cycle2 = 'GzclpT2Cycle2',
 }
 
 export enum UebungsKategorie02 {
-    Stamm, Session
+  Stamm,
+  Session,
 }
 
 export interface IUebung {
-    ID: number;
-    Name: string;
-    Typ: UebungsTyp;
-    Kategorieen01: Array<UebungsKategorie01>;
-    Kategorie02: UebungsKategorie02;
-    SessionID: number;
-    SatzListe: Array<Satz>;
-    AufwaermSatzListe: Array<Satz>;
-    ArbeitsSatzListe: Array<Satz>;
-    AbwaermSatzListe: Array<Satz>;
-    Selected: boolean;
-    WarmUpVisible: boolean; 
-    CooldownVisible: boolean;
-    IncludeWarmupWeight: boolean;
-    IncludeCoolDownWeight: boolean;
-    LiftedWeightVisible: boolean;
-    LiftedWeight: number;
-    Expanded: boolean;
-    Copy(): Uebung;
-    hasChanged(aCmpUebung: IUebung): Boolean;
+  ID: number;
+  // Bei Session-Uebungen ist FkUebung der Schluessel zur Stamm-Uebung
+  FkUebung: number;
+  // Schluessel zur Muskel-Gruppe
+  FkMuskel: number;
+  MuskelGruppe: string;
+  Name: string;
+  Typ: UebungsTyp;
+  Kategorieen01: Array<UebungsKategorie01>;
+  Kategorie02: UebungsKategorie02;
+  SessionID: number;
+  SatzListe: Array<Satz>;
+  AufwaermSatzListe: Array<Satz>;
+  ArbeitsSatzListe: Array<Satz>;
+  AbwaermSatzListe: Array<Satz>;
+  Selected: boolean;
+  WarmUpVisible: boolean;
+  CooldownVisible: boolean;
+  IncludeWarmupWeight: boolean;
+  IncludeCoolDownWeight: boolean;
+  LiftedWeightVisible: boolean;
+  LiftedWeight: number;
+  Expanded: boolean;
+  InfoLink: string;
+  Beschreibung: string;
+  Copy(): Uebung;
+  hasChanged(aCmpUebung: IUebung): Boolean;
 }
 
 export enum UebungsName {
-    Squat = "Squat",
-    Deadlift = "Deadlift",
-    Benchpress = "Benchpress",
-    OverheadPress = "OverheadPress",
-    AB_Rollout = "AB_Rollout",
-    AB_Wheel = "AB_Wheel",
-    BackExtension = "BackExtension",
-    BarbellRow = "BarbellRow",
-    BentOverDumbbellRaise = "BentOverDumbbellRaise",
-    BlastStrapPushUp = "BlastStrapPushUp",
-    CableKickBacks = "CableKickBacks",
-    CablePushDown = "CablePushDown",
-    CableRow = "CableRow",
-    CalfRaises = "CalfRaises",
-    ChestSupportedRows = "ChestSupportedRows",
-    ChinUps = "ChinUps",
-    CloseGripBenchPress = "CloseGripBenchPress",
-    LatPullDowns = "LatPulldowns",
-    Dips = "Dips",
+  Squat = 'Squat',
+  Deadlift = 'Deadlift',
+  Benchpress = 'Benchpress',
+  OverheadPress = 'OverheadPress',
+  AB_Rollout = 'AB_Rollout',
+  AB_Wheel = 'AB_Wheel',
+  BackExtension = 'BackExtension',
+  BarbellRow = 'BarbellRow',
+  BentOverDumbbellRaise = 'BentOverDumbbellRaise',
+  BlastStrapPushUp = 'BlastStrapPushUp',
+  CableKickBacks = 'CableKickBacks',
+  CablePushDown = 'CablePushDown',
+  CableRow = 'CableRow',
+  CalfRaises = 'CalfRaises',
+  ChestSupportedRows = 'ChestSupportedRows',
+  ChinUps = 'ChinUps',
+  CloseGripBenchPress = 'CloseGripBenchPress',
+  LatPullDowns = 'LatPulldowns',
+  Dips = 'Dips',
 }
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
 export class Uebung implements IUebung {
     public ID: number;
-    public Name: string = "";
+    // Bei Session-Uebungen ist FkUebung der Schluessel zur Stamm-Uebung
+    public FkUebung: number = 0;
+    public Name: string = '';
     public Typ: UebungsTyp = UebungsTyp.Undefined;
     public Kategorieen01: Array<UebungsKategorie01> = [];
     public Kategorie02: UebungsKategorie02 = UebungsKategorie02.Stamm;
@@ -85,12 +97,21 @@ export class Uebung implements IUebung {
     public IncludeCoolDownWeight: boolean = false;
     public BodyWeight: number = 0;
     public Expanded: boolean = false;
+    public InfoLink: string = '';
+    public Beschreibung: string = '';
+    public FkMuskel: number = 0;
+    public StammUebung: Uebung = null;
+
+    public get MuskelGruppe(): string {
+        return '';
+    }
 
     constructor() {
         // Nicht in Dexie-DB-Speichern -> enumerable: false
-       // Object.defineProperty(this, "SatzListe", { enumerable: false });
-        Object.defineProperty(this, "Selected", { enumerable: false });
-        Object.defineProperty(this, "Expanded", { enumerable: false });
+        // Object.defineProperty(this, "SatzListe", { enumerable: false });
+        Object.defineProperty(this, 'Selected', { enumerable: false });
+        Object.defineProperty(this, 'Expanded', { enumerable: false });
+        Object.defineProperty(this, 'StammUebung', { enumerable: false });
     }
 
     public hasChanged(aCmpUebung: IUebung): Boolean {
@@ -99,23 +120,19 @@ export class Uebung implements IUebung {
         if (this.Name != aCmpUebung.Name) return true;
         if (this.Typ != aCmpUebung.Typ) return true;
 
-        if (this.Kategorieen01.length != aCmpUebung.Kategorieen01.length) return true;
+        if (this.Kategorieen01.length != aCmpUebung.Kategorieen01.length)
+            return true;
         for (let index = 0; index < this.Kategorieen01.length; index++) {
             if (this.Kategorieen01[index] != aCmpUebung.Kategorieen01[index])
                 return true;
         }
 
         if (this.SatzListe && aCmpUebung.SatzListe) {
-            if (this.SatzListe.length != aCmpUebung.SatzListe.length)
-                return true;
+            if (this.SatzListe.length != aCmpUebung.SatzListe.length) return true;
 
             for (let index = 0; index < this.SatzListe.length; index++) {
-                if (
-                    this.SatzListe[index].hasChanged(
-                        aCmpUebung.SatzListe[index]
-                    )
-                ) {
-                    console.log("Set #" + index.toString() + " has changed.");
+                if (this.SatzListe[index].hasChanged(aCmpUebung.SatzListe[index])) {
+                    console.log('Set #' + index.toString() + ' has changed.');
                     return true;
                 }
             }
@@ -146,24 +163,23 @@ export class Uebung implements IUebung {
         return mResult;
     }
 
-    private checkSatzIncludedBodyWeight(aSatzListe: Array<Satz>): Boolean{
+    private checkSatzIncludedBodyWeight(aSatzListe: Array<Satz>): Boolean {
         for (let index = 0; index < aSatzListe.length; index++) {
             const mSatz = aSatzListe[index];
-            if (mSatz.IncludeBodyweight) 
-                return true;
+            if (mSatz.IncludeBodyweight) return true;
         }
         return false;
     }
-    
-    public checkWarmUpSatzIncludedBodyWeight(): Boolean{
+
+    public checkWarmUpSatzIncludedBodyWeight(): Boolean {
         return this.checkSatzIncludedBodyWeight(this.AufwaermSatzListe);
     }
 
-    public checkCoolDownSatzIncludedBodyWeight(): Boolean{
+    public checkCoolDownSatzIncludedBodyWeight(): Boolean {
         return this.checkSatzIncludedBodyWeight(this.AbwaermSatzListe);
     }
 
-    public checkArbeitsSatzIncludedBodyWeight(): Boolean{
+    public checkArbeitsSatzIncludedBodyWeight(): Boolean {
         return this.checkSatzIncludedBodyWeight(this.ArbeitsSatzListe);
     }
 
@@ -182,7 +198,7 @@ export class Uebung implements IUebung {
         aName: string,
         aTyp: UebungsTyp,
         aKategorieen01: Array<UebungsKategorie01>,
-        aKategorie02: UebungsKategorie02
+        aKategorie02: UebungsKategorie02,
     ): Uebung {
         //
         const mUebung = new Uebung();
@@ -265,5 +281,3 @@ export class Uebung implements IUebung {
         );
     }
 }
-
-

@@ -67,8 +67,8 @@ export class GlobalService {
     public SessUebungKopie: Uebung = null;
     public Observers: Array<any> = new Array<any>();
     public Comp03PanelUebungObserver: MyObserver = null;
-    public DatabaseName: string = 'ConceptCoach';  
-
+    public DatabaseName: string = 'ConceptCoach';
+    
     private readonly cAktuellesTrainingsProgramm: string = 'AktuellesTrainingsProgramm';
     private readonly cTrainingsHistorie: string = 'TrainingsHistorie';
 

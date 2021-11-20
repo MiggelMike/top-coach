@@ -25,7 +25,7 @@ export class MuscleGroupsComponent implements OnInit {
     ngOnInit(): void {
     }
     
-    public get MuskelGruppenListe() {
+    public get MuskelGruppenListe():Array<MuscleGroup> {
         return this.fDexieSvcService.MuskelgruppeListeSortedByName;
     }
 

@@ -89,7 +89,7 @@ export class DexieSvcService extends Dexie {
     HantelTable: Dexie.Table<Hantel, number>;
     EquipmentTable: Dexie.Table<Equipment, number>;
     public Programme: Array<ITrainingsProgramm> = [];
-    public UebungsListe: Array<Uebung> = [];
+    public StammUebungsListe: Array<Uebung> = [];
     public MuskelGruppenListe: Array<MuscleGroup> = [];
     public EquipmentListe: Array<Equipment> = [];
     public LangHantelListe: Array<Hantel> = [];
@@ -158,9 +158,9 @@ export class DexieSvcService extends Dexie {
             );
         }
 
-            // Dexie.delete("ConceptCoach");
+      //         Dexie.delete("ConceptCoach");
         
-        this.version(10).stores({
+        this.version(12).stores({
             AppData: "++id",
             Uebung: "++ID,Name,Typ",
             Programm: "++id,Name", 
@@ -177,11 +177,11 @@ export class DexieSvcService extends Dexie {
         this.PruefeStandardLanghanteln();
         this.PruefeStandardEquipment();
         this.PruefeStandardMuskelGruppen();
-        this.LadeStandardUebungen();
+        this.LadeStammUebungen();
     }
 
     get UebungListeSortedByName(): Array<Uebung>{
-        const mResult: Array<Uebung> = this.UebungsListe.map( mUebung => mUebung );
+        const mResult: Array<Uebung> = this.StammUebungsListe.map( mUebung => mUebung );
         mResult.sort((u1, u2) => {
             if (u1.Name > u2.Name) {
                 return 1;
@@ -487,8 +487,8 @@ export class DexieSvcService extends Dexie {
             });
     }
 
-    public LadeStandardUebungen() {
-        this.UebungsListe = [];
+    public LadeStammUebungen() {
+        this.StammUebungsListe = [];
         const mAnlegen: Array<Uebung> = new Array<Uebung>();
         this.table(this.cUebung)
             .filter(
@@ -510,11 +510,11 @@ export class DexieSvcService extends Dexie {
 
                 if (mAnlegen.length > 0) {
                     this.InsertUebungen(mAnlegen).then(() => {
-                        this.LadeStandardUebungen();
+                        this.LadeStammUebungen();
                     });
                 } else {
                     // Standard-Uebungen sind vorhanden.
-                    this.UebungsListe = mUebungen;
+                    this.StammUebungsListe = mUebungen;
                     // Standard-Vorlage-Programme laden
                     this.LadeProgramme(
                         {
@@ -621,7 +621,7 @@ export class DexieSvcService extends Dexie {
     }
 
     public SucheUebungPerName(aName: UebungsName): Uebung {
-        const mUebung = this.UebungsListe.find((u) => u.Name === aName);
+        const mUebung = this.StammUebungsListe.find((u) => u.Name === aName);
         return mUebung === undefined ? null : mUebung;
     }
 
@@ -662,7 +662,18 @@ export class DexieSvcService extends Dexie {
                 (aUebungen: Array<Uebung>) => {
                     if (aUebungen.length > 0) {
                         aSession.UebungsListe = aUebungen;
-                        aSession.UebungsListe.forEach((u) => {
+                        aSession.UebungsListe.forEach((u:Uebung) => {
+                            if (u.FkUebung > 0) {
+                                const mStammUebung = this.StammUebungsListe.find(mGefundeneUebung => mGefundeneUebung.ID === u.FkUebung);
+                                if (mStammUebung !== undefined)
+                                    u.Name = mStammUebung.Name;
+                            } else {
+                                const mStammUebung = this.StammUebungsListe.find(mGefundeneUebung => mGefundeneUebung.Name === u.Name);
+                                if (mStammUebung !== undefined)
+                                    u.FkUebung = mStammUebung.ID;
+                                this.UebungSpeichern(u);
+                            }
+
                             this.LadeUebungsSaetze(u, aLadePara);
                             if ((aLadePara !== undefined) && (aLadePara.OnUebungAfterLoadFn !== undefined))
                                 aLadePara.OnUebungAfterLoadFn(aLadePara);

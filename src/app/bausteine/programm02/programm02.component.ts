@@ -63,7 +63,7 @@ export class Programm02Component implements OnInit {
         private fDialogService: DialogeService,
         private fGlobalService: GlobalService,
         private fUebungService: UebungService,
-        public DbModule: DexieSvcService,
+        public fDbModule: DexieSvcService,
         private router: Router
     ) {
     }
@@ -107,19 +107,21 @@ export class Programm02Component implements OnInit {
         aUebungWaehlenData.fUebungsListe.forEach((mUebung) => {
             if (mUebung.Selected) {
                 aUebungWaehlenData.fSession.addUebung(
-                    Uebung.StaticKopiere(mUebung, UebungsKategorie02.Session)
-                );
+                    Uebung.StaticKopiere(
+                        mUebung,
+                        UebungsKategorie02.Session
+                ))
             }
         });
         aUebungWaehlenData.fMatDialog.close();
     }
 
     public AddExercise(aSession: ISession) {
-        if (this.DbModule.UebungsListe.length === 0)
-            this.DbModule.LadeStandardUebungen();
+        if (this.fDbModule.StammUebungsListe.length === 0)
+            this.fDbModule.LadeStammUebungen();
         else
             this.fUebungService.UebungWaehlen(
-                this.DbModule.UebungsListe,
+                this.fDbModule.StammUebungsListe,
                 aSession as Session,
                 this.SelectUebungDelegate
             );
