@@ -93,6 +93,7 @@ export class DexieSvcService extends Dexie {
     public MuskelGruppenListe: Array<MuscleGroup> = [];
     public EquipmentListe: Array<Equipment> = [];
     public LangHantelListe: Array<Hantel> = [];
+    private ProgramLadeStandardPara: LadePara;
 
     public LanghantelListeSortedByName(aIgnorGeloeschte: Boolean = true): Array<Hantel>{
         let mResult: Array<Hantel> = this.LangHantelListe.map(mHantel => mHantel);
@@ -144,6 +145,8 @@ export class DexieSvcService extends Dexie {
 
         return mResult;        
     }
+
+    
     
     //public ProgrammListeObserver: Observable<TrainingsProgramm[]>;
     //public ProgrammListe: Array<TrainingsProgramm> = [];
@@ -158,7 +161,41 @@ export class DexieSvcService extends Dexie {
             );
         }
 
-            //    Dexie.delete("ConceptCoach");
+                // Dexie.delete("ConceptCoach");
+
+        this.ProgramLadeStandardPara  =
+        {
+            fProgrammKategorie: ProgrammKategorie.Vorlage,
+            fProgramme: this.VorlageProgramme,
+    
+            OnProgrammBeforeLoadFn: (aData) => {
+                this.VorlageProgramme = [];
+            },
+    
+            OnProgrammAfterLoadFn: (p: TrainingsProgramm) => {
+                this.VorlageProgramme.push(p);   
+            }, //
+    
+            OnProgrammNoRecordFn: (aPara) => {
+                const mProgramme: Array<TrainingsProgramm> = (aPara.Data as Array<TrainingsProgramm>);
+                const mAnlegen: Array<ProgrammTyp.Gzclp> = new Array<ProgrammTyp.Gzclp>();
+                const mProg: TrainingsProgramm = (mProgramme.find(
+                    (p) => p.ProgrammTyp === ProgrammTyp.Gzclp
+                ));
+        
+                if (mProg === undefined)
+                    mAnlegen.push(ProgrammTyp.Gzclp);
+                else {
+                    if (mProgramme.find((p) => p.ProgrammTyp === ProgrammTyp.Gzclp) === undefined) {
+                        // Standard-Programm gefunden
+                        mProgramme.push(mProg);
+                    }
+                }
+        
+                for (let index = 0; index < mAnlegen.length; index++)
+                    this.ErzeugeVorlageProgramm(mAnlegen[index]);
+            } //OnProgrammNoRecorderLoadFn
+        } as LadePara
         
         this.version(12).stores({
             AppData: "++id",
@@ -516,41 +553,7 @@ export class DexieSvcService extends Dexie {
                     // Standard-Uebungen sind vorhanden.
                     this.StammUebungsListe = mUebungen;
                     // Standard-Vorlage-Programme laden
-                    this.LadeProgramme(
-                        {
-                            fProgrammKategorie: ProgrammKategorie.Vorlage,
-                            fProgramme: this.VorlageProgramme,
-
-                            OnProgrammBeforeLoadFn: (aData) => {
-                                this.VorlageProgramme = [];
-                            },
-
-                            OnProgrammAfterLoadFn: (p: TrainingsProgramm) => {
-                                this.VorlageProgramme.push(p);   
-                            }, //
-
-                            OnProgrammNoRecordFn: (aPara) => {
-                                const mProgramme: Array<TrainingsProgramm> = (aPara.Data as Array<TrainingsProgramm>);
-                                const mAnlegen: Array<ProgrammTyp.Gzclp> = new Array<ProgrammTyp.Gzclp>();
-                                const mProg: TrainingsProgramm = (mProgramme.find(
-                                    (p) => p.ProgrammTyp === ProgrammTyp.Gzclp
-                                ));
-                        
-                                if (mProg === undefined)
-                                    mAnlegen.push(ProgrammTyp.Gzclp);
-                                else {
-                                    if (mProgramme.find((p) => p.ProgrammTyp === ProgrammTyp.Gzclp) === undefined) {
-                                        // Standard-Programm gefunden
-                                        mProgramme.push(mProg);
-                                    }
-                                }
-                        
-                                for (let index = 0; index < mAnlegen.length; index++)
-                                    this.ErzeugeVorlageProgramm(mAnlegen[index]);
-                            } //OnProgrammNoRecorderLoadFn
-                        } as LadePara
-                    );// Standard-Vorlage-Programme laden
-                    
+                    this.LadeProgramme(this.ProgramLadeStandardPara);
                     // Aktuelles Programm laden
                     this.LadeProgramme(
                         {
@@ -1044,17 +1047,15 @@ export class DexieSvcService extends Dexie {
         );
     }
 
-    public ErzeugeVorlageProgramm(aProgrammTyp: ProgrammTyp): ITrainingsProgramm {
+    public async ErzeugeVorlageProgramm(aProgrammTyp: ProgrammTyp) {
         let mTrainingsProgramm: ITrainingsProgramm = null;
 
         if (aProgrammTyp === ProgrammTyp.Gzclp) {
             mTrainingsProgramm = GzclpProgramm.ErzeugeGzclpVorlage(this);
         }
 
-        if (!mTrainingsProgramm) return mTrainingsProgramm;
-
-        this.ProgrammSpeichern(mTrainingsProgramm);
-        return mTrainingsProgramm;
+        await this.ProgrammSpeichern(mTrainingsProgramm);
+        this.LadeProgramme(this.ProgramLadeStandardPara);
     }
 
     private async InitAppData() {
