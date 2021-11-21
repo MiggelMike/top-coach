@@ -399,18 +399,21 @@ export class DexieSvcService extends Dexie {
     }    
 
 
-    public PruefeStandardMuskelGruppen() {
+    public async PruefeStandardMuskelGruppen() {
 
         const mAnlegen: Array<MuscleGroup> = new Array<MuscleGroup>();
-        this.table(this.cMuskelGruppe)
+        await this.table(this.cMuskelGruppe)
             .filter(
-                (mMuskelgruppe ) => mMuskelgruppe.MuscleGroupKategorie01 === MuscleGroupKategorie01.Stamm
+                (mMuskelgruppe) => mMuskelgruppe.MuscleGroupKategorie01 === MuscleGroupKategorie01.Stamm
             )
             .toArray()
             .then((mMuskelgruppenListe) => {
                 for (const mMuscleGroupName in MuscleGroupKategorie02) {
                     if (
-                        mMuskelgruppenListe.find((mMuskelgruppe2) => mMuskelgruppe2.Name === mMuscleGroupName) === undefined) {
+                        mMuskelgruppenListe.find(
+                            (mMuskelgruppe2) => mMuskelgruppe2.Name === mMuscleGroupName
+                        ) === undefined
+                    ) {
                         const mNeueMuskelgruppe = this.NeueMuskelgruppe(
                             mMuscleGroupName,
                             MuscleGroupKategorie01.Stamm
@@ -423,8 +426,7 @@ export class DexieSvcService extends Dexie {
                     this.InsertMuskelGruppen(mAnlegen).then(() => {
                         this.PruefeStandardMuskelGruppen();
                     });
-                }
-                else this.LadeMuskelGruppen();
+                } else this.LadeMuskelGruppen();
             });
     }
 
