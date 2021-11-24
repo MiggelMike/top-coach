@@ -1,4 +1,4 @@
-import { DexieSvcService } from 'src/app/services/dexie-svc.service';
+import { MuscleGroup, MuscleGroupKategorie02 } from '../MuscleGroup/MuscleGroup';
 import { Satz, SatzTyp, LiftTyp, SatzPausen, SatzStatus } from './../Satz/Satz';
 
 var cloneDeep = require('lodash.clonedeep');
@@ -56,25 +56,25 @@ export interface IUebung {
   hasChanged(aCmpUebung: IUebung): Boolean;
 }
 
-export enum UebungsName {
+export enum StandardUebungsName {
   Squat = 'Squat',
   Deadlift = 'Deadlift',
   Benchpress = 'Benchpress',
-  OverheadPress = 'OverheadPress',
-  AB_Rollout = 'AB_Rollout',
-  AB_Wheel = 'AB_Wheel',
-  BackExtension = 'BackExtension',
-  BarbellRow = 'BarbellRow',
-  BentOverDumbbellRaise = 'BentOverDumbbellRaise',
-  BlastStrapPushUp = 'BlastStrapPushUp',
-  CableKickBacks = 'CableKickBacks',
-  CablePushDown = 'CablePushDown',
-  CableRow = 'CableRow',
-  CalfRaises = 'CalfRaises',
-  ChestSupportedRows = 'ChestSupportedRows',
-  ChinUps = 'ChinUps',
-  CloseGripBenchPress = 'CloseGripBenchPress',
-  LatPullDowns = 'LatPulldowns',
+  OverheadPress = 'Overhead-Press',
+  AB_Rollout = 'AB-Rollout',
+  AB_Wheel = 'AB-Wheel',
+  BackExtension = 'Back-Extension',
+  BarbellRow = 'Barbell-Row',
+  BentOverDumbbellRaise = 'Bent-Over-Dumbbell-Raise',
+  BlastStrapPushUp = 'Blast-Strap-Push-Up',
+  CableKickBacks = 'Cable-Kick-Backs',
+  CablePushDown = 'Cable-Push-Down',
+  CableRow = 'Cable-Row',
+  CalfRaises = 'Calf-Raises',
+  ChestSupportedRows = 'Chest-Supported-Rows',
+  ChinUps = 'Chin-Ups',
+  PullUps = 'Pull-Ups',
+  LatPullDowns = 'Lat-Pull-Downs',
   Dips = 'Dips',
 }
 
@@ -100,11 +100,9 @@ export class Uebung implements IUebung {
     public InfoLink: string = '';
     public Beschreibung: string = '';
     public FkMuskel: number = 0;
+    public MuskelGruppe: string = '';
     public StammUebung: Uebung = null;
 
-    public get MuskelGruppe(): string {
-        return '';
-    }
 
     constructor() {
         // Nicht in Dexie-DB-Speichern -> enumerable: false
@@ -300,3 +298,194 @@ export class Uebung implements IUebung {
         return mUebung;
     }
 }
+
+export class StandardUebung {
+    public Name: string;
+    public StandardUebungName: StandardUebungsName;
+    public Typ: UebungsTyp;
+    public PrimaryMuscleGroup: MuscleGroupKategorie02;
+    public SecondaryMuscleGroup: MuscleGroupKategorie02;
+    public TertiaryMuscleGroup: MuscleGroupKategorie02;
+    public QuaternaryMuscleGroup: MuscleGroupKategorie02;
+    public QuinaryMuscleGroup: MuscleGroupKategorie02; 
+
+    constructor(
+        aName: string,
+        aStandardUebungsName: StandardUebungsName,
+        aTyp: UebungsTyp,
+        aPrimaryMuscleGroup?: MuscleGroupKategorie02,
+        aSecondaryMuscleGroup?: MuscleGroupKategorie02,
+        aTertiaryMuscleGroup?: MuscleGroupKategorie02,
+        aQuaternaryMuscleGroup?: MuscleGroupKategorie02,
+        aQuinaryMuscleGroup?: MuscleGroupKategorie02
+    ) {
+        this.Name = aName;
+        this.Typ = aTyp;
+        this.StandardUebungName = aStandardUebungsName;
+        aPrimaryMuscleGroup === undefined ? this.PrimaryMuscleGroup = MuscleGroupKategorie02.None : this.PrimaryMuscleGroup = aPrimaryMuscleGroup;
+        aSecondaryMuscleGroup === undefined ? this.SecondaryMuscleGroup = MuscleGroupKategorie02.None : this.SecondaryMuscleGroup = aSecondaryMuscleGroup;
+        aTertiaryMuscleGroup === undefined ? this.TertiaryMuscleGroup = MuscleGroupKategorie02.None : this.TertiaryMuscleGroup = aTertiaryMuscleGroup;
+        aQuaternaryMuscleGroup === undefined ? this.QuaternaryMuscleGroup = MuscleGroupKategorie02.None : this.QuaternaryMuscleGroup = aQuaternaryMuscleGroup;
+        aQuinaryMuscleGroup === undefined ? this.QuinaryMuscleGroup = MuscleGroupKategorie02.None : this.QuinaryMuscleGroup = aQuinaryMuscleGroup;
+    }
+
+    public static getStandardUebung(aStandardUebungsName: StandardUebungsName): StandardUebung{
+        return StandardUebungListe.find(u => u.StandardUebungName === aStandardUebungsName);
+    }
+}
+
+// Standardübungen, die bei ersten Start des Programms in die DB eingetragen werden.
+export const StandardUebungListe: Array<StandardUebung> = new Array<StandardUebung>(
+    new StandardUebung(
+        'Squat',
+        StandardUebungsName.Squat,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Legs,
+        MuscleGroupKategorie02.Quadriceps,
+        MuscleGroupKategorie02.Glutes,
+        MuscleGroupKategorie02.Hamstrings,
+        MuscleGroupKategorie02.InnerAdductorMagnus),
+    
+    new StandardUebung(
+        'Deadlift',
+        StandardUebungsName.Deadlift,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Legs,
+        MuscleGroupKategorie02.Glutes,
+        MuscleGroupKategorie02.Quadriceps,
+        MuscleGroupKategorie02.Hamstrings,
+        MuscleGroupKategorie02.LowerBack),
+        
+    new StandardUebung(
+        'Bench-Press',
+        StandardUebungsName.Benchpress,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Chest,
+        MuscleGroupKategorie02.Triceps,
+        MuscleGroupKategorie02.Shoulders
+    ),
+
+    new StandardUebung(
+        'Overhead-Press',
+        StandardUebungsName.OverheadPress,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Shoulders,
+        MuscleGroupKategorie02.Triceps),
+
+    new StandardUebung(
+        'AB-Rollout',
+        StandardUebungsName.AB_Rollout,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Abdominal,
+        MuscleGroupKategorie02.Back,
+        MuscleGroupKategorie02.Shoulders,
+        MuscleGroupKategorie02.Triceps
+    ),
+
+    new StandardUebung(
+        'AB-Wheel',
+        StandardUebungsName.AB_Wheel,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Abdominal,
+        MuscleGroupKategorie02.Back,
+        MuscleGroupKategorie02.Shoulders,
+        MuscleGroupKategorie02.Triceps
+    ),
+
+    new StandardUebung(
+        'Back-Extension',
+        StandardUebungsName.BackExtension,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Back
+    ),
+
+    new StandardUebung(
+        'Barbell-Row',
+        StandardUebungsName.BarbellRow,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Back,
+        MuscleGroupKategorie02.Biceps
+    ),
+
+    new StandardUebung(
+        'Bent-Over-Dumbbell-Raise',
+        StandardUebungsName.BentOverDumbbellRaise,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Shoulders
+    ),
+
+    new StandardUebung(
+        'Cable-Kick-Backs',
+        StandardUebungsName.CableKickBacks,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Legs,
+        MuscleGroupKategorie02.Glutes,
+        MuscleGroupKategorie02.Hamstrings
+    ),
+    
+    new StandardUebung(
+        'Cable-Push-Down',
+        StandardUebungsName.CablePushDown,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Arms,
+        MuscleGroupKategorie02.Triceps
+    ),
+    
+    new StandardUebung(
+        'Cable-Row',
+        StandardUebungsName.CableRow,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Back,
+        MuscleGroupKategorie02.Biceps
+    ),
+
+    new StandardUebung(
+        'Calf-Raises',
+        StandardUebungsName.CalfRaises,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Legs,
+        MuscleGroupKategorie02.Calves
+    ),
+
+    new StandardUebung(
+        'Chest-Supported-Rows',
+        StandardUebungsName.ChestSupportedRows,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Back,
+        MuscleGroupKategorie02.Biceps
+    ),
+
+    new StandardUebung(
+        'Chin-Ups',
+        StandardUebungsName.ChinUps,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Back,
+        MuscleGroupKategorie02.Biceps
+    ),
+
+    new StandardUebung(
+        'Lat-Pull-Downs',
+        StandardUebungsName.LatPullDowns,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Back,
+        MuscleGroupKategorie02.Biceps        
+    ),
+
+    new StandardUebung(
+        'Pull-Ups',
+        StandardUebungsName.Dips,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Back,
+        MuscleGroupKategorie02.Arms
+    ),
+
+    new StandardUebung(
+        'Dips',
+        StandardUebungsName.Dips,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Arms,
+        MuscleGroupKategorie02.Triceps,
+        MuscleGroupKategorie02.Chest,
+        MuscleGroupKategorie02.Shoulders
+    )
+);

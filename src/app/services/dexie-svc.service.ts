@@ -9,9 +9,9 @@ import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
 import { AppData, IAppData } from './../../Business/Coach/Coach';
 import { Dexie, PromiseExtended } from 'dexie';
 import { Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
-import { UebungsTyp, Uebung, UebungsName, UebungsKategorie02 } from "../../Business/Uebung/Uebung";
+import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardUebung } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
-import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02 } from '../../Business/MuscleGroup/MuscleGroup';
+import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
 
 export enum ErstellStatus {
     VomAnwenderErstellt,
@@ -161,8 +161,6 @@ export class DexieSvcService extends Dexie {
             );
         }
 
-                // Dexie.delete("ConceptCoach");
-
         this.ProgramLadeStandardPara  =
         {
             fProgrammKategorie: ProgrammKategorie.Vorlage,
@@ -197,13 +195,15 @@ export class DexieSvcService extends Dexie {
             } //OnProgrammNoRecorderLoadFn
         } as LadePara
         
-        this.version(12).stores({
+      //     Dexie.delete("ConceptCoach");
+        
+        this.version(19).stores({
             AppData: "++id",
-            Uebung: "++ID,Name,Typ",
+            Uebung: "++ID,Name,Typ,Kategorie02,PrimaryMuscleGroup",
             Programm: "++id,Name", 
             SessionDB: "++ID,Name,Datum",
             Satz: "++ID",
-            MuskelGruppe: "++ID,Name",
+            MuskelGruppe: "++ID,Name,MuscleGroupKategorie01",
             Equipment: "++ID,Name",
             Hantel: "++ID,Typ,Name",
         });
@@ -313,13 +313,14 @@ export class DexieSvcService extends Dexie {
 
     private NeueUebung(
         aName: string,
-        aKategorie02: UebungsKategorie02
+        aKategorie02: UebungsKategorie02,
+        aTyp: UebungsTyp
     ): Uebung {
         const mGzclpKategorieen01 = Uebung.ErzeugeGzclpKategorieen01();
         const mKategorieen01 = [].concat(mGzclpKategorieen01);
         return Uebung.StaticNeueUebung(
             aName,
-            UebungsTyp.Kraft,
+            aTyp,
             mKategorieen01,
             aKategorie02
         );
@@ -403,19 +404,16 @@ export class DexieSvcService extends Dexie {
 
         const mAnlegen: Array<MuscleGroup> = new Array<MuscleGroup>();
         await this.table(this.cMuskelGruppe)
-            .filter(
-                (mMuskelgruppe) => mMuskelgruppe.MuscleGroupKategorie01 === MuscleGroupKategorie01.Stamm
-            )
+            .where("MuscleGroupKategorie01").equals(MuscleGroupKategorie01.Stamm as number)
             .toArray()
             .then((mMuskelgruppenListe) => {
-                for (const mMuscleGroupName in MuscleGroupKategorie02) {
+                for (let index = 0; index < StandardMuscleGroup.length; index++) {
+                    const mStandardMuscleGroup: MuscleGroupKategorie02 = StandardMuscleGroup[index];
                     if (
-                        mMuskelgruppenListe.find(
-                            (mMuskelgruppe2) => mMuskelgruppe2.Name === mMuscleGroupName
-                        ) === undefined
+                        mMuskelgruppenListe.find((mMuskelgruppe: MuscleGroup) => mMuskelgruppe.Name === mStandardMuscleGroup) === undefined
                     ) {
                         const mNeueMuskelgruppe = this.NeueMuskelgruppe(
-                            mMuscleGroupName,
+                            mStandardMuscleGroup,
                             MuscleGroupKategorie01.Stamm
                         );
                         mAnlegen.push(mNeueMuskelgruppe);
@@ -530,17 +528,18 @@ export class DexieSvcService extends Dexie {
         this.StammUebungsListe = [];
         const mAnlegen: Array<Uebung> = new Array<Uebung>();
         this.table(this.cUebung)
-            .filter(
-                (mUebung) => mUebung.Kategorie02 === UebungsKategorie02.Stamm
-            )
+            .where("Kategorie02").equals(UebungsKategorie02.Stamm as number)
             .toArray()
             .then((mUebungen) => {
-                for (const mUeb in UebungsName) {
-                    if (
-                        mUebungen.find((mUebung) => mUebung.Name === mUeb) === undefined) {
-                        const mNeueUebung = this.NeueUebung(
-                            mUeb,
-                            UebungsKategorie02.Stamm
+                let mNeueUebung: Uebung = null;
+                for (let index = 0; index < StandardUebungListe.length; index++) {
+                    const mStandardUebung = StandardUebungListe[index];
+                    if (mUebungen.find((mUebung) => mUebung.Name === mStandardUebung.Name) === undefined)
+                    {
+                        mNeueUebung = this.NeueUebung(
+                            mStandardUebung.Name,
+                            UebungsKategorie02.Stamm,
+                            mStandardUebung.Typ
                         );
                         mNeueUebung.SatzListe = [];
                         mAnlegen.push(mNeueUebung);
@@ -625,7 +624,7 @@ export class DexieSvcService extends Dexie {
         return 105;
     }
 
-    public SucheUebungPerName(aName: UebungsName): Uebung {
+    public SucheUebungPerName(aName: string): Uebung {
         const mUebung = this.StammUebungsListe.find((u) => u.Name === aName);
         return mUebung === undefined ? null : mUebung;
     }

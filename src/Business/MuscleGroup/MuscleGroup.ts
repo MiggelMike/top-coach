@@ -7,12 +7,21 @@ export enum MuscleGroupKategorie01 {
 }
 
 export enum MuscleGroupKategorie02 {
+    None = 'None',
     Legs = 'Legs',
+    Quadriceps = 'Quadriceps',
     Arms = 'Arms',
     Chest = 'Chest',
     Back = 'Back',
     Abdominal = 'Abdominal',
-    Shoulders = 'Shoulders'
+    Shoulders = 'Shoulders',
+    Hamstrings = 'Hamstrings',
+    Glutes = 'Glutes',
+    LowerBack = 'LowerBack',
+    InnerAdductorMagnus = 'Inner-Adductor-Magnus',
+    Triceps = 'Triceps',
+    Biceps = 'Biceps',
+    Calves = 'Calves' 
 }
 
 
@@ -51,3 +60,14 @@ export class MuscleGroup implements IMuscleGroup {
         return isEqual(this,aOtherMuscleGroup);
     }
 }
+
+// StandardMuskel-Gruppen, die bei ersten Start des Programms in die DB eingetragen werden.
+export var StandardMuscleGroup: Array<MuscleGroupKategorie02> = new Array<MuscleGroupKategorie02>(
+    MuscleGroupKategorie02.Legs,
+    MuscleGroupKategorie02.Chest,
+    MuscleGroupKategorie02.Arms,
+    MuscleGroupKategorie02.Back,
+    MuscleGroupKategorie02.Shoulders
+)
+    
+
