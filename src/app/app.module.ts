@@ -53,6 +53,7 @@ import { routes } from "./app-routing.module";
 import { SessionStatsOverlayComponent } from './session-stats-overlay/session-stats-overlay.component';
 import { DataStoreButtonsComponent } from './bausteine/data-store-buttons/data-store-buttons.component';
 import { ToolbarComponent } from './bausteine/toolbar/toolbar.component';
+import { MatSelectModule } from '@angular/material/select';
 
 // import {
 //     MatAutocompleteModule,
@@ -189,14 +190,16 @@ export const floatMask = createNumberMask({
         ReactiveFormsModule,
         OverlayModule,
         FormsModule,
-        DexieSvcService
+      DexieSvcService,
+      MatSelectModule
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA,
         NO_ERRORS_SCHEMA
       ],
 
-    exports: [
+  exports: [
+    MatSelectModule,
         RouterModule,
         CdkTableModule,
         CdkTreeModule,
@@ -248,8 +251,10 @@ export const floatMask = createNumberMask({
         MatToolbarModule,
         // MatTooltipModule,
         // MatTreeModule,
-    ],
-
+        
+  ],
+    
+  
     entryComponents: [
         DialogComponent,
         FilePreviewOverlayComponent,

@@ -195,11 +195,11 @@ export class DexieSvcService extends Dexie {
             } //OnProgrammNoRecorderLoadFn
         } as LadePara
         
-      //     Dexie.delete("ConceptCoach");
+        //   Dexie.delete("ConceptCoach");
         
-        this.version(19).stores({
+        this.version(20).stores({
             AppData: "++id",
-            Uebung: "++ID,Name,Typ,Kategorie02,PrimaryMuscleGroup",
+            Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05",
             Programm: "++id,Name", 
             SessionDB: "++ID,Name,Datum",
             Satz: "++ID",

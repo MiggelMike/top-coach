@@ -47,8 +47,7 @@ export class EditMuscleGroupComponent implements OnInit {
   }
 
 	SaveChanges() {
-		const mTmpEditMuscleGroupComponent: EditMuscleGroupComponent = this
-			.ClickData as EditMuscleGroupComponent;
+		const mTmpEditMuscleGroupComponent: EditMuscleGroupComponent = this.ClickData as EditMuscleGroupComponent;
 		if (mTmpEditMuscleGroupComponent.Muskelgruppe.Name.trim() === '') {
 			const mDialogData = new DialogData();
 			mDialogData.textZeilen.push('Please enter a name!');

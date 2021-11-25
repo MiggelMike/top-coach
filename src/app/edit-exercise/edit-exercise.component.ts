@@ -15,25 +15,19 @@ export class EditExerciseComponent implements OnInit {
     public Uebung: Uebung = null;
     public CmpMuskelgruppe: Uebung = null;
     public ClickData: EditExerciseComponent;
-    selectedValue: string;
-    foods: Food[] = [
-        {value: 'steak-0', viewValue: 'Steak'},
-        {value: 'pizza-1', viewValue: 'Pizza'},
-        {value: 'tacos-2', viewValue: 'Tacos'},
-      ];
-
+	
     constructor(private router: Router, private fDbModul: DexieSvcService, private location: Location) {
         const mNavigation = this.router.getCurrentNavigation();
         const mState = mNavigation.extras.state as { ueb: Uebung; };
-        this.Uebung = mState.ueb;
+		this.Uebung = mState.ueb;
     }
 
     ngOnInit(): void {
-    }
+	}
 
     public get MuskelListe(): Array<MuscleGroup>{
         const mComboListe: Array<MuscleGroup> = this.fDbModul.MuskelgruppeListeSortedByName.map(m => m);
-        mComboListe.unshift(new MuscleGroup());
+        // mComboListe.unshift(new MuscleGroup());
         return mComboListe;
     }
     
@@ -42,8 +36,7 @@ export class EditExerciseComponent implements OnInit {
     }
 
     SaveChanges() {
-		// const mTmpEditMuscleGroupComponent: EditMuscleGroupComponent = this
-		// 	.ClickData as EditMuscleGroupComponent;
+		const mTmpEditMuscleGroupComponent: EditExerciseComponent = this.ClickData as EditExerciseComponent;
 		// if (mTmpEditMuscleGroupComponent.Muskelgruppe.Name.trim() === '') {
 		// 	const mDialogData = new DialogData();
 		// 	mDialogData.textZeilen.push('Please enter a name!');

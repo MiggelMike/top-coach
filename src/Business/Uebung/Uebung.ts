@@ -27,33 +27,37 @@ export enum UebungsKategorie02 {
 }
 
 export interface IUebung {
-  ID: number;
-  // Bei Session-Uebungen ist FkUebung der Schluessel zur Stamm-Uebung
-  FkUebung: number;
-  // Schluessel zur Muskel-Gruppe
-  FkMuskel: number;
-  MuskelGruppe: string;
-  Name: string;
-  Typ: UebungsTyp;
-  Kategorieen01: Array<UebungsKategorie01>;
-  Kategorie02: UebungsKategorie02;
-  SessionID: number;
-  SatzListe: Array<Satz>;
-  AufwaermSatzListe: Array<Satz>;
-  ArbeitsSatzListe: Array<Satz>;
-  AbwaermSatzListe: Array<Satz>;
-  Selected: boolean;
-  WarmUpVisible: boolean;
-  CooldownVisible: boolean;
-  IncludeWarmupWeight: boolean;
-  IncludeCoolDownWeight: boolean;
-  LiftedWeightVisible: boolean;
-  LiftedWeight: number;
-  Expanded: boolean;
-  InfoLink: string;
-  Beschreibung: string;
-  Copy(): Uebung;
-  hasChanged(aCmpUebung: IUebung): Boolean;
+    ID: number;
+    // Bei Session-Uebungen ist FkUebung der Schluessel zur Stamm-Uebung
+    FkUebung: number;
+    // Schluessel zur Muskel-Gruppe
+    FkMuskel01: number;
+    FkMuskel02: number;
+    FkMuskel03: number;
+    FkMuskel04: number;
+    FkMuskel05: number;
+    MuskelGruppe: string;
+    Name: string;
+    Typ: UebungsTyp;
+    Kategorieen01: Array<UebungsKategorie01>;
+    Kategorie02: UebungsKategorie02;
+    SessionID: number;
+    SatzListe: Array<Satz>;
+    AufwaermSatzListe: Array<Satz>;
+    ArbeitsSatzListe: Array<Satz>;
+    AbwaermSatzListe: Array<Satz>;
+    Selected: boolean;
+    WarmUpVisible: boolean;
+    CooldownVisible: boolean;
+    IncludeWarmupWeight: boolean;
+    IncludeCoolDownWeight: boolean;
+    LiftedWeightVisible: boolean;
+    LiftedWeight: number;
+    Expanded: boolean;
+    InfoLink: string;
+    Beschreibung: string;
+    Copy(): Uebung;
+    hasChanged(aCmpUebung: IUebung): Boolean;
 }
 
 export enum StandardUebungsName {
@@ -99,8 +103,12 @@ export class Uebung implements IUebung {
     public Expanded: boolean = false;
     public InfoLink: string = '';
     public Beschreibung: string = '';
-    public FkMuskel: number = 0;
-    public MuskelGruppe: string = '';
+    public FkMuskel01: number = 0;
+    public FkMuskel02: number = 0;
+    public FkMuskel03: number = 0;
+    public FkMuskel04: number = 0;
+    public FkMuskel05: number = 0;
+   public MuskelGruppe: string = '';
     public StammUebung: Uebung = null;
 
 
