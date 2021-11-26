@@ -1,3 +1,4 @@
+import { Hantelscheibe } from 'src/Business/Hantelscheibe/Hantelscheibe';
 import { Hantel, HantelTyp } from './../../Business/Hantel/Hantel';
 import { Equipment, EquipmentOrigin, EquipmentTyp } from './../../Business/Equipment/Equipment';
 import { SessionDB, SessionStatus } from './../../Business/SessionDB';
@@ -74,7 +75,8 @@ export class DexieSvcService extends Dexie {
     readonly cSession: string = "SessionDB";
     readonly cMuskelGruppe : string = "MuskelGruppe";
     readonly cEquipment : string = "Equipment";
-    readonly cHantel : string = "Hantel";
+    readonly cHantel: string = "Hantel";
+    readonly cHantelscheibe : string = "Hantelscheibe";
     
     AktuellerProgrammTyp: ProgrammTyp;
     AktuellesProgramm: ITrainingsProgramm; 
@@ -87,12 +89,15 @@ export class DexieSvcService extends Dexie {
     SessionTable: Dexie.Table<Session, number>;
     MuskelGruppeTable: Dexie.Table<MuscleGroup, number>;
     HantelTable: Dexie.Table<Hantel, number>;
+    HantelscheibenTable: Dexie.Table<Hantelscheibe, number>;
     EquipmentTable: Dexie.Table<Equipment, number>;
     public Programme: Array<ITrainingsProgramm> = [];
     public StammUebungsListe: Array<Uebung> = [];
     public MuskelGruppenListe: Array<MuscleGroup> = [];
     public EquipmentListe: Array<Equipment> = [];
     public LangHantelListe: Array<Hantel> = [];
+    public HantelscheibenListe: Array<Hantelscheibe> = []; 
+
     private ProgramLadeStandardPara: LadePara;
 
     public LanghantelListeSortedByName(aIgnorGeloeschte: Boolean = true): Array<Hantel>{
@@ -197,7 +202,7 @@ export class DexieSvcService extends Dexie {
         
         //   Dexie.delete("ConceptCoach");
         
-        this.version(20).stores({
+        this.version(23).stores({
             AppData: "++id",
             Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05",
             Programm: "++id,Name", 
@@ -206,6 +211,7 @@ export class DexieSvcService extends Dexie {
             MuskelGruppe: "++ID,Name,MuscleGroupKategorie01",
             Equipment: "++ID,Name",
             Hantel: "++ID,Typ,Name",
+            Hantelscheibe: "++ID,&[Durchmesser+Gewicht]",
         });
 
         
@@ -273,6 +279,7 @@ export class DexieSvcService extends Dexie {
     private InitAll() {
         this.InitAppData();
         this.InitHantel();
+        this.InitHantelscheibe()
         this.InitEquipment();
         this.InitUebung();
         this.InitProgramm();
@@ -284,6 +291,11 @@ export class DexieSvcService extends Dexie {
     private InitHantel() {
         this.HantelTable = this.table(this.cHantel);
         this.HantelTable.mapToClass(Hantel);
+    }
+    
+    private InitHantelscheibe() {
+        this.HantelscheibenTable = this.table(this.cHantelscheibe);
+        this.HantelscheibenTable.mapToClass(Hantelscheibe);
     }  
 
     private InitMuskelGruppe() {
@@ -374,6 +386,24 @@ export class DexieSvcService extends Dexie {
             return undefined;
         
         return this.StammUebungsListe.find(ub => ub.Name.toUpperCase() === aUebung.Name.toUpperCase());
+    }
+
+    public HantelscheibeSpeichern(aScheibe: Hantelscheibe) {
+        return this.HantelscheibenTable.put(aScheibe);
+    }
+
+    public InsertHantelscheiben(aHantelscheibenListe: Array<Hantelscheibe>): PromiseExtended {
+        return this.HantelscheibenTable.bulkPut(aHantelscheibenListe);
+    }
+
+    public LadeHantelscheiben(aAfterLoadFn?: AfterLoadFn) {
+        this.table(this.cHantelscheibe)
+            .toArray()
+            .then((mHantelscheibenListe) => {
+                this.HantelscheibenListe = mHantelscheibenListe;
+                if (aAfterLoadFn !== undefined)
+                    aAfterLoadFn(mHantelscheibenListe);
+            });
     }
 
     public LadeMuskelGruppen(aAfterLoadFn?: AfterLoadFn) {

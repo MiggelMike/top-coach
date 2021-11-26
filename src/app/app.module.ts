@@ -90,6 +90,7 @@ import { EditEquipmentComponent } from './edit-equipment/edit-equipment.componen
 import { LanghantelComponent } from './langhantel/langhantel.component';
 import { EditLanghantelComponent } from './edit-langhantel/edit-langhantel.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { ScheibenComponent } from './scheiben/scheiben.component';
 //import { MatBadgeModule } from '@angular/material/m/MatBadgeModule';
 
 // import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
@@ -158,7 +159,8 @@ export const floatMask = createNumberMask({
         EquipmentComponent,
         EditEquipmentComponent,
         LanghantelComponent,
-        EditLanghantelComponent
+        EditLanghantelComponent,
+        ScheibenComponent
     ],
     imports: [
         RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),

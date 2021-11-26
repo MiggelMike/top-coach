@@ -15,7 +15,10 @@
 
                 <mat-form-field class="align-right" fxFlex="14%">
                     <mat-label>Diameter</mat-label>
-                    <input matInput [textMask]="{mask: Int2DigitMask, guide: false }" [ngModel]="Hantel.Durchmesser"
+                    <input matInput 
+                          [textMask]="{mask: Int2DigitMask, guide: false }" 
+                          (focusout)="SetDiameter(Hantel,$event)"  
+                          [ngModel]="Hantel.Durchmesser"
                         type="text">
                 </mat-form-field>
 

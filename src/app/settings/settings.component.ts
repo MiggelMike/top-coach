@@ -24,8 +24,8 @@ export class SettingsComponent implements OnInit {
         this.router.navigate(['/muscle-groups']);
     }
 
-    NavEquipmentAssets(): void {
-        this.router.navigate(['/equipment']);
+    NavScheiben(): void {
+        this.router.navigate(['/app-scheiben']);
     }
 
     NavBarbells() {

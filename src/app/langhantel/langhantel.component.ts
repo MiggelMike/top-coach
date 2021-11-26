@@ -45,7 +45,6 @@ export class LanghantelComponent implements OnInit {
     }
 
     NeueHantel() {
-        const mHantel: Hantel = new Hantel();
         this.HantelListe.push(new Hantel());
     }
 
@@ -66,7 +65,12 @@ export class LanghantelComponent implements OnInit {
                 return true;
         }
         return false;
+
     }
+
+    public SetDiameter(aHantel: Hantel, aEvent: any) {
+		aHantel.Durchmesser = aEvent.target.value;
+	}
 
     back() {
         const mTmpEditHantelComponent: LanghantelComponent = this;

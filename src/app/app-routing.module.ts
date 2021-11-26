@@ -14,6 +14,7 @@ import { EquipmentComponent } from './equipment/equipment.component';
 import { EditEquipmentComponent } from './edit-equipment/edit-equipment.component';
 import { LanghantelComponent } from './langhantel/langhantel.component';
 import { EditLanghantelComponent } from './edit-langhantel/edit-langhantel.component';
+import { ScheibenComponent } from './scheiben/scheiben.component';
 
 
 export const routes: Routes = [
@@ -29,7 +30,8 @@ export const routes: Routes = [
     { path: 'edit-equipment', component: EditEquipmentComponent },
     { path: 'langhantel', component: LanghantelComponent },
     { path: 'edit-langhantel', component: EditLanghantelComponent },
-    { path: 'sessionFormComponent', component: SessionFormComponent, data: { title: 'welcome', toolbar: false} },
+    { path: 'sessionFormComponent', component: SessionFormComponent, data: { title: 'welcome', toolbar: false } },
+    { path: 'app-scheiben', component: ScheibenComponent },    
 ];
 
 @NgModule({
