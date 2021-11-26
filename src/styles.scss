@@ -176,3 +176,8 @@ div.stern:after {
 .pd-l-5 {
     padding-left: 5px;
 }
+
+textarea:focus {
+    outline: none!important;
+    border-color:  #bdd2e9;
+ }
