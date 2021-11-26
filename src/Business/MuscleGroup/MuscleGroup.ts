@@ -67,7 +67,8 @@ export var StandardMuscleGroup: Array<MuscleGroupKategorie02> = new Array<Muscle
     MuscleGroupKategorie02.Chest,
     MuscleGroupKategorie02.Arms,
     MuscleGroupKategorie02.Back,
-    MuscleGroupKategorie02.Shoulders
+    MuscleGroupKategorie02.Shoulders,
+    MuscleGroupKategorie02.Abdominal
 )
     
 

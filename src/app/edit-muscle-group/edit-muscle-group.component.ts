@@ -32,7 +32,8 @@ export class EditMuscleGroupComponent implements OnInit {
   ngOnInit(): void {}
 
   back() {
-    if (this.Muskelgruppe.isEqual(this.CmpMuskelgruppe)) this.location.back();
+	  if (this.Muskelgruppe.isEqual(this.CmpMuskelgruppe))
+		  this.location.back();
     else {
       const mDialogData = new DialogData();
       mDialogData.textZeilen.push('Cancel unsaved changes?');
@@ -70,8 +71,7 @@ export class EditMuscleGroupComponent implements OnInit {
 					.MuskelgruppeSpeichern(mTmpEditMuscleGroupComponent.Muskelgruppe)
 					.then((mID: number) => {
 						mTmpEditMuscleGroupComponent.Muskelgruppe.ID = mID;
-						mTmpEditMuscleGroupComponent.CmpMuskelgruppe =
-							mTmpEditMuscleGroupComponent.Muskelgruppe.Copy();
+						mTmpEditMuscleGroupComponent.CmpMuskelgruppe = mTmpEditMuscleGroupComponent.Muskelgruppe.Copy();
 						mTmpEditMuscleGroupComponent.fDexieSvcService.LadeMuskelGruppen();
 					});
 			}

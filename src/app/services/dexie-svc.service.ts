@@ -365,6 +365,17 @@ export class DexieSvcService extends Dexie {
         return this.MuskelGruppeTable.bulkPut(aMuskelGruppenListe);
     }
 
+    public FindUebung(aUebung: Uebung): boolean{
+        return (this.UebungExists(aUebung) !== undefined)
+    }
+
+    public UebungExists(aUebung: Uebung): Uebung{
+        if (aUebung.Name.trim() === '')
+            return undefined;
+        
+        return this.StammUebungsListe.find(ub => ub.Name.toUpperCase() === aUebung.Name.toUpperCase());
+    }
+
     public LadeMuskelGruppen(aAfterLoadFn?: AfterLoadFn) {
         this.MuskelGruppenListe = [];
         this.table(this.cMuskelGruppe)
@@ -980,9 +991,11 @@ export class DexieSvcService extends Dexie {
 
     public UebungSpeichern(aUebung: Uebung) {
         return this.transaction("rw", this.UebungTable, this.SatzTable, () => {
-            this.UebungTable.put(aUebung).then((mUebungID:number) => {
+            this.UebungTable.put(aUebung)
+                .then((mUebungID: number) => {
                 // Uebung ist gespeichert.
                 // UebungsID in Saetze eintragen.
+                aUebung.ID = mUebungID;
                 aUebung.SatzListe.forEach((mSatz) => {
                     mSatz.UebungID = mUebungID;
                     mSatz.SessionID = aUebung.SessionID;

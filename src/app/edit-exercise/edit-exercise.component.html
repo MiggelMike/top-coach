@@ -12,55 +12,40 @@
             </mat-form-field>
         </div>
 
-            <mat-form-field class="mg-5" appearance="fill">
-                <mat-label>Involved Muscle #1</mat-label>
-                <select matNativeControl [(ngModel)]="Uebung.FkMuskel01">
-                    <option *ngFor="let mu of MuskelListe" [value]="mu.ID">
-                        {{ mu.Name }}
-                    </option>
+        <mat-form-field class="mg-5">
+            <mat-label>Involved Muscle #1</mat-label>
+            <mat-select [(ngModel)]="Uebung.FkMuskel01">
+                <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
 
-                </select>
-            </mat-form-field>
+        <mat-form-field class="mg-5">
+            <mat-label>Involved Muscle #2</mat-label>
+            <mat-select [(ngModel)]="Uebung.FkMuskel02">
+                <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
 
-            <mat-form-field class="mg-5" appearance="fill">
-                <mat-label>Involved Muscle #2</mat-label>
-                <select matNativeControl [(ngModel)]="Uebung.FkMuskel02">
-                    <option *ngFor="let mu of MuskelListe" [value]="mu.ID">
-                        {{ mu.Name }}
-                    </option>
+        <mat-form-field class="mg-5">
+            <mat-label>Involved Muscle #3</mat-label>
+            <mat-select [(ngModel)]="Uebung.FkMuskel03">
+                <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
 
-                </select>
-            </mat-form-field>
+        <mat-form-field class="mg-5">
+            <mat-label>Involved Muscle #4</mat-label>
+            <mat-select [(ngModel)]="Uebung.FkMuskel04">
+                <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
 
-            <mat-form-field class="mg-5" appearance="fill">
-                <mat-label>Involved Muscle #3</mat-label>
-                <select matNativeControl [(ngModel)]="Uebung.FkMuskel03">
-                    <option *ngFor="let mu of MuskelListe" [value]="mu.ID">
-                        {{ mu.Name }}
-                    </option>
-
-                </select>
-            </mat-form-field>
-
-            <mat-form-field class="mg-5" appearance="fill">
-                <mat-label>Involved Muscle #4</mat-label>
-                <select matNativeControl [(ngModel)]="Uebung.FkMuskel04">
-                    <option *ngFor="let mu of MuskelListe" [value]="mu.ID">
-                        {{ mu.Name }}
-                    </option>
-
-                </select>
-            </mat-form-field>
-
-            <mat-form-field class="mg-5" appearance="fill">
-                <mat-label>Involved Muscle #5</mat-label>
-                <select matNativeControl [(ngModel)]="Uebung.FkMuskel05">
-                    <option *ngFor="let mu of MuskelListe" [value]="mu.ID">
-                        {{ mu.Name }}
-                    </option>
-
-                </select>
-            </mat-form-field>
+        <mat-form-field class="mg-5">
+            <mat-label>Involved Muscle #5</mat-label>
+            <mat-select [(ngModel)]="Uebung.FkMuskel05">
+                <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
 
         <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
             <mat-label>Comments</mat-label>

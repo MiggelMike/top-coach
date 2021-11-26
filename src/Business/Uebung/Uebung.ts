@@ -2,6 +2,7 @@ import { MuscleGroup, MuscleGroupKategorie02 } from '../MuscleGroup/MuscleGroup'
 import { Satz, SatzTyp, LiftTyp, SatzPausen, SatzStatus } from './../Satz/Satz';
 
 var cloneDeep = require('lodash.clonedeep');
+var isEqual = require('lodash.isEqual')
 
 export enum UebungsTyp {
   Undefined = 'Undefined',
@@ -198,6 +199,10 @@ export class Uebung implements IUebung {
             UebungsKategorie01.GzclpT2Cycle1,
             UebungsKategorie01.GzclpT2Cycle2
         );
+    }
+
+    public isEqual(aOtherExercise: Uebung): Boolean {
+        return isEqual(this,aOtherExercise);
     }
 
     public static StaticNeueUebung(
