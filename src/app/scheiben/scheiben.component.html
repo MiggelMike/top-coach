@@ -28,7 +28,7 @@
                 <mat-form-field class="align-right" fxFlex="20%">
                     <mat-label>#</mat-label>
                     <input matInput 
-                           [textMask]="{mask: Int2DigitMask, guide: false }" 
+                           [textMask]="{mask: Int4DigitMask, guide: false }" 
                            (focusout)="SetAnzahl(sch,$event)"
                            [ngModel]="sch.Anzahl" type="text">
                 </mat-form-field>

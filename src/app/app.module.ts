@@ -128,7 +128,21 @@ export const floatMask = createNumberMask({
     allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
   })
 
+  export const Int3DigitMask = createNumberMask({
+    prefix: '',
+    suffix: '', 
+    includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
+    integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
+    allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
+  })  
 
+  export const Int4DigitMask = createNumberMask({
+    prefix: '',
+    suffix: '', 
+    includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
+    integerLimit: 4, // (number): limit the length of the integer number. Defaults to null for unlimited
+    allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
+  })    
 
 @NgModule({
     declarations: [

@@ -18,4 +18,8 @@ export class Hantelscheibe implements  IHantelscheibe  {
     public Copy(): Hantelscheibe {
         return cloneDeep(this);
     }
+
+    public isEqual(aOtherHantelscheibe: Hantelscheibe): Boolean {
+        return isEqual(this,aOtherHantelscheibe);
+    }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Hantelscheibe } from "src/Business/Hantelscheibe/Hantelscheibe";
 import { DialogData } from "../dialoge/hinweis/hinweis.component";
-import { floatMask, repMask, Int2DigitMask } from "./../app.module";
+import { floatMask, repMask, Int2DigitMask, Int4DigitMask } from "./../app.module";
 import { Location } from "@angular/common";
 import { DexieSvcService } from "../services/dexie-svc.service";
 import { DialogeService } from "../services/dialoge.service";
@@ -15,6 +15,7 @@ export class ScheibenComponent implements OnInit {
 	public floatMask = floatMask;
 	public repMask = repMask;
 	public Int2DigitMask = Int2DigitMask;
+	public Int4DigitMask = Int4DigitMask;
 	public ClickData: ScheibenComponent = this;
 
 	public CmpHantelscheibenListe: Array<Hantelscheibe> = [];
@@ -58,21 +59,21 @@ export class ScheibenComponent implements OnInit {
 	Delete(aScheibe: Hantelscheibe) {}
 
 	private ChangesExist(): Boolean {
-		// if (this.HantelListe.length !== this.CmpHantelListe.length)
-		//     return true;
+		if (this.HantelscheibenListe.length !== this.CmpHantelscheibenListe.length)
+		    return true;
 
-		// for (let index = 0; index < this.HantelListe.length; index++) {
-		//     const mHantel = this.HantelListe[index];
-		//     if (mHantel.ID === undefined)
-		//         return true;
+		for (let index = 0; index < this.HantelscheibenListe.length; index++) {
+		    const mHantel = this.HantelscheibenListe[index];
+		    if (mHantel.ID === undefined)
+		        return true;
 
-		//     const mCmpHantel = this.CmpHantelListe.find((h) => h.ID === mHantel.ID);
-		//     if (mHantel.ID === undefined)
-		//         return true;
+		    const mCmpHantel = this.CmpHantelscheibenListe.find((h) => h.ID === mHantel.ID);
+		    if (mHantel.ID === undefined)
+		        return true;
 
-		//     if (mHantel.isEqual(mCmpHantel) === false)
-		//         return true;
-		// }
+		    if (mHantel.isEqual(mCmpHantel) === false)
+		        return true;
+		}
 		return false;
 	}
 
@@ -115,10 +116,10 @@ export class ScheibenComponent implements OnInit {
 	}
 
 	CancelChanges() {
-		// const mTmpEditHantelComponent: LanghantelComponent = this.ClickData as LanghantelComponent;
-		// const mDialogData = new DialogData();
-		// mDialogData.textZeilen.push("Cancel unsaved changes?");
-		// mDialogData.OkFn = (): void => (mTmpEditHantelComponent.CopyHantelList());
-		// mTmpEditHantelComponent.fDialogService.JaNein(mDialogData);
+		const mTmpScheibenComponent: ScheibenComponent = this.ClickData as ScheibenComponent;
+		const mDialogData = new DialogData();
+		mDialogData.textZeilen.push("Cancel unsaved changes?");
+		mDialogData.OkFn = (): void => (mTmpScheibenComponent.CopyHantelscheibenList());
+		mTmpScheibenComponent.fDialogService.JaNein(mDialogData);
 	}
 }
