@@ -15,6 +15,7 @@
         <mat-form-field class="mg-5">
             <mat-label>Involved Muscle #1</mat-label>
             <mat-select [(ngModel)]="Uebung.FkMuskel01">
+                <mat-option [value]="0"></mat-option>
                 <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
             </mat-select>
         </mat-form-field>
@@ -22,6 +23,7 @@
         <mat-form-field class="mg-5">
             <mat-label>Involved Muscle #2</mat-label>
             <mat-select [(ngModel)]="Uebung.FkMuskel02">
+                <mat-option [value]="0"></mat-option>
                 <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
             </mat-select>
         </mat-form-field>
@@ -29,6 +31,7 @@
         <mat-form-field class="mg-5">
             <mat-label>Involved Muscle #3</mat-label>
             <mat-select [(ngModel)]="Uebung.FkMuskel03">
+                <mat-option [value]="0"></mat-option>
                 <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
             </mat-select>
         </mat-form-field>
@@ -36,6 +39,7 @@
         <mat-form-field class="mg-5">
             <mat-label>Involved Muscle #4</mat-label>
             <mat-select [(ngModel)]="Uebung.FkMuskel04">
+                <mat-option [value]="0"></mat-option>
                 <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
             </mat-select>
         </mat-form-field>
@@ -43,6 +47,7 @@
         <mat-form-field class="mg-5">
             <mat-label>Involved Muscle #5</mat-label>
             <mat-select [(ngModel)]="Uebung.FkMuskel05">
+                <mat-option [value]="0"></mat-option>
                 <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
             </mat-select>
         </mat-form-field>

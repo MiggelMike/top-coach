@@ -91,6 +91,8 @@ import { LanghantelComponent } from './langhantel/langhantel.component';
 import { EditLanghantelComponent } from './edit-langhantel/edit-langhantel.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ScheibenComponent } from './scheiben/scheiben.component';
+import { TrainingsGewichtProgressComponent } from './trainings-gewicht-progress/trainings-gewicht-progress.component';
+import { ExerciseSettingsComponent } from './exercise-settings/exercise-settings.component';
 //import { MatBadgeModule } from '@angular/material/m/MatBadgeModule';
 
 // import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
@@ -100,6 +102,15 @@ import { ScheibenComponent } from './scheiben/scheiben.component';
 
 //export const Firstmask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
 export const Firstmask = [/[0-9,'.', [0-9, [0-9,'.']]] /];
+
+
+export interface IOkCallback {
+  ():void;
+}
+
+export interface ICancelCallback {
+  ():void;
+}
 
 export const floatMask = createNumberMask({
     prefix: '',
@@ -174,7 +185,9 @@ export const floatMask = createNumberMask({
         EditEquipmentComponent,
         LanghantelComponent,
         EditLanghantelComponent,
-        ScheibenComponent
+        ScheibenComponent,
+        TrainingsGewichtProgressComponent,
+        ExerciseSettingsComponent
     ],
     imports: [
         RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),

@@ -27,7 +27,7 @@ export class ScheibenComponent implements OnInit {
 	ngOnInit(): void {}
 
 	get HantelscheibenListe(): Array<Hantelscheibe> {
-		return this.fDexieSvcService.HantelscheibenListe;
+		return this.fDexieSvcService.HantenscheibeListeSortedByDiameterAndWeight;
 	}
 
 	GetHantelscheibenListe() {

@@ -30,6 +30,9 @@ export class SettingsComponent implements OnInit {
 
     NavBarbells() {
         this.router.navigate(['/langhantel']);
-       
+    }
+
+    NavWeightIncrement(){
+        this.router.navigate(['/app-trainings-gewicht-progress']);
     }
 }

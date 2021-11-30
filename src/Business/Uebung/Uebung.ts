@@ -59,6 +59,9 @@ export interface IUebung {
     Beschreibung: string;
     Copy(): Uebung;
     hasChanged(aCmpUebung: IUebung): Boolean;
+    GewichtSteigerung: number;
+    GewichtReduzierung: number;
+
 }
 
 export enum StandardUebungsName {
@@ -109,9 +112,10 @@ export class Uebung implements IUebung {
     public FkMuskel03: number = 0;
     public FkMuskel04: number = 0;
     public FkMuskel05: number = 0;
-   public MuskelGruppe: string = '';
+    public MuskelGruppe: string = '';
     public StammUebung: Uebung = null;
-
+    public GewichtSteigerung: number = 0;
+    public GewichtReduzierung: number = 0;
 
     constructor() {
         // Nicht in Dexie-DB-Speichern -> enumerable: false

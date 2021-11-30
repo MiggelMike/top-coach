@@ -26,7 +26,7 @@ export class MuscleGroupsComponent implements OnInit {
     }
     
     public get MuskelGruppenListe():Array<MuscleGroup> {
-        return this.fDexieSvcService.MuskelgruppeListeSortedByName;
+        return this.fDexieSvcService.MuskelgruppeListeSortedByName();
     }
 
     public EditMuskelGruppe(aMuskelGruppe: MuscleGroup): void {

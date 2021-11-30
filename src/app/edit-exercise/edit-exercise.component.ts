@@ -33,8 +33,8 @@ export class EditExerciseComponent implements OnInit {
     ngOnInit(): void {
 	}
 
-    public get MuskelListe(): Array<MuscleGroup>{
-		return this.fDexieService.MuskelgruppeListeSortedByName;
+	public get MuskelListe(): Array<MuscleGroup>{
+		return this.fDexieService.MuskelgruppeListeSortedByName(); 
     }
     
     back() {

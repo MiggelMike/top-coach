@@ -8,7 +8,13 @@ import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, ElementRe
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { of } from 'rxjs';
-import { LOCALE_ID , Inject} from '@angular/core';
+import { LOCALE_ID, Inject } from '@angular/core';
+import { floatMask } from 'src/app/app.module';
+import { MatDialogConfig, MatDialog, DialogPosition, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ExerciseSettingsComponent } from 'src/app/exercise-settings/exercise-settings.component';
+import { ExerciseOverlayConfig, ExerciseSettingSvcService } from 'src/app/services/exercise-setting-svc.service';
+import { Router } from '@angular/router';
+
 
 
 @Component({
@@ -32,7 +38,10 @@ export class Programm03Component implements OnInit {
     @ViewChildren("panUebung") panUebung: QueryList<MatExpansionPanel>;
     @ViewChild(CdkOverlayOrigin) cdkOverlayOrigin: CdkOverlayOrigin;
     // @ViewChild('Session') div: ElementRef;
+    private fExerciseOverlayConfig: ExerciseOverlayConfig;
+    private fExerciseSettingsComponent: ExerciseSettingsComponent;
 
+    public floatMask = floatMask;
     private isExpanded: Boolean = true;
     public ToggleButtonText = "Close all excercises";
     public LocaleID: string;
@@ -49,13 +58,28 @@ export class Programm03Component implements OnInit {
     ngOnInit() { }
     
     constructor(
-        @Inject( LOCALE_ID ) localID: string ,
+        @Inject(LOCALE_ID) localID: string,
         private fGlobalService: GlobalService,
-        private fDialogService: DialogeService
+        private fDialogService: DialogeService,
+        private fExerciseSettingSvcService: ExerciseSettingSvcService
     ) {
         this.LocaleID = localID;
         if (this.fGlobalService.Comp03PanelUebungObserver === null)
             this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;
+        
+            // const mNavigation = this.router.getCurrentNavigation();
+            // const mState = mNavigation.extras.state as { uebung: Uebung; };
+            
+            // this.fSessionOverlayConfig =
+            //     {
+            //         session: this.Session,
+            //         left: -1000,
+            //         top: -1000
+            //     } as SessionOverlayConfig;
+    }
+
+    SetPlusWeight(aUuebung: Uebung, $event) {
+        
     }
 
     ngOnDestroy() {
@@ -78,13 +102,13 @@ export class Programm03Component implements OnInit {
     }
 
     PanelUebungOpened(aUebung: Uebung) {
-        if(aUebung.Expanded)
+        if (aUebung.Expanded)
             aUebung.Expanded = true;
         this.accCheckUebungPanels();
     }
 
     PanelUebungClosed(aUebung: Uebung) {
-        if(aUebung.Expanded)
+        if (aUebung.Expanded)
             aUebung.Expanded = false;
         this.accCheckUebungPanels();
     }
@@ -143,5 +167,18 @@ export class Programm03Component implements OnInit {
     public CopyExcercise(aUebung: Uebung) {
         this.fGlobalService.SessUebungKopie = aUebung.Copy();
     }
+
+    public DoSettings(aSessUeb: Uebung, aEvent: Event) {
+        aEvent.stopPropagation();
+
+        this.fExerciseOverlayConfig =
+            {
+                uebung: aSessUeb,
+                // left: -1000,
+                // top: -1000
+            } as ExerciseOverlayConfig;
+        
+            
+        this.fExerciseSettingsComponent = this.fExerciseSettingSvcService.open(this.fExerciseOverlayConfig);
+    }
 }
-  

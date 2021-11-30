@@ -45,8 +45,9 @@ const DEFAULT_CONFIG: SessionOverlayConfig = {
 export class SessionOverlayServiceService {
     public SessOverlayRef: OverlayRef = null;
     public SessionStatsOverlayComponent: SessionStatsOverlayComponent;
-
-    constructor(private overlay: Overlay, private injector: Injector) { }
+    
+    constructor(private overlay: Overlay, private injector: Injector
+    ) { }
     
     private createInjector(aConfig: SessionOverlayConfig, aSessionRef: SessionOverlayRef): PortalInjector {
         // Instantiate new WeakMap for our custom injection tokens
@@ -95,6 +96,7 @@ export class SessionOverlayServiceService {
             .position()
             .global()
             .top("100px")
+        
             // .left("150px")
             // .right("150px");
         // .centerHorizontally()
@@ -114,6 +116,7 @@ export class SessionOverlayServiceService {
     private createOverlay(aConfig: SessionOverlayConfig) {
         // Returns an OverlayConfig
         const overlayConfig = this.getOverlayConfig(aConfig);
+        
 
         // Returns an OverlayRef
         return this.overlay.create(overlayConfig);

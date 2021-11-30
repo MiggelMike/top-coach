@@ -1,3 +1,4 @@
+import { TrainingsGewichtProgressComponent } from './trainings-gewicht-progress/trainings-gewicht-progress.component';
 import { SettingsComponent } from './settings/settings.component';
 import { SessionFormComponent } from './bausteine/session-form/session-form.component';
 // import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
@@ -31,7 +32,9 @@ export const routes: Routes = [
     { path: 'langhantel', component: LanghantelComponent },
     { path: 'edit-langhantel', component: EditLanghantelComponent },
     { path: 'sessionFormComponent', component: SessionFormComponent, data: { title: 'welcome', toolbar: false } },
-    { path: 'app-scheiben', component: ScheibenComponent },    
+    { path: 'app-scheiben', component: ScheibenComponent },
+    { path: 'app-trainings-gewicht-progress', component: TrainingsGewichtProgressComponent },
+    
 ];
 
 @NgModule({
