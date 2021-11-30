@@ -40,7 +40,7 @@
 
         <div fxLayout="row" fxFlex="100%">
             <mat-form-field class="align-right" fxFlex="90%">
-                <mat-label>Weight increasing</mat-label>
+                <mat-label>Weight progression</mat-label>
                 <input matInput [textMask]="{mask: floatMask, guide: false }"
                     [ngModel]="(SessUeb.GewichtSteigerung | number: '1.2')" (focusout)="SetGewichtSteigerung($event)"
                     type="text">
@@ -49,7 +49,7 @@
 
         <div fxLayout="row" fxFlex="100%">
             <mat-form-field class="align-right" fxFlex="90%">
-                <mat-label>Weight decreasing</mat-label>
+                <mat-label>Weight reduction</mat-label>
                 <input matInput [textMask]="{mask: floatMask, guide: false }"
                     [ngModel]="(SessUeb.GewichtReduzierung | number: '1.2')" (focusout)="SetGewichtReduzierung($event)"
                     type="text">
