@@ -19,7 +19,7 @@ export class ExerciseSettingsComponent  {
   constructor(
     public overlayRef: ExerciseOverlayRef,
     public _ModalPositionService: ModalPositionService,
-    @Inject(cExerciseOverlayData) public uebung: IUebung
+    @Inject(cExerciseOverlayData) public SessUeb: IUebung
 
   ) {
     

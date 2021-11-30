@@ -174,8 +174,8 @@ export class Programm03Component implements OnInit {
         this.fExerciseOverlayConfig =
             {
                 uebung: aSessUeb,
-                // left: -1000,
-                // top: -1000
+                left: (aEvent as PointerEvent).pageX - (aEvent as PointerEvent).offsetX,
+                top: (aEvent as PointerEvent).clientY - (aEvent as PointerEvent).offsetY,
             } as ExerciseOverlayConfig;
         
             

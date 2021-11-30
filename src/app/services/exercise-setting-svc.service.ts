@@ -21,7 +21,9 @@ export interface ExerciseOverlayConfig {
 export const cExerciseOverlayData = new InjectionToken<IUebung>("Exercise_Settings_Overlay_Component");
 
 const DEFAULT_CONFIG: ExerciseOverlayConfig = {
-	hasBackdrop: false,
+  hasBackdrop: true,
+  height: 100,
+  width: 100,
 	backdropClass: "dark-backdrop",
 	uebung: null,
 	// panelClass: 'tm-file-preview-dialog-panel',
@@ -92,15 +94,16 @@ export class ExerciseSettingSvcService {
 
 	close() {
 		this .ExerciseSettingsComponent.close();
-		//this.SessOverlayRef.dispose();
 	}
 
 	private getOverlayConfig(aConfig: ExerciseOverlayConfig): OverlayConfig {
-		const positionStrategy = this.overlay.position().global()
-		// .left("150px")
-		// .right("150px");
-		.centerHorizontally()
-		.centerVertically();
+    const positionStrategy = this.overlay.position().global()
+      // .left(aConfig.left.toString() + "px")
+      .top(aConfig.top.toString()+"px")
+      //		 .left("150px")
+      //.top("150px");
+      .centerHorizontally();
+		// .centerVertically();
 
 		const overlayConfig = new OverlayConfig({
 			hasBackdrop: aConfig.hasBackdrop,

@@ -12,10 +12,10 @@
                             <h6 flex>#{{i+1}} {{SessUeb.Name}}</h6>
                         </div>
 
-                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DoSettings(SessUeb, $event)">Do Settings</a>
+                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DoSettings(SessUeb, $event)">Settings</a>
                         
 
-                        <ng-container *ngIf="bearbeitbar">
+                        <!-- <ng-container *ngIf="bearbeitbar">
                             <a [ngClass]="['link-button-font','HG-Transparent']" mat-button [matMenuTriggerFor]="menu"
                                 (click)="$event.stopPropagation()">Settings</a>
 
@@ -47,7 +47,7 @@
 
                                 </div>
                             </mat-menu>
-                        </ng-container>
+                        </ng-container> -->
                     </div>
 
                    
