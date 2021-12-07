@@ -32,11 +32,11 @@ export class ExerciseSettingsComponent {
 	}
 
 	SetGewichtSteigerung(aEvent: any) {
-		this.SessUeb.GewichtSteigerung = aEvent.target.value;
+		this.SessUeb.GewichtAenderung = aEvent.target.value;
   }
   
   SetGewichtReduzierung(aEvent: any) {
-    this.SessUeb.GewichtReduzierung = aEvent.target.value;
+    this.SessUeb.GewichtAenderung = aEvent.target.value;
     
   }
 }

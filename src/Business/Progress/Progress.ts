@@ -3,6 +3,8 @@ import { Session } from "src/Business/Session/Session";
 import { Satz } from "../Satz/Satz";
 import { Uebung } from "../Uebung/Uebung";
 import { ProgrammKategorie } from "../TrainingsProgramm/TrainingsProgramm";
+var cloneDeep = require('lodash.clonedeep');
+var isEqual = require('lodash.isEqual')
 
 export enum ProgressTyp {
 	BlockSet,
@@ -40,7 +42,6 @@ export interface IProgress {
 	ID: number;
 	Name: string;
 	Beschreibung: string;
-	CalcWeight(aSaetze: Array<Satz>): number;
 }
 
 // Wird in DB gespeichert
@@ -69,19 +70,17 @@ export class ProgressClient extends Progress {
 		return true;
 	}
 
-	private DetermineNextProgress(
+	private async DetermineNextProgress(
 		aDb: DexieSvcService,
 		aDatum: Date,
 		aFailCount: number,
 		aVorlageProgrammID: number,
 		aSatzIndex: number,
-		aSessUebung: Uebung,
-		aProgressSet: ProgressSet,
-		aProgressTyp: ProgressTyp
-	): WeightProgress {
+		aSessUebung: Uebung
+	): Promise<WeightProgress> {
 		if (aFailCount < 0) aFailCount = 0;
 
-		aDb.transaction("r", [aDb.cSession, aDb.cUebung], async () => {
+		return aDb.transaction("r", [aDb.cSession, aDb.cUebung], async () => {
 			if (aSessUebung.GewichtAenderung === 0) return WeightProgress.Same;
 
 			let mSessionListe: Array<Session> = [];
@@ -215,8 +214,8 @@ export class ProgressClient extends Progress {
 							else {
 								// Wenn der Prozesstyp nicht Blockset ist, muss 
 								if ((this.ProgressTyp === ProgressTyp.BlockSet) ||
-								// er RepRange sein. Daher das untere Limit prüfen.
-								 (mSessUebung.SatzWDH(0) < mSessUebung.SatzVonVorgabeWDH(0)))
+									// er RepRange sein. Daher das untere Limit prüfen.
+									(mSessUebung.SatzWDH(0) < mSessUebung.SatzVonVorgabeWDH(0)))
 									mFailCount++
 							}
 						}
@@ -259,6 +258,17 @@ export class ProgressClient extends Progress {
 				}
 			}
 			return WeightProgress.Same;
+		}).then( (mProgress) => {
+			return mProgress;
 		});
 	}
+
+	public Copy(): ProgressClient {
+        return cloneDeep(this);
+	}
+	
+	public isEqual(aOtherProgress: ProgressClient): boolean {
+        return isEqual(this,aOtherProgress);
+    }
+
 }

@@ -1,4 +1,4 @@
-import { Progress } from './../../Business/Progress/Progress';
+import { Progress, IProgress, ProgressClient } from './../../Business/Progress/Progress';
 import { Hantelscheibe } from 'src/Business/Hantelscheibe/Hantelscheibe';
 import { Hantel, HantelTyp } from './../../Business/Hantel/Hantel';
 import { Equipment, EquipmentOrigin, EquipmentTyp } from './../../Business/Equipment/Equipment';
@@ -430,6 +430,23 @@ export class DexieSvcService extends Dexie {
             return undefined;
         
         return this.StammUebungsListe.find(ub => ub.Name.toUpperCase() === aUebung.Name.toUpperCase());
+    }
+
+    public LadeProgress(aAfterLoadFn?: AfterLoadFn) {
+        this.table(this.cProgress)
+            .toArray()
+            .then((mProgressListe) => {
+                if (aAfterLoadFn !== undefined)
+                    aAfterLoadFn(mProgressListe);
+            });
+    }
+
+    public ProgressSpeichern(aProgess: Progress) {
+        return this.ProgressTable.put(aProgess);
+    }
+
+    public InsertProgresse(aProgessListe: Array<Progress>) {
+        return this.ProgressTable.bulkPut(aProgessListe);
     }
 
     public HantelscheibeSpeichern(aScheibe: Hantelscheibe) {

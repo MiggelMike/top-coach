@@ -79,7 +79,7 @@
                     </ng-container>
                 <!-- Ausgefuerte Wdh. -->
                 <mat-form-field class="align-right" fxFlex="30px">
-                    <mat-label>{{satz.WdhVorgabe | number: '1.0'}}</mat-label>
+                    <mat-label>{{satz.WdhVonVorgabe | number: '1.0'}}</mat-label>
                     <input matInput [textMask]="{mask: repMask, guide: false}" 
                            [ngModel]="satz.WdhAusgefuehrt" 
                             (focusout)="SetWdhAusgefuehrt($event)" type="text">
@@ -112,7 +112,7 @@
                 <!-- Geplante Vorgabe-Wdh. -->
                 <mat-form-field class="align-right" fxFlex="30px">
                     <input  matInput [textMask]="{mask: repMask, guide: false}" 
-                            [ngModel]="satz.WdhVorgabe" 
+                            [ngModel]="satz.WdhVonVorgabe" 
                             (focusout)="SetWdhVorgabe($event)" 
                             type="text"
                     >

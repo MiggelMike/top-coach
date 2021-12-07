@@ -93,6 +93,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ScheibenComponent } from './scheiben/scheiben.component';
 import { TrainingsGewichtProgressComponent } from './trainings-gewicht-progress/trainings-gewicht-progress.component';
 import { ExerciseSettingsComponent } from './exercise-settings/exercise-settings.component';
+import { EditTrainingsGewichtProgressComponent } from './edit-trainings-gewicht-progress/edit-trainings-gewicht-progress.component';
 //import { MatBadgeModule } from '@angular/material/m/MatBadgeModule';
 
 // import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
@@ -187,7 +188,8 @@ export const floatMask = createNumberMask({
         EditLanghantelComponent,
         ScheibenComponent,
         TrainingsGewichtProgressComponent,
-        ExerciseSettingsComponent
+        ExerciseSettingsComponent,
+        EditTrainingsGewichtProgressComponent
     ],
     imports: [
         RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),

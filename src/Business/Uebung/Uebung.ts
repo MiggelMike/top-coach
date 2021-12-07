@@ -63,7 +63,6 @@ export interface IUebung {
     Copy(): Uebung;
     hasChanged(aCmpUebung: IUebung): Boolean;
     FkProgress: number;
-    Progress: Progress;
     GewichtAenderung: number;
 
 }
@@ -121,18 +120,8 @@ export class Uebung implements IUebung {
     public GewichtAenderung: number = 0;
  
     public FkProgress: number = 0;
-    
-    public get Progress(): Progress {
-        let mResult: Progress = null;
-        this.pDb.transaction('r', [this.pDb.cProgress], async () => {
-            mResult = await this.pDb.ProgressTable.get(this.FkProgress).then(
-                (p => { return p })
-            )
-        });
-        return mResult;
-    }
 
-    constructor( public pDb: DexieSvcService) {
+    constructor() {
         // Nicht in Dexie-DB-Speichern -> enumerable: false
         // Object.defineProperty(this, "SatzListe", { enumerable: false });
         Object.defineProperty(this, 'pDb', { enumerable: false });

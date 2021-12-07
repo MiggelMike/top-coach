@@ -18,6 +18,7 @@ export class ScheibenComponent implements OnInit {
 	public Int4DigitMask = Int4DigitMask;
 	public ClickData: ScheibenComponent = this;
 
+	public HantelscheibenListe: Array<Hantelscheibe> = [];
 	public CmpHantelscheibenListe: Array<Hantelscheibe> = [];
 
 	constructor(private location: Location, private fDexieSvcService: DexieSvcService, public fDialogService: DialogeService) {
@@ -26,16 +27,16 @@ export class ScheibenComponent implements OnInit {
 
 	ngOnInit(): void {}
 
-	get HantelscheibenListe(): Array<Hantelscheibe> {
-		return this.fDexieSvcService.HantenscheibeListeSortedByDiameterAndWeight;
-	}
+	// get HantelscheibenListe(): Array<Hantelscheibe> {
+	// 	return this.fDexieSvcService.HantenscheibeListeSortedByDiameterAndWeight;
+	// }
 
 	GetHantelscheibenListe() {
 		this.fDexieSvcService.LadeHantelscheiben((mHantelscheibenListe) => {
-			// this.HantelscheibenListe = [];
-			// mHantelscheibenListe.forEach((hs) => {
-			// 	this.HantelscheibenListe.push(hs);
-			// });
+			this.HantelscheibenListe = [];
+			mHantelscheibenListe.forEach((hs) => {
+			 	this.HantelscheibenListe.push(hs);
+			});
 			this.CopyHantelscheibenList();
 		});
 	}
@@ -119,7 +120,7 @@ export class ScheibenComponent implements OnInit {
 		const mTmpScheibenComponent: ScheibenComponent = this.ClickData as ScheibenComponent;
 		const mDialogData = new DialogData();
 		mDialogData.textZeilen.push("Cancel unsaved changes?");
-		mDialogData.OkFn = (): void => (mTmpScheibenComponent.CopyHantelscheibenList());
+		mDialogData.OkFn = (): void => (mTmpScheibenComponent.GetHantelscheibenListe());
 		mTmpScheibenComponent.fDialogService.JaNein(mDialogData);
 	}
 }

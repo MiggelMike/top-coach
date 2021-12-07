@@ -16,6 +16,7 @@ import { EditEquipmentComponent } from './edit-equipment/edit-equipment.componen
 import { LanghantelComponent } from './langhantel/langhantel.component';
 import { EditLanghantelComponent } from './edit-langhantel/edit-langhantel.component';
 import { ScheibenComponent } from './scheiben/scheiben.component';
+import { EditTrainingsGewichtProgressComponent } from './edit-trainings-gewicht-progress/edit-trainings-gewicht-progress.component';
 
 
 export const routes: Routes = [
@@ -34,6 +35,8 @@ export const routes: Routes = [
     { path: 'sessionFormComponent', component: SessionFormComponent, data: { title: 'welcome', toolbar: false } },
     { path: 'app-scheiben', component: ScheibenComponent },
     { path: 'app-trainings-gewicht-progress', component: TrainingsGewichtProgressComponent },
+    { path: 'app-edit-trainings-gewicht-progress', component: EditTrainingsGewichtProgressComponent },
+    
     
 ];
 
