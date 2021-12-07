@@ -37,8 +37,15 @@ export class Programm01Component implements OnInit {
                 
                 OnProgrammNoRecordFn: 
                     (mProgramm: TrainingsProgramm) => {
-                        const mAktuellesProgramm: ITrainingsProgramm = aSelecedProgram.Copy(); 
+                        const mAktuellesProgramm: ITrainingsProgramm = aSelecedProgram.Copy();
+                        mAktuellesProgramm.id = undefined;
                         mAktuellesProgramm.ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
+
+                        if (aSelecedProgram.ProgrammKategorie === ProgrammKategorie.Vorlage)
+                            mAktuellesProgramm.FkVorlageProgramm = aSelecedProgram.id;
+                        else
+                            mAktuellesProgramm.FkVorlageProgramm = aSelecedProgram.FkVorlageProgramm;
+                        
                         this.fDbModul.AktuellesProgramm = mAktuellesProgramm;
                         this.fDbModul.ProgrammSpeichern(mAktuellesProgramm);
                 } // OnProgrammNoRecordFn

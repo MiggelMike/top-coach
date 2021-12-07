@@ -1,3 +1,4 @@
+import { Progress } from './../../Business/Progress/Progress';
 import { Hantelscheibe } from 'src/Business/Hantelscheibe/Hantelscheibe';
 import { Hantel, HantelTyp } from './../../Business/Hantel/Hantel';
 import { Equipment, EquipmentOrigin, EquipmentTyp } from './../../Business/Equipment/Equipment';
@@ -13,7 +14,6 @@ import { Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardUebung } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
-import { GewichtMinus, GewichtPlus } from 'src/Business/GewichtsAenderung/GewichtsAenderung';
 
 export enum ErstellStatus {
     VomAnwenderErstellt,
@@ -84,8 +84,7 @@ export class DexieSvcService extends Dexie {
     readonly cEquipment : string = "Equipment";
     readonly cHantel: string = "Hantel";
     readonly cHantelscheibe : string = "Hantelscheibe";
-    readonly cGewichtPlus: string = "GewichtPlus";
-    readonly cGewichtMin: string = "GewichtMin";
+    readonly cProgress: string = "Progress";
     
     AktuellerProgrammTyp: ProgrammTyp;
     AktuellesProgramm: ITrainingsProgramm; 
@@ -99,9 +98,8 @@ export class DexieSvcService extends Dexie {
     MuskelGruppeTable: Dexie.Table<MuscleGroup, number>;
     HantelTable: Dexie.Table<Hantel, number>;
     HantelscheibenTable: Dexie.Table<Hantelscheibe, number>;
-    GewichtPlusTable: Dexie.Table<GewichtPlus, number>;
-    GewichtMinusTable: Dexie.Table<GewichtMinus, number>;
     EquipmentTable: Dexie.Table<Equipment, number>;
+    ProgressTable: Dexie.Table<Progress, number>;
     public Programme: Array<ITrainingsProgramm> = [];
     public StammUebungsListe: Array<Uebung> = [];
     public MuskelGruppenListe: Array<MuscleGroup> = [];
@@ -239,20 +237,19 @@ export class DexieSvcService extends Dexie {
             } //OnProgrammNoRecorderLoadFn
         } as LadePara
         
-        //   Dexie.delete("ConceptCoach");
+        //    Dexie.delete("ConceptCoach");
         
-        this.version(24).stores({
+        this.version(25).stores({
             AppData: "++id",
-            Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05",
-            Programm: "++id,Name", 
-            SessionDB: "++ID,Name,Datum",
+            Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID",
+            Programm: "++id,Name,FkVorlageProgramm", 
+            SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm",
             Satz: "++ID",
             MuskelGruppe: "++ID,Name,MuscleGroupKategorie01",
             Equipment: "++ID,Name",
             Hantel: "++ID,Typ,Name",
             Hantelscheibe: "++ID,&[Durchmesser+Gewicht]",
-            GewichtPlus: "++ID,&Name",
-            GewichtMinus: "++ID,&Name",
+            Progress: "++ID,&Name"
         });
 
         
@@ -320,8 +317,6 @@ export class DexieSvcService extends Dexie {
 
     private InitAll() {
         this.InitAppData();
-        // this.InitGewichtPlus();
-        // this.InitGewichtMinus();
         this.InitHantel();
         this.InitHantelscheibe()
         this.InitEquipment();
@@ -332,19 +327,14 @@ export class DexieSvcService extends Dexie {
         this.InitSatz();
     }
 
+    private InitProgress() {
+        this.ProgressTable = this.table(this.cProgress);
+        this.ProgressTable.mapToClass(Progress);
+    }
+
     private InitHantel() {
         this.HantelTable = this.table(this.cHantel);
         this.HantelTable.mapToClass(Hantel);
-    }
-    
-    private InitGewichtPlus() {
-        this.GewichtPlusTable = this.table(this.cGewichtPlus);
-        this.GewichtPlusTable.mapToClass(GewichtPlus);
-    }
-
-    private InitGewichtMinus() {
-        this.GewichtMinusTable = this.table(this.cGewichtMin);
-        this.GewichtMinusTable.mapToClass(GewichtMinus);
     }
 
     private InitHantelscheibe() {
@@ -421,42 +411,6 @@ export class DexieSvcService extends Dexie {
 
     public InsertHanteln(aHantelListe: Array<Hantel>):PromiseExtended {
         return this.HantelTable.bulkPut(aHantelListe);
-    }
-
-    public GewichtPlusSpeichern(aGewichtPlus: GewichtPlus) {
-        return this.GewichtPlusTable.put(aGewichtPlus);
-    }
-
-    public InsertGewichtPlusListe(aGewichtPlusListe: Array<GewichtPlus>):PromiseExtended {
-        return this.GewichtPlusTable.bulkPut(aGewichtPlusListe);
-    }
-
-    public LadeGewichtPlus(aAfterLoadFn?: AfterLoadFn) {
-        this.table(this.cGewichtPlus)
-            .toArray()
-            .then((mGewichtPlusListe) => {
-                // this.HantelscheibenListe = mGewichtPlusListe;
-                if (aAfterLoadFn !== undefined)
-                    aAfterLoadFn(mGewichtPlusListe);
-            });
-    }    
-
-    public GewichtMinusSpeichern(aGewichtMinus: GewichtMinus) {
-        return this.GewichtMinusTable.put(aGewichtMinus);
-    }
-
-    public InsertGewichtMinusListe(aGewichtMinusListe: Array<GewichtMinus>):PromiseExtended {
-        return this.GewichtMinusTable.bulkPut(aGewichtMinusListe);
-    }
-
-    public LadeGewichtMinus(aAfterLoadFn?: AfterLoadFn) {
-        this.table(this.cGewichtMin)
-            .toArray()
-            .then((mGewichtMinusListe) => {
-                this.HantelscheibenListe = mGewichtMinusListe;
-                if (aAfterLoadFn !== undefined)
-                    aAfterLoadFn(mGewichtMinusListe);
-            });
     }
 
     public InsertUebungen(aUebungsListe: Array<Uebung>): PromiseExtended {

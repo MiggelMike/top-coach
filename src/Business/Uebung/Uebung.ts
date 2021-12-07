@@ -1,4 +1,7 @@
+import { mergeAlias } from '@angular/flex-layout';
+import { DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { MuscleGroup, MuscleGroupKategorie02 } from '../MuscleGroup/MuscleGroup';
+import { Progress, VorgabeWeightLimit } from '../Progress/Progress';
 import { Satz, SatzTyp, LiftTyp, SatzPausen, SatzStatus } from './../Satz/Satz';
 
 var cloneDeep = require('lodash.clonedeep');
@@ -59,8 +62,9 @@ export interface IUebung {
     Beschreibung: string;
     Copy(): Uebung;
     hasChanged(aCmpUebung: IUebung): Boolean;
-    GewichtSteigerung: number;
-    GewichtReduzierung: number;
+    FkProgress: number;
+    Progress: Progress;
+    GewichtAenderung: number;
 
 }
 
@@ -114,12 +118,24 @@ export class Uebung implements IUebung {
     public FkMuskel05: number = 0;
     public MuskelGruppe: string = '';
     public StammUebung: Uebung = null;
-    public GewichtSteigerung: number = 0;
-    public GewichtReduzierung: number = 0;
+    public GewichtAenderung: number = 0;
+ 
+    public FkProgress: number = 0;
+    
+    public get Progress(): Progress {
+        let mResult: Progress = null;
+        this.pDb.transaction('r', [this.pDb.cProgress], async () => {
+            mResult = await this.pDb.ProgressTable.get(this.FkProgress).then(
+                (p => { return p })
+            )
+        });
+        return mResult;
+    }
 
-    constructor() {
+    constructor( public pDb: DexieSvcService) {
         // Nicht in Dexie-DB-Speichern -> enumerable: false
         // Object.defineProperty(this, "SatzListe", { enumerable: false });
+        Object.defineProperty(this, 'pDb', { enumerable: false });
         Object.defineProperty(this, 'Selected', { enumerable: false });
         Object.defineProperty(this, 'Expanded', { enumerable: false });
         Object.defineProperty(this, 'StammUebung', { enumerable: false });
@@ -150,6 +166,55 @@ export class Uebung implements IUebung {
         }
 
         return false;
+    }
+
+    public SummeWDH(): number {
+        if ((this.ArbeitsSatzListe === undefined)||(this.ArbeitsSatzListe.length === 0))
+            return -1;
+        
+        let mResult = 0;
+        this.ArbeitsSatzListe.forEach(satz => {
+            mResult += satz.WdhAusgefuehrt;
+            
+        });
+        return mResult;
+    }
+
+    public SummeVorgabeWDH(aVorgabeWeightFrom: VorgabeWeightLimit): number {
+        if ((this.ArbeitsSatzListe === undefined)||(this.ArbeitsSatzListe.length === 0))
+            return -1;
+        
+        let mResult = 0;
+        this.ArbeitsSatzListe.forEach(satz => {
+            if(aVorgabeWeightFrom === VorgabeWeightLimit.LowerLimit)
+                mResult += satz.WdhVonVorgabe;
+            else
+                mResult += satz.WdhBisVorgabe;
+        });
+
+        return mResult;
+    }
+
+
+    public SatzWDH(aSatzIndex: number): number {
+        if ((this.ArbeitsSatzListe === undefined)||(this.ArbeitsSatzListe.length < aSatzIndex))
+            return -1;
+        
+        return this.ArbeitsSatzListe[aSatzIndex].WdhAusgefuehrt;
+    }
+
+    public SatzVonVorgabeWDH(aSatzIndex: number): number {
+        if ((this.ArbeitsSatzListe === undefined)||(this.ArbeitsSatzListe.length < aSatzIndex))
+            return -1;
+        
+        return this.ArbeitsSatzListe[aSatzIndex].WdhVonVorgabe;
+    }
+
+    public SatzBisVorgabeWDH(aSatzIndex: number): number {
+        if ((this.ArbeitsSatzListe === undefined)||(this.ArbeitsSatzListe.length < aSatzIndex))
+            return -1;
+        
+        return this.ArbeitsSatzListe[aSatzIndex].WdhBisVorgabe;
     }
 
     public Copy(): Uebung {
@@ -263,7 +328,8 @@ export class Uebung implements IUebung {
     public NeuerSatz(
         aSatzTyp: SatzTyp,
         aLiftTyp: LiftTyp,
-        aWdhVorgabe: number,
+        aVonWdhVorgabe: number,
+        aBisWdhVorgabe: number,
         aProzent: number,
         aAmrap: boolean
     ): Satz {
@@ -271,9 +337,9 @@ export class Uebung implements IUebung {
             UebungID: this.ID,
             SatzTyp: aSatzTyp,
             Prozent: aProzent,
-            WdhVorgabe: aWdhVorgabe,
+            WdhVonVorgabe: aVonWdhVorgabe,
+            WdhBisVorgabe: aBisWdhVorgabe,
             WdhAusgefuehrt: 0,
-            GewichtVorgabe: 0,
             GewichtAusgefuehrt: 0,
             PausenMinZeit: SatzPausen.Standard_Min,
             PausenMaxZeit: SatzPausen.Standard_Max,

@@ -16,6 +16,7 @@ export enum ProgrammKategorie {
 
 export interface ITrainingsProgramm {
     id: number;
+    FkVorlageProgramm: number;
     Tage: number;
     Name: string;
     ProgrammKategorie: ProgrammKategorie;
@@ -35,6 +36,7 @@ export interface ITrainingsProgramm {
 export abstract class TrainingsProgramm implements ITrainingsProgramm {
     // Wird in abgeleiteten Klassen gesetzt.
     public id: number;
+    public FkVorlageProgramm: number = 0;
     public Tage: number = 0;
     public Name: string = "";
     public ProgrammKategorie: ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
@@ -96,7 +98,12 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
     }
 
     public ErstelleSessionsAusVorlage(aProgrammKategorie : ProgrammKategorie): ITrainingsProgramm {
-        const mResult = this.Copy();
+        const mResult: ITrainingsProgramm = this.Copy();
+        if (this.ProgrammKategorie === ProgrammKategorie.Vorlage)
+            mResult.FkVorlageProgramm = this.id;
+        else
+            mResult.FkVorlageProgramm = this.FkVorlageProgramm;
+        
         for (let index0 = 0; index0 < mResult.SessionListe.length; index0++) {
             // Session
             const mSession = mResult.SessionListe[index0];
@@ -106,7 +113,7 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
                 for (let index2 = 0; index2 < mUebung.SatzListe.length; index2++) {
                     // Satz
                     const mSatz = mUebung.SatzListe[index2];
-                    mSatz.WdhAusgefuehrt = mSatz.WdhVorgabe;
+                    mSatz.WdhAusgefuehrt = mSatz.WdhVonVorgabe;
                     mSatz.GewichtAusgefuehrt = mSatz.GewichtVorgabe;
                 }
             }

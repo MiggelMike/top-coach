@@ -59,7 +59,8 @@ export interface ISatz {
     WdhAusgefuehrt: number;
     GewichtVorgabe: number;
     // getGewichtVorgabe(): string;
-    WdhVorgabe: number;
+    WdhVonVorgabe: number;
+    WdhBisVorgabe: number;
     PausenMinZeit: number;
     PausenMaxZeit: number;
     Status: SatzStatus;
@@ -82,7 +83,8 @@ export class Satz implements ISatz {
     public GewichtAusgefuehrt: number;
     public WdhAusgefuehrt: number = 0;
     public GewichtVorgabe: number = 0;
-    public WdhVorgabe: number = 0;
+    public WdhVonVorgabe: number = 0;
+    public WdhBisVorgabe: number = 0;
     public PausenMinZeit: number = 0;
     public PausenMaxZeit: number = 0;
     public Status: SatzStatus = SatzStatus.Wartet;
@@ -123,7 +125,7 @@ export class Satz implements ISatz {
         this.UebungID = aPara.UebungID ? aPara.UebungID : 0;
         this.SatzTyp = aPara.SatzTyp ? aPara.SatzTyp : SatzTyp.Aufwaermen;
         this.Prozent = aPara.Prozent ? aPara.Prozent : 0;
-        this.WdhVorgabe = aPara.WdhVorgabe ? aPara.WdhVorgabe : 0;
+        this.WdhVonVorgabe = aPara.WdhVonVorgabe ? aPara.WdhVonVorgabe : 0;
         this.WdhAusgefuehrt = aPara.WdhAusgefuehrt ? aPara.WdhAusgefuehrt : 0;
         this.GewichtVorgabe = aPara.GewichtVorgabe ? aPara.GewichtVorgabe : 0;
         this.GewichtAusgefuehrt = aPara.GewichtAusgefuehrt
@@ -155,7 +157,7 @@ export class Satz implements ISatz {
         if (this.Status != aCmpSatz.Status) return true;
         if (this.UebungID != aCmpSatz.UebungID) return true;
         if (this.WdhAusgefuehrt != aCmpSatz.WdhAusgefuehrt) return true;
-        if (this.WdhVorgabe != aCmpSatz.WdhVorgabe) return true;
+        if (this.WdhVonVorgabe != aCmpSatz.WdhVonVorgabe) return true;
         if (this.GewichtVorgabe != aCmpSatz.GewichtVorgabe) return true;
         if (this.GewichtAusgefuehrt != aCmpSatz.GewichtAusgefuehrt) return true;
         if (this.AMRAP != aCmpSatz.AMRAP) return true;
@@ -178,7 +180,7 @@ export class Satz implements ISatz {
         const mSatz: Satz = new Satz();
         mSatz.SatzTyp = aSatzTyp;
         mSatz.LiftTyp = aLiftTyp;
-        mSatz.WdhVorgabe = aWdhVorgabe;
+        mSatz.WdhVonVorgabe = aWdhVorgabe;
         mSatz.Prozent = aProzent;
         mSatz.SessionID = aSessionID;
         mSatz.UebungID = aUebungID;
