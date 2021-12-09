@@ -1,10 +1,9 @@
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
-import { ProgressClient } from './../../Business/Progress/Progress';
+import { ProgressClient, ProgressSet, ProgressTyp } from './../../Business/Progress/Progress';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DexieSvcService } from '../services/dexie-svc.service';
 import { DialogeService } from '../services/dialoge.service';
-import { Location } from '@angular/common'
 
 @Component({
   selector: 'app-trainings-gewicht-progress',
@@ -13,71 +12,67 @@ import { Location } from '@angular/common'
 })
 export class TrainingsGewichtProgressComponent implements OnInit {
 
-  public Progress: ProgressClient;
-  public CmpProgress: ProgressClient;
-  public ClickData: TrainingsGewichtProgressComponent;
+
+  // public NeueMuskelgruppe: MuscleGroup = null;
+  //   public Status: ErstellStatus = ErstellStatus.VomAnwenderErstellt;
+  //   MuscelListe: Array<MuscleGroup> = [];
+  // CmpMuscelListe: Array<MuscleGroup> = [];
+
+  public NeuerProgress: ProgressClient = null;
+  public CmpNeuerProgress: ProgressClient = null;
+  // public ProgressListe: Array<ProgressClient> = [];
+  //public CmpProgressListe: Array<ProgressClient> = [];
 
   constructor(
     private router: Router,
-		public fDexieService: DexieSvcService,
-		private location: Location,
-    public fDialogService: DialogeService) {
-      const mNavigation = this.router.getCurrentNavigation();
-      const mState = mNavigation.extras.state as { progress: ProgressClient; };
-      this.Progress = mState.progress.Copy();
-      this.CmpProgress = mState.progress.Copy();
-    }
+    public fDexieService: DexieSvcService,
+    public fDialogService: DialogeService)
+  {
+    this.fDexieService.LadeProgress();
+    // const mNavigation = this.router.getCurrentNavigation();
+    // const mState = mNavigation.extras.state as { Progress: ProgressClient };
+    // this.NeuerProgress = mState.Progress.Copy();
+    // this.CmpNeuerProgress = mState.Progress.Copy();
+  }
+  
 
   ngOnInit(): void {
   }
 
-  back() {
-		if (this.Progress.isEqual(this.CmpProgress))
-			this.location.back();
-		else {
-		  const mDialogData = new DialogData();
-		  mDialogData.textZeilen.push('Cancel unsaved changes?');
-		  mDialogData.OkFn = (): void => this.location.back();
-	
-		  this.fDialogService.JaNein(mDialogData);
-		}
-    }
+  public get ProgressListe(): Array<ProgressClient> {
+    return this.fDexieService.ProgressListeSortedByName();
+  }
 
-    SaveChanges() {
-		const mTmpEditExerciseComponent: TrainingsGewichtProgressComponent = this.ClickData as TrainingsGewichtProgressComponent;
-		if (mTmpEditExerciseComponent.Progress.Name.trim() === '') {
-			const mDialogData = new DialogData();
-			mDialogData.textZeilen.push('Please enter a name!');
-			mTmpEditExerciseComponent.fDialogService.Hinweis(mDialogData);
-		} else {
-			if ( (mTmpEditExerciseComponent.Progress.ID === undefined || mTmpEditExerciseComponent.Progress.ID <= 0)
-				//  && mTmpEditExerciseComponent.fDexieService.FindUebung(mTmpEditExerciseComponent.Progress)
-			) {
-				const mDialogData = new DialogData();
-				mDialogData.textZeilen.push(
-					`There is already a progess with name "${mTmpEditExerciseComponent.Progress.Name}"!`
-				);
-				mTmpEditExerciseComponent.fDialogService.Hinweis(mDialogData);
-			} else {
-				mTmpEditExerciseComponent.fDexieService.ProgressSpeichern(mTmpEditExerciseComponent.Progress)
-					.then(() => {
-						mTmpEditExerciseComponent.CmpProgress = mTmpEditExerciseComponent.Progress.Copy();
-						mTmpEditExerciseComponent.fDexieService.LadeProgress();
-					});
-			}
-		}
-	}
+  public EditProgress(aProgress: ProgressClient): void {
+    this.router.navigate(["/app-edit-trainings-gewicht-progress"], { state: { Progress: aProgress } });
+  }
 
-	CancelChanges() {
-		const mTmpTrainingsGewichtProgressComponent: TrainingsGewichtProgressComponent = this .ClickData as TrainingsGewichtProgressComponent;
-		const mDialogData = new DialogData();
-		mDialogData.textZeilen.push('Cancel unsaved changes?');
-		mDialogData.OkFn = (): void => {
-			mTmpTrainingsGewichtProgressComponent.Progress = mTmpTrainingsGewichtProgressComponent.CmpProgress.Copy();
-		};
+  public DoNeuerProgress(): void {
+    this.NeuerProgress = new ProgressClient();
+    this.NeuerProgress.ProgressSet = ProgressSet.All;
+    this.NeuerProgress.ProgressTyp = ProgressTyp.BlockSet;
+    this.router.navigate(["/app-edit-trainings-gewicht-progress"], { state: { Progress: this.NeuerProgress } });
+  }
 
-		mTmpTrainingsGewichtProgressComponent.fDialogService.JaNein(mDialogData);
-	}
+  public DeleteProgress(aProgress: ProgressClient) {
+    const mDialogData = new DialogData();
+    mDialogData.textZeilen.push("Delete record?");
+    mDialogData.OkFn = (): void => (this.DeletePrim(aProgress));
+    this.fDialogService.JaNein(mDialogData);
+  }
 
+  private DeletePrim(aProgress: ProgressClient) {
+    this.fDexieService.ProgressTable.delete(aProgress.ID)
+      .then(() => (this.CopyProgress()));
+  }
+
+
+  private CopyProgress() {
+    // this.MuscelListe = [];
+    // this.CmpNeuerProgress = [];
+    // for (let index = 0; index < this.ProgressListe.length; index++) {
+    //   this.CmpProgressListe.push(this.ProgressListe[index].Copy());
+    // }
+  }
 
 }

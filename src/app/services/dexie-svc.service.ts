@@ -106,6 +106,7 @@ export class DexieSvcService extends Dexie {
     public EquipmentListe: Array<Equipment> = [];
     public LangHantelListe: Array<Hantel> = [];
     public HantelscheibenListe: Array<Hantelscheibe> = []; 
+    public ProgressListe: Array<ProgressClient> = []; 
 
     private ProgramLadeStandardPara: LadePara;
 
@@ -239,7 +240,7 @@ export class DexieSvcService extends Dexie {
         
         //    Dexie.delete("ConceptCoach");
         
-        this.version(25).stores({
+        this.version(27).stores({
             AppData: "++id",
             Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID",
             Programm: "++id,Name,FkVorlageProgramm", 
@@ -317,6 +318,7 @@ export class DexieSvcService extends Dexie {
 
     private InitAll() {
         this.InitAppData();
+        this.InitProgress();
         this.InitHantel();
         this.InitHantelscheibe()
         this.InitEquipment();
@@ -436,13 +438,34 @@ export class DexieSvcService extends Dexie {
         this.table(this.cProgress)
             .toArray()
             .then((mProgressListe) => {
+                // mProgressListe.map(p => {
+                //     const neu = new ProgressClient();
+                // });
+                this.ProgressListe = mProgressListe;
                 if (aAfterLoadFn !== undefined)
                     aAfterLoadFn(mProgressListe);
             });
     }
 
+    public ProgressListeSortedByName(): Array<ProgressClient>{
+        let mResult: Array<ProgressClient> = this.ProgressListe.map(mProgress => mProgress);
+
+        mResult.sort((u1, u2) => {
+            if (u1.Name > u2.Name) {
+                return 1;
+            }
+        
+            if (u1.Name < u2.Name) {
+                return -1;
+            }
+        
+            return 0;
+        });
+        return mResult;
+    }  
+
     public ProgressSpeichern(aProgess: Progress) {
-        return this.ProgressTable.put(aProgess);
+        return this.ProgressTable.put(aProgess as Progress);
     }
 
     public InsertProgresse(aProgessListe: Array<Progress>) {
@@ -466,6 +489,8 @@ export class DexieSvcService extends Dexie {
                     aAfterLoadFn(mHantelscheibenListe);
             });
     }
+
+
 
     public LadeMuskelGruppen(aAfterLoadFn?: AfterLoadFn) {
         this.MuskelGruppenListe = [];

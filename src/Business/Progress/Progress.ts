@@ -1,6 +1,5 @@
 import { DexieSvcService } from "./../../app/services/dexie-svc.service";
 import { Session } from "src/Business/Session/Session";
-import { Satz } from "../Satz/Satz";
 import { Uebung } from "../Uebung/Uebung";
 import { ProgrammKategorie } from "../TrainingsProgramm/TrainingsProgramm";
 var cloneDeep = require('lodash.clonedeep');
@@ -11,7 +10,7 @@ export enum ProgressTyp {
 	RepRangeSet,
 }
 
-enum WeightCalculation {
+export enum WeightCalculation {
 	Sum,
 	Single,
 }
@@ -21,18 +20,18 @@ export enum VorgabeWeightLimit {
 	UpperLimit,
 }
 
-enum WeightProgressTime {
+export enum WeightProgressTime {
 	NextSession,
 	NextSet,
 }
 
-enum WeightProgress {
+export enum WeightProgress {
 	Increase,
 	Decrease,
 	Same,
 }
 
-enum ProgressSet {
+export enum ProgressSet {
 	First,
 	Last,
 	All,
@@ -42,10 +41,17 @@ export interface IProgress {
 	ID: number;
 	Name: string;
 	Beschreibung: string;
+	ProgressTyp: ProgressTyp;
+	ProgressSet: ProgressSet;
+	WeightProgressTime: WeightProgressTime;
+	WeightCalculation: WeightCalculation;
+	AdditionalReps: number;
+	Copy(): IProgress;
+    isEqual(aOtherProgress: IProgress): boolean
 }
 
 // Wird in DB gespeichert
-export class Progress {
+export class Progress implements IProgress {
 	ID: number;
 	Name: string = "";
 	Beschreibung: string = "";
@@ -53,10 +59,19 @@ export class Progress {
 	ProgressSet: ProgressSet = ProgressSet.All;
 	WeightProgressTime: WeightProgressTime = WeightProgressTime.NextSession;
 	WeightCalculation: WeightCalculation = WeightCalculation.Sum;
+	AdditionalReps: number = 0;
+
+	public Copy(): IProgress {
+        return cloneDeep(this);
+	}
+	
+	public isEqual(aOtherProgress: IProgress): boolean {
+        return isEqual(this,aOtherProgress);
+    }
 }
 
 // Wird nur im Client benutzt
-export class ProgressClient extends Progress {
+export class ProgressClient extends Progress implements IProgress {
 
 	private EvalSaetze(aSessUebung: Uebung, aVorgabeWeightLimit:VorgabeWeightLimit ): boolean {
 		if (this.WeightCalculation === WeightCalculation.Sum)
@@ -263,12 +278,6 @@ export class ProgressClient extends Progress {
 		});
 	}
 
-	public Copy(): ProgressClient {
-        return cloneDeep(this);
-	}
-	
-	public isEqual(aOtherProgress: ProgressClient): boolean {
-        return isEqual(this,aOtherProgress);
-    }
+
 
 }

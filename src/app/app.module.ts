@@ -54,6 +54,7 @@ import { SessionStatsOverlayComponent } from './session-stats-overlay/session-st
 import { DataStoreButtonsComponent } from './bausteine/data-store-buttons/data-store-buttons.component';
 import { ToolbarComponent } from './bausteine/toolbar/toolbar.component';
 import { MatSelectModule } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio'
 
 // import {
 //     MatAutocompleteModule,
@@ -202,7 +203,8 @@ export const floatMask = createNumberMask({
         RouterModule,
         CdkTableModule,
         CdkTreeModule,
-        DragDropModule,
+      DragDropModule,
+      MatRadioModule,
       
         
         MatSliderModule,  
