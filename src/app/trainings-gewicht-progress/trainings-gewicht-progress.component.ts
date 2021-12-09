@@ -68,11 +68,7 @@ export class TrainingsGewichtProgressComponent implements OnInit {
 
 
   private CopyProgress() {
-    // this.MuscelListe = [];
-    // this.CmpNeuerProgress = [];
-    // for (let index = 0; index < this.ProgressListe.length; index++) {
-    //   this.CmpProgressListe.push(this.ProgressListe[index].Copy());
-    // }
+    this.fDexieService.LadeProgress();
   }
 
 }
