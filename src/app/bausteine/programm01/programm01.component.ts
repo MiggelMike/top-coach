@@ -24,34 +24,38 @@ export class Programm01Component implements OnInit {
 
     ngOnInit() { }
 
-    SelectThisWorkoutClick(aSelecedProgram: ITrainingsProgramm, $event: any): void {
+    SelectThisWorkoutClick(aSelectedProgram: ITrainingsProgramm, $event: any): void {
         $event.stopPropagation();
-        this.programm = aSelecedProgram;
-        this.fDbModul.LadeProgramme(
-            {
-                fProgrammKategorie: ProgrammKategorie.AktuellesProgramm,
+        this.programm = aSelectedProgram.Copy();
+        this.programm.id = undefined;
+        this.programm.ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
+        this.fDbModul.ProgrammSpeichern(this.programm);
 
-                OnProgrammAfterLoadFn: (mProgramm: TrainingsProgramm) => {
-                    this.fDbModul.AktuellesProgramm = mProgramm;
-                }, // OnProgrammAfterLoadFn
+        // this.fDbModul.LadeProgramme(
+        //     {
+        //         fProgrammKategorie: ProgrammKategorie.AktuellesProgramm,
+
+        //         OnProgrammAfterLoadFn: (mProgramm: TrainingsProgramm) => {
+        //            this.fDbModul.AktuellesProgramm = mProgramm;
+        //         }, // OnProgrammAfterLoadFn
                 
-                OnProgrammNoRecordFn: 
-                    (mProgramm: TrainingsProgramm) => {
-                        const mAktuellesProgramm: ITrainingsProgramm = aSelecedProgram.Copy();
-                        mAktuellesProgramm.id = undefined;
-                        mAktuellesProgramm.ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
+        //         OnProgrammNoRecordFn: 
+        //             (mProgramm: TrainingsProgramm) => {
+        //                 const mAktuellesProgramm: ITrainingsProgramm = aSelectedProgram.Copy();
+        //                 mAktuellesProgramm.id = undefined;
+        //                 mAktuellesProgramm.ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
 
-                        if (aSelecedProgram.ProgrammKategorie === ProgrammKategorie.Vorlage)
-                            mAktuellesProgramm.FkVorlageProgramm = aSelecedProgram.id;
-                        else
-                            mAktuellesProgramm.FkVorlageProgramm = aSelecedProgram.FkVorlageProgramm;
+        //                 if (aSelectedProgram.ProgrammKategorie === ProgrammKategorie.Vorlage)
+        //                     mAktuellesProgramm.FkVorlageProgramm = aSelectedProgram.id;
+        //                 else
+        //                     mAktuellesProgramm.FkVorlageProgramm = aSelectedProgram.FkVorlageProgramm;
                         
-                        this.fDbModul.AktuellesProgramm = mAktuellesProgramm;
-                        this.fDbModul.ProgrammSpeichern(mAktuellesProgramm);
-                } // OnProgrammNoRecordFn
+        //                 this.fDbModul.AktuellesProgramm = mAktuellesProgramm;
+        //                 this.fDbModul.ProgrammSpeichern(mAktuellesProgramm);
+        //         } // OnProgrammNoRecordFn
 
-            } as LadePara
-        );
+        //     } as LadePara
+        // );
 
             // (aProgramm) => {
             //     // Gibt es schon ein aktuelles Programm?

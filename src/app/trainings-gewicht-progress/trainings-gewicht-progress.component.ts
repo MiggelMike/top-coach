@@ -1,74 +1,52 @@
-import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
-import { ProgressClient, ProgressSet, ProgressTyp } from './../../Business/Progress/Progress';
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { DexieSvcService } from '../services/dexie-svc.service';
-import { DialogeService } from '../services/dialoge.service';
+import { DialogData } from "src/app/dialoge/hinweis/hinweis.component";
+import { ProgressClient, ProgressSet, ProgressTyp } from "./../../Business/Progress/Progress";
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { DexieSvcService } from "../services/dexie-svc.service";
+import { DialogeService } from "../services/dialoge.service";
 
 @Component({
-  selector: 'app-trainings-gewicht-progress',
-  templateUrl: './trainings-gewicht-progress.component.html',
-  styleUrls: ['./trainings-gewicht-progress.component.scss']
+	selector: "app-trainings-gewicht-progress",
+	templateUrl: "./trainings-gewicht-progress.component.html",
+	styleUrls: ["./trainings-gewicht-progress.component.scss"],
 })
 export class TrainingsGewichtProgressComponent implements OnInit {
+	public NeuerProgress: ProgressClient = null;
+	public CmpNeuerProgress: ProgressClient = null;
 
+	constructor(private router: Router, public fDexieService: DexieSvcService, public fDialogService: DialogeService) {
+		this.fDexieService.LadeProgress();
+	}
 
-  // public NeueMuskelgruppe: MuscleGroup = null;
-  //   public Status: ErstellStatus = ErstellStatus.VomAnwenderErstellt;
-  //   MuscelListe: Array<MuscleGroup> = [];
-  // CmpMuscelListe: Array<MuscleGroup> = [];
+	ngOnInit(): void {}
 
-  public NeuerProgress: ProgressClient = null;
-  public CmpNeuerProgress: ProgressClient = null;
-  // public ProgressListe: Array<ProgressClient> = [];
-  //public CmpProgressListe: Array<ProgressClient> = [];
+	public get ProgressListe(): Array<ProgressClient> {
+		return this.fDexieService.ProgressListeSortedByName();
+	}
 
-  constructor(
-    private router: Router,
-    public fDexieService: DexieSvcService,
-    public fDialogService: DialogeService)
-  {
-    this.fDexieService.LadeProgress();
-    // const mNavigation = this.router.getCurrentNavigation();
-    // const mState = mNavigation.extras.state as { Progress: ProgressClient };
-    // this.NeuerProgress = mState.Progress.Copy();
-    // this.CmpNeuerProgress = mState.Progress.Copy();
-  }
-  
+	public EditProgress(aProgress: ProgressClient): void {
+		this.router.navigate(["/app-edit-trainings-gewicht-progress"], { state: { Progress: aProgress } });
+	}
 
-  ngOnInit(): void {
-  }
+	public DoNeuerProgress(): void {
+		this.NeuerProgress = new ProgressClient();
+		this.NeuerProgress.ProgressSet = ProgressSet.All;
+		this.NeuerProgress.ProgressTyp = ProgressTyp.BlockSet;
+		this.router.navigate(["/app-edit-trainings-gewicht-progress"], { state: { Progress: this.NeuerProgress } });
+	}
 
-  public get ProgressListe(): Array<ProgressClient> {
-    return this.fDexieService.ProgressListeSortedByName();
-  }
+	public DeleteProgress(aProgress: ProgressClient) {
+		const mDialogData = new DialogData();
+		mDialogData.textZeilen.push("Delete record?");
+		mDialogData.OkFn = (): void => this.DeletePrim(aProgress);
+		this.fDialogService.JaNein(mDialogData);
+	}
 
-  public EditProgress(aProgress: ProgressClient): void {
-    this.router.navigate(["/app-edit-trainings-gewicht-progress"], { state: { Progress: aProgress } });
-  }
+	private DeletePrim(aProgress: ProgressClient) {
+		this.fDexieService.ProgressTable.delete(aProgress.ID).then(() => this.CopyProgress());
+	}
 
-  public DoNeuerProgress(): void {
-    this.NeuerProgress = new ProgressClient();
-    this.NeuerProgress.ProgressSet = ProgressSet.All;
-    this.NeuerProgress.ProgressTyp = ProgressTyp.BlockSet;
-    this.router.navigate(["/app-edit-trainings-gewicht-progress"], { state: { Progress: this.NeuerProgress } });
-  }
-
-  public DeleteProgress(aProgress: ProgressClient) {
-    const mDialogData = new DialogData();
-    mDialogData.textZeilen.push("Delete record?");
-    mDialogData.OkFn = (): void => (this.DeletePrim(aProgress));
-    this.fDialogService.JaNein(mDialogData);
-  }
-
-  private DeletePrim(aProgress: ProgressClient) {
-    this.fDexieService.ProgressTable.delete(aProgress.ID)
-      .then(() => (this.CopyProgress()));
-  }
-
-
-  private CopyProgress() {
-    this.fDexieService.LadeProgress();
-  }
-
+	private CopyProgress() {
+		this.fDexieService.LadeProgress();
+	}
 }
