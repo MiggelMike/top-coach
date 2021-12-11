@@ -237,7 +237,7 @@ export class DexieSvcService extends Dexie {
             } //OnProgrammNoRecorderLoadFn
         } as LadePara
         
-                //  Dexie.delete("ConceptCoach");
+            //    Dexie.delete("ConceptCoach");
         
         this.version(29).stores({
             AppData: "++id",
@@ -985,15 +985,15 @@ export class DexieSvcService extends Dexie {
             
             for (let index = 0; index < mEinProgramm.SessionListe.length; index++) {
                 const mEineSession = mEinProgramm.SessionListe[index];
-                const mUebungen =
+                mEineSession.UebungsListe =
                     await this.UebungTable
                         .where("SessionID")
                         .equals(mEineSession.ID)
                         .toArray();
                 
-                for (let index = 0; index < mUebungen.length; index++) {
-                    const mEineUebung = mUebungen[index];
-                    const mSaetze =
+                for (let index = 0; index < mEineSession.UebungsListe.length; index++) {
+                    const mEineUebung = mEineSession.UebungsListe[index];
+                    mEineUebung.SatzListe = 
                         await this.SatzTable
                             .where("UebungID")
                             .equals(mEineUebung.ID)
@@ -1043,6 +1043,7 @@ export class DexieSvcService extends Dexie {
                     // SessionID in Uebungen eintragen
                     (mSessionID:number) => {
                         aSession.UebungsListe.forEach((mUebung) => {
+                            aSession.ID = mSessionID;
                             mUebung.SessionID = mSessionID;
                             this.UebungSpeichern(mUebung);
                         });

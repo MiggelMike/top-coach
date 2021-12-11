@@ -53,7 +53,7 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
         this.ProgrammKategorie = aProgrammKategorie;
         this.ProgrammTyp = aProgrammTyp;
         Object.defineProperty(this, "pDbModule", { enumerable: false });
-        // Object.defineProperty(this, "SessionListe", { enumerable: false });
+        Object.defineProperty(this, "SessionListe", { enumerable: false });
     }
 
     resetProgram(aQuellProgram: ITrainingsProgramm): void{

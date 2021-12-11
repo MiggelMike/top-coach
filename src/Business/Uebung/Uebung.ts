@@ -126,6 +126,7 @@ export class Uebung implements IUebung {
         Object.defineProperty(this, 'Selected', { enumerable: false });
         Object.defineProperty(this, 'Expanded', { enumerable: false });
         Object.defineProperty(this, 'StammUebung', { enumerable: false });
+        Object.defineProperty(this, "SatzListe", { enumerable: false });
     }
 
     public hasChanged(aCmpUebung: IUebung): Boolean {

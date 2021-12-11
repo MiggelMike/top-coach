@@ -62,4 +62,8 @@ export class SessionDB implements ISessionDB {
     BodyWeightAtSessionStart: number;
     UebungsListe: Array<Uebung> = new Array<Uebung>();
     PausenListe: Array<Pause> = new Array<Pause>();
+
+    constructor() {
+        Object.defineProperty(this, "UebungsListe", { enumerable: false });
+    }
 }

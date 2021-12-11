@@ -4,16 +4,14 @@ import { GlobalService } from 'src/app/services/global.service';
 import { MatAccordion, MatExpansionPanel } from '@angular/material/expansion';
 import { ISession } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
-import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, ElementRef, Output } from "@angular/core";
+import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList  } from "@angular/core";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { of } from 'rxjs';
 import { LOCALE_ID, Inject } from '@angular/core';
 import { floatMask } from 'src/app/app.module';
-import { MatDialogConfig, MatDialog, DialogPosition, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ExerciseSettingsComponent } from 'src/app/exercise-settings/exercise-settings.component';
 import { ExerciseOverlayConfig, ExerciseSettingSvcService } from 'src/app/services/exercise-setting-svc.service';
-import { Router } from '@angular/router';
 
 
 
