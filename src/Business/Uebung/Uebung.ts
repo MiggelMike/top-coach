@@ -1,7 +1,5 @@
-import { mergeAlias } from '@angular/flex-layout';
-import { DexieSvcService } from 'src/app/services/dexie-svc.service';
-import { MuscleGroup, MuscleGroupKategorie02 } from '../MuscleGroup/MuscleGroup';
-import { Progress, VorgabeWeightLimit } from '../Progress/Progress';
+import { MuscleGroupKategorie02 } from '../MuscleGroup/MuscleGroup';
+import { VorgabeWeightLimit } from '../Progress/Progress';
 import { Satz, SatzTyp, LiftTyp, SatzPausen, SatzStatus } from './../Satz/Satz';
 
 var cloneDeep = require('lodash.clonedeep');
@@ -208,6 +206,11 @@ export class Uebung implements IUebung {
 
     public Copy(): Uebung {
         return cloneDeep(this);
+        // for (let index = 0; index < mResult.SatzListe.length; index++) {
+        //     const mEinSatz: Satz = mResult.SatzListe[index];
+        //     mEinSatz.ID = undefined;
+        // }
+        // return mResult;
     }
 
     public get LiftedWeight(): number {

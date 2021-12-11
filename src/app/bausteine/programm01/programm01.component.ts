@@ -28,7 +28,30 @@ export class Programm01Component implements OnInit {
         $event.stopPropagation();
         this.programm = aSelectedProgram.Copy();
         this.programm.id = undefined;
+        this.programm.FkVorlageProgramm = aSelectedProgram.id;
         this.programm.ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
+        
+        if (this.programm.SessionListe) {
+            for (let index = 0; index < this.programm.SessionListe.length; index++) {
+                const mEineSession = this.programm.SessionListe[index];
+                mEineSession.FK_Programm = 0;
+                mEineSession.ID = undefined;
+
+                for (let index1 = 0; index1 < mEineSession.UebungsListe.length; index1++) {
+                    const mEineUebung = mEineSession.UebungsListe[index1];
+                    mEineUebung.ID = undefined;
+
+                    for (let index2 = 0; index2 < mEineUebung.SatzListe.length; index2++) {
+                        const mEinSatz = mEineUebung.SatzListe[index2];
+                        mEinSatz.SessionID = 0;
+                        mEinSatz.UebungID = 0;
+                        mEinSatz.ID = undefined;
+                    }
+                }
+            }
+        }
+
+
         this.fDbModul.ProgrammSpeichern(this.programm);
 
         // this.fDbModul.LadeProgramme(

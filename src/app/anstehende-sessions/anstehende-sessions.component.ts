@@ -1,8 +1,8 @@
-import { DexieSvcService } from './../services/dexie-svc.service';
-import { ITrainingsProgramm, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
+import { DexieSvcService, LadePara } from './../services/dexie-svc.service';
+import {  TrainingsProgramm, ITrainingsProgramm, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 
 
@@ -12,20 +12,36 @@ import { Observable } from 'rxjs';
     styleUrls: ["./anstehende-sessions.component.scss"],
 })
 export class AnstehendeSessionsComponent implements OnInit {
+    public AktuellesProgramm: ITrainingsProgramm;
     public isCollapsed = false;
-    public get AktuellesProgramm(): ITrainingsProgramm {
-        return this.fDbModule.AktuellesProgramm;
-    } 
 
     public AnstehendeSessionObserver: Observable<ITrainingsProgramm>;
 
     constructor(
         private fDbModule: DexieSvcService
     ) {
-       //this.AnstehendeSessionObserver = of(this.fDbModule.AktuellesProgramm);
+       this.AnstehendeSessionObserver = of(this.fDbModule.AktuellesProgramm);
     }
     
     ngOnInit() {
+        this.AnstehendeSessionObserver.subscribe(
+            () => {
+                this.fDbModule.LadeProgramme(
+                    {
+                        fProgrammKategorie: ProgrammKategorie.AktuellesProgramm,
+
+                        OnProgrammAfterLoadFn: (mProgramme: TrainingsProgramm[]) => {
+                            if ((mProgramme !== undefined) && (mProgramme.length > 0)) {
+                                this.AktuellesProgramm = mProgramme[0];
+                                // this.PrepAkuellesProgramm(this.AktuellesProgramm)
+                            }
+                        }, // OnProgrammAfterLoadFn
+                                
+                    } as LadePara
+                ); // Aktuelles Programm laden
+            });
+
+
         // this.AnstehendeSessionObserver.subscribe(
         //     () => {
         //         if (this.fDbModule.AktuellesProgramm === undefined) {

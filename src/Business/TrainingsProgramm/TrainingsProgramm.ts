@@ -1,6 +1,6 @@
+import { SessionStatus } from './../SessionDB';
 import { ISession } from 'src/Business/Session/Session';
 import { DexieSvcService } from './../../app/services/dexie-svc.service';
-import { runInThisContext } from 'vm';
 var cloneDeep = require('lodash.clonedeep');
 
 export enum ProgrammTyp {
@@ -53,7 +53,7 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
         this.ProgrammKategorie = aProgrammKategorie;
         this.ProgrammTyp = aProgrammTyp;
         Object.defineProperty(this, "pDbModule", { enumerable: false });
-        Object.defineProperty(this, "SessionListe", { enumerable: false });
+        // Object.defineProperty(this, "SessionListe", { enumerable: false });
     }
 
     resetProgram(aQuellProgram: ITrainingsProgramm): void{
@@ -89,12 +89,7 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
 
     public Copy(): ITrainingsProgramm {
         return cloneDeep(this);
-        // mResult.SessionListe = new Array<ISession>();
-        // if (this.SessionListe) {
-        //     for (let index = 0; index < this.SessionListe.length; index++) {
-        //         mResult.SessionListe.push(this.SessionListe[index].Copy());
-        //     }
-        // }
+
     }
 
     public ErstelleSessionsAusVorlage(aProgrammKategorie : ProgrammKategorie): ITrainingsProgramm {

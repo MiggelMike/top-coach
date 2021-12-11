@@ -10,7 +10,7 @@ export interface ISession extends ISessionDB {
     AddPause(): void;
     CalcDauer(): void;
     CalcPause(): void;
-    Copy(): SessionDB;
+    Copy(): Session;
     addUebung(aUebung: Uebung);
     hasChanged(aCmpSession: ISessionDB): Boolean;
     resetSession(aQuellSession: ISessionDB): void;
@@ -100,8 +100,13 @@ export class Session extends SessionDB implements ISession {
         this.SessionDauer = new Zeitraum(mJetzt,mJetzt, new MaxZeitraum(99,59,59));
     }
     
-    public Copy(): SessionDB {
-        return cloneDeep(this); 
+    public Copy(): Session {
+        return cloneDeep(this);
+        // for (let index = 0; index < mResult.UebungsListe.length; index++) {
+        //     const mEineUebung = mResult.UebungsListe[index].Copy();
+        //     mEineUebung.ID = undefined;
+        // }
+        // return mResult;
     }
 
     public addUebung(aUebung: Uebung) {

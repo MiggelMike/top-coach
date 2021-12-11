@@ -237,7 +237,7 @@ export class DexieSvcService extends Dexie {
             } //OnProgrammNoRecorderLoadFn
         } as LadePara
         
-            //    Dexie.delete("ConceptCoach");
+                //  Dexie.delete("ConceptCoach");
         
         this.version(29).stores({
             AppData: "++id",
@@ -679,19 +679,19 @@ export class DexieSvcService extends Dexie {
                     // Standard-Vorlage-Programme laden
                     this.LadeProgramme(this.ProgramLadeStandardPara);
                     // Aktuelles Programm laden
-                    this.LadeProgramme(
-                        {
-                            fProgrammKategorie: ProgrammKategorie.AktuellesProgramm,
+                    // this.LadeProgramme(
+                    //     {
+                    //         fProgrammKategorie: ProgrammKategorie.AktuellesProgramm,
 
-                            OnProgrammAfterLoadFn: (mProgramme: TrainingsProgramm[]) => {
-                                if ((mProgramme !== undefined)&&(mProgramme.length > 0)) {
-                                    this.AktuellesProgramm = mProgramme[0];
-                                    this.PrepAkuellesProgramm(this.AktuellesProgramm)
-                                }
-                            }, // OnProgrammAfterLoadFn
+                    //         OnProgrammAfterLoadFn: (mProgramme: TrainingsProgramm[]) => {
+                    //             if ((mProgramme !== undefined)&&(mProgramme.length > 0)) {
+                    //                 this.AktuellesProgramm = mProgramme[0];
+                    //                 this.PrepAkuellesProgramm(this.AktuellesProgramm)
+                    //             }
+                    //         }, // OnProgrammAfterLoadFn
                                 
-                        } as LadePara
-                    ); // Aktuelles Programm laden
+                    //     } as LadePara
+                    // ); // Aktuelles Programm laden
                 }
             });
     }
