@@ -98,12 +98,8 @@ export class ExerciseSettingSvcService {
 
 	private getOverlayConfig(aConfig: ExerciseOverlayConfig): OverlayConfig {
     const positionStrategy = this.overlay.position().global()
-      // .left(aConfig.left.toString() + "px")
       .top(aConfig.top.toString()+"px")
-      //		 .left("150px")
-      //.top("150px");
       .centerHorizontally();
-		// .centerVertically();
 
 		const overlayConfig = new OverlayConfig({
 			hasBackdrop: aConfig.hasBackdrop,

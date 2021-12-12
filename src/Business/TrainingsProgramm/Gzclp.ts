@@ -167,7 +167,8 @@ export class GzclpProgramm extends TrainingsProgramm {
 				Satz.NeuerSatz(
 					SatzTyp.Training,
 					LiftTyp.GzClpT3,
-					3, // Wdh-Vorgabe
+					0, // Von-Wdh-Vorgabe
+					3, // Bis-Wdh-Vorgabe
 					100, // Prozent
 					0, // SessionID
 					0, // UebungID
@@ -190,7 +191,8 @@ export class GzclpProgramm extends TrainingsProgramm {
 				Satz.NeuerSatz(
 					SatzTyp.Training,
 					LiftTyp.GzClpT3,
-					10, // Wdh-Vorgabe
+					0, // Von-Wdh-Vorgabe
+					10, // Bis-Wdh-Vorgabe
 					85, // Prozent
 					0, // SessionID
 					0, // UebungID
@@ -209,7 +211,8 @@ export class GzclpProgramm extends TrainingsProgramm {
 				Satz.NeuerSatz(
 					SatzTyp.Training,
 					LiftTyp.GzClpT3,
-					15, // Wdh-Vorgabe
+					0, // Von-Wdh-Vorgabe
+					15, // Bis-Wdh-Vorgabe
 					65, // Prozent
 					0, // SessionID
 					0, // UebungID

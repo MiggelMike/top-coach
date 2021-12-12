@@ -171,7 +171,8 @@ export class Satz implements ISatz {
     public static NeuerSatz(
         aSatzTyp: SatzTyp,
         aLiftTyp: LiftTyp,
-        aWdhVorgabe: number,
+        aWdhVonVorgabe: number,
+        aWdhBisVorgabe: number,
         aProzent: number,
         aSessionID: number,
         aUebungID: number,
@@ -180,7 +181,8 @@ export class Satz implements ISatz {
         const mSatz: Satz = new Satz();
         mSatz.SatzTyp = aSatzTyp;
         mSatz.LiftTyp = aLiftTyp;
-        mSatz.WdhVonVorgabe = aWdhVorgabe;
+        mSatz.WdhVonVorgabe = aWdhVonVorgabe;
+        mSatz.WdhBisVorgabe = aWdhBisVorgabe;
         mSatz.Prozent = aProzent;
         mSatz.SessionID = aSessionID;
         mSatz.UebungID = aUebungID;

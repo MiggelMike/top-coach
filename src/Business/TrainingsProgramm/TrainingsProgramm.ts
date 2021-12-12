@@ -108,7 +108,7 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
                 for (let index2 = 0; index2 < mUebung.SatzListe.length; index2++) {
                     // Satz
                     const mSatz = mUebung.SatzListe[index2];
-                    mSatz.WdhAusgefuehrt = mSatz.WdhVonVorgabe;
+                    mSatz.WdhAusgefuehrt = mSatz.WdhBisVorgabe;
                     mSatz.GewichtAusgefuehrt = mSatz.GewichtVorgabe;
                 }
             }

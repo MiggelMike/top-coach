@@ -68,6 +68,7 @@ export class SessUebungComponent implements OnInit {
                     LiftTyp.Custom,
                     0,
                     0,
+                    0,
                     this.session.ID,
                     this.sessUebung.ID,
                     false
@@ -80,6 +81,7 @@ export class SessUebungComponent implements OnInit {
                         LiftTyp.Custom,
                         0,
                         0,
+                        0,
                         this.session.ID,
                         this.sessUebung.ID,
                         false
@@ -90,6 +92,7 @@ export class SessUebungComponent implements OnInit {
                 mSatz = Satz.NeuerSatz(
                     SatzTyp.Training,
                     LiftTyp.Custom,
+                    0,
                     0,
                     0,
                     this.session.ID,

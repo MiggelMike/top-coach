@@ -18,7 +18,7 @@
                         <div class="align-right" fxLayout="column" fxFlex="60px"></div>
                     
                     </ng-container>
-                    <div class="center-item" fxLayout="column" fxFlex="30px">
+                    <div class="center-item" fxLayout="column" fxFlex="40px">
                         RP.
                     </div>
                     <div class="center-item" fxLayout="column" fxFlex="33px">
@@ -40,8 +40,8 @@
                     <div class="center-item" fxLayout="column" fxFlex="45px">
                         Weight
                     </div>
-                    <div class="center-item" fxLayout="column" fxFlex="30px">
-                        RP.
+                    <div class="center-item" fxLayout="column" fxFlex="60px">
+                        RP.                    
                     </div>
                     <div class="center-item" fxLayout="column" fxFlex="35px">
                         AR.
@@ -78,8 +78,8 @@
                         </mat-form-field>
                     </ng-container>
                 <!-- Ausgefuerte Wdh. -->
-                <mat-form-field class="align-right" fxFlex="30px">
-                    <mat-label>{{satz.WdhVonVorgabe | number: '1.0'}}</mat-label>
+                <mat-form-field class="align-right" fxFlex="40px">
+                    <mat-label>{{satz.WdhVonVorgabe | number: '1.0'}} - {{satz.WdhBisVorgabe | number: '1.0'}}</mat-label>
                     <input matInput [textMask]="{mask: repMask, guide: false}" 
                            [ngModel]="satz.WdhAusgefuehrt" 
                             (focusout)="SetWdhAusgefuehrt($event)" type="text">
@@ -109,11 +109,22 @@
                     >
                 </mat-form-field>
 
-                <!-- Geplante Vorgabe-Wdh. -->
+                <!-- Geplante Von-Vorgabe-Wdh. -->
                 <mat-form-field class="align-right" fxFlex="30px">
+                    <mat-label>From</mat-label>
                     <input  matInput [textMask]="{mask: repMask, guide: false}" 
                             [ngModel]="satz.WdhVonVorgabe" 
-                            (focusout)="SetWdhVorgabe($event)" 
+                            (focusout)="SetVonWdhVorgabe($event)" 
+                            type="text"
+                    >
+                </mat-form-field>
+
+                <!-- Geplante Bis-Vorgabe-Wdh. -->
+                <mat-form-field class="align-right" fxFlex="30px">
+                    <mat-label>To</mat-label>
+                    <input  matInput [textMask]="{mask: repMask, guide: false}" 
+                            [ngModel]="satz.WdhBisVorgabe" 
+                            (focusout)="SetBisWdhVorgabe($event)" 
                             type="text"
                     >
                 </mat-form-field>

@@ -57,9 +57,13 @@ export class SatzEditComponent implements OnInit {
         this.satz.GewichtVorgabe = aEvent.target.value;
     }
 
-    public SetWdhVorgabe(aEvent: any) {
+    public SetVonWdhVorgabe(aEvent: any) {
         this.satz.WdhVonVorgabe = aEvent.target.value;
-    }    
+    }
+    
+    public SetBisWdhVorgabe(aEvent: any) {
+        this.satz.WdhBisVorgabe = aEvent.target.value;
+    } 
 
     public SetWeightAusgefuehrt(aEvent: any) {
         this.satz.GewichtAusgefuehrt = aEvent.target.value;

@@ -96,7 +96,7 @@ export class ProgressClient extends Progress implements IProgress {
 		if (aFailCount < 0) aFailCount = 0;
 
 		return aDb.transaction("r", [aDb.cSession, aDb.cUebung], async () => {
-			if (aSessUebung.GewichtAenderung === 0) return WeightProgress.Same;
+			if (aSessUebung.GewichtSteigerung === 0) return WeightProgress.Same;
 
 			let mSessionListe: Array<Session> = [];
 

@@ -61,7 +61,8 @@ export interface IUebung {
     Copy(): Uebung;
     hasChanged(aCmpUebung: IUebung): Boolean;
     FkProgress: number;
-    GewichtAenderung: number;
+    GewichtSteigerung: number;
+    GewichtReduzierung: number;
 
 }
 
@@ -115,7 +116,8 @@ export class Uebung implements IUebung {
     public FkMuskel05: number = 0;
     public MuskelGruppe: string = '';
     public StammUebung: Uebung = null;
-    public GewichtAenderung: number = 0;
+    public GewichtSteigerung: number = 0;
+    public GewichtReduzierung: number = 0;
  
     public FkProgress: number = 0;
 
@@ -207,11 +209,6 @@ export class Uebung implements IUebung {
 
     public Copy(): Uebung {
         return cloneDeep(this);
-        // for (let index = 0; index < mResult.SatzListe.length; index++) {
-        //     const mEinSatz: Satz = mResult.SatzListe[index];
-        //     mEinSatz.ID = undefined;
-        // }
-        // return mResult;
     }
 
     public get LiftedWeight(): number {

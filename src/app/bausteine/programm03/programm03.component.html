@@ -18,15 +18,6 @@
 
                 <div class="card-body">
                     <div fxLayout="column" fxLayoutGap="2px" fxFlex="100%">
-                        <!-- <ng-container *ngIf="SessUeb.SatzListe">
-                            <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Warm up sets'"
-                                [satzListe]="SessUeb.SatzListe" [session]="session" [sessUebung]="SessUeb"
-                                [bearbeitbar]="bearbeitbar">
-                            </app-sess-uebung>
-                        </ng-container> -->
-
-
-
                         <ng-container *ngIf="SessUeb.AufwaermSatzListe && SessUeb.WarmUpVisible">
                             <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Warm up sets'"
                                 [satzListe]="SessUeb.AufwaermSatzListe" [session]="session" [sessUebung]="SessUeb"
