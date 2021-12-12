@@ -1,4 +1,4 @@
-import { Progress, IProgress, ProgressClient } from './../../Business/Progress/Progress';
+import { Progress, IProgress, ProgressClient, ProgressSet, ProgressTyp, WeightCalculation, WeightProgressTime } from './../../Business/Progress/Progress';
 import { Hantelscheibe } from 'src/Business/Hantelscheibe/Hantelscheibe';
 import { Hantel, HantelTyp } from './../../Business/Hantel/Hantel';
 import { Equipment, EquipmentOrigin, EquipmentTyp } from './../../Business/Equipment/Equipment';
@@ -255,6 +255,7 @@ export class DexieSvcService extends Dexie {
         
         this.InitAll();
         //  this.HantelTable.clear();
+        this.PruefeStandardProgress();
         this.PruefeStandardLanghanteln();
         this.PruefeStandardEquipment();
         this.PruefeStandardMuskelGruppen();
@@ -598,6 +599,24 @@ export class DexieSvcService extends Dexie {
                     this.InsertHanteln(mAnlegen).then(() => this.PruefeStandardLanghanteln());
                 else
                     this.LadeLanghanteln();
+            });
+    }
+
+    private PruefeStandardProgress() {
+        this.ProgressTable
+            .orderBy("Name")
+            .toArray()
+            .then((mProgress) => {
+                if ((mProgress === undefined) || (mProgress.length === 0)) {
+                    const mNeuProgress = new Progress();
+                    mNeuProgress.AdditionalReps = 0;
+                    mNeuProgress.ProgressSet = ProgressSet.All;
+                    mNeuProgress.ProgressTyp = ProgressTyp.BlockSet;
+                    mNeuProgress.WeightCalculation = WeightCalculation.Sum;
+                    mNeuProgress.WeightProgressTime = WeightProgressTime.NextSession;
+                    mNeuProgress.Name = 'All sets sum';
+                    this.ProgressSpeichern(mNeuProgress).then(() => this.LadeProgress());
+                }
             });
     }
 

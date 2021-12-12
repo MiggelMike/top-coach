@@ -158,6 +158,15 @@ export class GzclpProgramm extends TrainingsProgramm {
 	private ErzeugeSessions(aT1Uebung: string, aT2Uebung: string, aT3Uebung: string, aNeueSession: Session): void {
 		// T1-Lift
 		let mUebung: Uebung = Uebung.StaticKopiere(this.pDbModule.SucheUebungPerName(aT1Uebung), UebungsKategorie02.Session);
+		mUebung.GewichtSteigerung = 1;
+		mUebung.GewichtReduzierung = 1;
+
+		const mProgress = this.pDbModule.ProgressListe.find((p) => p.Name === 'All sets sum');
+		if (mProgress !== undefined)
+			mUebung.FkProgress = mProgress.ID;
+		
+		
+		
 		// this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.Custom, aNeueSession);
 
 		// Arbeits-Saetze anfügen
