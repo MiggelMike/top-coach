@@ -91,8 +91,8 @@ export class SessionFormComponent
     }
     
     leave() {
-        if(this.fSessionStatsOverlayComponent != null)
-        this.fSessionStatsOverlayComponent.close();
+        if (this.fSessionStatsOverlayComponent != null)
+            this.fSessionStatsOverlayComponent.close();
         this.location.back();
     }
 
@@ -108,6 +108,7 @@ export class SessionFormComponent
         aPara.fDexieSvcService.SessionSpeichern(aPara.Session);
         const mSession: Session = (aPara.Session);
         const mCmpSession: Session = (aPara.cmpSession);
+        // Die aus der Session gelöschten Übungen auch aus der DB löschen.
         for (let index = 0; index < mCmpSession.UebungsListe.length; index++) {
             const mUebung = mCmpSession.UebungsListe[index];
             const mSuchUebung = mSession.UebungsListe.find( u => u.ID === mUebung.ID)
