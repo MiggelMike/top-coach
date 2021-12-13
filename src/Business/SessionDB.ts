@@ -1,6 +1,7 @@
 import { Zeitraum, MaxZeitraum } from './../Business/Dauer';
 import { Uebung } from 'src/Business/Uebung/Uebung';
 
+
 export enum SessionStatus {
     NurLesen,
     Bearbeitbar,
@@ -39,31 +40,34 @@ export interface ISessionDB {
     BodyWeight: number;
     BodyWeightAtSessionStart: number;
     UebungsListe: Array<Uebung>;
+
 }
 
 export class SessionDB implements ISessionDB {
     public ID: number;
-    FK_Programm: number;
-    SessionNr: number;
-    Name: string;
-    Datum: Date;
-    DauerInSek: number;
-    Expanded: Boolean;
-    Kategorie01: SessionStatus;
-    Kategorie02: SessionStatus; 
-    Bearbeitbar: Boolean;
+    public FK_Programm: number;
+    public SessionNr: number;
+    public Name: string;
+    public Datum: Date;
+    public DauerInSek: number;
+    public Expanded: Boolean;
+    public Kategorie01: SessionStatus;
+    public Kategorie02: SessionStatus; 
+    public Bearbeitbar: Boolean;
     get LiftedWeight(): number { return 0; };
-    GestartedWann: Date;
-    PauseInSek: number;
-    DauerFormatted: string;
-    SessionDauer: Zeitraum;
-    DauerTimer: any;
+    public GestartedWann: Date;
+    public PauseInSek: number;
+    public DauerFormatted: string;
+    public SessionDauer: Zeitraum;
+    public DauerTimer: any;
     get BodyWeight(): number { return 0; };
-    BodyWeightAtSessionStart: number;
-    UebungsListe: Array<Uebung> = new Array<Uebung>();
-    PausenListe: Array<Pause> = new Array<Pause>();
+    public BodyWeightAtSessionStart: number;
+    public UebungsListe: Array<Uebung> = new Array<Uebung>();
+    public PausenListe: Array<Pause> = new Array<Pause>();
 
     constructor() {
         Object.defineProperty(this, "UebungsListe", { enumerable: false });
     }
+
+
 }

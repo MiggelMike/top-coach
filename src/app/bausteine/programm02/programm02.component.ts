@@ -14,8 +14,7 @@ import { GlobalService } from "src/app/services/global.service";
 import { of } from "rxjs";
 import { Uebung, IUebung } from "src/Business/Uebung/Uebung";
 import { UebungService } from "src/app/services/uebung.service";
-import { Router, NavigationExtras } from "@angular/router";
-import { threadId } from "worker_threads";
+import { Router  } from "@angular/router";
 
 @Component({
 	selector: "app-programm02",

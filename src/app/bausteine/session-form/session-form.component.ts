@@ -20,7 +20,7 @@ export class SessionFormComponent
     implements OnInit
     {
     public Session: Session;
-    public cmpSession: SessionDB;
+    public cmpSession: Session;
     public BodyWeight: number = 0;
     public fSessionStatsOverlayComponent: SessionStatsOverlayComponent = null;
     private fSessionOverlayConfig: SessionOverlayConfig;
@@ -37,7 +37,9 @@ export class SessionFormComponent
         const mNavigation = this.router.getCurrentNavigation();
         const mState = mNavigation.extras.state as { sess: Session; };
         mState.sess.BodyWeightAtSessionStart = this.fDexieSvcService.getBodyWeight();
-        this.Session = mState.sess;
+        this.Session = mState.sess.Copy();
+        this.cmpSession = mState.sess.Copy();
+        
         if ((this.Session.Kategorie02 === SessionStatus.Pause)
             || (this.Session.Kategorie02 === SessionStatus.Wartet)
             || (this.Session.Kategorie02 === SessionStatus.Laueft)
@@ -62,52 +64,36 @@ export class SessionFormComponent
     }
 
     back() {
-        // if (this.Progress.isEqual(this.CmpProgress)) this.location.back();
-		// else {
-		// 	const mDialogData = new DialogData();
-		// 	mDialogData.textZeilen.push("Cancel unsaved changes?");
-		// 	mDialogData.OkFn = (): void => this.location.back();
+        if (this.Session.isEqual(this.cmpSession))
+            this.leave();
+		else {
+			const mDialogData = new DialogData();
+			mDialogData.textZeilen.push("Cancel unsaved changes?");
+			mDialogData.OkFn = (): void => this.leave();
 
-		// 	this.fDialogService.JaNein(mDialogData);
-		// }
-        if(this.fSessionStatsOverlayComponent != null)
-        this.fSessionStatsOverlayComponent.close();
+			this.fDialogService.JaNein(mDialogData);
+		}
 
-        this.location.back();
     }
-
+    
     PasteExcercise() {
         if (this.fGlobalService.SessUebungKopie === null) {
-			const mDialoData = new DialogData();
+            const mDialoData = new DialogData();
 			mDialoData.textZeilen.push("No data to paste!");
 			this.fDialogService.Hinweis(mDialoData);
 			return;
 		}
-
+        
 		const mSessUebung: Uebung = this.fGlobalService.SessUebungKopie.Copy();
-		mSessUebung.SessionID = this.Session.ID;
+        mSessUebung.SessionID = this.Session.ID;
+        mSessUebung.ID = undefined;
 		this.Session.UebungsListe.push(mSessUebung);
     }
-
-    leave(aNavPath: string, aPara: any) {
-        if (aPara.Session.Kategorie02 === SessionStatus.Laueft) 
-            aPara.Session.AddPause();
-        
-
-        aPara.SaveChanges(aPara);
-        if(aPara.fSessionStatsOverlayComponent != null)
-            aPara.fSessionStatsOverlayComponent.close();
-        // this.router.navigate([aNavPath]);        
-        this.router.navigate([aNavPath], { state: { sess: aPara.Session } } );
-        // if (aPara.Session.hasChanged(aPara.cmpSession) === false) {
-        //     if(aPara.fSessionStatsOverlayComponent != null)
-        //         aPara.fSessionStatsOverlayComponent.close();
-        //     this.router.navigate([aNavPath] );
-        // } else {
-        //     if(aPara.fSessionStatsOverlayComponent != null)
-        //         aPara.fSessionStatsOverlayComponent.close();
-        //     aPara.CancelChanges(aPara, aNavPath);
-        // }
+    
+    leave() {
+        if(this.fSessionStatsOverlayComponent != null)
+        this.fSessionStatsOverlayComponent.close();
+        this.location.back();
     }
 
     ngAfterViewInit() {
@@ -120,6 +106,15 @@ export class SessionFormComponent
 
     public SaveChanges(aPara: any) {
         aPara.fDexieSvcService.SessionSpeichern(aPara.Session);
+        const mSession: Session = (aPara.Session);
+        const mCmpSession: Session = (aPara.cmpSession);
+        for (let index = 0; index < mCmpSession.UebungsListe.length; index++) {
+            const mUebung = mCmpSession.UebungsListe[index];
+            const mSuchUebung = mSession.UebungsListe.find( u => u.ID === mUebung.ID)
+            if (mSuchUebung === undefined)
+                aPara.fDexieSvcService.UebungTable.delete(mUebung.ID);
+        };
+
         aPara.cmpSession = aPara.Session.Copy();
     }
 

@@ -1,8 +1,8 @@
 import { SessionDB, Pause, ISessionDB, SessionStatus } from './../SessionDB';
 import { Zeitraum, MaxZeitraum } from './../Dauer';
 import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
-
 var cloneDeep = require('lodash.clonedeep');
+var isEqual = require('lodash.isEqual');
 
 export interface ISession extends ISessionDB {
     StarteDauerTimer(): void;
@@ -10,11 +10,11 @@ export interface ISession extends ISessionDB {
     AddPause(): void;
     CalcDauer(): void;
     CalcPause(): void;
-    Copy(): Session;
     addUebung(aUebung: Uebung);
     hasChanged(aCmpSession: ISessionDB): Boolean;
     resetSession(aQuellSession: ISessionDB): void;
     init(): void;
+    Copy(): ISession;
 }
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
@@ -32,6 +32,14 @@ export class Session extends SessionDB implements ISession {
         this.Kategorie02 = SessionStatus.Wartet;
     }
 
+    public isEqual(aOtherSession: Session): boolean {
+        const mSession = this.Copy();
+        const mCmpSession = aOtherSession.Copy();
+        mCmpSession.DauerFormatted = mSession.DauerFormatted;
+        mCmpSession.UebungsListe.forEach(u => u.Expanded = false);
+        mSession.UebungsListe.forEach(u => u.Expanded = false);
+        return isEqual(mSession,mCmpSession);
+    }    
 
     public CalcDauer(): void {
         if ((this.Kategorie02 === SessionStatus.Fertig) || (this.Kategorie02 === SessionStatus.FertigTimeOut)) {
@@ -94,12 +102,6 @@ export class Session extends SessionDB implements ISession {
         return mResult;
     }
 
-    constructor() {
-        super();
-        const mJetzt = new Date();
-        this.SessionDauer = new Zeitraum(mJetzt,mJetzt, new MaxZeitraum(99,59,59));
-    }
-    
     public Copy(): Session {
         return cloneDeep(this);
         // for (let index = 0; index < mResult.UebungsListe.length; index++) {
@@ -108,6 +110,14 @@ export class Session extends SessionDB implements ISession {
         // }
         // return mResult;
     }
+
+    constructor() {
+        super();
+        const mJetzt = new Date();
+        this.SessionDauer = new Zeitraum(mJetzt,mJetzt, new MaxZeitraum(99,59,59));
+    }
+    
+
 
     public addUebung(aUebung: Uebung) {
         aUebung.Kategorie02 = UebungsKategorie02.Session;
