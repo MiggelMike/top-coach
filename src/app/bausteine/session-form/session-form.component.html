@@ -1,4 +1,4 @@
-    <app-toolbar></app-toolbar>
+    <mat-icon (click)="back()">arrow_back</mat-icon>
 
     <a  [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
         (click)="doStats()" 
@@ -21,6 +21,10 @@
 
         <div class="center-item" layout-align="center center">
             <a class='link-button-font' mat-flat-button (click)="SetDone()">Done</a>
+        </div>
+
+        <div class="center-item" layout-align="center center">
+            <a [ngClass]="'link-button-font'" mat-flat-button (click)="PasteExcercise()">Paste Exercise</a>
         </div>
     </div>
 

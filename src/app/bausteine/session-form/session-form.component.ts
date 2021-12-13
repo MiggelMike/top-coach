@@ -7,6 +7,9 @@ import { DexieSvcService } from './../../services/dexie-svc.service';
 import { Component, OnInit } from "@angular/core";
 import { Router } from '@angular/router';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
+import { Location } from "@angular/common";
+import { GlobalService } from 'src/app/services/global.service';
+import { Uebung } from 'src/Business/Uebung/Uebung';
 
 @Component({
     selector: "app-session-form",
@@ -27,7 +30,9 @@ export class SessionFormComponent
         private router: Router,
         public fDexieSvcService: DexieSvcService,
         private fDialogService: DialogeService,
-        private fSessionOverlayServiceService: SessionOverlayServiceService
+        private fGlobalService: GlobalService,
+        private fSessionOverlayServiceService: SessionOverlayServiceService,
+        private location: Location
     ) {
         const mNavigation = this.router.getCurrentNavigation();
         const mState = mNavigation.extras.state as { sess: Session; };
@@ -54,6 +59,34 @@ export class SessionFormComponent
             this.fSessionStatsOverlayComponent = this.fSessionOverlayServiceService.open(this.fSessionOverlayConfig);
         else 
             this.fSessionStatsOverlayComponent.close();
+    }
+
+    back() {
+        // if (this.Progress.isEqual(this.CmpProgress)) this.location.back();
+		// else {
+		// 	const mDialogData = new DialogData();
+		// 	mDialogData.textZeilen.push("Cancel unsaved changes?");
+		// 	mDialogData.OkFn = (): void => this.location.back();
+
+		// 	this.fDialogService.JaNein(mDialogData);
+		// }
+        if(this.fSessionStatsOverlayComponent != null)
+        this.fSessionStatsOverlayComponent.close();
+
+        this.location.back();
+    }
+
+    PasteExcercise() {
+        if (this.fGlobalService.SessUebungKopie === null) {
+			const mDialoData = new DialogData();
+			mDialoData.textZeilen.push("No data to paste!");
+			this.fDialogService.Hinweis(mDialoData);
+			return;
+		}
+
+		const mSessUebung: Uebung = this.fGlobalService.SessUebungKopie.Copy();
+		mSessUebung.SessionID = this.Session.ID;
+		this.Session.UebungsListe.push(mSessUebung);
     }
 
     leave(aNavPath: string, aPara: any) {
