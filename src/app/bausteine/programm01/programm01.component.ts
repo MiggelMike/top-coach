@@ -32,21 +32,37 @@ export class Programm01Component implements OnInit {
         this.programm.ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
         
         if (this.programm.SessionListe) {
-            for (let index = 0; index < this.programm.SessionListe.length; index++) {
-                const mEineSession = this.programm.SessionListe[index];
-                mEineSession.FK_Programm = 0;
-                mEineSession.ID = undefined;
+            let mZyklen = 1;
+            if(aSelectedProgram.SessionListe.length < 10)
+                mZyklen = 3;
+            
+            this.programm.SessionListe = [];
+            for (let x = 0; x < mZyklen; x++) {
+                for (let index = 0; index < aSelectedProgram.SessionListe.length; index++) {
+                    const mPrtSession = aSelectedProgram.SessionListe[index];
+                    const mNeueSession = mPrtSession.Copy();
+                    mNeueSession.UebungsListe = [];
+                    mNeueSession.FK_Programm = 0;
+                    mNeueSession.ID = undefined;
 
-                for (let index1 = 0; index1 < mEineSession.UebungsListe.length; index1++) {
-                    const mEineUebung = mEineSession.UebungsListe[index1];
-                    mEineUebung.ID = undefined;
+                    for (let index1 = 0; index1 < mPrtSession.UebungsListe.length; index1++) {
+                        const mPrtUebung = mPrtSession.UebungsListe[index1];
+                        const mNeueUebung = mPrtUebung.Copy();
+                        mNeueUebung.SatzListe = [];
+                        mNeueUebung.ID = undefined;
 
-                    for (let index2 = 0; index2 < mEineUebung.SatzListe.length; index2++) {
-                        const mEinSatz = mEineUebung.SatzListe[index2];
-                        mEinSatz.SessionID = 0;
-                        mEinSatz.UebungID = 0;
-                        mEinSatz.ID = undefined;
+                        for (let index2 = 0; index2 < mPrtUebung.SatzListe.length; index2++) {
+                            const mPrtSatz =  mPrtUebung.SatzListe[index2];
+                            const mNeuerSatz = mPrtSatz.Copy();
+                            mNeuerSatz.SessionID = 0;
+                            mNeuerSatz.UebungID = 0;
+                            mNeuerSatz.ID = undefined;
+                            mNeueUebung.SatzListe.push(mNeuerSatz);
+                        }
+                        mNeueSession.UebungsListe.push(mNeueUebung);
+
                     }
+                    this.programm.SessionListe.push(mNeueSession);
                 }
             }
         }

@@ -3,6 +3,7 @@ import {  TrainingsProgramm, ITrainingsProgramm, ProgrammKategorie } from 'src/B
 import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
 import { Observable, of } from 'rxjs';
+import { SessionStatus } from 'src/Business/SessionDB';
 
 
 
@@ -33,6 +34,10 @@ export class AnstehendeSessionsComponent implements OnInit {
                         OnProgrammAfterLoadFn: (mProgramme: TrainingsProgramm[]) => {
                             if ((mProgramme !== undefined) && (mProgramme.length > 0)) {
                                 this.AktuellesProgramm = mProgramme[0];
+                                this.AktuellesProgramm.SessionListe =
+                                this.AktuellesProgramm.SessionListe.filter(
+                                    (s) => s.Kategorie02 === SessionStatus.Wartet
+                                );
                                 // this.PrepAkuellesProgramm(this.AktuellesProgramm)
                             }
                         }, // OnProgrammAfterLoadFn

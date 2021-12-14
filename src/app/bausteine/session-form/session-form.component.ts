@@ -21,6 +21,7 @@ export class SessionFormComponent
     {
     public Session: Session;
     public cmpSession: Session;
+    public nextSessionNr: number = 0;
     public BodyWeight: number = 0;
     public fSessionStatsOverlayComponent: SessionStatsOverlayComponent = null;
     private fSessionOverlayConfig: SessionOverlayConfig;
@@ -35,8 +36,9 @@ export class SessionFormComponent
         private location: Location
     ) {
         const mNavigation = this.router.getCurrentNavigation();
-        const mState = mNavigation.extras.state as { sess: Session; };
+        const mState = mNavigation.extras.state as { sess: Session; nextSessionNr: number };
         mState.sess.BodyWeightAtSessionStart = this.fDexieSvcService.getBodyWeight();
+        this.nextSessionNr = mState.nextSessionNr;
         this.Session = mState.sess.Copy();
         this.cmpSession = mState.sess.Copy();
         
@@ -105,6 +107,14 @@ export class SessionFormComponent
     }
 
     public SaveChanges(aPara: any) {
+        
+        if ((aPara as SessionFormComponent).Session.Kategorie02 === SessionStatus.Fertig) {
+            const mNeueSession: Session = (aPara as SessionFormComponent).Session.Copy(true);
+            mNeueSession.init();
+            mNeueSession.SessionNr = (aPara as SessionFormComponent).nextSessionNr;
+            aPara.fDexieSvcService.SessionSpeichern(mNeueSession);    
+        }
+            
         aPara.fDexieSvcService.SessionSpeichern(aPara.Session);
         const mSession: Session = (aPara.Session);
         const mCmpSession: Session = (aPara.cmpSession);

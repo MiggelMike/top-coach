@@ -205,7 +205,7 @@ export class Programm02Component implements OnInit {
 		//       sess: aSession
 		//     }
 		//   };
-		this.router.navigate(["sessionFormComponent"], { state: { sess: aSession } });
+		this.router.navigate(["sessionFormComponent"], { state: { sess: aSession,  nextSessionNr : this.SessionListe.length + 1 } });
 	}
 
 	public SaveChanges() {

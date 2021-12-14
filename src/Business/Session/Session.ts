@@ -14,7 +14,7 @@ export interface ISession extends ISessionDB {
     hasChanged(aCmpSession: ISessionDB): Boolean;
     resetSession(aQuellSession: ISessionDB): void;
     init(): void;
-    Copy(): ISession;
+    Copy(aKomplett?: boolean): ISession;
 }
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
@@ -28,8 +28,18 @@ export class Session extends SessionDB implements ISession {
     }
 
     public init(): void {
+        this.ID = undefined;
         this.PausenListe = [];
         this.Kategorie02 = SessionStatus.Wartet;
+        this.DauerInSek = 0;
+        this.UebungsListe.forEach(
+            (u) => {
+                u.SatzListe.forEach( s => {
+                    s.GewichtAusgefuehrt = 0;
+                    s.WdhAusgefuehrt = 0;
+                });
+            }
+        )
     }
 
     public isEqual(aOtherSession: Session): boolean {
@@ -102,13 +112,19 @@ export class Session extends SessionDB implements ISession {
         return mResult;
     }
 
-    public Copy(): Session {
-        return cloneDeep(this);
-        // for (let index = 0; index < mResult.UebungsListe.length; index++) {
-        //     const mEineUebung = mResult.UebungsListe[index].Copy();
-        //     mEineUebung.ID = undefined;
-        // }
-        // return mResult;
+    public Copy(aKomplett?: boolean): Session {
+        const mResult : Session = cloneDeep(this);
+        if(aKomplett !== undefined )
+        {
+            for (let index = 0; index < mResult.UebungsListe.length; index++) {
+                const mEineUebung = mResult.UebungsListe[index].Copy();
+                mEineUebung.ID = undefined;
+                mEineUebung.SatzListe.forEach( s => {
+                    s.ID = undefined;
+                });
+            }
+        }
+        return mResult;
     }
 
     constructor() {

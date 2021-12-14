@@ -45,19 +45,19 @@ export interface ISessionDB {
 
 export class SessionDB implements ISessionDB {
     public ID: number;
-    public FK_Programm: number;
-    public SessionNr: number;
-    public Name: string;
+    public FK_Programm: number = 0;
+    public SessionNr: number = 0;
+    public Name: string = '';
     public Datum: Date;
-    public DauerInSek: number;
-    public Expanded: Boolean;
-    public Kategorie01: SessionStatus;
-    public Kategorie02: SessionStatus; 
+    public DauerInSek: number = 0;
+    public Expanded: Boolean = false;
+    public Kategorie01: SessionStatus = SessionStatus.Bearbeitbar;
+    public Kategorie02: SessionStatus = SessionStatus.Wartet; 
     public Bearbeitbar: Boolean;
     get LiftedWeight(): number { return 0; };
     public GestartedWann: Date;
-    public PauseInSek: number;
-    public DauerFormatted: string;
+    public PauseInSek: number = 0;
+    public DauerFormatted: string = '';
     public SessionDauer: Zeitraum;
     public DauerTimer: any;
     get BodyWeight(): number { return 0; };
