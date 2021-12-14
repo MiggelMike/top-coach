@@ -113,18 +113,30 @@ export class Session extends SessionDB implements ISession {
     }
 
     public Copy(aKomplett?: boolean): Session {
-        const mResult : Session = cloneDeep(this);
+        const mNeueSession : Session = cloneDeep(this);
         if(aKomplett !== undefined )
         {
-            for (let index = 0; index < mResult.UebungsListe.length; index++) {
-                const mEineUebung = mResult.UebungsListe[index].Copy();
-                mEineUebung.ID = undefined;
-                mEineUebung.SatzListe.forEach( s => {
-                    s.ID = undefined;
-                });
+            mNeueSession.UebungsListe = [];
+            mNeueSession.ID = undefined;
+
+            for (let index1 = 0; index1 < this.UebungsListe.length; index1++) {
+                const mPrtUebung = this.UebungsListe[index1];
+                const mNeueUebung = mPrtUebung.Copy();
+                mNeueUebung.SatzListe = [];
+                mNeueUebung.ID = undefined;
+
+                for (let index2 = 0; index2 < mPrtUebung.SatzListe.length; index2++) {
+                    const mPrtSatz =  mPrtUebung.SatzListe[index2];
+                    const mNeuerSatz = mPrtSatz.Copy();
+                    mNeuerSatz.SessionID = 0;
+                    mNeuerSatz.UebungID = 0;
+                    mNeuerSatz.ID = undefined;
+                    mNeueUebung.SatzListe.push(mNeuerSatz);
+                }
+                mNeueSession.UebungsListe.push(mNeueUebung);
             }
         }
-        return mResult;
+        return mNeueSession;
     }
 
     constructor() {

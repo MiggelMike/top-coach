@@ -40,28 +40,7 @@ export class Programm01Component implements OnInit {
             for (let x = 0; x < mZyklen; x++) {
                 for (let index = 0; index < aSelectedProgram.SessionListe.length; index++) {
                     const mPrtSession = aSelectedProgram.SessionListe[index];
-                    const mNeueSession = mPrtSession.Copy();
-                    mNeueSession.UebungsListe = [];
-                    mNeueSession.FK_Programm = 0;
-                    mNeueSession.ID = undefined;
-
-                    for (let index1 = 0; index1 < mPrtSession.UebungsListe.length; index1++) {
-                        const mPrtUebung = mPrtSession.UebungsListe[index1];
-                        const mNeueUebung = mPrtUebung.Copy();
-                        mNeueUebung.SatzListe = [];
-                        mNeueUebung.ID = undefined;
-
-                        for (let index2 = 0; index2 < mPrtUebung.SatzListe.length; index2++) {
-                            const mPrtSatz =  mPrtUebung.SatzListe[index2];
-                            const mNeuerSatz = mPrtSatz.Copy();
-                            mNeuerSatz.SessionID = 0;
-                            mNeuerSatz.UebungID = 0;
-                            mNeuerSatz.ID = undefined;
-                            mNeueUebung.SatzListe.push(mNeuerSatz);
-                        }
-                        mNeueSession.UebungsListe.push(mNeueUebung);
-
-                    }
+                    const mNeueSession = mPrtSession.Copy(true);
                     this.programm.SessionListe.push(mNeueSession);
                 }
             }
