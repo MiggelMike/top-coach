@@ -19,7 +19,8 @@ export class EditTrainingsGewichtProgressComponent implements OnInit {
 	public CmpProgress: IProgress;
 	public ClickData: EditTrainingsGewichtProgressComponent;
 
-	constructor(private router: Router, public fDexieService: DexieSvcService, private location: Location, public fDialogService: DialogeService) {
+	constructor(private router: Router, public fDexieService: DexieSvcService, private location: Location, public fDialogService: DialogeService)
+	{
 		const mNavigation = this.router.getCurrentNavigation();
 		const mState = mNavigation.extras.state as { Progress: ProgressClient };
 		this.Progress = mState.Progress.Copy();

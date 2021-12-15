@@ -15,6 +15,7 @@ export interface ISession extends ISessionDB {
     resetSession(aQuellSession: ISessionDB): void;
     init(): void;
     Copy(aKomplett?: boolean): ISession;
+    ExtractUebungen(aUebungen: Array<Uebung>);
 }
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
@@ -110,6 +111,14 @@ export class Session extends SessionDB implements ISession {
             mResult = mResult + mUebung.LiftedWeight;
         }
         return mResult;
+    }
+
+    public ExtractUebungen(aUebungen: Array<Uebung>) {
+        this.UebungsListe.forEach((u) => {
+            const mFindUebung = aUebungen.find((r: Uebung) => r.FkUebung === u.FkUebung);
+            if (mFindUebung === undefined)
+                aUebungen.push(u);
+        });
     }
 
     public Copy(aKomplett?: boolean): Session {

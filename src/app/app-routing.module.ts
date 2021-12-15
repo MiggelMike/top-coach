@@ -17,6 +17,7 @@ import { LanghantelComponent } from './langhantel/langhantel.component';
 import { EditLanghantelComponent } from './edit-langhantel/edit-langhantel.component';
 import { ScheibenComponent } from './scheiben/scheiben.component';
 import { EditTrainingsGewichtProgressComponent } from './edit-trainings-gewicht-progress/edit-trainings-gewicht-progress.component';
+import { InitialWeightComponent } from './initial-weight/initial-weight.component';
 
 
 export const routes: Routes = [
@@ -36,7 +37,7 @@ export const routes: Routes = [
     { path: 'app-scheiben', component: ScheibenComponent },
     { path: 'app-trainings-gewicht-progress', component: TrainingsGewichtProgressComponent },
     { path: 'app-edit-trainings-gewicht-progress', component: EditTrainingsGewichtProgressComponent },
-    
+    { path: 'app-initial-weight', component: InitialWeightComponent }
     
 ];
 

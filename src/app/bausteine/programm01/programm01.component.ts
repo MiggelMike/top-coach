@@ -3,6 +3,10 @@ import { GlobalService } from "./../../services/global.service";
 import { Component, OnInit, Input } from "@angular/core";
 import { TrainingsProgramm, ITrainingsProgramm, ProgrammKategorie, ProgrammTyp } from "../../../Business/TrainingsProgramm/TrainingsProgramm";
 import { SessionStatus } from '../../../Business/SessionDB';
+import { DialogeService } from 'src/app/services/dialoge.service';
+import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
+import { Uebung } from 'src/Business/Uebung/Uebung';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -19,83 +23,69 @@ export class Programm01Component implements OnInit {
 
     constructor(
         private fGlobalService: GlobalService,
-        private fDbModul: DexieSvcService
+        private fDbModul: DexieSvcService,
+        public fDialogService: DialogeService,
+        private router: Router
     ) {}
 
     ngOnInit() { }
 
+    private SelectWorkout(aSelectedProgram: ITrainingsProgramm) {
+        const mDialogData = new DialogData();
+        mDialogData.textZeilen.push("Do want to set initial weights?");
+        mDialogData.OkFn = (): void => {
+           this.router.navigate(["/app-initial-weight"], { state: { Program: aSelectedProgram } });
+        }
+        this.fDialogService.JaNein(mDialogData);
+
+        // const mUebungen: Array<Uebung> = [];
+        // aSelectedProgram.SessionListe.forEach(
+        //     (s) => s.ExtractUebungen(mUebungen)
+        // );
+        
+        // this.programm = aSelectedProgram.Copy();
+        // this.programm.id = undefined;
+        // this.programm.FkVorlageProgramm = aSelectedProgram.id;
+        // this.programm.ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
+        
+        // if (this.programm.SessionListe) {
+        //     let mZyklen = 1;
+        //     if(aSelectedProgram.SessionListe.length < 10)
+        //         mZyklen = 3;
+            
+        //     this.programm.SessionListe = [];
+        //     for (let x = 0; x < mZyklen; x++) {
+        //         for (let index = 0; index < aSelectedProgram.SessionListe.length; index++) {
+        //             const mPrtSession = aSelectedProgram.SessionListe[index];
+        //             const mNeueSession = mPrtSession.Copy(true);
+        //             this.programm.SessionListe.push(mNeueSession);
+        //         }
+        //     }
+        // }
+    
+        // this.fDbModul.ProgrammSpeichern(this.programm);
+    }
+
     SelectThisWorkoutClick(aSelectedProgram: ITrainingsProgramm, $event: any): void {
         $event.stopPropagation();
-        this.programm = aSelectedProgram.Copy();
-        this.programm.id = undefined;
-        this.programm.FkVorlageProgramm = aSelectedProgram.id;
-        this.programm.ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
-        
-        if (this.programm.SessionListe) {
-            let mZyklen = 1;
-            if(aSelectedProgram.SessionListe.length < 10)
-                mZyklen = 3;
-            
-            this.programm.SessionListe = [];
-            for (let x = 0; x < mZyklen; x++) {
-                for (let index = 0; index < aSelectedProgram.SessionListe.length; index++) {
-                    const mPrtSession = aSelectedProgram.SessionListe[index];
-                    const mNeueSession = mPrtSession.Copy(true);
-                    this.programm.SessionListe.push(mNeueSession);
-                }
-            }
-        }
-
-
-        this.fDbModul.ProgrammSpeichern(this.programm);
-
-        // this.fDbModul.LadeProgramme(
-        //     {
-        //         fProgrammKategorie: ProgrammKategorie.AktuellesProgramm,
-
-        //         OnProgrammAfterLoadFn: (mProgramm: TrainingsProgramm) => {
-        //            this.fDbModul.AktuellesProgramm = mProgramm;
-        //         }, // OnProgrammAfterLoadFn
-                
-        //         OnProgrammNoRecordFn: 
-        //             (mProgramm: TrainingsProgramm) => {
-        //                 const mAktuellesProgramm: ITrainingsProgramm = aSelectedProgram.Copy();
-        //                 mAktuellesProgramm.id = undefined;
-        //                 mAktuellesProgramm.ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
-
-        //                 if (aSelectedProgram.ProgrammKategorie === ProgrammKategorie.Vorlage)
-        //                     mAktuellesProgramm.FkVorlageProgramm = aSelectedProgram.id;
-        //                 else
-        //                     mAktuellesProgramm.FkVorlageProgramm = aSelectedProgram.FkVorlageProgramm;
-                        
-        //                 this.fDbModul.AktuellesProgramm = mAktuellesProgramm;
-        //                 this.fDbModul.ProgrammSpeichern(mAktuellesProgramm);
-        //         } // OnProgrammNoRecordFn
-
-        //     } as LadePara
-        // );
-
-            // (aProgramm) => {
-            //     // Gibt es schon ein aktuelles Programm?
-            //     if (aProgramm !== undefined)
-            //         this.fDexieService.AktuellesProgramm = aProgramm;
-            //     else {
-            //         // Es gibt schon ein aktuelles Programm.
-            //         this.fDexieService.CheckAktuellesProgram(aProgram, this.fDexieService.AktuellesProgramm);
-                    //         else
-                    //              // Es soll kein anderes aktuelles Programm gewaehlt werden.
-                    //             return aProgramme[0];
-                    //     } else {
-                    //         // Es gibt kein aktuelles Programm.
-                    //         // Soll ein aktuelles Programm gewaehlt werden?
-                    //         if (aNeuesAktuellesProgram !== undefined)
-                    //              // Es soll ein aktuelles Programm gewaehlt werden
-                    //              this.CheckAktuellesProgram(aNeuesAktuellesProgram);
-                    //     }
-                    // this.fDexieService.AktuellesProgramm = aProgram;
-                
-                
-           
+        this.fDbModul.FindAktuellesProgramm(aSelectedProgram.id)
+            .then((p) => {
+                if (p.length > 0)
+                {
+                    const mDialogData = new DialogData();
+                    mDialogData.textZeilen.push("The program is already chosen!");
+                    mDialogData.textZeilen.push("Do want to replace it?");
+                    mDialogData.OkFn = (): void => {
+                        p.forEach((pr) =>
+                            this.fDbModul.ProgrammTable.delete(pr.id)
+                        );
+                        this.SelectWorkout(aSelectedProgram);
+                    }
+                    this.fDialogService.JaNein(mDialogData);
+                } else {
+                    this.SelectWorkout(aSelectedProgram);
+                    }
+            });
     }
 
     EditThisWorkoutClick($event): void {

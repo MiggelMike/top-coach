@@ -239,10 +239,10 @@ export class DexieSvcService extends Dexie {
         
             //    Dexie.delete("ConceptCoach");
         
-        this.version(29).stores({
+        this.version(30).stores({
             AppData: "++id",
             Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID",
-            Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie", 
+            Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]", 
             SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm",
             Satz: "++ID,UebungID",
             MuskelGruppe: "++ID,Name,MuscleGroupKategorie01",
@@ -909,83 +909,15 @@ export class DexieSvcService extends Dexie {
         }) != null;
     }
 
-//    public LadeAktuellesProgramm(aProgramme: Array<TrainingsProgramm>, aNeuesAktuellesProgram?: ITrainingsProgramm): TrainingsProgramm {
-    //     // Gibt es schon ein aktuelles Programm?
-    //     if (aProgramme.length > 0) {
-    //         this.FuelleProgramm(aProgramme[0]);
-    //         // Es gibt schon ein aktuelles Programm.
-    //         // Soll ein anderes aktuelles Programm gewaehlt werden?
-    //         if (aNeuesAktuellesProgram !== undefined)
-    //             // Es soll ein anderes aktuelles Programm gewaehlt werden.
-    //             this.CheckAktuellesProgram(aNeuesAktuellesProgram, aProgramme[0]);
-    //         else
-    //              // Es soll kein anderes aktuelles Programm gewaehlt werden.
-    //             return aProgramme[0];
-    //     } else {
-    //         // Es gibt kein aktuelles Programm.
-    //         // Soll ein aktuelles Programm gewaehlt werden?
-    //         if (aNeuesAktuellesProgram !== undefined)
-    //              // Es soll ein aktuelles Programm gewaehlt werden
-    //              this.CheckAktuellesProgram(aNeuesAktuellesProgram);
-    //     }
-    //     return null;
-    // }
-
-    public LadeAktuellesProgramm(aAktuellesProgramm: ITrainingsProgramm): void { 
-            // this.LadeProgramme(ProgrammKategorie.AktuellesProgramm,
-            //     (mProgramm) => {
-            //         if ((mProgramm !== undefined) && (mProgramm !== null)) {
-            //             let mNeueSessions: Array<SessionDB> = [];
-            //             let mUnDoneSessions: Array<SessionDB> = [];
-            //             let mDoneSessions: Array<SessionDB> = [];
-            //             // Das gefundene aktuelle Programm kopieren.
-            //             this.AktuellesProgramm = mProgramm.Copy();
-
-            //             // Die fertigen und nicht fertigen Sessions merken
-            //             for (let i = 0; i < mProgramm.SessionListe.length; i++) {
-            //                 if ((mProgramm.SessionListe[i].Kategorie02 === SessionStatus.Fertig)
-            //                     || (mProgramm.SessionListe[i].Kategorie02 === SessionStatus.FertigTimeOut))
-            //                     // fertige Session
-            //                     mDoneSessions.push(mProgramm.SessionListe[i]);
-            //                 else 
-            //                     // Nicht fertige Session
-            //                     mUnDoneSessions.push(mProgramm.SessionListe[i]);
-            //             }      
-
-                        // Sind alle Sessions des aktuellen Programms erledigt?  
-                        // if (mDoneSessions.length === this.fDbModule.AktuellesProgramm.SessionListe.length) {
-                        //     // Alle Sessions des aktuellen Programms sind erledigt  
-                        //     if (this.fDbModule.AktuellesProgramm.SessionListe.length < this.fDbModule.AktuellesProgramm.Tage * 2) {
-                        //         for (let i = 0; i < this.fDbModule.AktuellesProgramm.SessionListe.length; i++) {
-                        //             this.fDbModule.AktuellesProgramm.SessionListe[i].init();
-                        //         }
-                        //     }
-                        // }
-                            
-                        // this.fDbModule.AktuellesProgramm.SessionListe = [];
-                        // for (let i = 0; i < mUnDoneSessions.length; i++)
-                        //     this.fDbModule.AktuellesProgramm.SessionListe.push(mUnDoneSessions[i] as ISession);
-
-                        // if (this.fDbModule.AktuellesProgramm.SessionListe.length <  this.fDbModule.AktuellesProgramm.Tage * 2) {
-                        //     for (let i = 0; i < this.fDbModule.AktuellesProgramm.SessionListe.length; i++) {
-                        //         let mSessionDB: SessionDB = null;
-                        //         // if ((this.fDbModule.AktuellesProgramm.SessionListe[j].Kategorie02 === SessionStatus.Fertig)
-                        //         //     || (this.fDbModule.AktuellesProgramm.SessionListe[j].Kategorie02 === SessionStatus.FertigTimeOut)) {
-                        //         mSessionDB = this.fDbModule.AktuellesProgramm.SessionListe[i].Copy();
-                        //         mSessionDB.Kategorie02 = SessionStatus.Wartet;
-                        //         mNeueSessions.push(mSessionDB);
-                        //     }
-                        
-                        
-                        //     for (let i = 0; i < mNeueSessions.length; i++) {
-                        //         this.fDbModule.AktuellesProgramm.SessionListe.push(mNeueSessions[i] as ISession);
-                            
-                        //     }
-                        // }
-                    
-                    // }
-                // });
+    public async FindAktuellesProgramm(aID: number) {
+        return await this.ProgrammTable
+            .where({
+                FkVorlageProgramm: aID,
+                ProgrammKategorie: ProgrammKategorie.AktuellesProgramm.toString()
+            })
+            .toArray();
     }
+
 
     public async LadeProgramme(aLadePara: LadePara) {
         let mProgramme: ITrainingsProgramm[] = 
