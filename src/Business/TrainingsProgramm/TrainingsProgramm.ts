@@ -12,6 +12,7 @@ export enum ProgrammKategorie {
     AktuellesProgramm = "AktuellesProgramm",
     Vorlage = "Vorlage",
     Fertig = "Fertig",
+    Aktiv = 'Aktiv'
 }
 
 export interface ITrainingsProgramm {

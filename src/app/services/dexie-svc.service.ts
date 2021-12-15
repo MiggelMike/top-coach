@@ -124,7 +124,7 @@ export class DexieSvcService extends Dexie {
                             this.SatzTable.delete(sz.ID);
                     });
                 });
-                
+
                 if(s.ID !== undefined)
                     this.SessionTable.delete(s.ID);
             }
@@ -133,6 +133,15 @@ export class DexieSvcService extends Dexie {
     }
 
     public SetAktuellesProgramm(aSelectedProgram: TrainingsProgramm, aInitialWeightList?: Array<InitialWeight>): PromiseExtended<void> {
+        this.FindAktuellesProgramm()
+            .then((p) => {
+                for (let index = 0; index < p.length; index++) {
+                    const prog = p[index];
+                    prog.ProgrammKategorie = ProgrammKategorie.Aktiv;
+                }
+                this.ProgrammTable.bulkPut(p);
+            });
+
         const mProgramm = aSelectedProgram.Copy();
         mProgramm.id = undefined;
         mProgramm.FkVorlageProgramm = aSelectedProgram.id;
@@ -153,7 +162,10 @@ export class DexieSvcService extends Dexie {
                         aInitialWeightList.forEach((iw) => {
                             const mUebung = mNeueSession.UebungsListe.find((u) => u.FkUebung === iw.UebungID);
                             if (mUebung !== undefined)
-                                mUebung.ArbeitsSatzListe.forEach((sz) => sz.GewichtVorgabe = iw.Weight );
+                                mUebung.ArbeitsSatzListe.forEach((sz) => {
+                                    sz.GewichtVorgabe = iw.Weight;
+                                    sz.GewichtAusgefuehrt = iw.Weight;
+                                });
                         });
 
                     }
@@ -965,15 +977,11 @@ export class DexieSvcService extends Dexie {
         }) != null;
     }
 
-    public async FindAktuellesProgramm(aID: number) {
+    public async FindAktuellesProgramm() {
         return await this.ProgrammTable
-            .where({
-                FkVorlageProgramm: aID,
-                ProgrammKategorie: ProgrammKategorie.AktuellesProgramm.toString()
-            })
+            .where({ProgrammKategorie: ProgrammKategorie.AktuellesProgramm.toString()})
             .toArray();
     }
-
 
     public async LadeProgramme(aLadePara: LadePara) {
         let mProgramme: ITrainingsProgramm[] = 
