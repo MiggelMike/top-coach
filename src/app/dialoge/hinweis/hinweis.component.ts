@@ -41,5 +41,7 @@ export class DialogComponent {
 
     onCancelClick(): void {
         this.dialogRef.close();
+        if (this.data.CancelFn !== undefined)
+            this.data.CancelFn();
     }
 }

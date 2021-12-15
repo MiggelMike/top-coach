@@ -1,3 +1,4 @@
+import { InitialWeight } from './../../Business/Uebung/InitialWeight';
 import { Progress, IProgress, ProgressClient, ProgressSet, ProgressTyp, WeightCalculation, WeightProgressTime } from './../../Business/Progress/Progress';
 import { Hantelscheibe } from 'src/Business/Hantelscheibe/Hantelscheibe';
 import { Hantel, HantelTyp } from './../../Business/Hantel/Hantel';
@@ -14,6 +15,7 @@ import { Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardUebung } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
+import { SIGXFSZ } from 'constants';
 
 export enum ErstellStatus {
     VomAnwenderErstellt,
@@ -109,6 +111,60 @@ export class DexieSvcService extends Dexie {
     public ProgressListe: Array<ProgressClient> = []; 
 
     private ProgramLadeStandardPara: LadePara;
+
+    public DeleteProgram(aProgramm: TrainingsProgramm) {
+        aProgramm.SessionListe.forEach((s) => 
+        {
+            if ((s.Kategorie02 !== SessionStatus.Fertig) && (s.Kategorie02 !== SessionStatus.FertigTimeOut)) {
+                s.UebungsListe.forEach((u) => {
+                    if (u.ID !== undefined)
+                        this.UebungTable.delete(u.ID);
+                    u.SatzListe.forEach((sz) => {
+                        if(sz.ID !== undefined)
+                            this.SatzTable.delete(sz.ID);
+                    });
+                });
+                
+                if(s.ID !== undefined)
+                    this.SessionTable.delete(s.ID);
+            }
+        });
+        this.ProgrammTable.delete(aProgramm.id);
+    }
+
+    public SetAktuellesProgramm(aSelectedProgram: TrainingsProgramm, aInitialWeightList?: Array<InitialWeight>): PromiseExtended<void> {
+        const mProgramm = aSelectedProgram.Copy();
+        mProgramm.id = undefined;
+        mProgramm.FkVorlageProgramm = aSelectedProgram.id;
+        mProgramm.ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
+        
+        if (mProgramm.SessionListe) {
+            let mZyklen = 1;
+            if (aSelectedProgram.SessionListe.length < 10)
+                mZyklen = 3;
+            
+            mProgramm.SessionListe = [];
+            for (let x = 0; x < mZyklen; x++) {
+                for (let index = 0; index < aSelectedProgram.SessionListe.length; index++) {
+                    const mPrtSession = aSelectedProgram.SessionListe[index];
+                    const mNeueSession = mPrtSession.Copy(true);
+                    
+                    if (aInitialWeightList !== undefined) {
+                        aInitialWeightList.forEach((iw) => {
+                            const mUebung = mNeueSession.UebungsListe.find((u) => u.FkUebung === iw.UebungID);
+                            if (mUebung !== undefined)
+                                mUebung.ArbeitsSatzListe.forEach((sz) => sz.GewichtVorgabe = iw.Weight );
+                        });
+
+                    }
+                    mProgramm.SessionListe.push(mNeueSession);
+                }
+            }
+        
+            return this.ProgrammSpeichern(mProgramm);
+        }
+        return null;
+    }
 
     public get HantenscheibeListeSortedByDiameterAndWeight(): Array<Hantelscheibe> {
         let mResult: Array<Hantelscheibe> = this.HantelscheibenListe.map(mScheibe => mScheibe);

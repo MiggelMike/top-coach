@@ -5,7 +5,6 @@ import { TrainingsProgramm, ITrainingsProgramm, ProgrammKategorie, ProgrammTyp }
 import { SessionStatus } from '../../../Business/SessionDB';
 import { DialogeService } from 'src/app/services/dialoge.service';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
-import { Uebung } from 'src/Business/Uebung/Uebung';
 import { Router } from '@angular/router';
 
 
@@ -36,55 +35,32 @@ export class Programm01Component implements OnInit {
         mDialogData.OkFn = (): void => {
            this.router.navigate(["/app-initial-weight"], { state: { Program: aSelectedProgram } });
         }
-        this.fDialogService.JaNein(mDialogData);
 
-        // const mUebungen: Array<Uebung> = [];
-        // aSelectedProgram.SessionListe.forEach(
-        //     (s) => s.ExtractUebungen(mUebungen)
-        // );
-        
-        // this.programm = aSelectedProgram.Copy();
-        // this.programm.id = undefined;
-        // this.programm.FkVorlageProgramm = aSelectedProgram.id;
-        // this.programm.ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
-        
-        // if (this.programm.SessionListe) {
-        //     let mZyklen = 1;
-        //     if(aSelectedProgram.SessionListe.length < 10)
-        //         mZyklen = 3;
-            
-        //     this.programm.SessionListe = [];
-        //     for (let x = 0; x < mZyklen; x++) {
-        //         for (let index = 0; index < aSelectedProgram.SessionListe.length; index++) {
-        //             const mPrtSession = aSelectedProgram.SessionListe[index];
-        //             const mNeueSession = mPrtSession.Copy(true);
-        //             this.programm.SessionListe.push(mNeueSession);
-        //         }
-        //     }
-        // }
-    
-        // this.fDbModul.ProgrammSpeichern(this.programm);
+        mDialogData.CancelFn = (): void => {
+            this.fDbModul.SetAktuellesProgramm(aSelectedProgram as TrainingsProgramm)
+                .then(() =>  this.router.navigate([""]) );
+         }
+         this.fDialogService.JaNein(mDialogData);
     }
 
     SelectThisWorkoutClick(aSelectedProgram: ITrainingsProgramm, $event: any): void {
         $event.stopPropagation();
         this.fDbModul.FindAktuellesProgramm(aSelectedProgram.id)
             .then((p) => {
-                if (p.length > 0)
-                {
+                if (p.length > 0) {
                     const mDialogData = new DialogData();
                     mDialogData.textZeilen.push("The program is already chosen!");
                     mDialogData.textZeilen.push("Do want to replace it?");
                     mDialogData.OkFn = (): void => {
                         p.forEach((pr) =>
-                            this.fDbModul.ProgrammTable.delete(pr.id)
+                            this.fDbModul.DeleteProgram(pr as TrainingsProgramm)
                         );
                         this.SelectWorkout(aSelectedProgram);
                     }
                     this.fDialogService.JaNein(mDialogData);
                 } else {
                     this.SelectWorkout(aSelectedProgram);
-                    }
+                }
             });
     }
 

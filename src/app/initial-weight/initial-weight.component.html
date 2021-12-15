@@ -1,1 +1,28 @@
-<p>initial-weight works!</p>
+<div fxLayout="row wrap" fxLayoutAlign="center center">
+    <h4>Initial weights</h4>
+</div>
+
+<ng-container *ngFor="let iw of InitialWeightList">
+    <div fxLayout="row wrap" fxLayoutAlign="center center">
+        <div class="center-item" fxLayout="column" fxFlex="15%">
+                <mat-label>{{iw.Name}}</mat-label>
+        </div>
+
+        <div class="center-item" fxLayout="column" fxFlex="25%">
+            <mat-form-field class="align-left">
+                <mat-label>Initial weight</mat-label>
+                <input matInput [textMask]="{mask: floatMask, guide: false }" (focusout)="SetWeight(iw,$event)"
+                    [ngModel]="iw.Weight" type="text">
+            </mat-form-field>
+        </div>
+    </div>
+</ng-container>
+
+<div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center" [style.margin-top]="'5px'">
+    <div class="center-item" layout-align="center center">
+        <a class='link-button-font' mat-flat-button (click)="OkClick()">Save</a>
+    </div>
+    <div class="center-item" layout-align="center center">
+        <a class='link-button-font' mat-flat-button (click)="CancelClick()">Cancel</a>
+    </div>
+</div>
