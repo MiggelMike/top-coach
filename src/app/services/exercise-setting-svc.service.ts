@@ -48,10 +48,7 @@ export class ExerciseSettingSvcService {
 
   constructor(
     private overlay: Overlay,
-    private injector: Injector,
-    // public overlayRef: ExerciseOverlayRef,
-        // public _ModalPositionService: ModalPositionService,
-        // @Inject(cExerciseOverlayData) public uebung: IUebung
+    private injector: Injector
   ) { }
   
 

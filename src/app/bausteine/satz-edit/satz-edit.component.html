@@ -64,6 +64,7 @@
                         <input  matInput [textMask]="{mask: floatMask, guide: false }"
                                 [ngModel]="(satz.GewichtAusgefuehrt | number: '1.2')" 
                                 (focusout)="SetWeightAusgefuehrt($event)"
+                                (click)="WeightAusgefuehrtClick($event)"
                                 type="text">
                     </mat-form-field>
 
@@ -142,5 +143,7 @@
         <div class="center-item" layout-align="center center">
             <a [ngClass]="['link-button-font']" mat-flat-button (click)="CopySet()">Copy</a>
         </div>
+
+        
     </div>
 </div>

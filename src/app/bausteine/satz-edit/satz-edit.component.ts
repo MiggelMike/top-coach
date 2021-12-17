@@ -1,3 +1,6 @@
+import { DexieSvcService } from 'src/app/services/dexie-svc.service';
+import { Hantel } from './../../../Business/Hantel/Hantel';
+import { PlateCalcSvcService, PlateCalcOverlayConfig } from './../../services/plate-calc-svc.service';
 import { ISession } from 'src/Business/Session/Session';
 import { Uebung } from './../../../Business/Uebung/Uebung';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
@@ -7,6 +10,7 @@ import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
 import { floatMask, repMask } from './../../app.module';
+import { PlateCalcComponent } from 'src/app/plate-calc/plate-calc.component';
 
 @Component({
     selector: "app-satz-edit",
@@ -21,15 +25,31 @@ export class SatzEditComponent implements OnInit {
     @Input() rowNum: number;
     @Input() satzTyp: string;
     public floatMask = floatMask;
-    public repMask = repMask;    
+    public repMask = repMask;
+    public plateCalcComponent: PlateCalcComponent;
+    private plateCalcOverlayConfig: PlateCalcOverlayConfig;
+    private Hantel: Hantel;
 
     constructor(
         private fDialogService: DialogeService,
-        private fGlobalService: GlobalService
+        private fGlobalService: GlobalService,
+        private fPlateCalcSvcService: PlateCalcSvcService,
+        private fDbModule: DexieSvcService
+
     ) {}
     
     ngOnInit() {
         this.satz.BodyWeight = this.sess.BodyWeight;
+        if (this.sessUebung.FkHantel === undefined) {
+            const mStammUebung = this.fDbModule.StammUebungsListe.find((u) => u.ID === this.sessUebung.FkUebung);
+            if ((mStammUebung !== undefined) && (mStammUebung.FkHantel !== undefined)) {
+                this.sessUebung.FkHantel = mStammUebung.FkHantel;
+            }
+        }
+        
+        if (this.sessUebung.FkHantel !== undefined) 
+            this.Hantel = this.fDbModule.LangHantelListe.find((h) => h.ID === this.sessUebung.FkHantel);
+
     }
 
     public DeleteSet() {
@@ -71,6 +91,21 @@ export class SatzEditComponent implements OnInit {
 
     public SetWeightAusgefuehrt(aEvent: any) {
         this.satz.GewichtAusgefuehrt = aEvent.target.value;
+    }
+
+    public WeightAusgefuehrtClick(aEvent: any) {
+        aEvent.stopPropagation();
+
+        this.plateCalcOverlayConfig =
+            {
+                satz: this.satz,
+                hantel: this.Hantel,
+                left: (aEvent as PointerEvent).pageX - (aEvent as PointerEvent).offsetX,
+                top: (aEvent as PointerEvent).clientY - (aEvent as PointerEvent).offsetY,
+            } as PlateCalcOverlayConfig;
+        
+            
+        this.plateCalcComponent = this.fPlateCalcSvcService.open(this.plateCalcOverlayConfig);
     }
 
     public SetWdhAusgefuehrt(aEvent: any) {

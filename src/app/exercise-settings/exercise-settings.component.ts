@@ -1,11 +1,11 @@
-import { DexieSvcService } from 'src/app/services/dexie-svc.service';
-import { floatMask } from './../app.module';
+import { Hantel } from './../../Business/Hantel/Hantel';
+import { DexieSvcService } from "src/app/services/dexie-svc.service";
+import { floatMask } from "./../app.module";
 import { cExerciseOverlayData } from "./../services/exercise-setting-svc.service";
 import { IUebung } from "./../../Business/Uebung/Uebung";
 import { Component, Inject } from "@angular/core";
 import { ExerciseOverlayConfig, ExerciseOverlayRef } from "../services/exercise-setting-svc.service";
-import { ModalPositionService } from "../services/modal-position.service";
-import { Progress, ProgressTyp } from 'src/Business/Progress/Progress';
+import { Progress } from "src/Business/Progress/Progress";
 
 @Component({
 	selector: "app-exercise-settings",
@@ -17,18 +17,15 @@ export class ExerciseSettingsComponent {
 	public floatMask = floatMask;
 	public ProgressName: string;
 	public ProgressListe: Array<Progress> = [];
+	public HantelListe: Array<Hantel> = [];
 
 	constructor(
 		public overlayRef: ExerciseOverlayRef,
-		public _ModalPositionService: ModalPositionService,
 		public fDbModule: DexieSvcService,
 		@Inject(cExerciseOverlayData)
-		public SessUeb: IUebung) {
-		
-		this.fDbModule.LadeProgress(
-			(p) =>
-				this.ProgressListe = p
-		);
+		public SessUeb: IUebung
+	) {
+		this.fDbModule.LadeProgress((p) => (this.ProgressListe = p));
 	}
 
 	onOkClick(): void {
@@ -49,9 +46,8 @@ export class ExerciseSettingsComponent {
 	SetGewichtSteigerung(aEvent: any) {
 		this.SessUeb.GewichtSteigerung = aEvent.target.value;
 	}
-  
+
 	SetGewichtReduzierung(aEvent: any) {
 		this.SessUeb.GewichtReduzierung = aEvent.target.value;
-    
 	}
 }

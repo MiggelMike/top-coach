@@ -620,12 +620,10 @@ export class DexieSvcService extends Dexie {
             });
     }
 
-    public LadeLanghanteln(aAfterLoadFn?: AfterLoadFn) {
+    public LadeLanghanteln(aAfterLoadFn?: AfterLoadFn): PromiseExtended<void> {
         this.LangHantelListe = [];
-        this.table(this.cHantel)
-            .filter(
-                (mHantel: Hantel) => (mHantel.Typ === HantelTyp.Barbell)
-            )
+        return this.table(this.cHantel)
+            .where({ Typ : HantelTyp.Barbell})
             .toArray()
             .then((mHantelListe) => {
                 this.LangHantelListe = mHantelListe;
@@ -1037,11 +1035,13 @@ export class DexieSvcService extends Dexie {
                 // Uebung ist gespeichert.
                 // UebungsID in Saetze eintragen.
                 aUebung.ID = mUebungID;
-                aUebung.SatzListe.forEach((mSatz) => {
-                    mSatz.UebungID = mUebungID;
-                    mSatz.SessionID = aUebung.SessionID;
-                });
-                this.SaetzeSpeichern(aUebung.SatzListe);
+                if (aUebung.SatzListe !== undefined) {
+                    aUebung.SatzListe.forEach((mSatz) => {
+                        mSatz.UebungID = mUebungID;
+                        mSatz.SessionID = aUebung.SessionID;
+                    });
+                    this.SaetzeSpeichern(aUebung.SatzListe);
+                }
             });
         });
     }

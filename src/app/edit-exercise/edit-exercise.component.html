@@ -12,6 +12,26 @@
             </mat-form-field>
         </div>
 
+        <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
+            <mat-form-field class="mg-5">
+                <mat-label>Equipment type</mat-label>
+                <mat-select [(ngModel)]="Uebung.EquipmentTyp">
+                    <mat-option [value]=""></mat-option>
+                    <mat-option *ngFor="let equip of EquipmentListe" [value]="equip"> {{ equip }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <ng-container *ngIf="Uebung.EquipmentTyp === 'Barbell'">
+                <mat-form-field class="mg-5">
+                    <mat-label>Barbell</mat-label>
+                    <mat-select [(ngModel)]="Uebung.FkHantel">
+                        <mat-option [value]="0"></mat-option>
+                        <mat-option *ngFor="let h of HantelListe" [value]="h.ID"> {{ h.Name }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </ng-container>
+        </div>
+
         <mat-form-field class="mg-5">
             <mat-label>Involved Muscle #1</mat-label>
             <mat-select [(ngModel)]="Uebung.FkMuskel01">
@@ -55,6 +75,7 @@
         <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
             <mat-label>Notes</mat-label>
         </div>
+        
         <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
             <md-input-container fxFlex="100%">
                 <textarea [(ngModel)]="Uebung.Beschreibung" mdInput placeholder="Notes" rows="3" fxFlex="100%"

@@ -1,0 +1,26 @@
+<mat-card class="tc-font-size-smaller overlay-width">
+    <div class="align-left" fxLayout="column">
+        <ng-container *ngIf="Hantel">
+            <div fxLayout="row" fxFlex="100%">
+                <mat-label>{{Hantel.Name}}</mat-label>
+            </div>
+        </ng-container>
+
+        <div fxLayout="row" fxFlex="100%">
+            <mat-form-field class="align-right" fxFlex="90%">
+                <mat-label>Weight</mat-label>
+                <input matInput [textMask]="{mask: floatMask, guide: false }"
+                    [ngModel]="(Satz.GewichtAusgefuehrt | number: '1.2')" (focusout)="SetWeightVorgabe($event)"
+                    type="text">
+            </mat-form-field>
+        </div>
+
+
+  
+
+
+        <div fxLayout="row" fxLayoutAlign="center center">
+            <a mat-button (click)="close()"><span class="tc-font-size-small">close</span></a>
+        </div>
+    </div>
+</mat-card>

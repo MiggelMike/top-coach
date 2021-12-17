@@ -1,3 +1,4 @@
+import { Equipment } from './../Equipment/Equipment';
 import { MuscleGroupKategorie02 } from '../MuscleGroup/MuscleGroup';
 import { VorgabeWeightLimit } from '../Progress/Progress';
 import { Satz, SatzTyp, LiftTyp, SatzPausen, SatzStatus } from './../Satz/Satz';
@@ -12,6 +13,7 @@ export enum UebungsTyp {
   Ausdauer = 'Ausdauer',
   Dehnung = 'Dehnung',
 }
+
 
 export enum UebungsKategorie01 {
   Keine = 'Keine',
@@ -38,6 +40,7 @@ export interface IUebung {
     FkMuskel03: number;
     FkMuskel04: number;
     FkMuskel05: number;
+    FkHantel: number;
     MuskelGruppe: string;
     Name: string;
     Typ: UebungsTyp;
@@ -63,6 +66,7 @@ export interface IUebung {
     FkProgress: number;
     GewichtSteigerung: number;
     GewichtReduzierung: number;
+    EquipmentTyp: string;
 
 }
 
@@ -93,6 +97,8 @@ export class Uebung implements IUebung {
     public ID: number;
     // Bei Session-Uebungen ist FkUebung der Schluessel zur Stamm-Uebung
     public FkUebung: number = 0;
+    public FkHantel: number = 0;
+    public EquipmentTyp: string = '';
     public Name: string = '';
     public Typ: UebungsTyp = UebungsTyp.Undefined;
     public Kategorieen01: Array<UebungsKategorie01> = [];

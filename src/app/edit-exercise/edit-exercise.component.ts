@@ -1,3 +1,4 @@
+import { Hantel } from './../../Business/Hantel/Hantel';
 import { MuscleGroup } from './../../Business/MuscleGroup/MuscleGroup';
 import { DexieSvcService } from './../services/dexie-svc.service';
 import { Component, OnInit } from '@angular/core';
@@ -6,6 +7,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common'
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { DialogeService } from '../services/dialoge.service';
+import { Equipment, EquipmentTyp } from 'src/Business/Equipment/Equipment';
 
 
 @Component({
@@ -16,26 +18,43 @@ import { DialogeService } from '../services/dialoge.service';
 export class EditExerciseComponent implements OnInit {
     public Uebung: Uebung = null;
     public CmpUebung: Uebung = null;
-    public ClickData: EditExerciseComponent;
+	public ClickData: EditExerciseComponent;
 	
 	constructor(
 		private router: Router,
 		public fDexieService: DexieSvcService,
 		private location: Location,
 		public fDialogService: DialogeService
-	) {
-        const mNavigation = this.router.getCurrentNavigation();
-        const mState = mNavigation.extras.state as { ueb: Uebung; };
-		this.Uebung = mState.ueb.Copy();
-		this.CmpUebung = mState.ueb.Copy();
-    }
+		) {
+			const mNavigation = this.router.getCurrentNavigation();
+			const mState = mNavigation.extras.state as { ueb: Uebung; };
+			this.Uebung = mState.ueb.Copy();
+			this.CmpUebung = mState.ueb.Copy();
+		}
+		
+	public get EquipmentListe(): Array<string> {
+		const mResult: Array<string> = Equipment.EquipmentListe();
+		return mResult.sort((s1, s2) => {
+			if (s1 > s2)
+				return 1;
+			
+			if (s1 < s2)
+				return -1;
+			return 0;
+		});
+	}
 
     ngOnInit(): void {
 	}
 
 	public get MuskelListe(): Array<MuscleGroup>{
-		return this.fDexieService.MuskelgruppeListeSortedByName(); 
+		return this.fDexieService.MuskelgruppeListeSortedByName();
+	}
+	
+	public get HantelListe(): Array<Hantel>{
+		return this.fDexieService.LangHantelListe;
     }
+
     
     back() {
 		if (this.Uebung.isEqual(this.CmpUebung))
