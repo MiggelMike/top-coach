@@ -22,16 +22,31 @@
             </mat-form-field>
         </div>
 
-        <mat-label>Plates</mat-label>
-        <ng-container *ngFor="let hs of PlateList">
+
+        <ng-container *ngIf="PlateList.length > 0">
             <div fxLayout="row" fxFlex="100%">
-                <mat-label>{{hs.Anzahl}} x {{hs.Gewicht}}</mat-label>
+                <mat-label>Plates per side</mat-label>
             </div>
+
+            <ng-container *ngFor="let hs of PlateList">
+                <div fxLayout="row" fxFlex="100%">
+                    <mat-label>{{hs.Anzahl / 2}} x {{hs.Gewicht}}</mat-label>
+                </div>
+            </ng-container>
         </ng-container>
 
-        <container *ngIf="PlateList.length < 1">
-            <mat-label>Can not determine plates!</mat-label>
+        
+        <container *ngIf="JustTheBar === true; else PlateListlength">
+            <mat-label>Just the bar</mat-label>
         </container>
+        
+        <ng-template #PlateListlength>
+            <container *ngIf="PlateList.length < 1">
+                <mat-label>Can not determine plates!</mat-label>
+            </container>
+
+        </ng-template>
+        
 
 
 
