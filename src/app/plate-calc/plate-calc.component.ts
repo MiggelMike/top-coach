@@ -97,18 +97,23 @@ export class PlateCalcComponent implements OnInit {
               }
               
               if (mWeight > 0) {
-                if (this.PlateList.length === mRelevanteScheiben.length) {
-                  this.PlateList = [];
-                  break;
-                }
-                else if (this.PlateList.length > 0) {
+                if (this.PlateList.length > 0) {
                   mTmpScheibe = this.PlateList.pop();
                   if (parseFloat(mTmpScheibe.Gewicht.toString()) === mWeight) {
                     mWeight += mTmpScheibe.Gewicht * mTmpScheibe.Anzahl;
+                    const rlvScheibe: Hantelscheibe = mRelevanteScheiben.find((hs) => hs.ID === mTmpScheibe.ID);
+                    if (rlvScheibe)
+                      rlvScheibe.Anzahl += mTmpScheibe.Anzahl;
+                        
                     if (this.PlateList.length > 0) {
                       const mVorletzteScheibe: Hantelscheibe = this.PlateList.pop();
                       if (mVorletzteScheibe) {
                         mWeight += mVorletzteScheibe.Gewicht * mVorletzteScheibe.Anzahl;
+
+                        const rlvScheibe: Hantelscheibe = mRelevanteScheiben.find((hs) => hs.ID === mVorletzteScheibe.ID);
+                        if (rlvScheibe)
+                          rlvScheibe.Anzahl += mTmpScheibe.Anzahl;
+
                         mCheckedPlates.push(mVorletzteScheibe);
                       }
                     }

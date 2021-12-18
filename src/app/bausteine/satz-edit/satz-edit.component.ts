@@ -87,6 +87,14 @@ export class SatzEditComponent implements OnInit {
     public SetWeightAusgefuehrt(aEvent: any) {
         this.satz.GewichtAusgefuehrt = aEvent.target.value;
     }
+    
+    public CalcPlates($event) {
+        if (this.plateCalcComponent) {
+            // this.plateCalcComponent.Satz.GewichtAusgefuehrt = $event;
+            this.plateCalcComponent.CalcPlates($event);
+        }
+       
+    }
 
     public WeightAusgefuehrtClick(aEvent: any) {
         aEvent.stopPropagation();
