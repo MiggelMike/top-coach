@@ -33,10 +33,10 @@ export class ScheibenComponent implements OnInit {
 
 	GetHantelscheibenListe() {
 		this.fDexieSvcService.LadeHantelscheiben((mHantelscheibenListe) => {
-			this.HantelscheibenListe = [];
-			mHantelscheibenListe.forEach((hs) => {
-			 	this.HantelscheibenListe.push(hs);
-			});
+			this.HantelscheibenListe = this.fDexieSvcService.HantenscheibeListeSortedByDiameterAndWeight;
+			// mHantelscheibenListe.forEach((hs) => {
+			//  	this.HantelscheibenListe.push(hs);
+			// });
 			this.CopyHantelscheibenList();
 		});
 	}
