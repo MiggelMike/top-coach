@@ -307,7 +307,7 @@ export class DexieSvcService extends Dexie {
         
             //    Dexie.delete("ConceptCoach");
         
-        this.version(30).stores({
+        this.version(31).stores({
             AppData: "++id",
             Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID",
             Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]", 

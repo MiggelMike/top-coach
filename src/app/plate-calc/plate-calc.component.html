@@ -1,22 +1,39 @@
 <mat-card class="tc-font-size-smaller overlay-width">
     <div class="align-left" fxLayout="column">
-        <ng-container *ngIf="Hantel">
-            <div fxLayout="row" fxFlex="100%">
-                <mat-label>{{Hantel.Name}}</mat-label>
-            </div>
-        </ng-container>
+        <mat-form-field class="mg-5">
+            <mat-label>Barbell</mat-label>
+            <mat-select 
+                [(ngModel)]="Satz.FkHantel"
+                (selectionChange)="CalcPlates()"
+                >
+                <mat-option [value]="0"></mat-option>
+                <mat-option *ngFor="let h of HantelListe" [value]="h.ID"> {{ h.Name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
 
         <div fxLayout="row" fxFlex="100%">
             <mat-form-field class="align-right" fxFlex="90%">
                 <mat-label>Weight</mat-label>
                 <input matInput [textMask]="{mask: floatMask, guide: false }"
-                    [ngModel]="(Satz.GewichtAusgefuehrt | number: '1.2')" (focusout)="SetWeightVorgabe($event)"
+                    [ngModel]="(Satz.GewichtAusgefuehrt | number: '1.2')" 
+                    (focusout)="SetWeightVorgabe($event)"
+                    (ngModelChange)="CalcPlates($event)"
                     type="text">
             </mat-form-field>
         </div>
 
+        <mat-label>Plates</mat-label>
+        <ng-container *ngFor="let hs of PlateList">
+            <div fxLayout="row" fxFlex="100%">
+                <mat-label>{{hs.Anzahl}} x {{hs.Gewicht}}</mat-label>
+            </div>
+        </ng-container>
 
-  
+        <container *ngIf="PlateList.length < 1">
+            <mat-label>Can not determine plates!</mat-label>
+        </container>
+
+
 
 
         <div fxLayout="row" fxLayoutAlign="center center">

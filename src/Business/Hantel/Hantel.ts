@@ -17,7 +17,8 @@ export class IHantel {
     Name: string;
     Typ: HantelTyp;
     Durchmesser: number;
-    HantelStatus: ErstellStatus; 
+    HantelStatus: ErstellStatus;
+    Gewicht: number;
 }
 
 export class Hantel implements IHantel {
@@ -25,6 +26,7 @@ export class Hantel implements IHantel {
     Name: string = "";
     Typ: HantelTyp = HantelTyp.Barbell;
     Durchmesser: number = 0;
+    Gewicht: number = 0;
     HantelStatus: ErstellStatus = ErstellStatus.VomAnwenderErstellt; 
 
     public static StaticNeueHantel(

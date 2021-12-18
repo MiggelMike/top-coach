@@ -22,6 +22,16 @@
                         type="text">
                 </mat-form-field>
 
+                    <mat-form-field class="align-right" fxFlex="14%">
+                        <mat-label>Gewicht</mat-label>
+                        <input 
+                            matInput 
+                            [textMask]="{mask: floatMask, guide: false }" 
+                            [ngModel]="Hantel.Gewicht"
+                            (focusout)="SetGewicht(Hantel,$event)"  
+                            type="text">
+                    </mat-form-field>
+
                 <a class='link-button-font' mat-flat-button (click)="Delete(Hantel)">Delete</a>
             </div>
         </div>

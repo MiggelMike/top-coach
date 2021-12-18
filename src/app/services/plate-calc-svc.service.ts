@@ -1,10 +1,10 @@
-import { Hantel } from './../../Business/Hantel/Hantel';
-import { PlateCalcComponent } from './../plate-calc/plate-calc.component';
+import { Hantel } from "./../../Business/Hantel/Hantel";
+import { PlateCalcComponent } from "./../plate-calc/plate-calc.component";
 import { BaseOverlayRef } from "src/app/services/global.service";
 import { Injectable, InjectionToken, ComponentRef, Injector } from "@angular/core";
 import { Overlay, OverlayConfig, OverlayRef } from "@angular/cdk/overlay";
 import { ComponentPortal, PortalInjector } from "@angular/cdk/portal";
-import { Satz } from 'src/Business/Satz/Satz';
+import { Satz } from "src/Business/Satz/Satz";
 
 export class PlateCalcOverlayRef extends BaseOverlayRef {}
 
@@ -15,7 +15,6 @@ export interface PlateCalcOverlayConfig {
 	width?: number;
 	height?: number;
 	satz?: Satz;
-	hantel?: Hantel;
 	left?: number;
 	top?: number;
 }
@@ -23,27 +22,22 @@ export interface PlateCalcOverlayConfig {
 export const cPlateCalcOverlayData = new InjectionToken<Satz>("PlateCalc_Overlay_Component");
 
 const DEFAULT_CONFIG: PlateCalcOverlayConfig = {
-  hasBackdrop: true,
-  height: 100,
-  width: 100,
+	hasBackdrop: true,
+	height: 100,
+	width: 100,
 	backdropClass: "dark-backdrop",
 	satz: null,
-	hantel: null
 };
 
 @Injectable({
 	providedIn: "root",
 })
-  
+	
 export class PlateCalcSvcService {
 	public PlateCalcOverlayRef: OverlayRef = null;
 	public PlateCalcComponent: PlateCalcComponent;
 
-  constructor(
-    private overlay: Overlay,
-    private injector: Injector
-  ) { }
-  
+	constructor(private overlay: Overlay, private injector: Injector) {}
 
 	private createInjector(aConfig: PlateCalcOverlayConfig, aPlateCalcOverlayRef: PlateCalcOverlayRef): PortalInjector {
 		// Instantiate new WeakMap for our custom injection tokens
@@ -52,7 +46,6 @@ export class PlateCalcSvcService {
 		// Set custom injection tokens
 		injectionTokens.set(PlateCalcOverlayRef, aPlateCalcOverlayRef);
 		injectionTokens.set(cPlateCalcOverlayData, aConfig);
-		
 
 		// Instantiate new PortalInjector
 		return new PortalInjector(this.injector, injectionTokens);
@@ -88,9 +81,11 @@ export class PlateCalcSvcService {
 	}
 
 	private getOverlayConfig(aConfig: PlateCalcOverlayConfig): OverlayConfig {
-    const positionStrategy = this.overlay.position().global()
-      .top(aConfig.top.toString()+"px")
-      .centerHorizontally();
+		const positionStrategy = this.overlay
+			.position()
+			.global()
+			.top(aConfig.top.toString() + "px")
+			.centerHorizontally();
 
 		const overlayConfig = new OverlayConfig({
 			hasBackdrop: aConfig.hasBackdrop,

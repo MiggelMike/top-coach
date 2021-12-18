@@ -27,6 +27,17 @@
             </mat-form-field>
         </div>
 
+        <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
+            <mat-form-field class="align-right" fxFlex="100%">
+                <mat-label>Gewicht</mat-label>
+                <input 
+                    matInput 
+                    [textMask]="{mask: floatMask, guide: false }" 
+                    [ngModel]="Hantel.Gewicht"
+                    type="text">
+            </mat-form-field>
+        </div>        
+
     <app-data-store-buttons [SaveClick]="SaveChanges" [CancelClick]="CancelChanges" [ClickData]="this">
     </app-data-store-buttons>
 </div>

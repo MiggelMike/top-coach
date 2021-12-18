@@ -70,7 +70,11 @@ export class LanghantelComponent implements OnInit {
 
     public SetDiameter(aHantel: Hantel, aEvent: any) {
 		aHantel.Durchmesser = aEvent.target.value;
-	}
+    }
+    
+    public SetGewicht(aHantel: Hantel, aEvent: any) {
+		aHantel.Gewicht = aEvent.target.value;
+    }
 
     back() {
         const mTmpEditHantelComponent: LanghantelComponent = this;

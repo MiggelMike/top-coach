@@ -28,7 +28,6 @@ export class SatzEditComponent implements OnInit {
     public repMask = repMask;
     public plateCalcComponent: PlateCalcComponent;
     private plateCalcOverlayConfig: PlateCalcOverlayConfig;
-    private Hantel: Hantel;
 
     constructor(
         private fDialogService: DialogeService,
@@ -40,16 +39,12 @@ export class SatzEditComponent implements OnInit {
     
     ngOnInit() {
         this.satz.BodyWeight = this.sess.BodyWeight;
-        if (this.sessUebung.FkHantel === undefined) {
+        if (this.satz.FkHantel === undefined) {
             const mStammUebung = this.fDbModule.StammUebungsListe.find((u) => u.ID === this.sessUebung.FkUebung);
             if ((mStammUebung !== undefined) && (mStammUebung.FkHantel !== undefined)) {
-                this.sessUebung.FkHantel = mStammUebung.FkHantel;
+                this.satz.FkHantel = mStammUebung.FkHantel;
             }
         }
-        
-        if (this.sessUebung.FkHantel !== undefined) 
-            this.Hantel = this.fDbModule.LangHantelListe.find((h) => h.ID === this.sessUebung.FkHantel);
-
     }
 
     public DeleteSet() {
@@ -99,7 +94,6 @@ export class SatzEditComponent implements OnInit {
         this.plateCalcOverlayConfig =
             {
                 satz: this.satz,
-                hantel: this.Hantel,
                 left: (aEvent as PointerEvent).pageX - (aEvent as PointerEvent).offsetX,
                 top: (aEvent as PointerEvent).clientY - (aEvent as PointerEvent).offsetY,
             } as PlateCalcOverlayConfig;
