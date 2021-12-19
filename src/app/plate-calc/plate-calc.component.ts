@@ -25,6 +25,15 @@ export class PlateCalcComponent implements OnInit {
   public PlateListObserver: Observable<Array<Hantelscheibe>>;
   public GewichtAusgefuehrt: number = 0;
   public SetForAllSets: boolean;
+  public HantelForAllSets: boolean;
+  
+  public get SatzNr(): string{
+    if ((this.Uebung) && (this.Satz)) {
+      return ' --- Set ' + (this.Uebung.ArbeitsSatzListe.indexOf(this.Satz) + 1).toString();
+    }
+    return '';
+  }
+
 
 	constructor(public overlayRef: PlateCalcOverlayRef, public fDbModule: DexieSvcService, @Inject(cPlateCalcOverlayData) public aPlateCalcOverlayConfig: PlateCalcOverlayConfig) {
     this.Satz = aPlateCalcOverlayConfig.satz;
@@ -43,7 +52,7 @@ export class PlateCalcComponent implements OnInit {
     return this.Hantel.Gewicht === this.GewichtAusgefuehrt;
   }
 
-  public DoAllSets(aChecked: boolean) {
+  public DoWeightAllSets(aChecked: boolean) {
     if ((this.Uebung)&&(this.Satz)&&((aChecked))) {
       this.Uebung.ArbeitsSatzListe.forEach((sz) => {
         if (sz.ID !== this.Satz.ID) {
@@ -52,6 +61,17 @@ export class PlateCalcComponent implements OnInit {
       });
     }
   }
+
+  public DoHantelAllSets(aChecked: boolean) {
+    if ((this.Uebung)&&(this.Satz)&&((aChecked))) {
+      this.Uebung.ArbeitsSatzListe.forEach((sz) => {
+        if (sz.ID !== this.Satz.ID) {
+            sz.FkHantel = this.Satz.FkHantel;
+        }
+      });
+    }
+  }
+
 
   public CalcPlates(aValue?: any) {
     this.PlateListObserver.subscribe(() => {
@@ -155,6 +175,7 @@ export class PlateCalcComponent implements OnInit {
 
 	public SetWeightVorgabe(aEvent: any) {
     this.Satz.GewichtAusgefuehrt = aEvent.target.value;
-    this.DoAllSets(this.SetForAllSets);
-	}
+    this.DoWeightAllSets(this.SetForAllSets);
+  }
+  
 }

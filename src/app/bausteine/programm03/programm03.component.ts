@@ -83,6 +83,7 @@ export class Programm03Component implements OnInit {
     ngOnDestroy() {
         if (this.fGlobalService.Comp03PanelUebungObserver != null)
             this.fGlobalService.Comp03PanelUebungObserver = null;
+        
     }
 
     toggleUebungen(): void {
@@ -179,4 +180,5 @@ export class Programm03Component implements OnInit {
             
         this.fExerciseSettingsComponent = this.fExerciseSettingSvcService.open(this.fExerciseOverlayConfig);
     }
+    
 }

@@ -65,6 +65,11 @@ export class SessionFormComponent
             this.fSessionStatsOverlayComponent.close();
     }
 
+    ngOnDestroy() {
+        if(this.fSessionStatsOverlayComponent)
+            this.fSessionStatsOverlayComponent.close();
+    }
+
     back() {
         if (this.Session.isEqual(this.cmpSession))
             this.leave();
