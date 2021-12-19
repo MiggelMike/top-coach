@@ -1,3 +1,4 @@
+import { Uebung } from './../../Business/Uebung/Uebung';
 import { Hantelscheibe } from "./../../Business/Hantelscheibe/Hantelscheibe";
 import { PlateCalcOverlayRef, cPlateCalcOverlayData } from "./../services/plate-calc-svc.service";
 import { Component, Inject, OnInit } from "@angular/core";
@@ -19,12 +20,15 @@ export class PlateCalcComponent implements OnInit {
 	public PlateList: Array<Hantelscheibe>;
   public HantelListe: Array<Hantel>;
   public Hantel: Hantel;
-	public Satz: Satz;
+  public Satz: Satz;
+  public Uebung: Uebung;
   public PlateListObserver: Observable<Array<Hantelscheibe>>;
   public GewichtAusgefuehrt: number = 0;
+  public SetForAllSets: boolean;
 
 	constructor(public overlayRef: PlateCalcOverlayRef, public fDbModule: DexieSvcService, @Inject(cPlateCalcOverlayData) public aPlateCalcOverlayConfig: PlateCalcOverlayConfig) {
     this.Satz = aPlateCalcOverlayConfig.satz;
+    this.Uebung = aPlateCalcOverlayConfig.uebung;
     this.GewichtAusgefuehrt = this.Satz.GewichtAusgefuehrt;
     this.HantelListe = this.fDbModule.LangHantelListe;
     this.Hantel = this.fDbModule.LangHantelListe.find((lh) => lh.ID === this.Satz.FkHantel);
@@ -34,7 +38,19 @@ export class PlateCalcComponent implements OnInit {
   
 
   public get JustTheBar(): boolean {
+    if(this.Hantel === undefined)
+      return false;
     return this.Hantel.Gewicht === this.GewichtAusgefuehrt;
+  }
+
+  public DoAllSets(aChecked: boolean) {
+    if ((this.Uebung)&&(this.Satz)&&((aChecked))) {
+      this.Uebung.ArbeitsSatzListe.forEach((sz) => {
+        if (sz.ID !== this.Satz.ID) {
+            sz.GewichtAusgefuehrt = this.Satz.GewichtAusgefuehrt;
+        }
+      });
+    }
   }
 
   public CalcPlates(aValue?: any) {
@@ -138,6 +154,7 @@ export class PlateCalcComponent implements OnInit {
 	}
 
 	public SetWeightVorgabe(aEvent: any) {
-		this.Satz.GewichtAusgefuehrt = aEvent.target.value;
+    this.Satz.GewichtAusgefuehrt = aEvent.target.value;
+    this.DoAllSets(this.SetForAllSets);
 	}
 }

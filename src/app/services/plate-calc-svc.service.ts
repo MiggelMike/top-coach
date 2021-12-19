@@ -1,3 +1,4 @@
+import { Uebung } from './../../Business/Uebung/Uebung';
 import { Hantel } from "./../../Business/Hantel/Hantel";
 import { PlateCalcComponent } from "./../plate-calc/plate-calc.component";
 import { BaseOverlayRef } from "src/app/services/global.service";
@@ -15,6 +16,7 @@ export interface PlateCalcOverlayConfig {
 	width?: number;
 	height?: number;
 	satz?: Satz;
+	uebung?: Uebung;
 	left?: number;
 	top?: number;
 }

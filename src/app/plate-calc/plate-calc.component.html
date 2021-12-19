@@ -1,5 +1,26 @@
 <mat-card class="tc-font-size-smaller overlay-width">
     <div class="align-left" fxLayout="column">
+        
+        <div fxLayout="row" fxFlex="100%">
+            <mat-form-field class="align-right" fxFlex="60%">
+                <mat-label>Weight</mat-label>
+                <input matInput [textMask]="{mask: floatMask, guide: false }"
+                [ngModel]="(Satz.GewichtAusgefuehrt | number: '1.2')" 
+                (focusout)="SetWeightVorgabe($event)"
+                (ngModelChange)="CalcPlates($event)"
+                type="text">
+            </mat-form-field>
+
+            <div class="mg-5" layout-align="end" layout-margin>
+                <mat-checkbox 
+                [(ngModel)]="SetForAllSets" (click)="$event.stopPropagation()"
+                (change)="DoAllSets($event.checked)"
+
+                >All sets
+                </mat-checkbox>
+            </div>
+        </div>
+        
         <mat-form-field class="mg-5">
             <mat-label>Barbell</mat-label>
             <mat-select 
@@ -10,18 +31,6 @@
                 <mat-option *ngFor="let h of HantelListe" [value]="h.ID"> {{ h.Name }}</mat-option>
             </mat-select>
         </mat-form-field>
-
-        <div fxLayout="row" fxFlex="100%">
-            <mat-form-field class="align-right" fxFlex="90%">
-                <mat-label>Weight</mat-label>
-                <input matInput [textMask]="{mask: floatMask, guide: false }"
-                    [ngModel]="(Satz.GewichtAusgefuehrt | number: '1.2')" 
-                    (focusout)="SetWeightVorgabe($event)"
-                    (ngModelChange)="CalcPlates($event)"
-                    type="text">
-            </mat-form-field>
-        </div>
-
 
         <ng-container *ngIf="PlateList.length > 0">
             <div fxLayout="row" fxFlex="100%">

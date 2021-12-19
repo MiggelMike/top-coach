@@ -102,6 +102,7 @@ export class SatzEditComponent implements OnInit {
         this.plateCalcOverlayConfig =
             {
                 satz: this.satz,
+                uebung: this.sessUebung,
                 left: (aEvent as PointerEvent).pageX - (aEvent as PointerEvent).offsetX,
                 top: (aEvent as PointerEvent).clientY - (aEvent as PointerEvent).offsetY,
             } as PlateCalcOverlayConfig;
