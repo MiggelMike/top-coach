@@ -124,17 +124,18 @@ export class SessionFormComponent
             aPara.fDexieSvcService.SessionSpeichern(mNeueSession);    
         }
             
+        const mSession: Session = (aPara.Session);
+        const mCmpSession: Session = (aPara.cmpSession);
+        // Die aus der Session gelöschten Übungen auch aus der DB löschen.
+        for (let index = 0; index < mCmpSession.UebungsListe.length; index++) {
+            const mUebung = mCmpSession.UebungsListe[index];
+            const mSuchUebung = mSession.UebungsListe.find(u => u.ID === mUebung.ID)
+            if (mSuchUebung === undefined)
+                aPara.fDexieSvcService.UebungTable.delete(mUebung.ID);
+        };
+        
         aPara.fDexieSvcService.SessionSpeichern(aPara.Session)
             .then(() => {
-                const mSession: Session = (aPara.Session);
-                const mCmpSession: Session = (aPara.cmpSession);
-                // Die aus der Session gelöschten Übungen auch aus der DB löschen.
-                for (let index = 0; index < mCmpSession.UebungsListe.length; index++) {
-                    const mUebung = mCmpSession.UebungsListe[index];
-                    const mSuchUebung = mSession.UebungsListe.find(u => u.ID === mUebung.ID)
-                    if (mSuchUebung === undefined)
-                        aPara.fDexieSvcService.UebungTable.delete(mUebung.ID);
-                };
                 aPara.cmpSession = aPara.Session.Copy();
             });
 
