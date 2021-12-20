@@ -133,7 +133,7 @@ export class SessionFormComponent
             if (mSuchUebung === undefined)
                 aPara.fDexieSvcService.UebungTable.delete(mUebung.ID);
         };
-        
+
         aPara.fDexieSvcService.SessionSpeichern(aPara.Session)
             .then(() => {
                 aPara.cmpSession = aPara.Session.Copy();
@@ -152,9 +152,18 @@ export class SessionFormComponent
         this.fDialogService.JaNein(mDialogData);
     }
 
-    public SetPause():void {
-        this.Session.Kategorie02 = SessionStatus.Pause;
+    public get Paused(): boolean{
+        return (this.Session.Kategorie02 === SessionStatus.Pause);
     }
+
+    public SetPause():void {
+        this.Session.AddPause();
+    }
+
+    public GoAhead():void {
+        this.Session.StarteDauerTimer();
+    }
+
 
     public SetDone(): void {
         this.fSessionStatsOverlayComponent.sess.SetSessionFertig();
