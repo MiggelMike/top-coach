@@ -1046,7 +1046,7 @@ export class DexieSvcService extends Dexie {
         });
     }
 
-    public SessionSpeichern(aSession: Session) {
+    public SessionSpeichern(aSession: Session): PromiseExtended<void> {
         return this.transaction(
             "rw",
             this.SessionTable,
@@ -1065,9 +1065,7 @@ export class DexieSvcService extends Dexie {
                     }
                 )
             }
-        ).catch(r => (
-            console.log(r)
-        ));
+        );
     }
     
 

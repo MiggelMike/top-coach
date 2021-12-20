@@ -117,6 +117,7 @@ export class SatzEditComponent implements OnInit {
 
     public CopySet() {
         this.fGlobalService.SatzKopie = this.satz.Copy();
+        this.fGlobalService.SatzKopie.ID = undefined;
     }
 
     ngDoCheck() {

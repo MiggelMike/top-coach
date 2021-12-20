@@ -80,7 +80,6 @@ export class SessionFormComponent
 
 			this.fDialogService.JaNein(mDialogData);
 		}
-
     }
     
     PasteExcercise() {
@@ -94,6 +93,10 @@ export class SessionFormComponent
 		const mSessUebung: Uebung = this.fGlobalService.SessUebungKopie.Copy();
         mSessUebung.SessionID = this.Session.ID;
         mSessUebung.ID = undefined;
+        mSessUebung.SatzListe.forEach((sz) => {
+            sz.ID = undefined;
+            sz.UebungID = undefined;
+        });
 		this.Session.UebungsListe.push(mSessUebung);
     }
     
@@ -111,6 +114,7 @@ export class SessionFormComponent
         this.BodyWeight = this.fDexieSvcService.getBodyWeight();
     }
 
+
     public SaveChanges(aPara: any) {
         
         if ((aPara as SessionFormComponent).Session.Kategorie02 === SessionStatus.Fertig) {
@@ -120,18 +124,20 @@ export class SessionFormComponent
             aPara.fDexieSvcService.SessionSpeichern(mNeueSession);    
         }
             
-        aPara.fDexieSvcService.SessionSpeichern(aPara.Session);
-        const mSession: Session = (aPara.Session);
-        const mCmpSession: Session = (aPara.cmpSession);
-        // Die aus der Session gelöschten Übungen auch aus der DB löschen.
-        for (let index = 0; index < mCmpSession.UebungsListe.length; index++) {
-            const mUebung = mCmpSession.UebungsListe[index];
-            const mSuchUebung = mSession.UebungsListe.find( u => u.ID === mUebung.ID)
-            if (mSuchUebung === undefined)
-                aPara.fDexieSvcService.UebungTable.delete(mUebung.ID);
-        };
+        aPara.fDexieSvcService.SessionSpeichern(aPara.Session)
+            .then(() => {
+                const mSession: Session = (aPara.Session);
+                const mCmpSession: Session = (aPara.cmpSession);
+                // Die aus der Session gelöschten Übungen auch aus der DB löschen.
+                for (let index = 0; index < mCmpSession.UebungsListe.length; index++) {
+                    const mUebung = mCmpSession.UebungsListe[index];
+                    const mSuchUebung = mSession.UebungsListe.find(u => u.ID === mUebung.ID)
+                    if (mSuchUebung === undefined)
+                        aPara.fDexieSvcService.UebungTable.delete(mUebung.ID);
+                };
+                aPara.cmpSession = aPara.Session.Copy();
+            });
 
-        aPara.cmpSession = aPara.Session.Copy();
     }
 
     public CancelChanges(aPara: SessionFormComponent, aNavRoute: string) {
