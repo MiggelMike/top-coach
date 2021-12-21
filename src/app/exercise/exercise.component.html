@@ -1,11 +1,18 @@
 <app-toolbar></app-toolbar>
+
 <div fxLayout="row wrap" fxLayoutAlign="center center">
     <h4>Exercises</h4>
 </div>
 <ng-container *ngIf="UebungListeSortedByName">
+    <div class="center-item" layout-align="center center">
+        <a class='link-button-font' mat-flat-button (click)="NewExercise()" >New exercise</a>
+    </div>    
+    
     <ng-container *ngFor="let uebung of UebungListeSortedByName" >
         <div fxLayout="row wrap" fxLayoutAlign="center center">
             <a mat-button (click)="EditExercise(uebung)">{{uebung.Name}}</a>
         </div>
     </ng-container>
+
+
 </ng-container>

@@ -1,5 +1,5 @@
 import { ISession } from "src/Business/Session/Session";
-import { ISessionDB } from "./../../../Business/SessionDB";
+import { ISessionDB, SessionDB } from "./../../../Business/SessionDB";
 import { SessionStatus } from "../../../Business/SessionDB";
 import { UebungWaehlenData } from "./../../uebung-waehlen/uebung-waehlen.component";
 import { UebungsKategorie02 } from "./../../../Business/Uebung/Uebung";
@@ -114,8 +114,6 @@ export class Programm02Component implements OnInit {
 				this.fDbModule.EvalAktuelleSessionListe(aSession as Session);
 		});
 	}
-
-
 	
 	private DeleteSessionPrim(aSession: ISession, aRowNum: number, aOnDelete: onDeleteFn ) {
 		const mDialogData = new DialogData();
@@ -150,6 +148,17 @@ export class Programm02Component implements OnInit {
 		const mSessUebung: Uebung = this.fGlobalService.SessUebungKopie.Copy();
 		mSessUebung.SessionID = aSession.ID;
 		aSession.UebungsListe.push(mSessUebung);
+	}
+
+	public AdditionalSession(): void{
+		const mNewSession: Session = new Session();
+		mNewSession.init();
+		mNewSession.UebungsListe = [];
+		mNewSession.Name = 'Additional session';
+		mNewSession.Kategorie02 = SessionStatus.Wartet;
+		mNewSession.FK_VorlageProgramm = 0;
+		mNewSession.FK_Programm = this.fDbModule.AktuellesProgramm.id;
+		this.startSessionPrim(mNewSession);
 	}
 
 	public toggleSessions(): void {
@@ -190,7 +199,7 @@ export class Programm02Component implements OnInit {
 
 	public AddSession() {
 		const mDate = new Date();
-		const mSession: Session = new Session();
+		const mSession: ISession = new Session();
 		mSession.Name = `Session ${mDate.toLocaleString()}`;
 		mSession.Datum = new Date();
 		mSession.DauerInSek = 0;
@@ -217,8 +226,7 @@ export class Programm02Component implements OnInit {
 	// 	this.fDbModule.EvalAktuelleSessionListe(aSession as Session);
 	// }
 
-	public startSession(aEvent: Event, aSession: ISession) {
-		aEvent.stopPropagation();
+	private startSessionPrim(aSession: ISession) {
 
 		if (aSession.Kategorie02 === SessionStatus.Fertig || aSession.Kategorie02 === SessionStatus.FertigTimeOut) return;
 
@@ -231,15 +239,15 @@ export class Programm02Component implements OnInit {
 			case SessionStatus.Pause:
 				aSession.StarteDauerTimer();
 				break;
-			// case SessionStatus.Laueft: aSession.StartePauseTimer(); break;
 		}
 
-		// aSession.GestartedWann = new Date();
-		// const navigationExtras: NavigationExtras = {
-		//     state: {
-		//       sess: aSession
-		//     }
-		//   };
+		this.router.navigate(["sessionFormComponent"], { state: { sess: aSession,  AnzSessionInProgram : this.programm.MaxSessions } });
+	}
+
+
+	public startSession(aEvent: Event, aSession: ISession) {
+		aEvent.stopPropagation();
+		this.startSessionPrim(aSession);
 		this.router.navigate(["sessionFormComponent"], { state: { sess: aSession,  AnzSessionInProgram : this.programm.MaxSessions } });
 	}
 

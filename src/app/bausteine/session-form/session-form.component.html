@@ -31,9 +31,16 @@
             <a class='link-button-font' mat-flat-button (click)="SetDone()">Done</a>
         </div>
 
+
+        <div class="center-item" layout-align="center center">
+            <a [ngClass]="'link-button-font'" mat-flat-button (click)="AddExercise()">Add exercise</a>
+        </div>
+
         <div class="center-item" layout-align="center center">
             <a [ngClass]="'link-button-font'" mat-flat-button (click)="PasteExcercise()">Paste Exercise</a>
         </div>
+
+
     </div>
 
     <app-data-store-buttons

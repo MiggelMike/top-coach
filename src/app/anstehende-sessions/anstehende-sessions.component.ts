@@ -1,5 +1,5 @@
-import { DexieSvcService, LadePara } from './../services/dexie-svc.service';
-import {  TrainingsProgramm, ITrainingsProgramm, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
+import { DexieSvcService  } from './../services/dexie-svc.service';
+import {  ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
 import { Observable, of } from 'rxjs';
@@ -38,6 +38,8 @@ export class AnstehendeSessionsComponent implements OnInit {
                 mProgram.SessionListe.filter(
                     (s) => (s.Kategorie02 !== SessionStatus.Fertig && s.Kategorie02 !== SessionStatus.FertigTimeOut)
                 );
+            
+                //mProgram.SessionListe
         }
         return mProgram
     }

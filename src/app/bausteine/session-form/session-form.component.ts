@@ -1,5 +1,5 @@
 import { SessionStatus  } from './../../../Business/SessionDB';
-import { ISession, Session } from 'src/Business/Session/Session';
+import { Session } from 'src/Business/Session/Session';
 import { SessionStatsOverlayComponent } from './../../session-stats-overlay/session-stats-overlay.component';
 import { SessionOverlayServiceService, SessionOverlayConfig } from './../../services/session-overlay-service.service';
 import { DialogeService } from './../../services/dialoge.service';
@@ -10,7 +10,6 @@ import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
 import { Location } from "@angular/common";
 import { GlobalService } from 'src/app/services/global.service';
 import { Uebung } from 'src/Business/Uebung/Uebung';
-import { ProgrammKategorie, TrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 
 @Component({
     selector: "app-session-form",
@@ -81,6 +80,10 @@ export class SessionFormComponent
 
 			this.fDialogService.JaNein(mDialogData);
 		}
+    }
+
+    AddExercise() {
+        
     }
     
     PasteExcercise() {

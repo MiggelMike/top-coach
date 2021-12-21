@@ -1,5 +1,7 @@
 <ng-container *ngIf="SessionListe && (SessionListe.length > 0)">
         <a [ngClass]="['link-button-font']" mat-flat-button (click)="toggleSessions()">{{ToggleButtonText}}</a>
+        <a [ngClass]="['link-button-font']" mat-flat-button (click)="AdditionalSession()">Additional session</a>
+
         <ng-container *ngFor="let sess of SessionListe, index as i">
             <mat-accordion #accSession="matAccordion" multi="true">
                 <mat-expansion-panel #panSession='matExpansionPanel' class="HG-01">

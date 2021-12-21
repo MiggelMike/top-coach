@@ -22,7 +22,9 @@ export class ExerciseComponent implements OnInit {
 
     public EditExercise(aUebung: Uebung): void {
         this.router.navigate(["/edit-exercise"], { state: { ueb: aUebung} });
-        // this.router.navigate(['sessionFormComponent'], { state: { sess: aSession } } );
-        
+    }
+
+    public NewExercise():void {
+        this.router.navigate(["/edit-exercise"], { state: { ueb: new Uebung()} });
     }
 }
