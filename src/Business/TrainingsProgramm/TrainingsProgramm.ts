@@ -18,7 +18,7 @@ export enum ProgrammKategorie {
 export interface ITrainingsProgramm {
     id: number;
     FkVorlageProgramm: number;
-    Tage: number;
+    MaxSessions: number;
     Name: string;
     ProgrammKategorie: ProgrammKategorie;
     ProgrammTyp: ProgrammTyp;
@@ -38,7 +38,7 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
     // Wird in abgeleiteten Klassen gesetzt.
     public id: number;
     public FkVorlageProgramm: number = 0;
-    public Tage: number = 0;
+    public MaxSessions: number = 0;
     public Name: string = "";
     public ProgrammKategorie: ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
     public ProgrammTyp: ProgrammTyp = ProgrammTyp.Custom;
@@ -76,7 +76,7 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
             if (this.Name != aCmpProgramm.Name) return true;
             if (this.ProgrammKategorie != aCmpProgramm.ProgrammKategorie) return true;
             if (this.ProgrammTyp != aCmpProgramm.ProgrammTyp) return true;
-            if (this.Tage != aCmpProgramm.Tage) return true;
+            if (this.MaxSessions != aCmpProgramm.MaxSessions) return true;
             
             for (let index = 0; index < this.SessionListe.length; index++) {
                 if (this.SessionListe[index].hasChanged(aCmpProgramm.SessionListe[index]) === true) {
@@ -120,18 +120,16 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
 
     public Init(aSessions: Array<ISession>): void {
         for (
-            let mAktuellerTag = 1;
-            mAktuellerTag <= this.Tage;
-            mAktuellerTag++
+            let mSessionNr = 0; mSessionNr < this.MaxSessions; mSessionNr++
         ) {
-            this.InitTag(mAktuellerTag).forEach((mSess) => {
+            this.InitSession(mSessionNr % this.MaxSessions).forEach((mSess) => {
                 aSessions.push(mSess);
                 this.SessionListe.push(mSess);
             });
         }
     }
 
-    protected abstract InitTag(aTagNr: number): Array<ISession>;
+    protected abstract InitSession(aSessionNr: number): Array<ISession>;
 
     public abstract DeserializeProgramm(aJsonData: Object): ITrainingsProgramm;
 }

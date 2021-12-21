@@ -153,8 +153,6 @@ export class Session extends SessionDB implements ISession {
         const mJetzt = new Date();
         this.SessionDauer = new Zeitraum(mJetzt,mJetzt, new MaxZeitraum(99,59,59));
     }
-    
-
 
     public addUebung(aUebung: Uebung) {
         aUebung.Kategorie02 = UebungsKategorie02.Session;

@@ -27,7 +27,7 @@ import { deserialize } from '@peerlancers/json-serialization';
 export class GzclpProgramm extends TrainingsProgramm {
 	constructor(aProgrammKategorie: ProgrammKategorie, public override pDbModule: DexieSvcService) {
 		super(ProgrammTyp.Gzclp, aProgrammKategorie, pDbModule);
-		this.Tage = 4;
+		this.MaxSessions = 4;
 	}
 
 	public PreCopy(): ITrainingsProgramm {
@@ -85,12 +85,13 @@ export class GzclpProgramm extends TrainingsProgramm {
 		// }
 	}
 
-	protected override InitTag(aSessionNr: number): Array<ISession> {
+	protected override InitSession(aSessionNr: number): Array<ISession> {
 		const mSessions = new Array<ISession>();
 		const mNeueSession = new Session();
-		mNeueSession.Name = `Day #${aSessionNr}  --- `;
+		const mSessionNr = aSessionNr + 1;
+		mNeueSession.Name = `Day #${mSessionNr}  --- `;
 		// `0${month}
-		switch (aSessionNr - (1 % 4)) {
+		switch (aSessionNr) {
 			case 0:
 				mNeueSession.Name += "Squat";
 				break;
@@ -116,7 +117,7 @@ export class GzclpProgramm extends TrainingsProgramm {
 		mSessions.push(mNeueSession);
 
 		switch (aSessionNr) {
-			case 1:
+			case 0:
 				this.ErzeugeSessions(
 					StandardUebung.getStandardUebung(StandardUebungsName.Squat).Name,
 					StandardUebung.getStandardUebung(StandardUebungsName.Benchpress).Name,
@@ -125,7 +126,7 @@ export class GzclpProgramm extends TrainingsProgramm {
 				);
 				break;
 
-			case 2:
+			case 1:
 				this.ErzeugeSessions(
 					StandardUebung.getStandardUebung(StandardUebungsName.OverheadPress).Name,
 					StandardUebung.getStandardUebung(StandardUebungsName.Deadlift).Name,
@@ -134,7 +135,7 @@ export class GzclpProgramm extends TrainingsProgramm {
 				);
 				break;
 
-			case 3:
+			case 2:
 				this.ErzeugeSessions(
 					StandardUebung.getStandardUebung(StandardUebungsName.Benchpress).Name,
 					StandardUebung.getStandardUebung(StandardUebungsName.Squat).Name,
@@ -143,7 +144,7 @@ export class GzclpProgramm extends TrainingsProgramm {
 				);
 				break;
 
-			case 4:
+			case 3:
 				this.ErzeugeSessions(
 					StandardUebung.getStandardUebung(StandardUebungsName.Deadlift).Name,
 					StandardUebung.getStandardUebung(StandardUebungsName.OverheadPress).Name,

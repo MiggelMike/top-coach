@@ -157,6 +157,7 @@ export class DexieSvcService extends Dexie {
                 for (let index = 0; index < aSelectedProgram.SessionListe.length; index++) {
                     const mPrtSession = aSelectedProgram.SessionListe[index];
                     const mNeueSession = mPrtSession.Copy(true);
+                    mNeueSession.FK_VorlageProgramm = aSelectedProgram.id;
                     
                     if (aInitialWeightList !== undefined) {
                         aInitialWeightList.forEach((iw) => {
@@ -305,9 +306,9 @@ export class DexieSvcService extends Dexie {
             } //OnProgrammNoRecorderLoadFn
         } as LadePara
         
-            //    Dexie.delete("ConceptCoach");
+                //  Dexie.delete("ConceptCoach");
         
-        this.version(31).stores({
+        this.version(32).stores({
             AppData: "++id",
             Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID",
             Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]", 
