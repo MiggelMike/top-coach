@@ -47,6 +47,9 @@ export interface onErrorFn {
     (aData?: any): void;
 }
 
+export interface onDeleteFn {
+    (aData?: any): void;
+}
 
 
 export class LadePara {
@@ -306,7 +309,7 @@ export class DexieSvcService extends Dexie {
             } //OnProgrammNoRecorderLoadFn
         } as LadePara
         
-                //  Dexie.delete("ConceptCoach");
+                //   Dexie.delete("ConceptCoach");
         
         this.version(32).stores({
             AppData: "++id",
@@ -764,23 +767,26 @@ export class DexieSvcService extends Dexie {
                     this.StammUebungsListe = mUebungen;
                     // Standard-Vorlage-Programme laden
                     this.LadeProgramme(this.ProgramLadeStandardPara);
-                    // Aktuelles Programm laden
-                    // this.LadeProgramme(
-                    //     {
-                    //         fProgrammKategorie: ProgrammKategorie.AktuellesProgramm,
-
-                    //         OnProgrammAfterLoadFn: (mProgramme: TrainingsProgramm[]) => {
-                    //             if ((mProgramme !== undefined)&&(mProgramme.length > 0)) {
-                    //                 this.AktuellesProgramm = mProgramme[0];
-                    //                 this.PrepAkuellesProgramm(this.AktuellesProgramm)
-                    //             }
-                    //         }, // OnProgrammAfterLoadFn
-                                
-                    //     } as LadePara
-                    // ); // Aktuelles Programm laden
+                    // this.LadeAktuellesProgramm();
                 }
             });
     }
+
+    public LadeAktuellesProgramm() {
+        this.LadeProgramme(
+            {
+                fProgrammKategorie: ProgrammKategorie.AktuellesProgramm,
+                
+                OnProgrammAfterLoadFn: (mProgramme: TrainingsProgramm[]) => {
+                    if ((mProgramme !== undefined) && (mProgramme.length > 0)) {
+                        this.AktuellesProgramm = mProgramme[0];
+                    }
+                }, // OnProgrammAfterLoadFn
+                        
+            } as LadePara
+        ); // Aktuelles Programm laden
+                        
+    } // Aktuelles Programm laden
 
     public PrepAkuellesProgramm(aProgramm: ITrainingsProgramm) {
         let mNeueSessions: Array<SessionDB> = [];
@@ -1129,7 +1135,18 @@ export class DexieSvcService extends Dexie {
     }
 
     public EvalAktuelleSessionListe(aSession: Session): void { 
-        if (aSession.Kategorie02 === SessionStatus.Fertig) {
+        if ((aSession.Kategorie02 === SessionStatus.Fertig)||(aSession.Kategorie02 === SessionStatus.Loeschen)) {
+            if ((aSession.Kategorie02 === SessionStatus.Loeschen)
+                && this.AktuellesProgramm
+                && this.AktuellesProgramm.SessionListe) {
+                const mSess: ISession = this.AktuellesProgramm.SessionListe.find( (s) => s.ID === aSession.ID);
+                if (mSess) {
+                    const i = this.AktuellesProgramm.SessionListe.indexOf(mSess);
+                    if(i)
+                        this.AktuellesProgramm.SessionListe.splice(i, 1);
+                }
+            }
+
             this.LadeProgramme({
                 fProgrammKategorie: ProgrammKategorie.AktuellesProgramm,
 
@@ -1178,6 +1195,11 @@ export class DexieSvcService extends Dexie {
                         mNeueSession.FK_Programm = mAktuellesProgram.id;
                         this.SessionSpeichern(mNeueSession);
                     }
+
+                    if (aSession.Kategorie02 === SessionStatus.Loeschen)
+                        this.SessionTable.delete(aSession.ID);
+                    
+                    this.LadeAktuellesProgramm();
                 } // OnProgrammAfterLoadFn
             } as LadePara
             )

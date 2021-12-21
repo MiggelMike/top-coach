@@ -3,7 +3,7 @@ import { ISessionDB } from "./../../../Business/SessionDB";
 import { SessionStatus } from "../../../Business/SessionDB";
 import { UebungWaehlenData } from "./../../uebung-waehlen/uebung-waehlen.component";
 import { UebungsKategorie02 } from "./../../../Business/Uebung/Uebung";
-import { DexieSvcService } from "./../../services/dexie-svc.service";
+import { DexieSvcService, onDeleteFn } from "./../../services/dexie-svc.service";
 import { Session } from "./../../../Business/Session/Session";
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Output, EventEmitter, Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";
@@ -61,6 +61,10 @@ export class Programm02Component implements OnInit {
 		}
 	}
 
+	public SessionWartet(aSess: ISession): boolean{
+		return (aSess.Kategorie02 === SessionStatus.Wartet);
+	}
+
 	constructor(private fDialogService: DialogeService, private fGlobalService: GlobalService, private fUebungService: UebungService, public fDbModule: DexieSvcService, private router: Router) {}
 
 	ngAfterViewInit() {
@@ -76,20 +80,73 @@ export class Programm02Component implements OnInit {
 	}
 
 	public DeleteSession(aSession: ISession, aRowNum: number) {
+		this.DeleteSessionPrim(
+			aSession,
+			aRowNum,
+			() => (): void => {
+				const index: number = this.SessionListe.indexOf(aSession);
+				if (index !== -1) {
+					this.SessionListe.splice(index, 1);
+				}
+		
+				if (this.fGlobalService.Comp03PanelUebungObserver != null) {
+					//this.panUebung.expanded = false;
+					of(this.panUebung).subscribe(this.fGlobalService.Comp03PanelUebungObserver);
+				}
+			}
+		);
+			
+		// const mDialogData = new DialogData();
+		// mDialogData.textZeilen.push(`Delete session #${aRowNum + 1} "${aSession.Name}" ?`);
+		// mDialogData.OkFn = (): void => {
+		// 	const index: number = this.SessionListe.indexOf(aSession);
+		// 	if (index !== -1) {
+		// 		this.SessionListe.splice(index, 1);
+		// 	}
+
+		// 	if (this.fGlobalService.Comp03PanelUebungObserver != null) {
+		// 		//this.panUebung.expanded = false;
+		// 		of(this.panUebung).subscribe(this.fGlobalService.Comp03PanelUebungObserver);
+		// 	}
+		// };
+
+		// this.fDialogService.JaNein(mDialogData);
+	}
+
+	public DeleteAusAnstehendeSessions(aEvent: any, aSession: ISession, aRowNum: number) {
+		aEvent.stopPropagation();
+		this.DeleteSessionPrim(
+			aSession,
+			aRowNum,
+			() => {
+				aSession.Kategorie02 = SessionStatus.Loeschen;
+				this.fDbModule.EvalAktuelleSessionListe(aSession as Session);
+			}
+		);
+			
+		// const mDialogData = new DialogData();
+		// mDialogData.textZeilen.push(`Delete session #${aRowNum + 1} "${aSession.Name}" ?`);
+		// mDialogData.OkFn = (): void => {
+		// 	const index: number = this.SessionListe.indexOf(aSession);
+		// 	if (index !== -1) {
+		// 		this.SessionListe.splice(index, 1);
+		// 	}
+
+		// 	if (this.fGlobalService.Comp03PanelUebungObserver != null) {
+		// 		//this.panUebung.expanded = false;
+		// 		of(this.panUebung).subscribe(this.fGlobalService.Comp03PanelUebungObserver);
+		// 	}
+		// };
+
+		// this.fDialogService.JaNein(mDialogData);
+	}
+
+
+	
+	private DeleteSessionPrim(aSession: ISession, aRowNum: number, aOnDelete: onDeleteFn ) {
 		const mDialogData = new DialogData();
 		mDialogData.textZeilen.push(`Delete session #${aRowNum + 1} "${aSession.Name}" ?`);
-		mDialogData.OkFn = (): void => {
-			const index: number = this.SessionListe.indexOf(aSession);
-			if (index !== -1) {
-				this.SessionListe.splice(index, 1);
-			}
-
-			if (this.fGlobalService.Comp03PanelUebungObserver != null) {
-				//this.panUebung.expanded = false;
-				of(this.panUebung).subscribe(this.fGlobalService.Comp03PanelUebungObserver);
-			}
-		};
-
+		mDialogData.OkFn = () => aOnDelete();
 		this.fDialogService.JaNein(mDialogData);
 	}
 
@@ -181,6 +238,10 @@ export class Programm02Component implements OnInit {
 		//mSession.FK_Programm = this.programmID;
 		this.SessionListe.push(mSession as Session);
 	}
+
+	// public DeleteSession(aSession: ISession):void {
+	// 	this.fDbModule.EvalAktuelleSessionListe(aSession as Session);
+	// }
 
 	public startSession(aEvent: Event, aSession: ISession) {
 		aEvent.stopPropagation();

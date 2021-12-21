@@ -9,7 +9,8 @@ export enum SessionStatus {
     Pause,
     Laueft,
     Fertig,
-    FertigTimeOut
+    FertigTimeOut,
+    Loeschen
 }
 
 export class Pause extends Zeitraum {

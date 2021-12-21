@@ -13,39 +13,35 @@ import { SessionStatus } from 'src/Business/SessionDB';
     styleUrls: ["./anstehende-sessions.component.scss"],
 })
 export class AnstehendeSessionsComponent implements OnInit {
-    public AktuellesProgramm: ITrainingsProgramm;
     public isCollapsed = false;
-
+    
     public AnstehendeSessionObserver: Observable<ITrainingsProgramm>;
-
+    
     constructor(
         private fDbModule: DexieSvcService
     ) {
-       this.AnstehendeSessionObserver = of(this.fDbModule.AktuellesProgramm);
+        this.AnstehendeSessionObserver = of(this.fDbModule.AktuellesProgramm);
     }
     
     ngOnInit() {
         this.AnstehendeSessionObserver.subscribe(
             () => {
-                this.fDbModule.LadeProgramme(
-                    {
-                        fProgrammKategorie: ProgrammKategorie.AktuellesProgramm,
-
-                        OnProgrammAfterLoadFn: (mProgramme: TrainingsProgramm[]) => {
-                            if ((mProgramme !== undefined) && (mProgramme.length > 0)) {
-                                this.AktuellesProgramm = mProgramme[0];
-                                this.AktuellesProgramm.SessionListe =
-                                    this.AktuellesProgramm.SessionListe.filter(
-                                        (s) => (s.Kategorie02 !== SessionStatus.Fertig && s.Kategorie02 !== SessionStatus.FertigTimeOut)
-                                    );
-                            }
-                        }, // OnProgrammAfterLoadFn
-                                
-                    } as LadePara
-                ); // Aktuelles Programm laden
+                this.fDbModule.LadeAktuellesProgramm();
             });
     }
-
+                
+    public get AktuellesProgramm(): ITrainingsProgramm {
+        let mProgram: ITrainingsProgramm;
+        if ((this.fDbModule.AktuellesProgramm) && (this.fDbModule.AktuellesProgramm.SessionListe)) {
+            mProgram = this.fDbModule.AktuellesProgramm;
+            mProgram.SessionListe =
+                mProgram.SessionListe.filter(
+                    (s) => (s.Kategorie02 !== SessionStatus.Fertig && s.Kategorie02 !== SessionStatus.FertigTimeOut)
+                );
+        }
+        return mProgram
+    }
+                
     beforePanelOpened(aSess: Session) {
         aSess.Expanded = true;
     }
