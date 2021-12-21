@@ -116,60 +116,7 @@ export class SessionFormComponent
 
     public SaveChanges(aPara: any) {
         const mSessionForm: SessionFormComponent = (aPara as SessionFormComponent);
-
-        if (mSessionForm.Session.Kategorie02 === SessionStatus.Fertig) {
-            mSessionForm.fDexieSvcService.LadeProgramme({
-                fProgrammKategorie: ProgrammKategorie.AktuellesProgramm,
-
-                OnProgrammAfterLoadFn: (mAktuelleProgrammListe: TrainingsProgramm[]) => {
-                    let mNeueSession: Session = null;
-                    let mAktuellesProgram: TrainingsProgramm = null;
-                    let mAkuelleSessionListe: Array<ISession> = null;
-                    if ((mAktuelleProgrammListe !== undefined) && (mAktuelleProgrammListe.length > 0)) {
-                        mAktuellesProgram = mAktuelleProgrammListe[0];
-                        mAkuelleSessionListe = mAktuellesProgram.SessionListe.filter((s) =>
-                            s.Kategorie02 !== SessionStatus.Fertig && s.Kategorie02 !== SessionStatus.FertigTimeOut 
-                        )
-                    }
-                    else return;
-                    
-                    // Ist die Session dem Vorlageprogramm des aktuellen-Programms?
-                    // Die Session muss aus dem gleichen Vorlageprogramm kommen, wie das aktuelle Programm.
-                    if (mAktuellesProgram.FkVorlageProgramm  > 0 && mSessionForm.Session.FK_VorlageProgramm === mAktuellesProgram.FkVorlageProgramm ) {
-                        // Die Session dem Vorlageprogramm des aktuellen-Programms.
-                        // Jetz aus der aktuellen Sessionliste die rausfiltern, die dem Vorlage-Programmm entsprechen,   
-                        mAkuelleSessionListe = mAkuelleSessionListe.filter((s) => (s.FK_VorlageProgramm === mAktuellesProgram.FkVorlageProgramm));
-                        if (mAkuelleSessionListe.length < 1)
-                            return;
-                        const mLastSession = mAkuelleSessionListe.pop();
-
-                        const mVorlageProgrammListe: Array<TrainingsProgramm> = mSessionForm.fDexieSvcService.VorlageProgramme.filter((vp) => vp.id === mSessionForm.Session.FK_VorlageProgramm);
-                        // mVorlageProgrammListe sollte vorhanden sein und Elemente haben.
-                        if ((mVorlageProgrammListe !== undefined) && (mVorlageProgrammListe.length > 0)) {
-                            const mVorlageProgramm = mVorlageProgrammListe[0];
-                            // mVorlageProgramm sollte Sessions haben.
-                            
-                            if ((mVorlageProgramm.SessionListe !== undefined) && (mVorlageProgramm.SessionListe.length > 0)) {
-                                // Sessions aus dem Vorlageprogramm holen
-                                const mIndex =  ((mLastSession.SessionNr + 1) % mVorlageProgramm.SessionListe.length);
-                                const mVorlageSession = (mVorlageProgramm.SessionListe[mIndex]);
-                                mNeueSession = mVorlageSession.Copy(true) as Session;
-                                mNeueSession.init();
-                                mNeueSession.FK_VorlageProgramm = mVorlageProgramm.id;
-                            }
-                        }
-                    } else {
-                        // Die Session ist nicht aus einem Vorlageprogramm
-                    }
-                    
-                    if (mNeueSession !== null) {
-                        mNeueSession.FK_Programm = mAktuellesProgram.id;
-                        aPara.fDexieSvcService.SessionSpeichern(mNeueSession);
-                    }
-                } // OnProgrammAfterLoadFn
-            } as LadePara
-            )
-        };
+        mSessionForm.fDexieSvcService.EvalAktuelleSessionListe(mSessionForm.Session);
 
         const mSession: Session = (aPara.Session);
         const mCmpSession: Session = (aPara.cmpSession);
