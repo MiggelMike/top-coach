@@ -133,12 +133,10 @@ export class SessionFormComponent
                     }
                     else return;
                     
-                    
                     // Ist die Session dem Vorlageprogramm des aktuellen-Programms?
+                    // Die Session muss aus dem gleichen Vorlageprogramm kommen, wie das aktuelle Programm.
                     if (mAktuellesProgram.FkVorlageProgramm  > 0 && mSessionForm.Session.FK_VorlageProgramm === mAktuellesProgram.FkVorlageProgramm ) {
                         // Die Session dem Vorlageprogramm des aktuellen-Programms.
-                        // Sie könnte auch aus einem anderen Vorlageprogramm kommen.
-                        // Das wird hier aber nicht berücksichtigt.
                         // Jetz aus der aktuellen Sessionliste die rausfiltern, die dem Vorlage-Programmm entsprechen,   
                         mAkuelleSessionListe = mAkuelleSessionListe.filter((s) => (s.FK_VorlageProgramm === mAktuellesProgram.FkVorlageProgramm));
                         if (mAkuelleSessionListe.length < 1)
@@ -160,7 +158,6 @@ export class SessionFormComponent
                                 mNeueSession.FK_VorlageProgramm = mVorlageProgramm.id;
                             }
                         }
-                        
                     } else {
                         // Die Session ist nicht aus einem Vorlageprogramm
                     }
