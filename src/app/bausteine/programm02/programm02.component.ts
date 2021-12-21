@@ -95,22 +95,6 @@ export class Programm02Component implements OnInit {
 				}
 			}
 		);
-			
-		// const mDialogData = new DialogData();
-		// mDialogData.textZeilen.push(`Delete session #${aRowNum + 1} "${aSession.Name}" ?`);
-		// mDialogData.OkFn = (): void => {
-		// 	const index: number = this.SessionListe.indexOf(aSession);
-		// 	if (index !== -1) {
-		// 		this.SessionListe.splice(index, 1);
-		// 	}
-
-		// 	if (this.fGlobalService.Comp03PanelUebungObserver != null) {
-		// 		//this.panUebung.expanded = false;
-		// 		of(this.panUebung).subscribe(this.fGlobalService.Comp03PanelUebungObserver);
-		// 	}
-		// };
-
-		// this.fDialogService.JaNein(mDialogData);
 	}
 
 	public DeleteAusAnstehendeSessions(aEvent: any, aSession: ISession, aRowNum: number) {
@@ -120,25 +104,15 @@ export class Programm02Component implements OnInit {
 			aRowNum,
 			() => {
 				aSession.Kategorie02 = SessionStatus.Loeschen;
+                if(this.fDbModule.AktuellesProgramm && this.fDbModule.AktuellesProgramm.SessionListe) {
+                const mSess: ISession = this.fDbModule.AktuellesProgramm.SessionListe.find( (s) => s.ID === aSession.ID);
+                if (mSess) {
+                    const mIndex = this.fDbModule.AktuellesProgramm.SessionListe.indexOf(mSess);
+                    this.fDbModule.AktuellesProgramm.SessionListe.splice(mIndex, 1);
+                }
+            }
 				this.fDbModule.EvalAktuelleSessionListe(aSession as Session);
-			}
-		);
-			
-		// const mDialogData = new DialogData();
-		// mDialogData.textZeilen.push(`Delete session #${aRowNum + 1} "${aSession.Name}" ?`);
-		// mDialogData.OkFn = (): void => {
-		// 	const index: number = this.SessionListe.indexOf(aSession);
-		// 	if (index !== -1) {
-		// 		this.SessionListe.splice(index, 1);
-		// 	}
-
-		// 	if (this.fGlobalService.Comp03PanelUebungObserver != null) {
-		// 		//this.panUebung.expanded = false;
-		// 		of(this.panUebung).subscribe(this.fGlobalService.Comp03PanelUebungObserver);
-		// 	}
-		// };
-
-		// this.fDialogService.JaNein(mDialogData);
+		});
 	}
 
 
