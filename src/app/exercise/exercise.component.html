@@ -12,10 +12,13 @@
     <ng-container *ngFor="let uebung of UebungListeSortedByName">
         <div fxLayout="row wrap" fxLayoutAlign="center">
             <div  fxFlex="30%">
-                <span >
-                    <a mat-button (click)="EditExercise(uebung)">{{uebung.Name}}</a>
+                <span>
+                    <a>{{uebung.Name}}</a>
                 </span>
             </div>
+
+            <a [ngClass]="['link-button-font', 'nav-link', 'HG-Transparent']"
+               mat-button (click)="EditExercise(uebung)">Edit</a>
             
             <div class="center-item" fxLayout="column" layout-align="center center" fxFlex="0 0 auto">
                 <a [ngClass]="['link-button-font', 'nav-link', 'HG-Transparent']" 
