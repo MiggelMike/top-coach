@@ -2,6 +2,12 @@
 <div fxLayout="row wrap" fxLayoutAlign="center center">
     <h4>Muscles</h4>
 </div>
+
+<div class="center-item" layout-align="center center">
+    <a class='link-button-font btn btn-link' mat-flat-button (click)="NeueMuskelGruppe()">New Muscle</a>
+
+</div>
+
 <ng-container *ngIf="MuskelGruppenListe">
     <div class="center-item">
         <ng-container *ngFor="let mg of MuskelGruppenListe">
@@ -14,9 +20,5 @@
                 </div>
             </div>
         </ng-container>
-    </div>
-    <div class="center-item" layout-align="center center">
-        <a class='link-button-font btn btn-link' mat-flat-button (click)="NeueMuskelGruppe()">New Muscle</a>
-
     </div>
 </ng-container>

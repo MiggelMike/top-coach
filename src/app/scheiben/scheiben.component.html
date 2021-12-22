@@ -4,44 +4,45 @@
     <h4>Plates</h4>
 </div>
 
-<div class="center-item" layout-align="center center">
-    <a class='link-button-font' mat-flat-button (click)="NeueScheibe()" >New Plate</a>
-</div>
 
 <ng-container *ngIf="HantelscheibenListe">
     <ng-container *ngFor="let sch of HantelscheibenListe">
         <div fxLayout="row wrap" fxLayoutAlign="center center" >
             <div fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="2px" fxFlex="100%">
-
+                
                 <mat-form-field class="align-right" fxFlex="20%">
                     <mat-label>Diameter</mat-label>
                     <input matInput 
-                          [textMask]="{mask: Int2DigitMask, guide: false }" 
-                          (focusout)="SetDiameter(sch,$event)"
-                          [ngModel]="sch.Durchmesser" type="text">
+                    [textMask]="{mask: Int2DigitMask, guide: false }" 
+                    (focusout)="SetDiameter(sch,$event)"
+                    [ngModel]="sch.Durchmesser" type="text">
                 </mat-form-field>
-
+                
                 <mat-form-field class="align-right" fxFlex="20%">
                     <mat-label>Weight</mat-label>
                     <input matInput 
-                           [textMask]="{mask: floatMask, guide: false }" 
-                           (focusout)="SetWeight(sch,$event)"
-                           [ngModel]="sch.Gewicht" type="text">
+                    [textMask]="{mask: floatMask, guide: false }" 
+                    (focusout)="SetWeight(sch,$event)"
+                    [ngModel]="sch.Gewicht" type="text">
                 </mat-form-field>
-
+                
                 <mat-form-field class="align-right" fxFlex="20%">
                     <mat-label>#</mat-label>
                     <input matInput 
-                           [textMask]="{mask: Int4DigitMask, guide: false }" 
-                           (focusout)="SetAnzahl(sch,$event)"
-                           [ngModel]="sch.Anzahl" type="text">
+                    [textMask]="{mask: Int4DigitMask, guide: false }" 
+                    (focusout)="SetAnzahl(sch,$event)"
+                    [ngModel]="sch.Anzahl" type="text">
                 </mat-form-field>
-
-
-                <a class='link-button-font' mat-flat-button (click)="Delete(sch)"></a>
+                
+                
+                <a class='link-button-font' mat-flat-button (click)="Delete(sch)">Delete</a>
             </div>
         </div>
     </ng-container>
+    
+    <div class="center-item" layout-align="center center">
+        <a class='link-button-font' mat-flat-button (click)="NeueScheibe()" >New Plate</a>
+    </div>
 
     <app-data-store-buttons [SaveClick]="SaveChanges" [CancelClick]="CancelChanges" [ClickData]="this"></app-data-store-buttons>
 

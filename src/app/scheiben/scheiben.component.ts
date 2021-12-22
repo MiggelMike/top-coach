@@ -57,7 +57,15 @@ export class ScheibenComponent implements OnInit {
 		aScheibe.Durchmesser = aEvent.target.value;
 	}
 
-	Delete(aScheibe: Hantelscheibe) {}
+	Delete(aScheibe: Hantelscheibe) {
+		const mDialogData = new DialogData();
+        mDialogData.textZeilen.push("Delete record?");
+		mDialogData.OkFn = (): void => {
+			this.fDexieSvcService.HantelscheibenTable.delete(aScheibe.ID);
+			this.GetHantelscheibenListe();
+		};
+        this.fDialogService.JaNein(mDialogData);	
+	}
 
 	private ChangesExist(): Boolean {
 		if (this.HantelscheibenListe.length !== this.CmpHantelscheibenListe.length)

@@ -3,6 +3,10 @@
     <h4>Progress schemas</h4>
 </div>
 
+<div class="center-item" layout-align="center center">
+    <a class='link-button-font btn btn-link' mat-flat-button (click)="DoNeuerProgress()">New Progress schema</a>
+</div>
+
 <ng-container *ngIf="ProgressListe">
     <div class="center-item">
         <ng-container *ngFor="let progress of ProgressListe">
@@ -17,8 +21,3 @@
         </ng-container>
     </div>
 </ng-container>
-
-<div class="center-item" layout-align="center center">
-    <a class='link-button-font btn btn-link' mat-flat-button (click)="DoNeuerProgress()">New Progress schema</a>
-
-</div>
