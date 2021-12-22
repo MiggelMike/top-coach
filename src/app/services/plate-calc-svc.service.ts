@@ -86,7 +86,8 @@ export class PlateCalcSvcService {
 		const positionStrategy = this.overlay
 			.position()
 			.global()
-			.top(aConfig.top.toString() + "px")
+			// .top(aConfig.top.toString() + "px")
+			.centerVertically()
 			.centerHorizontally();
 
 		const overlayConfig = new OverlayConfig({
