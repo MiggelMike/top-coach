@@ -1,15 +1,9 @@
-import { ISessionDB } from './../../Business/SessionDB';
-import { Router } from '@angular/router';
-import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
 import { DexieSvcService } from './dexie-svc.service';
 import { MyObserver } from './../../Observers/MyObservers';
 import { ISatz } from './../../Business/Satz/Satz';
-import { UebungService } from './uebung.service';
 import { ITrainingsProgramm, ProgrammTyp, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
-import { TrainingServiceModule } from '../../modules/training-service.module'
 import { Injectable } from '@angular/core';
 import { Sportler, ISportler } from '../../Business/Sportler/Sportler';
-// import { GzclpProgramm  } from '../../Business/TrainingsProgramm/Gzclp';
 import { ISession } from '../../Business/Session/Session';
 import { Uebung } from '../../Business/Uebung/Uebung';
 import { Subscriber } from 'rxjs';

@@ -222,10 +222,6 @@ export class Programm02Component implements OnInit {
 		this.SessionListe.push(mSession as Session);
 	}
 
-	// public DeleteSession(aSession: ISession):void {
-	// 	this.fDbModule.EvalAktuelleSessionListe(aSession as Session);
-	// }
-
 	private startSessionPrim(aSession: ISession) {
 
 		if (aSession.Kategorie02 === SessionStatus.Fertig || aSession.Kategorie02 === SessionStatus.FertigTimeOut) return;

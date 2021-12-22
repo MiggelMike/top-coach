@@ -1,3 +1,4 @@
+import { UebungService } from './../../services/uebung.service';
 import { SessionStatus  } from './../../../Business/SessionDB';
 import { Session } from 'src/Business/Session/Session';
 import { SessionStatsOverlayComponent } from './../../session-stats-overlay/session-stats-overlay.component';
@@ -9,7 +10,8 @@ import { Router } from '@angular/router';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
 import { Location } from "@angular/common";
 import { GlobalService } from 'src/app/services/global.service';
-import { Uebung } from 'src/Business/Uebung/Uebung';
+import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
+import { UebungWaehlenData } from 'src/app/uebung-waehlen/uebung-waehlen.component';
 
 @Component({
     selector: "app-session-form",
@@ -32,6 +34,7 @@ export class SessionFormComponent
         public fDexieSvcService: DexieSvcService,
         private fDialogService: DialogeService,
         private fGlobalService: GlobalService,
+        private fUebungService: UebungService,
         private fSessionOverlayServiceService: SessionOverlayServiceService,
         private location: Location
     ) {
@@ -83,7 +86,22 @@ export class SessionFormComponent
     }
 
     AddExercise() {
-        
+        this.fUebungService.UebungWaehlen(
+            this.fDexieSvcService.StammUebungsListe,
+            this.Session,
+            
+            (aUebungWaehlenData: UebungWaehlenData) =>  {
+                aUebungWaehlenData.fUebungsListe.forEach((mUebung) => {
+                    if (mUebung.Selected) {
+                        const mNeueSessionUebung = Uebung.StaticKopiere(mUebung, UebungsKategorie02.Session);
+                        mNeueSessionUebung.ID = undefined;
+                        mNeueSessionUebung.FkUebung = mUebung.ID;
+                        mNeueSessionUebung.SessionID = aUebungWaehlenData.fSession.ID;
+                        aUebungWaehlenData.fSession.addUebung(mNeueSessionUebung);
+                    }
+                });
+                aUebungWaehlenData.fMatDialog.close();
+            });
     }
     
     PasteExcercise() {

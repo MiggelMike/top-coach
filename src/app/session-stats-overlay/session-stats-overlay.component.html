@@ -1,15 +1,25 @@
-<div #anchorRef cdkDrag cdkDragRootElement=".cdk-overlay-pane"
-    [style.top.px]="top" [style.left.px]="left"
+<div #anchorRef cdkDrag cdkDragRootElement=".cdk-overlay-pane" [style.top.px]="top" [style.left.px]="left"
     (mousedown)="handleMousedown( $event )">
 
-    <mat-card class="tc-font-size-smaller overlay-width" >
-        <p class="tc-font-size-smaller font-bold">{{sess.Name}}</p>
-        <p class="tc-font-size-smaller"><span class="font-bold">Start</span> {{sess.GestartedWann | date: 'mediumDate'}} {{sess.GestartedWann | date:'shortTime'}}</p>
-        <p class="tc-font-size-smaller"><span class="font-bold">Body weight at start</span> {{sess.BodyWeight | number: '1.2'}}</p>
-        <p class="tc-font-size-smaller"><span class="font-bold">Weight lifted</span> {{sess.LiftedWeight | number: '1.2'}}</p>
-        <p class="tc-font-size-smaller"><span class="font-bold">Duration</span> {{sess.DauerFormatted}}</p>
-        <div fxLayout="row wrap" fxLayoutAlign="center center">
-            <a mat-button (click)="close()"><span class="tc-font-size-small">close</span></a>
+    <mat-card class="tc-font-size-smaller overlay-width">
+        <!-- <p class="tc-font-size-smaller font-bold">{{sess.Name}}</p> -->
+        <div fxLayout="column" fxFlex="100%">
+
+            <div fxLayout="row wrap" fxFlex="100%">
+                <mat-form-field class="align-left" fxFlex="100%">
+                    <mat-label>Name</mat-label>
+                    <input #Name matInput [(ngModel)]="sess.Name" maxlength="30" type="text">
+                </mat-form-field>
+            </div>
+
+            <p class="tc-font-size-smaller"><span class="font-bold">Start</span> {{sess.GestartedWann | date: 'mediumDate'}} {{sess.GestartedWann | date:'shortTime'}}</p>
+            <p class="tc-font-size-smaller"><span class="font-bold">Body weight at start</span> {{sess.BodyWeight | number: '1.2'}}</p>
+            <p class="tc-font-size-smaller"><span class="font-bold">Weight lifted</span> {{sess.LiftedWeight | number: '1.2'}}</p>
+            <p class="tc-font-size-smaller"><span class="font-bold">Duration</span> {{sess.DauerFormatted}}</p>
+
+            <div fxLayout="row wrap" fxLayoutAlign="center center">
+                <a mat-button (click)="close()"><span class="tc-font-size-small">close</span></a>
+            </div>
         </div>
-    </mat-card> 
+    </mat-card>
 </div>
