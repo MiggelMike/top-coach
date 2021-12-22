@@ -27,4 +27,9 @@ export class ExerciseComponent implements OnInit {
     public NewExercise():void {
         this.router.navigate(["/edit-exercise"], { state: { ueb: new Uebung()} });
     }
+
+    public DeleteExercise(aUebung: Uebung): void {
+        const x = 0;
+        // this.router.navigate(["/edit-exercise"], { state: { ueb: new Uebung()} });
+    }
 }

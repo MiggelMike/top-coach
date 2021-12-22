@@ -22,9 +22,15 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+.align-left { 
+    text-align: left; 
+}
+
 .align-right { 
     text-align: right; 
 }
+
+
 
 .height-10 {
     height: 10px;
@@ -173,6 +179,14 @@ div.stern:after {
     justify-content: center;
   }
 
+
+  .align-items-left {
+    display: flex;
+    justify-content: left;
+    align-items: left;
+    flex-direction: column;
+  }
+
   .center-item {
     display: flex;
     justify-content: center;
@@ -210,3 +224,4 @@ textarea:focus {
     outline: none!important;
     border-color:  #bdd2e9;
  }
+ 
