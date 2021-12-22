@@ -74,7 +74,7 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 		var naturalTop = ( this.fAnchorPosition.top + 40 - window.pageYOffset );
 		var minLeft = 10;
 		var maxLeft = ( windowWidth - popupWidth - 10 );
-		var minTop = 10;
+		// var minTop = 10;
 		var maxTop = ( windowHeight - popupHeight - 10 );
 		this.fPopupPosition.left = Math.min( naturalLeft, maxLeft );
 		this.fPopupPosition.left = Math.max( minLeft, this.fPopupPosition.left );
@@ -93,22 +93,8 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 
     }
     
-    ngAfterViewInit() {
+    ngAfterViewInit() { }
         
-
-        // this._portal = new TemplatePortal(this._ovelayTemplate, this._viewContainerRef);
-        
-        // var anchorRect = this.anchorRef.nativeElement.getBoundingClientRect();
-        
-                
-        // this._overlayRef = this._overlay.create({
-        //     positionStrategy: this._overlay.position().global().centerHorizontally().centerVertically(),
-        //     hasBackdrop: true
-        // });
-        // this._overlayRef.backdropClick().subscribe(() => this._overlayRef.detach());
-    }
-
-
     
     close() {
         if(this.overlayRef != null)
