@@ -1136,16 +1136,16 @@ export class DexieSvcService extends Dexie {
 
     public EvalAktuelleSessionListe(aSession: Session): void { 
         if ((aSession.Kategorie02 === SessionStatus.Fertig)||(aSession.Kategorie02 === SessionStatus.Loeschen)) {
-            if ((aSession.Kategorie02 === SessionStatus.Loeschen)
-                && this.AktuellesProgramm
-                && this.AktuellesProgramm.SessionListe) {
-                const mSess: ISession = this.AktuellesProgramm.SessionListe.find( (s) => s.ID === aSession.ID);
-                if (mSess) {
-                    const i = this.AktuellesProgramm.SessionListe.indexOf(mSess);
-                    if(i)
-                        this.AktuellesProgramm.SessionListe.splice(i, 1);
-                }
-            }
+            // if ((aSession.Kategorie02 === SessionStatus.Loeschen)
+            //     && this.AktuellesProgramm
+            //     && this.AktuellesProgramm.SessionListe) {
+            //     const mSess: ISession = this.AktuellesProgramm.SessionListe.find( (s) => s.ID === aSession.ID);
+            //     if (mSess) {
+            //         const i = this.AktuellesProgramm.SessionListe.indexOf(mSess);
+            //         if(i)
+            //             this.AktuellesProgramm.SessionListe.splice(i, 1);
+            //     }
+            // }
 
             this.LadeProgramme({
                 fProgrammKategorie: ProgrammKategorie.AktuellesProgramm,
@@ -1164,10 +1164,10 @@ export class DexieSvcService extends Dexie {
                     
                     // Ist die Session dem Vorlageprogramm des aktuellen-Programms?
                     // Die Session muss aus dem gleichen Vorlageprogramm kommen, wie das aktuelle Programm.
-                    if (mAktuellesProgram.FkVorlageProgramm  > 0 && aSession.FK_VorlageProgramm === mAktuellesProgram.FkVorlageProgramm ) {
+                    if (mAktuellesProgram.FkVorlageProgramm > 0 && aSession.FK_VorlageProgramm === mAktuellesProgram.FkVorlageProgramm) {
                         // Die Session dem Vorlageprogramm des aktuellen-Programms.
                         // Jetz aus der aktuellen Sessionliste die rausfiltern, die dem Vorlage-Programmm entsprechen,   
-                        mAkuelleSessionListe = mAkuelleSessionListe.filter((s) => (s.FK_VorlageProgramm === mAktuellesProgram.FkVorlageProgramm));
+                        mAkuelleSessionListe = mAkuelleSessionListe.filter((s) => (s.FK_VorlageProgramm === mAktuellesProgram.FkVorlageProgramm && s.ID !== aSession.ID));
                         if (mAkuelleSessionListe.length < 1)
                             return;
                         const mLastSession = mAkuelleSessionListe.pop();
@@ -1180,15 +1180,18 @@ export class DexieSvcService extends Dexie {
                             
                             if ((mVorlageProgramm.SessionListe !== undefined) && (mVorlageProgramm.SessionListe.length > 0)) {
                                 // Sessions aus dem Vorlageprogramm holen
-                                const mIndex =  ((mLastSession.SessionNr + 1) % mVorlageProgramm.SessionListe.length);
+                                const mIndex = ((mLastSession.SessionNr + 1) % mVorlageProgramm.SessionListe.length);
                                 const mVorlageSession = (mVorlageProgramm.SessionListe[mIndex]);
                                 mNeueSession = mVorlageSession.Copy(true) as Session;
                                 mNeueSession.init();
                                 mNeueSession.FK_VorlageProgramm = mVorlageProgramm.id;
                             }
                         }
-                    } else {
+                    } else if (aSession.Kategorie02 === SessionStatus.Fertig) {
                         // Die Session ist nicht aus dem aktuellen Vorlageprogramm
+                        mNeueSession = aSession.Copy(true) as Session;
+                        mNeueSession.init();
+                        mNeueSession.FK_VorlageProgramm = aSession.FK_VorlageProgramm;
                     }
                     
                     if (mNeueSession !== null) {
