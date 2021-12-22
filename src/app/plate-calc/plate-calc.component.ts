@@ -29,7 +29,17 @@ export class PlateCalcComponent implements OnInit {
   
   public get SatzNr(): string{
     if ((this.Uebung) && (this.Satz)) {
-      return ' --- Set ' + (this.Uebung.ArbeitsSatzListe.indexOf(this.Satz) + 1).toString();
+      let mIndex = this.Uebung.ArbeitsSatzListe.indexOf(this.Satz);
+      if (mIndex > -1)
+        return ' --- Work-Set ' + (mIndex + 1).toString();
+
+      mIndex = this.Uebung.AufwaermSatzListe.indexOf(this.Satz);
+      if (mIndex > -1)
+        return ' --- Warm-Up-Set ' + (mIndex + 1 ).toString();
+      
+      mIndex = this.Uebung.AbwaermSatzListe.indexOf(this.Satz);
+      if (mIndex > -1)
+        return ' --- Cool-Down-Set ' + (mIndex + 1).toString();
     }
     return '';
   }
