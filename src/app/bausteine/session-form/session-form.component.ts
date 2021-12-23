@@ -74,7 +74,6 @@ export class SessionFormComponent implements OnInit {
 			const mDialogData = new DialogData();
 			mDialogData.textZeilen.push("Cancel unsaved changes?");
 			mDialogData.OkFn = (): void => this.leave();
-
 			this.fDialogService.JaNein(mDialogData);
 		}
 	}
@@ -118,7 +117,13 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	leave() {
-		this.location.back();
+		this.fDexieSvcService.LadeAktuellesProgramm(
+			() => {
+				this.location.back();
+			}
+			
+		 );
+		
 	}
 
 	ngAfterViewInit() {

@@ -772,7 +772,7 @@ export class DexieSvcService extends Dexie {
             });
     }
 
-    public LadeAktuellesProgramm() {
+    public LadeAktuellesProgramm(aExtraFn?: AfterLoadFn) {
         this.LadeProgramme(
             {
                 fProgrammKategorie: ProgrammKategorie.AktuellesProgramm,
@@ -780,6 +780,8 @@ export class DexieSvcService extends Dexie {
                 OnProgrammAfterLoadFn: (mProgramme: TrainingsProgramm[]) => {
                     if ((mProgramme !== undefined) && (mProgramme.length > 0)) {
                         this.AktuellesProgramm = mProgramme[0];
+                        if (aExtraFn)
+                            aExtraFn();
                     }
                 }, // OnProgrammAfterLoadFn
                         

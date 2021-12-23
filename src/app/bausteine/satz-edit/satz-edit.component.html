@@ -73,12 +73,14 @@
                                          ||(satzTyp === 'Work sets' && sessUebung.checkArbeitsSatzIncludedBodyWeight())
                                          ||(satzTyp === 'Cool down sets' && sessUebung.checkCoolDownSatzIncludedBodyWeight())
                                           ">
-                        <mat-form-field  class="align-right"fxFlex="55px">
-                            <input matInput  [disabled]="true" [textMask]="{mask: floatMask, guide: false }"
+                        <mat-form-field  class="align-right"fxFlex="75px">
+                            <mat-label>Bodyweight</mat-label>
+                            <input matInput  [disabled]="true" 
                             [value]="satz.getBodyWeightText('+ ')"
                             type="text">
                         </mat-form-field>
                     </ng-container>
+
                 <!-- Ausgefuerte Wdh. -->
                 <mat-form-field class="align-right" fxFlex="40px">
                     <mat-label>{{satz.WdhVonVorgabe | number: '1.0'}} - {{satz.WdhBisVorgabe | number: '1.0'}}</mat-label>
