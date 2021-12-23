@@ -1146,10 +1146,8 @@ export class DexieSvcService extends Dexie {
                 }
             } else {
                 // Die Session ersteinmal in die Session-Liste des aktuellen Programms aufnehmen.
-                // Eventuell wird sie aber wieder gelöscht.
                 if (mSess === undefined) this.AktuellesProgramm.SessionListe.push(aSession);
             }
-                
         }
 
         if ((aSession.Kategorie02 === SessionStatus.Fertig)||(aSession.Kategorie02 === SessionStatus.Loeschen)) {
