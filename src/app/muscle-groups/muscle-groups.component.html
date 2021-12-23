@@ -10,13 +10,14 @@
 
 <ng-container *ngIf="MuskelGruppenListe">
     <div class="center-item">
-        <ng-container *ngFor="let mg of MuskelGruppenListe">
-            <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
+        <ng-container *ngFor="let mg of MuskelGruppenListe, index as i">
+            <!-- Zeilen-Hintergrundfarbe -> [ngClass]="{'HG-01': i % 2 === 0}" -->
+            <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%" [ngClass]="{'HG-01': i % 2 === 0}">
                 <div fxLayout="column" fxFlex="200px" fxLayoutAlign="center start">
                     <a mat-button (click)="EditMuskelGruppe(mg)">{{mg.Name}}</a>
                 </div>
                 <div fxLayout="column" fxFlex="20%" fxLayoutAlign="center end">
-                    <a class='link-button-font btn-link' mat-button (click)="DeleteMuskel(mg)">Delete</a>
+                    <a [ngClass]="['link-button-font', 'nav-link', 'HG-Transparent']"  mat-button (click)="DeleteMuskel(mg)">Delete</a>
                 </div>
             </div>
         </ng-container>

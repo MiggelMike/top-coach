@@ -6,9 +6,9 @@
 
 
 <ng-container *ngIf="HantelListe">
-    <ng-container *ngFor="let Hantel of HantelListe">
+    <ng-container *ngFor="let Hantel of HantelListe, index as i">
         <div fxLayout="row wrap" fxLayoutAlign="center center" >
-            <div fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="2px" fxFlex="100%">
+            <div fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="2px" fxFlex="100%"   [ngClass]="{'HG-01': i % 2 === 0}">
                 <mat-form-field class="align-left" fxFlex="35%">
                     <mat-label>Name</mat-label>
                     <input matInput [(ngModel)]="Hantel.Name" maxlength="50" type="text">
@@ -35,7 +35,7 @@
                 
                 <div  fxFlex="14%">
                     
-                    <a class='link-button-font' mat-flat-button (click)="Delete(Hantel)">Delete</a>
+                    <a [ngClass]="['link-button-font', 'nav-link', 'HG-Transparent']" mat-flat-button (click)="Delete(Hantel)">Delete</a>
                 </div>
             </div>
         </div>

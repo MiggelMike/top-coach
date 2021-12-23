@@ -6,9 +6,9 @@
 
 
 <ng-container *ngIf="HantelscheibenListe">
-    <ng-container *ngFor="let sch of HantelscheibenListe">
-        <div fxLayout="row wrap" fxLayoutAlign="center center" >
-            <div fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="2px" fxFlex="100%">
+    <ng-container *ngFor="let sch of HantelscheibenListe, index as i">
+        <div fxLayout="row wrap" fxLayoutAlign="center center" class="mg-5"  >
+            <div fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="2px" fxFlex="100%"   [ngClass]="{'HG-01': i % 2 === 0}">
                 
                 <mat-form-field class="align-right" fxFlex="20%">
                     <mat-label>Diameter</mat-label>
@@ -35,7 +35,7 @@
                 </mat-form-field>
                 
                 
-                <a class='link-button-font' mat-flat-button (click)="Delete(sch)">Delete</a>
+                <a  [ngClass]="['link-button-font', 'nav-link', 'HG-Transparent']" mat-flat-button (click)="Delete(sch)">Delete</a>
             </div>
         </div>
     </ng-container>
