@@ -1134,18 +1134,25 @@ export class DexieSvcService extends Dexie {
         }
     }
 
-    public EvalAktuelleSessionListe(aSession: Session): void { 
+    public EvalAktuelleSessionListe(aSession: Session): void {
+        if (this.AktuellesProgramm && this.AktuellesProgramm.SessionListe) {
+            const mSess: ISession = this.AktuellesProgramm.SessionListe.find( (s) => s.ID === aSession.ID);
+            if (aSession.Kategorie02 === SessionStatus.Loeschen) {
+                // Die Session kann schon aus der Session-Liste des aktuellen Programms genommen.
+                if (mSess !== undefined) {
+                    const mIndex = this.AktuellesProgramm.SessionListe.indexOf(aSession);
+                    if(mIndex > -1)
+                    this.AktuellesProgramm.SessionListe.splice(mIndex,1);
+                }
+            } else {
+                // Die Session ersteinmal in die Session-Liste des aktuellen Programms aufnehmen.
+                // Eventuell wird sie aber wieder gelöscht.
+                if (mSess === undefined) this.AktuellesProgramm.SessionListe.push(aSession);
+            }
+                
+        }
+
         if ((aSession.Kategorie02 === SessionStatus.Fertig)||(aSession.Kategorie02 === SessionStatus.Loeschen)) {
-            // if ((aSession.Kategorie02 === SessionStatus.Loeschen)
-            //     && this.AktuellesProgramm
-            //     && this.AktuellesProgramm.SessionListe) {
-            //     const mSess: ISession = this.AktuellesProgramm.SessionListe.find( (s) => s.ID === aSession.ID);
-            //     if (mSess) {
-            //         const i = this.AktuellesProgramm.SessionListe.indexOf(mSess);
-            //         if(i)
-            //             this.AktuellesProgramm.SessionListe.splice(i, 1);
-            //     }
-            // }
 
             this.LadeProgramme({
                 fProgrammKategorie: ProgrammKategorie.AktuellesProgramm,
@@ -1202,6 +1209,7 @@ export class DexieSvcService extends Dexie {
                     if (aSession.Kategorie02 === SessionStatus.Loeschen)
                         this.SessionTable.delete(aSession.ID);
                     
+                    //this.AktuellesProgramm.SessionListe
                     this.LadeAktuellesProgramm();
                 } // OnProgrammAfterLoadFn
             } as LadePara
