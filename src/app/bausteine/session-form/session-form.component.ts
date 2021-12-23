@@ -12,6 +12,7 @@ import { Location } from "@angular/common";
 import { GlobalService } from "src/app/services/global.service";
 import { Uebung, UebungsKategorie02 } from "src/Business/Uebung/Uebung";
 import { UebungWaehlenData } from "src/app/uebung-waehlen/uebung-waehlen.component";
+import { UebungEditData } from "src/app/edit-exercise/edit-exercise.component";
 
 @Component({
 	selector: "app-session-form",
@@ -25,6 +26,7 @@ export class SessionFormComponent implements OnInit {
 	public BodyWeight: number = 0;
 	public fSessionStatsOverlayComponent: SessionStatsOverlayComponent = null;
 	private fSessionOverlayConfig: SessionOverlayConfig;
+	private SelectedExerciseList: Array<Uebung> = [];
 
 	constructor(
 		private router: Router,
@@ -81,7 +83,7 @@ export class SessionFormComponent implements OnInit {
 		this.fUebungService.UebungWaehlen(
 			this.fDexieSvcService.StammUebungsListe,
 			this.Session,
-
+            // Funktion für den Ok-Button
 			(aUebungWaehlenData: UebungWaehlenData) => {
 				aUebungWaehlenData.fUebungsListe.forEach((mUebung) => {
 					if (mUebung.Selected) {

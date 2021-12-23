@@ -8,6 +8,18 @@ import { Location } from '@angular/common'
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { DialogeService } from '../services/dialoge.service';
 import { Equipment, EquipmentTyp } from 'src/Business/Equipment/Equipment';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { min } from 'rxjs';
+
+
+type UebungEditDelegate = (aUebungWaehlenData: UebungEditData ) => void;
+
+export class UebungEditData {
+    fUebung: Uebung;
+    fUebungListe: Array<Uebung>;
+    OkClickFn: UebungEditDelegate;
+    fMatDialog: MatDialogRef<EditExerciseComponent>;
+}
 
 
 @Component({
@@ -19,18 +31,23 @@ export class EditExerciseComponent implements OnInit {
     public Uebung: Uebung = null;
     public CmpUebung: Uebung = null;
 	public ClickData: EditExerciseComponent;
+	public SelectFormParent: boolean = false;
+	public fDialog: MatDialogRef<EditExerciseComponent>;
+	public UebungEditData: UebungEditData;
 	
 	constructor(
 		private router: Router,
 		public fDexieService: DexieSvcService,
 		private location: Location,
 		public fDialogService: DialogeService
-		) {
-			const mNavigation = this.router.getCurrentNavigation();
+	) {
+		const mNavigation = this.router.getCurrentNavigation();
+		if (mNavigation) {
 			const mState = mNavigation.extras.state as { ueb: Uebung; };
 			this.Uebung = mState.ueb.Copy();
 			this.CmpUebung = mState.ueb.Copy();
 		}
+	}
 		
 	public get EquipmentListe(): Array<string> {
 		const mResult: Array<string> = Equipment.EquipmentListe();
@@ -89,6 +106,8 @@ export class EditExerciseComponent implements OnInit {
 					.then(() => {
 						mTmpEditExerciseComponent.CmpUebung = mTmpEditExerciseComponent.Uebung.Copy();
 						mTmpEditExerciseComponent.fDexieService.LadeStammUebungen();
+						if (mTmpEditExerciseComponent.fDialog)
+							mTmpEditExerciseComponent.fDialog.close(mTmpEditExerciseComponent.Uebung);
 					});
 
 			}
@@ -96,11 +115,17 @@ export class EditExerciseComponent implements OnInit {
 	}
 
 	CancelChanges() {
-		const mTmpEditExerciseComponent: EditExerciseComponent = this .ClickData as EditExerciseComponent;
+		const mTmpEditExerciseComponent: EditExerciseComponent = this.ClickData as EditExerciseComponent;
 		const mDialogData = new DialogData();
 		mDialogData.textZeilen.push('Cancel unsaved changes?');
 		mDialogData.OkFn = (): void => {
 			mTmpEditExerciseComponent.Uebung = mTmpEditExerciseComponent.CmpUebung.Copy();
+			if (mTmpEditExerciseComponent.fDialog) {
+				const mUebungsListe: Array<Uebung> = (mTmpEditExerciseComponent.fDialog.componentInstance as EditExerciseComponent).UebungEditData.fUebungListe;
+				const mIndex = mUebungsListe.findIndex((u) => u.ID === mTmpEditExerciseComponent.CmpUebung.ID);
+				if (mIndex > -1) mUebungsListe[mIndex] = mTmpEditExerciseComponent.CmpUebung;
+				mTmpEditExerciseComponent.fDialog.close();
+			}
 		};
 
 		mTmpEditExerciseComponent.fDialogService.JaNein(mDialogData);

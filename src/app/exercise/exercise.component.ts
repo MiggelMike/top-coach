@@ -3,8 +3,8 @@ import { Component, OnInit } from "@angular/core";
 import { DexieSvcService } from "../services/dexie-svc.service";
 import { Uebung } from "src/Business/Uebung/Uebung";
 import { Router } from "@angular/router";
-import { AnyNumber } from "@angular-package/type";
 import { DialogData } from "../dialoge/hinweis/hinweis.component";
+import { Location } from '@angular/common'
 
 @Component({
 	selector: "app-exercise",
@@ -12,8 +12,23 @@ import { DialogData } from "../dialoge/hinweis/hinweis.component";
 	styleUrls: ["./exercise.component.scss"],
 })
 export class ExerciseComponent implements OnInit {
+	public SelectMode: boolean = false;
+	public SelectedExerciseList: Array<Uebung>;
 
-	constructor(private fDexieSvcService: DexieSvcService, private router: Router, private fDialogService: DialogeService) {}
+	constructor(
+		private location: Location,
+		private fDexieSvcService: DexieSvcService,
+		private router: Router,
+		private fDialogService: DialogeService)
+	{
+		const x = 0;
+		const mNavigation = this.router.getCurrentNavigation();
+		const mState = mNavigation.extras.state as { SelectMode: boolean; SelectedExerciseList: Array<Uebung>};
+		if (mState && mState.SelectMode && mState.SelectedExerciseList) {
+			this.SelectMode = mState.SelectMode;
+			this.SelectedExerciseList = mState.SelectedExerciseList;
+		}
+	}
 
 	ngOnInit(): void {}
 
@@ -38,5 +53,17 @@ export class ExerciseComponent implements OnInit {
 		};
 
 		this.fDialogService.JaNein(mDialogData);
+	}
+
+	public OkClickFn() {
+		this.UebungListeSortedByName.forEach((u) => {
+			if((u.Selected)&&(this.SelectedExerciseList.indexOf(u) < 0))
+				this.SelectedExerciseList.push(u)
+		});
+		this.location.back();
+	}
+
+	public CancelClickFn() {
+		this.location.back();
 	}
 }

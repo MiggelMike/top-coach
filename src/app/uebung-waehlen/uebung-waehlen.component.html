@@ -5,16 +5,22 @@
             <!-- Zeilen-Hintergrundfarbe -> [ngClass]="{'HG-01': i % 2 === 0}" -->
             <div fxLayout="row" fxFlex="50%" fxFlex.gt-sm="25%" fxHide.md [ngClass]="{'HG-01': i % 2 === 0}" fxLayoutGap="10px" >
                 <div fxLayout="column">
-                    <mat-checkbox class="check-box-margin" [(ngModel)]="uebung.Selected"></mat-checkbox>
+                    <mat-checkbox class="mg-5" [(ngModel)]="uebung.Selected"></mat-checkbox>
                 </div>
+
                 <div fxLayout="column">
-                    <span>{{uebung.Name}}</span>
+                    <a [ngClass]="'link-button-font'" mat-flat-button (click)="EditButtonClick(uebung,data.fUebungsListe)">Edit exercise</a>
                 </div>
+
+                <div fxLayout="column">
+                    <span class="mg-5">{{uebung.Name}}</span>
+                </div>
+
             </div>
         </ng-container>
-        <div fxLayout="row" fxLayoutAlign="center center">  
-            <a [ngClass]="'link-button-font'" mat-flat-button (click)=" OkButtonClick()">Ok</a>
-            <a [ngClass]="'link-button-font'" mat-flat-button (click)=" CancelClickFn()">Cancel</a>
-        </div>
     </div>
 </div>
+    <div fxLayout="row" fxLayoutAlign="center center">  
+        <a [ngClass]="'link-button-font'" mat-flat-button (click)="OkButtonClick()">Ok</a>
+        <a [ngClass]="'link-button-font'" mat-flat-button (click)="CancelClickFn()">Cancel</a>
+    </div>

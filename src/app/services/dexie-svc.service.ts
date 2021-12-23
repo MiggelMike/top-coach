@@ -1207,7 +1207,6 @@ export class DexieSvcService extends Dexie {
                     if (aSession.Kategorie02 === SessionStatus.Loeschen)
                         this.SessionTable.delete(aSession.ID);
                     
-                    //this.AktuellesProgramm.SessionListe
                     this.LadeAktuellesProgramm();
                 } // OnProgrammAfterLoadFn
             } as LadePara

@@ -1,9 +1,11 @@
+import { Observable } from 'rxjs';
 import { Session } from 'src/Business/Session/Session';
 import { Uebung } from 'src/Business/Uebung/Uebung';
 import { UebungWaehlenComponent, UebungWaehlenData } from './../uebung-waehlen/uebung-waehlen.component';
 import { Injectable } from '@angular/core';
 import { JsonProperty } from '@peerlancers/json-serialization';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { EditExerciseComponent, UebungEditData } from '../edit-exercise/edit-exercise.component';
 
 
 @Injectable({
@@ -18,7 +20,32 @@ export class UebungService {
     @JsonProperty()
     public LetzteUebungID: number = 0;
 
-    constructor(public fDialog?: MatDialog) {}
+    constructor(public fDialog?: MatDialog) { }
+
+    public EditUebung(aUebung: Uebung, aUebungsListe: Array<Uebung>) {
+        const mUebungEditData: UebungEditData = new UebungEditData();
+
+        const mDialogConfig = new MatDialogConfig();
+        mDialogConfig.restoreFocus = true;
+        mDialogConfig.width = "75%";
+        mDialogConfig.height = "85%";
+        mDialogConfig.disableClose = false;
+        mDialogConfig.autoFocus = true;
+
+        mDialogConfig.data = mUebungEditData;
+        mDialogConfig.hasBackdrop = false;
+
+        mUebungEditData.fUebung = aUebung;
+        mUebungEditData.fUebungListe = aUebungsListe;
+        mUebungEditData.fMatDialog = this.fDialog.open(EditExerciseComponent, mDialogConfig);
+        
+        (mUebungEditData.fMatDialog.componentInstance as EditExerciseComponent).UebungEditData = mUebungEditData;
+
+        (mUebungEditData.fMatDialog.componentInstance as EditExerciseComponent).fDialog = mUebungEditData.fMatDialog;
+        (mUebungEditData.fMatDialog.componentInstance as EditExerciseComponent).Uebung = mUebungEditData.fUebung;
+        (mUebungEditData.fMatDialog.componentInstance as EditExerciseComponent).CmpUebung = mUebungEditData.fUebung.Copy();
+    }
+
 
     public UebungWaehlen(aUebungsListe: Array<Uebung>, aSession: Session, aSelectFn: any) {
         const mUebungWaehlenData: UebungWaehlenData = new UebungWaehlenData();
@@ -38,7 +65,7 @@ export class UebungService {
         );
 
         mDialogConfig.data = mUebungWaehlenData;
-        mDialogConfig.hasBackdrop = true;
+        mDialogConfig.hasBackdrop = false;
 
         mUebungWaehlenData.fUebungsListe = aUebungsListe;
         mUebungWaehlenData.OkClickFn = aSelectFn;
