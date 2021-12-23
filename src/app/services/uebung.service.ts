@@ -40,7 +40,6 @@ export class UebungService {
         mUebungEditData.fMatDialog = this.fDialog.open(EditExerciseComponent, mDialogConfig);
         
         (mUebungEditData.fMatDialog.componentInstance as EditExerciseComponent).UebungEditData = mUebungEditData;
-
         (mUebungEditData.fMatDialog.componentInstance as EditExerciseComponent).fDialog = mUebungEditData.fMatDialog;
         (mUebungEditData.fMatDialog.componentInstance as EditExerciseComponent).Uebung = mUebungEditData.fUebung;
         (mUebungEditData.fMatDialog.componentInstance as EditExerciseComponent).CmpUebung = mUebungEditData.fUebung.Copy();
@@ -74,63 +73,6 @@ export class UebungService {
 
         mUebungWaehlenData.fMatDialog = this.fDialog.open(UebungWaehlenComponent, mDialogConfig);
     }
-
-
-
-    // public LadeLetzteID(): number {
-    //     const s = localStorage.getItem(this.cLetzteUebungID);
-    //     this.LetzteUebungID = s === null ? 0 : parseInt(s);
-    //     return this.LetzteUebungID;
-    // }
-
-    // public SpeicherLetzteID() {
-    //     localStorage.setItem(
-    //         this.cLetzteUebungID,
-    //         this.LetzteUebungID.toString()
-    //     );
-    // }
-
-    // public LadeStammUebungen(): Array<Uebung> {
-    //     const s = localStorage.getItem(this.cStammUebungen);
-    //     if (s === null) return null;
-    //     const mObject = JSON.parse(s);
-    //     let mResult = Object.values(mObject);
-    //     return mResult as Array<Uebung>;
-    // }
-
-    // public SpeicherStammUebungen(): void {
-    //     const s = serialize(this.Uebungen);
-    //     localStorage.setItem(this.cStammUebungen, JSON.stringify(s));
-    // }
-
-    // public ErzeugeUebungStammdaten() {
-    //     const mKategorieen01 = [];
-    //     const mGzclpKategorieen01 = Uebung.ErzeugeGzclpKategorieen01();
-    //     const mDummy = this.LadeStammUebungen();
-
-    //     this.LadeLetzteID();
-    //     try {
-    //         if (mDummy !== null) this.Uebungen = mDummy;
-    //         for (const mUeb in UebungsName) {
-    //             if (mUeb) {
-    //                 let mUebung = UebungService.SucheUebungPerName(
-    //                     mUeb as UebungsName
-    //                 );
-    //                 if (mUebung === null) {
-    //                     mUebung = Uebung.StaticNeueUebung(
-    //                         mUeb,
-    //                         UebungsTyp.Kraft,
-    //                         mKategorieen01.concat(mGzclpKategorieen01)
-    //                     );
-    //                     this.AddUebung(mUebung);
-    //                 }
-    //             }
-    //         }
-    //         this.SpeicherStammUebungen();
-    //     } finally {
-    //         this.SpeicherLetzteID();
-    //     }
-    // }
 
     public AddUebung(aUebung: Uebung) {
         this.Uebungen.push(aUebung);

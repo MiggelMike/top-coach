@@ -80,7 +80,7 @@ export class SessionFormComponent implements OnInit {
 
 	AddExercise() {
 		this.fUebungService.UebungWaehlen(
-			this.fDexieSvcService.StammUebungsListe,
+			this.fDexieSvcService.UebungListeSortedByName,
 			this.Session,
             // Funktion für den Ok-Button
 			(aUebungWaehlenData: UebungWaehlenData) => {

@@ -736,7 +736,7 @@ export class DexieSvcService extends Dexie {
             });
     }
 
-    public async LadeStammUebungen() {
+    public async LadeStammUebungen(aAfterLoadFn?: AfterLoadFn) {
         this.StammUebungsListe = [];
         const mAnlegen: Array<Uebung> = new Array<Uebung>();
         await this.table(this.cUebung)
@@ -765,6 +765,8 @@ export class DexieSvcService extends Dexie {
                 } else {
                     // Standard-Uebungen sind vorhanden.
                     this.StammUebungsListe = mUebungen;
+                    if (aAfterLoadFn)
+                        aAfterLoadFn();
                     // Standard-Vorlage-Programme laden
                     this.LadeProgramme(this.ProgramLadeStandardPara);
                     // this.LadeAktuellesProgramm();
@@ -1037,21 +1039,21 @@ export class DexieSvcService extends Dexie {
         return this.SatzTable.bulkPut(aSaetze as Array<Satz>);
     }
 
-    public UebungSpeichern(aUebung: Uebung) {
+    public UebungSpeichern(aUebung: Uebung):PromiseExtended<void> {
         return this.transaction("rw", this.UebungTable, this.SatzTable, () => {
             this.UebungTable.put(aUebung)
                 .then((mUebungID: number) => {
-                // Uebung ist gespeichert.
-                // UebungsID in Saetze eintragen.
-                aUebung.ID = mUebungID;
-                if (aUebung.SatzListe !== undefined) {
-                    aUebung.SatzListe.forEach((mSatz) => {
-                        mSatz.UebungID = mUebungID;
-                        mSatz.SessionID = aUebung.SessionID;
-                    });
-                    this.SaetzeSpeichern(aUebung.SatzListe);
-                }
-            });
+                    // Uebung ist gespeichert.
+                    // UebungsID in Saetze eintragen.
+                    aUebung.ID = mUebungID;
+                    if (aUebung.SatzListe !== undefined) {
+                        aUebung.SatzListe.forEach((mSatz) => {
+                            mSatz.UebungID = mUebungID;
+                            mSatz.SessionID = aUebung.SessionID;
+                        });
+                        this.SaetzeSpeichern(aUebung.SatzListe);
+                    }
+                });
         });
     }
 

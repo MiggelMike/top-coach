@@ -102,14 +102,34 @@ export class EditExerciseComponent implements OnInit {
 				);
 				mTmpEditExerciseComponent.fDialogService.Hinweis(mDialogData);
 			} else {
+				
+				
 				mTmpEditExerciseComponent.fDexieService.UebungSpeichern(mTmpEditExerciseComponent.Uebung)
 					.then(() => {
+						let mUebungListe: Array<Uebung> = (mTmpEditExerciseComponent.fDialog.componentInstance as EditExerciseComponent).UebungEditData.fUebungListe;
 						mTmpEditExerciseComponent.CmpUebung = mTmpEditExerciseComponent.Uebung.Copy();
-						mTmpEditExerciseComponent.fDexieService.LadeStammUebungen();
-						if (mTmpEditExerciseComponent.fDialog)
-							mTmpEditExerciseComponent.fDialog.close(mTmpEditExerciseComponent.Uebung);
+						const mIndex = (mTmpEditExerciseComponent.fDialog.componentInstance as EditExerciseComponent).UebungEditData.fUebungListe.findIndex((u) => u.ID === mTmpEditExerciseComponent.Uebung.ID);
+						if (mIndex < 0) {
+							mUebungListe.push(mTmpEditExerciseComponent.Uebung);
+							mUebungListe = mUebungListe.sort(
+								(s1, s2) => {
+									if (s1.Name > s2.Name)
+										return 1;
+									if (s1.Name < s2.Name)
+										return -1;
+									return 0;
+								}
+							);
+						}
+						
+						(mTmpEditExerciseComponent.fDialog.componentInstance as EditExerciseComponent).UebungEditData.fUebungListe.push(mTmpEditExerciseComponent.Uebung);
+						mTmpEditExerciseComponent.fDexieService.LadeStammUebungen(
+							() => {
+								if (mTmpEditExerciseComponent.fDialog)
+									mTmpEditExerciseComponent.fDialog.close();
+							}
+						);
 					});
-
 			}
 		}
 	}

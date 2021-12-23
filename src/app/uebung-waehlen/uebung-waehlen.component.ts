@@ -50,4 +50,12 @@ export class UebungWaehlenComponent implements OnInit {
             aUebungListe
  		);
     }
+
+    public NewButtonClick(aUebungListe: Array<Uebung>) {
+        this.fUebungService.EditUebung(
+            new Uebung(),
+            aUebungListe
+ 		);
+        
+    }
 }
