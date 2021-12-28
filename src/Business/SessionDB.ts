@@ -42,16 +42,17 @@ export interface ISessionDB {
     BodyWeight: number;
     BodyWeightAtSessionStart: number;
     UebungsListe: Array<Uebung>;
-
+    ProgressIsCalced: boolean;
 }
 
 export class SessionDB implements ISessionDB {
     public ID: number;
     public FK_Programm: number = 0;
     public FK_VorlageProgramm: number = 0;
+    public ProgressIsCalced: boolean = false;
     public SessionNr: number = 0;
     public Name: string = '';
-    public Datum: Date;
+    public Datum: Date = new Date();
     public DauerInSek: number = 0;
     public Expanded: Boolean = false;
     public Kategorie01: SessionStatus = SessionStatus.Bearbeitbar;

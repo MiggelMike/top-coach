@@ -1,8 +1,4 @@
 <mat-card class="tc-font-size-smaller overlay-width">
-    <!-- <p class="tc-font-size-smaller"><span class="font-bold">Start</span> {{sess.GestartedWann | date: 'mediumDate'}} {{sess.GestartedWann | date:'shortTime'}}</p>
-        <p class="tc-font-size-smaller"><span class="font-bold">Body weight at start</span> {{sess.BodyWeight | number: '1.2'}}</p>
-        <p class="tc-font-size-smaller"><span class="font-bold">Weight lifted</span> {{sess.LiftedWeight | number: '1.2'}}</p>
-        <p class="tc-font-size-smaller"><span class="font-bold">Duration</span> {{sess.DauerFormatted}}</p> -->
     <div class="align-left" fxLayout="column">
         <div fxLayout="row wrap" fxFlex="100%">
             <h4>{{SessUeb.Name}}</h4>
@@ -64,7 +60,14 @@
             </mat-form-field>
         </div>
 
-        
+        <div fxLayout="row" fxFlex="100%">
+            <mat-form-field class="align-right" fxFlex="90%">
+                <mat-label>Fail count</mat-label>
+                <input matInput [textMask]="{mask: Int3DigitMask, guide: false }"
+                    [ngModel]="(SessUeb.FailCount | number: '1.0')" (focusout)="SetFailCount($event)"
+                    type="text">
+            </mat-form-field>
+        </div>        
 
         <div fxLayout="row" fxLayoutAlign="center center">
             <a mat-button (click)="close()"><span class="tc-font-size-small">close</span></a>

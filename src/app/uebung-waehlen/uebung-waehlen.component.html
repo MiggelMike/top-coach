@@ -2,7 +2,7 @@
 <h1 mat-dialog-title>Select exercise</h1>
 
 <div fxLayout="row" fxLayoutAlign="center center" class="mg-5">
-    <a [ngClass]="['link-button-font', 'nav-link', 'HG-Transparent']" mat-flat-button
+    <a class="ref-button" mat-flat-button
         (click)="NewButtonClick(data.fUebungsListe)">New exercise</a>
 </div>
 
@@ -16,7 +16,7 @@
                 </div>
 
                 <div fxLayout="column" fxFlex="20%">
-                    <a [ngClass]="['link-button-font', 'nav-link', 'HG-Transparent']" mat-flat-button
+                    <a class="ref-button" mat-flat-button
                         (click)="EditButtonClick(uebung,data.fUebungsListe)">Edit exercise</a>
                 </div>
 
@@ -31,8 +31,8 @@
     </div>
 </div>
 <div fxLayout="row" fxLayoutAlign="center center">
-    <a [ngClass]="['link-button-font', 'nav-link', 'HG-Transparent']" mat-flat-button (click)="OkButtonClick()">Ok</a>
-    <a [ngClass]="['link-button-font', 'nav-link', 'HG-Transparent']" mat-flat-button
+    <a class="ref-button" mat-flat-button (click)="OkButtonClick()">Ok</a>
+    <a class="ref-button" mat-flat-button
         (click)="CancelClickFn()">Cancel</a>
 </div>
 <!-- </div> -->

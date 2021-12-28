@@ -22,14 +22,14 @@
                                                 
                             <ng-container *ngIf='StartButtonVisible'>
                                 <div class="center-item" layout-align="center center" fxFlex="0 0 auto">
-                                    <a [ngClass]="['link-button-font', 'nav-link', 'HG-Transparent']" 
+                                    <a [ngClass]="['ref-button']" 
                                         mat-flat-button
                                         (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
                                 </div>
 
                                 <!-- <ng-container *ngIf="SessionWartet(sess)"> -->
                                     <div class="center-item" layout-align="center center" fxFlex="0 0 auto">
-                                        <a [ngClass]="['link-button-font', 'nav-link', 'HG-Transparent']" 
+                                        <a [ngClass]="['ref-button']" 
                                         mat-flat-button
                                         (click)="DeleteAusAnstehendeSessions($event,sess, i+1)">Delete</a>
                                     </div>

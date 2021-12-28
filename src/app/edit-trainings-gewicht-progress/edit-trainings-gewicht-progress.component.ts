@@ -1,7 +1,6 @@
-import { IProgress } from './../../Business/Progress/Progress';
+import { IProgress, Progress } from './../../Business/Progress/Progress';
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { ProgressClient } from "src/Business/Progress/Progress";
 import { DialogData } from "../dialoge/hinweis/hinweis.component";
 import { DexieSvcService } from "../services/dexie-svc.service";
 import { DialogeService } from "../services/dialoge.service";
@@ -22,7 +21,7 @@ export class EditTrainingsGewichtProgressComponent implements OnInit {
 	constructor(private router: Router, public fDexieService: DexieSvcService, private location: Location, public fDialogService: DialogeService)
 	{
 		const mNavigation = this.router.getCurrentNavigation();
-		const mState = mNavigation.extras.state as { Progress: ProgressClient };
+		const mState = mNavigation.extras.state as { Progress: Progress };
 		this.Progress = mState.Progress.Copy();
 		this.CmpProgress = mState.Progress.Copy();
 	}
@@ -51,7 +50,7 @@ export class EditTrainingsGewichtProgressComponent implements OnInit {
 			mDialogData.textZeilen.push("Please enter a name!");
 			mTmpEditTrainingsGewichtProgressComponent.fDialogService.Hinweis(mDialogData);
 		} else {
-			mTmpEditTrainingsGewichtProgressComponent.fDexieService.ProgressSpeichern(mTmpEditTrainingsGewichtProgressComponent.Progress)
+			mTmpEditTrainingsGewichtProgressComponent.fDexieService.ProgressSpeichern(mTmpEditTrainingsGewichtProgressComponent.Progress as Progress)
 				.then(() => {
 					mTmpEditTrainingsGewichtProgressComponent.CmpProgress = mTmpEditTrainingsGewichtProgressComponent.Progress.Copy();
 					mTmpEditTrainingsGewichtProgressComponent.fDexieService.LadeProgress();

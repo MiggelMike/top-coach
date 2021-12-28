@@ -4,7 +4,7 @@ import { Session } from "src/Business/Session/Session";
 import { SessionStatsOverlayComponent } from "./../../session-stats-overlay/session-stats-overlay.component";
 import { SessionOverlayServiceService, SessionOverlayConfig } from "./../../services/session-overlay-service.service";
 import { DialogeService } from "./../../services/dialoge.service";
-import { DexieSvcService, LadePara } from "./../../services/dexie-svc.service";
+import { DexieSvcService } from "./../../services/dexie-svc.service";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { DialogData } from "src/app/dialoge/hinweis/hinweis.component";
@@ -12,7 +12,8 @@ import { Location } from "@angular/common";
 import { GlobalService } from "src/app/services/global.service";
 import { Uebung, UebungsKategorie02 } from "src/Business/Uebung/Uebung";
 import { UebungWaehlenData } from "src/app/uebung-waehlen/uebung-waehlen.component";
-import { UebungEditData } from "src/app/edit-exercise/edit-exercise.component";
+import { Progress, WeightProgress } from "src/Business/Progress/Progress";
+import { min } from "rxjs";
 
 @Component({
 	selector: "app-session-form",
@@ -135,6 +136,10 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	public SaveChanges(aPara: any) {
+		(aPara as SessionFormComponent).SaveChangesPrim(aPara);
+	}
+
+	public async SaveChangesPrim(aPara: any) {
 		const mSessionForm: SessionFormComponent = aPara as SessionFormComponent;
 		mSessionForm.fDexieSvcService.EvalAktuelleSessionListe(mSessionForm.Session);
 
@@ -148,9 +153,44 @@ export class SessionFormComponent implements OnInit {
 			if (mSuchUebung === undefined) aPara.fDexieSvcService.UebungTable.delete(mUebung.ID);
 		}
 
-		aPara.fDexieSvcService.SessionSpeichern(aPara.Session).then(() => {
+		await aPara.fDexieSvcService.SessionSpeichern(aPara.Session).then(() => {
 			aPara.cmpSession = aPara.Session.Copy();
 		});
+				
+		if ((mSession.Kategorie02 === SessionStatus.Fertig) && (mSession.ProgressIsCalced === false)) {
+			mSession.ProgressIsCalced = true;
+			for (let mIndex = 0; mIndex < mSession.UebungsListe.length; mIndex++) {
+				const mUebung = mSession.UebungsListe[mIndex];
+				
+				const mProgress: Progress = mSessionForm.fDexieSvcService.ProgressListe.find((mFindProgress) =>
+					(mUebung.FkProgress !== undefined && mFindProgress.ID === mUebung.FkProgress)
+				);
+
+				if (mProgress) {
+					for (let index = 0; index < mUebung.ArbeitsSatzListe.length; index++) {
+						await mProgress.DetermineNextProgress(
+							mSessionForm.fDexieSvcService,
+							mSession.Datum,
+							mSession.FK_VorlageProgramm,
+							index,
+							mUebung
+						).then((mWeightProgress) => {
+							let mProgressWeight = 0;
+
+							switch (mWeightProgress) {
+								case WeightProgress.Increase:
+									mProgressWeight = mUebung.GewichtSteigerung;
+									break;
+
+								case WeightProgress.Decrease:
+									mProgressWeight = -mUebung.GewichtReduzierung;
+									break;
+							} // switch
+						});
+					}//for
+				}//if 
+			}//for
+		}
 	}
 
 	public CancelChanges(aPara: SessionFormComponent, aNavRoute: string) {
@@ -177,7 +217,23 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	public SetDone(): void {
-		this.fSessionStatsOverlayComponent.sess.SetSessionFertig();
+		const mDialogData = new DialogData();
+		mDialogData.textZeilen.push("Workout will be saved and closed.");
+		mDialogData.textZeilen.push("Do you want to proceed?");
+		mDialogData.OkFn = (): void => {
+			this.fSessionStatsOverlayComponent.sess.SetSessionFertig();
+			
+			this.SaveChangesPrim(this).then(() => {
+				// Die Session ist abgeschlossen und kann daher sofort aus der Liste der anstehenden Sessions gelöscht werden.
+				const mIndex = this.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex( (s) => s.ID === this.Session.ID);
+				if (mIndex > -1) this.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
+
+				this.router.navigate([""]);
+			});
+		};
+
+		this.fDialogService.JaNein(mDialogData);
+
 	}
 
 	public PauseButtonVisible(): Boolean {

@@ -1,19 +1,12 @@
-    <mat-icon (click)="back()">arrow_back</mat-icon>
+<mat-icon (click)="back()">arrow_back</mat-icon>
 
 
-    <a  [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
-        (click)="doStats()" 
-        >Stats
-    </a>
-    
+<a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="doStats()">Stats
+</a>
 
-    <app-programm03 
-        [session]="Session" 
-        [bearbeitbar]="true" 
-        [ShowStats]="true"
-        >
+    <app-programm03 [session]="Session" [bearbeitbar]="true" [ShowStats]="true">
     </app-programm03>
-
+    
     <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center" [style.margin-top]="'5px'">
         <ng-container *ngIf="PauseButtonVisible()">
             <div class="center-item" layout-align="center center">
@@ -28,25 +21,23 @@
                 </ng-template>
             </div>
         </ng-container>
-
+        
         <div class="center-item" layout-align="center center">
             <a class='link-button-font' mat-flat-button (click)="SetDone()">Done</a>
         </div>
-
-
+        
+        
         <div class="center-item" layout-align="center center">
             <a [ngClass]="'link-button-font'" mat-flat-button (click)="AddExercise()">Add exercise</a>
         </div>
-
+        
         <div class="center-item" layout-align="center center">
             <a [ngClass]="'link-button-font'" mat-flat-button (click)="PasteExcercise()">Paste Exercise</a>
         </div>
-
-
+        
+        
     </div>
 
-    <app-data-store-buttons
-        [SaveClick]="SaveChanges" 
-        [CancelClick]="CancelChanges"
-        [ClickData]="this">
+    
+    <app-data-store-buttons [SaveClick]="SaveChanges" [CancelClick]="CancelChanges" [ClickData]="this">
     </app-data-store-buttons>

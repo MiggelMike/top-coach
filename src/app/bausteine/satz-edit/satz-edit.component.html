@@ -2,9 +2,9 @@
     <!-- Spalten-Titel -->
     <div fxLayout="row" fxLayoutGap="2px" fxFlex="100%">
         <ng-container *ngIf="rowNum === 0">
-            <ng-container *ngIf="(sess.Kategorie02 === 3 || sess.Kategorie02 === 4); then TitelSessionLaueft else TitelSessionLaueftNicht"></ng-container>
+            <ng-container *ngIf="(sess.Kategorie02 === 3 || sess.Kategorie02 === 4 || sess.Kategorie02 === 5); then TitelNoShowPlan else TitelShowPlan"></ng-container>
                 <!-- Spalten-Titel waehrend des Trainings  -->
-                <ng-template #TitelSessionLaueft> 
+                <ng-template #TitelNoShowPlan> 
                     <div class="center-item align-right" fxLayout="column" fxFlex="25px">
                         #
                     </div>
@@ -33,7 +33,7 @@
                 </ng-template>
 
                 <!-- Spalten-Titel, wenn kein Training laeuft  -->
-                <ng-template #TitelSessionLaueftNicht> 
+                <ng-template #TitelShowPlan> 
                     <div class="center-item align-right" fxLayout="column" fxFlex="25px">
                         #
                     </div>
@@ -54,10 +54,19 @@
         <div class="center-item align-right" fxFlex="25px">
             <mat-label>{{rowNum+1}}</mat-label>
         </div>
+<!-- 
+        NurLesen,
+        Bearbeitbar,
+        Wartet,
+        Pause,
+        Laueft,
+        Fertig,
+        FertigTimeOut,
+        Loeschen -->
 
-        <ng-container *ngIf="(sess.Kategorie02 === 3 || sess.Kategorie02 === 4); then SessionLaueft else SessionLaueftNicht"></ng-container>
+        <ng-container *ngIf="(sess.Kategorie02 === 3 || sess.Kategorie02 === 4 || sess.Kategorie02 === 5); then noShowPlan else showPlan"></ng-container>
             <!-- Training laeuft -->
-            <ng-template #SessionLaueft>
+            <ng-template #noShowPlan>
                 <!-- Ausgefuehrtes-Gewicht -->
                     <mat-form-field class="align-right" fxFlex="45px">
                         <mat-label>{{satz.GewichtVorgabe | number: '1.2'}}</mat-label>
@@ -103,7 +112,7 @@
             </ng-template>
 
             <!-- Training laeuft nicht -->
-            <ng-template #SessionLaueftNicht>
+            <ng-template #showPlan>
                 <!-- Geplantes Vorgabe-Gewicht -->
                 <mat-form-field class="align-right" fxFlex="45px">
                     <mat-label>{{satz.GewichtVorgabe | number: '1.2'}}</mat-label>

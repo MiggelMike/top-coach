@@ -230,6 +230,7 @@ export class Programm02Component implements OnInit {
 			case SessionStatus.Wartet:
 				aSession.GestartedWann = new Date();
 				aSession.Kategorie02 = SessionStatus.Laueft;
+				aSession.Datum = new Date();
 				break;
 
 			case SessionStatus.Pause:

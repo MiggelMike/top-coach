@@ -31,11 +31,11 @@
                 <span class="mg-5"><a>{{uebung.Name}}</a></span>
             </div>
 
-            <a [ngClass]="['link-button-font', 'nav-link', 'HG-Transparent']" mat-button
+            <a [ngClass]="['ref-button']" mat-button
                 (click)="EditExercise(uebung)">Edit</a>
 
             <div class="center-item" fxLayout="column" layout-align="center center" fxFlex="0 0 auto">
-                <a [ngClass]="['link-button-font', 'nav-link', 'HG-Transparent']" mat-flat-button
+                <a [ngClass]="['ref-button']" mat-flat-button
                     (click)="DeleteExercise(uebung)">Delete</a>
             </div>
         </div>
@@ -43,8 +43,8 @@
 
     <ng-container *ngIf="SelectMode">
         <div fxLayout="row" fxLayoutAlign="center center">
-            <a [ngClass]="'link-button-font'" mat-flat-button (click)="OkClickFn()">Ok</a>
-            <a [ngClass]="'link-button-font'" mat-flat-button (click)="CancelClickFn()">Cancel</a>
+            <a class='ref-button' mat-flat-button (click)="OkClickFn()">Ok</a>
+            <a class='ref-button' mat-flat-button (click)="CancelClickFn()">Cancel</a>
         </div>
     </ng-container>
 </ng-container>

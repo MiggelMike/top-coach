@@ -17,7 +17,7 @@
                     <a mat-button (click)="EditMuskelGruppe(mg)">{{mg.Name}}</a>
                 </div>
                 <div fxLayout="column" fxFlex="20%" fxLayoutAlign="center end">
-                    <a [ngClass]="['link-button-font', 'nav-link', 'HG-Transparent']"  mat-button (click)="DeleteMuskel(mg)">Delete</a>
+                    <a class="ref-button" mat-button (click)="DeleteMuskel(mg)">Delete</a>
                 </div>
             </div>
         </ng-container>

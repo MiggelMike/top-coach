@@ -1,5 +1,5 @@
+import { Progress } from './../../../Business/Progress/Progress';
 import { DexieSvcService } from 'src/app/services/dexie-svc.service';
-import { Hantel } from './../../../Business/Hantel/Hantel';
 import { PlateCalcSvcService, PlateCalcOverlayConfig } from './../../services/plate-calc-svc.service';
 import { ISession } from 'src/Business/Session/Session';
 import { Uebung } from './../../../Business/Uebung/Uebung';
@@ -28,6 +28,7 @@ export class SatzEditComponent implements OnInit {
     public repMask = repMask;
     public plateCalcComponent: PlateCalcComponent;
     private plateCalcOverlayConfig: PlateCalcOverlayConfig;
+    private Progress: Progress;
 
     constructor(
         private fDialogService: DialogeService,
@@ -35,7 +36,15 @@ export class SatzEditComponent implements OnInit {
         private fPlateCalcSvcService: PlateCalcSvcService,
         private fDbModule: DexieSvcService
 
-    ) {}
+    ) {
+        this.fDbModule.LadeProgress(
+            (mProgressListe: Array<Progress>) => {
+                this.Progress = mProgressListe.find((p) => p.ID === this.sessUebung.FkProgress);
+                // if (this.Progress)
+                //    this.Progress.
+            }
+        )
+    }
     
     ngOnInit() {
         this.satz.BodyWeight = this.sess.BodyWeight;

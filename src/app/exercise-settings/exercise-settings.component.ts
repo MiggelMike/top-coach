@@ -1,6 +1,6 @@
 import { Hantel } from './../../Business/Hantel/Hantel';
 import { DexieSvcService } from "src/app/services/dexie-svc.service";
-import { floatMask } from "./../app.module";
+import { floatMask, Int3DigitMask } from "./../app.module";
 import { cExerciseOverlayData } from "./../services/exercise-setting-svc.service";
 import { IUebung } from "./../../Business/Uebung/Uebung";
 import { Component, Inject } from "@angular/core";
@@ -15,6 +15,7 @@ import { Progress } from "src/Business/Progress/Progress";
 export class ExerciseSettingsComponent {
 	public fConfig: ExerciseOverlayConfig;
 	public floatMask = floatMask;
+	public Int3DigitMask = Int3DigitMask;
 	public ProgressName: string;
 	public ProgressListe: Array<Progress> = [];
 	public HantelListe: Array<Hantel> = [];
@@ -49,5 +50,9 @@ export class ExerciseSettingsComponent {
 
 	SetGewichtReduzierung(aEvent: any) {
 		this.SessUeb.GewichtReduzierung = aEvent.target.value;
+	}
+
+	SetFailCount(aEvent: any) {
+		this.SessUeb.FailCount = aEvent.target.value;
 	}
 }

@@ -1,5 +1,5 @@
 import { DialogData } from "src/app/dialoge/hinweis/hinweis.component";
-import { ProgressClient, ProgressSet, ProgressTyp } from "./../../Business/Progress/Progress";
+import { Progress, ProgressSet, ProgressTyp } from "./../../Business/Progress/Progress";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { DexieSvcService } from "../services/dexie-svc.service";
@@ -11,8 +11,8 @@ import { DialogeService } from "../services/dialoge.service";
 	styleUrls: ["./trainings-gewicht-progress.component.scss"],
 })
 export class TrainingsGewichtProgressComponent implements OnInit {
-	public NeuerProgress: ProgressClient = null;
-	public CmpNeuerProgress: ProgressClient = null;
+	public NeuerProgress: Progress = null;
+	public CmpNeuerProgress: Progress = null;
 
 	constructor(private router: Router, public fDexieService: DexieSvcService, public fDialogService: DialogeService) {
 		this.fDexieService.LadeProgress();
@@ -20,29 +20,29 @@ export class TrainingsGewichtProgressComponent implements OnInit {
 
 	ngOnInit(): void {}
 
-	public get ProgressListe(): Array<ProgressClient> {
+	public get ProgressListe(): Array<Progress> {
 		return this.fDexieService.ProgressListeSortedByName();
 	}
 
-	public EditProgress(aProgress: ProgressClient): void {
+	public EditProgress(aProgress: Progress): void {
 		this.router.navigate(["/app-edit-trainings-gewicht-progress"], { state: { Progress: aProgress } });
 	}
 
 	public DoNeuerProgress(): void {
-		this.NeuerProgress = new ProgressClient();
+		this.NeuerProgress = new Progress();
 		this.NeuerProgress.ProgressSet = ProgressSet.All;
 		this.NeuerProgress.ProgressTyp = ProgressTyp.BlockSet;
 		this.router.navigate(["/app-edit-trainings-gewicht-progress"], { state: { Progress: this.NeuerProgress } });
 	}
 
-	public DeleteProgress(aProgress: ProgressClient) {
+	public DeleteProgress(aProgress: Progress) {
 		const mDialogData = new DialogData();
 		mDialogData.textZeilen.push("Delete record?");
 		mDialogData.OkFn = (): void => this.DeletePrim(aProgress);
 		this.fDialogService.JaNein(mDialogData);
 	}
 
-	private DeletePrim(aProgress: ProgressClient) {
+	private DeletePrim(aProgress: Progress) {
 		this.fDexieService.ProgressTable.delete(aProgress.ID).then(() => this.CopyProgress());
 	}
 

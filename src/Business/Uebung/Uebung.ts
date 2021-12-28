@@ -67,6 +67,7 @@ export interface IUebung {
     GewichtSteigerung: number;
     GewichtReduzierung: number;
     EquipmentTyp: string;
+    FailCount: number;
 
 }
 
@@ -101,6 +102,7 @@ export class Uebung implements IUebung {
     public EquipmentTyp: string = '';
     public Name: string = '';
     public Typ: UebungsTyp = UebungsTyp.Undefined;
+    public FailCount: number = 3;
     public Kategorieen01: Array<UebungsKategorie01> = [];
     public Kategorie02: UebungsKategorie02 = UebungsKategorie02.Stamm;
     public SessionID: number = 0;
@@ -170,7 +172,8 @@ export class Uebung implements IUebung {
         
         let mResult = 0;
         this.ArbeitsSatzListe.forEach(satz => {
-            mResult += satz.WdhAusgefuehrt;
+            if(satz.Status === SatzStatus.Fertig)
+                mResult += satz.WdhAusgefuehrt;
             
         });
         return mResult;
@@ -182,7 +185,7 @@ export class Uebung implements IUebung {
         
         let mResult = 0;
         this.ArbeitsSatzListe.forEach(satz => {
-            if(aVorgabeWeightFrom === VorgabeWeightLimit.LowerLimit)
+            if (aVorgabeWeightFrom === VorgabeWeightLimit.LowerLimit)
                 mResult += satz.WdhVonVorgabe;
             else
                 mResult += satz.WdhBisVorgabe;
