@@ -1092,7 +1092,7 @@ export class DexieSvcService extends Dexie {
 				fProgrammKategorie: ProgrammKategorie.AktuellesProgramm,
 
 				OnProgrammAfterLoadFn: (mAktuelleProgrammListe: TrainingsProgramm[]) => {
-					let mNeueSession: Session = null;
+					let mNeueSession: Session = undefined;
 					let mAktuellesProgram: TrainingsProgramm;
 					let mAkuelleSessionListe: Array<ISession> = null;
 					// Gibt es ein aktuelles Program?
@@ -1131,28 +1131,36 @@ export class DexieSvcService extends Dexie {
 										if (mLastSession) {
 											mNeueSession = mLastSession.Copy(true);
 											mNeueSession.init();
-											mNeueSession.FK_VorlageProgramm = mVorlageProgramm.id;
 											this.InitSessionSaetze(mLastSession, mNeueSession);
-											mNeueSession.FK_Programm = mAktuellesProgram.id;
-											this.SessionSpeichern(mNeueSession).then(
-												() => this.LadeAktuellesProgramm()
-											)
+										} else {
+											mNeueSession = aSession.Copy(true);
+											mNeueSession.init();
+											this.InitSessionSaetze(aSession, mNeueSession);
 										}
+										mNeueSession.FK_VorlageProgramm = mVorlageProgramm.id;
+										mNeueSession.FK_Programm = mAktuellesProgram.id;
+										this.SessionSpeichern(mNeueSession).then(
+											() => this.LadeAktuellesProgramm()
+										)
 									});
+								}
 							}
 						}
-					}
-					else if (aSession.Kategorie02 === SessionStatus.Fertig)
-					{
-						// Die Session ist nicht aus dem aktuellen Vorlageprogramm
-						mNeueSession = aSession.Copy(true) as Session;
-						mNeueSession.init();
-						mNeueSession.FK_VorlageProgramm = aSession.FK_VorlageProgramm;
-						this.InitSessionSaetze(aSession, mNeueSession);
-					}
-
-					if (aSession.Kategorie02 === SessionStatus.Loeschen) this.SessionTable.delete(aSession.ID);
-
+						else if (aSession.Kategorie02 === SessionStatus.Fertig)
+						{
+							// Die Session ist nicht aus dem aktuellen Vorlageprogramm
+							mNeueSession = aSession.Copy(true) as Session;
+							mNeueSession.init();
+							mNeueSession.FK_VorlageProgramm = aSession.FK_VorlageProgramm;
+							this.InitSessionSaetze(aSession, mNeueSession);
+							this.SessionSpeichern(mNeueSession).then(
+								() => this.LadeAktuellesProgramm()
+							)
+						}
+						
+						if (aSession.Kategorie02 === SessionStatus.Loeschen)
+							this.SessionTable.delete(aSession.ID);
+							
 				}, // OnProgrammAfterLoadFn
 			} as LadePara);
 		}
