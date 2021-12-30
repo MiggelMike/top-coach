@@ -1123,16 +1123,19 @@ export class DexieSvcService extends Dexie {
 							// mVorlageProgramm sollte Sessions haben.
 
 							if (mVorlageProgramm.SessionListe !== undefined && mVorlageProgramm.SessionListe.length > 0) {
-								// Session aus dem Vorlageprogramm holen
-								const mIndex = (mLastSession.SessionNr + 1) % mVorlageProgramm.SessionListe.length;
-								const mVorlageSession = mVorlageProgramm.SessionListe[mIndex];
+								// Letzte Session des gleichen Session-Typs und dem gleichen Vorgabe-Programm suchen.
+								// Z.B: Falls es sich bei dem Session-Typ von aSession um 'Squat-Day' handelt,
+								// wird die letzte Session vom Typ 'Squat-Day' gesucht. 
 								this.LastSession(aSession)
 									.then((mLastSession: Session) => {
+										// Gibt es schon eine entsprechende abgeschlossene Session?
 										if (mLastSession) {
+											// Es gibt schon eine entsprechende abgeschlossene Session.
 											mNeueSession = mLastSession.Copy(true);
 											mNeueSession.init();
 											this.InitSessionSaetze(mLastSession, mNeueSession);
 										} else {
+											// Es gibt noch keine entsprechende abgeschlossene Session.
 											mNeueSession = aSession.Copy(true);
 											mNeueSession.init();
 											this.InitSessionSaetze(aSession, mNeueSession);
