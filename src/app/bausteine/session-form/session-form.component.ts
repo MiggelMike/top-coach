@@ -1,6 +1,7 @@
+import { ArbeitsSaetzeStatus } from './../../../Business/Uebung/Uebung';
 import { UebungService } from "./../../services/uebung.service";
 import { SessionStatus } from "./../../../Business/SessionDB";
-import { Session } from "src/Business/Session/Session";
+import { ISession, Session } from "src/Business/Session/Session";
 import { SessionStatsOverlayComponent } from "./../../session-stats-overlay/session-stats-overlay.component";
 import { SessionOverlayServiceService, SessionOverlayConfig } from "./../../services/session-overlay-service.service";
 import { DialogeService } from "./../../services/dialoge.service";
@@ -157,40 +158,69 @@ export class SessionFormComponent implements OnInit {
 			aPara.cmpSession = aPara.Session.Copy();
 		});
 				
-		if ((mSession.Kategorie02 === SessionStatus.Fertig) && (mSession.ProgressIsCalced === false)) {
-			mSession.ProgressIsCalced = true;
-			for (let mIndex = 0; mIndex < mSession.UebungsListe.length; mIndex++) {
-				const mUebung = mSession.UebungsListe[mIndex];
+		// if ((mSession.Kategorie02 === SessionStatus.Fertig) && (mSession.ProgressIsCalced === false)) {
+		// 	mSession.ProgressIsCalced = true;
+		// 	for (let mIndex = 0; mIndex < mSession.UebungsListe.length; mIndex++) {
+		// 		const mUebung = mSession.UebungsListe[mIndex];
+		// 		// Sofort zur nächsten Übung gehen, wenn keine Arbeitsätze vorhanden oder nicht alle fertig sind.  
+		// 		if ((mUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.KeinerVorhanden) ||
+		// 			(mUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.NichtAlleFertig))
+		// 			continue;
 				
-				const mProgress: Progress = mSessionForm.fDexieSvcService.ProgressListe.find((mFindProgress) =>
-					(mUebung.FkProgress !== undefined && mFindProgress.ID === mUebung.FkProgress)
-				);
+		// 		const mProgress: Progress = mSessionForm.fDexieSvcService.ProgressListe.find((mFindProgress) =>
+		// 			(mUebung.FkProgress !== undefined && mFindProgress.ID === mUebung.FkProgress)
+		// 		);
 
-				if (mProgress) {
-					for (let index = 0; index < mUebung.ArbeitsSatzListe.length; index++) {
-						await mProgress.DetermineNextProgress(
-							mSessionForm.fDexieSvcService,
-							mSession.Datum,
-							mSession.FK_VorlageProgramm,
-							index,
-							mUebung
-						).then((mWeightProgress) => {
-							let mProgressWeight = 0;
+		// 		if (mProgress) {
+		// 			for (let index = 0; index < mUebung.ArbeitsSatzListe.length; index++) {
+		// 				await mProgress.DetermineNextProgress(
+		// 					mSessionForm.fDexieSvcService,
+		// 					mSession.Datum,
+		// 					mSession.FK_VorlageProgramm,
+		// 					index,
+		// 					mUebung
+		// 				).then((mWeightProgress) => {
+		// 					let mProgressWeight = 0;
 
-							switch (mWeightProgress) {
-								case WeightProgress.Increase:
-									mProgressWeight = mUebung.GewichtSteigerung;
-									break;
+		// 					switch (mWeightProgress) {
+		// 						case WeightProgress.Increase:
+		// 							mProgressWeight = mUebung.GewichtSteigerung;
+		// 							break;
 
-								case WeightProgress.Decrease:
-									mProgressWeight = -mUebung.GewichtReduzierung;
-									break;
-							} // switch
-						});
-					}//for
-				}//if 
-			}//for
-		}
+		// 						case WeightProgress.Decrease:
+		// 							mProgressWeight = -mUebung.GewichtReduzierung;
+		// 							break;
+		// 					} // switch
+
+		// 					if (mProgressWeight !== 0) {
+		// 						const mAnstehendeSessions: Array<ISession> =
+		// 							mSessionForm.fDexieSvcService.AktuellesProgramm.SessionListe
+		// 								.filter((s) =>
+		// 									// Session muss im Warte-Modus sein
+		// 									(s.Kategorie02 === SessionStatus.Wartet) &&
+		// 									// Die Uebung muss in der Session vorkommen.
+		// 									(s.UebungsListe.findIndex((u: Uebung) => u.FkUebung === mUebung.FkUebung) > -1)
+		// 								);
+
+		// 						mAnstehendeSessions.forEach((s) => {
+		// 							const mAnstehendeUebungen: Array<Uebung> = s.UebungsListe.filter((u: Uebung) => u.FkUebung === mUebung.FkUebung);
+		// 							mAnstehendeUebungen.forEach((u) => {
+		// 								u.ArbeitsSatzListe.forEach((sz) => {
+		// 									sz.GewichtVorgabe += mProgressWeight;
+		// 									sz.WdhAusgefuehrt = sz.GewichtVorgabe;
+		// 								})
+		// 								aPara.fDexieSvcService.SessionSpeichern(s).then(() => {
+											
+		// 								});
+		// 							});
+		// 						});
+								
+		// 					}
+		// 				});
+		// 			}//for
+		// 		}//if 
+		// 	}//for
+		// }
 	}
 
 	public CancelChanges(aPara: SessionFormComponent, aNavRoute: string) {

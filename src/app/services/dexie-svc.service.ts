@@ -7,7 +7,7 @@ import { SessionDB, SessionStatus } from './../../Business/SessionDB';
 import { Session, ISession } from 'src/Business/Session/Session';
 import { ITrainingsProgramm, TrainingsProgramm, ProgrammTyp, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { DialogeService } from './dialoge.service';
-import { ISatz, Satz } from './../../Business/Satz/Satz';
+import { ISatz, Satz, SatzStatus } from './../../Business/Satz/Satz';
 import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
 import { AppData, IAppData } from './../../Business/Coach/Coach';
 import { Dexie, PromiseExtended } from 'dexie';
@@ -32,34 +32,34 @@ export interface LadeProgrammeFn {
 }
 
 export interface BeforeLoadFn {
-    (aData?: any): void;
+    (aData?: any): void | any;
 }
 
 export interface AfterLoadFn {
-    (aData?: any): void;
+    (aData?: any): void | any;
 }
 
 export interface NoRecordFn {
-    (aData?: any): void;
+    (aData?: any): void | any;
 }
 
 export interface onErrorFn {
-    (aData?: any): void;
+    (aData?: any): void | any;
 }
 
 export interface onDeleteFn {
-    (aData?: any): void;
+    (aData?: any): void | any;
 }
 
 
 export class LadePara {
-    Data?: any;
+	Data?: any;
+	WhereClause?: {};
     fProgrammTyp?: ProgrammTyp;
     fProgrammKategorie?: ProgrammKategorie; 
     OnProgrammBeforeLoadFn?: BeforeLoadFn; 
     OnProgrammAfterLoadFn?: AfterLoadFn; 
     OnProgrammNoRecordFn?: NoRecordFn; 
-    OnSessionBeforeLoadFn?: BeforeLoadFn;
     OnSessionAfterLoadFn?: AfterLoadFn; 
     OnSessionNoRecordFn?: NoRecordFn; 
     OnUebungBeforeLoadFn?: BeforeLoadFn;
@@ -714,7 +714,8 @@ export class DexieSvcService extends Dexie {
 		});
 
 		for (let i = 0; i < aProgramm.SessionListe.length; i++) {
-			if (aProgramm.SessionListe[i].Kategorie02 === SessionStatus.Fertig || aProgramm.SessionListe[i].Kategorie02 === SessionStatus.FertigTimeOut) mDoneSessions.push(aProgramm.SessionListe[i]);
+			if (aProgramm.SessionListe[i].Kategorie02 === SessionStatus.Fertig || aProgramm.SessionListe[i].Kategorie02 === SessionStatus.FertigTimeOut)
+				mDoneSessions.push(aProgramm.SessionListe[i]);
 		}
 
 		//         // Sind alle Sessions des aktuellen Programms erledigt?
@@ -761,27 +762,37 @@ export class DexieSvcService extends Dexie {
 		this.ProgrammTable.mapToClass(TrainingsProgramm);
 	}
 
-	public async LadeProgrammSessions(aProgramm: TrainingsProgramm, aLadePara?: LadePara) {
-		if (aLadePara !== undefined && aLadePara.OnSessionBeforeLoadFn !== undefined) aLadePara.OnSessionBeforeLoadFn(aLadePara);
+	// public async LadeUebungenEinerSession(aSession: Session) {
+	// 	await this.LadeSessionUebungen(aSession);
+	// }
 
+
+	public async LadeProgrammSessions(aLadePara: LadePara): Promise<Array<Session>> {
+        // SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02]",		
+		let mSessions: Array<Session> = []
 		await this.table(this.cSession)
-			.filter((s) => s.FK_Programm === aProgramm.id)
+			.where(aLadePara.WhereClause)
 			.toArray()
 			.then((aSessions: Array<Session>) => {
-				if (aSessions.length > 0) {
-					aProgramm.SessionListe = aSessions;
-					aProgramm.SessionListe.forEach((s) => this.LadeSessionUebungen(s, aLadePara));
-
-					if (aLadePara !== undefined && aLadePara.OnSessionAfterLoadFn !== undefined) aLadePara.OnSessionAfterLoadFn(aLadePara);
-				} else if (aLadePara !== undefined && aLadePara.OnSessionNoRecordFn !== undefined) aLadePara.OnSessionNoRecordFn(aLadePara);
+				mSessions = aSessions;
+				if (aLadePara !== undefined) {
+					if (aLadePara.OnSessionNoRecordFn !== undefined)
+						mSessions = aLadePara.OnSessionNoRecordFn(aLadePara);
+					
+					if (aLadePara.OnSessionAfterLoadFn !== undefined)
+						mSessions = aLadePara.OnSessionAfterLoadFn(mSessions);
+				}
 			});
+		return mSessions;
 	}
 
-	public async LadeSessionUebungen(aSession: ISession, aLadePara?: LadePara) {
-		if (aLadePara !== undefined && aLadePara.OnUebungBeforeLoadFn !== undefined) aLadePara.OnUebungBeforeLoadFn(aLadePara);
+	public async LadeSessionUebungen(aSession: ISession, aLadePara: LadePara): Promise<Array<Uebung>> {
+		let mResultUebungen: Array<Uebung> = [];
+		// if (aLadePara !== undefined && aLadePara.OnUebungBeforeLoadFn !== undefined)
+		// 	aLadePara.OnUebungBeforeLoadFn(aLadePara);
 
-		await this.table(this.cUebung)
-			.filter((mUebung) => mUebung.SessionID === aSession.ID)
+		mResultUebungen = await this.table(this.cUebung)
+			.where(aLadePara.WhereClause)
 			.toArray()
 			.then((aUebungen: Array<Uebung>) => {
 				if (aUebungen.length > 0) {
@@ -792,19 +803,33 @@ export class DexieSvcService extends Dexie {
 						if (u.FkUebung > 0) {
 							//Der Schlüssel zur Stamm-Übung ist gesetzt
 							const mStammUebung = this.StammUebungsListe.find((mGefundeneUebung) => mGefundeneUebung.ID === u.FkUebung);
-							if (mStammUebung !== undefined) u.Name = mStammUebung.Name;
+							if (mStammUebung !== undefined)
+								u.Name = mStammUebung.Name;
 						} else {
 							// Der Schlüssel zur Stamm-Übung sollte normaleweise gesetzt
 							const mStammUebung = this.StammUebungsListe.find((mGefundeneUebung) => mGefundeneUebung.Name === u.Name);
-							if (mStammUebung !== undefined) u.FkUebung = mStammUebung.ID;
+							if (mStammUebung !== undefined)
+								u.FkUebung = mStammUebung.ID;
+							
 							this.UebungSpeichern(u);
 						}
-
-						this.LadeUebungsSaetze(u, aLadePara);
-						if (aLadePara !== undefined && aLadePara.OnUebungAfterLoadFn !== undefined) aLadePara.OnUebungAfterLoadFn(aLadePara);
 					});
-				} else if (aLadePara !== undefined && aLadePara.OnUebungNoRecordFn !== undefined) aLadePara.OnUebungNoRecordFn(aLadePara);
+
+				}
+				return aUebungen;
 			});
+			
+		for (let index = 0; index < mResultUebungen.length; index++) {
+			const mPtrUebung = mResultUebungen[index];
+			await this.LadeUebungsSaetze(mPtrUebung, aLadePara);
+		}
+			
+		if (aLadePara !== undefined && aLadePara.OnUebungAfterLoadFn !== undefined)
+			mResultUebungen = aLadePara.OnUebungAfterLoadFn(mResultUebungen);
+		else if (aLadePara !== undefined && aLadePara.OnUebungNoRecordFn !== undefined)
+			mResultUebungen = aLadePara.OnUebungNoRecordFn(aLadePara);
+		
+		return mResultUebungen;
 	}
 
 	public async LadeUebungsSaetze(aUebung: Uebung, aLadePara?: LadePara) {
@@ -982,6 +1007,71 @@ export class DexieSvcService extends Dexie {
 		}
 	}
 
+	private InitSessionSaetze(aQuellSession: Session, aZielSession: Session) {
+		aZielSession.UebungsListe = [];
+		for (let index = 0; index < aQuellSession.UebungsListe.length; index++) {
+			const mQuellUebung  = aQuellSession.UebungsListe[index];
+			const mUebung: Uebung = mQuellUebung.Copy();
+			mUebung.ID = undefined;
+			mUebung.SatzListe = [];
+
+			mQuellUebung.SatzListe.forEach((sz) => {
+				const mSatz: Satz = sz.Copy();
+				mSatz.ID = undefined;
+				mSatz.Status = SatzStatus.Wartet;
+				mUebung.SatzListe.push(mSatz);
+			})
+			aZielSession.UebungsListe.push(mUebung);
+		};
+	}
+
+	private async LastSession(aSession: Session): Promise<Session>
+	{
+		// Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress",
+		// SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02]",
+		const mSessions: Array<Session> = await this.LadeProgrammSessions({
+			OnSessionAfterLoadFn: (aSessions: Array<Session>) => {
+				aSessions =
+					aSessions.filter((s: Session) => (
+						(s.ID !== aSession.ID) &&
+						(s.Datum <= aSession.Datum)
+					));
+	
+				aSessions = aSessions.sort((s1, s2) => {
+					if (s1.Datum > s2.Datum)
+						return -1;
+					
+					if (s1.Datum < s2.Datum)
+						return 1;
+					
+					return 0;
+				});
+				
+				while (aSessions.length > 1)
+					aSessions.shift();
+				
+				return aSessions;
+			},
+	
+			WhereClause: {
+				FK_VorlageProgramm: aSession.FK_VorlageProgramm,
+				Kategorie02: SessionStatus.Fertig,
+				SessionNr: aSession.SessionNr
+			}
+		});
+		
+		let mResultSession = undefined;		
+		if(mSessions.length > 0){
+			mResultSession = mSessions.pop();
+			await this.LadeSessionUebungen(mResultSession, { WhereClause: { SessionID: mResultSession.ID } })
+				.then((mUebungen)=> {
+					const x = mUebungen;
+				});
+		}
+		
+		return mResultSession;
+	}
+
 	public EvalAktuelleSessionListe(aSession: Session): void {
 		if (this.AktuellesProgramm && this.AktuellesProgramm.SessionListe) {
 			const mSess: ISession = this.AktuellesProgramm.SessionListe.find((s) => s.ID === aSession.ID);
@@ -1003,21 +1093,28 @@ export class DexieSvcService extends Dexie {
 
 				OnProgrammAfterLoadFn: (mAktuelleProgrammListe: TrainingsProgramm[]) => {
 					let mNeueSession: Session = null;
-					let mAktuellesProgram: TrainingsProgramm = null;
+					let mAktuellesProgram: TrainingsProgramm;
 					let mAkuelleSessionListe: Array<ISession> = null;
+					// Gibt es ein aktuelles Program?
 					if (mAktuelleProgrammListe !== undefined && mAktuelleProgrammListe.length > 0) {
+						// Es gibt ein aktuelles Programm
 						mAktuellesProgram = mAktuelleProgrammListe[0];
-						mAkuelleSessionListe = mAktuellesProgram.SessionListe.filter((s) => s.Kategorie02 !== SessionStatus.Fertig && s.Kategorie02 !== SessionStatus.FertigTimeOut);
-					} else return;
+						mAkuelleSessionListe = mAktuellesProgram.SessionListe.filter((s) =>
+							s.Kategorie02 !== SessionStatus.Fertig &&
+							s.Kategorie02 !== SessionStatus.FertigTimeOut);
+					};
 
-					// Ist die Session dem Vorlageprogramm des aktuellen-Programms?
-					// Die Session muss aus dem gleichen Vorlageprogramm kommen, wie das aktuelle Programm.
-					if (mAktuellesProgram.FkVorlageProgramm > 0 && aSession.FK_VorlageProgramm === mAktuellesProgram.FkVorlageProgramm) {
-						// Die Session dem Vorlageprogramm des aktuellen-Programms.
+					// Gibt es ein aktuelles aktuelles Programm
+					// und ist aSession aus dem Vorlageprogramm des aktuellen Programms?
+					if ((mAktuellesProgram) &&
+						(mAktuellesProgram.FkVorlageProgramm > 0) &&
+						(aSession.FK_VorlageProgramm === mAktuellesProgram.FkVorlageProgramm))
+					{
+						// aSession ist aus dem Vorlageprogramm des aktuellen-Programms.
 						// Jetz aus der aktuellen Sessionliste die rausfiltern, die dem Vorlage-Programmm entsprechen,
 						mAkuelleSessionListe = mAkuelleSessionListe.filter((s) => s.FK_VorlageProgramm === mAktuellesProgram.FkVorlageProgramm && s.ID !== aSession.ID);
 						if (mAkuelleSessionListe.length < 1) return;
-						const mLastSession = mAkuelleSessionListe.pop();
+						const mLastSession: Session = mAkuelleSessionListe.pop() as Session;
 
 						const mVorlageProgrammListe: Array<TrainingsProgramm> = this.VorlageProgramme.filter((vp) => vp.id === aSession.FK_VorlageProgramm);
 						// mVorlageProgrammListe sollte vorhanden sein und Elemente haben.
@@ -1026,29 +1123,36 @@ export class DexieSvcService extends Dexie {
 							// mVorlageProgramm sollte Sessions haben.
 
 							if (mVorlageProgramm.SessionListe !== undefined && mVorlageProgramm.SessionListe.length > 0) {
-								// Sessions aus dem Vorlageprogramm holen
+								// Session aus dem Vorlageprogramm holen
 								const mIndex = (mLastSession.SessionNr + 1) % mVorlageProgramm.SessionListe.length;
 								const mVorlageSession = mVorlageProgramm.SessionListe[mIndex];
-								mNeueSession = mVorlageSession.Copy(true) as Session;
-								mNeueSession.init();
-								mNeueSession.FK_VorlageProgramm = mVorlageProgramm.id;
+								this.LastSession(aSession)
+									.then((mLastSession: Session) => {
+										if (mLastSession) {
+											mNeueSession = mLastSession.Copy(true);
+											mNeueSession.init();
+											mNeueSession.FK_VorlageProgramm = mVorlageProgramm.id;
+											this.InitSessionSaetze(mLastSession, mNeueSession);
+											mNeueSession.FK_Programm = mAktuellesProgram.id;
+											this.SessionSpeichern(mNeueSession).then(
+												() => this.LadeAktuellesProgramm()
+											)
+										}
+									});
 							}
 						}
-					} else if (aSession.Kategorie02 === SessionStatus.Fertig) {
+					}
+					else if (aSession.Kategorie02 === SessionStatus.Fertig)
+					{
 						// Die Session ist nicht aus dem aktuellen Vorlageprogramm
 						mNeueSession = aSession.Copy(true) as Session;
 						mNeueSession.init();
 						mNeueSession.FK_VorlageProgramm = aSession.FK_VorlageProgramm;
-					}
-
-					if (mNeueSession !== null) {
-						mNeueSession.FK_Programm = mAktuellesProgram.id;
-						this.SessionSpeichern(mNeueSession);
+						this.InitSessionSaetze(aSession, mNeueSession);
 					}
 
 					if (aSession.Kategorie02 === SessionStatus.Loeschen) this.SessionTable.delete(aSession.ID);
 
-					this.LadeAktuellesProgramm();
 				}, // OnProgrammAfterLoadFn
 			} as LadePara);
 		}

@@ -30,6 +30,13 @@ export enum UebungsKategorie02 {
   Session,
 }
 
+export enum ArbeitsSaetzeStatus {
+    KeinerVorhanden,
+    NichtAlleFertig,
+    AlleFertig
+  }
+  
+
 export interface IUebung {
     ID: number;
     // Bei Session-Uebungen ist FkUebung der Schluessel zur Stamm-Uebung
@@ -68,6 +75,7 @@ export interface IUebung {
     GewichtReduzierung: number;
     EquipmentTyp: string;
     FailCount: number;
+    ArbeitsSaetzeStatus: ArbeitsSaetzeStatus;
 
 }
 
@@ -138,6 +146,20 @@ export class Uebung implements IUebung {
         Object.defineProperty(this, 'StammUebung', { enumerable: false });
         Object.defineProperty(this, "SatzListe", { enumerable: false });
     }
+
+    get ArbeitsSaetzeStatus(): ArbeitsSaetzeStatus {
+        if (this.ArbeitsSatzListe.length <= 0) return ArbeitsSaetzeStatus.KeinerVorhanden;
+        let mAnzFertig: number = 0;
+        this.ArbeitsSatzListe.forEach((s) => {
+            if (s.Status === SatzStatus.Fertig)
+                mAnzFertig++;
+        });
+
+        if (mAnzFertig >= this.ArbeitsSatzListe.length) return ArbeitsSaetzeStatus.AlleFertig;
+
+        return ArbeitsSaetzeStatus.NichtAlleFertig;
+    }
+
 
     public hasChanged(aCmpUebung: IUebung): Boolean {
         if (this.ID != aCmpUebung.ID) return true;

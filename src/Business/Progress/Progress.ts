@@ -1,7 +1,7 @@
 import { SessionStatus } from 'src/Business/SessionDB';
 import { DexieSvcService } from "./../../app/services/dexie-svc.service";
 import { Session } from "src/Business/Session/Session";
-import { Uebung } from "../Uebung/Uebung";
+import { ArbeitsSaetzeStatus, Uebung } from "../Uebung/Uebung";
 import { ProgrammKategorie } from "../TrainingsProgramm/TrainingsProgramm";
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual')
@@ -112,16 +112,6 @@ export class Progress implements IProgress {
 
 			let mSessionListe: Array<Session> = [];
 
-			// const mUebungsListe: Array<Uebung> = await aDb
-			// 		.table(aDb.cUebung)
-			// 		.where({ FkUebung: aSessUebung.FkUebung })
-			// 		// .equals(mSess.ID)
-			// 		// .and((mUebung: Uebung) => mUebung.FkUebung === aSessUebung.FkUebung)
-			// 		.toArray()
-			// 		.then((mUebungen) => {
-			// 			return mUebungen;
-			// 		});
-
 			// Die Sessions nur laden, wenn die Anzahl der Fehlversuche größer 0 ist.
 			if (mFailCount > 0) {
 				// Warten, bis Sessions geladen sind.
@@ -222,8 +212,7 @@ export class Progress implements IProgress {
 				const mUebungsListe: Array<Uebung> = await aDb
 					.table(aDb.cUebung)
 					.where({ SessionID: mSess.ID, FkUebung: aSessUebung.FkUebung, FkProgress: aSessUebung.FkProgress })
-					// .equals(mSess.ID)
-					.and((mUebung: Uebung) => mUebung.ID !== aSessUebung.ID )
+					.and((mUebung: Uebung) => (mUebung.ID !== aSessUebung.ID) && (mUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig))
 					.toArray()
 					.then((mUebungen) => {
 						return mUebungen;
@@ -277,9 +266,9 @@ export class Progress implements IProgress {
 								// Die vorgegebenen Wiederholungen konnten erreicht werden
 								return WeightProgress.Increase;
 							else {
-								// Wenn der Prozesstyp nicht Blockset ist, muss 
+								// Wenn der Prozesstyp nicht Blockset ist, muss... 
 								if ((mProgress.ProgressTyp === ProgressTyp.BlockSet) ||
-									// er RepRange sein. Daher das untere Limit prüfen.
+									// ...er RepRange sein. Daher das untere Limit prüfen.
 									(this.EvalSaetze(mSessUebung, VorgabeWeightLimit.LowerLimit) === false))
 									mFailCount++
 							}
