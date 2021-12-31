@@ -281,9 +281,9 @@ export class DexieSvcService extends Dexie {
 			}, //OnProgrammNoRecorderLoadFn
 		} as LadePara;
 
-		    //  Dexie.delete("ConceptCoach");
+		    //   Dexie.delete("ConceptCoach");
 
-		this.version(38).stores({
+		this.version(1).stores({
 			AppData: "++id",
 			Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
@@ -1027,8 +1027,6 @@ export class DexieSvcService extends Dexie {
 
 	private async LastSession(aSession: Session): Promise<Session>
 	{
-		// Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress",
-		// SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02]",
 		const mSessions: Array<Session> = await this.LadeProgrammSessions({
 			OnSessionAfterLoadFn: (aSessions: Array<Session>) => {
 				aSessions =
@@ -1114,15 +1112,18 @@ export class DexieSvcService extends Dexie {
 						// Jetz aus der aktuellen Sessionliste die rausfiltern, die dem Vorlage-Programmm entsprechen,
 						mAkuelleSessionListe = mAkuelleSessionListe.filter((s) => s.FK_VorlageProgramm === mAktuellesProgram.FkVorlageProgramm && s.ID !== aSession.ID);
 						if (mAkuelleSessionListe.length < 1) return;
-						const mLastSession: Session = mAkuelleSessionListe.pop() as Session;
-
+						
 						const mVorlageProgrammListe: Array<TrainingsProgramm> = this.VorlageProgramme.filter((vp) => vp.id === aSession.FK_VorlageProgramm);
 						// mVorlageProgrammListe sollte vorhanden sein und Elemente haben.
 						if (mVorlageProgrammListe !== undefined && mVorlageProgrammListe.length > 0) {
 							const mVorlageProgramm = mVorlageProgrammListe[0];
 							// mVorlageProgramm sollte Sessions haben.
-
 							if (mVorlageProgramm.SessionListe !== undefined && mVorlageProgramm.SessionListe.length > 0) {
+								
+								// const mLastSessionAusVorlage: Session = mAkuelleSessionListe.pop() as Session;
+								// const mIndex = (mLastSessionAusVorlage.SessionNr + 1) % mVorlageProgramm.SessionListe.length;
+								const mVorlageSession = mVorlageProgramm.SessionListe[aSession.SessionNr];
+
 								// Letzte Session des gleichen Session-Typs und dem gleichen Vorgabe-Programm suchen.
 								// Z.B: Falls es sich bei dem Session-Typ von aSession um 'Squat-Day' handelt,
 								// wird die letzte Session vom Typ 'Squat-Day' gesucht. 
@@ -1154,7 +1155,7 @@ export class DexieSvcService extends Dexie {
 							// Die Session ist nicht aus dem aktuellen Vorlageprogramm
 							mNeueSession = aSession.Copy(true) as Session;
 							mNeueSession.init();
-							mNeueSession.FK_VorlageProgramm = aSession.FK_VorlageProgramm;
+							// mNeueSession.FK_VorlageProgramm = aSession.FK_VorlageProgramm;
 							this.InitSessionSaetze(aSession, mNeueSession);
 							this.SessionSpeichern(mNeueSession).then(
 								() => this.LadeAktuellesProgramm()

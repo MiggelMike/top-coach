@@ -72,6 +72,8 @@ export interface ISatz {
     hasChanged(aCmpSatz: ISatz): Boolean;
     getBodyWeightText(aPrefix?: string): string;
     FkHantel: number;
+    Vorgabe: boolean;
+
 }
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
@@ -95,6 +97,7 @@ export class Satz implements ISatz {
     public IncludeBodyweight: boolean = false;
     public BodyWeight: number = 0;
     public FkHantel: number = 0;
+    public Vorgabe: boolean = false;
 
     public get LiftedWeight(): number {
         if (this.Status === SatzStatus.Fertig) {

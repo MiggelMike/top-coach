@@ -1,6 +1,15 @@
-<div class="cardInner" fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-center">
-    <div class="kreis font-size-xsmall" fxLayout="row" fxLayoutAlign="center center">
-       {{satz.WdhVonVorgabe}} - {{satz.WdhBisVorgabe}} 
-       <ng-container *ngIf="satz.AMRAP">+</ng-container>
+<div class="cardInner" fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center center">
+    <div class="center-item align-right" fxLayout="column" fxFlex="100%">
+
+        <div class="kreis font-size-xsmall" fxLayout="row"   fxLayoutAlign="center center">
+            {{satz.WdhVonVorgabe}} - {{satz.WdhBisVorgabe}} 
+            <ng-container *ngIf="satz.AMRAP">+</ng-container>
+        </div>
+        
+        <div class="font-size-xsmall" fxLayout="row" fxFlex="100%" fxLayoutAlign="center center">
+            <mat-label>
+                {{satz.GewichtVorgabe}}
+            </mat-label>  
+        </div>
     </div>
 </div>

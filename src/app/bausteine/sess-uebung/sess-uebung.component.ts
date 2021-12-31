@@ -19,7 +19,7 @@ export class SessUebungComponent implements OnInit {
     @Input() satzTypText: string = "";
     @Input() session: ISession = null;
     @Input() sessUebung: Uebung;
-    @Input() satzListe: Array<ISatz>;
+    @Input() satzListe: Array<Satz>;
     @Input() rowNum: number = 0;
     @Input() panUebung1: MatExpansionPanel;
     @Input() bearbeitbar: Boolean;

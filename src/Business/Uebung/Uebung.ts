@@ -76,6 +76,7 @@ export interface IUebung {
     EquipmentTyp: string;
     FailCount: number;
     ArbeitsSaetzeStatus: ArbeitsSaetzeStatus;
+    Vorlage: boolean;
 
 }
 
@@ -134,7 +135,7 @@ export class Uebung implements IUebung {
     public StammUebung: Uebung = null;
     public GewichtSteigerung: number = 0;
     public GewichtReduzierung: number = 0;
- 
+    public Vorlage: boolean = false;
     public FkProgress: number = 0;
 
     constructor() {
