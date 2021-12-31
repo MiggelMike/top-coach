@@ -144,7 +144,7 @@ export class DexieSvcService extends Dexie {
 
 		if (mProgramm.SessionListe) {
 			let mZyklen = 1;
-			if (aSelectedProgram.SessionListe.length < 10) mZyklen = 3;
+			// if (aSelectedProgram.SessionListe.length < 10) mZyklen = 3;
 
 			mProgramm.SessionListe = [];
 			for (let x = 0; x < mZyklen; x++) {
