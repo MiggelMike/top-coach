@@ -15,6 +15,7 @@ import { Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardUebung } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
+import { threadId } from 'worker_threads';
 //  import { SIGXFSZ } from 'constants';
 
 export enum ErstellStatus {
@@ -1113,66 +1114,43 @@ export class DexieSvcService extends Dexie {
 
 					// Gibt es ein aktuelles aktuelles Programm
 					// und ist aSession aus dem Vorlageprogramm des aktuellen Programms?
-					if ((mAktuellesProgram) &&
-						(mAktuellesProgram.FkVorlageProgramm > 0) &&
-						(aSession.FK_VorlageProgramm === mAktuellesProgram.FkVorlageProgramm))
-					{
+					if (mAktuellesProgram && mAktuellesProgram.FkVorlageProgramm > 0 && aSession.FK_VorlageProgramm === mAktuellesProgram.FkVorlageProgramm) {
 						// aSession ist aus dem Vorlageprogramm des aktuellen-Programms.
 						// Jetz aus der aktuellen Sessionliste die rausfiltern, die dem Vorlage-Programmm entsprechen,
 						mAkuelleSessionListe = mAkuelleSessionListe.filter((s) => s.FK_VorlageProgramm === mAktuellesProgram.FkVorlageProgramm && s.ID !== aSession.ID);
 						if (mAkuelleSessionListe.length < 1) return;
-						
+
 						const mVorlageProgrammListe: Array<TrainingsProgramm> = this.VorlageProgramme.filter((vp) => vp.id === aSession.FK_VorlageProgramm);
 						// mVorlageProgrammListe sollte vorhanden sein und Elemente haben.
 						if (mVorlageProgrammListe !== undefined && mVorlageProgrammListe.length > 0) {
 							const mVorlageProgramm = mVorlageProgrammListe[0];
 							// mVorlageProgramm sollte Sessions haben.
 							if (mVorlageProgramm.SessionListe !== undefined && mVorlageProgramm.SessionListe.length > 0) {
-								
-								// const mLastSessionAusVorlage: Session = mAkuelleSessionListe.pop() as Session;
-								// const mIndex = (mLastSessionAusVorlage.SessionNr + 1) % mVorlageProgramm.SessionListe.length;
-								const mVorlageSession: Session = mVorlageProgramm.SessionListe[aSession.SessionNr] as Session;
-
-								// Letzte Session des gleichen Session-Typs und dem gleichen Vorgabe-Programm suchen.
-								// Z.B: Falls es sich bei dem Session-Typ von aSession um 'Squat-Day' handelt,
-								// wird die letzte Session vom Typ 'Squat-Day' gesucht. 
-								this.LastSession(aSession)
-									.then((mLastSession: Session) => {
-										// Gibt es schon eine entsprechende abgeschlossene Session?
-										if (mLastSession) {
-											// Es gibt schon eine entsprechende abgeschlossene Session.
-											mNeueSession = mLastSession.Copy(true);
-											mNeueSession.init();
-											this.InitSessionSaetze(mLastSession, mNeueSession);
-										} else {
-											// Es gibt noch keine entsprechende abgeschlossene Session.
-											mNeueSession = mVorlageSession.Copy(true);
-											mNeueSession.init();
-											this.InitSessionSaetze(aSession, mNeueSession);
-										}
-										mNeueSession.FK_VorlageProgramm = mVorlageProgramm.id;
-										mNeueSession.FK_Programm = mAktuellesProgram.id;
-										this.SessionSpeichern(mNeueSession).then(
-											() => this.LadeAktuellesProgramm()
-										)
-									});
+								mNeueSession = aSession.Copy(true);
+								mNeueSession.init();
+								this.InitSessionSaetze(aSession, mNeueSession);
+								mNeueSession.FK_VorlageProgramm = mVorlageProgramm.id;
+								mNeueSession.FK_Programm = mAktuellesProgram.id;
+								mAkuelleSessionListe.push(mNeueSession);
+								// mNeueSession.ListenIndex = mAkuelleSessionListe.length - 1;
+								for (let index = 0; index < mAkuelleSessionListe.length; index++) {
+									const mPtrSession: Session = mAkuelleSessionListe[index] as Session;
+									mPtrSession.ListenIndex = index;
+									this.SessionSpeichern(mPtrSession).then(() => this.LadeAktuellesProgramm());
 								}
 							}
 						}
-						else if (aSession.Kategorie02 === SessionStatus.Fertig)
-						{
-							// Die Session ist nicht aus dem aktuellen Vorlageprogramm
-							mNeueSession = aSession.Copy(true) as Session;
-							mNeueSession.init();
-							// mNeueSession.FK_VorlageProgramm = aSession.FK_VorlageProgramm;
-							this.InitSessionSaetze(aSession, mNeueSession);
-							this.SessionSpeichern(mNeueSession).then(
-								() => this.LadeAktuellesProgramm()
-							)
-						}
+					} else if (aSession.Kategorie02 === SessionStatus.Fertig) {
+						// Die Session ist nicht aus dem aktuellen Vorlageprogramm
+						mNeueSession = aSession.Copy(true) as Session;
+						mNeueSession.init();
+						// mNeueSession.FK_VorlageProgramm = aSession.FK_VorlageProgramm;
+						this.InitSessionSaetze(aSession, mNeueSession);
+						this.SessionSpeichern(mNeueSession).then(() => this.LadeAktuellesProgramm());
+					}
 						
-						if (aSession.Kategorie02 === SessionStatus.Loeschen)
-							this.SessionTable.delete(aSession.ID);
+					if (aSession.Kategorie02 === SessionStatus.Loeschen)
+						this.SessionTable.delete(aSession.ID);
 							
 				}, // OnProgrammAfterLoadFn
 			} as LadePara);
