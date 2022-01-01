@@ -51,7 +51,12 @@ export class Programm02Component implements OnInit {
 		this.programm.SessionListe[event.currentIndex].ListenIndex = event.previousIndex;
 		this.fDbModule.SessionSpeichern(this.programm.SessionListe[event.previousIndex] as Session);
 		this.fDbModule.SessionSpeichern(this.programm.SessionListe[event.currentIndex] as Session);		
-	  }
+	}
+	
+	DoSessionName(aSess:ISession, aEvent: any) {
+		aSess.Name = aEvent.target.value;
+		this.fDbModule.SessionSpeichern(aSess as Session);
+	}
 
 	public StartButtonText(aSess: ISession): string {
 		if (aSess.Kategorie02 === undefined) aSess.Kategorie02 = SessionStatus.Wartet;

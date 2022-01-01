@@ -10,19 +10,9 @@
                         <mat-expansion-panel-header>
                             <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">
                                 <mat-form-field class="align-left" fxFlex="auto">
-                                    <ng-container *ngIf='bearbeitbar; then  BearbeitbarBlock else NurLesenBlock'>
+                                    <ng-container *ngIf='bearbeitbar'>
                                     </ng-container>
-                                    <!-- Nur Lesen -->
-                                    <ng-template #NurLesenBlock>
-                                        <input matInput [(ngModel)]="sess.Name" type="text"
-                                            (click)="$event.stopPropagation()" readonly>
-                                    </ng-template>
-
-                                    <!-- Bearbeitbar -->
-                                    <ng-template #BearbeitbarBlock>
-                                        <input matInput [(ngModel)]="sess.Name" type="text"
-                                            (click)="$event.stopPropagation()">
-                                    </ng-template>
+                                        <input matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
                                 </mat-form-field>
 
                                 <ng-container *ngIf='StartButtonVisible'>
