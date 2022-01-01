@@ -143,14 +143,15 @@ export class DexieSvcService extends Dexie {
 		mProgramm.ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
 
 		if (mProgramm.SessionListe) {
-			let mZyklen = 1;
+			// let mZyklen = 1;
 			// if (aSelectedProgram.SessionListe.length < 10) mZyklen = 3;
 
 			mProgramm.SessionListe = [];
-			for (let x = 0; x < mZyklen; x++) {
+			// for (let x = 0; x < mZyklen; x++) {
 				for (let index = 0; index < aSelectedProgram.SessionListe.length; index++) {
 					const mPrtSession = aSelectedProgram.SessionListe[index];
 					const mNeueSession = mPrtSession.Copy(true);
+					mNeueSession.ListenIndex = index;
 					mNeueSession.FK_VorlageProgramm = aSelectedProgram.id;
 
 					if (aInitialWeightList !== undefined) {
@@ -166,7 +167,7 @@ export class DexieSvcService extends Dexie {
 					}
 					mProgramm.SessionListe.push(mNeueSession);
 				}
-			}
+			// }
 
 			return this.ProgrammSpeichern(mProgramm);
 		}
@@ -283,11 +284,11 @@ export class DexieSvcService extends Dexie {
 
 		    //   Dexie.delete("ConceptCoach");
 
-		this.version(1).stores({
+		this.version(2).stores({
 			AppData: "++id",
 			Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
-			SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02]",
+			SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02],[FK_Programm+ListenIndex]",
 			Satz: "++ID,UebungID",
 			MuskelGruppe: "++ID,Name,MuscleGroupKategorie01",
 			Equipment: "++ID,Name",

@@ -25,6 +25,7 @@ export interface ISessionDB {
     FK_Programm: number;
     FK_VorlageProgramm: number;
     SessionNr: number;
+    ListenIndex: number;
     Name: string;
     Datum: Date;
     DauerInSek: number;
@@ -51,6 +52,7 @@ export class SessionDB implements ISessionDB {
     public FK_VorlageProgramm: number = 0;
     public ProgressIsCalced: boolean = false;
     public SessionNr: number = 0;
+    public ListenIndex: number = 0;
     public Name: string = '';
     public Datum: Date = new Date();
     public DauerInSek: number = 0;

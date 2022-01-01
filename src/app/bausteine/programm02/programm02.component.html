@@ -2,80 +2,84 @@
     <a [ngClass]="['link-button-font']" mat-flat-button (click)="toggleSessions()">{{ToggleButtonText}}</a>
     <a [ngClass]="['link-button-font']" mat-flat-button (click)="AdditionalSession()">Additional session</a>
 
-    <ng-container *ngFor="let sess of SessionListe, index as i">
-        <div class="mg-top-10">
-            <mat-accordion #accSession="matAccordion" multi="true">
-                <mat-expansion-panel #panSession='matExpansionPanel' class="HG-01">
-                    <mat-expansion-panel-header>
-                        <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">
-                            <mat-form-field class="align-left" fxFlex="auto">
-                                <ng-container *ngIf='bearbeitbar; then  BearbeitbarBlock else NurLesenBlock'>
+    <!-- <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+        <div class="example-box" *ngFor="let movie of movies" cdkDrag>{{movie}}</div>
+      </div> -->
+      
+    <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+        <div *ngFor="let sess of SessionListe, index as i" cdkDrag>
+            <div class="mg-top-10">
+                <mat-accordion #accSession="matAccordion" multi="true">
+                    <mat-expansion-panel #panSession='matExpansionPanel' class="HG-01">
+                        <mat-expansion-panel-header>
+                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">
+                                <mat-form-field class="align-left" fxFlex="auto">
+                                    <ng-container *ngIf='bearbeitbar; then  BearbeitbarBlock else NurLesenBlock'>
+                                    </ng-container>
+                                    <!-- Nur Lesen -->
+                                    <ng-template #NurLesenBlock>
+                                        <input matInput [(ngModel)]="sess.Name" type="text"
+                                            (click)="$event.stopPropagation()" readonly>
+                                    </ng-template>
+
+                                    <!-- Bearbeitbar -->
+                                    <ng-template #BearbeitbarBlock>
+                                        <input matInput [(ngModel)]="sess.Name" type="text"
+                                            (click)="$event.stopPropagation()">
+                                    </ng-template>
+                                </mat-form-field>
+
+                                <ng-container *ngIf='StartButtonVisible'>
+                                    <div class="center-item" layout-align="center center" fxFlex="0 0 auto">
+                                        <a [ngClass]="['ref-button']" mat-flat-button
+                                            (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
+                                    </div>
+
+                                    <!-- <div class="center-item" layout-align="center center" fxFlex="0 0 auto">
+                                        <a [ngClass]="['ref-button']" mat-flat-button
+                                            (click)="DeleteAusAnstehendeSessions($event,sess, i+1)">Skip</a>
+                                    </div> -->
                                 </ng-container>
-                                <!-- Nur Lesen -->
-                                <ng-template #NurLesenBlock>
-                                    <input matInput [(ngModel)]="sess.Name" type="text"
-                                        (click)="$event.stopPropagation()" readonly>
-                                </ng-template>
+                            </div>
+                        </mat-expansion-panel-header>
 
-                                <!-- Bearbeitbar -->
-                                <ng-template #BearbeitbarBlock>
-                                    <input matInput [(ngModel)]="sess.Name" type="text"
-                                        (click)="$event.stopPropagation()">
-                                </ng-template>
-                            </mat-form-field>
+                        <div [id]="'collapseSession' + i" aria-labelledby="headingOne" attr.data-parent="#accordionSession">
+                            <div class="card-body">
+                                <!-- session an Sub-Komponente durchreichen -->
+                                <app-programm03 [session]="sess" [bearbeitbar]="bearbeitbar"></app-programm03>
+                            </div>
+                        </div>
 
-                            <ng-container *ngIf='StartButtonVisible'>
-                                <div class="center-item" layout-align="center center" fxFlex="0 0 auto">
-                                    <a [ngClass]="['ref-button']" mat-flat-button
-                                        (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
+                        <ng-container *ngIf="showButtons">
+                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
+                                <div class="center-item" layout-align="center center">
+                                    <a [ngClass]="'link-button-font'" mat-flat-button (click)="CopySession(sess)">Copy
+                                        Session</a>
                                 </div>
 
-                                <!-- <ng-container *ngIf="SessionWartet(sess)"> -->
-                                <div class="center-item" layout-align="center center" fxFlex="0 0 auto">
-                                    <a [ngClass]="['ref-button']" mat-flat-button
-                                        (click)="DeleteAusAnstehendeSessions($event,sess, i+1)">Skip</a>
+                                <div class="center-item" layout-align="center center">
+                                    <a [ngClass]="'link-button-font'" mat-flat-button (click)="DeleteSession(sess,i)">Delete
+                                        Session</a>
                                 </div>
-                                <!-- </ng-container>  -->
-                            </ng-container>
-                        </div>
-                    </mat-expansion-panel-header>
-
-                    <div [id]="'collapseSession' + i" aria-labelledby="headingOne" attr.data-parent="#accordionSession">
-                        <div class="card-body">
-                            <!-- session an Sub-Komponente durchreichen -->
-                            <app-programm03 [session]="sess" [bearbeitbar]="bearbeitbar"></app-programm03>
-                        </div>
-                    </div>
-
-                    <ng-container *ngIf="showButtons">
-                        <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
-                            <div class="center-item" layout-align="center center">
-                                <a [ngClass]="'link-button-font'" mat-flat-button (click)="CopySession(sess)">Copy
-                                    Session</a>
                             </div>
 
-                            <div class="center-item" layout-align="center center">
-                                <a [ngClass]="'link-button-font'" mat-flat-button (click)="DeleteSession(sess,i)">Delete
-                                    Session</a>
-                            </div>
-                        </div>
+                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
+                                <div class="center-item" layout-align="center center">
+                                    <a [ngClass]="'link-button-font'" mat-flat-button (click)="AddExercise(sess)">Add
+                                        exercise</a>
+                                </div>
 
-                        <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
-                            <div class="center-item" layout-align="center center">
-                                <a [ngClass]="'link-button-font'" mat-flat-button (click)="AddExercise(sess)">Add
-                                    exercise</a>
+                                <div class="center-item" layout-align="center center">
+                                    <a [ngClass]="'link-button-font'" mat-flat-button (click)="PasteExcercise(sess)">Paste
+                                        Exercise</a>
+                                </div>
                             </div>
-
-                            <div class="center-item" layout-align="center center">
-                                <a [ngClass]="'link-button-font'" mat-flat-button (click)="PasteExcercise(sess)">Paste
-                                    Exercise</a>
-                            </div>
-                        </div>
-                    </ng-container>
-                </mat-expansion-panel>
-            </mat-accordion>
+                        </ng-container>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
         </div>
-    </ng-container>
+    </div>
 </ng-container>
 
 <ng-container *ngIf="showButtons">

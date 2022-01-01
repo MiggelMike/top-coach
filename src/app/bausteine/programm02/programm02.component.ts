@@ -14,7 +14,8 @@ import { GlobalService } from "src/app/services/global.service";
 import { of } from "rxjs";
 import { Uebung, IUebung } from "src/Business/Uebung/Uebung";
 import { UebungService } from "src/app/services/uebung.service";
-import { Router  } from "@angular/router";
+import { Router } from "@angular/router";
+import {CdkDragDrop } from '@angular/cdk/drag-drop';
 
 @Component({
 	selector: "app-programm02",
@@ -43,6 +44,14 @@ export class Programm02Component implements OnInit {
 		if (this.SessionPanelsExpanded === true) return true;
 		return false;
 	}
+
+
+	drop(event: CdkDragDrop<ISession[]>) {
+		this.programm.SessionListe[event.previousIndex].ListenIndex = event.currentIndex;
+		this.programm.SessionListe[event.currentIndex].ListenIndex = event.previousIndex;
+		this.fDbModule.SessionSpeichern(this.programm.SessionListe[event.previousIndex] as Session);
+		this.fDbModule.SessionSpeichern(this.programm.SessionListe[event.currentIndex] as Session);		
+	  }
 
 	public StartButtonText(aSess: ISession): string {
 		if (aSess.Kategorie02 === undefined) aSess.Kategorie02 = SessionStatus.Wartet;

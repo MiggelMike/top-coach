@@ -113,6 +113,7 @@ export class GzclpProgramm extends TrainingsProgramm {
 
 		mNeueSession.SessionNr = aSessionNr;
 		mNeueSession.Datum = null;
+		mNeueSession.ListenIndex = aSessionNr;
 
 		mSessions.push(mNeueSession);
 
