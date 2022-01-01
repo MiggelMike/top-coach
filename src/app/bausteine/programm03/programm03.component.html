@@ -8,6 +8,7 @@
 
     <ng-container *ngFor="let SessUeb of session.UebungsListe, index as i; let isOdd=odd">
         <!-- <ng-container [SessUeb]="SessUeb"></ng-container> -->
+        <div class="mg-top-5">
         <mat-accordion #accUebung='matAccordion' multi="true">
             <mat-expansion-panel #panUebung='matExpansionPanel' [expanded]="SessUeb.Expanded"
                 (closed)="PanelUebungClosed(SessUeb)" (opened)="PanelUebungOpened(SessUeb)">
@@ -61,6 +62,6 @@
                 </div>
             </mat-expansion-panel>
         </mat-accordion>
-
+        </div>
     </ng-container>
 </ng-container>

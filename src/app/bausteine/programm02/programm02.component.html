@@ -2,10 +2,6 @@
     <a [ngClass]="['link-button-font']" mat-flat-button (click)="toggleSessions()">{{ToggleButtonText}}</a>
     <a [ngClass]="['link-button-font']" mat-flat-button (click)="AdditionalSession()">Additional session</a>
 
-    <!-- <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
-        <div class="example-box" *ngFor="let movie of movies" cdkDrag>{{movie}}</div>
-      </div> -->
-      
     <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
         <div *ngFor="let sess of SortedSessionListe, index as i" cdkDrag>
             <div class="mg-top-10">
