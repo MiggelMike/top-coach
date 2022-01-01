@@ -969,7 +969,7 @@ export class DexieSvcService extends Dexie {
 			);
 		});
 	}
-
+	
 	public ProgrammSpeichern(aTrainingsProgramm: ITrainingsProgramm) {
 		return this.transaction("rw", this.ProgrammTable, this.SessionTable, this.UebungTable, this.SatzTable, () => {
 			// const mSessions = mTrainingsProgramm.SessionListe;
@@ -1024,6 +1024,7 @@ export class DexieSvcService extends Dexie {
 			const mUebung: Uebung = mQuellUebung.Copy();
 			mUebung.ID = undefined;
 			mUebung.SatzListe = [];
+			mUebung.Expanded = false;
 
 			mQuellUebung.SatzListe.forEach((sz) => {
 				const mSatz: Satz = sz.Copy();
@@ -1112,41 +1113,23 @@ export class DexieSvcService extends Dexie {
 							s.Kategorie02 !== SessionStatus.FertigTimeOut);
 					};
 
-					// Gibt es ein aktuelles aktuelles Programm
-					// und ist aSession aus dem Vorlageprogramm des aktuellen Programms?
-					if (mAktuellesProgram && mAktuellesProgram.FkVorlageProgramm > 0 && aSession.FK_VorlageProgramm === mAktuellesProgram.FkVorlageProgramm) {
-						// aSession ist aus dem Vorlageprogramm des aktuellen-Programms.
-						// Jetz aus der aktuellen Sessionliste die rausfiltern, die dem Vorlage-Programmm entsprechen,
-						mAkuelleSessionListe = mAkuelleSessionListe.filter((s) => s.FK_VorlageProgramm === mAktuellesProgram.FkVorlageProgramm && s.ID !== aSession.ID);
-						if (mAkuelleSessionListe.length < 1) return;
 
-						const mVorlageProgrammListe: Array<TrainingsProgramm> = this.VorlageProgramme.filter((vp) => vp.id === aSession.FK_VorlageProgramm);
-						// mVorlageProgrammListe sollte vorhanden sein und Elemente haben.
-						if (mVorlageProgrammListe !== undefined && mVorlageProgrammListe.length > 0) {
-							const mVorlageProgramm = mVorlageProgrammListe[0];
-							// mVorlageProgramm sollte Sessions haben.
-							if (mVorlageProgramm.SessionListe !== undefined && mVorlageProgramm.SessionListe.length > 0) {
-								mNeueSession = aSession.Copy(true);
-								mNeueSession.init();
-								this.InitSessionSaetze(aSession, mNeueSession);
-								mNeueSession.FK_VorlageProgramm = mVorlageProgramm.id;
-								mNeueSession.FK_Programm = mAktuellesProgram.id;
-								mAkuelleSessionListe.push(mNeueSession);
-								// mNeueSession.ListenIndex = mAkuelleSessionListe.length - 1;
-								for (let index = 0; index < mAkuelleSessionListe.length; index++) {
-									const mPtrSession: Session = mAkuelleSessionListe[index] as Session;
-									mPtrSession.ListenIndex = index;
-									this.SessionSpeichern(mPtrSession).then(() => this.LadeAktuellesProgramm());
-								}
-							}
-						}
-					} else if (aSession.Kategorie02 === SessionStatus.Fertig) {
-						// Die Session ist nicht aus dem aktuellen Vorlageprogramm
-						mNeueSession = aSession.Copy(true) as Session;
-						mNeueSession.init();
-						// mNeueSession.FK_VorlageProgramm = aSession.FK_VorlageProgramm;
-						this.InitSessionSaetze(aSession, mNeueSession);
-						this.SessionSpeichern(mNeueSession).then(() => this.LadeAktuellesProgramm());
+					mNeueSession = aSession.Copy(true);
+					mNeueSession.init();
+					this.InitSessionSaetze(aSession, mNeueSession);
+					mNeueSession.FK_Programm = mAktuellesProgram.id;
+					mNeueSession.Expanded = false;
+
+					const mVorlageProgrammListe: Array<TrainingsProgramm> = this.VorlageProgramme.filter((vp) => vp.id === aSession.FK_VorlageProgramm);
+					// Ist eine mVorlageProgrammListe vorhanden und hat sie Elemente?
+					if (mVorlageProgrammListe !== undefined && mVorlageProgrammListe.length > 0) 
+						mNeueSession.FK_VorlageProgramm = mVorlageProgrammListe[0].id;
+			
+					mAkuelleSessionListe.push(mNeueSession);
+					for (let index = 0; index < mAkuelleSessionListe.length; index++) {
+						const mPtrSession: Session = mAkuelleSessionListe[index] as Session;
+						mPtrSession.ListenIndex = index;
+						this.SessionSpeichern(mPtrSession).then(() => this.LadeAktuellesProgramm());
 					}
 						
 					if (aSession.Kategorie02 === SessionStatus.Loeschen)
