@@ -7,7 +7,7 @@
       </div> -->
       
     <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
-        <div *ngFor="let sess of SessionListe, index as i" cdkDrag>
+        <div *ngFor="let sess of SortedSessionListe, index as i" cdkDrag>
             <div class="mg-top-10">
                 <mat-accordion #accSession="matAccordion" multi="true">
                     <mat-expansion-panel #panSession='matExpansionPanel' class="HG-01">

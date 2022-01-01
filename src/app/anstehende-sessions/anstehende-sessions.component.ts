@@ -39,15 +39,7 @@ export class AnstehendeSessionsComponent implements OnInit {
                     (s) => (s.Kategorie02 !== SessionStatus.Fertig && s.Kategorie02 !== SessionStatus.FertigTimeOut)
                 );
             
-            mProgram.SessionListe = mProgram.SessionListe.sort((s1, s2) => {
-                if (s1.ListenIndex > s2.ListenIndex)
-                    return 1;
-                
-                if (s1.ListenIndex < s2.ListenIndex)
-                    return -1;
-                    
-                return 0;
-            });
+            mProgram.SessionListe = this.fDbModule.SortSessionByListenIndex(mProgram.SessionListe as Array<Session>);
         }
         return mProgram
     }

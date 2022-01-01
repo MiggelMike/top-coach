@@ -763,9 +763,17 @@ export class DexieSvcService extends Dexie {
 		this.ProgrammTable.mapToClass(TrainingsProgramm);
 	}
 
-	// public async LadeUebungenEinerSession(aSession: Session) {
-	// 	await this.LadeSessionUebungen(aSession);
-	// }
+	public SortSessionByListenIndex(aSessionListe: Array<Session>) {
+		return aSessionListe.sort((s1, s2) => {
+			if (s1.ListenIndex > s2.ListenIndex)
+				return 1;
+	
+			if (s1.ListenIndex < s2.ListenIndex)
+				return -1;
+		
+			return 0;
+		});
+	}
 
 
 	public async LadeProgrammSessions(aLadePara: LadePara): Promise<Array<Session>> {

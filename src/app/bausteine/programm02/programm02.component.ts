@@ -123,6 +123,10 @@ export class Programm02Component implements OnInit {
 				this.fDbModule.EvalAktuelleSessionListe(aSession as Session);
 		});
 	}
+
+	public get SortedSessionListe(): Array<ISession> {
+		return this.fDbModule.SortSessionByListenIndex(this.SessionListe as Array<Session>);
+    }
 	
 	private DeleteSessionPrim(aSession: ISession, aRowNum: number, aOnDelete: onDeleteFn ) {
 		const mDialogData = new DialogData();
