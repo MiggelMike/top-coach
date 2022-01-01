@@ -1,3 +1,4 @@
+import { DexieSvcService } from './../../services/dexie-svc.service';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { Uebung  } from './../../../Business/Uebung/Uebung';
 import { GlobalService } from 'src/app/services/global.service';
@@ -12,7 +13,8 @@ import { LOCALE_ID, Inject } from '@angular/core';
 import { floatMask } from 'src/app/app.module';
 import { ExerciseSettingsComponent } from 'src/app/exercise-settings/exercise-settings.component';
 import { ExerciseOverlayConfig, ExerciseSettingSvcService } from 'src/app/services/exercise-setting-svc.service';
-
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import {DragDropModule} from '@angular/cdk/drag-drop'; 
 
 
 @Component({
@@ -53,13 +55,15 @@ export class Programm03Component implements OnInit {
             console.log("UebungPanelsObserver got a complete notification"),
     };
 
-    ngOnInit() { }
+    ngOnInit() {
+    }
     
     constructor(
         @Inject(LOCALE_ID) localID: string,
         private fGlobalService: GlobalService,
         private fDialogService: DialogeService,
-        private fExerciseSettingSvcService: ExerciseSettingSvcService
+        private fExerciseSettingSvcService: ExerciseSettingSvcService,
+        private fDbModule: DexieSvcService
     ) {
         this.LocaleID = localID;
         if (this.fGlobalService.Comp03PanelUebungObserver === null)
@@ -74,6 +78,15 @@ export class Programm03Component implements OnInit {
             //         left: -1000,
             //         top: -1000
             //     } as SessionOverlayConfig;
+    }
+
+    drop(event: CdkDragDrop<Uebung[]>) {
+        this.session.UebungsListe[event.previousIndex].ListenIndex = event.currentIndex;
+        this.session.UebungsListe[event.currentIndex].ListenIndex = event.previousIndex;
+    }
+    
+    public get UebungsListe(): Array<Uebung>{
+        return Uebung.StaticUebungsListeSortByListenIndex(this.session.UebungsListe);
     }
 
     SetPlusWeight(aUuebung: Uebung, $event) {

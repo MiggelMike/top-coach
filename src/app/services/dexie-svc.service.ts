@@ -15,7 +15,6 @@ import { Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardUebung } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
-import { threadId } from 'worker_threads';
 //  import { SIGXFSZ } from 'constants';
 
 export enum ErstellStatus {
@@ -168,7 +167,6 @@ export class DexieSvcService extends Dexie {
 					}
 					mProgramm.SessionListe.push(mNeueSession);
 				}
-			// }
 
 			return this.ProgrammSpeichern(mProgramm);
 		}
@@ -283,9 +281,9 @@ export class DexieSvcService extends Dexie {
 			}, //OnProgrammNoRecorderLoadFn
 		} as LadePara;
 
-		    //   Dexie.delete("ConceptCoach");
+		    //  Dexie.delete("ConceptCoach");
 
-		this.version(2).stores({
+		this.version(4).stores({
 			AppData: "++id",
 			Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
@@ -937,9 +935,9 @@ export class DexieSvcService extends Dexie {
 		return this.SatzTable.bulkPut(aSaetze as Array<Satz>);
 	}
 
-	public UebungSpeichern(aUebung: Uebung): PromiseExtended<void> {
-		return this.transaction("rw", this.UebungTable, this.SatzTable, () => {
-			this.UebungTable.put(aUebung).then((mUebungID: number) => {
+	public async UebungSpeichern(aUebung: Uebung) {
+		await this.UebungTable.put(aUebung)
+			.then((mUebungID: number) => {
 				// Uebung ist gespeichert.
 				// UebungsID in Saetze eintragen.
 				aUebung.ID = mUebungID;
@@ -948,10 +946,31 @@ export class DexieSvcService extends Dexie {
 						mSatz.UebungID = mUebungID;
 						mSatz.SessionID = aUebung.SessionID;
 					});
-					this.SaetzeSpeichern(aUebung.SatzListe);
 				}
-			});
-		});
+		}).catch((e) =>
+			console.log(e)
+		);
+
+		await this.SaetzeSpeichern(aUebung.SatzListe);
+		
+
+		// return this.transaction("rw", this.UebungTable, this.SatzTable, () => {
+		// 	this.UebungTable.put(aUebung)
+		// 		.then((mUebungID: number) => {
+		// 			// Uebung ist gespeichert.
+		// 			// UebungsID in Saetze eintragen.
+		// 			aUebung.ID = mUebungID;
+		// 			if (aUebung.SatzListe !== undefined) {
+		// 				aUebung.SatzListe.forEach((mSatz) => {
+		// 					mSatz.UebungID = mUebungID;
+		// 					mSatz.SessionID = aUebung.SessionID;
+		// 				});
+		// 				this.SaetzeSpeichern(aUebung.SatzListe);
+		// 			}
+		// 	});
+		// }).catch((e) =>
+		// 	console.log(e)
+		// );
 	}
 
 	public SessionSpeichern(aSession: Session): PromiseExtended<void> {
@@ -960,11 +979,13 @@ export class DexieSvcService extends Dexie {
 				// Session ist gespeichert
 				// SessionID in Uebungen eintragen
 				(mSessionID: number) => {
-					aSession.UebungsListe.forEach((mUebung) => {
-						aSession.ID = mSessionID;
+					// aSession.ID = mS
+					for (let index = 0; index < aSession.UebungsListe.length; index++) {
+						const mUebung = aSession.UebungsListe[index];
 						mUebung.SessionID = mSessionID;
+						mUebung.ListenIndex = index;
 						this.UebungSpeichern(mUebung);
-					});
+					};
 				}
 			);
 		});
@@ -1112,7 +1133,6 @@ export class DexieSvcService extends Dexie {
 							s.Kategorie02 !== SessionStatus.Fertig &&
 							s.Kategorie02 !== SessionStatus.FertigTimeOut);
 					};
-
 
 					mNeueSession = aSession.Copy(true);
 					mNeueSession.init();

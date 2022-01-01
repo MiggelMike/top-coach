@@ -1,27 +1,27 @@
-
 <div cdkDrag cdkDragRootElement=".cdk-overlay-pane">
-<img *ngIf="data.typ === 'Hinweis'" src="../../../assets/icons/iconfinder_preferences-desktop-notification_8802.png"
-    style="object-fit: cover; height: 50px; width: 50px;">
+    <img *ngIf="data.typ === 'Hinweis'" src="../../../assets/icons/iconfinder_preferences-desktop-notification_8802.png"
+        style="object-fit: cover; height: 50px; width: 50px;">
 
-<img *ngIf="data.typ === 'Frage'" src="../../../assets/icons/system_help.png"
-    style="object-fit: cover; height: 50px; width: 50px;">
-        
-<div mat-dialog-actions layout="row"
-    style="display: block; text-align: center; margin: auto; width: 100%; padding-top: 1em; padding-bottom: 1em;">
-    <div style="text-align: center; padding-top: 1em; padding-bottom: 1em;">
-        <div *ngFor="let txt of data.textZeilen ">
-            <h6>{{txt}}</h6>
+    <img *ngIf="data.typ === 'Frage'" src="../../../assets/icons/system_help.png"
+        style="object-fit: cover; height: 50px; width: 50px;">
+
+    <div mat-dialog-actions layout="row"
+        style="display: block; text-align: center; margin: auto; width: 100%; padding-top: 1em; padding-bottom: 1em;">
+        <div style="text-align: center; padding-top: 1em; padding-bottom: 1em;">
+            <div *ngFor="let txt of data.textZeilen ">
+                <h6>{{txt}}</h6>
+            </div>
         </div>
-    </div>
-    
-    <ng-container *ngIf="data.typ === 'Frage'">
-        <a class='link-button-font btn-link' mat-button (click)="onOkClick()">Yes</a>            
-        <a *ngIf="data.typ === 'Frage'"  class='link-button-font btn-link' mat-button (click)="onCancelClick()">No</a>            
-    </ng-container>
 
-    <ng-container *ngIf="data.typ !== 'Frage'">
-        <a class='link-button-font btn-link' mat-button (click)="onOkClick()">Ok</a>            
-    </ng-container>
-   
-</div>
+        <ng-container *ngIf="data.typ === 'Frage'">
+            <a class='link-button-font btn-link' mat-button (click)="onOkClick()">Yes</a>
+            <a *ngIf="data.typ === 'Frage'" class='link-button-font btn-link' mat-button
+                (click)="onCancelClick()">No</a>
+        </ng-container>
+
+        <ng-container *ngIf="data.typ !== 'Frage'">
+            <a class='link-button-font btn-link' mat-button (click)="onOkClick()">Ok</a>
+        </ng-container>
+
+    </div>
 </div>

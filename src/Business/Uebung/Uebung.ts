@@ -77,6 +77,7 @@ export interface IUebung {
     FailCount: number;
     ArbeitsSaetzeStatus: ArbeitsSaetzeStatus;
     Vorlage: boolean;
+    ListenIndex: number;
 
 }
 
@@ -108,6 +109,7 @@ export class Uebung implements IUebung {
     // Bei Session-Uebungen ist FkUebung der Schluessel zur Stamm-Uebung
     public FkUebung: number = 0;
     public FkHantel: number = 0;
+    public ListenIndex: number = 0;
     public EquipmentTyp: string = '';
     public Name: string = '';
     public Typ: UebungsTyp = UebungsTyp.Undefined;
@@ -146,6 +148,20 @@ export class Uebung implements IUebung {
         Object.defineProperty(this, 'Expanded', { enumerable: false });
         Object.defineProperty(this, 'StammUebung', { enumerable: false });
         Object.defineProperty(this, "SatzListe", { enumerable: false });
+    }
+
+    public static StaticUebungsListeSortByListenIndex(aUebungsListe: Array<Uebung>): Array<Uebung>{
+        return aUebungsListe.sort(
+            (u1,u2) => 
+            {
+                if (u1.ListenIndex > u2.ListenIndex)
+                    return 1;
+                
+                if (u1.ListenIndex < u2.ListenIndex)
+                    return -1;
+                
+                return 0;
+            });
     }
 
     get ArbeitsSaetzeStatus(): ArbeitsSaetzeStatus {
