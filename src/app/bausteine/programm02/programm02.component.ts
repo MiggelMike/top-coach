@@ -37,6 +37,8 @@ export class Programm02Component implements OnInit {
 	@ViewChildren("panSession") panUebung: QueryList<MatExpansionPanel>;
 
 	private isExpanded: Boolean = true;
+	private CmpSessionListe: Array<ISession> = [];
+	private DelSessionListe: Array<ISession> = [];
 	public ToggleButtonText: string;
 	public ClickData: Programm02Component;
 
@@ -87,7 +89,9 @@ export class Programm02Component implements OnInit {
 		});
 	}
 
-	ngOnInit() {}
+	ngOnInit() {
+		this.CmpSessionListe = this.SessionListe;
+	}
 
 	public CopySession(aSession: ISession) {
 		//     this.fGlobalService.SessionKopie = aSession.Copy();
@@ -97,11 +101,14 @@ export class Programm02Component implements OnInit {
 		this.DeleteSessionPrim(
 			aSession,
 			aRowNum,
-			() => (): void => {
+			() => {
+				this.DelSessionListe.push(aSession);
 				const index: number = this.SessionListe.indexOf(aSession);
-				if (index !== -1) {
+				if (index !== -1) 
 					this.SessionListe.splice(index, 1);
-				}
+				
+				for (let index = 0; index < this.SessionListe.length; index++) 
+					this.SessionListe[index].ListenIndex = index;
 		
 				if (this.fGlobalService.Comp03PanelUebungObserver != null) {
 					//this.panUebung.expanded = false;
@@ -176,6 +183,7 @@ export class Programm02Component implements OnInit {
 		mNewSession.Kategorie02 = SessionStatus.Wartet;
 		mNewSession.FK_VorlageProgramm = 0;
 		mNewSession.FK_Programm = this.fDbModule.AktuellesProgramm.id;
+		mNewSession.ListenIndex = this.SessionListe.length;
 		this.startSessionPrim(mNewSession);
 	}
 
@@ -223,6 +231,7 @@ export class Programm02Component implements OnInit {
 		mSession.DauerInSek = 0;
 		mSession.SessionNr = this.SessionListe.length + 1;
 		mSession.Kategorie01 = SessionStatus.Bearbeitbar;
+		mSession.ListenIndex = this.SessionListe.length;
 		//mSession.FK_Programm = this.programm.ID;
 		this.SessionListe.push(mSession);
 	}
@@ -267,6 +276,11 @@ export class Programm02Component implements OnInit {
 	}
 
 	public SaveChanges() {
+		//this.ClickData.programm.SessionListe;// = this.SessionListe;
+		this.DelSessionListe.forEach((s) => 
+			this.ClickData.fDbModule.DeleteSession(s as Session)
+		);
+			
 		this.ClickData.fDbModule.ProgrammSpeichern(this.ClickData.programm);
         if (this.ClickData.ProgrammSavedEvent !== undefined)
             this.ClickData.ProgrammSavedEvent.emit(this.ClickData.programm);
