@@ -21,10 +21,12 @@
                                             (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
                                     </div>
 
-                                    <!-- <div class="center-item" layout-align="center center" fxFlex="0 0 auto">
-                                        <a [ngClass]="['ref-button']" mat-flat-button
-                                            (click)="DeleteAusAnstehendeSessions($event,sess, i+1)">Skip</a>
-                                    </div> -->
+                                    <ng-container *ngIf="sess.IstAusVorgabe === false">
+                                        <div class="center-item" layout-align="center center" fxFlex="0 0 auto">
+                                            <a [ngClass]="['ref-button']" mat-flat-button (click)="DeleteSession($event,sess, i+1)">Delete</a>
+                                        </div>
+                                    </ng-container>
+                                 
                                 </ng-container>
                             </div>
                         </mat-expansion-panel-header>
@@ -44,8 +46,7 @@
                                 </div>
 
                                 <div class="center-item" layout-align="center center">
-                                    <a [ngClass]="'link-button-font'" mat-flat-button (click)="DeleteSession(sess,i)">Delete
-                                        Session</a>
+                                    <a [ngClass]="'link-button-font'" mat-flat-button (click)="DeleteSession($event, sess,i)">Delete Session</a>
                                 </div>
                             </div>
 

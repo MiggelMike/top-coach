@@ -957,26 +957,6 @@ export class DexieSvcService extends Dexie {
 				}
 				return mUebungID;
 			});
-			//  .catch((e) => console.log(e));
-
-
-		// return this.transaction("rw", this.UebungTable, this.SatzTable, () => {
-		// 	this.UebungTable.put(aUebung)
-		// 		.then((mUebungID: number) => {
-		// 			// Uebung ist gespeichert.
-		// 			// UebungsID in Saetze eintragen.
-		// 			aUebung.ID = mUebungID;
-		// 			if (aUebung.SatzListe !== undefined) {
-		// 				aUebung.SatzListe.forEach((mSatz) => {
-		// 					mSatz.UebungID = mUebungID;
-		// 					mSatz.SessionID = aUebung.SessionID;
-		// 				});
-		// 				this.SaetzeSpeichern(aUebung.SatzListe);
-		// 			}
-		// 	});
-		// }).catch((e) =>
-		// 	console.log(e)
-		// );
 	}
 
 	public SessionSpeichern(aSession: Session): PromiseExtended<void> {

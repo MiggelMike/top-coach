@@ -16,6 +16,7 @@ export interface ISession extends ISessionDB {
     init(): void;
     Copy(aKomplett?: boolean): ISession;
     ExtractUebungen(aUebungen: Array<Uebung>);
+    IstAusVorgabe: boolean;
 }
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
@@ -42,6 +43,11 @@ export class Session extends SessionDB implements ISession {
             }
         )
     }
+
+    public get IstAusVorgabe(): boolean {
+        return (this.FK_VorlageProgramm > 0);
+    }
+
 
     public isEqual(aOtherSession: Session): boolean {
         const mSession = this.Copy();

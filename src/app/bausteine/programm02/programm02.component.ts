@@ -11,7 +11,7 @@ import { MatAccordion, MatExpansionPanel } from "@angular/material/expansion";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
-import { of } from "rxjs";
+import { Observable, of } from "rxjs";
 import { Uebung, IUebung } from "src/Business/Uebung/Uebung";
 import { UebungService } from "src/app/services/uebung.service";
 import { Router } from "@angular/router";
@@ -41,6 +41,10 @@ export class Programm02Component implements OnInit {
 	private DelSessionListe: Array<ISession> = [];
 	public ToggleButtonText: string;
 	public ClickData: Programm02Component;
+	private SessionListObserver: Observable<Array<ISession>>;
+	
+	
+
 
 	public SessionPanelsExpanded1(): Boolean {
 		if (this.SessionPanelsExpanded === true) return true;
@@ -90,6 +94,7 @@ export class Programm02Component implements OnInit {
 	}
 
 	ngOnInit() {
+		this.SessionListObserver = of(this.SessionListe);
 		this.CmpSessionListe = this.SessionListe;
 	}
 
@@ -97,19 +102,26 @@ export class Programm02Component implements OnInit {
 		//     this.fGlobalService.SessionKopie = aSession.Copy();
 	}
 
-	public DeleteSession(aSession: ISession, aRowNum: number) {
+	public DeleteSession(aEvent: any, aSession: ISession, aRowNum: number) {
+		aEvent.stopPropagation();
 		this.DeleteSessionPrim(
 			aSession,
 			aRowNum,
 			() => {
-				this.DelSessionListe.push(aSession);
+				// this.DelSessionListe.push(aSession);
 				const index: number = this.SessionListe.indexOf(aSession);
 				if (index !== -1) 
 					this.SessionListe.splice(index, 1);
 				
 				for (let index = 0; index < this.SessionListe.length; index++) 
 					this.SessionListe[index].ListenIndex = index;
-		
+				
+				this.fDbModule.DeleteSession(aSession as Session);
+
+				this.SessionListObserver.subscribe(() => {
+					this.fDbModule.LadeAktuellesProgramm();//this.SortedSessionListe;
+				 })
+				
 				if (this.fGlobalService.Comp03PanelUebungObserver != null) {
 					//this.panUebung.expanded = false;
 					of(this.panUebung).subscribe(this.fGlobalService.Comp03PanelUebungObserver);
@@ -280,6 +292,8 @@ export class Programm02Component implements OnInit {
 		this.DelSessionListe.forEach((s) => 
 			this.ClickData.fDbModule.DeleteSession(s as Session)
 		);
+
+		this.DelSessionListe = [];
 			
 		this.ClickData.fDbModule.ProgrammSpeichern(this.ClickData.programm);
         if (this.ClickData.ProgrammSavedEvent !== undefined)
