@@ -50,15 +50,16 @@ export class InitialWeightComponent implements OnInit {
 	}
 
 	OkClick() {
-		this.fDexieService.SetAktuellesProgramm(this.Program, this.InitialWeightList).then(() => this.location.back());
+		this.fDexieService.SetAktuellesProgramm(this.Program, this.InitialWeightList).then(() => this.router.navigate(['']));
 	}
 
 	CancelClick() {
 		const mDialogData = new DialogData();
 		mDialogData.textZeilen.push("Go ahead without initial weights?");
 		mDialogData.OkFn = (): void => {
-			this.fDexieService.SetAktuellesProgramm(this.Program).then(() => this.location.back());
-		};
+			this.fDexieService.SetAktuellesProgramm(this.Program
+			).then(() => this.router.navigate([''])
+		)};
 		this.fDialogService.JaNein(mDialogData);
 	}
 }
