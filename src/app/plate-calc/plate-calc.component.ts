@@ -82,6 +82,10 @@ export class PlateCalcComponent implements OnInit {
     }
   }
 
+  onClickWeightVorgabe(aEvent: any) {
+    aEvent.target.select();
+  }
+
 
   public CalcPlates(aValue?: any) {
     this.PlateListObserver.subscribe(() => {

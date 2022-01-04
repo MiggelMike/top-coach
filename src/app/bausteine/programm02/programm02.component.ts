@@ -154,7 +154,7 @@ export class Programm02Component implements OnInit {
 	
 	private DeleteSessionPrim(aSession: ISession, aRowNum: number, aOnDelete: onDeleteFn ) {
 		const mDialogData = new DialogData();
-		mDialogData.textZeilen.push(`Delete session #${aRowNum + 1} "${aSession.Name}" ?`);
+		mDialogData.textZeilen.push(`Delete session #${aRowNum} "${aSession.Name}" ?`);
 		mDialogData.OkFn = () => aOnDelete();
 		this.fDialogService.JaNein(mDialogData);
 	}

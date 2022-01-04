@@ -95,6 +95,7 @@
                     <mat-label>{{satz.WdhVonVorgabe | number: '1.0'}} - {{satz.WdhBisVorgabe | number: '1.0'}}</mat-label>
                     <input matInput [textMask]="{mask: repMask, guide: false}" 
                            [ngModel]="satz.WdhAusgefuehrt" 
+                           (click)="onClickWdhAusgefuehrt($event)" 
                             (focusout)="SetWdhAusgefuehrt($event)" type="text">
                 </mat-form-field>
                 <!-- AMRAP  -->
@@ -131,6 +132,7 @@
                     <input  matInput [textMask]="{mask: repMask, guide: false}" 
                             [ngModel]="satz.WdhVonVorgabe" 
                             (focusout)="SetVonWdhVorgabe($event)" 
+                            (click)="onClickWdhVonVorgabe($event)" 
                             type="text"
                     >
                 </mat-form-field>
@@ -141,6 +143,7 @@
                     <input  matInput [textMask]="{mask: repMask, guide: false}" 
                             [ngModel]="satz.WdhBisVorgabe" 
                             (focusout)="SetBisWdhVorgabe($event)" 
+                            (click)="onClickWdhBisVorgab($event)" 
                             type="text"
                     >
                 </mat-form-field>

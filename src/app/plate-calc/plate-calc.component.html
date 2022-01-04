@@ -8,6 +8,7 @@
                 [ngModel]="(Satz.GewichtAusgefuehrt | number: '1.2')" 
                 (focusout)="SetWeightVorgabe($event)"
                 (ngModelChange)="CalcPlates($event)"
+                (click)="onClickWeightVorgabe($event)" 
                 type="text">
             </mat-form-field>
 

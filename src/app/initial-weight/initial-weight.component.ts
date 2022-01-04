@@ -49,6 +49,10 @@ export class InitialWeightComponent implements OnInit {
 		aWeightItem.Weight = aEvent.target.value;
 	}
 
+	onInitialWeightClick(aEvent: any) {
+		aEvent.target.select();
+	}
+
 	OkClick() {
 		this.fDexieService.SetAktuellesProgramm(this.Program, this.InitialWeightList).then(() => this.router.navigate(['']));
 	}

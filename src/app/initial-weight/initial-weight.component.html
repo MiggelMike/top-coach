@@ -11,7 +11,7 @@
         <div class="center-item" fxLayout="column" fxFlex="25%">
             <mat-form-field class="align-left">
                 <mat-label>Initial weight</mat-label>
-                <input matInput [textMask]="{mask: floatMask, guide: false }" (focusout)="SetWeight(iw,$event)"
+                <input matInput [textMask]="{mask: floatMask, guide: false }" (focusout)="SetWeight(iw,$event)" (click)="onInitialWeightClick($event)" 
                     [ngModel]="iw.Weight" type="text">
             </mat-form-field>
         </div>

@@ -91,7 +91,11 @@ export class SatzEditComponent implements OnInit {
         this.satz.WdhBisVorgabe = aEvent.target.value;
         if (this.satz.WdhVonVorgabe > this.satz.WdhBisVorgabe)
             this.satz.WdhVonVorgabe = this.satz.WdhBisVorgabe;
-    } 
+    }
+    
+    onClickWdhBisVorgab(aEvent:any) {
+        aEvent.target.Select();
+    }
 
     public SetWeightAusgefuehrt(aEvent: any) {
         this.satz.GewichtAusgefuehrt = aEvent.target.value;
@@ -107,6 +111,7 @@ export class SatzEditComponent implements OnInit {
 
     public WeightAusgefuehrtClick(aEvent: any) {
         aEvent.stopPropagation();
+        aEvent.target.select();
 
         this.plateCalcOverlayConfig =
             {
@@ -120,9 +125,17 @@ export class SatzEditComponent implements OnInit {
         this.plateCalcComponent = this.fPlateCalcSvcService.open(this.plateCalcOverlayConfig);
     }
 
+    onClickWdhVonVorgabe(aEvent: any) {
+        aEvent.target.Select();
+    }    
+
     public SetWdhAusgefuehrt(aEvent: any) {
         this.satz.WdhAusgefuehrt = aEvent.target.value;
-    }    
+    }
+    
+    onClickWdhAusgefuehrt(aEvent: any) {
+        aEvent.target.select();
+    }
 
     public CopySet() {
         this.fGlobalService.SatzKopie = this.satz.Copy();
