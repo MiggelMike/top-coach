@@ -130,17 +130,23 @@ export class SatzEditComponent implements OnInit {
         this.plateCalcComponent = this.fPlateCalcSvcService.open(this.plateCalcOverlayConfig);
     }
 
-    onClickSatzFertig(aEvent: any) {
-        this.StoppUhrOverlayConfig =
-        {
-            satz: this.satz,
-            // uebung: this.sessUebung,
-            // left: (aEvent as PointerEvent).pageX - (aEvent as PointerEvent).offsetX,
-            // top: (aEvent as PointerEvent).clientY - (aEvent as PointerEvent).offsetY,
-        } as PlateCalcOverlayConfig;
+    onClickSatzFertig(aChecked: boolean) {
+        if(this.fStoppUhrService.StoppuhrComponent)
+            this.fStoppUhrService.StoppuhrComponent.close();
+    
+        if (aChecked) {
+            this.StoppUhrOverlayConfig =
+                {
+                    satz: this.satz,
+                    uebung: this.sessUebung
+                    // uebung: this.sessUebung,
+                    // left: (aEvent as PointerEvent).pageX - (aEvent as PointerEvent).offsetX,
+                    // top: (aEvent as PointerEvent).clientY - (aEvent as PointerEvent).offsetY,
+                } as PlateCalcOverlayConfig;
     
         
-        this.StoppuhrComponent = this.fStoppUhrService.open(this.StoppUhrOverlayConfig);
+            this.StoppuhrComponent = this.fStoppUhrService.open(this.StoppUhrOverlayConfig);
+        }
     }    
 
     onClickWdhVonVorgabe(aEvent: any) {

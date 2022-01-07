@@ -1,4 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
+import { Satz } from 'src/Business/Satz/Satz';
+import { Uebung } from 'src/Business/Uebung/Uebung';
 import { DexieSvcService } from '../services/dexie-svc.service';
 import { cStoppUhrOverlayData, StoppUhrOverlayConfig, StoppUhrOverlayRef } from '../services/stoppuhr-svc.service';
 
@@ -9,9 +11,15 @@ import { cStoppUhrOverlayData, StoppUhrOverlayConfig, StoppUhrOverlayRef } from 
 })
 export class StoppuhrComponent implements OnInit {
   public fConfig: StoppUhrOverlayConfig;
+  public Satz: Satz;
+  public Uebung: Uebung;
 
 
-  constructor(public overlayRef:  StoppUhrOverlayRef, public fDbModule: DexieSvcService, @Inject(cStoppUhrOverlayData) public aPlateCalcOverlayConfig: StoppUhrOverlayConfig) { }
+  constructor(public overlayRef: StoppUhrOverlayRef, public fDbModule: DexieSvcService, @Inject(cStoppUhrOverlayData) public aPlateCalcOverlayConfig: StoppUhrOverlayConfig) {
+    this.Satz = aPlateCalcOverlayConfig.satz;
+    this.Uebung = aPlateCalcOverlayConfig.uebung;
+
+   }
 
   ngOnInit(): void {
   }
