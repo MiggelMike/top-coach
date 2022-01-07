@@ -1,5 +1,4 @@
 import { Uebung } from './../../Business/Uebung/Uebung';
-import { Hantel } from "./../../Business/Hantel/Hantel";
 import { PlateCalcComponent } from "./../plate-calc/plate-calc.component";
 import { BaseOverlayRef } from "src/app/services/global.service";
 import { Injectable, InjectionToken, ComponentRef, Injector } from "@angular/core";
@@ -69,8 +68,7 @@ export class PlateCalcSvcService {
 	open(aConfig: PlateCalcOverlayConfig = {}): PlateCalcComponent {
 		const dialogConfig = { ...DEFAULT_CONFIG, ...aConfig };
 
-		// Returns an OverlayRef which is a PortalHost
-		this.PlateCalcOverlayRef = this.createOverlay(dialogConfig);
+	    this.PlateCalcOverlayRef = this.createOverlay(dialogConfig);
 		const dialogRef = new PlateCalcOverlayRef(this.PlateCalcOverlayRef);
 		this.PlateCalcOverlayRef.backdropClick().subscribe((_) => this.close());
 		this.PlateCalcComponent = this.attachDialogContainer(this.PlateCalcOverlayRef, dialogConfig, dialogRef);
@@ -86,7 +84,6 @@ export class PlateCalcSvcService {
 		const positionStrategy = this.overlay
 			.position()
 			.global()
-			// .top(aConfig.top.toString() + "px")
 			.centerVertically()
 			.centerHorizontally();
 

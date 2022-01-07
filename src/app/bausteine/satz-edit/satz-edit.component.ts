@@ -11,6 +11,8 @@ import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
 import { floatMask, repMask } from './../../app.module';
 import { PlateCalcComponent } from 'src/app/plate-calc/plate-calc.component';
+import { StoppuhrComponent } from 'src/app/stoppuhr/stoppuhr.component';
+import { StoppUhrOverlayConfig, StoppuhrSvcService } from 'src/app/services/stoppuhr-svc.service';
 
 @Component({
     selector: "app-satz-edit",
@@ -28,10 +30,13 @@ export class SatzEditComponent implements OnInit {
     public repMask = repMask;
     public plateCalcComponent: PlateCalcComponent;
     private plateCalcOverlayConfig: PlateCalcOverlayConfig;
+    private StoppUhrOverlayConfig: StoppUhrOverlayConfig;
+    public StoppuhrComponent: StoppuhrComponent;
     private Progress: Progress;
 
     constructor(
         private fDialogService: DialogeService,
+        private fStoppUhrService: StoppuhrSvcService,
         private fGlobalService: GlobalService,
         private fPlateCalcSvcService: PlateCalcSvcService,
         private fDbModule: DexieSvcService
@@ -124,6 +129,19 @@ export class SatzEditComponent implements OnInit {
             
         this.plateCalcComponent = this.fPlateCalcSvcService.open(this.plateCalcOverlayConfig);
     }
+
+    onClickSatzFertig(aEvent: any) {
+        this.StoppUhrOverlayConfig =
+        {
+            satz: this.satz,
+            // uebung: this.sessUebung,
+            // left: (aEvent as PointerEvent).pageX - (aEvent as PointerEvent).offsetX,
+            // top: (aEvent as PointerEvent).clientY - (aEvent as PointerEvent).offsetY,
+        } as PlateCalcOverlayConfig;
+    
+        
+        this.StoppuhrComponent = this.fStoppUhrService.open(this.StoppUhrOverlayConfig);
+    }    
 
     onClickWdhVonVorgabe(aEvent: any) {
         aEvent.target.Select();

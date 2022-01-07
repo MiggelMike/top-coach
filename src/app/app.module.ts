@@ -97,6 +97,7 @@ import { ExerciseSettingsComponent } from './exercise-settings/exercise-settings
 import { EditTrainingsGewichtProgressComponent } from './edit-trainings-gewicht-progress/edit-trainings-gewicht-progress.component';
 import { InitialWeightComponent } from './initial-weight/initial-weight.component';
 import { PlateCalcComponent } from './plate-calc/plate-calc.component';
+import { StoppuhrComponent } from './stoppuhr/stoppuhr.component';
 //import { MatBadgeModule } from '@angular/material/m/MatBadgeModule';
 
 // import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
@@ -194,7 +195,8 @@ export const floatMask = createNumberMask({
         ExerciseSettingsComponent,
         EditTrainingsGewichtProgressComponent,
         InitialWeightComponent,
-        PlateCalcComponent
+        PlateCalcComponent,
+        StoppuhrComponent
     ],
     imports: [
         RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
