@@ -40,8 +40,12 @@ export class ExerciseSettingsComponent {
 		this.SessUeb.AufwaermArbeitsSatzPause = aEvent.target.value;
 	}
 
-	SetArbeitsSatzPause(aEvent) {
-		this.SessUeb.AufwaermArbeitsSatzPause = aEvent.target.value;
+	SetArbeitsSatzPause1(aEvent) {
+		this.SessUeb.ArbeitsSatzPause1 = aEvent.target.value;
+	}
+
+	SetArbeitsSatzPause2(aEvent) {
+		this.SessUeb.ArbeitsSatzPause2 = aEvent.target.value;
 	}
 
 	SetNextExercisePause(aEvent) {
