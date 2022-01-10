@@ -210,7 +210,7 @@ div.herz:after {
 .mg-left-5 {
 	margin-left: 5px;
 }
-.mg-topt-5 {
+.mg-top-5 {
 	margin-top: 5px;
 }
 
@@ -246,19 +246,6 @@ textarea:focus {
 	background-color: transparent;
 }
 
-.mat-card.scrollable-content {
-	overflow: hidden;
-	display: flex;
-	flex-direction: column;
-  
-	> .mat-card-title-group {
-	  display: block;
-	}
-  
-	> .mat-card-content {
-	  overflow-y: auto;
-	}
-  }
 
   .excercise-overlay {
 	overflow-y: auto;
