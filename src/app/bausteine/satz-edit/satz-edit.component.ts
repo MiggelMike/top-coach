@@ -140,10 +140,15 @@ export class SatzEditComponent implements OnInit {
         }
     
         if (aChecked) {
-            this.StoppUhrOverlayConfig =
+            this.StoppUhrOverlayConfig = 
                 {
-                    satz: this.satz,
-                    uebung: this.sessUebung
+                    
+                    satz: this.satz as Satz,
+                uebung: this.sessUebung,
+                satznr: this.rowNum + 1
+
+                
+                    
                     // uebung: this.sessUebung,
                     // left: (aEvent as PointerEvent).pageX - (aEvent as PointerEvent).offsetX,
                     // top: (aEvent as PointerEvent).clientY - (aEvent as PointerEvent).offsetY,

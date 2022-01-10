@@ -1,6 +1,6 @@
 <mat-card class="tc-font-size-smaller overlay-width">
-    <div class="align-left" fxLayout="column">
-        <h5>{{Uebung.Name}}</h5>
+    <div class="align-left" fxLayout="column" fxLayoutGap="10px">
+        <h5>{{Uebung.Name}} set #{{SatzListenNr}}</h5>
         <!-- <div fxLayout="row" fxFlex="100%">
             <mat-form-field class="align-right" fxFlex="60%">
                 <mat-label>Weight</mat-label>
@@ -67,15 +67,15 @@
         </ng-template> -->
 
         <div fxLayout="row" fxFlex="100%">
-            <mat-label>Scheduled pause time #1: {{Uebung.PauseTime1}}</mat-label> 
+           <mat-label>Scheduled pause seconds if set was easy: {{(ScheduledPauseTimeEasy)}}</mat-label> 
         </div>            
 
         <div fxLayout="row" fxFlex="100%">
-            <mat-label>Scheduled pause time #2: {{Uebung.PauseTime2}}</mat-label> 
+            <mat-label>Scheduled pause seconds if set was hard: {{ScheduledPauseTimeHard}}</mat-label> 
         </div>            
 
         <div fxLayout="row" fxFlex="100%">
-            <h5> Pause time: {{PauseTime}}</h5> 
+            <h5> Pause time: {{getPauseTime("Training")}}</h5> 
         </div>            
 
 
