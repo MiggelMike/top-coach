@@ -109,7 +109,7 @@
                 <!-- Satz Fertig-Flag -->
                 <div class="center-item" layout-align="center center" fxFlex="25px">
                     <mat-checkbox [(ngModel)]="SatzFertig"
-                    (change)="onClickSatzFertig($event.checked)"
+                    (change)="onClickSatzFertig(satz, $event.checked)"
                     ></mat-checkbox>
                 </div>
             </ng-template>

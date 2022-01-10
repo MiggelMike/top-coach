@@ -23,7 +23,7 @@ export const cExerciseOverlayData = new InjectionToken<IUebung>("Exercise_Settin
 const DEFAULT_CONFIG: ExerciseOverlayConfig = {
   hasBackdrop: true,
   height: 100,
-  width: 100,
+  width: 250,
 	backdropClass: "dark-backdrop",
 	uebung: null,
 	// panelClass: 'tm-file-preview-dialog-panel',
@@ -49,7 +49,9 @@ export class ExerciseSettingSvcService {
   constructor(
     private overlay: Overlay,
     private injector: Injector
-  ) { }
+  ) {
+	  
+   }
   
 
 	private createInjector(aConfig: ExerciseOverlayConfig, aExerciseRef: ExerciseOverlayRef): PortalInjector {
@@ -94,9 +96,10 @@ export class ExerciseSettingSvcService {
 	}
 
 	private getOverlayConfig(aConfig: ExerciseOverlayConfig): OverlayConfig {
-    const positionStrategy = this.overlay.position().global()
-      .top(aConfig.top.toString()+"px")
-      .centerHorizontally();
+		const positionStrategy = this.overlay.position().global()
+			.top(aConfig.top.toString() + "px")
+			.centerHorizontally();
+		
 
 		const overlayConfig = new OverlayConfig({
 			hasBackdrop: aConfig.hasBackdrop,

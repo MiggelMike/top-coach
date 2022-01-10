@@ -245,3 +245,22 @@ textarea:focus {
 	color: #a9bcf5;
 	background-color: transparent;
 }
+
+.mat-card.scrollable-content {
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+  
+	> .mat-card-title-group {
+	  display: block;
+	}
+  
+	> .mat-card-content {
+	  overflow-y: auto;
+	}
+  }
+
+  .excercise-overlay {
+	overflow-y: auto;
+	padding: 5px;
+  }

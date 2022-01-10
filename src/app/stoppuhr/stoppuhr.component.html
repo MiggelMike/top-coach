@@ -66,6 +66,19 @@
             </container>
         </ng-template> -->
 
+        <div fxLayout="row" fxFlex="100%">
+            <mat-label>Scheduled pause time #1: {{Uebung.PauseTime1}}</mat-label> 
+        </div>            
+
+        <div fxLayout="row" fxFlex="100%">
+            <mat-label>Scheduled pause time #2: {{Uebung.PauseTime2}}</mat-label> 
+        </div>            
+
+        <div fxLayout="row" fxFlex="100%">
+            <h5> Pause time: {{PauseTime}}</h5> 
+        </div>            
+
+
         <div fxLayout="row" fxLayoutAlign="center center">
             <a mat-button (click)="close()"><span class="tc-font-size-small">close</span></a>
         </div>

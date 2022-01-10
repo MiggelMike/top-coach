@@ -130,9 +130,14 @@ export class SatzEditComponent implements OnInit {
         this.plateCalcComponent = this.fPlateCalcSvcService.open(this.plateCalcOverlayConfig);
     }
 
-    onClickSatzFertig(aChecked: boolean) {
+    onClickSatzFertig(aSatz: ISatz, aChecked: boolean) {
         if(this.fStoppUhrService.StoppuhrComponent)
             this.fStoppUhrService.StoppuhrComponent.close();
+        
+        let mHeader: string = '';
+        if (aChecked) {
+            mHeader = '';
+        }
     
         if (aChecked) {
             this.StoppUhrOverlayConfig =

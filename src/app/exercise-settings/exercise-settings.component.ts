@@ -20,6 +20,13 @@ export class ExerciseSettingsComponent {
 	public ProgressListe: Array<Progress> = [];
 	public HantelListe: Array<Hantel> = [];
 
+	public datemask = {
+		guide: true,
+		showMask : true,
+		mask: [/\d/, /\d/, '/', /\d/, /\d/, '/',/\d/, /\d/,/\d/, /\d/]
+	};
+
+
 	constructor(
 		public overlayRef: ExerciseOverlayRef,
 		public fDbModule: DexieSvcService,
@@ -28,6 +35,19 @@ export class ExerciseSettingsComponent {
 	) {
 		this.fDbModule.LadeProgress((p) => (this.ProgressListe = p));
 	}
+
+	SetAufwaermArbeitsSatzPause(aEvent) {
+		this.SessUeb.AufwaermArbeitsSatzPause = aEvent.target.value;
+	}
+
+	SetArbeitsSatzPause(aEvent) {
+		this.SessUeb.AufwaermArbeitsSatzPause = aEvent.target.value;
+	}
+
+	SetNextExercisePause(aEvent) {
+		this.SessUeb.NaechsteUebungPause = aEvent.target.value;
+	}
+
 
 	onOkClick(): void {
 		// this.dialogRef.close();
@@ -38,6 +58,18 @@ export class ExerciseSettingsComponent {
 	onCancelClick(): void {
 		// this.dialogRef.close();
 	}
+
+	get PauseTime1(): string{
+		return '00:00:00';//this.SessUeb.PauseTime1;
+	}
+
+	get PauseTime2(): string{
+		return '00:00:00';//this.SessUeb.PauseTime2;
+	}
+	
+	get PauseTime(): string{
+		return '00:00:00';//this.SessUeb.PauseTime2;
+	}		
 
 	close() {
 		if (this.overlayRef != null) this.overlayRef.close();

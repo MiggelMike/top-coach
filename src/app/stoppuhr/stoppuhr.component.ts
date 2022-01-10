@@ -15,9 +15,9 @@ export class StoppuhrComponent implements OnInit {
   public Uebung: Uebung;
 
 
-  constructor(public overlayRef: StoppUhrOverlayRef, public fDbModule: DexieSvcService, @Inject(cStoppUhrOverlayData) public aPlateCalcOverlayConfig: StoppUhrOverlayConfig) {
-    this.Satz = aPlateCalcOverlayConfig.satz;
-    this.Uebung = aPlateCalcOverlayConfig.uebung;
+  constructor(public overlayRef: StoppUhrOverlayRef, public fDbModule: DexieSvcService, @Inject(cStoppUhrOverlayData) public aStoppUhrOverlayConfig: StoppUhrOverlayConfig) {
+    this.Satz = aStoppUhrOverlayConfig.satz;
+    this.Uebung = aStoppUhrOverlayConfig.uebung;
 
    }
 
@@ -27,6 +27,12 @@ export class StoppuhrComponent implements OnInit {
   close() {
 		if (this.overlayRef != null) this.overlayRef.close();
 		this.overlayRef = null;
-	}
+  }
+  
+
+  get PauseTime():string{
+    return '00:00:00';
+  }
+
 
 }

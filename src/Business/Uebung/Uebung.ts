@@ -1,3 +1,4 @@
+import { Zeitraum } from './../Dauer';
 import { Equipment } from './../Equipment/Equipment';
 import { MuscleGroupKategorie02 } from '../MuscleGroup/MuscleGroup';
 import { VorgabeWeightLimit } from '../Progress/Progress';
@@ -78,6 +79,13 @@ export interface IUebung {
     ArbeitsSaetzeStatus: ArbeitsSaetzeStatus;
     Vorlage: boolean;
     ListenIndex: number;
+    AufwaermArbeitsSatzPause: number;
+    NaechsteUebungPause: number;
+    ArbeitsSatzPause1: number;
+    ArbeitsSatzPause2: number;
+    PauseTime1(aSatz:Satz): string;
+    PauseTime2(aSatz: Satz): string;
+    getPauseText(aSatzTyp: string): string;
 
 }
 
@@ -137,6 +145,11 @@ export class Uebung implements IUebung {
     public StammUebung: Uebung = null;
     public GewichtSteigerung: number = 0;
     public GewichtReduzierung: number = 0;
+    public ArbeitsSatzPause1: number = 0;
+    public ArbeitsSatzPause2: number = 0;
+    public AufwaermArbeitsSatzPause: number = 0;
+    public NaechsteUebungPause: number = 0;
+
     public Vorlage: boolean = false;
     public FkProgress: number = 0;
 
@@ -164,6 +177,14 @@ export class Uebung implements IUebung {
             });
     }
 
+    public PauseTime1(aSatz:Satz): string{
+        return '00:00:00';
+    }
+
+    public PauseTime2(aSatz:Satz): string{
+        return '00:00:00';
+    }    
+
     get ArbeitsSaetzeStatus(): ArbeitsSaetzeStatus {
         if (this.ArbeitsSatzListe.length <= 0) return ArbeitsSaetzeStatus.KeinerVorhanden;
         let mAnzFertig: number = 0;
@@ -175,6 +196,16 @@ export class Uebung implements IUebung {
         if (mAnzFertig >= this.ArbeitsSatzListe.length) return ArbeitsSaetzeStatus.AlleFertig;
 
         return ArbeitsSaetzeStatus.NichtAlleFertig;
+    }
+
+    public getPauseText(aSatzTyp: string): string {
+        return Zeitraum.FormatDauer(0);
+        // return '00:00:00';
+    }
+
+    public setPauseText(aSatzTyp: SatzTyp, aValue: string) {
+        
+        // return '00:00:00';
     }
 
 

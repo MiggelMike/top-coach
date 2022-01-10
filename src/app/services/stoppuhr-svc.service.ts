@@ -1,10 +1,10 @@
 import { Injectable, ComponentRef, Injector, InjectionToken } from "@angular/core";
 import { Overlay, OverlayConfig, OverlayRef } from "@angular/cdk/overlay";
 import { ComponentPortal, PortalInjector } from "@angular/cdk/portal";
-import { BaseOverlayRef } from "./global.service";
 import { Satz } from "src/Business/Satz/Satz";
 import { Uebung } from "src/Business/Uebung/Uebung";
 import { StoppuhrComponent } from "../stoppuhr/stoppuhr.component";
+import { BaseOverlayRef } from "./global.service";
 
 export class StoppUhrOverlayRef extends BaseOverlayRef {}
 
@@ -17,7 +17,8 @@ export interface StoppUhrOverlayConfig {
 	satz?: Satz;
 	uebung?: Uebung;
 	left?: number;
-	top?: number;
+  top?: number;
+  headerText?: string
 }
 
 export const cStoppUhrOverlayData = new InjectionToken<Satz>("StoppUhr_Overlay_Component");
