@@ -22,7 +22,7 @@ export const cExerciseOverlayData = new InjectionToken<IUebung>("Exercise_Settin
 
 const DEFAULT_CONFIG: ExerciseOverlayConfig = {
   hasBackdrop: true,
-  height: 100,
+  height: 400,
   width: 250,
 	backdropClass: "dark-backdrop",
 	uebung: null,

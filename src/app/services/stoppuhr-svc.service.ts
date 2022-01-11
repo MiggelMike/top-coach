@@ -26,9 +26,9 @@ export const cStoppUhrOverlayData = new InjectionToken<Satz>("StoppUhr_Overlay_C
 
 const DEFAULT_CONFIG: StoppUhrOverlayConfig = {
 	hasBackdrop: false,
-	height: 100,
+	height: 200,
 	width: 100,
-	backdropClass: "dark-backdrop",
+	// backdropClass: "dark-backdrop",
 	satz: null,
 	satznr: 0
 };

@@ -1,4 +1,4 @@
-<mat-card class="tc-font-size-smaller overlay-width">
+<mat-card class="tc-font-size-smaller">
     <div class="align-left" fxLayout="column">
         <div fxLayout="row wrap" fxFlex="100%">
             <h4>{{SessUeb.Name}}</h4>
@@ -6,7 +6,7 @@
         
         <mat-tab-group>
             <mat-tab  label="Visibilities">
-                <div class="align-left mg-top-5" fxLayout="column" fxLayoutGap="5px">
+                <div class="align-left mg-top-5" fxLayout="column" fxLayoutGap="5px" style="overflow-y: hidden;">
                     <div fxLayout="row wrap" fxFlex="100%">
                         <div layout-align="start" layout-margin>
                             <mat-checkbox [(ngModel)]="SessUeb.WarmUpVisible" (click)="$event.stopPropagation()">Show Warmup
