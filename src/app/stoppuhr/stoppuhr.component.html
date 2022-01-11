@@ -3,15 +3,15 @@
         <h5>{{Uebung.Name}} set #{{SatzListenNr}}</h5>
 
         <div fxLayout="row" fxFlex="100%">
-           <mat-label>Scheduled pause seconds if set was easy: {{(ScheduledPauseTimeEasy)}}</mat-label> 
+           <mat-label>Scheduled pause seconds if set was easy:  {{ScheduledPauseSecondsEasy}} ({{ScheduledPauseTimeEasy}})</mat-label> 
         </div>            
 
         <div fxLayout="row" fxFlex="100%">
-            <mat-label>Scheduled pause seconds if set was hard: {{ScheduledPauseTimeHard}}</mat-label> 
+            <mat-label>Scheduled pause seconds if set was hard: {{ScheduledPauseSecondsHard}} ({{ScheduledPauseTimeHard}})</mat-label> 
         </div>            
 
         <div fxLayout="row" fxFlex="100%">
-            <h5> Pause time: {{getPauseTime("Training")}}</h5> 
+            <h5> Pause time: {{PauseTime}}</h5> 
         </div>            
 
 

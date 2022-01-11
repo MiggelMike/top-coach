@@ -16,12 +16,16 @@ export class StoppuhrComponent implements OnInit {
   public Satz: Satz;
   public Uebung: Uebung;
   public SatzListenNr: number;
+  public StartZeitpunkt: Date;
 
 
   constructor(public overlayRef: StoppUhrOverlayRef, public fDbModule: DexieSvcService, @Inject(cStoppUhrOverlayData) public aStoppUhrOverlayConfig: StoppUhrOverlayConfig) {
     this.Satz = aStoppUhrOverlayConfig.satz;
     this.Uebung = aStoppUhrOverlayConfig.uebung;
     this.SatzListenNr = aStoppUhrOverlayConfig.satznr;
+    this.StartZeitpunkt = new Date();
+    // this.Dauer = new Zeitraum(new Date(), )
+    //Zeitraum.CalcDauer()
 
    }
 
@@ -29,26 +33,30 @@ export class StoppuhrComponent implements OnInit {
   }
 
   close() {
-		if (this.overlayRef != null) this.overlayRef.close();
+    if (this.overlayRef != null) this.overlayRef.close();
 		this.overlayRef = null;
   }
-
-  get ScheduledPauseTimeEasy(): string{
-    return this.Uebung.ArbeitsSatzPause1.toString();
-  }
-
-  get ScheduledPauseTimeHard(): string{
-    return this.Uebung.ArbeitsSatzPause2.toString();
-  }
-
   
+  get ScheduledPauseTimeEasy(): string{
+    return Zeitraum.FormatDauer(this.Uebung.ArbeitsSatzPause1);
+  }
 
-  getPauseTime(aSatzTyp: string): string{
-    if (this.Uebung) {
-      if (aSatzTyp === SatzTyp.Training)
-        return '10:00:00';    
-    }
-    return '00:00:00';
+  get ScheduledPauseSecondsEasy(): number{
+    return this.Uebung.ArbeitsSatzPause1;
+ }
+  
+  get ScheduledPauseTimeHard(): string{
+    return Zeitraum.FormatDauer(this.Uebung.ArbeitsSatzPause2);
+  }
+
+  get ScheduledPauseSecondsHard(): number{
+     return this.Uebung.ArbeitsSatzPause2;
+  }
+  
+  
+  
+  get PauseTime(): string{
+    return Zeitraum.FormatDauer(Zeitraum.CalcDauer(this.StartZeitpunkt,new Date()));
   }
 
 
