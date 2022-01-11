@@ -114,9 +114,7 @@ export class Satz implements ISatz {
     }
 
     get fGewichtVorgabe(): string {
-        if (this.GewichtVorgabe === 0)
-            return "0.00";
-        return this.GewichtVorgabe.toPrecision(2);
+        return this.GewichtVorgabe.toFixed(2);
     }
 
     public getBodyWeightText(aPrefix?: string): string {

@@ -6,6 +6,11 @@ import { Satz, SatzStatus } from '../Satz/Satz';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual')
 
+export class NextProgress {
+	Uebung: Uebung;
+	Satz: Satz
+}
+
 export enum ProgressTyp {
 	BlockSet,
 	RepRangeSet,
@@ -287,8 +292,11 @@ export class Progress implements IProgress {
 		});
 	}
 
-	public static StaticDoSaetzeProgress(aWeightProgress: WeightProgress, aSatz: Satz, aUebung: Uebung, aSess: Session): void {
-		 // Aus der Satzliste der aktuellen Übung die Sätze mit dem Status "Wartet" in mSatzliste sammeln
+	public StaticDoSaetzeProgress(aWeightProgress: WeightProgress, aSatz: Satz, aUebung: Uebung, aSess: Session): NextProgress {
+		const mResult: NextProgress = new NextProgress();
+		aUebung.nummeriereSatzListe(aUebung.ArbeitsSatzListe);
+		// Aus der Satzliste der aktuellen Übung die Sätze mit dem Status "Wartet" in mSatzliste sammeln.
+		// Die Sätze müssen nach "aSatz" in der Liste sein.
 		const mSatzListe: Array<Satz> = aUebung.ArbeitsSatzListe.filter((sz) => (sz.SatzListIndex > aSatz.SatzListIndex && sz.Status === SatzStatus.Wartet));
 		let mDiff: number = 0;
 
@@ -298,7 +306,7 @@ export class Progress implements IProgress {
 				break;
 				
 			case WeightProgress.Decrease:
-				mDiff = -aUebung.GewichtReduzierung;
+				mDiff = aUebung.GewichtReduzierung;
 				break;
 		}
 		
@@ -309,12 +317,32 @@ export class Progress implements IProgress {
 		});
 
 		let mNextUndoneSet: Satz = mSatzListe.shift();
-		if (mNextUndoneSet === undefined) {
-			const mFirstWaitingExercise: Uebung = aSess.getFirstWaitingExercise(aUebung.ListenIndex + 1);
+		let mFirstSetChecked: boolean = false;
+		let mCheckAgain: boolean = false;
+
+		if (mNextUndoneSet !== undefined) {
+			let mWaitingExercise: Uebung;
+			do {
+				mCheckAgain = false;
+				if ((this.ProgressSet === ProgressSet.First) && (mFirstSetChecked === false)) {
+					mWaitingExercise = aUebung;
+					mFirstSetChecked = true;
+				} else mWaitingExercise = aSess.getFirstWaitingExercise(aUebung.ListenIndex + 1);
 			
-			if (mFirstWaitingExercise) {
-				mFirstWaitingExercise.getFirstWaitingWorkSet;
-			}
+				if (mWaitingExercise) {
+					mResult.Uebung = mWaitingExercise;
+					if (mWaitingExercise.getFirstWaitingWorkSet) {
+						mResult.Satz = mWaitingExercise.getFirstWaitingWorkSet;
+						return mResult;
+					} else {
+						if (mFirstSetChecked === true) {
+							mCheckAgain = true;
+						}
+					}
+				}
+			} while (mCheckAgain)
 		}
+		return undefined;
 	}
+
 }

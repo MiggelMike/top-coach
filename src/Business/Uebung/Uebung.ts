@@ -87,6 +87,7 @@ export interface IUebung {
     PauseTime2(aSatz: Satz): string;
     getPauseText(aSatzTyp: string): string;
     getFirstWaitingWorkSet: Satz;
+    nummeriereSatzListe(aSatzListe: Array<Satz>);
 
 }
 
@@ -171,6 +172,12 @@ export class Uebung implements IUebung {
                 return mPtrSatz;
         }
         return undefined
+    }
+
+    public nummeriereSatzListe(aSatzListe: Array<Satz>): void{
+        for (let index = 0; index < aSatzListe.length; index++) {
+            aSatzListe[index].SatzListIndex = index;
+        }
     }
 
     public static StaticUebungsListeSortByListenIndex(aUebungsListe: Array<Uebung>): Array<Uebung>{

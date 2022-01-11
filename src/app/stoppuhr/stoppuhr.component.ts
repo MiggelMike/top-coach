@@ -20,12 +20,14 @@ export class StoppuhrComponent implements OnInit {
 	private Gong = new Audio();
 	private SoundEasyPlayed: boolean = false;
 	private SoundHardPlayed: boolean = false;
+	public NextSetText: string;
 
 	constructor(public overlayRef: StoppUhrOverlayRef, public fDbModule: DexieSvcService, @Inject(cStoppUhrOverlayData) public aStoppUhrOverlayConfig: StoppUhrOverlayConfig) {
 		this.Satz = aStoppUhrOverlayConfig.satz;
 		this.Uebung = aStoppUhrOverlayConfig.uebung;
 		this.SatzListenNr = aStoppUhrOverlayConfig.satznr;
 		this.StartZeitpunkt = new Date();
+		this.NextSetText = aStoppUhrOverlayConfig.headerText;
 		// ../../../assets/audio/alarm.wav
 		this.Gong.src = "../../assets/sounds/Gong.mp3";
 		this.Gong.load();
@@ -53,6 +55,8 @@ export class StoppuhrComponent implements OnInit {
 	get ScheduledPauseSecondsHard(): number {
 		return this.Uebung.ArbeitsSatzPause2;
 	}
+
+
 
 	get PauseTime(): string {
 		const mDauerSec: number = Zeitraum.CalcDauer(this.StartZeitpunkt, new Date());

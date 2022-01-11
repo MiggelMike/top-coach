@@ -31,7 +31,7 @@ export class Session extends SessionDB implements ISession {
         return this.BodyWeightAtSessionStart;
     }
 
-    public getFirstWaitingExercise(aFromIndex: number): Uebung
+    public getFirstWaitingExercise(aFromIndex: number, aToIndex?: number): Uebung
     {
         for (let mUebungIndex = 0; mUebungIndex < this.UebungsListe.length; mUebungIndex++) {
             const mPtrUbung = this.UebungsListe[mUebungIndex];

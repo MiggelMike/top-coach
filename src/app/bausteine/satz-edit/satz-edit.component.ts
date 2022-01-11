@@ -1,7 +1,7 @@
-import { Progress, ProgressSet, ProgressTyp, WeightProgress } from './../../../Business/Progress/Progress';
+import { NextProgress, Progress, ProgressSet, ProgressTyp, WeightProgress } from './../../../Business/Progress/Progress';
 import { DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { PlateCalcSvcService, PlateCalcOverlayConfig } from './../../services/plate-calc-svc.service';
-import { ISession } from 'src/Business/Session/Session';
+import { ISession, Session } from 'src/Business/Session/Session';
 import { Uebung } from './../../../Business/Uebung/Uebung';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit, Input } from "@angular/core";
@@ -158,41 +158,20 @@ export class SatzEditComponent implements OnInit {
                         && (this.Progress.ProgressSet === ProgressSet.First)) {
                         this.Progress.DetermineNextProgress(this.fDbModule, new Date, this.sess.FK_VorlageProgramm, this.rowNum, this.sessUebung)
                             .then((wp: WeightProgress) => {
-                                
-                                let mDiff: number = 0;
-                                switch (wp) {
-                                    case WeightProgress.Increase:
-                                        mDiff = this.sessUebung.GewichtSteigerung;
-                                        break;
-                                        
-                                    case WeightProgress.Decrease:
-                                        mDiff = -this.sessUebung.GewichtReduzierung;
-                                        break;
+                                const mNextProgress: NextProgress = this.Progress.StaticDoSaetzeProgress(wp, this.satz as Satz, this.sessUebung, this.sess as Session);
+                                if (mNextProgress) {
+                                    this.DoStoppUhr(mNextProgress.Satz.GewichtAusgefuehrt,
+                                        `"${ mNextProgress.Uebung.Name }" - set #${(mNextProgress.Satz.SatzListIndex + 1).toString()} - weight: ${(mNextProgress.Satz.fGewichtVorgabe)}`
+                                        );
                                 }
-                                
-                                mSatzListe.forEach((sz) => {
-                                    sz.GewichtDiff = mDiff;
-                                    sz.AddToDoneWeight(mDiff);
-                                    sz.SetPresetWeight(sz.GewichtAusgefuehrt);
-                                });
-
-                                let mNextUndoneSet: Satz = mSatzListe.shift();
-                                if (mNextUndoneSet === undefined) {
-                                    const mFirstWaitingExercise: Uebung = this.sess.getFirstWaitingExercise(this.sessUebung.ListenIndex + 1);
-                                    
-                                    if (mFirstWaitingExercise) {
-                                        mFirstWaitingExercise.getFirstWaitingWorkSet;
-                                    }
-                                }
-
                             });
                     } else {
-                        this.DoStoppUhr(0);
+                        this.DoStoppUhr(0,'???');
                     }
                 } else {
                     mSatzListe.forEach((sz) => {
                         if (sz.GewichtDiff) {
-                            sz.AddToDoneWeight(sz.GewichtDiff);
+                            sz.AddToDoneWeight(-sz.GewichtDiff);
                             sz.SetPresetWeight(sz.GewichtAusgefuehrt);
                             sz.GewichtDiff = 0;
                         }
