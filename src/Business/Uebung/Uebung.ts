@@ -86,6 +86,7 @@ export interface IUebung {
     PauseTime1(aSatz:Satz): string;
     PauseTime2(aSatz: Satz): string;
     getPauseText(aSatzTyp: string): string;
+    getFirstWaitingWorkSet: Satz;
 
 }
 
@@ -161,6 +162,15 @@ export class Uebung implements IUebung {
         Object.defineProperty(this, 'Expanded', { enumerable: false });
         Object.defineProperty(this, 'StammUebung', { enumerable: false });
         Object.defineProperty(this, "SatzListe", { enumerable: false });
+    }
+
+    public get getFirstWaitingWorkSet(): Satz {
+        for (let index = 0; index < this.ArbeitsSatzListe.length; index++) {
+            const mPtrSatz: Satz = this.ArbeitsSatzListe[index];
+            if (mPtrSatz.Status === SatzStatus.Wartet)
+                return mPtrSatz;
+        }
+        return undefined
     }
 
     public static StaticUebungsListeSortByListenIndex(aUebungsListe: Array<Uebung>): Array<Uebung>{

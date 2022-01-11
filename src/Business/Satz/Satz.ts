@@ -57,7 +57,7 @@ export interface ISatz {
     SatzGruppenNr: number;
     SatzListIndex: number;
     Prozent: number;
-    GewichtSteigerung: number;
+    GewichtDiff: number;
     GewichtAusgefuehrt: number;
     WdhAusgefuehrt: number;
     GewichtVorgabe: number;
@@ -85,7 +85,7 @@ export class Satz implements ISatz {
     public UebungID: number = 0;
     public SatzTyp: SatzTyp = SatzTyp.Training;
     public Prozent: number = 0;
-    public GewichtSteigerung: number = 0;
+    public GewichtDiff: number = 0;
     public GewichtAusgefuehrt: number;
     public WdhAusgefuehrt: number = 0;
     public GewichtVorgabe: number = 0;

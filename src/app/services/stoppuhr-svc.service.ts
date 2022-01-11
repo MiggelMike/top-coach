@@ -19,8 +19,8 @@ export interface StoppUhrOverlayConfig {
 	left?: number;
 	satznr?: number;
 	nextTimeWeight?: number;
-  top?: number;
-  headerText?: string
+    top?: number;
+    headerText?: string
 }
 
 export const cStoppUhrOverlayData = new InjectionToken<Satz>("StoppUhr_Overlay_Component");

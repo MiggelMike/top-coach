@@ -2,6 +2,7 @@ import { SessionStatus } from 'src/Business/SessionDB';
 import { DexieSvcService } from "./../../app/services/dexie-svc.service";
 import { Session } from "src/Business/Session/Session";
 import { ArbeitsSaetzeStatus, Uebung } from "../Uebung/Uebung";
+import { Satz, SatzStatus } from '../Satz/Satz';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual')
 
@@ -286,6 +287,34 @@ export class Progress implements IProgress {
 		});
 	}
 
+	public static StaticDoSaetzeProgress(aWeightProgress: WeightProgress, aSatz: Satz, aUebung: Uebung, aSess: Session): void {
+		 // Aus der Satzliste der aktuellen Übung die Sätze mit dem Status "Wartet" in mSatzliste sammeln
+		const mSatzListe: Array<Satz> = aUebung.ArbeitsSatzListe.filter((sz) => (sz.SatzListIndex > aSatz.SatzListIndex && sz.Status === SatzStatus.Wartet));
+		let mDiff: number = 0;
 
+		switch (aWeightProgress) {
+			case WeightProgress.Increase:
+				mDiff = aUebung.GewichtSteigerung;
+				break;
+				
+			case WeightProgress.Decrease:
+				mDiff = -aUebung.GewichtReduzierung;
+				break;
+		}
+		
+		mSatzListe.forEach((sz) => {
+			sz.GewichtDiff = mDiff;
+			sz.AddToDoneWeight(mDiff);
+			sz.SetPresetWeight(sz.GewichtAusgefuehrt);
+		});
 
+		let mNextUndoneSet: Satz = mSatzListe.shift();
+		if (mNextUndoneSet === undefined) {
+			const mFirstWaitingExercise: Uebung = aSess.getFirstWaitingExercise(aUebung.ListenIndex + 1);
+			
+			if (mFirstWaitingExercise) {
+				mFirstWaitingExercise.getFirstWaitingWorkSet;
+			}
+		}
+	}
 }

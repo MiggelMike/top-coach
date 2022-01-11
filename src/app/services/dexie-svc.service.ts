@@ -1117,8 +1117,10 @@ export class DexieSvcService extends Dexie {
 
 					const mVorlageProgrammListe: Array<TrainingsProgramm> = this.VorlageProgramme.filter((vp) => vp.id === aSession.FK_VorlageProgramm);
 					// Ist eine mVorlageProgrammListe vorhanden und hat sie Elemente?
-					if (mVorlageProgrammListe !== undefined && mVorlageProgrammListe.length > 0) mNeueSession.FK_VorlageProgramm = mVorlageProgrammListe[0].id;
+					if (mVorlageProgrammListe !== undefined && mVorlageProgrammListe.length > 0)
+						mNeueSession.FK_VorlageProgramm = mVorlageProgrammListe[0].id;
 
+					
 					mAkuelleSessionListe.push(mNeueSession);
 					for (let index = 0; index < mAkuelleSessionListe.length; index++) {
 						const mPtrSession: Session = mAkuelleSessionListe[index] as Session;

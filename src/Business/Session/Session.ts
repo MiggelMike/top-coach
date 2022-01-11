@@ -1,6 +1,7 @@
 import { SessionDB, Pause, ISessionDB, SessionStatus } from './../SessionDB';
 import { Zeitraum, MaxZeitraum } from './../Dauer';
 import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
+import { Satz, SatzStatus } from '../Satz/Satz';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
 
@@ -16,6 +17,7 @@ export interface ISession extends ISessionDB {
     init(): void;
     Copy(aKomplett?: boolean): ISession;
     ExtractUebungen(aUebungen: Array<Uebung>);
+    getFirstWaitingExercise(aFromIndex: number): Uebung;
     IstAusVorgabe: boolean;
 }
 
@@ -27,6 +29,19 @@ export class Session extends SessionDB implements ISession {
         //     this.BodyWeightAtSessionStart = new DexieSvcService(null).getBodyWeight();
         // }
         return this.BodyWeightAtSessionStart;
+    }
+
+    public getFirstWaitingExercise(aFromIndex: number): Uebung
+    {
+        for (let mUebungIndex = 0; mUebungIndex < this.UebungsListe.length; mUebungIndex++) {
+            const mPtrUbung = this.UebungsListe[mUebungIndex];
+            if (mPtrUbung.ListenIndex >= aFromIndex) {
+                const mWaitingSetList: Array<Satz> = mPtrUbung.ArbeitsSatzListe.filter((sz) => sz.Status === SatzStatus.Wartet);
+                if (mWaitingSetList.length > 0)
+                    return mPtrUbung;
+            }
+        }
+        return undefined;
     }
 
     public init(): void {

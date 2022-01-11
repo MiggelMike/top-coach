@@ -148,7 +148,7 @@ export class SatzEditComponent implements OnInit {
                     mPtrSatz.SatzListIndex = index;
                 }
 
-                // Aus der Satzliste der aktuellen Übung Sätze mit dem Status "Wartet" in mSatzliste sammeln
+                // Aus der Satzliste der aktuellen Übung die Sätze mit dem Status "Wartet" in mSatzliste sammeln
                 const mSatzListe = this.sessUebung.SatzListe.filter((sz) => (sz.SatzListIndex > aSatz.SatzListIndex && sz.Status === SatzStatus.Wartet));
 
                 if (aChecked) {
@@ -158,52 +158,59 @@ export class SatzEditComponent implements OnInit {
                         && (this.Progress.ProgressSet === ProgressSet.First)) {
                         this.Progress.DetermineNextProgress(this.fDbModule, new Date, this.sess.FK_VorlageProgramm, this.rowNum, this.sessUebung)
                             .then((wp: WeightProgress) => {
+                                
                                 let mDiff: number = 0;
                                 switch (wp) {
                                     case WeightProgress.Increase:
                                         mDiff = this.sessUebung.GewichtSteigerung;
-                                        // this.DoStoppUhr(this.sessUebung.GewichtSteigerung);
                                         break;
                                         
                                     case WeightProgress.Decrease:
-                                        mDiff = this.sessUebung.GewichtReduzierung;
-                                        // this.DoStoppUhr(-this.sessUebung.GewichtReduzierung);
+                                        mDiff = -this.sessUebung.GewichtReduzierung;
                                         break;
-                                            
-                                    // default: this.DoStoppUhr(0);
                                 }
                                 
-                                        mSatzListe.forEach((sz) => {
-                                            sz.GewichtSteigerung = this.sessUebung.GewichtSteigerung;
-                                            sz.AddToDoneWeight(this.sessUebung.GewichtSteigerung);
-                                            sz.SetPresetWeight(sz.GewichtAusgefuehrt);
-                                        });
-                                
-                                        this.DoStoppUhr(mDiff);
-                            })
-                    } else this.DoStoppUhr(0);
+                                mSatzListe.forEach((sz) => {
+                                    sz.GewichtDiff = mDiff;
+                                    sz.AddToDoneWeight(mDiff);
+                                    sz.SetPresetWeight(sz.GewichtAusgefuehrt);
+                                });
+
+                                let mNextUndoneSet: Satz = mSatzListe.shift();
+                                if (mNextUndoneSet === undefined) {
+                                    const mFirstWaitingExercise: Uebung = this.sess.getFirstWaitingExercise(this.sessUebung.ListenIndex + 1);
+                                    
+                                    if (mFirstWaitingExercise) {
+                                        mFirstWaitingExercise.getFirstWaitingWorkSet;
+                                    }
+                                }
+
+                            });
+                    } else {
+                        this.DoStoppUhr(0);
+                    }
                 } else {
                     mSatzListe.forEach((sz) => {
-                        if (sz.GewichtSteigerung) {
-                            sz.AddToDoneWeight(-sz.GewichtSteigerung);
+                        if (sz.GewichtDiff) {
+                            sz.AddToDoneWeight(sz.GewichtDiff);
                             sz.SetPresetWeight(sz.GewichtAusgefuehrt);
-                            sz.GewichtSteigerung = 0;
+                            sz.GewichtDiff = 0;
                         }
                     });
-                    this.DoStoppUhr(0);
+                    this.fStoppUhrService.close();
                 }
             });
 
     }
     
-    private DoStoppUhr(aNextTimeWeight: number):void {
+    private DoStoppUhr(aNextTimeWeight: number, aHeaderText: string):void {
         this.StoppUhrOverlayConfig = 
             {
-            satz: this.satz as Satz,
-            uebung: this.sessUebung,
-            satznr: this.rowNum + 1,
-            nextTimeWeight: aNextTimeWeight 
-        // top: (aEvent as PointerEvent).clientY - (aEvent as PointerEvent).offsetY,
+                satz: this.satz as Satz,
+                uebung: this.sessUebung,
+                satznr: this.rowNum + 1,
+                nextTimeWeight: aNextTimeWeight,
+                headerText: aHeaderText
             } as StoppUhrOverlayConfig;
     
     

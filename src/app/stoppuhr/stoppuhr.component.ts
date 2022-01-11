@@ -57,13 +57,19 @@ export class StoppuhrComponent implements OnInit {
 	get PauseTime(): string {
 		const mDauerSec: number = Zeitraum.CalcDauer(this.StartZeitpunkt, new Date());
 
-    if (mDauerSec >= this.Uebung.ArbeitsSatzPause1 && this.SoundEasyPlayed === false) {
-      this.SoundEasyPlayed = true;
+		if (   this.Uebung.ArbeitsSatzPause1 > 0
+			&& mDauerSec >= this.Uebung.ArbeitsSatzPause1
+			&& this.SoundEasyPlayed === false)
+		{
+			this.SoundEasyPlayed = true;
 			this.Gong.play();
 		}
 
-    if (mDauerSec >= this.Uebung.ArbeitsSatzPause2 && this.SoundHardPlayed === false) {
-      this.SoundHardPlayed = true;
+		if (   this.Uebung.ArbeitsSatzPause2 > 0
+			&& mDauerSec >= this.Uebung.ArbeitsSatzPause2
+			&& this.SoundHardPlayed === false)
+		{
+			this.SoundHardPlayed = true;
 			this.Gong.play();
 		}
 
