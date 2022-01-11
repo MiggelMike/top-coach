@@ -1,6 +1,11 @@
 <mat-card class="tc-font-size-smaller">
     <div class="align-left" fxLayout="column" fxLayoutGap="10px">
-        <h5>{{Uebung.Name}} set #{{SatzListenNr}}</h5>
+        <h5>{{Uebung.Name}} set #{{SatzListenNr}} done</h5>
+
+        <div fxLayout="row" fxFlex="100%">
+            <span>Next undone set is {{ScheduledPauseTimeEasy}}</span> 
+         </div>            
+ 
 
         <div fxLayout="row" fxFlex="100%">
            <mat-label>Scheduled pause seconds if set was easy:  {{ScheduledPauseSecondsEasy}} ({{ScheduledPauseTimeEasy}})</mat-label> 

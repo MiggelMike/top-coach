@@ -1,4 +1,4 @@
-import { Progress } from './../../../Business/Progress/Progress';
+import { Progress, ProgressSet, ProgressTyp, WeightProgress } from './../../../Business/Progress/Progress';
 import { DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { PlateCalcSvcService, PlateCalcOverlayConfig } from './../../services/plate-calc-svc.service';
 import { ISession } from 'src/Business/Session/Session';
@@ -13,6 +13,7 @@ import { floatMask, repMask } from './../../app.module';
 import { PlateCalcComponent } from 'src/app/plate-calc/plate-calc.component';
 import { StoppuhrComponent } from 'src/app/stoppuhr/stoppuhr.component';
 import { StoppUhrOverlayConfig, StoppuhrSvcService } from 'src/app/services/stoppuhr-svc.service';
+import { NumericLiteral } from 'typescript';
 
 @Component({
     selector: "app-satz-edit",
@@ -45,11 +46,10 @@ export class SatzEditComponent implements OnInit {
         this.fDbModule.LadeProgress(
             (mProgressListe: Array<Progress>) => {
                 this.Progress = mProgressListe.find((p) => p.ID === this.sessUebung.FkProgress);
-                // if (this.Progress)
-                //    this.Progress.
             }
         )
     }
+    
     
     ngOnInit() {
         this.satz.BodyWeight = this.sess.BodyWeight;
@@ -131,33 +131,85 @@ export class SatzEditComponent implements OnInit {
     }
 
     onClickSatzFertig(aSatz: ISatz, aChecked: boolean) {
-        if(this.fStoppUhrService.StoppuhrComponent)
+        if (this.fStoppUhrService.StoppuhrComponent)
             this.fStoppUhrService.StoppuhrComponent.close();
         
         let mHeader: string = '';
         if (aChecked) {
             mHeader = '';
         }
-    
-        if (aChecked) {
-            this.StoppUhrOverlayConfig = 
-                {
-                    
-                    satz: this.satz as Satz,
-                uebung: this.sessUebung,
-                satznr: this.rowNum + 1
 
-                
-                    
-                    // uebung: this.sessUebung,
-                    // left: (aEvent as PointerEvent).pageX - (aEvent as PointerEvent).offsetX,
-                    // top: (aEvent as PointerEvent).clientY - (aEvent as PointerEvent).offsetY,
-                } as PlateCalcOverlayConfig;
+        this.fDbModule.LadeProgress(
+            (mProgressListe: Array<Progress>) => {
+                this.Progress = mProgressListe.find((p) => p.ID === this.sessUebung.FkProgress);
+                // Sätze der aktuellen Übung durchnummerieren
+                for (let index = 0; index < this.sessUebung.SatzListe.length; index++) {
+                    const mPtrSatz: Satz = this.sessUebung.SatzListe[index];
+                    mPtrSatz.SatzListIndex = index;
+                }
+
+                // Aus der Satzliste der aktuellen Übung Sätze mit dem Status "Wartet" in mSatzliste sammeln
+                const mSatzListe = this.sessUebung.SatzListe.filter((sz) => (sz.SatzListIndex > aSatz.SatzListIndex && sz.Status === SatzStatus.Wartet));
+
+                if (aChecked) {
+                    if ((this.Progress)
+                        && (this.rowNum === 0)
+                        && (this.Progress.ProgressTyp === ProgressTyp.BlockSet)
+                        && (this.Progress.ProgressSet === ProgressSet.First)) {
+                        this.Progress.DetermineNextProgress(this.fDbModule, new Date, this.sess.FK_VorlageProgramm, this.rowNum, this.sessUebung)
+                            .then((wp: WeightProgress) => {
+                                let mDiff: number = 0;
+                                switch (wp) {
+                                    case WeightProgress.Increase:
+                                        mDiff = this.sessUebung.GewichtSteigerung;
+                                        // this.DoStoppUhr(this.sessUebung.GewichtSteigerung);
+                                        break;
+                                        
+                                    case WeightProgress.Decrease:
+                                        mDiff = this.sessUebung.GewichtReduzierung;
+                                        // this.DoStoppUhr(-this.sessUebung.GewichtReduzierung);
+                                        break;
+                                            
+                                    // default: this.DoStoppUhr(0);
+                                }
+                                
+                                        mSatzListe.forEach((sz) => {
+                                            sz.GewichtSteigerung = this.sessUebung.GewichtSteigerung;
+                                            sz.AddToDoneWeight(this.sessUebung.GewichtSteigerung);
+                                            sz.SetPresetWeight(sz.GewichtAusgefuehrt);
+                                        });
+                                
+                                        this.DoStoppUhr(mDiff);
+                            })
+                    } else this.DoStoppUhr(0);
+                } else {
+                    mSatzListe.forEach((sz) => {
+                        if (sz.GewichtSteigerung) {
+                            sz.AddToDoneWeight(-sz.GewichtSteigerung);
+                            sz.SetPresetWeight(sz.GewichtAusgefuehrt);
+                            sz.GewichtSteigerung = 0;
+                        }
+                    });
+                    this.DoStoppUhr(0);
+                }
+            });
+
+    }
     
+    private DoStoppUhr(aNextTimeWeight: number):void {
+        this.StoppUhrOverlayConfig = 
+            {
+            satz: this.satz as Satz,
+            uebung: this.sessUebung,
+            satznr: this.rowNum + 1,
+            nextTimeWeight: aNextTimeWeight 
+        // top: (aEvent as PointerEvent).clientY - (aEvent as PointerEvent).offsetY,
+            } as StoppUhrOverlayConfig;
+    
+    
+        this.StoppuhrComponent = this.fStoppUhrService.open(this.StoppUhrOverlayConfig);
         
-            this.StoppuhrComponent = this.fStoppUhrService.open(this.StoppUhrOverlayConfig);
-        }
-    }    
+    }
 
     onClickWdhVonVorgabe(aEvent: any) {
         aEvent.target.Select();

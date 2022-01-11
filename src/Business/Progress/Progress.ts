@@ -2,7 +2,6 @@ import { SessionStatus } from 'src/Business/SessionDB';
 import { DexieSvcService } from "./../../app/services/dexie-svc.service";
 import { Session } from "src/Business/Session/Session";
 import { ArbeitsSaetzeStatus, Uebung } from "../Uebung/Uebung";
-import { ProgrammKategorie } from "../TrainingsProgramm/TrainingsProgramm";
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual')
 

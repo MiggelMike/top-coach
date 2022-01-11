@@ -18,6 +18,7 @@ export interface StoppUhrOverlayConfig {
 	uebung?: Uebung;
 	left?: number;
 	satznr?: number;
+	nextTimeWeight?: number;
   top?: number;
   headerText?: string
 }
@@ -30,7 +31,8 @@ const DEFAULT_CONFIG: StoppUhrOverlayConfig = {
 	width: 100,
 	// backdropClass: "dark-backdrop",
 	satz: null,
-	satznr: 0
+	satznr: 0,
+	nextTimeWeight: 0 
 };
 
 

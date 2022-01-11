@@ -1,6 +1,7 @@
 import { ISession } from 'src/Business/Session/Session';
 import { IUebung } from '../Uebung/Uebung';
 import {formatNumber} from '@angular/common';
+import { isThisTypeNode } from 'typescript';
 var cloneDeep = require('lodash.clonedeep');
 
 
@@ -54,11 +55,12 @@ export interface ISatz {
     UebungID: number;
     SatzTyp: SatzTyp;
     SatzGruppenNr: number;
+    SatzListIndex: number;
     Prozent: number;
+    GewichtSteigerung: number;
     GewichtAusgefuehrt: number;
     WdhAusgefuehrt: number;
     GewichtVorgabe: number;
-    // getGewichtVorgabe(): string;
     WdhVonVorgabe: number;
     WdhBisVorgabe: number;
     PausenMinZeit: number;
@@ -83,6 +85,7 @@ export class Satz implements ISatz {
     public UebungID: number = 0;
     public SatzTyp: SatzTyp = SatzTyp.Training;
     public Prozent: number = 0;
+    public GewichtSteigerung: number = 0;
     public GewichtAusgefuehrt: number;
     public WdhAusgefuehrt: number = 0;
     public GewichtVorgabe: number = 0;
@@ -94,6 +97,7 @@ export class Satz implements ISatz {
     public LiftTyp: LiftTyp = LiftTyp.Custom;
     public AMRAP: boolean = false;
     public SatzGruppenNr: number = 0;
+    public SatzListIndex: number = 0;
     public IncludeBodyweight: boolean = false;
     public BodyWeight: number = 0;
     public FkHantel: number = 0;
@@ -148,6 +152,7 @@ export class Satz implements ISatz {
 
         // Nicht in Dexie-DB-Speichern -> enumerable: false        
         Object.defineProperty(this, "BodyWeight", { enumerable: false });
+        Object.defineProperty(this, "GewichtSteigerung", { enumerable: false });
     }
 
     public hasChanged(aCmpSatz: ISatz): Boolean{
@@ -194,6 +199,16 @@ export class Satz implements ISatz {
         mSatz.AMRAP = aAmrap;
         return mSatz;
     }
+
+    public AddToDoneWeight(aDoneWeight: number) {
+        let tmp: number = Number.parseFloat(this.GewichtAusgefuehrt.toString());
+        this.GewichtAusgefuehrt = tmp + aDoneWeight;
+    }
+
+    public SetPresetWeight(aPresetWeight: number) {
+        this.GewichtVorgabe = aPresetWeight;
+    }
+
 }
 
 
