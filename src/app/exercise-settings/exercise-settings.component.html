@@ -23,16 +23,14 @@
         
                     <div fxLayout="row" fxFlex="100%">
                         <div layout-align="start" layout-margin>
-                            <mat-checkbox [(ngModel)]="SessUeb.IncludeWarmupWeight" (click)="$event.stopPropagation()">Add
-                                Warmup-Weight
+                            <mat-checkbox [(ngModel)]="SessUeb.IncludeWarmupWeight" (click)="$event.stopPropagation()">Add Warmup-Weight
                             </mat-checkbox>
                         </div>
                     </div>
         
                     <div fxLayout="row" fxFlex="100%">
                         <div layout-align="start" layout-margin>
-                            <mat-checkbox [(ngModel)]="SessUeb.IncludeCoolDownWeight" (click)="$event.stopPropagation()">Add
-                                Cooldown-Weight
+                            <mat-checkbox [(ngModel)]="SessUeb.IncludeCoolDownWeight" (click)="$event.stopPropagation()">Add Cooldown-Weight
                             </mat-checkbox>
                         </div>
                     </div>
@@ -48,6 +46,18 @@
                             <mat-option *ngFor="let progress of ProgressListe" [value]="progress.ID"> {{ progress.Name }}</mat-option>
                         </mat-select>
                     </mat-form-field>
+
+
+                        <mat-form-field>
+                            <mat-label>Progression group</mat-label>
+                            <mat-select [(ngModel)]="SessUeb.ProgressGroup">
+                                <mat-option *ngFor="let pg of ProgressGroupListe" 
+                                        [value]="pg"
+                                        >  {{ pg }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+              
                     
                     <div fxLayout="row" fxFlex="100%">
                         <mat-form-field class="align-right" fxFlex="90%">

@@ -1,3 +1,4 @@
+import { ProgressGroup } from 'src/Business/Progress/Progress';
 import { Zeitraum } from './../Dauer';
 import { Equipment } from './../Equipment/Equipment';
 import { MuscleGroupKategorie02 } from '../MuscleGroup/MuscleGroup';
@@ -86,8 +87,9 @@ export interface IUebung {
     PauseTime1(aSatz:Satz): string;
     PauseTime2(aSatz: Satz): string;
     getPauseText(aSatzTyp: string): string;
-    getFirstWaitingWorkSet: Satz;
+    getFirstWaitingWorkSet(aFromIndex: number): Satz;
     nummeriereSatzListe(aSatzListe: Array<Satz>);
+    ProgressGroup: string;
 
 }
 
@@ -154,6 +156,7 @@ export class Uebung implements IUebung {
 
     public Vorlage: boolean = false;
     public FkProgress: number = 0;
+    public ProgressGroup: string = ProgressGroup[0];
 
     constructor() {
         // Nicht in Dexie-DB-Speichern -> enumerable: false
@@ -165,8 +168,8 @@ export class Uebung implements IUebung {
         Object.defineProperty(this, "SatzListe", { enumerable: false });
     }
 
-    public get getFirstWaitingWorkSet(): Satz {
-        for (let index = 0; index < this.ArbeitsSatzListe.length; index++) {
+    public getFirstWaitingWorkSet(aFromIndex: number = 0): Satz {
+        for (let index = aFromIndex; index < this.ArbeitsSatzListe.length; index++) {
             const mPtrSatz: Satz = this.ArbeitsSatzListe[index];
             if (mPtrSatz.Status === SatzStatus.Wartet)
                 return mPtrSatz;

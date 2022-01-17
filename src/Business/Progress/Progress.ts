@@ -1,14 +1,25 @@
+import { Session } from './../Session/Session';
 import { SessionStatus } from 'src/Business/SessionDB';
 import { DexieSvcService } from "./../../app/services/dexie-svc.service";
-import { Session } from "src/Business/Session/Session";
 import { ArbeitsSaetzeStatus, Uebung } from "../Uebung/Uebung";
 import { Satz, SatzStatus } from '../Satz/Satz';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual')
 
+export var ProgressGroup: string[] = ['A', 'B', 'C', 'D', 'E', 'F','H','I','J','K'];
+
+
+
+export enum NextProgressStatus { 
+	SameExercise,
+	OtherExercise,
+	NoNoreWaitingSets
+}
+
 export class NextProgress {
 	Uebung: Uebung;
-	Satz: Satz
+	Satz: Satz;
+	NextProgressStatus: NextProgressStatus = NextProgressStatus.SameExercise;
 }
 
 export enum ProgressTyp {
@@ -292,22 +303,78 @@ export class Progress implements IProgress {
 		});
 	}
 
-	public StaticDoSaetzeProgress(aWeightProgress: WeightProgress, aSatz: Satz, aUebung: Uebung, aSess: Session): NextProgress {
+	public static StaticDoSaetzeProgress(aWarteSatzListe: Array<Satz>, aUpComingSessionListe: Array<Session>, aAusgangsSatz: Satz, aUebung: Uebung, aAusgangsSession: Session, aProgressSet : ProgressSet,  aWeightProgress?: WeightProgress): NextProgress {
 		const mResult: NextProgress = new NextProgress();
+		let mSatzListe: Array<Satz> = aWarteSatzListe.map( (sz) => sz);
 		aUebung.nummeriereSatzListe(aUebung.ArbeitsSatzListe);
-		// Aus der Satzliste der aktuellen Übung die Sätze mit dem Status "Wartet" in mSatzliste sammeln.
-		// Die Sätze müssen nach "aSatz" in der Liste sein.
-		const mSatzListe: Array<Satz> = aUebung.ArbeitsSatzListe.filter((sz) => (sz.SatzListIndex > aSatz.SatzListIndex && sz.Status === SatzStatus.Wartet));
+		// Läuft die Session?
+		if (aAusgangsSession.Kategorie02 === SessionStatus.Laueft) {
+			// Die Session läuft
+			// Bei ProgressSet.First sofort in der aktuellen Übung für alle folgenden Sätze das Gewicht erhöht.
+			if (aProgressSet === ProgressSet.First) {
+				// Die Sätze müssen nach "aSatz" in der Liste sein.
+				// Aus der Satzliste der aktuellen Übung alle folgenden Sätze mit dem Status "Wartet" in mSatzliste sammeln.
+				// mSatzListe = aUebung.ArbeitsSatzListe.filter(
+				// 	(sz) => (
+				// 		sz.SatzListIndex > aAusgangsSatz.SatzListIndex &&
+				// 		sz.Status === SatzStatus.Wartet
+				// 	));
+				// Im Fall, dass die Übung mit der gleichen Progressions-Gruppe mehrfach in der Session vorkommt,
+				// wird auch für diese das Gewicht in den Arbeitsätzen angepasst.
+				const mUebungsListe = aAusgangsSession.UebungsListe.filter(
+					(u) =>
+						// Die Übung aus den Übergabeparametern ist schon weiter oben behandelt worden. 
+						u !== aUebung &&
+						u.FkUebung === aUebung.FkUebung &&
+						u.ProgressGroup === aUebung.ProgressGroup 
+				);
+
+					// if (mSatzListe.length === 0) {
+					// 	mResult.NextProgressStatus = NextProgressStatus.OtherExercise;
+					// 	// Alle Sätze der aktuellen Übung sind fertig.
+					// 	// Jetzt in den nächsten Übungen nach 'wartenden Sätzen' suchen.
+						
+					// 	for (let index = 0; index < aAusgangsSession.UebungsListe.length; index++) {
+					// 		const mPtrUebung: Uebung = aAusgangsSession.UebungsListe[index];
+					// 		mSatzListe = aUebung.ArbeitsSatzListe.filter((sz) => sz.Status === SatzStatus.Wartet);
+					// 	}
+					// }
+
+				
+			}
+		} else {
+			// Session läuft nicht -> aAusgangsSession.Kategorie02 != SessionStatus.Laueft
+			// Sessions mit der gleichen Übung heraussuchen.
+			const mSessionListe: Array<Session> = aUpComingSessionListe.filter(
+				(s) => {
+					// Die Uebungen und die Progressgruppe müssen gleich sein.
+					const mUebung = s.UebungsListe.find((u) => u.FkUebung === aUebung.FkUebung && u.ProgressGroup === aUebung.ProgressGroup);
+					if (mUebung) {
+						mUebung.nummeriereSatzListe(mUebung.ArbeitsSatzListe);
+						if ((s.ID === aAusgangsSession.ID) && (mUebung.ListenIndex === aUebung.ListenIndex)) {
+							if (mUebung.getFirstWaitingWorkSet(aAusgangsSatz.SatzListIndex + 1))
+								return s;
+						} else {
+							if (mUebung.getFirstWaitingWorkSet())
+								return s;
+						}
+					}
+					return undefined;
+				});
+		}
+			
 		let mDiff: number = 0;
 
-		switch (aWeightProgress) {
-			case WeightProgress.Increase:
-				mDiff = aUebung.GewichtSteigerung;
-				break;
+		if (aWeightProgress !== undefined) {
+			switch (aWeightProgress as WeightProgress) {
+				case WeightProgress.Increase:
+					mDiff = aUebung.GewichtSteigerung;
+					break;
 				
-			case WeightProgress.Decrease:
-				mDiff = aUebung.GewichtReduzierung;
-				break;
+				case WeightProgress.Decrease:
+					mDiff = aUebung.GewichtReduzierung;
+					break;
+			}
 		}
 		
 		mSatzListe.forEach((sz) => {
@@ -324,15 +391,21 @@ export class Progress implements IProgress {
 			let mWaitingExercise: Uebung;
 			do {
 				mCheckAgain = false;
-				if ((this.ProgressSet === ProgressSet.First) && (mFirstSetChecked === false)) {
+				if (   (aProgressSet === ProgressSet.First)
+					&& (mFirstSetChecked === false))
+				{
 					mWaitingExercise = aUebung;
 					mFirstSetChecked = true;
-				} else mWaitingExercise = aSess.getFirstWaitingExercise(aUebung.ListenIndex + 1);
+				} else mWaitingExercise = aAusgangsSession.getFirstWaitingExercise(aUebung.ListenIndex + 1);
 			
 				if (mWaitingExercise) {
 					mResult.Uebung = mWaitingExercise;
-					if (mWaitingExercise.getFirstWaitingWorkSet) {
-						mResult.Satz = mWaitingExercise.getFirstWaitingWorkSet;
+					if (mWaitingExercise.getFirstWaitingWorkSet()) {
+						if(mWaitingExercise === aUebung)
+							mResult.Satz = mWaitingExercise.getFirstWaitingWorkSet(aAusgangsSatz.SatzListIndex + 1);
+						else
+							mResult.Satz = mWaitingExercise.getFirstWaitingWorkSet();
+						
 						return mResult;
 					} else {
 						if (mFirstSetChecked === true) {

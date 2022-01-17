@@ -5,7 +5,7 @@ import { cExerciseOverlayData } from "./../services/exercise-setting-svc.service
 import { IUebung } from "./../../Business/Uebung/Uebung";
 import { Component, Inject } from "@angular/core";
 import { ExerciseOverlayConfig, ExerciseOverlayRef } from "../services/exercise-setting-svc.service";
-import { Progress } from "src/Business/Progress/Progress";
+import { Progress, ProgressGroup } from "src/Business/Progress/Progress";
 
 @Component({
 	selector: "app-exercise-settings",
@@ -19,6 +19,8 @@ export class ExerciseSettingsComponent {
 	public ProgressName: string;
 	public ProgressListe: Array<Progress> = [];
 	public HantelListe: Array<Hantel> = [];
+	public ProgressGroupListe: Array<string>;
+	
 
 	public datemask = {
 		guide: true,
@@ -34,21 +36,34 @@ export class ExerciseSettingsComponent {
 		public SessUeb: IUebung
 	) {
 		this.fDbModule.LadeProgress((p) => (this.ProgressListe = p));
+		this.ProgressGroupListe = ProgressGroup;
 	}
 
-	SetAufwaermArbeitsSatzPause(aEvent) {
+	SetProgressGroup(aEvent:any) {
+		this.SessUeb.ProgressGroup = aEvent.target.value;
+		if (this.SessUeb.ProgressGroup.length > 0) {
+			if (this.ProgressGroupListe.find((pg) => pg.toUpperCase() === this.SessUeb.ProgressGroup.toUpperCase()) === undefined)
+				this.ProgressGroupListe.push(this.SessUeb.ProgressGroup);
+		}
+	}
+
+	onExitSelectProgressGroup(aGroup: string) {
+		this.SessUeb.ProgressGroup = aGroup;
+	}
+
+	SetAufwaermArbeitsSatzPause(aEvent: any) {
 		this.SessUeb.AufwaermArbeitsSatzPause = aEvent.target.value;
 	}
 
-	SetArbeitsSatzPause1(aEvent) {
+	SetArbeitsSatzPause1(aEvent: any) {
 		this.SessUeb.ArbeitsSatzPause1 = aEvent.target.value;
 	}
 
-	SetArbeitsSatzPause2(aEvent) {
+	SetArbeitsSatzPause2(aEvent: any) {
 		this.SessUeb.ArbeitsSatzPause2 = aEvent.target.value;
 	}
 
-	SetNextExercisePause(aEvent) {
+	SetNextExercisePause(aEvent: any) {
 		this.SessUeb.NaechsteUebungPause = aEvent.target.value;
 	}
 

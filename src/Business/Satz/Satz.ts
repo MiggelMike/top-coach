@@ -113,7 +113,7 @@ export class Satz implements ISatz {
         return 0;
     }
 
-    get fGewichtVorgabe(): string {
+    public get fGewichtVorgabe(): string {
         return this.GewichtVorgabe.toFixed(2);
     }
 
@@ -199,12 +199,13 @@ export class Satz implements ISatz {
     }
 
     public AddToDoneWeight(aDoneWeight: number) {
-        let tmp: number = Number.parseFloat(this.GewichtAusgefuehrt.toString());
-        this.GewichtAusgefuehrt = tmp + aDoneWeight;
+        const tmp: number = Number.parseFloat(this.GewichtAusgefuehrt.toString());
+        const mDoneWeight: number = Number.parseFloat(aDoneWeight.toString());
+        this.GewichtAusgefuehrt = tmp + mDoneWeight;
     }
 
     public SetPresetWeight(aPresetWeight: number) {
-        this.GewichtVorgabe = aPresetWeight;
+        this.GewichtVorgabe = Number.parseFloat(aPresetWeight.toString());
     }
 
 }

@@ -112,6 +112,17 @@ export class DexieSvcService extends Dexie {
 
 	private ProgramLadeStandardPara: LadePara;
 
+	public UpComingSessionList(): Array<Session> {
+		if ((this.AktuellesProgramm) && (this.AktuellesProgramm.SessionListe)) {
+			this.AktuellesProgramm.SessionListe =
+				this.AktuellesProgramm.SessionListe.filter(
+					(s) => (s.Kategorie02 !== SessionStatus.Fertig && s.Kategorie02 !== SessionStatus.FertigTimeOut)
+				);
+				return this.SortSessionByListenIndex(this.AktuellesProgramm.SessionListe as Array<Session>);
+		}
+		return undefined;
+	}
+
 	public DeleteProgram(aProgramm: TrainingsProgramm) {
 		aProgramm.SessionListe.forEach((s) => {
 			if (s.Kategorie02 !== SessionStatus.Fertig && s.Kategorie02 !== SessionStatus.FertigTimeOut) {
@@ -299,9 +310,9 @@ export class DexieSvcService extends Dexie {
 			}, //OnProgrammNoRecorderLoadFn
 		} as LadePara;
 
-		//  Dexie.delete("ConceptCoach");
+		//   Dexie.delete("ConceptCoach");
 
-		this.version(4).stores({
+		this.version(5).stores({
 			AppData: "++id",
 			Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",

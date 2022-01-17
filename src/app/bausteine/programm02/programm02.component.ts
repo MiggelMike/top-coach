@@ -287,7 +287,7 @@ export class Programm02Component implements OnInit {
 		this.router.navigate(["sessionFormComponent"], { state: { sess: aSession,  AnzSessionInProgram : this.programm.MaxSessions } });
 	}
 
-	public SaveChanges() {
+	public SaveChanges():void {
 		//this.ClickData.programm.SessionListe;// = this.SessionListe;
 		this.DelSessionListe.forEach((s) => 
 			this.ClickData.fDbModule.DeleteSession(s as Session)
@@ -295,12 +295,12 @@ export class Programm02Component implements OnInit {
 
 		this.DelSessionListe = [];
 			
-		this.ClickData.fDbModule.ProgrammSpeichern(this.ClickData.programm);
-        if (this.ClickData.ProgrammSavedEvent !== undefined)
-            this.ClickData.ProgrammSavedEvent.emit(this.ClickData.programm);
+		this.fDbModule.ProgrammSpeichern(this.programm);
+        if (this.ProgrammSavedEvent !== undefined)
+            this.ProgrammSavedEvent.emit(this.programm);
 	}
 
-	public CancelChanges() {}
+	public CancelChanges():void {}
 
 	private CheckStatus() {
 		for (let index = 0; index < this.SessionListe.length; index++) {

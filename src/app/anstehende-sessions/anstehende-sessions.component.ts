@@ -34,14 +34,9 @@ export class AnstehendeSessionsComponent implements OnInit {
         let mProgram: ITrainingsProgramm;
         if ((this.fDbModule.AktuellesProgramm) && (this.fDbModule.AktuellesProgramm.SessionListe)) {
             mProgram = this.fDbModule.AktuellesProgramm;
-            mProgram.SessionListe =
-                mProgram.SessionListe.filter(
-                    (s) => (s.Kategorie02 !== SessionStatus.Fertig && s.Kategorie02 !== SessionStatus.FertigTimeOut)
-                );
-            
-            mProgram.SessionListe = this.fDbModule.SortSessionByListenIndex(mProgram.SessionListe as Array<Session>);
+            mProgram.SessionListe = this.fDbModule.UpComingSessionList();
         }
-        return mProgram
+        return mProgram;
     }
                 
     beforePanelOpened(aSess: Session) {

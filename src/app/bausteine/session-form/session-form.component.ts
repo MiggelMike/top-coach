@@ -111,6 +111,7 @@ export class SessionFormComponent implements OnInit {
 		const mSessUebung: Uebung = this.fGlobalService.SessUebungKopie.Copy();
 		mSessUebung.SessionID = this.Session.ID;
 		mSessUebung.ID = undefined;
+		mSessUebung.ListenIndex = this.Session.UebungsListe.length;
 		mSessUebung.SatzListe.forEach((sz) => {
 			sz.ID = undefined;
 			sz.UebungID = undefined;

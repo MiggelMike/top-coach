@@ -1,7 +1,7 @@
 import { SessionDB, Pause, ISessionDB, SessionStatus } from './../SessionDB';
 import { Zeitraum, MaxZeitraum } from './../Dauer';
 import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
-import { Satz, SatzStatus } from '../Satz/Satz';
+import { Satz, SatzStatus, SatzTyp } from '../Satz/Satz';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
 
@@ -19,6 +19,8 @@ export interface ISession extends ISessionDB {
     ExtractUebungen(aUebungen: Array<Uebung>);
     getFirstWaitingExercise(aFromIndex: number): Uebung;
     IstAusVorgabe: boolean;
+    AlleUebungsSaetzeEinerProgressGruppe(aUebung: Uebung, aStatus: SatzStatus): Array<Satz>;
+    AlleUebungenEinerProgressGruppe(aUebung: Uebung): Array<Uebung>;
 }
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
@@ -239,6 +241,28 @@ export class Session extends SessionDB implements ISession {
                 mUebung1.CooldownVisible = mUebung.CooldownVisible;
             }
         }
+    }
+
+    public AlleUebungsSaetzeEinerProgressGruppe(aUebung: Uebung, aStatus: SatzStatus): Array<Satz> {
+        let mSatzListe: Array<Satz> = [];
+        const mUebungsListe: Array<Uebung> = this.AlleUebungenEinerProgressGruppe(aUebung);
+        mUebungsListe.forEach((u) =>
+            mSatzListe = mSatzListe.concat(u.ArbeitsSatzListe.filter(
+                (sz) => (
+                    sz.Status === aStatus &&
+                    sz.SatzTyp === SatzTyp.Training
+                )))
+        );
+        return mSatzListe;
+    }
+
+    public AlleUebungenEinerProgressGruppe(aUebung: Uebung): Array<Uebung> {
+        return this.UebungsListe.filter(
+            (u) =>
+                u.FkUebung === aUebung.FkUebung &&
+                u.FkProgress === aUebung.FkProgress && 
+                u.ProgressGroup === aUebung.ProgressGroup 
+        );
     }
 
 }
