@@ -142,6 +142,7 @@ export class SatzEditComponent implements OnInit {
         this.fDbModule.LadeProgress(
             (mProgressListe: Array<Progress>) => {
                 this.Progress = mProgressListe.find((p) => p.ID === this.sessUebung.FkProgress);
+                // this.Progress = mProgressListe.find((p) => p.ID === this.sessUebung.FkAltProgress);
                 // Sätze der aktuellen Übung durchnummerieren
                 for (let index = 0; index < this.sessUebung.SatzListe.length; index++) {
                     const mPtrSatz: Satz = this.sessUebung.SatzListe[index];
@@ -154,23 +155,25 @@ export class SatzEditComponent implements OnInit {
                 // const mSatzListe = this.sessUebung.SatzListe.filter((sz) => (sz.SatzListIndex > aSatz.SatzListIndex && sz.Status === SatzStatus.Wartet));
                 const mSessionsListe: Array<Session> = this.fDbModule.UpComingSessionList();
  
-                const mProgressPara: ProgressPara = new ProgressPara();
-                mProgressPara.AusgangsSession = this.sess;
-                mProgressPara.AusgangsUebung = this.sessUebung;
-                mProgressPara.AusgangsSatz = aSatz as Satz;
-                mProgressPara.DbModule = this.fDbModule;
-                mProgressPara.Programm = this.programm;
-                mProgressPara.Progress = this.Progress;
                 
-                if (aChecked) {
-                    if (this.Progress) {
+                if (this.Progress) {
+                    // if (aChecked) {
                         if ((this.rowNum === 0)
                         && (this.Progress.ProgressTyp === ProgressTyp.BlockSet)
                         && (this.Progress.ProgressSet === ProgressSet.First)) {
                             this.Progress.DetermineNextProgress(this.fDbModule, new Date, this.sess.FK_VorlageProgramm, this.rowNum, this.sessUebung)
                             .then((wp: WeightProgress) => {
+                                const mProgressPara: ProgressPara = new ProgressPara();
+                                mProgressPara.AusgangsSession = this.sess;
+                                mProgressPara.AusgangsUebung = this.sessUebung;
+                                mProgressPara.AusgangsSatz = aSatz as Satz;
+                                mProgressPara.DbModule = this.fDbModule;
+                                mProgressPara.Programm = this.programm;
+                                mProgressPara.Progress = this.Progress;
                                 mProgressPara.Wp = wp;
-                                    Progress.StaticProgrammSetNextWeight(mProgressPara);
+                                mProgressPara.Storno = false;
+                                mProgressPara.SatzUndone = aChecked === false;
+                                Progress.StaticProgrammSetNextWeight(mProgressPara);
                                     
                                     // this.DoStoppUhr(mNextProgress.Satz.GewichtAusgefuehrt,
                                     //     `"${mNextProgress.Uebung.Name}" - set #${(mNextProgress.Satz.SatzListIndex + 1).toString()} - weight: ${(mNextProgress.Satz.fGewichtVorgabe)}`
@@ -200,7 +203,7 @@ export class SatzEditComponent implements OnInit {
                                 );
                             }
                         }
-                    }
+                    // }
                 } else {
                     mSatzListe.forEach((sz) => {
                         if (sz.GewichtDiff) {
