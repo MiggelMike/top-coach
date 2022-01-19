@@ -14,7 +14,6 @@ import { floatMask } from 'src/app/app.module';
 import { ExerciseSettingsComponent } from 'src/app/exercise-settings/exercise-settings.component';
 import { ExerciseOverlayConfig, ExerciseSettingSvcService } from 'src/app/services/exercise-setting-svc.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import {DragDropModule} from '@angular/cdk/drag-drop'; 
 
 
 @Component({

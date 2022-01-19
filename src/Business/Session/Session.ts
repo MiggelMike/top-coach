@@ -2,6 +2,7 @@ import { SessionDB, Pause, ISessionDB, SessionStatus } from './../SessionDB';
 import { Zeitraum, MaxZeitraum } from './../Dauer';
 import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
 import { Satz, SatzStatus, SatzTyp } from '../Satz/Satz';
+import { WeightProgress } from '../Progress/Progress';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
 
@@ -21,6 +22,9 @@ export interface ISession extends ISessionDB {
     IstAusVorgabe: boolean;
     AlleUebungsSaetzeEinerProgressGruppe(aUebung: Uebung, aStatus: SatzStatus): Array<Satz>;
     AlleUebungenEinerProgressGruppe(aUebung: Uebung): Array<Uebung>;
+    SetNextWeight(aWp: WeightProgress, aUebung: Uebung);
+    isEqual(aOtherSession: Session): boolean 
+
 }
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
@@ -265,4 +269,21 @@ export class Session extends SessionDB implements ISession {
         );
     }
 
+    public SetNextWeight(aWp: WeightProgress, aUebung: Uebung): void {
+        let mDiff: number = 0;
+        this.AlleUebungenEinerProgressGruppe(aUebung).forEach(
+            (u) => {
+                if (aWp !== undefined) {
+                    switch (aWp) {
+                        case WeightProgress.Increase:
+                            mDiff = u.GewichtSteigerung;
+                            break;
+                
+                        case WeightProgress.Decrease:
+                            mDiff = u.GewichtReduzierung;
+                            break;
+                    }
+                }
+            });
+        }
 }

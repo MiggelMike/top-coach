@@ -19,7 +19,7 @@
             <ng-template #BearbeitbarBlock>
                 <div fxLayout="column" fxLayout.lt-sm="column" fxLayoutAlign="flex-start">
                     <ng-container *ngFor="let satz of satzListe, index as i">
-                        <app-satz-edit [rowNum]="i" [sessUebung]="sessUebung" [satz]="satz" [sess]="session"  [satzTyp]="satzTypText" >
+                        <app-satz-edit [rowNum]="i" [programm]="programm" [sessUebung]="sessUebung"  [satz]="satz" [sess]="session"  [satzTyp]="satzTypText" >
                         </app-satz-edit>
                     </ng-container>
 

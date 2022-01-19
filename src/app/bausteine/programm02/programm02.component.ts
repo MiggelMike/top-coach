@@ -284,7 +284,7 @@ export class Programm02Component implements OnInit {
 	public startSession(aEvent: Event, aSession: ISession) {
 		aEvent.stopPropagation();
 		this.startSessionPrim(aSession);
-		this.router.navigate(["sessionFormComponent"], { state: { sess: aSession,  AnzSessionInProgram : this.programm.MaxSessions } });
+		this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession,  AnzSessionInProgram : this.programm.MaxSessions } });
 	}
 
 	public SaveChanges():void {

@@ -1,3 +1,4 @@
+import { ITrainingsProgramm } from './../../../Business/TrainingsProgramm/TrainingsProgramm';
 import { Uebung, IUebung } from 'src/Business/Uebung/Uebung';
 import { ISession, Session } from './../../../Business/Session/Session';
 import { Component, OnInit, Input } from "@angular/core";
@@ -17,6 +18,7 @@ export class SessUebungComponent implements OnInit {
     public floatMask = floatMask;
     public repMask = repMask;
     @Input() satzTypText: string = "";
+    @Input() programm: ITrainingsProgramm = null;
     @Input() session: ISession = null;
     @Input() sessUebung: Uebung;
     @Input() satzListe: Array<Satz>;

@@ -1,3 +1,4 @@
+import { ITrainingsProgramm } from './../../../Business/TrainingsProgramm/TrainingsProgramm';
 import { ArbeitsSaetzeStatus } from './../../../Business/Uebung/Uebung';
 import { UebungService } from "./../../services/uebung.service";
 import { SessionStatus } from "./../../../Business/SessionDB";
@@ -13,8 +14,6 @@ import { Location } from "@angular/common";
 import { GlobalService } from "src/app/services/global.service";
 import { Uebung, UebungsKategorie02 } from "src/Business/Uebung/Uebung";
 import { UebungWaehlenData } from "src/app/uebung-waehlen/uebung-waehlen.component";
-import { Progress, WeightProgress } from "src/Business/Progress/Progress";
-import { min } from "rxjs";
 
 @Component({
 	selector: "app-session-form",
@@ -24,11 +23,12 @@ import { min } from "rxjs";
 export class SessionFormComponent implements OnInit {
 	public Session: Session;
 	public AnzSessionInProgram: number = 0;
+	public Programm: ITrainingsProgramm;
 	public cmpSession: Session;
 	public BodyWeight: number = 0;
 	public fSessionStatsOverlayComponent: SessionStatsOverlayComponent = null;
 	private fSessionOverlayConfig: SessionOverlayConfig;
-	private SelectedExerciseList: Array<Uebung> = [];
+	// private SelectedExerciseList: Array<Uebung> = [];
 
 	constructor(
 		private router: Router,
@@ -40,8 +40,9 @@ export class SessionFormComponent implements OnInit {
 		private location: Location
 	) {
 		const mNavigation = this.router.getCurrentNavigation();
-		const mState = mNavigation.extras.state as { sess: Session; AnzSessionInProgram: number };
+		const mState = mNavigation.extras.state as { programm: ITrainingsProgramm, sess: Session; AnzSessionInProgram: number };
 		mState.sess.BodyWeightAtSessionStart = this.fDexieSvcService.getBodyWeight();
+		this.Programm = mState.programm;
 		this.Session = mState.sess.Copy();
 		this.cmpSession = mState.sess.Copy();
 		this.AnzSessionInProgram = mState.AnzSessionInProgram;

@@ -73,6 +73,7 @@ export interface IUebung {
     Copy(): Uebung;
     hasChanged(aCmpUebung: IUebung): Boolean;
     FkProgress: number;
+    FkAltProgress: number
     GewichtSteigerung: number;
     GewichtReduzierung: number;
     EquipmentTyp: string;
@@ -156,6 +157,7 @@ export class Uebung implements IUebung {
 
     public Vorlage: boolean = false;
     public FkProgress: number = 0;
+    public FkAltProgress: number = 0;
     public ProgressGroup: string = ProgressGroup[0];
 
     constructor() {

@@ -1,4 +1,4 @@
-import { NextProgress, Progress, ProgressSet, ProgressTyp, WeightProgress } from './../../../Business/Progress/Progress';
+import { NextProgress, Progress, ProgressPara, ProgressSet, ProgressTyp, WeightProgress } from './../../../Business/Progress/Progress';
 import { DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { PlateCalcSvcService, PlateCalcOverlayConfig } from './../../services/plate-calc-svc.service';
 import { ISession, Session } from 'src/Business/Session/Session';
@@ -13,7 +13,6 @@ import { floatMask, repMask } from './../../app.module';
 import { PlateCalcComponent } from 'src/app/plate-calc/plate-calc.component';
 import { StoppuhrComponent } from 'src/app/stoppuhr/stoppuhr.component';
 import { StoppUhrOverlayConfig, StoppuhrSvcService } from 'src/app/services/stoppuhr-svc.service';
-import { NumericLiteral } from 'typescript';
 
 @Component({
     selector: "app-satz-edit",
@@ -134,10 +133,11 @@ export class SatzEditComponent implements OnInit {
         if (this.fStoppUhrService.StoppuhrComponent)
             this.fStoppUhrService.StoppuhrComponent.close();
         
+            
         let mHeader: string = '';
         if (aChecked) {
             mHeader = '';
-        }
+        } 
 
         this.fDbModule.LadeProgress(
             (mProgressListe: Array<Progress>) => {
@@ -154,65 +154,28 @@ export class SatzEditComponent implements OnInit {
                 // const mSatzListe = this.sessUebung.SatzListe.filter((sz) => (sz.SatzListIndex > aSatz.SatzListIndex && sz.Status === SatzStatus.Wartet));
                 const mSessionsListe: Array<Session> = this.fDbModule.UpComingSessionList();
  
+                const mProgressPara: ProgressPara = new ProgressPara();
+                mProgressPara.AusgangsSession = this.sess;
+                mProgressPara.AusgangsUebung = this.sessUebung;
+                mProgressPara.AusgangsSatz = aSatz as Satz;
+                mProgressPara.DbModule = this.fDbModule;
+                mProgressPara.Programm = this.programm;
+                mProgressPara.Progress = this.Progress;
+                
                 if (aChecked) {
                     if (this.Progress) {
                         if ((this.rowNum === 0)
-                            && (this.Progress.ProgressTyp === ProgressTyp.BlockSet)
-                            && (this.Progress.ProgressSet === ProgressSet.First)) {
+                        && (this.Progress.ProgressTyp === ProgressTyp.BlockSet)
+                        && (this.Progress.ProgressSet === ProgressSet.First)) {
                             this.Progress.DetermineNextProgress(this.fDbModule, new Date, this.sess.FK_VorlageProgramm, this.rowNum, this.sessUebung)
-                                .then((wp: WeightProgress) => {
-                                    // const mNextProgress: NextProgress = Progress.StaticDoSaetzeProgress(
-                                    //     mSatzListe,
-                                    //     mSessionsListe,
-                                    //     this.satz as Satz,
-                                    //     this.sessUebung,
-                                    //     this.sess as Session,
-                                    //     this.Progress.ProgressSet,
-                                    //     wp);
-                                    let mDiff: number = 0;
-
-                                    this.sess.AlleUebungenEinerProgressGruppe(this.sessUebung).forEach(
-                                        (u) => {
-                                            if (wp !== undefined) {
-                                                switch (wp as WeightProgress) {
-                                                    case WeightProgress.Increase:
-                                                        mDiff = u.GewichtSteigerung;
-                                                        break;
-                                            
-                                                    case WeightProgress.Decrease:
-                                                        mDiff = u.GewichtReduzierung;
-                                                        break;
-                                                }
-                                            }
-
-                                            u.ArbeitsSatzListe.filter((sz) => sz.Status === SatzStatus.Wartet)
-                                                .forEach((sz) => {
-                                                        switch (wp as WeightProgress) {
-                                                            case WeightProgress.Increase:
-                                                                sz.AddToDoneWeight(mDiff);
-                                                                sz.SetPresetWeight(sz.GewichtAusgefuehrt);
-                                                                break;
-                                                    
-                                                            case WeightProgress.Decrease:
-                                                                sz.AddToDoneWeight(-mDiff);
-                                                                sz.SetPresetWeight(sz.GewichtAusgefuehrt);
-                                                                break;
-                                                            }
-                                                        sz.GewichtDiff = mDiff;
-                                                })
-                                        });
-                            
-                                    // mSatzListe.forEach((sz) => {
-                                    //     sz.GewichtDiff = mDiff;
-                                    //     sz.AddToDoneWeight(mDiff);
-                                    //     sz.SetPresetWeight(sz.GewichtAusgefuehrt);
-                                    // });
+                            .then((wp: WeightProgress) => {
+                                mProgressPara.Wp = wp;
+                                    Progress.StaticProgrammSetNextWeight(mProgressPara);
                                     
-                                    //     this.DoStoppUhr(mNextProgress.Satz.GewichtAusgefuehrt,
-                                    //         `"${mNextProgress.Uebung.Name}" - set #${(mNextProgress.Satz.SatzListIndex + 1).toString()} - weight: ${(mNextProgress.Satz.fGewichtVorgabe)}`
-                                    //     );
-                                    // }
-                                });
+                                    // this.DoStoppUhr(mNextProgress.Satz.GewichtAusgefuehrt,
+                                    //     `"${mNextProgress.Uebung.Name}" - set #${(mNextProgress.Satz.SatzListIndex + 1).toString()} - weight: ${(mNextProgress.Satz.fGewichtVorgabe)}`
+                                    // );
+                            });
                             // } else {
                             //     const mNextProgress: NextProgress = Progress.StaticDoSaetzeProgress(this.satz as Satz, this.sessUebung, this.sess as Session, this.Progress);
                             //     if (mNextProgress) {
