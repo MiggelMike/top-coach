@@ -1,14 +1,11 @@
+import { Session } from './../../Business/Session/Session';
 import { ITrainingsProgramm } from './../../Business/TrainingsProgramm/TrainingsProgramm';
-import { Programm01Component } from './../bausteine/programm01/programm01.component';
 import { BaseOverlayRef } from "src/app/services/global.service";
 import { Injectable, InjectionToken, ComponentRef, Injector } from "@angular/core";
 import { Overlay, OverlayConfig, OverlayRef } from "@angular/cdk/overlay";
 import { ComponentPortal, PortalInjector } from "@angular/cdk/portal";
-import { IUebung, Uebung } from "src/Business/Uebung/Uebung";
+import { Uebung } from "src/Business/Uebung/Uebung";
 import { ExerciseSettingsComponent } from "../exercise-settings/exercise-settings.component";
-import { ISatz } from 'src/Business/Satz/Satz';
-
-
 
 export class ExerciseOverlayRef extends BaseOverlayRef { }
 
@@ -20,6 +17,7 @@ export interface ExerciseOverlayConfig {
 	height?: number;
 	uebung?: Uebung;
 	programm?: ITrainingsProgramm;
+	session?: Session;
 	left?: number;
 	top?: number;
 }

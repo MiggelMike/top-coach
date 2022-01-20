@@ -1,12 +1,16 @@
+import { Session } from './../../Business/Session/Session';
+import { ProgressPara } from './../../Business/Progress/Progress';
 import { ITrainingsProgramm } from './../../Business/TrainingsProgramm/TrainingsProgramm';
 import { Hantel } from './../../Business/Hantel/Hantel';
 import { DexieSvcService } from "src/app/services/dexie-svc.service";
 import { floatMask, Int3DigitMask } from "./../app.module";
 import { cExerciseOverlayData } from "./../services/exercise-setting-svc.service";
-import { IUebung } from "./../../Business/Uebung/Uebung";
+import { IUebung, Uebung } from "./../../Business/Uebung/Uebung";
 import { Component, Inject } from "@angular/core";
 import { ExerciseOverlayConfig, ExerciseOverlayRef } from "../services/exercise-setting-svc.service";
 import { Progress, ProgressGroup } from "src/Business/Progress/Progress";
+import { SatzStatus } from 'src/Business/Satz/Satz';
+import { ISession } from 'src/Business/Session/Session';
 
 @Component({
 	selector: "app-exercise-settings",
@@ -22,6 +26,7 @@ export class ExerciseSettingsComponent {
 	public HantelListe: Array<Hantel> = [];
 	public ProgressGroupListe: Array<string>;
 	public Programm: ITrainingsProgramm;
+	public Session: ISession;
 	public SessUeb: IUebung;
 	
 
@@ -41,7 +46,9 @@ export class ExerciseSettingsComponent {
 		this.fDbModule.LadeProgress((p) => (this.ProgressListe = p));
 		this.ProgressGroupListe = ProgressGroup;
 		this.SessUeb = aExerciseOverlayConfig.uebung;
+		this.Session = aExerciseOverlayConfig.session;
 		this.Programm = aExerciseOverlayConfig.programm;
+		this.fConfig = aExerciseOverlayConfig;
 	}
 
 	SetProgressGroup(aEvent:any) {
@@ -52,8 +59,21 @@ export class ExerciseSettingsComponent {
 		}
 	}
 
-	onExitSelectProgressGroup(aGroup: string) {
-		this.SessUeb.ProgressGroup = aGroup;
+	onChangeProgressSchema(aEvent: any) {
+		// Hat sich das Progress-Schema der Übung geändert und sind Arbeitssätze vorhanden?
+		if ((this.SessUeb.FkProgress !== this.SessUeb.FkAltProgress) && (this.SessUeb.ArbeitsSatzListe.length > 0)) {
+			
+			// Alle Übungen der Session mit dem alten Progress-Schema von SessUeb suchen
+			const mProgressPara: ProgressPara = new ProgressPara();
+			mProgressPara.DbModule = this.fDbModule;
+			mProgressPara.Programm = this.Programm;
+			mProgressPara.AusgangsSession = this.Session;
+			mProgressPara.AusgangsUebung = this.SessUeb as Uebung;
+			mProgressPara.AusgangsSatz = this.SessUeb.ArbeitsSatzListe[0];
+			mProgressPara.SatzDone = (this.SessUeb.ArbeitsSatzListe[0].Status === SatzStatus.Fertig);
+			mProgressPara.ProgressHasChanged = (this.SessUeb.FkProgress !== this.SessUeb.FkAltProgress) && (this.SessUeb.ArbeitsSatzListe[0].Status === SatzStatus.Fertig);
+			Progress.DoProgress(mProgressPara);
+		}
 	}
 
 	SetAufwaermArbeitsSatzPause(aEvent: any) {

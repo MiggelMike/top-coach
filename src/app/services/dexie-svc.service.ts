@@ -953,7 +953,9 @@ export class DexieSvcService extends Dexie {
 		return this.SatzTable.bulkPut(aSaetze as Array<Satz>);
 	}
 
-	public UebungSpeichern(aUebung: Uebung):PromiseExtended<number> {
+	public UebungSpeichern(aUebung: Uebung): PromiseExtended<number> {
+		aUebung.FkAltProgress = aUebung.FkProgress;
+		aUebung.AltWeightProgress = aUebung.WeightProgress;
 		return this.UebungTable.put(aUebung)
 			.then((mUebungID: number) => {
 				// Uebung ist gespeichert.

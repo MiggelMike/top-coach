@@ -1,4 +1,4 @@
-import { ProgressGroup } from 'src/Business/Progress/Progress';
+import { ProgressGroup, WeightProgress } from 'src/Business/Progress/Progress';
 import { Zeitraum } from './../Dauer';
 import { Equipment } from './../Equipment/Equipment';
 import { MuscleGroupKategorie02 } from '../MuscleGroup/MuscleGroup';
@@ -91,7 +91,8 @@ export interface IUebung {
     getFirstWaitingWorkSet(aFromIndex: number): Satz;
     nummeriereSatzListe(aSatzListe: Array<Satz>);
     ProgressGroup: string;
-
+    WeightProgress: WeightProgress;
+    AltWeightProgress: WeightProgress;
 }
 
 export enum StandardUebungsName {
@@ -158,6 +159,8 @@ export class Uebung implements IUebung {
     public Vorlage: boolean = false;
     public FkProgress: number = 0;
     public FkAltProgress: number = 0;
+    public WeightProgress: WeightProgress = WeightProgress.Same;
+    public AltWeightProgress: WeightProgress = WeightProgress.Same;
     public ProgressGroup: string = ProgressGroup[0];
 
     constructor() {
