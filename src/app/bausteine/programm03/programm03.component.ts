@@ -182,13 +182,13 @@ export class Programm03Component implements OnInit {
     public DoSettings(aSessUeb: Uebung, aEvent: Event) {
         aEvent.stopPropagation();
 
-        this.fExerciseOverlayConfig =
-            {
-                uebung: aSessUeb,
-                left: (aEvent as PointerEvent).pageX - (aEvent as PointerEvent).offsetX,
+        this.fExerciseOverlayConfig = {
+            uebung: aSessUeb,
+            programm: this.programm,
+            left: (aEvent as PointerEvent).pageX - (aEvent as PointerEvent).offsetX,
             top: (aEvent as PointerEvent).clientY - (aEvent as PointerEvent).offsetY,
 
-            } as ExerciseOverlayConfig;
+        } as ExerciseOverlayConfig;
         
             
         this.fExerciseSettingsComponent = this.fExerciseSettingSvcService.open(this.fExerciseOverlayConfig);

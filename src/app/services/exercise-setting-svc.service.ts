@@ -1,11 +1,16 @@
+import { ITrainingsProgramm } from './../../Business/TrainingsProgramm/TrainingsProgramm';
+import { Programm01Component } from './../bausteine/programm01/programm01.component';
 import { BaseOverlayRef } from "src/app/services/global.service";
 import { Injectable, InjectionToken, ComponentRef, Injector } from "@angular/core";
 import { Overlay, OverlayConfig, OverlayRef } from "@angular/cdk/overlay";
 import { ComponentPortal, PortalInjector } from "@angular/cdk/portal";
 import { IUebung, Uebung } from "src/Business/Uebung/Uebung";
 import { ExerciseSettingsComponent } from "../exercise-settings/exercise-settings.component";
+import { ISatz } from 'src/Business/Satz/Satz';
 
-export class ExerciseOverlayRef extends BaseOverlayRef {}
+
+
+export class ExerciseOverlayRef extends BaseOverlayRef { }
 
 export interface ExerciseOverlayConfig {
 	panelClass?: string;
@@ -14,11 +19,12 @@ export interface ExerciseOverlayConfig {
 	width?: number;
 	height?: number;
 	uebung?: Uebung;
+	programm?: ITrainingsProgramm;
 	left?: number;
 	top?: number;
 }
 
-export const cExerciseOverlayData = new InjectionToken<IUebung>("Exercise_Settings_Overlay_Component");
+export const cExerciseOverlayData = new InjectionToken<ExerciseOverlayConfig>("Exercise_Settings_Overlay_Component");
 
 const DEFAULT_CONFIG: ExerciseOverlayConfig = {
   hasBackdrop: true,
@@ -26,6 +32,7 @@ const DEFAULT_CONFIG: ExerciseOverlayConfig = {
   width: 250,
 	backdropClass: "dark-backdrop",
 	uebung: null,
+	programm: null
 	// panelClass: 'tm-file-preview-dialog-panel',
 
 	//   `div {
@@ -60,7 +67,7 @@ export class ExerciseSettingSvcService {
 
 		// Set custom injection tokens
 		injectionTokens.set(ExerciseOverlayRef, aExerciseRef);
-		injectionTokens.set(cExerciseOverlayData, aConfig.uebung);
+		injectionTokens.set(cExerciseOverlayData, aConfig);
 
 		// Instantiate new PortalInjector
 		return new PortalInjector(this.injector, injectionTokens);

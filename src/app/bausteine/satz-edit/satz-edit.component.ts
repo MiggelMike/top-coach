@@ -129,16 +129,7 @@ export class SatzEditComponent implements OnInit {
         this.plateCalcComponent = this.fPlateCalcSvcService.open(this.plateCalcOverlayConfig);
     }
 
-    onClickSatzFertig(aSatz: ISatz, aChecked: boolean) {
-        if (this.fStoppUhrService.StoppuhrComponent)
-            this.fStoppUhrService.StoppuhrComponent.close();
-        
-            
-        let mHeader: string = '';
-        if (aChecked) {
-            mHeader = '';
-        } 
-
+    public DoProgress(aSatz: ISatz, aChecked: boolean) {
         this.fDbModule.LadeProgress(
             (mProgressListe: Array<Progress>) => {
                 this.Progress = mProgressListe.find((p) => p.ID === this.sessUebung.FkProgress);
@@ -148,20 +139,28 @@ export class SatzEditComponent implements OnInit {
                     const mPtrSatz: Satz = this.sessUebung.SatzListe[index];
                     mPtrSatz.SatzListIndex = index;
                 }
-
-                // Hole alle Sätze aus der aktuellen Session die aktuelle Übung mehrfach vorkommt
-                //   Aus der Satzliste der aktuellen Übung die Sätze mit dem Status "Wartet" in mSatzliste sammeln
+    
+                // Hole alle Sätze aus der aktuellen Session, in der die aktuelle Übung mehrfach vorkommt
+                // Aus der Satzliste der aktuellen Übung die Sätze mit dem Status "Wartet" in mSatzliste sammeln
                 const mSatzListe = this.sess.AlleUebungsSaetzeEinerProgressGruppe(this.sessUebung, SatzStatus.Wartet);
-                // const mSatzListe = this.sessUebung.SatzListe.filter((sz) => (sz.SatzListIndex > aSatz.SatzListIndex && sz.Status === SatzStatus.Wartet));
                 const mSessionsListe: Array<Session> = this.fDbModule.UpComingSessionList();
- 
+    
+                let mNextProgress: NextProgress;
+                if (aChecked) 
+                    mNextProgress =
+                        Progress.StaticDoSaetzeProgress(
+                            mSatzListe,
+                            mSessionsListe,
+                            this.satz as Satz,
+                            this.sessUebung,
+                            this.sess as Session,
+                            this.Progress.ProgressSet);                
                 
                 if (this.Progress) {
-                    // if (aChecked) {
-                        if ((this.rowNum === 0)
+                    if (   (this.rowNum === 0)
                         && (this.Progress.ProgressTyp === ProgressTyp.BlockSet)
                         && (this.Progress.ProgressSet === ProgressSet.First)) {
-                            this.Progress.DetermineNextProgress(this.fDbModule, new Date, this.sess.FK_VorlageProgramm, this.rowNum, this.sessUebung)
+                        this.Progress.DetermineNextProgress(this.fDbModule, new Date, this.sess.FK_VorlageProgramm, this.rowNum, this.sessUebung)
                             .then((wp: WeightProgress) => {
                                 const mProgressPara: ProgressPara = new ProgressPara();
                                 mProgressPara.AusgangsSession = this.sess;
@@ -172,50 +171,47 @@ export class SatzEditComponent implements OnInit {
                                 mProgressPara.Progress = this.Progress;
                                 mProgressPara.Wp = wp;
                                 mProgressPara.Storno = false;
-                                mProgressPara.SatzUndone = aChecked === false;
+                                mProgressPara.SatzDone = aChecked === false;
                                 Progress.StaticProgrammSetNextWeight(mProgressPara);
-                                    
-                                    // this.DoStoppUhr(mNextProgress.Satz.GewichtAusgefuehrt,
-                                    //     `"${mNextProgress.Uebung.Name}" - set #${(mNextProgress.Satz.SatzListIndex + 1).toString()} - weight: ${(mNextProgress.Satz.fGewichtVorgabe)}`
-                                    // );
                             });
-                            // } else {
-                            //     const mNextProgress: NextProgress = Progress.StaticDoSaetzeProgress(this.satz as Satz, this.sessUebung, this.sess as Session, this.Progress);
-                            //     if (mNextProgress) {
-                            //         this.DoStoppUhr(mNextProgress.Satz.GewichtAusgefuehrt,
-                            //             `"${mNextProgress.Uebung.Name}" - set #${(mNextProgress.Satz.SatzListIndex + 1).toString()} - weight: ${(mNextProgress.Satz.GewichtVorgabe.toString())}`
-                            //         );
-                            //     }
-                            // }
-                        } else {
-                            const mNextProgress: NextProgress =
-                                Progress.StaticDoSaetzeProgress(
-                                    mSatzListe,
-                                    mSessionsListe,
-                                    this.satz as Satz,
-                                    this.sessUebung,
-                                    this.sess as Session,
-                                    this.Progress.ProgressSet);
-                            
-                            if (mNextProgress) {
-                                this.DoStoppUhr(mNextProgress.Satz.GewichtAusgefuehrt,
-                                    `"${mNextProgress.Uebung.Name}" - set #${(mNextProgress.Satz.SatzListIndex + 1).toString()} - weight: ${(mNextProgress.Satz.GewichtVorgabe.toString())}`
-                                );
-                            }
-                        }
-                    // }
-                } else {
-                    mSatzListe.forEach((sz) => {
-                        if (sz.GewichtDiff) {
-                            sz.AddToDoneWeight(-sz.GewichtDiff);
-                            sz.SetPresetWeight(sz.GewichtAusgefuehrt);
-                            sz.GewichtDiff = 0;
-                        }
-                    });
-                    this.fStoppUhrService.close();
+                    }
                 }
-                
+    
+                if(aChecked)
+                    this.DoStoppUhr(mNextProgress.Satz.GewichtAusgefuehrt,
+                        `"${mNextProgress.Uebung.Name}" - set #${(mNextProgress.Satz.SatzListIndex + 1).toString()} - weight: ${(mNextProgress.Satz.fGewichtVorgabe)}`
+                    );
             });
+        
+    }
+
+    onClickSatzFertig(aSatz: ISatz, aChecked: boolean) {
+        if (this.fStoppUhrService.StoppuhrComponent)
+            this.fStoppUhrService.StoppuhrComponent.close();
+        
+            
+        let mHeader: string = '';
+        if (aChecked) {
+            mHeader = '';
+        }
+
+        const mProgressPara: ProgressPara = new ProgressPara();
+        mProgressPara.AusgangsSatz = aSatz as Satz;
+        mProgressPara.AusgangsSession = this.sess;
+        mProgressPara.AusgangsUebung = this.sessUebung;
+        mProgressPara.Programm = this.programm;
+        mProgressPara.DbModule = this.fDbModule;
+        mProgressPara.SatzDone = aChecked;
+        mProgressPara.Storno = false;
+        mProgressPara.NextProgressFn = (aNextProgress: NextProgress) => {
+            this.DoStoppUhr(aNextProgress.Satz.GewichtAusgefuehrt,
+                `"${aNextProgress.Uebung.Name}" - set #${(aNextProgress.Satz.SatzListIndex + 1).toString()} - weight: ${(aNextProgress.Satz.fGewichtVorgabe)}`
+            );
+
+        } 
+        Progress.DoProgress(mProgressPara);
+
+        //this.DoProgress(aSatz, aChecked);
     }
         
     

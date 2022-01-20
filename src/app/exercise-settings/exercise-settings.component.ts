@@ -1,3 +1,4 @@
+import { ITrainingsProgramm } from './../../Business/TrainingsProgramm/TrainingsProgramm';
 import { Hantel } from './../../Business/Hantel/Hantel';
 import { DexieSvcService } from "src/app/services/dexie-svc.service";
 import { floatMask, Int3DigitMask } from "./../app.module";
@@ -20,6 +21,8 @@ export class ExerciseSettingsComponent {
 	public ProgressListe: Array<Progress> = [];
 	public HantelListe: Array<Hantel> = [];
 	public ProgressGroupListe: Array<string>;
+	public Programm: ITrainingsProgramm;
+	public SessUeb: IUebung;
 	
 
 	public datemask = {
@@ -33,10 +36,12 @@ export class ExerciseSettingsComponent {
 		public overlayRef: ExerciseOverlayRef,
 		public fDbModule: DexieSvcService,
 		@Inject(cExerciseOverlayData)
-		public SessUeb: IUebung
+		public aExerciseOverlayConfig:ExerciseOverlayConfig
 	) {
 		this.fDbModule.LadeProgress((p) => (this.ProgressListe = p));
 		this.ProgressGroupListe = ProgressGroup;
+		this.SessUeb = aExerciseOverlayConfig.uebung;
+		this.Programm = aExerciseOverlayConfig.programm;
 	}
 
 	SetProgressGroup(aEvent:any) {

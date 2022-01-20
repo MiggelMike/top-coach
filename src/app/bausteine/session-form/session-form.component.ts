@@ -14,6 +14,7 @@ import { Location } from "@angular/common";
 import { GlobalService } from "src/app/services/global.service";
 import { Uebung, UebungsKategorie02 } from "src/Business/Uebung/Uebung";
 import { UebungWaehlenData } from "src/app/uebung-waehlen/uebung-waehlen.component";
+import { Progress } from 'src/Business/Progress/Progress';
 
 @Component({
 	selector: "app-session-form",
@@ -156,9 +157,14 @@ export class SessionFormComponent implements OnInit {
 			if (mSuchUebung === undefined) aPara.fDexieSvcService.UebungTable.delete(mUebung.ID);
 		}
 
+		
+
+
 		await aPara.fDexieSvcService.SessionSpeichern(aPara.Session).then(() => {
 			aPara.cmpSession = aPara.Session.Copy();
 		});
+
+
 				
 		// if ((mSession.Kategorie02 === SessionStatus.Fertig) && (mSession.ProgressIsCalced === false)) {
 		// 	mSession.ProgressIsCalced = true;
@@ -256,6 +262,49 @@ export class SessionFormComponent implements OnInit {
 			this.fSessionStatsOverlayComponent.sess.SetSessionFertig();
 			
 			this.SaveChangesPrim(this).then(() => {
+
+
+				// this.fDexieSvcService.LadeProgress(
+				// 	(mProgressListe: Array<Progress>) => {
+				// 	const mProgress:Progress = mProgressListe.find((p) => p.ID === this.sessUebung.FkProgress);
+				// 	// this.Progress = mProgressListe.find((p) => p.ID === this.sessUebung.FkAltProgress);
+				// 	// Sätze der aktuellen Übung durchnummerieren
+				// 	for (let index = 0; index < this.sessUebung.SatzListe.length; index++) {
+				// 		const mPtrSatz: Satz = this.sessUebung.SatzListe[index];
+				// 		mPtrSatz.SatzListIndex = index;
+				// 	}
+		
+				// 	// Hole alle Sätze aus der aktuellen Session die aktuelle Übung mehrfach vorkommt
+				// 	//   Aus der Satzliste der aktuellen Übung die Sätze mit dem Status "Wartet" in mSatzliste sammeln
+				// 	const mSatzListe = this.sess.AlleUebungsSaetzeEinerProgressGruppe(this.sessUebung, SatzStatus.Wartet);
+				// 	// const mSatzListe = this.sessUebung.SatzListe.filter((sz) => (sz.SatzListIndex > aSatz.SatzListIndex && sz.Status === SatzStatus.Wartet));
+				// 	const mSessionsListe: Array<Session> = this.fDbModule.UpComingSessionList();
+		
+				// 	if (this.Progress) {
+				// 		if (   (this.rowNum === 0)
+				// 			&& (this.Progress.ProgressTyp === ProgressTyp.BlockSet)
+				// 			&& (this.Progress.ProgressSet === ProgressSet.First)) {
+				// 			this.Progress.DetermineNextProgress(this.fDbModule, new Date, this.sess.FK_VorlageProgramm, this.rowNum, this.sessUebung)
+				// 				.then((wp: WeightProgress) => {
+				// 					const mProgressPara: ProgressPara = new ProgressPara();
+				// 					mProgressPara.AusgangsSession = this.sess;
+				// 					mProgressPara.AusgangsUebung = this.sessUebung;
+				// 					mProgressPara.AusgangsSatz = aSatz as Satz;
+				// 					mProgressPara.DbModule = this.fDbModule;
+				// 					mProgressPara.Programm = this.programm;
+				// 					mProgressPara.Progress = this.Progress;
+				// 					mProgressPara.Wp = wp;
+				// 					mProgressPara.Storno = false;
+				// 					mProgressPara.SatzUndone = false;
+				// 					Progress.StaticProgrammSetNextWeight(mProgressPara);
+				// 				});
+				// 		}
+				// 	}
+				// });
+
+
+
+
 				// Die Session ist abgeschlossen und kann daher sofort aus der Liste der anstehenden Sessions gelöscht werden.
 				const mIndex = this.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex( (s) => s.ID === this.Session.ID);
 				if (mIndex > -1) this.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
