@@ -1,5 +1,5 @@
 import { InitialWeight } from './../../Business/Uebung/InitialWeight';
-import { Progress, ProgressSet, ProgressTyp, WeightCalculation, WeightProgressTime } from './../../Business/Progress/Progress';
+import { Progress, ProgressSet, ProgressTyp, WeightCalculation, WeightProgressTime, ProgressPara } from './../../Business/Progress/Progress';
 import { Hantelscheibe } from 'src/Business/Hantelscheibe/Hantelscheibe';
 import { Hantel, HantelTyp } from './../../Business/Hantel/Hantel';
 import { Equipment, EquipmentOrigin, EquipmentTyp } from './../../Business/Equipment/Equipment';
@@ -312,7 +312,7 @@ export class DexieSvcService extends Dexie {
 
 		//   Dexie.delete("ConceptCoach");
 
-		this.version(5).stores({
+		this.version(6).stores({
 			AppData: "++id",
 			Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
@@ -489,13 +489,16 @@ export class DexieSvcService extends Dexie {
 		return this.StammUebungsListe.find((ub) => ub.Name.toUpperCase() === aUebung.Name.toUpperCase());
 	}
 
-	public LadeProgress(aAfterLoadFn?: AfterLoadFn) {
+	public LadeProgress(aProgressPara?: ProgressPara) {
 		this.table(this.cProgress)
 			.toArray()
 			.then((mProgressListe) => {
 				this.ProgressListe = mProgressListe;
 
-				if (aAfterLoadFn !== undefined) aAfterLoadFn(mProgressListe);
+				if ((aProgressPara !== undefined) && (aProgressPara.AfterLoadFn)) {
+					aProgressPara.ProgressListe = mProgressListe;
+					aProgressPara.AfterLoadFn(aProgressPara);
+				}
 			});
 	}
 

@@ -1,6 +1,7 @@
 import { SessionStatus } from './../SessionDB';
 import { ISession } from 'src/Business/Session/Session';
 import { DexieSvcService } from './../../app/services/dexie-svc.service';
+import { Satz } from '../Satz/Satz';
 var cloneDeep = require('lodash.clonedeep');
 
 export enum ProgrammTyp {
@@ -30,7 +31,8 @@ export interface ITrainingsProgramm {
     ErstelleSessionsAusVorlage(aProgrammKategorie: ProgrammKategorie): ITrainingsProgramm;
     DeserializeProgramm(aJsonData: Object): ITrainingsProgramm;
     hasChanged(aCmpProgramm: ITrainingsProgramm): Boolean;
-    resetProgram(aQuellProgram: ITrainingsProgramm):void
+    resetProgram(aQuellProgram: ITrainingsProgramm): void
+    SuchSatz(aSatz: Satz): Satz;
 }
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
@@ -127,6 +129,18 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
                 this.SessionListe.push(mSess);
             });
         }
+    }
+
+    public SuchSatz(aSatz: Satz): Satz {
+        let  mResult: Satz;
+        this.SessionListe.find((s) => {
+            if (s.ID === aSatz.SessionID) {
+                mResult = s.SucheSatz(aSatz);
+                return s;
+            }
+            return undefined;
+        });
+        return mResult;
     }
 
     protected abstract InitSession(aSessionNr: number): Array<ISession>;

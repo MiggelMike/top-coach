@@ -1,4 +1,4 @@
-import { DexieSvcService } from 'src/app/services/dexie-svc.service';
+import { AfterLoadFn, DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { ITrainingsProgramm, TrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { ISession, Session } from './../Session/Session';
 import { SessionStatus } from 'src/Business/SessionDB';
@@ -24,6 +24,8 @@ export class ProgressPara {
 	ProgressHasChanged: boolean;
 	SatzDone: boolean;
 	NextProgressFn?: NextProgressFn;
+	AfterLoadFn?: AfterLoadFn;
+	ProgressListe?: Array<Progress>;
 }
 
 export enum NextProgressStatus { 
@@ -393,11 +395,11 @@ export class Progress implements IProgress {
 			}
 		}
 		
-		mSatzListe.forEach((sz) => {
-			sz.GewichtDiff = mDiff;
-			sz.AddToDoneWeight(mDiff);
-			sz.SetPresetWeight(sz.GewichtAusgefuehrt);
-		});
+		// mSatzListe.forEach((sz) => {
+		// 	sz.GewichtDiff = mDiff;
+		// 	sz.AddToDoneWeight(mDiff);
+		// 	sz.SetPresetWeight(sz.GewichtAusgefuehrt);
+		// });
 
 		let mNextUndoneSet: Satz = mSatzListe.shift();
 		let mFirstSetChecked: boolean = false;
@@ -435,87 +437,90 @@ export class Progress implements IProgress {
 	}
 
 	public static DoProgress(aProgressPara: ProgressPara) {
-        aProgressPara.DbModule.LadeProgress(
-            (mProgressListe: Array<Progress>) => {
-                aProgressPara.Progress = mProgressListe.find((p) => p.ID === aProgressPara.AusgangsUebung.FkProgress);
+		const mProgressParaMerker: ProgressPara = aProgressPara;
+		mProgressParaMerker.AfterLoadFn = 
+			(aProgressPara: ProgressPara) => {
+				// (  mProgressListe: Array<Progress>) => {				
+				const mProgressListe: Array<Progress> = aProgressPara.ProgressListe;
+				mProgressParaMerker.Progress = mProgressListe.find((p) => p.ID === mProgressParaMerker.AusgangsUebung.FkProgress);
                 // this.Progress = mProgressListe.find((p) => p.ID === this.sessUebung.FkAltProgress);
                 // Sätze der aktuellen Übung durchnummerieren
-				aProgressPara.AusgangsUebung.nummeriereSatzListe(aProgressPara.AusgangsUebung.SatzListe);
+				mProgressParaMerker.AusgangsUebung.nummeriereSatzListe(mProgressParaMerker.AusgangsUebung.SatzListe);
                 // Hole alle Sätze aus der aktuellen Session, in der die aktuelle Übung mehrfach vorkommt
                 // Aus der Satzliste der aktuellen Übung die Sätze mit dem Status "Wartet" in mSatzliste sammeln
-                const mSatzListe = aProgressPara.AusgangsSession.AlleUebungsSaetzeEinerProgressGruppe(aProgressPara.AusgangsUebung, SatzStatus.Wartet);
-                const mSessionsListe: Array<Session> = aProgressPara.DbModule.UpComingSessionList();
+                const mSatzListe = mProgressParaMerker.AusgangsSession.AlleUebungsSaetzeEinerProgressGruppe(mProgressParaMerker.AusgangsUebung, SatzStatus.Wartet);
+                const mSessionsListe: Array<Session> = mProgressParaMerker.DbModule.UpComingSessionList();
     
                 let mNextProgress: NextProgress;
-                if (aProgressPara.SatzDone) 
+                if (mProgressParaMerker.SatzDone) 
                     mNextProgress =
                         Progress.StaticDoSaetzeProgress(
                             mSatzListe,
                             mSessionsListe,
-                            aProgressPara.AusgangsSatz as Satz,
-                            aProgressPara.AusgangsUebung,
-                            aProgressPara.AusgangsSession as Session,
-                            aProgressPara.Progress.ProgressSet);                
+                            mProgressParaMerker.AusgangsSatz as Satz,
+                            mProgressParaMerker.AusgangsUebung,
+                            mProgressParaMerker.AusgangsSession as Session,
+                            mProgressParaMerker.Progress.ProgressSet);                
                 
-				// if (aProgressPara.Storno) {
-				// 	const mStornoProgress: Progress = mProgressListe.find((p) => p.ID === aProgressPara.AusgangsUebung.FkAltProgress);
+				// if (mProgressPara.Storno) {
+				// 	const mStornoProgress: Progress = mProgressListe.find((p) => p.ID === mProgressPara.AusgangsUebung.FkAltProgress);
 				// 	if (mStornoProgress) {
-				// 		// aProgressPara.Progress.DetermineNextProgress(	aProgressPara.DbModule,
+				// 		// mProgressPara.Progress.DetermineNextProgress(	mProgressPara.DbModule,
 				// 		// 	new Date,
-				// 		// 	aProgressPara.AusgangsSession.FK_VorlageProgramm,
-				// 		// 	aProgressPara.AusgangsSatz.SatzListIndex,
-				// 		// 	aProgressPara.AusgangsUebung)
+				// 		// 	mProgressPara.AusgangsSession.FK_VorlageProgramm,
+				// 		// 	mProgressPara.AusgangsSatz.SatzListIndex,
+				// 		// 	mProgressPara.AusgangsUebung)
 				// 		// 		.then((wp: WeightProgress) => {
 				// 			const mProgressPara: ProgressPara = new ProgressPara();
-				// 			mProgressPara.AusgangsSession = aProgressPara.AusgangsSession;
-				// 			mProgressPara.AusgangsUebung = aProgressPara.AusgangsUebung;
-				// 			mProgressPara.AusgangsSatz = aProgressPara.AusgangsSatz;
-				// 			mProgressPara.DbModule = aProgressPara.DbModule;
-				// 			mProgressPara.Programm = aProgressPara.Programm;
+				// 			mProgressPara.AusgangsSession = mProgressPara.AusgangsSession;
+				// 			mProgressPara.AusgangsUebung = mProgressPara.AusgangsUebung;
+				// 			mProgressPara.AusgangsSatz = mProgressPara.AusgangsSatz;
+				// 			mProgressPara.DbModule = mProgressPara.DbModule;
+				// 			mProgressPara.Programm = mProgressPara.Programm;
 				// 			mProgressPara.Progress = mStornoProgress;
 				// 			mProgressPara.Wp = WeightProgress.Decrease;
 				// 			mProgressPara.Storno = true;
-				// 			mProgressPara.SatzDone = aProgressPara.SatzDone;
+				// 			mProgressPara.SatzDone = mProgressPara.SatzDone;
 				// 			Progress.StaticProgrammSetNextWeight(mProgressPara);
 				// 			// });
 				// 		}
 				// }
 
 				// let mStornoProgress: Progress;
-				// if (aProgressPara.AusgangsUebung.FkAltProgress !== aProgressPara.AusgangsUebung.FkProgress) 
-				//  	mStornoProgress = mProgressListe.find((p) => p.ID === aProgressPara.AusgangsUebung.FkAltProgress);
+				// if (mProgressPara.AusgangsUebung.FkAltProgress !== mProgressPara.AusgangsUebung.FkProgress) 
+				//  	mStornoProgress = mProgressListe.find((p) => p.ID === mProgressPara.AusgangsUebung.FkAltProgress);
 					
-				if (aProgressPara.Progress) {
-                    if (   (aProgressPara.AusgangsSatz.SatzListIndex === 0)
-                        && (aProgressPara.Progress.ProgressTyp === ProgressTyp.BlockSet)
-						&& (aProgressPara.Progress.ProgressSet === ProgressSet.First)
-						|| (aProgressPara.AusgangsUebung.FkAltProgress !== aProgressPara.AusgangsUebung.FkProgress)
+				if (mProgressParaMerker.Progress) {
+                    if (   (mProgressParaMerker.AusgangsSatz.SatzListIndex === 0)
+                        && (mProgressParaMerker.Progress.ProgressTyp === ProgressTyp.BlockSet)
+						&& (mProgressParaMerker.Progress.ProgressSet === ProgressSet.First)
+						|| (mProgressParaMerker.AusgangsUebung.FkAltProgress !== mProgressParaMerker.AusgangsUebung.FkProgress)
 					) {
-						aProgressPara.Progress.DetermineNextProgress(	aProgressPara.DbModule,
+						mProgressParaMerker.Progress.DetermineNextProgress(	mProgressParaMerker.DbModule,
 																		new Date,
-																		aProgressPara.AusgangsSession.FK_VorlageProgramm,
-																		aProgressPara.AusgangsSatz.SatzListIndex,
-																		aProgressPara.AusgangsUebung)
+																		mProgressParaMerker.AusgangsSession.FK_VorlageProgramm,
+																		mProgressParaMerker.AusgangsSatz.SatzListIndex,
+																		mProgressParaMerker.AusgangsUebung)
                             .then((wp: WeightProgress) => {
                                 const mProgressPara: ProgressPara = new ProgressPara();
-                                mProgressPara.AusgangsSession = aProgressPara.AusgangsSession;
-                                mProgressPara.AusgangsUebung = aProgressPara.AusgangsUebung;
-                                mProgressPara.AusgangsSatz = aProgressPara.AusgangsSatz;
-                                mProgressPara.DbModule = aProgressPara.DbModule;
-                                mProgressPara.Programm = aProgressPara.Programm;
-                                mProgressPara.Progress = aProgressPara.Progress;
-                                mProgressPara.ProgressHasChanged = aProgressPara.AusgangsUebung.FkAltProgress !== aProgressPara.AusgangsUebung.FkProgress;
+                                mProgressPara.AusgangsSession = mProgressParaMerker.AusgangsSession;
+                                mProgressPara.AusgangsUebung = mProgressParaMerker.AusgangsUebung;
+                                mProgressPara.AusgangsSatz = mProgressParaMerker.AusgangsSatz;
+                                mProgressPara.DbModule = mProgressParaMerker.DbModule;
+                                mProgressPara.Programm = mProgressParaMerker.Programm;
+                                mProgressPara.Progress = mProgressParaMerker.Progress;
+                                mProgressPara.ProgressHasChanged = mProgressParaMerker.AusgangsUebung.FkAltProgress !== mProgressParaMerker.AusgangsUebung.FkProgress;
                                 mProgressPara.Wp = wp;
-                                mProgressPara.SatzDone = aProgressPara.SatzDone;
+                                mProgressPara.SatzDone = mProgressParaMerker.SatzDone;
                                 Progress.StaticProgrammSetNextWeight(mProgressPara);
                             });
                     }
                 }
     
-				if ((aProgressPara.SatzDone) && (aProgressPara.NextProgressFn))
-					aProgressPara.NextProgressFn(mNextProgress);
-            });
-        
+				if ((mProgressParaMerker.SatzDone) && (mProgressParaMerker.NextProgressFn))
+					mProgressParaMerker.NextProgressFn(mNextProgress);
+			};
+		mProgressParaMerker.DbModule.LadeProgress(mProgressParaMerker);
     }
 
 	public static StaticSessionSetNextWeight(aWp: WeightProgress, aSession: Session, aUebung: Uebung): void {
@@ -546,19 +551,21 @@ export class Progress implements IProgress {
 	
 	public static StaticProgrammSetNextWeight(aProgressPara: ProgressPara):void {
 		class ProgressExercise { Session: ISession; Uebung: Uebung; Progress: Progress; StornoProgress: Progress };
-		// Wenn die Session läuft, muss aProgress definiert sein!
-		// if (aAusgangsSession.Kategorie02 === SessionStatus.Laueft && aProgress === undefined)
-		// 	return;
 
 		let mAlleUebungenEinerProgressGruppe: Array<Uebung>;
-		if (aProgressPara.AusgangsUebung)
-			mAlleUebungenEinerProgressGruppe = aProgressPara.AusgangsSession.AlleUebungenEinerProgressGruppe(aProgressPara.AusgangsUebung);
 		// Temporäre Liste der Uebungen
 		const mTodoListe: Array<ProgressExercise> = [];
-		// Alle vorhandenen Progress-Typen laden
-		aProgressPara.DbModule.LadeProgress(
+		aProgressPara.AfterLoadFn =
+			// Alle vorhandenen Progress-Typen laden
 			// After-Load-Call-Back ausführen
-			(mProgressListe: Array<Progress>) => {
+			(aProgressPara: ProgressPara) => {
+				if (aProgressPara.AusgangsUebung) {
+					if(aProgressPara.AusgangsUebung.FkProgress !== aProgressPara.AusgangsUebung.FkAltProgress)
+						mAlleUebungenEinerProgressGruppe = aProgressPara.AusgangsSession.AlleUebungenEinerProgressGruppe(aProgressPara.AusgangsUebung, aProgressPara.AusgangsUebung.FkAltProgress);
+					else
+						mAlleUebungenEinerProgressGruppe = aProgressPara.AusgangsSession.AlleUebungenEinerProgressGruppe(aProgressPara.AusgangsUebung, );
+				}
+				
 				// Die relevanten Sessions aus der Sessionliste des Programms Herausfiltern.
 				const mSessionListe: Array<ISession> = aProgressPara.Programm.SessionListe.filter((mCmpSession) => {
 					if
@@ -576,26 +583,30 @@ export class Progress implements IProgress {
 						// Die Session nur berücksichtigen, wenn sie mindestens eine Übung der Ausgangs-Session hat.
 						(aProgressPara.AusgangsSession.UebungsListe.find((au) => {
 							// Die Übungen aller Sessions aus der Session-Liste des Programms mit den Übungen der Ausgangssession vergleichen.
-							let mResultDummy : Uebung;
+							let mResultDummy: Uebung;
 							for (let index = 0; index < mCmpSession.UebungsListe.length; index++) {
 								let mCmpUebPtr = mCmpSession.UebungsListe[index];
-								if ((aProgressPara.AusgangsUebung.ID === mCmpUebPtr.ID
-									||
-									aProgressPara.AusgangsUebung.FkUebung === mCmpUebPtr.FkUebung &&
-									aProgressPara.AusgangsUebung.ListenIndex === mCmpUebPtr.ListenIndex
-								    )
-									&&
-									aProgressPara.AusgangsUebung.FkAltProgress === mCmpUebPtr.FkProgress
-									
-								)
-									mCmpUebPtr = aProgressPara.AusgangsUebung;
+								if (aProgressPara.AusgangsUebung.FkUebung !== mCmpUebPtr.FkUebung)
+									continue;
+
 								// Wenn aProgress gesetzt ist, dessen ID zum Vergleichen verwenden,
 								// sonst die ID des Progress der Übung aus der Übungsliste benutzen. 
 								const mSuchProgressID: number = aProgressPara.Progress ? aProgressPara.Progress.ID : mCmpUebPtr.FkProgress;
-   							    // Hat der Progresstyp sich geändert?
+								// Hat der Progresstyp sich geändert?
 								let mStornoProgressID: number;
-								if (mCmpUebPtr.FkAltProgress > 0 && mCmpUebPtr.FkAltProgress !== mCmpUebPtr.FkProgress )
-									mStornoProgressID = mCmpUebPtr.FkAltProgress;
+
+								if (aProgressPara.AusgangsUebung.FkUebung === mCmpUebPtr.FkUebung) {
+									if (
+										//  mCmpUebPtr.ListenIndex === aProgressPara.AusgangsUebung.ListenIndex &&
+										mCmpUebPtr.FkProgress > 0 && mCmpUebPtr.FkAltProgress !== aProgressPara.AusgangsUebung.FkProgress
+									)
+										mStornoProgressID = mCmpUebPtr.FkAltProgress;
+									else if (mCmpUebPtr.FkAltProgress > 0 && mCmpUebPtr.FkAltProgress !== mCmpUebPtr.FkProgress)
+										mStornoProgressID = mCmpUebPtr.FkAltProgress;
+								
+									else if (aProgressPara.AusgangsUebung.FkAltProgress > 0 && aProgressPara.AusgangsUebung.FkAltProgress !== mCmpUebPtr.FkProgress)
+										mStornoProgressID = mCmpUebPtr.FkAltProgress;
+								}
 								
 								if (	// Sind die Übungen gleich?
 									au.FkUebung === mCmpUebPtr.FkUebung
@@ -606,11 +617,11 @@ export class Progress implements IProgress {
 									||
 									// Der Progresstyp hat sich geändert.
 									// Evtl. schon getätigte Gewichtsvorgaben müssen rückgängig gemacht werden.
-									mStornoProgressID 
+									mStornoProgressID
 									
 								) {
-									const mProgress: Progress = mProgressListe.find((p) => p.ID === mCmpUebPtr.FkProgress);
-									const mStornoProgress: Progress = mProgressListe.find((p) => p.ID === mStornoProgressID);
+									const mProgress: Progress = aProgressPara.ProgressListe.find((p) => p.ID === mCmpUebPtr.FkProgress);
+									const mStornoProgress: Progress = aProgressPara.ProgressListe.find((p) => p.ID === mStornoProgressID);
 									
 									if (mProgress || mStornoProgress) {
 										const mProgessExercise: ProgressExercise = new ProgressExercise();
@@ -633,95 +644,112 @@ export class Progress implements IProgress {
 						return false;
 				});
 
+				const mProgressID = aProgressPara.AusgangsUebung.FkProgress;
+				const mAltProgressID = aProgressPara.AusgangsUebung.FkAltProgress;
+
 				// Wenn die Todo-Liste leer ist, gibt es nichts zu tun.
 				mTodoListe.forEach((td) => {
-					let mDiff: number = 0;
+					let mGewichtDiff: number = 0;
+
 					td.Uebung.nummeriereSatzListe(td.Uebung.SatzListe);
 					td.Uebung.WeightProgress = aProgressPara.Wp;
-
 					// Progress-Schema ist geändert worden 
-					if (aProgressPara.ProgressHasChanged === true) {
+					if ((aProgressPara.ProgressHasChanged === true) &&
+						(td.Uebung.FkUebung === aProgressPara.AusgangsUebung.FkUebung) &&
+						(   (td.Uebung.FkAltProgress !== mProgressID)
+							||
+							(td.Uebung.FkProgress !== mAltProgressID)
+						)
+					) {
 						td.Uebung.ArbeitsSatzListe.forEach((sz) => {
-							if ((aProgressPara.AusgangsSatz === undefined || Progress.EqualSet(sz, aProgressPara.AusgangsSatz) === false) &&
+							if
+								((aProgressPara.AusgangsSatz === undefined || Progress.EqualSet(sz, aProgressPara.AusgangsSatz) === false) &&
 								(sz.Status === SatzStatus.Wartet) &&
-								(td.Uebung.AltWeightProgress !== undefined)) {
-									switch (td.Uebung.AltWeightProgress) {
-										case WeightProgress.Increase:
-											sz.AddToDoneWeight(-td.Uebung.GewichtSteigerung);
-											sz.SetPresetWeight(sz.GewichtAusgefuehrt);
-											break;
+								(sz.GewichtDiff !== undefined) &&
+								(td.Uebung.AltWeightProgress !== undefined))
+							{
+								switch (td.Uebung.AltWeightProgress) {
+									case WeightProgress.Increase:
+										if (aProgressPara.ProgressHasChanged)
+											sz.GewichtDiff = -sz.GewichtDiff;
+											
+										sz.AddToDoneWeight(sz.GewichtDiff);
+										sz.SetPresetWeight(sz.GewichtAusgefuehrt);
+										break;
 										
-										case WeightProgress.Decrease:
-											sz.AddToDoneWeight(td.Uebung.GewichtReduzierung);
-											sz.SetPresetWeight(sz.GewichtAusgefuehrt);
-											break;
-									}
+									case WeightProgress.Decrease:
+										sz.AddToDoneWeight(sz.GewichtDiff);
+										sz.SetPresetWeight(sz.GewichtAusgefuehrt);
+										break;
 								}
+							}
 						})
 					}//if
 
-
-					if ((aProgressPara.SatzDone === false)&&(aProgressPara.ProgressHasChanged === false)) {
+					if ((aProgressPara.SatzDone === false) && (aProgressPara.ProgressHasChanged === false)) {
 						td.Uebung.ArbeitsSatzListe.forEach((sz) => {
 							if (aProgressPara.AusgangsSatz === undefined || Progress.EqualSet(sz, aProgressPara.AusgangsSatz) === false) {
 								if (sz.Status === SatzStatus.Wartet) {
 									if (td.Uebung.WeightProgress !== undefined) {
 										switch (td.Uebung.WeightProgress) {
 											case WeightProgress.Increase:
-												mDiff = -td.Uebung.GewichtSteigerung;
+												mGewichtDiff = -td.Uebung.GewichtSteigerung;
 												break;
 											
 											case WeightProgress.Decrease:
-												mDiff = -td.Uebung.GewichtReduzierung;
+												mGewichtDiff = -td.Uebung.GewichtReduzierung;
 												break;
 										}
 										
 										switch (td.Uebung.WeightProgress) {
 											case WeightProgress.Increase:
-												sz.AddToDoneWeight(mDiff);
+												sz.AddToDoneWeight(mGewichtDiff);
 												sz.SetPresetWeight(sz.GewichtAusgefuehrt);
 												break;
 												
 											case WeightProgress.Decrease:
-												sz.AddToDoneWeight(-mDiff);
+												sz.AddToDoneWeight(-mGewichtDiff);
 												sz.SetPresetWeight(sz.GewichtAusgefuehrt);
 												break;
 										}
+										// mGewichtDiff = 0;
+										sz.GewichtDiff = 0;
 									}
 								}
 							}
 						})
 					}//if
 					
-					if (aProgressPara.SatzDone === true) {
-						mDiff = 0;
+					if ((aProgressPara.SatzDone === true) && (aProgressPara.ProgressHasChanged === false)) {
+						mGewichtDiff = 0;
 						if (td.Progress) {
 							td.Uebung.ArbeitsSatzListe.forEach((sz) => {
 								if (aProgressPara.AusgangsSatz === undefined || Progress.EqualSet(sz, aProgressPara.AusgangsSatz) === false) {
 									if (sz.Status === SatzStatus.Wartet) {
 										if (td.Uebung.WeightProgress !== undefined) {
+											mGewichtDiff = 0;
 											switch (td.Uebung.WeightProgress) {
 												case WeightProgress.Increase:
-													mDiff = td.Uebung.GewichtSteigerung;
+													mGewichtDiff = td.Uebung.GewichtSteigerung;
 													break;
 							
 												case WeightProgress.Decrease:
-													mDiff = td.Uebung.GewichtReduzierung;
+													mGewichtDiff = td.Uebung.GewichtReduzierung;
 													break;
 											}
 
 											switch (td.Uebung.WeightProgress) {
 												case WeightProgress.Increase:
-													sz.AddToDoneWeight(mDiff);
+													sz.AddToDoneWeight(mGewichtDiff);
 													sz.SetPresetWeight(sz.GewichtAusgefuehrt);
 													break;
-						
+													
 												case WeightProgress.Decrease:
-													sz.AddToDoneWeight(-mDiff);
+													sz.AddToDoneWeight(-mGewichtDiff);
 													sz.SetPresetWeight(sz.GewichtAusgefuehrt);
 													break;
 											}
-											sz.GewichtDiff = mDiff;
+											sz.GewichtDiff = mGewichtDiff;
 										}
 									}
 								}
@@ -729,27 +757,24 @@ export class Progress implements IProgress {
 						}
 					}
 					
-					td.Uebung.AltWeightProgress = aProgressPara.Wp;
-					td.Uebung.FkAltProgress = td.Uebung.FkProgress;
+					const mUebung: Uebung = mAlleUebungenEinerProgressGruppe.find((u) =>
+						u.SessionID === td.Uebung.SessionID &&
+						u.FkUebung === td.Uebung.FkUebung &&
+						u.ListenIndex === td.Uebung.ListenIndex
+					);
 
-					if (mAlleUebungenEinerProgressGruppe) {
-						const mUebung: Uebung = mAlleUebungenEinerProgressGruppe.find((u) =>
-							u.SessionID === td.Uebung.SessionID &&
-							u.FkUebung === td.Uebung.FkUebung &&
-							u.ListenIndex === td.Uebung.ListenIndex
-						);
-
-						if (mUebung) {
-							mUebung.SatzListe = td.Uebung.SatzListe;
-							for (let index = 0; index < mUebung.SatzListe.length; index++) {
-								const mSatzPtr = mUebung.SatzListe[index];
-								if (aProgressPara.AusgangsSatz && Progress.EqualSet(mSatzPtr, aProgressPara.AusgangsSatz) === true)
-									mSatzPtr.Status = aProgressPara.AusgangsSatz.Status;
-							}
+					if (mUebung) {
+						mUebung.AltWeightProgress = aProgressPara.Wp;
+						mUebung.FkProgress = aProgressPara.AusgangsUebung.FkProgress;
+						mUebung.FkAltProgress = aProgressPara.AusgangsUebung.FkProgress;
+						mUebung.SatzListe = td.Uebung.SatzListe;
+						for (let index = 0; index < mUebung.SatzListe.length; index++) {
+							const mSatzPtr = mUebung.SatzListe[index];
+							if (aProgressPara.AusgangsSatz && Progress.EqualSet(mSatzPtr, aProgressPara.AusgangsSatz) === true)
+								mSatzPtr.Status = aProgressPara.AusgangsSatz.Status;
 						}
 					}
 				})
-
 
 				let mUniqueSessionListe: Array<ISession> = [];
 				mUniqueSessionListe = mSessionListe.filter((s) =>
@@ -757,9 +782,10 @@ export class Progress implements IProgress {
 				);
 
 				mUniqueSessionListe.forEach((s) => {
-					if (aProgressPara.AusgangsSession.Kategorie02 !== SessionStatus.Laueft) 
-					aProgressPara.DbModule.SessionSpeichern(s as Session);
+					if (aProgressPara.AusgangsSession.Kategorie02 !== SessionStatus.Laueft)
+						aProgressPara.DbModule.SessionSpeichern(s as Session);
 				});
-			})
+			};
+		aProgressPara.DbModule.LadeProgress(aProgressPara);
 	}
 }

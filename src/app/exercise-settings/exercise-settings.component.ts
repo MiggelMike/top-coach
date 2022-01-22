@@ -43,7 +43,10 @@ export class ExerciseSettingsComponent {
 		@Inject(cExerciseOverlayData)
 		public aExerciseOverlayConfig:ExerciseOverlayConfig
 	) {
-		this.fDbModule.LadeProgress((p) => (this.ProgressListe = p));
+		const mProgressPara: ProgressPara = new ProgressPara();
+		mProgressPara.AfterLoadFn = (aProgressPara: ProgressPara ) => (this.ProgressListe = aProgressPara.ProgressListe);
+		// mProgressPara.ProgressListe = this.ProgressListe;
+		this.fDbModule.LadeProgress(mProgressPara);
 		this.ProgressGroupListe = ProgressGroup;
 		this.SessUeb = aExerciseOverlayConfig.uebung;
 		this.Session = aExerciseOverlayConfig.session;

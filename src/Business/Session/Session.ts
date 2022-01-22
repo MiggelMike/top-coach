@@ -1,3 +1,4 @@
+import { ProgressGroup } from 'src/Business/Progress/Progress';
 import { SessionDB, Pause, ISessionDB, SessionStatus } from './../SessionDB';
 import { Zeitraum, MaxZeitraum } from './../Dauer';
 import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
@@ -21,14 +22,31 @@ export interface ISession extends ISessionDB {
     getFirstWaitingExercise(aFromIndex: number): Uebung;
     IstAusVorgabe: boolean;
     AlleUebungsSaetzeEinerProgressGruppe(aUebung: Uebung, aStatus: SatzStatus): Array<Satz>;
-    AlleUebungenEinerProgressGruppe(aUebung: Uebung): Array<Uebung>;
+    AlleUebungenEinerProgressGruppe(aUebung: Uebung, aProgessID?: number): Array<Uebung>;
     SetNextWeight(aWp: WeightProgress, aUebung: Uebung);
-    isEqual(aOtherSession: Session): boolean 
+    isEqual(aOtherSession: Session): boolean
+    SucheSatz(aSatz: Satz):Satz
 
 }
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
 export class Session extends SessionDB implements ISession {
+
+    public SucheSatz(aSatz: Satz): Satz {
+        let mResult: Satz;
+        this.UebungsListe.find((u) => {
+            mResult = u.ArbeitsSatzListe.find((sz) =>
+                sz.ID === aSatz.ID && aSatz.ID > 0
+                ||
+                sz.UebungID === aSatz.UebungID && aSatz.UebungID > 0
+                && sz.SatzListIndex === aSatz.SatzListIndex
+            )
+            if (mResult)
+                return u;
+            return undefined;
+        });
+        return mResult;
+    }
 
     public override get BodyWeight(): number {
         // if (this.BodyWeightAtSessionStart === 0) {
@@ -260,12 +278,12 @@ export class Session extends SessionDB implements ISession {
         return mSatzListe;
     }
 
-    public AlleUebungenEinerProgressGruppe(aUebung: Uebung): Array<Uebung> {
+    public AlleUebungenEinerProgressGruppe(aUebung: Uebung, aProgessID?: number): Array<Uebung> {
         return this.UebungsListe.filter(
             (u) =>
                 u.FkUebung === aUebung.FkUebung &&
-                u.FkProgress === aUebung.FkProgress && 
-                u.ProgressGroup === aUebung.ProgressGroup 
+                u.FkProgress === aProgessID ? aProgessID : aUebung.FkProgress && 
+                u.ProgressGroup === aUebung.ProgressGroup
         );
     }
 

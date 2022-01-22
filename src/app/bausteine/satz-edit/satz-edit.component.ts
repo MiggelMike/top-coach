@@ -42,11 +42,13 @@ export class SatzEditComponent implements OnInit {
         private fDbModule: DexieSvcService
 
     ) {
-        this.fDbModule.LadeProgress(
+        const mProgressPara: ProgressPara = new ProgressPara();
+        mProgressPara.AfterLoadFn =
             (mProgressListe: Array<Progress>) => {
                 this.Progress = mProgressListe.find((p) => p.ID === this.sessUebung.FkProgress);
-            }
-        )
+            };
+
+        this.fDbModule.LadeProgress(mProgressPara);
     }
     
     
