@@ -31,6 +31,10 @@ export interface ISession extends ISessionDB {
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
 export class Session extends SessionDB implements ISession {
+    public static nummeriereUebungsListe(aUebungsListe: Array<Uebung>) {
+        for (let index = 0; index < aUebungsListe.length; index++)
+            aUebungsListe[index].ListenIndex = index;
+    }
 
     public SucheSatz(aSatz: Satz): Satz {
         let mResult: Satz;
@@ -187,7 +191,7 @@ export class Session extends SessionDB implements ISession {
                     mNeuerSatz.ID = undefined;
                     mNeueUebung.SatzListe.push(mNeuerSatz);
                 }
-                mNeueSession.UebungsListe.push(mNeueUebung);
+                mNeueSession.addUebung(mNeueUebung);
             }
         }
         return mNeueSession;
@@ -200,9 +204,15 @@ export class Session extends SessionDB implements ISession {
     }
 
     public addUebung(aUebung: Uebung) {
-        aUebung.Kategorie02 = UebungsKategorie02.Session;
-        this.UebungsListe.push(aUebung);
+        Session.StaticAddUebung(aUebung, this.UebungsListe);
     }
+
+    public static StaticAddUebung(aUebung: Uebung, aUebungsListe: Array<Uebung>) {
+        aUebung.Kategorie02 = UebungsKategorie02.Session;
+        aUebungsListe.push(aUebung);
+        Session.nummeriereUebungsListe(aUebungsListe);
+    }
+
 
     public hasChanged(aCmpSession: ISessionDB): Boolean {
         if (aCmpSession.ID != this.ID) return true;
@@ -234,7 +244,7 @@ export class Session extends SessionDB implements ISession {
 
     public resetSession(aQuellSession: ISessionDB):void {
         const mUebungsListe: Array<Uebung> = new Array<Uebung>();
-        this.UebungsListe.forEach(u => mUebungsListe.push(u.Copy()));
+        this.UebungsListe.forEach(u => mUebungsListe .push(u.Copy()));
         this.UebungsListe = [];
 
         this.Datum = aQuellSession.Datum;
@@ -251,7 +261,7 @@ export class Session extends SessionDB implements ISession {
         
         for (let index = 0; index < aQuellSession.UebungsListe.length; index++) {
             const mUebung = aQuellSession.UebungsListe[index].Copy();
-            this.UebungsListe.push(mUebung);
+            this.addUebung(mUebung);
         }
 
         for (let index = 0; index < mUebungsListe.length; index++) {

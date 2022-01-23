@@ -184,7 +184,7 @@ export class Programm02Component implements OnInit {
 
 		const mSessUebung: Uebung = this.fGlobalService.SessUebungKopie.Copy();
 		mSessUebung.SessionID = aSession.ID;
-		aSession.UebungsListe.push(mSessUebung);
+		aSession.addUebung(mSessUebung);
 	}
 
 	public AdditionalSession(): void{

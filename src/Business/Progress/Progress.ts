@@ -18,9 +18,9 @@ export class ProgressPara {
 	Wp: WeightProgress;
 	AusgangsSession: ISession;
 	DbModule: DexieSvcService;
-	AusgangsUebung?: Uebung;
-	AusgangsSatz?: Satz;
-	Progress?: Progress;
+	AusgangsUebung: Uebung;
+	AusgangsSatz: Satz;
+	Progress: Progress;
 	ProgressHasChanged: boolean;
 	SatzDone: boolean;
 	NextProgressFn?: NextProgressFn;
@@ -686,6 +686,7 @@ export class Progress implements IProgress {
 						})
 					}//if
 
+					// Satz ist noch nicht erledigt
 					if ((aProgressPara.SatzDone === false) && (aProgressPara.ProgressHasChanged === false)) {
 						td.Uebung.ArbeitsSatzListe.forEach((sz) => {
 							if (aProgressPara.AusgangsSatz === undefined || Progress.EqualSet(sz, aProgressPara.AusgangsSatz) === false) {
@@ -712,7 +713,6 @@ export class Progress implements IProgress {
 												sz.SetPresetWeight(sz.GewichtAusgefuehrt);
 												break;
 										}
-										// mGewichtDiff = 0;
 										sz.GewichtDiff = 0;
 									}
 								}
@@ -720,36 +720,26 @@ export class Progress implements IProgress {
 						})
 					}//if
 					
+					// Satz ist erledigt
 					if ((aProgressPara.SatzDone === true) && (aProgressPara.ProgressHasChanged === false)) {
-						mGewichtDiff = 0;
 						if (td.Progress) {
 							td.Uebung.ArbeitsSatzListe.forEach((sz) => {
 								if (aProgressPara.AusgangsSatz === undefined || Progress.EqualSet(sz, aProgressPara.AusgangsSatz) === false) {
 									if (sz.Status === SatzStatus.Wartet) {
 										if (td.Uebung.WeightProgress !== undefined) {
-											mGewichtDiff = 0;
 											switch (td.Uebung.WeightProgress) {
 												case WeightProgress.Increase:
-													mGewichtDiff = td.Uebung.GewichtSteigerung;
-													break;
-							
-												case WeightProgress.Decrease:
-													mGewichtDiff = td.Uebung.GewichtReduzierung;
-													break;
-											}
-
-											switch (td.Uebung.WeightProgress) {
-												case WeightProgress.Increase:
-													sz.AddToDoneWeight(mGewichtDiff);
+													sz.AddToDoneWeight(td.Uebung.GewichtSteigerung);
 													sz.SetPresetWeight(sz.GewichtAusgefuehrt);
+													sz.GewichtDiff = td.Uebung.GewichtSteigerung;
 													break;
 													
 												case WeightProgress.Decrease:
-													sz.AddToDoneWeight(-mGewichtDiff);
+													sz.AddToDoneWeight(-td.Uebung.GewichtReduzierung);
 													sz.SetPresetWeight(sz.GewichtAusgefuehrt);
+													sz.GewichtDiff = -td.Uebung.GewichtReduzierung;
 													break;
 											}
-											sz.GewichtDiff = mGewichtDiff;
 										}
 									}
 								}

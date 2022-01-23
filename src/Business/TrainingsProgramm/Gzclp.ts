@@ -187,7 +187,7 @@ export class GzclpProgramm extends TrainingsProgramm {
 				)
 			);
 		}
-		aNeueSession.UebungsListe.push(mUebung);
+		aNeueSession.addUebung(mUebung);
 
 		// T2-Lift
 		mUebung = Uebung.StaticKopiere(this.pDbModule.SucheUebungPerName(aT2Uebung), UebungsKategorie02.Session);
@@ -211,7 +211,7 @@ export class GzclpProgramm extends TrainingsProgramm {
 				)
 			);
 		}
-		aNeueSession.UebungsListe.push(mUebung);
+		aNeueSession.addUebung(mUebung);
 
 		// T3-Lift
 		mUebung = Uebung.StaticKopiere(this.pDbModule.SucheUebungPerName(aT3Uebung), UebungsKategorie02.Session);
@@ -231,7 +231,7 @@ export class GzclpProgramm extends TrainingsProgramm {
 				)
 			);
 		}
-		aNeueSession.UebungsListe.push(mUebung);
+		aNeueSession.addUebung(mUebung);
 	}
 
 	public static ErzeugeGzclpVorlage(aDbModule: DexieSvcService): ITrainingsProgramm {

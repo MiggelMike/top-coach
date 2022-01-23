@@ -14,7 +14,7 @@ import { Location } from "@angular/common";
 import { GlobalService } from "src/app/services/global.service";
 import { Uebung, UebungsKategorie02 } from "src/Business/Uebung/Uebung";
 import { UebungWaehlenData } from "src/app/uebung-waehlen/uebung-waehlen.component";
-import { Progress } from 'src/Business/Progress/Progress';
+import { Progress, ProgressPara } from 'src/Business/Progress/Progress';
 
 @Component({
 	selector: "app-session-form",
@@ -118,7 +118,7 @@ export class SessionFormComponent implements OnInit {
 			sz.ID = undefined;
 			sz.UebungID = undefined;
 		});
-		this.Session.UebungsListe.push(mSessUebung);
+		this.Session.addUebung(mSessUebung);
 	}
 
 	leave() {
@@ -262,6 +262,9 @@ export class SessionFormComponent implements OnInit {
 			this.fSessionStatsOverlayComponent.sess.SetSessionFertig();
 			
 			this.SaveChangesPrim(this).then(() => {
+				const mProgressPara: ProgressPara = new ProgressPara();
+				// mProgressPara.
+				Progress.DoProgress(mProgressPara);
 
 
 				// this.fDexieSvcService.LadeProgress(

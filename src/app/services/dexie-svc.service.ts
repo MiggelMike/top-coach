@@ -1055,7 +1055,7 @@ export class DexieSvcService extends Dexie {
 				mSatz.Status = SatzStatus.Wartet;
 				mUebung.SatzListe.push(mSatz);
 			});
-			aZielSession.UebungsListe.push(mUebung);
+			aZielSession.addUebung(mUebung);
 		}
 	}
 
