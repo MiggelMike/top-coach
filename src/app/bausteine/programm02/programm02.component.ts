@@ -16,6 +16,7 @@ import { Uebung, IUebung } from "src/Business/Uebung/Uebung";
 import { UebungService } from "src/app/services/uebung.service";
 import { Router } from "@angular/router";
 import {CdkDragDrop } from '@angular/cdk/drag-drop';
+import { Satz } from "src/Business/Satz/Satz";
 
 @Component({
 	selector: "app-programm02",
@@ -33,6 +34,7 @@ export class Programm02Component implements OnInit {
 	@Input() SessionPanelsExpanded: boolean = false;
 	@Input() showWarmUpCheckBox: Boolean = true;
 	@Input() showCoolDownCheckBox: Boolean = true;
+	@Input() DeletedSatzList: Array<Satz> = [];
 	@ViewChildren("accSession") accSession: QueryList<MatAccordion>;
 	@ViewChildren("panSession") panUebung: QueryList<MatExpansionPanel>;
 

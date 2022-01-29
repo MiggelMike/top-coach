@@ -14,6 +14,7 @@ import { floatMask } from 'src/app/app.module';
 import { ExerciseSettingsComponent } from 'src/app/exercise-settings/exercise-settings.component';
 import { ExerciseOverlayConfig, ExerciseSettingSvcService } from 'src/app/services/exercise-setting-svc.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { Satz } from 'src/Business/Satz/Satz';
 
 
 @Component({
@@ -32,6 +33,8 @@ export class Programm03Component implements OnInit {
     @Input() panUebung1: MatExpansionPanel;
     @Input() ShowStats: Boolean = false;
     @Input() StatsVisible: Boolean = false;
+    @Input() DeletedExerciseList: Array<Uebung> = [];
+	@Input() DeletedSatzList: Array<Satz> = [];
     
     @ViewChildren("accUebung") accUebung: QueryList<MatAccordion>;
     @ViewChildren("panUebung") panUebung: QueryList<MatExpansionPanel>;
@@ -160,6 +163,9 @@ export class Programm03Component implements OnInit {
             // SessUeb-Index gefunden?
             if (index !== -1) {
                 // SessUeb-Index gefunden
+                if (aUebung.ID > 0) {
+                    this.DeletedExerciseList.push(aUebung);
+                }
                 // SessUeb aus Liste entfernen.
                 this.session.UebungsListe.splice(index, 1);
             }

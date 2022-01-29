@@ -15,6 +15,7 @@ import { GlobalService } from "src/app/services/global.service";
 import { Uebung, UebungsKategorie02 } from "src/Business/Uebung/Uebung";
 import { UebungWaehlenData } from "src/app/uebung-waehlen/uebung-waehlen.component";
 import { Progress, ProgressPara } from 'src/Business/Progress/Progress';
+import { Satz } from 'src/Business/Satz/Satz';
 
 @Component({
 	selector: "app-session-form",
@@ -29,6 +30,8 @@ export class SessionFormComponent implements OnInit {
 	public BodyWeight: number = 0;
 	public fSessionStatsOverlayComponent: SessionStatsOverlayComponent = null;
 	private fSessionOverlayConfig: SessionOverlayConfig;
+	public DeletedExerciseList: Array<Uebung> = [];
+	public DeletedSatzList: Array<Satz> = [];
 	// private SelectedExerciseList: Array<Uebung> = [];
 
 	constructor(
@@ -154,17 +157,29 @@ export class SessionFormComponent implements OnInit {
 		for (let index = 0; index < mCmpSession.UebungsListe.length; index++) {
 			const mUebung = mCmpSession.UebungsListe[index];
 			const mSuchUebung = mSession.UebungsListe.find((u) => u.ID === mUebung.ID);
-			if (mSuchUebung === undefined) aPara.fDexieSvcService.UebungTable.delete(mUebung.ID);
+			if (mSuchUebung === undefined) aPara.fDexieSvcService.DeleteUebung(mUebung);
 		}
 
-		
+		// Die aus der Session gelöschten Sätze auch aus der DB löschen.
+		for (let index = 0; index < mCmpSession.UebungsListe.length; index++) {
+			const mCmpUebung = mCmpSession.UebungsListe[index];
+			const mSuchUebung = mSession.UebungsListe.find((u) => u.ID === mCmpUebung.ID);
+			if (mSuchUebung !== undefined) {
+				mCmpUebung.SatzListe.forEach((mCmpSatz) => {
+					if (mSuchUebung.SatzListe.find((mSuchSatz) => mSuchSatz.ID === mCmpSatz.ID) === undefined)
+						aPara.fDexieSvcService.DeleteSatz(mCmpSatz);
+					
+				});
+			}
+		}
 
+		// await aPara.fDexieSvcService.SessionSpeichern(aPara.Session).then(() => {
+		// 	aPara.cmpSession = aPara.Session.Copy();
+		// });
 
 		await aPara.fDexieSvcService.SessionSpeichern(aPara.Session).then(() => {
 			aPara.cmpSession = aPara.Session.Copy();
 		});
-
-
 				
 		// if ((mSession.Kategorie02 === SessionStatus.Fertig) && (mSession.ProgressIsCalced === false)) {
 		// 	mSession.ProgressIsCalced = true;

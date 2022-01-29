@@ -4,7 +4,7 @@
 <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="doStats()">Stats
 </a>
 
-    <app-programm03 [session]="Session" [bearbeitbar]="true" [ShowStats]="true" [programm]="Programm">
+    <app-programm03 [session]="Session" [bearbeitbar]="true" [ShowStats]="true" [programm]="Programm" [DeletedExerciseList]="DeletedExerciseList" [DeletedSatzList]="DeletedSatzList">
     </app-programm03>
     
     <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center" [style.margin-top]="'5px'">

@@ -31,6 +31,7 @@
                                 <ng-container *ngIf="SessUeb.AufwaermSatzListe && SessUeb.WarmUpVisible">
                                     <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Warm up sets'"
                                         [satzListe]="SessUeb.AufwaermSatzListe" [session]="session"
+                                        [DeletedSatzList]="DeletedSatzList"
                                         [programm]="programm"
                                         [sessUebung]="SessUeb" [bearbeitbar]="bearbeitbar">
                                     </app-sess-uebung>
@@ -40,6 +41,7 @@
                                     <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Work sets'"
                                         [satzListe]="SessUeb.ArbeitsSatzListe" [session]="session"
                                         [programm]="programm"
+                                        [DeletedSatzList]="DeletedSatzList"
                                         [sessUebung]="SessUeb" [bearbeitbar]="bearbeitbar">
                                     </app-sess-uebung>
                                 </ng-container>
@@ -48,6 +50,7 @@
                                     <app-sess-uebung [panUebung1]=panUebung [rowNum]="i"
                                         [satzTypText]="'Cool down sets'" [satzListe]="SessUeb.AbwaermSatzListe"
                                         [programm]="programm"
+                                        [DeletedSatzList]="DeletedSatzList"
                                         [session]="session" [sessUebung]="SessUeb" [bearbeitbar]="bearbeitbar">
                                     </app-sess-uebung>
                                 </ng-container>

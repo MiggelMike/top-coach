@@ -25,6 +25,7 @@ export class SessUebungComponent implements OnInit {
     @Input() rowNum: number = 0;
     @Input() panUebung1: MatExpansionPanel;
     @Input() bearbeitbar: Boolean;
+    @Input() DeletedSatzList: Array<Satz> = [];
 
     constructor(
         private fDialogService: DialogeService,

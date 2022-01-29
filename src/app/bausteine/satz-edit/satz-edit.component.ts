@@ -26,6 +26,7 @@ export class SatzEditComponent implements OnInit {
     @Input() satz: ISatz;
     @Input() rowNum: number;
     @Input() satzTyp: string;
+    @Input() DeletedSatzList: Array<Satz> = [];
     public floatMask = floatMask;
     public repMask = repMask;
     public plateCalcComponent: PlateCalcComponent;
@@ -68,6 +69,9 @@ export class SatzEditComponent implements OnInit {
         mDialogData.OkFn = (): void => {
             const index: number = this.sessUebung.SatzListe.indexOf(this.satz as Satz);
             if (index !== -1) {
+                // @Input() DeletedSatzList: Array < Satz > =[];
+                if (this.satz.ID > 0)
+                    this.DeletedSatzList.push(this.satz as Satz);
                 this.sessUebung.SatzListe.splice(index, 1);
             }
         };

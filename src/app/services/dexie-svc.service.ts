@@ -981,7 +981,6 @@ export class DexieSvcService extends Dexie {
 				// Session ist gespeichert
 				// SessionID in Uebungen eintragen
 				(mSessionID: number) => {
-					// aSession.ID = mS
 					for (let index = 0; index < aSession.UebungsListe.length; index++) {
 						const mUebung = aSession.UebungsListe[index];
 						mUebung.SessionID = mSessionID;
