@@ -1,4 +1,3 @@
-import { Session } from './../../Business/Session/Session';
 import { ProgressPara } from './../../Business/Progress/Progress';
 import { ITrainingsProgramm } from './../../Business/TrainingsProgramm/TrainingsProgramm';
 import { Hantel } from './../../Business/Hantel/Hantel';
@@ -63,20 +62,15 @@ export class ExerciseSettingsComponent {
 	}
 
 	onChangeProgressSchema(aEvent: any) {
-		// Hat sich das Progress-Schema der Übung geändert und sind Arbeitssätze vorhanden?
-		if ((this.SessUeb.FkProgress !== this.SessUeb.FkAltProgress) && (this.SessUeb.ArbeitsSatzListe.length > 0)) {
-			
-			// Alle Übungen der Session mit dem alten Progress-Schema von SessUeb suchen
-			const mProgressPara: ProgressPara = new ProgressPara();
-			mProgressPara.DbModule = this.fDbModule;
-			mProgressPara.Programm = this.Programm;
-			mProgressPara.AusgangsSession = this.Session;
-			mProgressPara.AusgangsUebung = this.SessUeb as Uebung;
-			mProgressPara.AusgangsSatz = this.SessUeb.ArbeitsSatzListe[0];
-			mProgressPara.SatzDone = (this.SessUeb.ArbeitsSatzListe[0].Status === SatzStatus.Fertig);
-			mProgressPara.ProgressHasChanged = (this.SessUeb.FkProgress !== this.SessUeb.FkAltProgress) && (this.SessUeb.ArbeitsSatzListe[0].Status === SatzStatus.Fertig);
-			Progress.DoProgress(mProgressPara);
-		}
+		const mProgressPara: ProgressPara = new ProgressPara();
+		mProgressPara.DbModule = this.fDbModule;
+		mProgressPara.Programm = this.Programm;
+		mProgressPara.AusgangsSession = this.Session;
+		mProgressPara.AusgangsUebung = this.SessUeb as Uebung;
+		mProgressPara.AusgangsSatz = this.SessUeb.ArbeitsSatzListe.length > 0 ? this.SessUeb.ArbeitsSatzListe[0] : undefined;
+		mProgressPara.SatzDone = this.SessUeb.ArbeitsSatzListe.length > 0 ? this.SessUeb.ArbeitsSatzListe[0].Status === SatzStatus.Fertig : false;
+		mProgressPara.ProgressHasChanged = (this.SessUeb.FkProgress !== this.SessUeb.FkAltProgress) && (this.SessUeb.ArbeitsSatzListe[0].Status === SatzStatus.Fertig);
+		Progress.StaticDoProgress(mProgressPara);
 	}
 
 	SetAufwaermArbeitsSatzPause(aEvent: any) {

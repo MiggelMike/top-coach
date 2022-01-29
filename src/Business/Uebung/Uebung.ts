@@ -74,6 +74,7 @@ export interface IUebung {
     hasChanged(aCmpUebung: IUebung): Boolean;
     FkProgress: number;
     FkAltProgress: number
+    FkOrgProgress: number
     GewichtSteigerung: number;
     GewichtReduzierung: number;
     EquipmentTyp: string;
@@ -157,8 +158,9 @@ export class Uebung implements IUebung {
     public NaechsteUebungPause: number = 0;
 
     public Vorlage: boolean = false;
-    public FkProgress: number = 0;
-    public FkAltProgress: number = 0;
+    public FkProgress: number = -1;
+    public FkAltProgress: number = -1;
+    public FkOrgProgress: number = -1;
     public WeightProgress: WeightProgress = WeightProgress.Same;
     public AltWeightProgress: WeightProgress = WeightProgress.Same;
     public ProgressGroup: string = ProgressGroup[0];

@@ -22,7 +22,8 @@ export interface ISession extends ISessionDB {
     getFirstWaitingExercise(aFromIndex: number): Uebung;
     IstAusVorgabe: boolean;
     AlleUebungsSaetzeEinerProgressGruppe(aUebung: Uebung, aStatus: SatzStatus): Array<Satz>;
-    AlleUebungenEinerProgressGruppe(aUebung: Uebung, aProgessID?: number): Array<Uebung>;
+    AlleUebungenDerAktuellenProgressGruppe(aUebung: Uebung, aProgessID?: number): Array<Uebung>;
+    AlleUebungenDerAltenProgressGruppe(aUebung: Uebung, aProgessID?: number): Array<Uebung>;
     SetNextWeight(aWp: WeightProgress, aUebung: Uebung);
     isEqual(aOtherSession: Session): boolean
     SucheSatz(aSatz: Satz):Satz
@@ -277,7 +278,7 @@ export class Session extends SessionDB implements ISession {
 
     public AlleUebungsSaetzeEinerProgressGruppe(aUebung: Uebung, aStatus: SatzStatus): Array<Satz> {
         let mSatzListe: Array<Satz> = [];
-        const mUebungsListe: Array<Uebung> = this.AlleUebungenEinerProgressGruppe(aUebung);
+        const mUebungsListe: Array<Uebung> = this.AlleUebungenDerAktuellenProgressGruppe(aUebung);
         mUebungsListe.forEach((u) =>
             mSatzListe = mSatzListe.concat(u.ArbeitsSatzListe.filter(
                 (sz) => (
@@ -288,7 +289,7 @@ export class Session extends SessionDB implements ISession {
         return mSatzListe;
     }
 
-    public AlleUebungenEinerProgressGruppe(aUebung: Uebung, aProgessID?: number): Array<Uebung> {
+    public AlleUebungenDerAktuellenProgressGruppe(aUebung: Uebung, aProgessID?: number): Array<Uebung> {
         return this.UebungsListe.filter(
             (u) =>
                 u.FkUebung === aUebung.FkUebung &&
@@ -297,9 +298,19 @@ export class Session extends SessionDB implements ISession {
         );
     }
 
+    public AlleUebungenDerAltenProgressGruppe(aUebung: Uebung, aProgessID?: number): Array<Uebung> {
+        return this.UebungsListe.filter(
+            (u) =>
+                u.FkUebung === aUebung.FkUebung &&
+                u.FkAltProgress === aProgessID ? aProgessID : aUebung.FkAltProgress && 
+                u.ProgressGroup === aUebung.ProgressGroup
+        );
+    }
+
+
     public SetNextWeight(aWp: WeightProgress, aUebung: Uebung): void {
         let mDiff: number = 0;
-        this.AlleUebungenEinerProgressGruppe(aUebung).forEach(
+        this.AlleUebungenDerAktuellenProgressGruppe(aUebung).forEach(
             (u) => {
                 if (aWp !== undefined) {
                     switch (aWp) {

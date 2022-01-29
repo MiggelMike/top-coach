@@ -264,7 +264,7 @@ export class SessionFormComponent implements OnInit {
 			this.SaveChangesPrim(this).then(() => {
 				const mProgressPara: ProgressPara = new ProgressPara();
 				// mProgressPara.
-				Progress.DoProgress(mProgressPara);
+				Progress.StaticDoProgress(mProgressPara);
 
 
 				// this.fDexieSvcService.LadeProgress(

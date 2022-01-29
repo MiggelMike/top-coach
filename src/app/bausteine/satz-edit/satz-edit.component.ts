@@ -156,7 +156,7 @@ export class SatzEditComponent implements OnInit {
             );
 
         } 
-        Progress.DoProgress(mProgressPara);
+        Progress.StaticDoProgress(mProgressPara);
     }
         
     
