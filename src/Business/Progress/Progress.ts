@@ -660,8 +660,8 @@ export class Progress implements IProgress {
 								(sz.Status === SatzStatus.Wartet) &&
 								(sz.GewichtDiff !== undefined))
 							{
-								if (aProgressPara.AlteProgressID !== aProgressPara.ProgressID
-								) {
+								// if (aProgressPara.AlteProgressID !== aProgressPara.ProgressID
+								if (td.Uebung.FkProgress !== td.Uebung.FkAltProgress) {
 									if (td.Uebung.FkOrgProgress && td.Uebung.FkOrgProgress === aProgressPara.ProgressID && aProgressPara.SatzDone === true) {
 										switch (td.Uebung.WeightProgress) {
 											case WeightProgress.Increase:
@@ -676,7 +676,6 @@ export class Progress implements IProgress {
 												sz.SetPresetWeight(sz.GewichtAusgefuehrt);
 												break;
 										}
-										// td.Uebung.FkOrgProgress = td.Uebung.FkAltProgress;
 									} else {
 										if (td.Uebung.FkOrgProgress === undefined)
 											td.Uebung.FkOrgProgress = td.Uebung.FkAltProgress;
@@ -712,33 +711,10 @@ export class Progress implements IProgress {
 										}
 									}
 								}
-	
-							
-								// if (aProgressPara.ProgressID > 0) {
-								// 	switch (td.Uebung.WeightProgress) {
-								// 		case WeightProgress.Increase:
-								// 			sz.GewichtDiff = td.Uebung.GewichtSteigerung;
-								// 			sz.AddToDoneWeight(sz.GewichtDiff);
-								// 			sz.SetPresetWeight(sz.GewichtAusgefuehrt);
-								// 			break;
-																		
-								// 		case WeightProgress.Decrease:
-								// 			sz.GewichtDiff = td.Uebung.GewichtReduzierung;
-								// 			sz.AddToDoneWeight(-sz.GewichtDiff);
-								// 			sz.SetPresetWeight(sz.GewichtAusgefuehrt);
-								// 			break;
-								// 	}
-								// }
-								// td.Uebung.FkAltProgress = 0;
-								// else {
-								// 	sz.AddToDoneWeight(-sz.GewichtDiff);
-								// 	sz.SetPresetWeight(sz.GewichtAusgefuehrt);
-								// 	sz.GewichtDiff = 0;
-								// }
 							}
 						})
-						td.Uebung.FkProgress = aProgressPara.ProgressID;
-						td.Uebung.FkAltProgress = aProgressPara.ProgressID;
+						// td.Uebung.FkProgress = aProgressPara.ProgressID;
+						// td.Uebung.FkAltProgress = aProgressPara.ProgressID;
 					}//if
 
 						// Satz ist noch nicht erledigt und Prozess hat sich geändert
@@ -814,8 +790,8 @@ export class Progress implements IProgress {
 					);
 
 					if (mUebung) {
-						mUebung.FkProgress = aProgressPara.AusgangsUebung.FkProgress;
-						mUebung.FkAltProgress = aProgressPara.AusgangsUebung.FkProgress;
+						// mUebung.FkProgress = aProgressPara.AusgangsUebung.FkProgress;
+						// mUebung.FkAltProgress = aProgressPara.AusgangsUebung.FkProgress;
 						mUebung.SatzListe = td.Uebung.SatzListe;
 						for (let index = 0; index < mUebung.SatzListe.length; index++) {
 							const mSatzPtr = mUebung.SatzListe[index];
