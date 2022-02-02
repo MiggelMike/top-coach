@@ -541,6 +541,15 @@ export class Progress implements IProgress {
 				aSatz1.SatzListIndex === aSatz2.SatzListIndex);
 	}
 
+	public static StaticEqualUebung(aUebung1 : Uebung, aUebung2: Uebung): boolean{
+		return (aUebung1 !== undefined &&
+			    aUebung2 !== undefined &&
+			    aUebung1.SessionID === aUebung2.SessionID &&
+			    aUebung1.FkUebung === aUebung2.FkUebung &&
+				aUebung1.ListenIndex === aUebung2.ListenIndex);
+	}
+
+
 	private static StaticProgressHasChanged(aProgressPara: ProgressPara): boolean{
 		return (aProgressPara.ProgressID !== aProgressPara.AlteProgressID);
 	}
@@ -557,8 +566,8 @@ export class Progress implements IProgress {
 		return (aUebung.FkAltProgress !== undefined);
 	}
 
-	private static StaticUebungEffectsRunningSession(aUebung: Uebung, aProgressPara: ProgressPara ): boolean{
-		const mProgress: Progress = aProgressPara.ProgressListe.find((p) => p.ID === aUebung.FkProgress);
+	private static StaticProgressEffectsRunningSession(aProgressID: number, aProgressPara: ProgressPara ): boolean{
+		const mProgress: Progress = aProgressPara.ProgressListe.find((p) => p.ID === aProgressID);
 		if((mProgress) && (mProgress.ProgressSet === ProgressSet.First))
 			return true
 		return false;
@@ -641,6 +650,7 @@ export class Progress implements IProgress {
 				
 				// Die relevanten Sessions aus der Sessionliste des Programms Herausfiltern.
 				const mSessionListe: Array<ISession> = aProgressPara.Programm.SessionListe.filter((mCmpSession) => {
+					
 					if
 						((
 							// 1. Wenn die Ausgangs - Session läuft, ist es okay, dass die Übungen auch dieser Session untersucht werden, wenn in aProgress der ProgressSet = First ist.
@@ -730,6 +740,7 @@ export class Progress implements IProgress {
 				// Wenn die Todo-Liste leer ist, gibt es nichts zu tun.
 				for (let index = 0; index < mTodoListe.length; index++) {
 					const mPtrUebung: Uebung = mTodoListe[index].Uebung;
+					const mProgress: Progress = mTodoListe[index].Progress; 
 
 					if (mPtrUebung.FkUebung !== aProgressPara.AusgangsUebung.FkUebung)
 						continue;
@@ -738,11 +749,40 @@ export class Progress implements IProgress {
 					
 					if (Progress.StaticProgressHasChanged(aProgressPara)) {
 						// Progress-Schema ist geändert worden 
-						
+						if (Progress.StaticProgressEffectsRunningSession(aProgressPara.AlteProgressID, aProgressPara)
+							&& Progress.StaticSessionLaeuft(aProgressPara.AusgangsSession))
+						{
+							Progress.StaticResetAllWeights(mPtrUebung, aProgressPara.AusgangsSatz);
+							Progress.StaticSetWeightDiffs(mPtrUebung, aProgressPara.AusgangsSatz, 0);
+						} //if
+
+						if (Progress.StaticEqualUebung(mPtrUebung, aProgressPara.AusgangsUebung)) {
+							mPtrUebung.FkAltProgress = aProgressPara.AlteProgressID;
+							mPtrUebung.FkProgress = aProgressPara.ProgressID;
+						}
+
+						if (Progress.StaticProgressEffectsRunningSession(aProgressPara.ProgressID, aProgressPara)
+							&& Progress.StaticSessionLaeuft(aProgressPara.AusgangsSession))
+                        {
+							if (Progress.StaticSetIsDne(aProgressPara.AusgangsSatz))
+							{
+								switch (aProgressPara.Wp) {
+									case WeightProgress.Increase:
+										Progress.StaticSetAllWeights(mPtrUebung, aProgressPara.AusgangsSatz, mPtrUebung.GewichtSteigerung);
+										Progress.StaticSetWeightDiffs(mPtrUebung, aProgressPara.AusgangsSatz, mPtrUebung.GewichtSteigerung);
+										break;
+								
+									case WeightProgress.Decrease:
+										Progress.StaticSetAllWeights(mPtrUebung, aProgressPara.AusgangsSatz, -mPtrUebung.GewichtReduzierung);
+										Progress.StaticSetWeightDiffs(mPtrUebung, aProgressPara.AusgangsSatz, mPtrUebung.GewichtSteigerung);
+										break;
+								} // switch
+							} //if
+						} //if							
 					} else {
 						// Progress-Schema ist NICHT geändert worden 
 						if (Progress.StaticUebungProgressExists(mPtrUebung) 
-							&& Progress.StaticUebungEffectsRunningSession(mPtrUebung, aProgressPara)
+							&& Progress.StaticProgressEffectsRunningSession(mPtrUebung.FkProgress, aProgressPara)
 							&& Progress.StaticSessionLaeuft(aProgressPara.AusgangsSession)
 						) {
 							Progress.StaticResetAllWeights(mPtrUebung, aProgressPara.AusgangsSatz);
