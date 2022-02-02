@@ -310,7 +310,7 @@ export class DexieSvcService extends Dexie {
 			}, //OnProgrammNoRecorderLoadFn
 		} as LadePara;
 
-		    // Dexie.delete("ConceptCoach");
+		    //  Dexie.delete("ConceptCoach");
 
 		this.version(6).stores({
 			AppData: "++id",
