@@ -596,24 +596,31 @@ export class Progress implements IProgress {
 
 	private static StaticSetWeight(aGewichtDiff: number, aSatz: Satz, aArithmetik: Arithmetik): void {
 		if (aSatz.Status === SatzStatus.Wartet) {
-			if (aArithmetik === Arithmetik.Sub)
+			if (aArithmetik === Arithmetik.Sub) {
 				aSatz.AddToDoneWeight(-aGewichtDiff);
-			else
+				aSatz.GewichtDiff.pop();
+			}
+			else {
 				aSatz.AddToDoneWeight(aGewichtDiff);
+				aSatz.GewichtDiff.push(aGewichtDiff);
+			}
 		
 			aSatz.SetPresetWeight(aSatz.GewichtAusgefuehrt);
 		}
 	}
 
-	private static StaticSetWeightDiffs(mUebung: Uebung, aAusgangsSatz: Satz, aWeight: number): void {
-		mUebung.ArbeitsSatzListe.forEach(
-			(sz) => {
-				if (Progress.StaticEqualSet(aAusgangsSatz, sz) === false) {
-				   sz.GewichtDiff = aWeight;
-				}
-			}
-		)
-	}
+	// private static StaticSetWeightDiffs(mUebung: Uebung, aAusgangsSatz: Satz,  aArithmetik: Arithmetik, aWeight: number = 0): void {
+	// 	mUebung.ArbeitsSatzListe.forEach(
+	// 		(sz) => {
+	// 			if (Progress.StaticEqualSet(aAusgangsSatz, sz) === false) {
+	// 				if(aArithmetik === Arithmetik.Add)
+	// 					sz.GewichtDiff.push(aWeight);
+	// 				else
+	// 					sz.GewichtDiff.pop();
+	// 			}
+	// 		}
+	// 	)
+	// }
 	
 	private static StaticSetAllWeights(mUebung: Uebung, aAusgangsSatz: Satz, aArithmetik: Arithmetik,  aWeight: number = this.cIgnoreWeight): void {
 		mUebung.ArbeitsSatzListe.forEach(
@@ -622,7 +629,8 @@ export class Progress implements IProgress {
 					if (aWeight !== this.cIgnoreWeight)
 						Progress.StaticSetWeight(aWeight, sz, aArithmetik);
 					else
-						Progress.StaticSetWeight(sz.GewichtDiff, sz, aArithmetik);
+						if (sz.GewichtDiff.length > 0)
+							Progress.StaticSetWeight(sz.GewichtDiff[sz.GewichtDiff.length - 1], sz, aArithmetik);
 				}
 			}
 		)
@@ -639,7 +647,11 @@ export class Progress implements IProgress {
 					if (aWeight !== this.cIgnoreWeight)
 						Progress.StaticSetWeight(aWeight, sz, Arithmetik.Sub);
 					else
-						Progress.StaticSetWeight(sz.GewichtDiff, sz, Arithmetik.Sub);
+					{
+						if (sz.GewichtDiff.length > 0) {
+							Progress.StaticSetWeight(sz.GewichtDiff.pop(), sz, Arithmetik.Sub);
+						}
+					}
 				}
 			}
 		)
@@ -840,12 +852,10 @@ export class Progress implements IProgress {
 								switch (aProgressPara.Wp) {
 									case WeightProgress.Increase:
 										Progress.StaticSetAllWeights(mPtrUebung, aProgressPara.AusgangsSatz, Arithmetik.Add, mPtrUebung.GewichtSteigerung);
-										Progress.StaticSetWeightDiffs(mPtrUebung, aProgressPara.AusgangsSatz, mPtrUebung.GewichtSteigerung);
 										break;
 								
 									case WeightProgress.Decrease:
 										Progress.StaticSetAllWeights(mPtrUebung, aProgressPara.AusgangsSatz, Arithmetik.Sub, mPtrUebung.GewichtReduzierung);
-										Progress.StaticSetWeightDiffs(mPtrUebung, aProgressPara.AusgangsSatz, mPtrUebung.GewichtReduzierung);
 										break;
 								} // switch
 							}
@@ -853,11 +863,7 @@ export class Progress implements IProgress {
 							{
 								// Der Ausgangsatz ist nicht erledigt.
 								Progress.StaticSetAllWeights(mPtrUebung, aProgressPara.AusgangsSatz, Arithmetik.Sub);
-								Progress.StaticSetWeightDiffs(mPtrUebung, aProgressPara.AusgangsSatz, 0);
 					   		}
-
-
-
 
 						// if(	   Progress.StaticSetIsDone(aProgressPara.AusgangsSatz)
 						// 	&& Progress.StaticEqualUebung(mPtrUebung, aProgressPara.AusgangsUebung)
