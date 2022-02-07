@@ -1,5 +1,5 @@
 import { ISession } from 'src/Business/Session/Session';
-import { IUebung } from '../Uebung/Uebung';
+import { IUebung, Uebung } from '../Uebung/Uebung';
 import {formatNumber, NumberSymbol} from '@angular/common';
 import { isThisTypeNode } from 'typescript';
 var cloneDeep = require('lodash.clonedeep');
@@ -81,6 +81,7 @@ export interface ISatz {
 
 export class GewichtDiff {
     Gewicht: number = 0;
+    Uebung: Uebung;
     FromSet: Satz;
 }
 

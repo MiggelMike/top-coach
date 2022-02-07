@@ -302,7 +302,7 @@ export class Session extends SessionDB implements ISession {
         return this.UebungsListe.filter(
             (u) =>
                 u.FkUebung === aUebung.FkUebung &&
-                u.FkAltProgress === aProgessID ? aProgessID : aUebung.FkAltProgress && 
+                u.FkAltProgress === aProgessID !== undefined ? aProgessID : aUebung.FkAltProgress && 
                 u.ProgressGroup === aUebung.ProgressGroup
         );
     }
