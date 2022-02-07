@@ -1,3 +1,5 @@
+import { Gewicht } from './../Konfiguration/Gewicht';
+import { GewichtDiff } from './../Satz/Satz';
 import { AfterLoadFn, DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { ITrainingsProgramm, TrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { ISession, Session } from './../Session/Session';
@@ -11,6 +13,10 @@ export var ProgressGroup: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'H', 'I', 'J
 
 export interface NextProgressFn {
 	(aNextProgress: NextProgress):void | any
+}
+
+enum Arithmetik {
+	Add, Sub
 }
 
 export class ProgressPara {
@@ -85,10 +91,6 @@ export interface IProgress {
 	AdditionalReps: number;
 	Copy(): IProgress;
     isEqual(aOtherProgress: IProgress): boolean
-}
-
-enum Arithmetik {
-	Add, Sub
 }
 
 // Wird in DB gespeichert
@@ -541,11 +543,21 @@ export class Progress implements IProgress {
 	}
 
 	public static StaticEqualSet(aSatz1 : Satz, aSatz2: Satz): boolean{
-		return (aSatz1 !== undefined &&
-			    aSatz2 !== undefined &&
-			    aSatz1.SessionID === aSatz2.SessionID &&
-			    aSatz1.UebungID === aSatz2.UebungID &&
-				aSatz1.SatzListIndex === aSatz2.SatzListIndex);
+		return (
+			aSatz1 !== undefined &&
+			aSatz2 !== undefined &&
+			((
+				aSatz1.ID > 0 &&
+				aSatz2.ID > 0 &&
+				aSatz1.ID === aSatz2.ID
+			)
+			||
+			(	aSatz1.SessionID === aSatz2.SessionID &&
+				aSatz1.UebungID === aSatz2.UebungID &&
+				aSatz1.SatzListIndex === aSatz2.SatzListIndex
+			))
+			
+		);
 	}
 
 	public static StaticEqualUebung(aUebung1 : Uebung, aUebung2: Uebung): boolean{
@@ -594,19 +606,33 @@ export class Progress implements IProgress {
 		return (aSession.Kategorie02 === SessionStatus.Laueft);
 	}
 
-	private static StaticSetWeight(aGewichtDiff: number, aSatz: Satz, aArithmetik: Arithmetik): void {
+	private static StaticSetWeight(aGewichtDiff: GewichtDiff, aSatz: Satz, aArithmetik: Arithmetik): void {
 		if (aSatz.Status === SatzStatus.Wartet) {
-			if (aArithmetik === Arithmetik.Sub) {
-				aSatz.AddToDoneWeight(-aGewichtDiff);
-				aSatz.GewichtDiff.pop();
-			}
-			else {
-				aSatz.AddToDoneWeight(aGewichtDiff);
+			if (aArithmetik === Arithmetik.Add) {
+				aSatz.AddToDoneWeight(aGewichtDiff.Gewicht);
 				aSatz.GewichtDiff.push(aGewichtDiff);
+			}
+		    else {
+				aSatz.AddToDoneWeight(-aGewichtDiff.Gewicht);
+				const mIndex = aSatz.GewichtDiff.indexOf(aGewichtDiff);
+				if (mIndex > -1)
+					aSatz.GewichtDiff.splice(mIndex, 1);
 			}
 		
 			aSatz.SetPresetWeight(aSatz.GewichtAusgefuehrt);
 		}
+		// if (aSatz.Status === SatzStatus.Wartet) {
+		// 	if (aArithmetik === Arithmetik.Sub) {
+		// 		aSatz.AddToDoneWeight(-aGewichtDiff.Gewicht);
+		// 		aSatz.GewichtDiff.pop();
+		// 	}
+		// 	else {
+		// 		aSatz.AddToDoneWeight(aGewichtDiff.Gewicht);
+		// 		aSatz.GewichtDiff.push(aGewichtDiff);
+		// 	}
+		
+		// 	aSatz.SetPresetWeight(aSatz.GewichtAusgefuehrt);
+		// }
 	}
 
 	// private static StaticSetWeightDiffs(mUebung: Uebung, aAusgangsSatz: Satz,  aArithmetik: Arithmetik, aWeight: number = 0): void {
@@ -625,27 +651,37 @@ export class Progress implements IProgress {
 	private static StaticSetAllWeights(mUebung: Uebung, aAusgangsSatz: Satz, aArithmetik: Arithmetik,  aWeight: number = this.cIgnoreWeight): void {
 		mUebung.ArbeitsSatzListe.forEach(
 			(sz) => {
-				if (Progress.StaticEqualSet(aAusgangsSatz, sz) === false) {
-					if (aWeight !== this.cIgnoreWeight)
-						Progress.StaticSetWeight(aWeight, sz, aArithmetik);
-					else
-						if (sz.GewichtDiff.length > 0)
-							Progress.StaticSetWeight(sz.GewichtDiff[sz.GewichtDiff.length - 1], sz, aArithmetik);
+				if (aArithmetik === Arithmetik.Add) {
+					if (
+						   (Progress.StaticEqualSet(aAusgangsSatz, sz) === false)
+						&& (aWeight !== this.cIgnoreWeight))
+					{
+						const mGewichtDiff: GewichtDiff = new GewichtDiff();
+						mGewichtDiff.Gewicht = aWeight;
+						mGewichtDiff.FromSet = aAusgangsSatz;
+						Progress.StaticSetWeight(mGewichtDiff, sz, aArithmetik);
+					}
 				}
-			}
-		)
+				else {
+					if (sz.GewichtDiff.length > 0) {
+						const mGewichtDiff: GewichtDiff = sz.GewichtDiff.find((gdiff) => { return Progress.StaticEqualSet(gdiff.FromSet, aAusgangsSatz); });
+						if(mGewichtDiff !== undefined)
+							Progress.StaticSetWeight(mGewichtDiff, sz, aArithmetik);
+					}
+				}
+			})
 	}
 
 	private static StaticSetIsDone(aSatz: Satz): boolean {
 		return aSatz.Status === SatzStatus.Fertig;
 	}
 
-	private static StaticResetAllWeights(mUebung: Uebung, aAusgangsSatz: Satz, aWeight: number = this.cIgnoreWeight): void {
+	private static StaticResetAllWeights(mUebung: Uebung, aAusgangsSatz: Satz, aGewichtDiff?: GewichtDiff): void {
 		mUebung.ArbeitsSatzListe.forEach(
 			(sz) => {
 				if (Progress.StaticEqualSet(aAusgangsSatz, sz) === false) {
-					if (aWeight !== this.cIgnoreWeight)
-						Progress.StaticSetWeight(aWeight, sz, Arithmetik.Sub);
+					if (aGewichtDiff  !== undefined)
+						Progress.StaticSetWeight(aGewichtDiff, sz, Arithmetik.Sub);
 					else
 					{
 						if (sz.GewichtDiff.length > 0) {
@@ -767,10 +803,10 @@ export class Progress implements IProgress {
 				// Wenn die Todo-Liste leer ist, gibt es nichts zu tun.
 				for (let mTodoIndex = 0; mTodoIndex < mTodoListe.length; mTodoIndex++) {
 					const mPtrTodoUebung: Uebung = mTodoListe[mTodoIndex].Uebung;
-					let mPtrUebung: Uebung;
+					let mPtrArbeitUebung: Uebung;
 					for (let mSessionIndex = 0; mSessionIndex < aProgressPara.Programm.SessionListe.length; mSessionIndex++) {
 						const mPrtSession = aProgressPara.Programm.SessionListe[mSessionIndex];
-							mPtrUebung = mPrtSession.UebungsListe.find((u) =>
+							mPtrArbeitUebung = mPrtSession.UebungsListe.find((u) =>
 								u.SessionID === mPtrTodoUebung.SessionID &&
 								u.FkUebung === mPtrTodoUebung.FkUebung &&
 								u.ListenIndex === mPtrTodoUebung.ListenIndex &&
@@ -778,7 +814,7 @@ export class Progress implements IProgress {
 								u.ProgressGroup === mPtrTodoUebung.ProgressGroup
 						);
 						
-						if (mPtrUebung)
+						if (mPtrArbeitUebung)
 							break;
 							
 							// if (mUebung) {
@@ -794,7 +830,7 @@ export class Progress implements IProgress {
 							// }
 					}
 
-					if (mPtrUebung === undefined)
+					if (mPtrArbeitUebung === undefined)
 						continue;
 
 
@@ -808,10 +844,10 @@ export class Progress implements IProgress {
 					// )
 					//  	continue;
 
-					if (mPtrUebung.FkUebung !== aProgressPara.AusgangsUebung.FkUebung)
+					if (mPtrArbeitUebung.FkUebung !== aProgressPara.AusgangsUebung.FkUebung)
 						continue;
 					
-					mPtrUebung.nummeriereSatzListe(mPtrUebung.SatzListe);
+					mPtrArbeitUebung.nummeriereSatzListe(mPtrArbeitUebung.SatzListe);
 					
 					// if (Progress.StaticProgressHasChanged(aProgressPara)) {
 					// 	// Progress-Schema ist geändert worden 
@@ -828,8 +864,8 @@ export class Progress implements IProgress {
 					// }
 
 					// Progress-Schema ist NICHT geändert worden 
-					if (   Progress.StaticUebungProgressExists(mPtrUebung) 
-						&& Progress.StaticProgressEffectsRunningSession(mPtrUebung.FkProgress, aProgressPara)
+					if (   Progress.StaticUebungProgressExists(mPtrArbeitUebung) 
+						&& Progress.StaticProgressEffectsRunningSession(mPtrArbeitUebung.FkProgress, aProgressPara)
 						&& Progress.StaticSessionLaeuft(aProgressPara.AusgangsSession)
 					) {
 						// Progress.StaticResetAllWeights(mPtrUebung, aProgressPara.AusgangsSatz);
@@ -838,9 +874,9 @@ export class Progress implements IProgress {
 						if (    // Der Ausgangsatz ist nicht erledigt.
 							    (Progress.StaticSetIsDone(aProgressPara.AusgangsSatz) === false)
 								// Die Übung ist nicht die Ausgangübung
-							&& (Progress.StaticEqualUebung(mPtrUebung, aProgressPara.AusgangsUebung) === false)
+							&& (Progress.StaticEqualUebung(mPtrArbeitUebung, aProgressPara.AusgangsUebung) === false)
 							    // Erste Satz der Übung ist nicht erledigt
-							&& 	Progress.StaticFirstSetIsWaiting(mPtrUebung))
+							&& 	Progress.StaticFirstSetIsWaiting(mPtrArbeitUebung))
 						{
 						}
 						
@@ -851,18 +887,29 @@ export class Progress implements IProgress {
 								// Der Ausgangsatz ist erledigt.
 								switch (aProgressPara.Wp) {
 									case WeightProgress.Increase:
-										Progress.StaticSetAllWeights(mPtrUebung, aProgressPara.AusgangsSatz, Arithmetik.Add, mPtrUebung.GewichtSteigerung);
+										Progress.StaticSetAllWeights(
+											mPtrArbeitUebung,
+											aProgressPara.AusgangsSatz,
+											Arithmetik.Add,
+											mPtrArbeitUebung.GewichtSteigerung);
 										break;
 								
 									case WeightProgress.Decrease:
-										Progress.StaticSetAllWeights(mPtrUebung, aProgressPara.AusgangsSatz, Arithmetik.Sub, mPtrUebung.GewichtReduzierung);
+										Progress.StaticSetAllWeights(
+											mPtrArbeitUebung,
+											aProgressPara.AusgangsSatz,
+											Arithmetik.Sub,
+											mPtrArbeitUebung.GewichtReduzierung);
 										break;
 								} // switch
 							}
 							else
 							{
 								// Der Ausgangsatz ist nicht erledigt.
-								Progress.StaticSetAllWeights(mPtrUebung, aProgressPara.AusgangsSatz, Arithmetik.Sub);
+								Progress.StaticSetAllWeights(
+									mPtrArbeitUebung,
+									aProgressPara.AusgangsSatz,
+									Arithmetik.Sub);
 					   		}
 
 						// if(	   Progress.StaticSetIsDone(aProgressPara.AusgangsSatz)
@@ -922,13 +969,11 @@ export class Progress implements IProgress {
 					);
 
 					if (mUebung) {
-						for (let index = 0; index < mPtrUebung.SatzListe.length; index++) {
+						for (let index = 0; index < mPtrArbeitUebung.SatzListe.length; index++) {
 							if (index < mUebung.SatzListe.length) {
-								const mPrtSatz: Satz = mPtrUebung.SatzListe[index];
-								const mNeuSatz: Satz = mPrtSatz.Copy();
-								mNeuSatz.Status = mUebung.SatzListe[index].Status;
-								mUebung.SatzListe[index] = mNeuSatz;
-								
+								const mPrtSatz: Satz = mPtrArbeitUebung.SatzListe[index];
+								mPrtSatz.Status = mUebung.SatzListe[index].Status;
+								mUebung.SatzListe[index] = mPrtSatz;
 							}
 						}
 					}

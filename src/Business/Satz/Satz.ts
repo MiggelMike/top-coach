@@ -1,6 +1,6 @@
 import { ISession } from 'src/Business/Session/Session';
 import { IUebung } from '../Uebung/Uebung';
-import {formatNumber} from '@angular/common';
+import {formatNumber, NumberSymbol} from '@angular/common';
 import { isThisTypeNode } from 'typescript';
 var cloneDeep = require('lodash.clonedeep');
 
@@ -57,7 +57,7 @@ export interface ISatz {
     SatzGruppenNr: number;
     SatzListIndex: number;
     Prozent: number;
-    GewichtDiff: Array<number>;
+    GewichtDiff: Array<GewichtDiff>;
     GewichtAusgefuehrt: number;
     WdhAusgefuehrt: number;
     GewichtVorgabe: number;
@@ -78,6 +78,12 @@ export interface ISatz {
 
 }
 
+
+export class GewichtDiff {
+    Gewicht: number = 0;
+    FromSet: Satz;
+}
+
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
 export class Satz implements ISatz {
     public ID: number;
@@ -85,7 +91,7 @@ export class Satz implements ISatz {
     public UebungID: number = 0;
     public SatzTyp: SatzTyp = SatzTyp.Training;
     public Prozent: number = 0;
-    public GewichtDiff: Array<number> = [];
+    public GewichtDiff: Array<GewichtDiff> = [];
     public GewichtAusgefuehrt: number;
     public WdhAusgefuehrt: number = 0;
     public GewichtVorgabe: number = 0;
