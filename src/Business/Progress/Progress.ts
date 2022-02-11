@@ -592,6 +592,14 @@ export class Progress implements IProgress {
 		return false;
 	}	
 
+	private static StaticFirstSetDone(aUebung: Uebung): boolean{
+		if (aUebung.ArbeitsSatzListe.length === 0)
+			return false;
+		
+		return aUebung.ArbeitsSatzListe[0].Status === SatzStatus.Fertig;
+	}
+
+
 	private static StaticNewProgressExists(aUebung: Uebung): boolean{
 		return (aUebung.FkProgress !== undefined);
 	}
@@ -649,6 +657,20 @@ export class Progress implements IProgress {
 	private static StaticSetIsDone(aSatz: Satz): boolean {
 		return aSatz.Status === SatzStatus.Fertig;
 	}
+
+	private static StaticSetHasChangedByProcess(aUebung: Uebung, aProgressPara: ProgressPara): boolean {
+		const mProgress: Progress = aProgressPara.ProgressListe.find((p) => p.ID === aProgressPara.AlteProgressID);
+		return aUebung.ArbeitsSatzListe.find(
+			(sz) => {
+				if (sz.GewichtDiff.length <= 0)
+					return false;
+				
+				return (sz.GewichtDiff.find((gfiff) => {
+					return Progress.StaticEqualSet(gfiff.FromSet, aProgressPara.AusgangsSatz);
+				})) !== undefined;
+			}) !== undefined;
+	}
+
 
 	private static StaticResetAllWeights(mUebung: Uebung, aAlteProgressID: number): void {
 		mUebung.ArbeitsSatzListe.forEach(
@@ -831,22 +853,48 @@ export class Progress implements IProgress {
 					
 					mPtrArbeitUebung.nummeriereSatzListe(mPtrArbeitUebung.SatzListe);
 					
-					if (   Progress.StaticProgressHasChanged(aProgressPara) 
-						// && (Progress.StaticEqualUebung(mPtrArbeitUebung, aProgressPara.AusgangsUebung) === false))
+					if (Progress.StaticProgressHasChanged(aProgressPara)
+						// Schleifen-Übung <> Ausgangs-Übung 
+						&& (Progress.StaticEqualUebung(mPtrArbeitUebung, aProgressPara.AusgangsUebung) === false)
+						// Alter Prozess der Ausgangs-Übung wirkt sich auf laufende Sessions aus 
+						&& Progress.StaticProgressEffectsRunningSession(aProgressPara.AlteProgressID, aProgressPara)
+						// Prozess der Schleifen-Übung wirkt sich auf laufende Sessions aus 
+						&& Progress.StaticProgressEffectsRunningSession(mPtrArbeitUebung.FkProgress, aProgressPara)
+						// Erster Satz der Ausgangsübung ist erledigt 
+						&& Progress.StaticFirstSetDone(aProgressPara.AusgangsUebung)
+						// Erster Satz der Schleifenübung ist erledigt 
+						&& Progress.StaticFirstSetDone(mPtrArbeitUebung)
 					) {
-					 	// Progress-Schema ist geändert worden 
-						// Progress.StaticSetAllWeights(
-						// 	mPtrArbeitUebung,
-						// 	aProgressPara.AusgangsUebung,
-						// 	aProgressPara.AusgangsSatz,
-						// 	Arithmetik.Sub);
-
-						// if (Progress.StaticProgressEffectsRunningSession(aProgressPara.AlteProgressID, aProgressPara)
-						// 	&& Progress.StaticSessionLaeuft(aProgressPara.AusgangsSession)) {
 						Progress.StaticResetAllWeights( mPtrArbeitUebung,  aProgressPara.AlteProgressID);
-						// 	Progress.StaticSetWeightDiffs(mPtrUebung, aProgressPara.AusgangsSatz, 0);
-						// } //if
 					} //if
+
+					if (Progress.StaticProgressHasChanged(aProgressPara)
+						&& (Progress.StaticEqualUebung(mPtrArbeitUebung, aProgressPara.AusgangsUebung) === true)
+						&& Progress.StaticProgressEffectsRunningSession(aProgressPara.AlteProgressID, aProgressPara)
+						&& Progress.StaticFirstSetDone(aProgressPara.AusgangsUebung)
+					) {
+						Progress.StaticResetAllWeights( mPtrArbeitUebung,  aProgressPara.AlteProgressID);
+					} //if
+
+					if (Progress.StaticProgressHasChanged(aProgressPara)
+						// Schleifen-Übung <> Ausgangs-Übung 
+						&& (Progress.StaticEqualUebung(mPtrArbeitUebung, aProgressPara.AusgangsUebung) === false)
+						// Alter Prozess der Ausgangs-Übung wirkt sich auf laufende Sessions aus 
+						&& Progress.StaticProgressEffectsRunningSession(aProgressPara.AlteProgressID, aProgressPara)
+						// Es gibt eine Änderung der Sätze mit dem alten Prozess  
+						&& Progress.StaticSetHasChangedByProcess(mPtrArbeitUebung, aProgressPara)
+					) {
+						Progress.StaticResetAllWeights( mPtrArbeitUebung,  aProgressPara.AlteProgressID);
+					} //if
+					
+					if (Progress.StaticProgressHasChanged(aProgressPara)
+						// Schleifen-Übung = Ausgangs-Übung 
+						&& (Progress.StaticEqualUebung(mPtrArbeitUebung, aProgressPara.AusgangsUebung) === true)
+						// Alter Prozess der Ausgangs-Übung wirkt sich auf laufende Sessions aus 
+						&& Progress.StaticProgressEffectsRunningSession(aProgressPara.AlteProgressID, aProgressPara)
+					) {
+						Progress.StaticResetAllWeights( mPtrArbeitUebung,  aProgressPara.AlteProgressID);
+					} //if					
 
 					// if (Progress.StaticEqualUebung(mPtrUebung, aProgressPara.AusgangsUebung)) {
 					// 	mPtrUebung.FkAltProgress = aProgressPara.AlteProgressID;
@@ -856,7 +904,7 @@ export class Progress implements IProgress {
 					// Progress-Schema ist NICHT geändert worden 
 					if (   Progress.StaticUebungProgressExists(mPtrArbeitUebung)
 						&& Progress.StaticProgressEffectsRunningSession(mPtrArbeitUebung.FkProgress, aProgressPara)
-						// && (mPtrArbeitUebung.FkProgress === aProgressPara.AusgangsUebung.FkProgress)
+						&& (mPtrArbeitUebung.FkProgress === aProgressPara.ProgressID)
 						&& Progress.StaticSessionLaeuft(aProgressPara.AusgangsSession
 						)
 					) {
