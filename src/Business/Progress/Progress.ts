@@ -542,6 +542,11 @@ export class Progress implements IProgress {
             });
 	}
 
+	public static StaticManageProgressID(aUebung: Uebung, aNeuProgressID: number): void {
+		aUebung.FkAltProgress = aUebung.FkProgress;
+		aUebung.FkProgress = aNeuProgressID;
+	}
+
 	public static StaticEqualSet(aSatz1 : Satz, aSatz2: Satz): boolean{
 		return (
 			aSatz1 !== undefined &&
@@ -678,12 +683,12 @@ export class Progress implements IProgress {
 				const mGewichtDiff = sz.GewichtDiff.find(
 					(gdiff) => {
 						return (
-							gdiff.Uebung.FkAltProgress === aAlteProgressID)
-							&& ((mUebung.ID === gdiff.Uebung.ID)
+							(gdiff.Uebung.FkAltProgress === aAlteProgressID)&&
+							((mUebung.ID === gdiff.Uebung.ID)
 							||
 							(		(mUebung.FkUebung === gdiff.Uebung.FkUebung)
 								&& 	(mUebung.ProgressGroup === gdiff.Uebung.ProgressGroup))
-							)
+							))
 					});
 				
 				if(mGewichtDiff !== undefined)
@@ -815,7 +820,7 @@ export class Progress implements IProgress {
 				// Wenn die Todo-Liste leer ist, gibt es nichts zu tun.
 				for (let mTodoIndex = 0; mTodoIndex < mTodoListe.length; mTodoIndex++) {
 					const mPtrTodoUebung: Uebung = mTodoListe[mTodoIndex].Uebung;
-					let mPtrArbeitUebung: Uebung;
+					let mPtrArbeitUebung: Uebung = mPtrTodoUebung;
 
 					for (let mSessionIndex = 0; mSessionIndex < aProgressPara.Programm.SessionListe.length; mSessionIndex++) {
 						const mPrtSession = aProgressPara.Programm.SessionListe[mSessionIndex];
@@ -824,7 +829,7 @@ export class Progress implements IProgress {
 								u.SessionID === mPtrTodoUebung.SessionID &&
 								u.FkUebung === mPtrTodoUebung.FkUebung &&
 								u.ListenIndex === mPtrTodoUebung.ListenIndex &&
-								u.FkAltProgress === mPtrTodoUebung.FkAltProgress &&
+								// u.FkAltProgress === mPtrTodoUebung.FkAltProgress &&
 								u.ProgressGroup === mPtrTodoUebung.ProgressGroup
 							);
 						} else {
@@ -832,7 +837,7 @@ export class Progress implements IProgress {
 								u.SessionID === mPtrTodoUebung.SessionID &&
 								u.FkUebung === mPtrTodoUebung.FkUebung &&
 								u.ListenIndex === mPtrTodoUebung.ListenIndex &&
-								u.FkProgress === mPtrTodoUebung.FkProgress &&
+								// u.FkProgress === mPtrTodoUebung.FkProgress &&
 								u.ProgressGroup === mPtrTodoUebung.ProgressGroup
 							);
 						}
@@ -853,59 +858,66 @@ export class Progress implements IProgress {
 					
 					mPtrArbeitUebung.nummeriereSatzListe(mPtrArbeitUebung.SatzListe);
 					
-					if (Progress.StaticProgressHasChanged(aProgressPara)
+					if (Progress.StaticProgressHasChanged(aProgressPara)) {
 						// Schleifen-Übung <> Ausgangs-Übung 
-						&& (Progress.StaticEqualUebung(mPtrArbeitUebung, aProgressPara.AusgangsUebung) === false)
-						// Alter Prozess der Ausgangs-Übung wirkt sich auf laufende Sessions aus 
+						if ((Progress.StaticEqualUebung(mPtrArbeitUebung, aProgressPara.AusgangsUebung) === false)
+						// Alter Prozess wirkt sich auf laufende Sessions aus 
 						&& Progress.StaticProgressEffectsRunningSession(aProgressPara.AlteProgressID, aProgressPara)
 						// Prozess der Schleifen-Übung wirkt sich auf laufende Sessions aus 
 						&& Progress.StaticProgressEffectsRunningSession(mPtrArbeitUebung.FkProgress, aProgressPara)
 						// Erster Satz der Ausgangsübung ist erledigt 
 						&& Progress.StaticFirstSetDone(aProgressPara.AusgangsUebung)
 						// Erster Satz der Schleifenübung ist erledigt 
-						&& Progress.StaticFirstSetDone(mPtrArbeitUebung)
-					) {
-						Progress.StaticResetAllWeights( mPtrArbeitUebung,  aProgressPara.AlteProgressID);
-					} //if
+						// && Progress.StaticFirstSetDone(mPtrArbeitUebung)
+						) {
+							Progress.StaticResetAllWeights( mPtrArbeitUebung,  aProgressPara.AlteProgressID);
+						} //if
+						else if (
+								(Progress.StaticEqualUebung(mPtrArbeitUebung, aProgressPara.AusgangsUebung) === true)
+							&& 	Progress.StaticProgressEffectsRunningSession(aProgressPara.AlteProgressID, aProgressPara)
+							&& 	Progress.StaticFirstSetDone(aProgressPara.AusgangsUebung)
+						) {
+							Progress.StaticResetAllWeights( mPtrArbeitUebung,  aProgressPara.AlteProgressID);
+						} //if
+						else if (
+							// Schleifen-Übung <> Ausgangs-Übung
+								(Progress.StaticEqualUebung(mPtrArbeitUebung, aProgressPara.AusgangsUebung) === false)
+							// Alter Prozess der Ausgangs-Übung wirkt sich auf laufende Sessions aus 
+							&& (Progress.StaticProgressEffectsRunningSession(aProgressPara.AlteProgressID, aProgressPara) === true)
+							// Es gibt eine Änderung der Sätze mit dem alten Prozess  
+							&& (Progress.StaticSetHasChangedByProcess(mPtrArbeitUebung, aProgressPara) === true)
+						) {
+							Progress.StaticResetAllWeights( mPtrArbeitUebung,  aProgressPara.AlteProgressID);
+						} //if
+						else if (
+							// Schleifen-Übung = Ausgangs-Übung
+								(Progress.StaticEqualUebung(mPtrArbeitUebung, aProgressPara.AusgangsUebung) === true)
+							// Alter Prozess der Ausgangs-Übung wirkt sich auf laufende Sessions aus 
+							&& Progress.StaticProgressEffectsRunningSession(aProgressPara.AlteProgressID, aProgressPara)
+						) {
+							Progress.StaticResetAllWeights( mPtrArbeitUebung,  aProgressPara.AlteProgressID);
+						} //if					
+					} // if
+				
 
-					if (Progress.StaticProgressHasChanged(aProgressPara)
-						&& (Progress.StaticEqualUebung(mPtrArbeitUebung, aProgressPara.AusgangsUebung) === true)
-						&& Progress.StaticProgressEffectsRunningSession(aProgressPara.AlteProgressID, aProgressPara)
-						&& Progress.StaticFirstSetDone(aProgressPara.AusgangsUebung)
-					) {
-						Progress.StaticResetAllWeights( mPtrArbeitUebung,  aProgressPara.AlteProgressID);
-					} //if
-
-					if (Progress.StaticProgressHasChanged(aProgressPara)
-						// Schleifen-Übung <> Ausgangs-Übung 
-						&& (Progress.StaticEqualUebung(mPtrArbeitUebung, aProgressPara.AusgangsUebung) === false)
-						// Alter Prozess der Ausgangs-Übung wirkt sich auf laufende Sessions aus 
-						&& Progress.StaticProgressEffectsRunningSession(aProgressPara.AlteProgressID, aProgressPara)
-						// Es gibt eine Änderung der Sätze mit dem alten Prozess  
-						&& Progress.StaticSetHasChangedByProcess(mPtrArbeitUebung, aProgressPara)
-					) {
-						Progress.StaticResetAllWeights( mPtrArbeitUebung,  aProgressPara.AlteProgressID);
-					} //if
-					
-					if (Progress.StaticProgressHasChanged(aProgressPara)
-						// Schleifen-Übung = Ausgangs-Übung 
-						&& (Progress.StaticEqualUebung(mPtrArbeitUebung, aProgressPara.AusgangsUebung) === true)
-						// Alter Prozess der Ausgangs-Übung wirkt sich auf laufende Sessions aus 
-						&& Progress.StaticProgressEffectsRunningSession(aProgressPara.AlteProgressID, aProgressPara)
-					) {
-						Progress.StaticResetAllWeights( mPtrArbeitUebung,  aProgressPara.AlteProgressID);
-					} //if					
-
-					// if (Progress.StaticEqualUebung(mPtrUebung, aProgressPara.AusgangsUebung)) {
-					// 	mPtrUebung.FkAltProgress = aProgressPara.AlteProgressID;
-					// 	mPtrUebung.FkProgress = aProgressPara.ProgressID;
-					// }
-
-					// Progress-Schema ist NICHT geändert worden 
-					if (   Progress.StaticUebungProgressExists(mPtrArbeitUebung)
-						&& Progress.StaticProgressEffectsRunningSession(mPtrArbeitUebung.FkProgress, aProgressPara)
-						&& (mPtrArbeitUebung.FkProgress === aProgressPara.ProgressID)
-						&& Progress.StaticSessionLaeuft(aProgressPara.AusgangsSession
+					if (
+						(
+							// Schleifen-Übung = Ausgangs-Übung
+							(Progress.StaticEqualUebung(mPtrArbeitUebung, aProgressPara.AusgangsUebung) === true)
+					 		// Prozess wirkt sich auf laufende Sessions aus 
+						&& 	(Progress.StaticProgressEffectsRunningSession(aProgressPara.ProgressID, aProgressPara) === true)
+							// Session läuft
+						&& 	(Progress.StaticSessionLaeuft(aProgressPara.AusgangsSession) === true)
+						)
+						||
+						(
+							// Schleifen-Übung <> Ausgangs-Übung
+							(Progress.StaticEqualUebung(mPtrArbeitUebung, aProgressPara.AusgangsUebung) === false)
+					 		// Der Prozess der Übung wirkt sich auf laufende Sessions aus 
+						&& 	(Progress.StaticProgressEffectsRunningSession(mPtrArbeitUebung.FkProgress, aProgressPara) === true)
+						&& 	(mPtrArbeitUebung.FkProgress === aProgressPara.ProgressID )
+							// Session läuft
+						&& 	(Progress.StaticSessionLaeuft(aProgressPara.AusgangsSession) === true)
 						)
 					) {
 						// if (Progress.StaticEqualUebung(mPtrUebung, aProgressPara.AusgangsUebung)) {
@@ -942,47 +954,64 @@ export class Progress implements IProgress {
 						}
 					}
 					
-					const mUebung: Uebung = aProgressPara.AusgangsSession.UebungsListe.find((u) =>
-							u.SessionID === mPtrTodoUebung.SessionID &&
-							u.FkUebung === mPtrTodoUebung.FkUebung &&
-							u.ListenIndex === mPtrTodoUebung.ListenIndex &&
-							u.FkProgress === mPtrTodoUebung.FkProgress &&
-							u.ProgressGroup === mPtrTodoUebung.ProgressGroup
-					);
-
-					if (mUebung) {
-						for (let index = 0; index < mPtrArbeitUebung.SatzListe.length; index++) {
-							if (index < mUebung.SatzListe.length) {
-								const mPrtSatz: Satz = mPtrArbeitUebung.SatzListe[index];
-								mPrtSatz.Status = mUebung.SatzListe[index].Status;
-								mUebung.SatzListe[index] = mPrtSatz;
+					aProgressPara.AusgangsSession.UebungsListe.find((u) => {
+						if ((u.SessionID === mPtrArbeitUebung.SessionID) &&
+							(u.FkUebung === mPtrArbeitUebung.FkUebung) &&
+							(u.ListenIndex === mPtrArbeitUebung.ListenIndex))
+						{
+							if (Progress.StaticEqualUebung(u, mPtrArbeitUebung) === true) {
+								// if (u.FkAltProgress !== aProgressPara.ProgressID)
+								if (u.FkAltProgress !== u.FkProgress)
+								{
+									Progress.StaticManageProgressID(u, aProgressPara.ProgressID);
+									Progress.StaticManageProgressID(mPtrArbeitUebung, aProgressPara.ProgressID);
+									Progress.StaticManageProgressID(aProgressPara.AusgangsUebung, aProgressPara.ProgressID);
+								}
 							}
-						}
-					}
+							
+							for (let index = 0; index < mPtrArbeitUebung.SatzListe.length; index++) {
+								if (index < u.SatzListe.length) {
+									const mPrtSatz: Satz = mPtrArbeitUebung.SatzListe[index];
+									mPrtSatz.Status = u.SatzListe[index].Status;
+									u.SatzListe[index] = mPrtSatz;
+								}
+							}
+						//	aProgressPara.AusgangsUebung = mPtrArbeitUebung;
+
+							return true;
+						} // if
+						return false;
+					});
+
 					
-
-					// let mUebung: Uebung = mAlleUebungenEinerProgressGruppe.find((u) =>
-					// const mUebung: Uebung = aProgressPara.Programm.SessionListemAlleUebungenEinerProgressGruppe.find((u) =>
-				
-					// 	u.SessionID === mPtrUebung.SessionID &&
-					// 	u.FkUebung === mPtrUebung.FkUebung &&
-					// 	u.ListenIndex === mPtrUebung.ListenIndex &&
-					// 	u.FkProgress === mPtrUebung.FkProgress &&s
-					// 	u.ProgressGroup === mPtrUebung.ProgressGroup
-					// );
-
-					// if (mUebung) {
-					// 	for (let index = 0; index < mPtrUebung.SatzListe.length; index++) {
-					// 		if (index < mUebung.SatzListe.length) {
-					// 			const mPrtSatz: Satz = mPtrUebung.SatzListe[index];
-					// 			const mNeuSatz: Satz = mPrtSatz.Copy();
-					// 			mNeuSatz.Status = mUebung.SatzListe[index].Status;
-					// 			mUebung.SatzListe[index] = mNe;
-								
-					// 		}
-					// 	}
-					// }
+					// aProgressPara.Programm.SessionListe.find((ss) => {
+					// 	if (
+					// 		ss.FK_Programm === aProgressPara.AusgangsSession.FK_Programm
+					// 		&& ss.ListenIndex === aProgressPara.AusgangsSession.ListenIndex
+					// 	) {
+					// 		ss = aProgressPara.AusgangsSession;
+					// 		// ss.UebungsListe.find((u)=> {
+					// 		// 	if (Progress.StaticEqualUebung(u, mPtrArbeitUebung))
+					// 		// 	{
+					// 		// 		u = mPtrArbeitUebung;
+					// 		// 		// for (let index = 0; index < mPtrArbeitUebung.SatzListe.length; index++)
+					// 		// 		// {
+					// 		// 		// 	if (index < mPtrArbeitUebung.SatzListe.length) {
+					// 		// 		// 		u.SatzListe[index] = mPtrArbeitUebung.SatzListe[index];
+					// 		// 		// 		// const mPrtSatz: Satz = u.SatzListe[index];
+					// 		// 		// 		// mPrtSatz.Status = mPtrArbeitUebung.SatzListe[index].Status;
+					// 		// 		// 		// mPrtSatz.SatzListe[index] = mPrtSatz;
+					// 		// 		// 	}
+					// 		// 		// }//for
+					// 		// 	}//if
+									
+					// 		// });
+					// 	}//if
+					// });
+		
+					
 				}//for
+
 
 				let mUniqueSessionListe: Array<ISession> = [];
 				mUniqueSessionListe = mSessionListe.filter((s) =>
