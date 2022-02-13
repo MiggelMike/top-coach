@@ -609,10 +609,16 @@ export class Progress implements IProgress {
 		return (aUebung.FkProgress !== undefined);
 	}
 
-	private static StaticFirstSetIsWaiting(aUebung: Uebung): boolean {
-		return (aUebung.ArbeitsSatzListe.find((sz) =>
-			   (sz.SatzListIndex === 0)
-			&& (sz.Status === SatzStatus.Wartet)) !== undefined);
+	private static StaticFindDoneSet(aSession: ISession, aUebung: Uebung): boolean {
+		for (let index = 0; index < aSession.UebungsListe.length; index++) {
+			if (aSession.UebungsListe[index].FkUebung === aUebung.FkUebung
+				&& aSession.UebungsListe[index].ProgressGroup === aUebung.ProgressGroup
+				&& aSession.UebungsListe[index].FkProgress === aUebung.FkProgress) {
+				if (Progress.StaticFirstSetDone(aSession.UebungsListe[index]))
+					return true;
+			}
+		}
+		return false;
 	}
 
 	private static StaticSessionLaeuft(aSession: ISession): boolean{
@@ -849,10 +855,6 @@ export class Progress implements IProgress {
 					if (mPtrArbeitUebung === undefined)
 						continue;
 
-
-					const mProgress: Progress = mTodoListe[mTodoIndex].Progress;
-					const mSession: ISession = mTodoListe[mTodoIndex].Session;
-					
 					if (mPtrArbeitUebung.FkUebung !== aProgressPara.AusgangsUebung.FkUebung)
 						continue;
 					
@@ -922,7 +924,11 @@ export class Progress implements IProgress {
 					) {
 						// if (Progress.StaticEqualUebung(mPtrUebung, aProgressPara.AusgangsUebung)) {
 						// Die Übung ist die Ausgangübung
-						if (Progress.StaticSetIsDone(aProgressPara.AusgangsSatz)) {
+						if (Progress.StaticSetIsDone(aProgressPara.AusgangsSatz)
+							||
+							Progress.StaticFindDoneSet(aProgressPara.AusgangsSession, mPtrArbeitUebung)
+						)
+						{
 							// Der Ausgangsatz ist erledigt.
 							switch (aProgressPara.Wp) {
 								case WeightProgress.Increase:
@@ -960,7 +966,6 @@ export class Progress implements IProgress {
 							(u.ListenIndex === mPtrArbeitUebung.ListenIndex))
 						{
 							if (Progress.StaticEqualUebung(u, mPtrArbeitUebung) === true) {
-								// if (u.FkAltProgress !== aProgressPara.ProgressID)
 								if (u.FkAltProgress !== u.FkProgress)
 								{
 									Progress.StaticManageProgressID(u, aProgressPara.ProgressID);
@@ -968,7 +973,6 @@ export class Progress implements IProgress {
 									Progress.StaticManageProgressID(aProgressPara.AusgangsUebung, aProgressPara.ProgressID);
 								}
 							}
-							
 							for (let index = 0; index < mPtrArbeitUebung.SatzListe.length; index++) {
 								if (index < u.SatzListe.length) {
 									const mPrtSatz: Satz = mPtrArbeitUebung.SatzListe[index];
@@ -976,8 +980,8 @@ export class Progress implements IProgress {
 									u.SatzListe[index] = mPrtSatz;
 								}
 							}
-						//	aProgressPara.AusgangsUebung = mPtrArbeitUebung;
 
+							u = mPtrArbeitUebung;
 							return true;
 						} // if
 						return false;
