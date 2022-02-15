@@ -497,7 +497,15 @@ export class Progress implements IProgress {
 								mProgressPara.AlteProgressID = mProgressParaMerker.AusgangsUebung.FkAltProgress;
 								mProgressPara.ProgressHasChanged = mProgressPara.AlteProgressID !== mProgressPara.ProgressID;
 								// mProgressPara.Wp = mProgressParaMerker.AusgangsUebung.FkProgress === undefined ? WeightProgress.Decrease : mProgressParaMerker.AusgangsUebung.WeightProgress;
-								mProgressPara.Wp = mProgressParaMerker.AusgangsSatz.Status === SatzStatus.Wartet ? WeightProgress.Decrease : wp;
+								
+								if ((mProgressPara.ProgressHasChanged === true)
+									&&	(mProgressParaMerker.AusgangsSatz.Status === SatzStatus.Wartet)
+									&& (Progress.StaticFindDoneSet(mProgressParaMerker.AusgangsSession, mProgressParaMerker.AusgangsUebung) === true)
+								)
+									mProgressPara.Wp = wp;
+								else
+									mProgressPara.Wp = mProgressParaMerker.AusgangsSatz.Status === SatzStatus.Wartet ? WeightProgress.Decrease : wp;
+								
                                 mProgressPara.SatzDone = mProgressParaMerker.SatzDone;
                                 Progress.StaticProgrammSetNextWeight(mProgressPara);
                             });
@@ -609,7 +617,7 @@ export class Progress implements IProgress {
 		return (aUebung.FkProgress !== undefined);
 	}
 
-	private static StaticFindDoneSet(aSession: ISession, aUebung: Uebung): boolean {
+	public static StaticFindDoneSet(aSession: ISession, aUebung: Uebung): boolean {
 		for (let index = 0; index < aSession.UebungsListe.length; index++) {
 			if (aSession.UebungsListe[index].FkUebung === aUebung.FkUebung
 				&& aSession.UebungsListe[index].ProgressGroup === aUebung.ProgressGroup
@@ -683,18 +691,19 @@ export class Progress implements IProgress {
 	}
 
 
-	private static StaticResetAllWeights(mUebung: Uebung, aAlteProgressID: number): void {
+	private static StaticResetAllWeights(mUebung: Uebung, aProgressID: number): void {
 		mUebung.ArbeitsSatzListe.forEach(
 			(sz) => {
 				const mGewichtDiff = sz.GewichtDiff.find(
 					(gdiff) => {
 						return (
-							(gdiff.Uebung.FkAltProgress === aAlteProgressID)&&
-							((mUebung.ID === gdiff.Uebung.ID)
+							//    (gdiff.Uebung.FkAltProgress === aProgressID || mUebung.FkAltProgress === aProgressID)
+							   (gdiff.Uebung.FkAltProgress === aProgressID)
+							&& (mUebung.ID === gdiff.Uebung.ID)
 							||
 							(		(mUebung.FkUebung === gdiff.Uebung.FkUebung)
 								&& 	(mUebung.ProgressGroup === gdiff.Uebung.ProgressGroup))
-							))
+							)
 					});
 				
 				if(mGewichtDiff !== undefined)
@@ -925,8 +934,8 @@ export class Progress implements IProgress {
 						// if (Progress.StaticEqualUebung(mPtrUebung, aProgressPara.AusgangsUebung)) {
 						// Die Übung ist die Ausgangübung
 						if (Progress.StaticSetIsDone(aProgressPara.AusgangsSatz)
-							||
-							Progress.StaticFindDoneSet(aProgressPara.AusgangsSession, mPtrArbeitUebung)
+							// ||
+							// Progress.StaticFindDoneSet(aProgressPara.AusgangsSession, mPtrArbeitUebung)
 						)
 						{
 							// Der Ausgangsatz ist erledigt.
