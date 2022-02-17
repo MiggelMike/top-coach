@@ -189,7 +189,7 @@ export class Progress implements IProgress {
 						if (aSessUebung.SatzWDH(0) < aSessUebung.SatzVonVorgabeWDH(0))
 							return WeightProgress.Decrease;
 					}
-				}
+			    }
 
 				if (mProgress.ProgressSet === ProgressSet.Last && aSatzIndex === aSessUebung.ArbeitsSatzListe.length - 1) {
 					// Der letzte Satz der Übung ist maßgebend.
@@ -258,8 +258,9 @@ export class Progress implements IProgress {
 				// Warten, bis Übungen geladen sind
 				const mUebungsListe: Array<Uebung> = await aDb
 					.table(aDb.cUebung)
-					.where({ SessionID: mSess.ID, FkUebung: aSessUebung.FkUebung, FkProgress: aSessUebung.FkProgress })
-					.and((mUebung: Uebung) => (mUebung.ID !== aSessUebung.ID) && (mUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig))
+					// .where({ SessionID: mSess.ID, FkUebung: aSessUebung.FkUebung, FkProgress: aSessUebung.FkProgress })
+					.where({ FK_Programm: mSess.FK_Programm, FkUebung: aSessUebung.FkUebung, FkProgress: aSessUebung.FkProgress })
+					.and((mUebung: Uebung) => (Progress.StaticEqualUebung(mUebung, aSessUebung) === false) && (mUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig))
 					.toArray()
 					.then((mUebungen) => {
 						return mUebungen;
@@ -449,6 +450,7 @@ export class Progress implements IProgress {
 		return undefined;
 	}
 
+
 	public static StaticDoProgress(aProgressPara: ProgressPara) {
 		const mProgressParaMerker: ProgressPara = aProgressPara;
 		mProgressParaMerker.AfterLoadFn = 
@@ -475,10 +477,11 @@ export class Progress implements IProgress {
                             mProgressParaMerker.Progress.ProgressSet);                
 					
 				if (mProgressParaMerker.Progress) {
-                    if (   (mProgressParaMerker.AusgangsSatz.SatzListIndex === 0)
-                        && (mProgressParaMerker.Progress.ProgressTyp === ProgressTyp.BlockSet)
-						&& (mProgressParaMerker.Progress.ProgressSet === ProgressSet.First)
-						|| (mProgressParaMerker.AusgangsUebung.FkAltProgress !== mProgressParaMerker.AusgangsUebung.FkProgress)
+					if ( true
+						// (mProgressParaMerker.AusgangsSatz.SatzListIndex === 0)
+                        // && (mProgressParaMerker.Progress.ProgressTyp === ProgressTyp.BlockSet)
+						// && (mProgressParaMerker.Progress.ProgressSet === ProgressSet.First)
+						// || (mProgressParaMerker.AusgangsUebung.FkAltProgress !== mProgressParaMerker.AusgangsUebung.FkProgress)
 					) {
 						mProgressParaMerker.Progress.DetermineNextProgress(	mProgressParaMerker.DbModule,
 																		new Date,
@@ -498,13 +501,18 @@ export class Progress implements IProgress {
 								mProgressPara.ProgressHasChanged = mProgressPara.AlteProgressID !== mProgressPara.ProgressID;
 								// mProgressPara.Wp = mProgressParaMerker.AusgangsUebung.FkProgress === undefined ? WeightProgress.Decrease : mProgressParaMerker.AusgangsUebung.WeightProgress;
 								
-								if ((mProgressPara.ProgressHasChanged === true)
-									&&	(mProgressParaMerker.AusgangsSatz.Status === SatzStatus.Wartet)
-									&& (Progress.StaticFindDoneSet(mProgressParaMerker.AusgangsSession, mProgressParaMerker.AusgangsUebung) === true)
-								)
+								if (mProgressPara.ProgressHasChanged === true){
+									if (
+										(mProgressParaMerker.AusgangsSatz.Status === SatzStatus.Wartet)
+										&& (Progress.StaticFindDoneSet(mProgressParaMerker.AusgangsSession, mProgressParaMerker.AusgangsUebung) === true)
+									)
+										mProgressPara.Wp = wp;
+									else
+										mProgressPara.Wp = mProgressParaMerker.AusgangsSatz.Status === SatzStatus.Wartet ? WeightProgress.Decrease : wp;
+								}
+								else {
 									mProgressPara.Wp = wp;
-								else
-									mProgressPara.Wp = mProgressParaMerker.AusgangsSatz.Status === SatzStatus.Wartet ? WeightProgress.Decrease : wp;
+								}
 								
                                 mProgressPara.SatzDone = mProgressParaMerker.SatzDone;
                                 Progress.StaticProgrammSetNextWeight(mProgressPara);
@@ -529,6 +537,7 @@ export class Progress implements IProgress {
 				if ((mProgressParaMerker.SatzDone) && (mProgressParaMerker.NextProgressFn))
 					mProgressParaMerker.NextProgressFn(mNextProgress);
 			};
+		
 		mProgressParaMerker.DbModule.LadeProgress(mProgressParaMerker);
     }
 
@@ -576,9 +585,18 @@ export class Progress implements IProgress {
 	public static StaticEqualUebung(aUebung1 : Uebung, aUebung2: Uebung): boolean{
 		return (aUebung1 !== undefined &&
 			    aUebung2 !== undefined &&
-			    aUebung1.SessionID === aUebung2.SessionID &&
-			    aUebung1.FkUebung === aUebung2.FkUebung &&
-				aUebung1.ListenIndex === aUebung2.ListenIndex);
+			(
+				(		aUebung1.SessionID === aUebung2.SessionID
+					&&	aUebung1.FkUebung === aUebung2.FkUebung
+					&& 	aUebung1.ListenIndex === aUebung2.ListenIndex
+				)
+				||
+			(
+						aUebung1.ID !== 0
+					&&	aUebung1.ID === aUebung2.ID
+				)
+			)
+		);
 	}
 
 
@@ -946,7 +964,7 @@ export class Progress implements IProgress {
 										aProgressPara.AusgangsUebung,
 										aProgressPara.AusgangsSatz,
 										Arithmetik.Add,
-										mPtrArbeitUebung.GewichtSteigerung);
+										aProgressPara.AusgangsUebung.GewichtSteigerung);
 									break;
 						
 								case WeightProgress.Decrease:
@@ -955,7 +973,7 @@ export class Progress implements IProgress {
 										aProgressPara.AusgangsUebung,
 										aProgressPara.AusgangsSatz,
 										Arithmetik.Sub,
-										mPtrArbeitUebung.GewichtReduzierung);
+										aProgressPara.AusgangsUebung.GewichtReduzierung);
 									break;
 							} // switch
 						}

@@ -51,6 +51,18 @@ export interface onDeleteFn {
     (aData?: any): void | any;
 }
 
+export interface AfterSaveFn {
+    (aData?: any): void | any;
+}
+
+export interface ExtraFn {
+    (aData?: any): void | any;
+}
+
+
+
+
+
 
 export class LadePara {
 	Data?: any;
@@ -729,7 +741,8 @@ export class DexieSvcService extends Dexie {
 			OnProgrammAfterLoadFn: (mProgramme: TrainingsProgramm[]) => {
 				if (mProgramme !== undefined && mProgramme.length > 0) {
 					this.AktuellesProgramm = mProgramme[0];
-					if (aExtraFn) aExtraFn();
+					if (aExtraFn !== undefined)
+						aExtraFn();
 				}
 			}, // OnProgrammAfterLoadFn
 		} as LadePara); // Aktuelles Programm laden
@@ -746,7 +759,8 @@ export class DexieSvcService extends Dexie {
 		});
 
 		for (let i = 0; i < aProgramm.SessionListe.length; i++) {
-			if (aProgramm.SessionListe[i].Kategorie02 === SessionStatus.Fertig || aProgramm.SessionListe[i].Kategorie02 === SessionStatus.FertigTimeOut) mDoneSessions.push(aProgramm.SessionListe[i]);
+			if (aProgramm.SessionListe[i].Kategorie02 === SessionStatus.Fertig || aProgramm.SessionListe[i].Kategorie02 === SessionStatus.FertigTimeOut)
+				mDoneSessions.push(aProgramm.SessionListe[i]);
 		}
 
 		//         // Sind alle Sessions des aktuellen Programms erledigt?
@@ -975,9 +989,9 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
-	public SessionSpeichern(aSession: Session): PromiseExtended<void> {
+	public SessionSpeichern(aSession: Session, aAfterSaveFn?: AfterSaveFn): PromiseExtended<Session> {
 		return this.transaction("rw", this.SessionTable, this.UebungTable, this.SatzTable, () => {
-			this.SessionTable.put(aSession).then(
+			return this.SessionTable.put(aSession).then(
 				// Session ist gespeichert
 				// SessionID in Uebungen eintragen
 				(mSessionID: number) => {
@@ -987,6 +1001,12 @@ export class DexieSvcService extends Dexie {
 						mUebung.ListenIndex = index;
 						this.UebungSpeichern(mUebung);
 					}
+					aSession.ID = mSessionID;
+
+					if (aAfterSaveFn !== undefined)
+						aAfterSaveFn(aSession);
+
+					return aSession;
 				}
 			);
 		});
@@ -1094,7 +1114,7 @@ export class DexieSvcService extends Dexie {
 		return mResultSession;
 	}
 
-	public EvalAktuelleSessionListe(aSession: Session): void {
+	public EvalAktuelleSessionListe(aSession: Session, aExtraFn?: ExtraFn): void {
 		if (this.AktuellesProgramm && this.AktuellesProgramm.SessionListe) {
 			const mSess: ISession = this.AktuellesProgramm.SessionListe.find((s) => s.ID === aSession.ID);
 			if (aSession.Kategorie02 === SessionStatus.Loeschen) {
@@ -1116,7 +1136,7 @@ export class DexieSvcService extends Dexie {
 				OnProgrammAfterLoadFn: (mAktuelleProgrammListe: TrainingsProgramm[]) => {
 					let mNeueSession: Session = undefined;
 					let mAktuellesProgram: TrainingsProgramm;
-					let mAkuelleSessionListe: Array<ISession> = null;
+					let mAkuelleSessionListe: Array<ISession> = [];
 					// Gibt es ein aktuelles Program?
 					if (mAktuelleProgrammListe !== undefined && mAktuelleProgrammListe.length > 0) {
 						// Es gibt ein aktuelles Programm
@@ -1135,15 +1155,23 @@ export class DexieSvcService extends Dexie {
 					if (mVorlageProgrammListe !== undefined && mVorlageProgrammListe.length > 0)
 						mNeueSession.FK_VorlageProgramm = mVorlageProgrammListe[0].id;
 
-					
 					mAkuelleSessionListe.push(mNeueSession);
 					for (let index = 0; index < mAkuelleSessionListe.length; index++) {
 						const mPtrSession: Session = mAkuelleSessionListe[index] as Session;
 						mPtrSession.ListenIndex = index;
-						this.SessionSpeichern(mPtrSession).then(() => this.LadeAktuellesProgramm());
-					}
-
-					if (aSession.Kategorie02 === SessionStatus.Loeschen) this.SessionTable.delete(aSession.ID);
+						this.SessionSpeichern(mPtrSession,
+							(aSession) => {
+								if (index === mAkuelleSessionListe.length - 1) {
+									if (aSession.Kategorie02 === SessionStatus.Loeschen)
+										this.SessionTable.delete(aSession.ID);
+									
+									if (aExtraFn !== undefined)
+										aExtraFn()
+									else
+										this.LadeAktuellesProgramm();
+									}//if
+							});
+					} //for
 				}, // OnProgrammAfterLoadFn
 			} as LadePara);
 		}

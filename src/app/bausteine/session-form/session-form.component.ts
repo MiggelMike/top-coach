@@ -15,7 +15,7 @@ import { GlobalService } from "src/app/services/global.service";
 import { Uebung, UebungsKategorie02 } from "src/Business/Uebung/Uebung";
 import { UebungWaehlenData } from "src/app/uebung-waehlen/uebung-waehlen.component";
 import { Progress, ProgressPara } from 'src/Business/Progress/Progress';
-import { Satz } from 'src/Business/Satz/Satz';
+import { Satz, SatzStatus } from 'src/Business/Satz/Satz';
 
 @Component({
 	selector: "app-session-form",
@@ -146,39 +146,36 @@ export class SessionFormComponent implements OnInit {
 		(aPara as SessionFormComponent).SaveChangesPrim(aPara);
 	}
 
-	public async SaveChangesPrim(aPara: any) {
-		const mSessionForm: SessionFormComponent = aPara as SessionFormComponent;
-		mSessionForm.fDexieSvcService.EvalAktuelleSessionListe(mSessionForm.Session);
+	public async SaveChangesPrim(aPara?: any) {
+		const mSessionForm: SessionFormComponent = aPara.that as SessionFormComponent;
+		mSessionForm.fDexieSvcService.EvalAktuelleSessionListe(mSessionForm.Session, aPara.ExtraFn);
 
-		const mSession: Session = aPara.Session;
-		const mCmpSession: Session = aPara.cmpSession;
+		const mSession: Session = mSessionForm.Session;
+		const mCmpSession: Session = mSessionForm.cmpSession;
 
-		// Die aus der Session gelöschten Übungen auch aus der DB löschen.
+		// In der Session gelöschte Übungen auch aus der DB löschen.
 		for (let index = 0; index < mCmpSession.UebungsListe.length; index++) {
 			const mUebung = mCmpSession.UebungsListe[index];
 			const mSuchUebung = mSession.UebungsListe.find((u) => u.ID === mUebung.ID);
-			if (mSuchUebung === undefined) aPara.fDexieSvcService.DeleteUebung(mUebung);
+			if (mSuchUebung === undefined) mSessionForm.fDexieSvcService.DeleteUebung(mUebung);
 		}
 
-		// Die aus der Session gelöschten Sätze auch aus der DB löschen.
+		// In der Session gelöschte Sätze auch aus der DB löschen.
 		for (let index = 0; index < mCmpSession.UebungsListe.length; index++) {
 			const mCmpUebung = mCmpSession.UebungsListe[index];
 			const mSuchUebung = mSession.UebungsListe.find((u) => u.ID === mCmpUebung.ID);
 			if (mSuchUebung !== undefined) {
 				mCmpUebung.SatzListe.forEach((mCmpSatz) => {
 					if (mSuchUebung.SatzListe.find((mSuchSatz) => mSuchSatz.ID === mCmpSatz.ID) === undefined)
-						aPara.fDexieSvcService.DeleteSatz(mCmpSatz);
+					mSessionForm.fDexieSvcService.DeleteSatz(mCmpSatz);
 					
 				});
 			}
 		}
 
-		// await aPara.fDexieSvcService.SessionSpeichern(aPara.Session).then(() => {
-		// 	aPara.cmpSession = aPara.Session.Copy();
-		// });
 
-		await aPara.fDexieSvcService.SessionSpeichern(aPara.Session).then(() => {
-			aPara.cmpSession = aPara.Session.Copy();
+		await mSessionForm.fDexieSvcService.SessionSpeichern(mSessionForm.Session).then(() => {
+			mSessionForm.cmpSession = mSessionForm.Session.Copy();
 		});
 				
 		// if ((mSession.Kategorie02 === SessionStatus.Fertig) && (mSession.ProgressIsCalced === false)) {
@@ -274,12 +271,42 @@ export class SessionFormComponent implements OnInit {
 		mDialogData.textZeilen.push("Workout will be saved and closed.");
 		mDialogData.textZeilen.push("Do you want to proceed?");
 		mDialogData.OkFn = (): void => {
-			this.fSessionStatsOverlayComponent.sess.SetSessionFertig();
+			this.Session.SetSessionFertig();
 			
-			this.SaveChangesPrim(this).then(() => {
-				const mProgressPara: ProgressPara = new ProgressPara();
-				// mProgressPara.
-				Progress.StaticDoProgress(mProgressPara);
+			this.SaveChangesPrim(
+				{
+					that: this,
+				// ExtraxFn -> siehe EvalAktuelleSessionListe
+				ExtraFn: () => {
+					const mProgressPara: ProgressPara = new ProgressPara();
+					mProgressPara.DbModule = this.fDexieSvcService;
+					mProgressPara.Programm = this.Programm;
+					mProgressPara.AusgangsSession = this.Session;
+					mProgressPara.ProgressHasChanged = false;
+
+					const mIndex = this.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === this.Session.ID);
+					if(mIndex > -1) this.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
+					this.router.navigate([""]);
+					}
+				});
+				
+				// this.Session.UebungsListe.forEach(
+				// 	(u) => {
+				// 		mProgressPara.AusgangsUebung = u;
+				// 		mProgressPara.ProgressID = u.FkProgress;
+				// 		mProgressPara.AlteProgressID = u.FkProgress;
+				// 		u.FkAltProgress = u.FkAltProgress === undefined ? u.FkProgress : u.FkAltProgress;
+				// 		if (
+				// 			(u.ArbeitsSatzListe)
+				// 			&& 	(u.ArbeitsSatzListe.length > 0)
+				// 		)
+				// 		{
+				// 			mProgressPara.AusgangsSatz = u.ArbeitsSatzListe[0];
+				// 			mProgressPara.SatzDone = u.ArbeitsSatzListe[0].Status === SatzStatus.Fertig;
+				// 			mProgressPara.ProgressHasChanged = false;
+				// 			Progress.StaticDoProgress(mProgressPara);
+				// 		}
+				// 	});
 
 
 				// this.fDexieSvcService.LadeProgress(
@@ -324,11 +351,6 @@ export class SessionFormComponent implements OnInit {
 
 
 				// Die Session ist abgeschlossen und kann daher sofort aus der Liste der anstehenden Sessions gelöscht werden.
-				const mIndex = this.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex( (s) => s.ID === this.Session.ID);
-				if (mIndex > -1) this.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
-
-				this.router.navigate([""]);
-			});
 		};
 
 		this.fDialogService.JaNein(mDialogData);
