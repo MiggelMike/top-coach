@@ -143,13 +143,12 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	public SaveChanges(aPara: any) {
-		(aPara as SessionFormComponent).SaveChangesPrim(aPara);
+		(aPara as SessionFormComponent).SaveChangesPrim({ that: aPara});
 	}
 
 	public async SaveChangesPrim(aPara?: any) {
 		const mSessionForm: SessionFormComponent = aPara.that as SessionFormComponent;
-		mSessionForm.fDexieSvcService.EvalAktuelleSessionListe(mSessionForm.Session, aPara.ExtraFn);
-
+		
 		const mSession: Session = mSessionForm.Session;
 		const mCmpSession: Session = mSessionForm.cmpSession;
 
@@ -173,6 +172,7 @@ export class SessionFormComponent implements OnInit {
 			}
 		}
 
+		mSessionForm.fDexieSvcService.EvalAktuelleSessionListe(mSessionForm.Session, aPara);
 
 		await mSessionForm.fDexieSvcService.SessionSpeichern(mSessionForm.Session).then(() => {
 			mSessionForm.cmpSession = mSessionForm.Session.Copy();
@@ -271,24 +271,25 @@ export class SessionFormComponent implements OnInit {
 		mDialogData.textZeilen.push("Workout will be saved and closed.");
 		mDialogData.textZeilen.push("Do you want to proceed?");
 		mDialogData.OkFn = (): void => {
-			this.Session.SetSessionFertig();
-			
+ 	    this.Session.SetSessionFertig();
+		
 			this.SaveChangesPrim(
 				{
 					that: this,
-				// ExtraxFn -> siehe EvalAktuelleSessionListe
-				ExtraFn: () => {
-					const mProgressPara: ProgressPara = new ProgressPara();
-					mProgressPara.DbModule = this.fDexieSvcService;
-					mProgressPara.Programm = this.Programm;
-					mProgressPara.AusgangsSession = this.Session;
-					mProgressPara.ProgressHasChanged = false;
-
-					const mIndex = this.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === this.Session.ID);
-					if(mIndex > -1) this.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
-					this.router.navigate([""]);
+					DoProgressFn: (aSession: Session ) => {
+						const mProgressPara: ProgressPara = new ProgressPara();
+						mProgressPara.DbModule = this.fDexieSvcService;
+						mProgressPara.Programm = this.Programm;
+						mProgressPara.AusgangsSession = aSession;
+						mProgressPara.ProgressHasChanged = false;
+					},
+					// ExtraxFn -> siehe EvalAktuelleSessionListe
+					ExtraFn: () => {
+						const mIndex = this.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === this.Session.ID);
+						if (mIndex > -1) this.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
+						this.router.navigate([""]);
 					}
-				});
+					});
 				
 				// this.Session.UebungsListe.forEach(
 				// 	(u) => {

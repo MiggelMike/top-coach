@@ -322,7 +322,7 @@ export class DexieSvcService extends Dexie {
 			}, //OnProgrammNoRecorderLoadFn
 		} as LadePara;
 
-		    //  Dexie.delete("ConceptCoach");
+		    //   Dexie.delete("ConceptCoach");
 
 		this.version(6).stores({
 			AppData: "++id",
@@ -967,7 +967,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public SaetzeSpeichern(aSaetze: Array<ISatz>) {
-		return this.SatzTable.bulkPut(aSaetze as Array<Satz>);
+		this.SatzTable.bulkPut(aSaetze as Array<Satz>);
 	}
 
 	public UebungSpeichern(aUebung: Uebung): PromiseExtended<number> {
@@ -982,16 +982,16 @@ export class DexieSvcService extends Dexie {
 					aUebung.SatzListe.forEach((mSatz) => {
 						mSatz.UebungID = mUebungID;
 						mSatz.SessionID = aUebung.SessionID;
+						this.SatzSpeichern(mSatz);
 					});
-					this.SaetzeSpeichern(aUebung.SatzListe);
 				}
 				return mUebungID;
 			});
 	}
 
-	public SessionSpeichern(aSession: Session, aAfterSaveFn?: AfterSaveFn): PromiseExtended<Session> {
+	public SessionSpeichern(aSession: Session, aAfterSaveFn?: AfterSaveFn): PromiseExtended<void> {
 		return this.transaction("rw", this.SessionTable, this.UebungTable, this.SatzTable, () => {
-			return this.SessionTable.put(aSession).then(
+			this.SessionTable.put(aSession).then(
 				// Session ist gespeichert
 				// SessionID in Uebungen eintragen
 				(mSessionID: number) => {
@@ -1005,8 +1005,6 @@ export class DexieSvcService extends Dexie {
 
 					if (aAfterSaveFn !== undefined)
 						aAfterSaveFn(aSession);
-
-					return aSession;
 				}
 			);
 		});
@@ -1114,7 +1112,7 @@ export class DexieSvcService extends Dexie {
 		return mResultSession;
 	}
 
-	public EvalAktuelleSessionListe(aSession: Session, aExtraFn?: ExtraFn): void {
+	public EvalAktuelleSessionListe(aSession: Session, aPara?: any): void {
 		if (this.AktuellesProgramm && this.AktuellesProgramm.SessionListe) {
 			const mSess: ISession = this.AktuellesProgramm.SessionListe.find((s) => s.ID === aSession.ID);
 			if (aSession.Kategorie02 === SessionStatus.Loeschen) {
@@ -1162,16 +1160,18 @@ export class DexieSvcService extends Dexie {
 					for (let index = 0; index < mAkuelleSessionListe.length; index++) {
 						const mPtrSession: Session = mAkuelleSessionListe[index] as Session;
 						mPtrSession.ListenIndex = index;
-						this.SessionSpeichern(mPtrSession,
-							(aSession) => {
-								if (index === mAkuelleSessionListe.length - 1) {
-									
-									if (aExtraFn !== undefined)
-										aExtraFn()
-									else
-										this.LadeAktuellesProgramm();
-									}//if
-							});
+                        // Progress ermitteln
+						if ((aPara !== undefined) && (aPara.DoProgressFn !== undefined)) {
+							aPara.DoProgressFn(mPtrSession);
+							if (index === mAkuelleSessionListe.length - 1) {
+								if ((aPara !== undefined) && (aPara.ExtraFn !== undefined)) {
+									aPara.ExtraFn();
+								}
+								else
+								this.LadeAktuellesProgramm();
+							}//if
+						}
+						this.SessionSpeichern(mPtrSession);
 					} //for
 				}, // OnProgrammAfterLoadFn
 			} as LadePara);
