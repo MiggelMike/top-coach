@@ -1155,6 +1155,9 @@ export class DexieSvcService extends Dexie {
 					if (mVorlageProgrammListe !== undefined && mVorlageProgrammListe.length > 0)
 						mNeueSession.FK_VorlageProgramm = mVorlageProgrammListe[0].id;
 
+					if (aSession.Kategorie02 === SessionStatus.Loeschen)
+						this.SessionTable.delete(aSession.ID);
+					
 					mAkuelleSessionListe.push(mNeueSession);
 					for (let index = 0; index < mAkuelleSessionListe.length; index++) {
 						const mPtrSession: Session = mAkuelleSessionListe[index] as Session;
@@ -1162,8 +1165,6 @@ export class DexieSvcService extends Dexie {
 						this.SessionSpeichern(mPtrSession,
 							(aSession) => {
 								if (index === mAkuelleSessionListe.length - 1) {
-									if (aSession.Kategorie02 === SessionStatus.Loeschen)
-										this.SessionTable.delete(aSession.ID);
 									
 									if (aExtraFn !== undefined)
 										aExtraFn()
