@@ -23,6 +23,7 @@ import {
 } from '../Satz/Satz';
 
 import { deserialize } from '@peerlancers/json-serialization';
+import { Progress } from '../Progress/Progress';
 
 export class GzclpProgramm extends TrainingsProgramm {
 	constructor(aProgrammKategorie: ProgrammKategorie, public override pDbModule: DexieSvcService) {
@@ -163,11 +164,9 @@ export class GzclpProgramm extends TrainingsProgramm {
 		mUebung.GewichtSteigerung = 1;
 		mUebung.GewichtReduzierung = 1;
 
-		const mProgress = this.pDbModule.ProgressListe.find((p) => p.Name === 'All sets sum');
+		const mProgress = this.pDbModule.ProgressListe.find((p) => p.Name === Progress.cStandardProgress);
 		if (mProgress !== undefined)
 			mUebung.FkProgress = mProgress.ID;
-		
-		
 		
 		// this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.Custom, aNeueSession);
 

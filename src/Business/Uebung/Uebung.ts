@@ -1,4 +1,4 @@
-import { ProgressGroup, WeightProgress } from 'src/Business/Progress/Progress';
+import { Progress, ProgressGroup, WeightProgress } from 'src/Business/Progress/Progress';
 import { Zeitraum } from './../Dauer';
 import { Equipment } from './../Equipment/Equipment';
 import { MuscleGroupKategorie02 } from '../MuscleGroup/MuscleGroup';
@@ -158,9 +158,9 @@ export class Uebung implements IUebung {
     public NaechsteUebungPause: number = 0;
 
     public Vorlage: boolean = false;
-    public FkProgress: number;
-    public FkAltProgress: number;
-    public FkOrgProgress: number;
+    public FkProgress: number = -1;
+    public FkAltProgress: number = -1;
+    public FkOrgProgress: number = -1;
     public WeightProgress: WeightProgress = WeightProgress.Same;
     public AltWeightProgress: WeightProgress = WeightProgress.Same;
     public ProgressGroup: string = ProgressGroup[0];
@@ -375,6 +375,7 @@ export class Uebung implements IUebung {
         aTyp: UebungsTyp,
         aKategorieen01: Array<UebungsKategorie01>,
         aKategorie02: UebungsKategorie02,
+        aFkProgess: number
     ): Uebung {
         //
         const mUebung = new Uebung();
@@ -382,6 +383,8 @@ export class Uebung implements IUebung {
         mUebung.Typ = aTyp;
         mUebung.Kategorieen01 = aKategorieen01 ? aKategorieen01 : [];
         mUebung.Kategorie02 = aKategorie02;
+        mUebung.FkProgress = aFkProgess;
+        mUebung.FkAltProgress = aFkProgess;
         return mUebung;
     }
 
@@ -454,7 +457,8 @@ export class Uebung implements IUebung {
             aUebung.Name,
             aUebung.Typ,
             aUebung.Kategorieen01,
-            aKategorie02
+            aKategorie02,
+            aUebung.FkProgress
         );
 
         // Soll eine Session-Übung erzeugt werden? 

@@ -322,11 +322,11 @@ export class DexieSvcService extends Dexie {
 			}, //OnProgrammNoRecorderLoadFn
 		} as LadePara;
 
-		    //   Dexie.delete("ConceptCoach");
+		//    Dexie.delete("ConceptCoach");
 
-		this.version(6).stores({
+		this.version(8).stores({
 			AppData: "++id",
-			Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress",
+			Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,[FK_Programm+FkUebung+FkProgress+ProgressGroup]",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
 			SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02],[FK_Programm+ListenIndex]",
 			Satz: "++ID,UebungID",
@@ -343,7 +343,7 @@ export class DexieSvcService extends Dexie {
 		this.PruefeStandardLanghanteln();
 		this.PruefeStandardEquipment();
 		this.PruefeStandardMuskelGruppen();
-		this.LadeStammUebungen();
+		// this.LadeStammUebungen();
 	}
 
 	get UebungListeSortedByName(): Array<Uebung> {
@@ -400,7 +400,7 @@ export class DexieSvcService extends Dexie {
 
 	private InitAll() {
 		this.InitAppData();
-		this.InitProgress();
+		 this.InitProgress();
 		this.InitHantel();
 		this.InitHantelscheibe();
 		this.InitEquipment();
@@ -454,7 +454,11 @@ export class DexieSvcService extends Dexie {
 	private NeueUebung(aName: string, aKategorie02: UebungsKategorie02, aTyp: UebungsTyp): Uebung {
 		const mGzclpKategorieen01 = Uebung.ErzeugeGzclpKategorieen01();
 		const mKategorieen01 = [].concat(mGzclpKategorieen01);
-		return Uebung.StaticNeueUebung(aName, aTyp, mKategorieen01, aKategorie02);
+		const mProgress: Progress = this.ProgressListe.find((p) => p.Name === Progress.cStandardProgress);
+		if(mProgress === undefined)
+			return Uebung.StaticNeueUebung(aName, aTyp, mKategorieen01, aKategorie02, -1);
+		else
+			return Uebung.StaticNeueUebung(aName, aTyp, mKategorieen01, aKategorie02, mProgress.ID);
 	}
 
 	private NeueMuskelgruppe(aName: string, aKategorie01: MuscleGroupKategorie01): MuscleGroup {
@@ -501,8 +505,8 @@ export class DexieSvcService extends Dexie {
 		return this.StammUebungsListe.find((ub) => ub.Name.toUpperCase() === aUebung.Name.toUpperCase());
 	}
 
-	public LadeProgress(aProgressPara?: ProgressPara) {
-		this.table(this.cProgress)
+	public async LadeProgress(aProgressPara?: ProgressPara) {
+		await this.table(this.cProgress)
 			.toArray()
 			.then((mProgressListe) => {
 				this.ProgressListe = mProgressListe;
@@ -648,8 +652,8 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
-	private PruefeStandardProgress() {
-		this.ProgressTable.orderBy("Name")
+	private async PruefeStandardProgress() {
+		await this.ProgressTable.orderBy("Name")
 			.toArray()
 			.then((mProgress) => {
 				if (mProgress === undefined || mProgress.length === 0) {
@@ -659,8 +663,11 @@ export class DexieSvcService extends Dexie {
 					mNeuProgress.ProgressTyp = ProgressTyp.BlockSet;
 					mNeuProgress.WeightCalculation = WeightCalculation.Sum;
 					mNeuProgress.WeightProgressTime = WeightProgressTime.NextSession;
-					mNeuProgress.Name = "All sets sum";
-					this.ProgressSpeichern(mNeuProgress).then(() => this.LadeProgress());
+					mNeuProgress.Name = Progress.cStandardProgress;
+					this.ProgressSpeichern(mNeuProgress).then(
+						() => {
+							this.LadeProgress().then(() => this.LadeStammUebungen())
+						});
 				}
 			});
 	}
@@ -962,8 +969,8 @@ export class DexieSvcService extends Dexie {
 		if (aLadePara.OnProgrammAfterLoadFn !== undefined) aLadePara.OnProgrammAfterLoadFn(mProgramme);
 	}
 
-	public SatzSpeichern(aSatz: ISatz) {
-		return this.SatzTable.put(aSatz as Satz);
+	public async SatzSpeichern(aSatz: ISatz): Promise<number> {
+		return await this.SatzTable.put(aSatz as Satz);
 	}
 
 	public SaetzeSpeichern(aSaetze: Array<ISatz>) {
@@ -974,40 +981,44 @@ export class DexieSvcService extends Dexie {
 		aUebung.FkAltProgress = aUebung.FkProgress;
 		aUebung.AltWeightProgress = aUebung.WeightProgress;
 		return this.UebungTable.put(aUebung)
-			.then((mUebungID: number) => {
+			.then( async (mUebungID: number) => {
 				// Uebung ist gespeichert.
 				// UebungsID in Saetze eintragen.
 				aUebung.ID = mUebungID;
 				if (aUebung.SatzListe !== undefined) {
-					aUebung.SatzListe.forEach((mSatz) => {
+					for (let index = 0; index < aUebung.SatzListe.length; index++) {
+						const mSatz = aUebung.SatzListe[index];
 						mSatz.UebungID = mUebungID;
 						mSatz.SessionID = aUebung.SessionID;
-						this.SatzSpeichern(mSatz);
-					});
+						await this.SatzSpeichern(mSatz);
+					}
 				}
 				return mUebungID;
 			});
 	}
 
-	public SessionSpeichern(aSession: Session, aAfterSaveFn?: AfterSaveFn): PromiseExtended<void> {
-		return this.transaction("rw", this.SessionTable, this.UebungTable, this.SatzTable, () => {
-			this.SessionTable.put(aSession).then(
+	public async SessionSpeichern(aSession: Session, aAfterSaveFn?: AfterSaveFn): Promise<void> {
+		return this.transaction("rw", this.SessionTable, this.UebungTable, this.SatzTable, async () => {
+			const mUebungsListe: Array<Uebung> = aSession.UebungsListe.map(u => u);
+			aSession.UebungsListe = undefined;
+			await this.SessionTable.put(aSession).then(
 				// Session ist gespeichert
 				// SessionID in Uebungen eintragen
-				(mSessionID: number) => {
-					for (let index = 0; index < aSession.UebungsListe.length; index++) {
-						const mUebung = aSession.UebungsListe[index];
+			    async (mSessionID: number) => {
+					for (let index = 0; index < mUebungsListe.length; index++) {
+						const mUebung = mUebungsListe[index];
 						mUebung.SessionID = mSessionID;
 						mUebung.ListenIndex = index;
-						this.UebungSpeichern(mUebung);
+						await this.UebungSpeichern(mUebung);
 					}
 					aSession.ID = mSessionID;
+					aSession.UebungsListe = mUebungsListe;
 
 					if (aAfterSaveFn !== undefined)
 						aAfterSaveFn(aSession);
 				}
 			);
-		});
+		 });
 	}
 
 	public ProgrammSpeichern(aTrainingsProgramm: ITrainingsProgramm) {
@@ -1112,7 +1123,7 @@ export class DexieSvcService extends Dexie {
 		return mResultSession;
 	}
 
-	public EvalAktuelleSessionListe(aSession: Session, aPara?: any): void {
+	public async EvalAktuelleSessionListe(aSession: Session, aPara?: any): Promise<void>  {
 		if (this.AktuellesProgramm && this.AktuellesProgramm.SessionListe) {
 			const mSess: ISession = this.AktuellesProgramm.SessionListe.find((s) => s.ID === aSession.ID);
 			if (aSession.Kategorie02 === SessionStatus.Loeschen) {
@@ -1123,58 +1134,79 @@ export class DexieSvcService extends Dexie {
 				}
 			} else {
 				// Die Session ersteinmal in die Session-Liste des aktuellen Programms aufnehmen.
-				if (mSess === undefined) this.AktuellesProgramm.SessionListe.push(aSession);
+		//		if (mSess === undefined) this.AktuellesProgramm.SessionListe.push(aSession);
 			}
 		}
 
 		if (aSession.Kategorie02 === SessionStatus.Fertig || aSession.Kategorie02 === SessionStatus.Loeschen) {
-			this.LadeProgramme({
-				fProgrammKategorie: ProgrammKategorie.AktuellesProgramm,
+			const mNeueSession: Session = aSession.Copy(true);
+			mNeueSession.init();
+			this.InitSessionSaetze(aSession, mNeueSession);
+			mNeueSession.FK_Programm = aSession.FK_Programm;
+			mNeueSession.FK_VorlageProgramm = aSession.FK_VorlageProgramm;
+			mNeueSession.Expanded = false;
 
-				OnProgrammAfterLoadFn: (mAktuelleProgrammListe: TrainingsProgramm[]) => {
-					let mNeueSession: Session = undefined;
-					let mAktuellesProgram: TrainingsProgramm;
-					let mAkuelleSessionListe: Array<ISession> = [];
-					// Gibt es ein aktuelles Program?
-					if (mAktuelleProgrammListe !== undefined && mAktuelleProgrammListe.length > 0) {
-						// Es gibt ein aktuelles Programm
-						mAktuellesProgram = mAktuelleProgrammListe[0];
-						mAkuelleSessionListe = mAktuellesProgram.SessionListe.filter((s) => s.Kategorie02 !== SessionStatus.Fertig && s.Kategorie02 !== SessionStatus.FertigTimeOut);
-					}
+			// export enum SessionStatus {
+			// 	NurLesen,
+			// 	Bearbeitbar,
+			// 	Wartet,
+			// 	Pause,
+			// 	Laueft,
+			// 	Fertig,
+			// 	FertigTimeOut,
+			// 	Loeschen
+			// }
 
-					mNeueSession = aSession.Copy(true);
-					mNeueSession.init();
-					this.InitSessionSaetze(aSession, mNeueSession);
-					mNeueSession.FK_Programm = mAktuellesProgram.id;
-					mNeueSession.Expanded = false;
+			await this.SessionSpeichern(aSession).then(
+				async () => {
+					const mIndex = this.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSession.ID);
+					if (mIndex > -1)
+						this.AktuellesProgramm.SessionListe.splice(mIndex, 1);
+		
+		
+					const mAkuelleSessionListe: Array<ISession> = this.AktuellesProgramm.SessionListe.filter((s) =>
+							s.Kategorie02 !== SessionStatus.Fertig
+							&& s.Kategorie02 !== SessionStatus.FertigTimeOut
+							|| s.ID === aSession.ID
+							|| s.ListenIndex === aSession.ListenIndex
+					);
+		
+					mNeueSession.ListenIndex = mAkuelleSessionListe.length + 1;
+					await this.SessionSpeichern(mNeueSession).then(
+						() => {
+		
+							if (mAkuelleSessionListe.length > 0) {
+								let index = 0
+								let mPtrSession: Session = mAkuelleSessionListe[index] as Session;
+								mPtrSession.ListenIndex = index;
+				
+								let mInterVallID = setInterval(async () => {
+									await this.SessionSpeichern(mPtrSession).then(
+										() => {
+											index++;
+											if (index >= mAkuelleSessionListe.length)
+												clearInterval(mInterVallID);
+											else {
+												let mPtrSession: Session = mAkuelleSessionListe[index] as Session;
+												mPtrSession.ListenIndex = index;
+											}
+										}); //await this.SessionSpeichern(mPtrSession).then
+								}, 1000);
+							}
+						}); // await this.SessionSpeichern(mNeueSession).then	
+				});//await this.SessionSpeichern(aSession).then
+				
 
-					const mVorlageProgrammListe: Array<TrainingsProgramm> = this.VorlageProgramme.filter((vp) => vp.id === aSession.FK_VorlageProgramm);
-					// Ist eine mVorlageProgrammListe vorhanden und hat sie Elemente?
-					if (mVorlageProgrammListe !== undefined && mVorlageProgrammListe.length > 0)
-						mNeueSession.FK_VorlageProgramm = mVorlageProgrammListe[0].id;
 
-					if (aSession.Kategorie02 === SessionStatus.Loeschen)
-						this.SessionTable.delete(aSession.ID);
-					
-					mAkuelleSessionListe.push(mNeueSession);
-					for (let index = 0; index < mAkuelleSessionListe.length; index++) {
-						const mPtrSession: Session = mAkuelleSessionListe[index] as Session;
-						mPtrSession.ListenIndex = index;
-                        // Progress ermitteln
-						if ((aPara !== undefined) && (aPara.DoProgressFn !== undefined)) {
-							aPara.DoProgressFn(mPtrSession);
-							if (index === mAkuelleSessionListe.length - 1) {
-								if ((aPara !== undefined) && (aPara.ExtraFn !== undefined)) {
-									aPara.ExtraFn();
-								}
-								else
-								this.LadeAktuellesProgramm();
-							}//if
-						}
-						this.SessionSpeichern(mPtrSession);
-					} //for
-				}, // OnProgrammAfterLoadFn
-			} as LadePara);
+
+//			mAkuelleSessionListe.push(mNeueSession);	
+			if (aSession.Kategorie02 === SessionStatus.Loeschen)
+				this.SessionTable.delete(aSession.ID);
+			
+			if ((aPara !== undefined) && (aPara.ExtraFn !== undefined)) 
+				aPara.ExtraFn();
+			
+			return null;
 		}
 	}
 }

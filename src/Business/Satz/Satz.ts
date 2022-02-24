@@ -121,7 +121,7 @@ export class Satz implements ISatz {
     }
 
     public get fGewichtVorgabe(): string {
-        return this.GewichtVorgabe.toFixed(2);
+        return Number(this.GewichtVorgabe).toFixed(2);
     }
 
     public getBodyWeightText(aPrefix?: string): string {

@@ -45,8 +45,8 @@ export class SatzEditComponent implements OnInit {
     ) {
         const mProgressPara: ProgressPara = new ProgressPara();
         mProgressPara.AfterLoadFn =
-            (mProgressListe: Array<Progress>) => {
-                this.Progress = mProgressListe.find((p) => p.ID === this.sessUebung.FkProgress);
+            (aProgressPara: ProgressPara) => {
+                this.Progress = aProgressPara.ProgressListe.find((p) => p.ID === this.sessUebung.FkProgress);
             };
 
         this.fDbModule.LadeProgress(mProgressPara);
@@ -153,6 +153,7 @@ export class SatzEditComponent implements OnInit {
         mProgressPara.DbModule = this.fDbModule;
         mProgressPara.SatzDone = aChecked;
         mProgressPara.ProgressHasChanged = false;
+        mProgressPara.ProgressListe = this.fDbModule.ProgressListe;
         // Routine zum Starten der Stoppuhr.
         mProgressPara.NextProgressFn = (aNextProgress: NextProgress) => {
             this.DoStoppUhr(aNextProgress.Satz.GewichtAusgefuehrt,

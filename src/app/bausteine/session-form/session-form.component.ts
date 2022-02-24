@@ -143,7 +143,8 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	public SaveChanges(aPara: any) {
-		(aPara as SessionFormComponent).SaveChangesPrim({ that: aPara});
+		(aPara as SessionFormComponent).SaveChangesPrim({ that: aPara });
+		(aPara as SessionFormComponent).fDexieSvcService.EvalAktuelleSessionListe((aPara as SessionFormComponent).Session, aPara);
 	}
 
 	public async SaveChangesPrim(aPara?: any) {
@@ -156,7 +157,8 @@ export class SessionFormComponent implements OnInit {
 		for (let index = 0; index < mCmpSession.UebungsListe.length; index++) {
 			const mUebung = mCmpSession.UebungsListe[index];
 			const mSuchUebung = mSession.UebungsListe.find((u) => u.ID === mUebung.ID);
-			if (mSuchUebung === undefined) mSessionForm.fDexieSvcService.DeleteUebung(mUebung);
+			if (mSuchUebung === undefined)
+				mSessionForm.fDexieSvcService.DeleteUebung(mUebung);
 		}
 
 		// In der Session gelöschte Sätze auch aus der DB löschen.
@@ -164,15 +166,19 @@ export class SessionFormComponent implements OnInit {
 			const mCmpUebung = mCmpSession.UebungsListe[index];
 			const mSuchUebung = mSession.UebungsListe.find((u) => u.ID === mCmpUebung.ID);
 			if (mSuchUebung !== undefined) {
-				mCmpUebung.SatzListe.forEach((mCmpSatz) => {
+				for (let mSatzIndex = 0; mSatzIndex < mCmpUebung.SatzListe.length; mSatzIndex++) {
+					const mCmpSatz = mCmpUebung.SatzListe[mSatzIndex];
 					if (mSuchUebung.SatzListe.find((mSuchSatz) => mSuchSatz.ID === mCmpSatz.ID) === undefined)
 					mSessionForm.fDexieSvcService.DeleteSatz(mCmpSatz);
-					
-				});
+				}
 			}
 		}
 
-		mSessionForm.fDexieSvcService.EvalAktuelleSessionListe(mSessionForm.Session, aPara);
+		if ((aPara !== undefined) && (aPara.DoProgressFn !== undefined)) 
+			aPara.DoProgressFn(this.Session);
+		
+
+		// mSessionForm.fDexieSvcService.EvalAktuelleSessionListe(mSessionForm.Session, aPara);
 
 		await mSessionForm.fDexieSvcService.SessionSpeichern(mSessionForm.Session).then(() => {
 			mSessionForm.cmpSession = mSessionForm.Session.Copy();
@@ -271,94 +277,49 @@ export class SessionFormComponent implements OnInit {
 		mDialogData.textZeilen.push("Workout will be saved and closed.");
 		mDialogData.textZeilen.push("Do you want to proceed?");
 		mDialogData.OkFn = (): void => {
- 	    this.Session.SetSessionFertig();
-		
+ 	    	this.Session.SetSessionFertig();
+			 
 			this.SaveChangesPrim(
 				{
 					that: this,
-					DoProgressFn: (aSession: Session ) => {
-						const mProgressPara: ProgressPara = new ProgressPara();
-						mProgressPara.DbModule = this.fDexieSvcService;
-						mProgressPara.Programm = this.Programm;
-						mProgressPara.AusgangsSession = aSession;
-						mProgressPara.ProgressHasChanged = false;
-					},
-					// ExtraxFn -> siehe EvalAktuelleSessionListe
-					ExtraFn: () => {
-						const mIndex = this.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === this.Session.ID);
-						if (mIndex > -1) this.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
-						this.router.navigate([""]);
+					DoProgressFn: async (aSession: Session) => {
+						if (aSession.UebungsListe.length > 0) {
+							const mPtrUebung = aSession.UebungsListe[0];
+							if (mPtrUebung.ArbeitsSatzListe.length > 0) {
+								const mProgressPara: ProgressPara = new ProgressPara();
+								mProgressPara.DbModule = this.fDexieSvcService;
+								mProgressPara.Programm = this.Programm;
+								mProgressPara.AusgangsSession = aSession;
+								mProgressPara.ProgressHasChanged = false;
+								mProgressPara.AusgangsUebung = mPtrUebung;
+								mProgressPara.AusgangsSatz = mPtrUebung.ArbeitsSatzListe[0];
+								mProgressPara.ProgressID = mPtrUebung.FkProgress;
+								mProgressPara.AlteProgressID = mPtrUebung.FkProgress;
+								mProgressPara.SatzDone = mPtrUebung.ArbeitsSatzListe[0].Status === SatzStatus.Fertig;
+								mProgressPara.ProgressListe = this.fDexieSvcService.ProgressListe;
+								await Progress.StaticDoProgress(mProgressPara).then(() => {
+									this.fDexieSvcService.EvalAktuelleSessionListe(
+										this.Session,
+										{
+											ExtraFn: () => {
+												// const mIndex = this.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === this.Session.ID);
+												// if (mIndex > -1) this.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
+												this.router.navigate([""]);
+											}
+										}
+									);
+								});
+							}
+						}
 					}
-					});
-				
-				// this.Session.UebungsListe.forEach(
-				// 	(u) => {
-				// 		mProgressPara.AusgangsUebung = u;
-				// 		mProgressPara.ProgressID = u.FkProgress;
-				// 		mProgressPara.AlteProgressID = u.FkProgress;
-				// 		u.FkAltProgress = u.FkAltProgress === undefined ? u.FkProgress : u.FkAltProgress;
-				// 		if (
-				// 			(u.ArbeitsSatzListe)
-				// 			&& 	(u.ArbeitsSatzListe.length > 0)
-				// 		)
-				// 		{
-				// 			mProgressPara.AusgangsSatz = u.ArbeitsSatzListe[0];
-				// 			mProgressPara.SatzDone = u.ArbeitsSatzListe[0].Status === SatzStatus.Fertig;
-				// 			mProgressPara.ProgressHasChanged = false;
-				// 			Progress.StaticDoProgress(mProgressPara);
-				// 		}
-				// 	});
-
-
-				// this.fDexieSvcService.LadeProgress(
-				// 	(mProgressListe: Array<Progress>) => {
-				// 	const mProgress:Progress = mProgressListe.find((p) => p.ID === this.sessUebung.FkProgress);
-				// 	// this.Progress = mProgressListe.find((p) => p.ID === this.sessUebung.FkAltProgress);
-				// 	// Sätze der aktuellen Übung durchnummerieren
-				// 	for (let index = 0; index < this.sessUebung.SatzListe.length; index++) {
-				// 		const mPtrSatz: Satz = this.sessUebung.SatzListe[index];
-				// 		mPtrSatz.SatzListIndex = index;
-				// 	}
-		
-				// 	// Hole alle Sätze aus der aktuellen Session die aktuelle Übung mehrfach vorkommt
-				// 	//   Aus der Satzliste der aktuellen Übung die Sätze mit dem Status "Wartet" in mSatzliste sammeln
-				// 	const mSatzListe = this.sess.AlleUebungsSaetzeEinerProgressGruppe(this.sessUebung, SatzStatus.Wartet);
-				// 	// const mSatzListe = this.sessUebung.SatzListe.filter((sz) => (sz.SatzListIndex > aSatz.SatzListIndex && sz.Status === SatzStatus.Wartet));
-				// 	const mSessionsListe: Array<Session> = this.fDbModule.UpComingSessionList();
-		
-				// 	if (this.Progress) {
-				// 		if (   (this.rowNum === 0)
-				// 			&& (this.Progress.ProgressTyp === ProgressTyp.BlockSet)
-				// 			&& (this.Progress.ProgressSet === ProgressSet.First)) {
-				// 			this.Progress.DetermineNextProgress(this.fDbModule, new Date, this.sess.FK_VorlageProgramm, this.rowNum, this.sessUebung)
-				// 				.then((wp: WeightProgress) => {
-				// 					const mProgressPara: ProgressPara = new ProgressPara();
-				// 					mProgressPara.AusgangsSession = this.sess;
-				// 					mProgressPara.AusgangsUebung = this.sessUebung;
-				// 					mProgressPara.AusgangsSatz = aSatz as Satz;
-				// 					mProgressPara.DbModule = this.fDbModule;
-				// 					mProgressPara.Programm = this.programm;
-				// 					mProgressPara.Progress = this.Progress;
-				// 					mProgressPara.Wp = wp;
-				// 					mProgressPara.Storno = false;
-				// 					mProgressPara.SatzUndone = false;
-				// 					Progress.StaticProgrammSetNextWeight(mProgressPara);
-				// 				});
-				// 		}
-				// 	}
-				// });
-
-
-
-
-				// Die Session ist abgeschlossen und kann daher sofort aus der Liste der anstehenden Sessions gelöscht werden.
-		};
+				});
+		}
 
 		this.fDialogService.JaNein(mDialogData);
 
 	}
 
-	public PauseButtonVisible(): Boolean {
+	public PauseButtonVisible(): boolean {
 		return this.Session.Kategorie02 !== SessionStatus.Fertig && this.Session.Kategorie02 !== SessionStatus.FertigTimeOut;
 	}
 }

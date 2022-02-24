@@ -1,4 +1,3 @@
-import { ProgressGroup } from 'src/Business/Progress/Progress';
 import { SessionDB, Pause, ISessionDB, SessionStatus } from './../SessionDB';
 import { Zeitraum, MaxZeitraum } from './../Dauer';
 import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
@@ -177,22 +176,23 @@ export class Session extends SessionDB implements ISession {
         {
             mNeueSession.UebungsListe = [];
             mNeueSession.ID = undefined;
+            if (this.UebungsListe !== undefined) {
+                for (let index1 = 0; index1 < this.UebungsListe.length; index1++) {
+                    const mPrtUebung = this.UebungsListe[index1];
+                    const mNeueUebung = mPrtUebung.Copy();
+                    mNeueUebung.SatzListe = [];
+                    mNeueUebung.ID = undefined;
 
-            for (let index1 = 0; index1 < this.UebungsListe.length; index1++) {
-                const mPrtUebung = this.UebungsListe[index1];
-                const mNeueUebung = mPrtUebung.Copy();
-                mNeueUebung.SatzListe = [];
-                mNeueUebung.ID = undefined;
-
-                for (let index2 = 0; index2 < mPrtUebung.SatzListe.length; index2++) {
-                    const mPrtSatz =  mPrtUebung.SatzListe[index2];
-                    const mNeuerSatz = mPrtSatz.Copy();
-                    mNeuerSatz.SessionID = 0;
-                    mNeuerSatz.UebungID = 0;
-                    mNeuerSatz.ID = undefined;
-                    mNeueUebung.SatzListe.push(mNeuerSatz);
+                    for (let index2 = 0; index2 < mPrtUebung.SatzListe.length; index2++) {
+                        const mPrtSatz = mPrtUebung.SatzListe[index2];
+                        const mNeuerSatz = mPrtSatz.Copy();
+                        mNeuerSatz.SessionID = 0;
+                        mNeuerSatz.UebungID = 0;
+                        mNeuerSatz.ID = undefined;
+                        mNeueUebung.SatzListe.push(mNeuerSatz);
+                    }
+                    mNeueSession.addUebung(mNeueUebung);
                 }
-                mNeueSession.addUebung(mNeueUebung);
             }
         }
         return mNeueSession;
