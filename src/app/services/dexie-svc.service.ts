@@ -322,7 +322,7 @@ export class DexieSvcService extends Dexie {
 			}, //OnProgrammNoRecorderLoadFn
 		} as LadePara;
 
-		//    Dexie.delete("ConceptCoach");
+		    Dexie.delete("ConceptCoach");
 
 		this.version(8).stores({
 			AppData: "++id",
@@ -985,26 +985,29 @@ export class DexieSvcService extends Dexie {
 				// Uebung ist gespeichert.
 				// UebungsID in Saetze eintragen.
 				aUebung.ID = mUebungID;
-				if (aUebung.SatzListe !== undefined) {
-					for (let index = 0; index < aUebung.SatzListe.length; index++) {
-						const mSatz = aUebung.SatzListe[index];
+				const mSatzListe: Array<Satz> = aUebung.SatzListe.map(sz => sz);
+				aUebung.SatzListe = undefined;
+				if (mSatzListe !== undefined) {
+					for (let index = 0; index < mSatzListe.length; index++) {
+						const mSatz = mSatzListe[index];
 						mSatz.UebungID = mUebungID;
 						mSatz.SessionID = aUebung.SessionID;
 						await this.SatzSpeichern(mSatz);
 					}
 				}
+				aUebung.SatzListe = mSatzListe;
 				return mUebungID;
 			});
 	}
 
 	public async SessionSpeichern(aSession: Session, aAfterSaveFn?: AfterSaveFn): Promise<void> {
 		return this.transaction("rw", this.SessionTable, this.UebungTable, this.SatzTable, async () => {
-			const mUebungsListe: Array<Uebung> = aSession.UebungsListe.map(u => u);
-			aSession.UebungsListe = undefined;
 			await this.SessionTable.put(aSession).then(
 				// Session ist gespeichert
 				// SessionID in Uebungen eintragen
 			    async (mSessionID: number) => {
+					const mUebungsListe: Array<Uebung> = aSession.UebungsListe.map(u => u);
+					aSession.UebungsListe = undefined;
 					for (let index = 0; index < mUebungsListe.length; index++) {
 						const mUebung = mUebungsListe[index];
 						mUebung.SessionID = mSessionID;
@@ -1032,10 +1035,12 @@ export class DexieSvcService extends Dexie {
 					// Programm ist gespeichert.
 					// ProgrammID in die Sessions eintragen
 					(id) => {
-						aTrainingsProgramm.SessionListe.forEach((mEineSession) => {
+						const mSessionListe: Array<ISession> = aTrainingsProgramm.SessionListe.map(s => s);
+						mSessionListe.forEach((mEineSession) => {
 							mEineSession.FK_Programm = id;
 							this.SessionSpeichern(mEineSession as Session);
 						});
+						aTrainingsProgramm.SessionListe = mSessionListe;
 					}
 				)
 				.catch((err) => {
