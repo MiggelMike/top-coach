@@ -833,10 +833,10 @@ export class DexieSvcService extends Dexie {
 		// SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02]",
 		// return this.transaction("rw", this.SessionTable, this.UebungTable, this.SatzTable, async () => {
 			return await this.SessionTable
-				.where(aLadePara.WhereClause)
-				.and((sess) => aLadePara.And(sess))
-				.limit(aLadePara.Limit)
-				.sortBy(aLadePara.SortBy)
+				.where(aLadePara === undefined || aLadePara.WhereClause === undefined ? { FK_Programm: 0 } : aLadePara.WhereClause )
+				.and((aLadePara === undefined || aLadePara.And === undefined ? () => { return 1 === 1 } : (session:Session) => aLadePara.And(session)))
+				.limit(aLadePara === undefined || aLadePara.Limit === undefined ? Number.MAX_SAFE_INTEGER : aLadePara.Limit)
+				.sortBy(aLadePara === undefined || aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
 				.then( async (aSessions: Array<Session>) => {
 					const mLadePara: LadePara = new LadePara();
 					for (let index = 0; index < aSessions.length; index++) {
@@ -846,8 +846,6 @@ export class DexieSvcService extends Dexie {
 					}
 
 					if (aLadePara !== undefined) {
-						if (aLadePara.Then !== undefined)
-							aSessions = aLadePara.Then(aSessions);
 						if (aLadePara.OnSessionNoRecordFn !== undefined) aSessions = aLadePara.OnSessionNoRecordFn(aLadePara);
 						if (aLadePara.OnSessionAfterLoadFn !== undefined) aSessions = aLadePara.OnSessionAfterLoadFn(aSessions);
 					}
@@ -857,67 +855,51 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async LadeSessionUebungen(aSession: ISession, aLadePara: LadePara): Promise<Array<Uebung>> {
-		// if (aLadePara !== undefined && aLadePara.OnUebungBeforeLoadFn !== undefined)
-		// 	aLadePara.OnUebungBeforeLoadFn(aLadePara);
+		if (aLadePara !== undefined && aLadePara.OnUebungBeforeLoadFn !== undefined)
+			aLadePara.OnUebungBeforeLoadFn(aLadePara);
 
 		return this.UebungTable
-			.where(aLadePara.WhereClause)
-			// .and((uebung) => aLadePara.And(uebung))
-			// .limit(aLadePara.Limit)
-			// .sortBy(aLadePara.SortBy)
-			.toArray()
-			.then((aUebungen: Array<Uebung>) => {
+			.where(aLadePara === undefined || aLadePara.WhereClause === undefined ? { SessionID: aSession.ID } : aLadePara.WhereClause )
+			.and((aLadePara === undefined || aLadePara.And === undefined ? () => { return 1 === 1 } : (aUebung:Uebung) => aLadePara.And(aUebung)))
+			.limit(aLadePara === undefined || aLadePara.Limit === undefined ? Number.MAX_SAFE_INTEGER : aLadePara.Limit)
+			.sortBy(aLadePara === undefined || aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
+			.then( async (aUebungen: Array<Uebung>) => {
 				if (aUebungen.length > 0) {
 					aSession.UebungsListe = aUebungen;
-					aSession.UebungsListe.forEach((u: Uebung) => {
+					for (let index = 0; index < aSession.UebungsListe.length; index++) {
+						const mPtrUebung = aSession.UebungsListe[index];
 						// Session-Übungen sind keine Stamm-Übungen.
 						// Ist der Schlüssel zur Stamm-Übung gesetzt?
-						if (u.FkUebung > 0) {
+						if (mPtrUebung.FkUebung > 0) {
 							//Der Schlüssel zur Stamm-Übung ist gesetzt
-							const mStammUebung = this.StammUebungsListe.find((mGefundeneUebung) => mGefundeneUebung.ID === u.FkUebung);
-							if (mStammUebung !== undefined) u.Name = mStammUebung.Name;
+							const mStammUebung = this.StammUebungsListe.find((mGefundeneUebung) => mGefundeneUebung.ID === mPtrUebung.FkUebung);
+							if (mStammUebung !== undefined) mPtrUebung.Name = mStammUebung.Name;
 						} else {
 							// Der Schlüssel zur Stamm-Übung sollte normalerweise gesetzt sein
-							const mStammUebung = this.StammUebungsListe.find((mGefundeneUebung) => mGefundeneUebung.Name === u.Name);
-							if (mStammUebung !== undefined) u.FkUebung = mStammUebung.ID;
+							const mStammUebung = this.StammUebungsListe.find((mGefundeneUebung) => mGefundeneUebung.Name === mPtrUebung.Name);
+							if (mStammUebung !== undefined) mPtrUebung.FkUebung = mStammUebung.ID;
+						}
 
-							this.UebungSpeichern(u);
-						}
-					});
+						await this.UebungSpeichern(mPtrUebung);
+						await this.LadeUebungsSaetze(mPtrUebung);
+					};
+
+					if (aLadePara !== undefined && aLadePara.OnUebungAfterLoadFn !== undefined) aUebungen = aLadePara.OnUebungAfterLoadFn(aUebungen);
+					else if (aLadePara !== undefined && aLadePara.OnUebungNoRecordFn !== undefined) aUebungen = aLadePara.OnUebungNoRecordFn(aLadePara);
 				}
-				for (let index = 0; index < aUebungen.length; index++) {
-					const mPtrUebung = aUebungen[index];
-					try {
-						
-						this.SatzTable.toArray().then((x) => {
-				 
-							const y = x;
-						}
-							
-						)
-					} catch (error) {
-						console.error(error);
-					}
-					// this.LadeUebungsSaetze(mPtrUebung, aLadePara);
-				}
-				if (aLadePara !== undefined && aLadePara.OnUebungAfterLoadFn !== undefined) aUebungen = aLadePara.OnUebungAfterLoadFn(aUebungen);
-				else if (aLadePara !== undefined && aLadePara.OnUebungNoRecordFn !== undefined) aUebungen = aLadePara.OnUebungNoRecordFn(aLadePara);
 				return aUebungen;
 			});
 
 	}
 
-	public LadeUebungsSaetze(aUebung: Uebung, aLadePara?: LadePara): Promise<Array<Satz>> {
-		// if (aLadePara !== undefined && aLadePara.OnSatzBeforeLoadFn !== undefined) aLadePara.OnSatzBeforeLoadFn(aLadePara);
+	public async LadeUebungsSaetze(aUebung: Uebung, aLadePara?: LadePara): Promise<Array<Satz>> {
+		if (aLadePara !== undefined && aLadePara.OnSatzBeforeLoadFn !== undefined) aLadePara.OnSatzBeforeLoadFn(aLadePara);
 
 		return this.SatzTable
-			// .filter((mSatz) => mSatz.UebungID === aUebung.ID && mSatz.SessionID === aUebung.SessionID)
-			// .where(aLadePara.WhereClause === undefined ? { UebungID: aUebung.ID } : aLadePara.WhereClause )
-			// .where( { UebungID: aUebung.ID } )
-			// .and((aLadePara.And === undefined ? () => { return 1 === 1 } : (satz:Satz) => aLadePara.And(satz)))
-			// .limit(aLadePara.Limit)
-			// .sortBy(aLadePara.SortBy)
-			.toArray()
+			.where(aLadePara === undefined || aLadePara.WhereClause === undefined ? { UebungID: aUebung.ID } : aLadePara.WhereClause )
+			.and((aLadePara === undefined || aLadePara.And === undefined ? () => { return 1 === 1 } : (satz:Satz) => aLadePara.And(satz)))
+			.limit(aLadePara === undefined || aLadePara.Limit === undefined ? Number.MAX_SAFE_INTEGER : aLadePara.Limit)
+			.sortBy(aLadePara === undefined || aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
 			.then((aSaetze: Array<Satz>) => {
 				if (aSaetze.length > 0) {
 					aUebung.SatzListe = aSaetze;
@@ -1011,7 +993,11 @@ export class DexieSvcService extends Dexie {
 	public UebungSpeichern(aUebung: Uebung): PromiseExtended<number> {
 		aUebung.FkAltProgress = aUebung.FkProgress;
 		aUebung.AltWeightProgress = aUebung.WeightProgress;
-		const mSatzListe: Array<Satz> = aUebung.SatzListe.map(sz => sz);
+		
+		let mSatzListe: Array<Satz>;
+		if (aUebung.SatzListe !== undefined)
+			mSatzListe = aUebung.SatzListe.map(sz => sz);
+		
 		aUebung.SatzListe = undefined;
 		return this.UebungTable.put(aUebung)
 			.then( async (mUebungID: number) => {

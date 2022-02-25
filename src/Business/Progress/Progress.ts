@@ -177,21 +177,11 @@ export class Progress implements IProgress {
 				};
 				mLadePara.Limit = mFailCount;
 				mLadePara.SortBy = "Datum";
-				mLadePara.Then = (aSessions: Array<Session>) => {
+				mLadePara.OnSessionAfterLoadFn = (aSessions: Array<Session>) => {
 					return aSessions.reverse();
 				};
-		
-				aDb.table('Satz').toArray().then((x) => {
-					const y = x;
-				}
-				);
-				try {
-					
-					// mSessionListe = await aDb.LadeProgrammSessions(mLadePara);
-				} catch (error) {
-					console.error(error);
-				}
 
+				mSessionListe = await aDb.LadeProgrammSessions(mLadePara);
 				
 				// mSessionListe = await aDb.SessionTable
 				// 	// Suche nach dem gleichen Programm und nur fertige Sessions.
@@ -1140,16 +1130,16 @@ export class Progress implements IProgress {
 				}//for
 
 
-				// let mUniqueSessionListe: Array<ISession> = [];
-				// mUniqueSessionListe = mSessionListe.filter((s) =>
-				// 	mUniqueSessionListe.indexOf(s) < 0
-				// );
+				let mUniqueSessionListe: Array<ISession> = [];
+				mUniqueSessionListe = mSessionListe.filter((s) =>
+					mUniqueSessionListe.indexOf(s) < 0
+				);
 
-				// mUniqueSessionListe.forEach((s) => {
-				// 	if (aProgressPara.AusgangsSession.Kategorie02 !== SessionStatus.Laueft)
-				// 		aProgressPara.DbModule.SessionSpeichern(s as Session);
+				mUniqueSessionListe.forEach((s) => {
+					if (aProgressPara.AusgangsSession.Kategorie02 !== SessionStatus.Laueft)
+						aProgressPara.DbModule.SessionSpeichern(s as Session);
 				
-				// });
+				});
 		return null;
 	}
 }
