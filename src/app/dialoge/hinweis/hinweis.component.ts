@@ -3,11 +3,11 @@ import { Component, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 interface IOkCallback {
-    ():void;
+    (aPara?: any):void;
 }
 
 interface ICancelCallback {
-    ():void;
+    (aPara?: any):void;
 }
 
 
@@ -36,12 +36,12 @@ export class DialogComponent {
     onOkClick(): void {
         this.dialogRef.close();
         if (this.data.OkFn !== undefined)
-            this.data.OkFn();
+            this.data.OkFn(this.data.OkData);
     }
 
     onCancelClick(): void {
         this.dialogRef.close();
         if (this.data.CancelFn !== undefined)
-            this.data.CancelFn();
+            this.data.CancelFn(this.data.CancelData);
     }
 }

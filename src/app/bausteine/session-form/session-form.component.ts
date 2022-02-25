@@ -178,8 +178,6 @@ export class SessionFormComponent implements OnInit {
 			aPara.DoProgressFn(this.Session);
 		
 
-		// mSessionForm.fDexieSvcService.EvalAktuelleSessionListe(mSessionForm.Session, aPara);
-
 		await mSessionForm.fDexieSvcService.SessionSpeichern(mSessionForm.Session).then(() => {
 			mSessionForm.cmpSession = mSessionForm.Session.Copy();
 		});
@@ -272,51 +270,46 @@ export class SessionFormComponent implements OnInit {
 		this.Session.StarteDauerTimer();
 	}
 
-	public SetDone(): void {
+	public async SetDone(aSession: SessionFormComponent): Promise<void> {
 		const mDialogData = new DialogData();
 		mDialogData.textZeilen.push("Workout will be saved and closed.");
 		mDialogData.textZeilen.push("Do you want to proceed?");
-		mDialogData.OkFn = (): void => {
- 	    	this.Session.SetSessionFertig();
-			 
-			this.SaveChangesPrim(
-				{
-					that: this,
-					DoProgressFn: async (aSession: Session) => {
-						if (aSession.UebungsListe.length > 0) {
-							const mPtrUebung = aSession.UebungsListe[0];
-							if (mPtrUebung.ArbeitsSatzListe.length > 0) {
-								const mProgressPara: ProgressPara = new ProgressPara();
-								mProgressPara.DbModule = this.fDexieSvcService;
-								mProgressPara.Programm = this.Programm;
-								mProgressPara.AusgangsSession = aSession;
-								mProgressPara.ProgressHasChanged = false;
-								mProgressPara.AusgangsUebung = mPtrUebung;
-								mProgressPara.AusgangsSatz = mPtrUebung.ArbeitsSatzListe[0];
-								mProgressPara.ProgressID = mPtrUebung.FkProgress;
-								mProgressPara.AlteProgressID = mPtrUebung.FkProgress;
-								mProgressPara.SatzDone = mPtrUebung.ArbeitsSatzListe[0].Status === SatzStatus.Fertig;
-								mProgressPara.ProgressListe = this.fDexieSvcService.ProgressListe;
-								await Progress.StaticDoProgress(mProgressPara).then(() => {
-									this.fDexieSvcService.EvalAktuelleSessionListe(
-										this.Session,
-										{
-											ExtraFn: () => {
-												// const mIndex = this.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === this.Session.ID);
-												// if (mIndex > -1) this.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
-												this.router.navigate([""]);
-											}
-										}
-									);
-								});
-							}
-						}
+		mDialogData.OkData = this;
+		mDialogData.OkFn = async (aSessionForm: SessionFormComponent): Promise<void> => {
+			aSessionForm.Session.SetSessionFertig();
+			await this.SaveChangesPrim({ that: aSessionForm });
+			if (aSessionForm.Session.UebungsListe.length > 0) {
+				const mPtrUebung = aSessionForm.Session.UebungsListe[0];
+				if (mPtrUebung.ArbeitsSatzListe.length > 0) {
+					const mProgressPara: ProgressPara = new ProgressPara();
+					mProgressPara.DbModule = this.fDexieSvcService;
+					mProgressPara.Programm = this.Programm;
+					mProgressPara.AusgangsSession = aSessionForm.Session;
+					mProgressPara.ProgressHasChanged = false;
+					mProgressPara.AusgangsUebung = mPtrUebung;
+					mProgressPara.AusgangsSatz = mPtrUebung.ArbeitsSatzListe[0];
+					mProgressPara.ProgressID = mPtrUebung.FkProgress;
+					mProgressPara.AlteProgressID = mPtrUebung.FkProgress;
+					mProgressPara.SatzDone = mPtrUebung.ArbeitsSatzListe[0].Status === SatzStatus.Fertig;
+					mProgressPara.ProgressListe = this.fDexieSvcService.ProgressListe;
+					mProgressPara.ProgressExtraFn = (aProgressExtraFnSession: Session) => {
+						this.fDexieSvcService.EvalAktuelleSessionListe(
+							aProgressExtraFnSession,
+							{
+								ExtraFn: () => {
+									const mIndex = this.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
+									if (mIndex > -1) this.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
+									this.router.navigate([""]);
+								}
+							});
 					}
-				});
+					const mProgressPara2: ProgressPara = await Progress.StaticDoProgress(mProgressPara);
+				}
+
+			}
+			return null;
 		}
-
 		this.fDialogService.JaNein(mDialogData);
-
 	}
 
 	public PauseButtonVisible(): boolean {

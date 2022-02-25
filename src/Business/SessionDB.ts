@@ -72,7 +72,7 @@ export class SessionDB implements ISessionDB {
     public PausenListe: Array<Pause> = new Array<Pause>();
 
     constructor() {
-    //    Object.defineProperty(this, "UebungsListe", { enumerable: false });
+       Object.defineProperty(this, "UebungsListe", { enumerable: false });
     }
 
 

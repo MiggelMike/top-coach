@@ -16,6 +16,10 @@ export interface NextProgressFn {
 	(aNextProgress: NextProgress):void | any
 }
 
+export interface ProgressExtraFn {
+	(aData?: any):void | any
+}
+
 enum Arithmetik {
 	Add, Sub
 }
@@ -30,6 +34,7 @@ export class ProgressPara {
 	Progress: Progress;
 	ProgressHasChanged: boolean;
 	SatzDone: boolean;
+	ProgressExtraFn?: ProgressExtraFn;
 	NextProgressFn?: NextProgressFn;
 	AfterLoadFn?: AfterLoadFn;
 	ProgressListe?: Array<Progress>;
@@ -157,29 +162,69 @@ export class Progress implements IProgress {
 		let mFailCount = (aSessUebung.FailCount < 0) ? 0 : aSessUebung.FailCount;
 		const mProgress: Progress = this;
 		
-		return aDb.transaction("r", [aDb.cSession, aDb.cUebung], async () => {
-			if ((aSessUebung.GewichtSteigerung === 0)&&(aSessUebung.GewichtReduzierung === 0)) return WeightProgress.Same;
+		// return await aDb.transaction("r", [aDb.cSession, aDb.cUebung], async () => {
+			if ((aSessUebung.GewichtSteigerung === 0) && (aSessUebung.GewichtReduzierung === 0)) return WeightProgress.Same;
 
 			let mSessionListe: Array<Session> = [];
 
 			// Die Sessions nur laden, wenn die Anzahl der Fehlversuche größer 0 ist.
 			if (mFailCount > 0) {
 				// Warten, bis Sessions geladen sind.
-				mSessionListe = await aDb.SessionTable
-					// Suche nach dem gleichen Programm und nur fertige Sessions.
-					.where({ FK_VorlageProgramm: aVorlageProgrammID, Kategorie02: SessionStatus.Fertig })
-					.and((sess: Session) => sess.Datum <= aDatum)
-					// aFailCount ist die Anzahl der Fehlversuche.
-					// Daher nur soviele Sessions laden, wie die Anzahl der Fehlversuche ist.
-					.limit(mFailCount)
-					.sortBy("Datum")
-					.then((aSessions: Array<Session>) => {
-						return aSessions.reverse();
-					});
+				const mLadePara: LadePara = new LadePara();
+				mLadePara.WhereClause = { FK_VorlageProgramm: aVorlageProgrammID, Kategorie02: SessionStatus.Fertig };
+				mLadePara.And = (sess: Session): boolean => {
+					return sess.Datum <= aDatum;
+				};
+				mLadePara.Limit = mFailCount;
+				mLadePara.SortBy = "Datum";
+				mLadePara.Then = (aSessions: Array<Session>) => {
+					return aSessions.reverse();
+				};
+		
+				aDb.table('Satz').toArray().then((x) => {
+					const y = x;
+				}
+				);
+				try {
+					
+					// mSessionListe = await aDb.LadeProgrammSessions(mLadePara);
+				} catch (error) {
+					console.error(error);
+				}
+
+				
+				// mSessionListe = await aDb.SessionTable
+				// 	// Suche nach dem gleichen Programm und nur fertige Sessions.
+				// 	.where({ FK_VorlageProgramm: aVorlageProgrammID, Kategorie02: SessionStatus.Fertig })
+				// 	.and((sess: Session) => sess.Datum <= aDatum)
+				// 	// aFailCount ist die Anzahl der Fehlversuche.
+				// 	// Daher nur soviele Sessions laden, wie die Anzahl der Fehlversuche ist.
+				// 	.limit(mFailCount)
+				// 	.sortBy("Datum")
+				// 	.then((aSessions: Array<Session>) => {
+				// 		return aSessions.reverse();
+				// 	});
 			} // if
 
-			if (	(mProgress.ProgressSet === ProgressSet.First)
-				&&	(Progress.StaticSessionLaeuft(aSession) === true) 
+			// public async LadeProgrammSessions(aLadePara: LadePara): Promise<Array<Session>> {
+			// 	// SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02]",
+			// 	let mSessions: Array<Session> = [];
+			// 	await this.table(this.cSession)
+			// 		.where(aLadePara.WhereClause)
+			// 		.toArray()
+			// 		.then((aSessions: Array<Session>) => {
+			// 			mSessions = aSessions;
+			// 			if (aLadePara !== undefined) {
+			// 				if (aLadePara.OnSessionNoRecordFn !== undefined) mSessions = aLadePara.OnSessionNoRecordFn(aLadePara);
+		
+			// 				if (aLadePara.OnSessionAfterLoadFn !== undefined) mSessions = aLadePara.OnSessionAfterLoadFn(mSessions);
+			// 			}
+			// 		});
+			// 	return mSessions;
+			// }
+
+			if ((mProgress.ProgressSet === ProgressSet.First)
+				&& (Progress.StaticSessionLaeuft(aSession) === true)
 			)
 				mSessionListe.push(aSession);
 
@@ -192,12 +237,12 @@ export class Progress implements IProgress {
 						// Die vorgegebenen Wiederholungen konnten erreicht werden
 						return WeightProgress.Increase;
 					// Die vorgegebenen Wiederholungen konnten nicht erreicht werden
-					if(mProgress.ProgressTyp === ProgressTyp.RepRangeSet) {
+					if (mProgress.ProgressTyp === ProgressTyp.RepRangeSet) {
 						// Prüfen, ob das untere WDH-Limit erreicht ist 
 						if (aSessUebung.SatzWDH(0) < aSessUebung.SatzVonVorgabeWDH(0))
 							return WeightProgress.Decrease;
 					}
-			    }
+				}
 
 				if (mProgress.ProgressSet === ProgressSet.Last && aSatzIndex === aSessUebung.ArbeitsSatzListe.length - 1) {
 					// Der letzte Satz der Übung ist maßgebend.
@@ -250,7 +295,7 @@ export class Progress implements IProgress {
 					// Alle Sätze der Übung.
 					if (mProgress.EvalSaetze(aSessUebung, VorgabeWeightLimit.UpperLimit))
 						// Die vorgegebenen Wiederholungen konnten erreicht werden
-						 return WeightProgress.Increase;
+						return WeightProgress.Increase;
 				}
 				// Es konnte noch kein Ergebnis ermittelt werden.
 				// Da aber aFailCount größer 0 ist, kann mit dem gleichen Gewicht weiter gearbeitet werden.
@@ -266,7 +311,7 @@ export class Progress implements IProgress {
 					
 				// Warten, bis Übungen geladen sind
 				let mUebungsListe: Array<Uebung> = await aDb
-						.table(aDb.cUebung)
+					.table(aDb.cUebung)
 					.where({
 						FK_Programm: mPrtFertigeSession.FK_Programm,
 						FkUebung: aSessUebung.FkUebung,
@@ -284,7 +329,7 @@ export class Progress implements IProgress {
 				
 				if (index === mSessionListe.indexOf(aSession)) {
 					aSession.UebungsListe.forEach((u) => {
-						if(u.FkUebung === aSessUebung.FkUebung
+						if (u.FkUebung === aSessUebung.FkUebung
 							&& u.FkProgress === aSessUebung.FkProgress
 							&& u.ProgressGroup === aSessUebung.ProgressGroup
 						)
@@ -356,9 +401,10 @@ export class Progress implements IProgress {
 				}
 			}
 			return WeightProgress.Same;
-		}).then( (mProgress) => {
-			return mProgress;
-		});
+		// });
+		// }).then( (mProgress) => {
+		// 	return mProgress;
+		// });
 	}
 
 	public static StaticDoSaetzeProgress(aWarteSatzListe: Array<Satz>, aUpComingSessionListe: Array<Session>, aAusgangsSatz: Satz, aUebung: Uebung, aAusgangsSession: Session, aProgressSet : ProgressSet,  aWeightProgress?: WeightProgress): NextProgress {
@@ -477,9 +523,9 @@ export class Progress implements IProgress {
 	}
 
 
-	public static async StaticDoProgress(aProgressPara: ProgressPara):Promise<void> {
+	public static async StaticDoProgress(aProgressPara: ProgressPara):Promise<ProgressPara> {
 		if (aProgressPara.ProgressListe === undefined)
-			return;
+			return aProgressPara;
 
 		const mProgressParaMerker: ProgressPara = aProgressPara;
 		const mProgressListe: Array<Progress> = mProgressParaMerker.ProgressListe;
@@ -509,47 +555,46 @@ export class Progress implements IProgress {
 				// && (mProgressParaMerker.Progress.ProgressSet === ProgressSet.First)
 				// || (mProgressParaMerker.AusgangsUebung.FkAltProgress !== mProgressParaMerker.AusgangsUebung.FkProgress)
 			) {
-			  	mProgressParaMerker.Progress.DetermineNextProgress(
-					mProgressParaMerker.DbModule,
-					new Date,
-					mProgressParaMerker.AusgangsSession.FK_VorlageProgramm,
-					mProgressParaMerker.AusgangsSatz.SatzListIndex,
-					mProgressParaMerker.AusgangsUebung,
-					mProgressParaMerker.AusgangsSession as Session
-				)
-					.then((wp: WeightProgress) => {
-						if (wp !== WeightProgress.Same) {
-							const mProgressPara: ProgressPara = new ProgressPara();
-							mProgressPara.ProgressListe = aProgressPara.ProgressListe;
-							mProgressPara.AusgangsSession = mProgressParaMerker.AusgangsSession;
-							mProgressPara.AusgangsUebung = mProgressParaMerker.AusgangsUebung;
-							mProgressPara.AusgangsSatz = mProgressParaMerker.AusgangsSatz;
-							mProgressPara.DbModule = mProgressParaMerker.DbModule;
-							mProgressPara.Programm = mProgressParaMerker.Programm;
-							mProgressPara.Progress = mProgressParaMerker.Progress;
-							mProgressPara.ProgressID = mProgressParaMerker.Progress ? mProgressParaMerker.Progress.ID : -1;
-							mProgressPara.AlteProgressID = mProgressParaMerker.AusgangsUebung.FkAltProgress;
-							mProgressPara.ProgressHasChanged = mProgressPara.AlteProgressID !== mProgressPara.ProgressID;
-							// mProgressPara.Wp = mProgressParaMerker.AusgangsUebung.FkProgress === undefined ? WeightProgress.Decrease : mProgressParaMerker.AusgangsUebung.WeightProgress;
-						
-							if (mProgressPara.ProgressHasChanged === true) {
-								if (
-									(mProgressParaMerker.AusgangsSatz.Status === SatzStatus.Wartet)
-									&& (Progress.StaticFindDoneSet(mProgressParaMerker.AusgangsSession, mProgressParaMerker.AusgangsUebung) === true)
-								)
-									mProgressPara.Wp = wp;
-								else
-									mProgressPara.Wp = mProgressParaMerker.AusgangsSatz.Status === SatzStatus.Wartet ? WeightProgress.Decrease : wp;
-							}
-							else {
-								mProgressPara.Wp = wp;
-							}
-						
-							mProgressPara.SatzDone = mProgressParaMerker.SatzDone;
-							Progress.StaticProgrammSetNextWeight(mProgressPara);
+				const mWp: WeightProgress =
+					await mProgressParaMerker.Progress.DetermineNextProgress(
+						mProgressParaMerker.DbModule,
+						new Date,
+						mProgressParaMerker.AusgangsSession.FK_VorlageProgramm,
+						mProgressParaMerker.AusgangsSatz.SatzListIndex,
+						mProgressParaMerker.AusgangsUebung,
+						mProgressParaMerker.AusgangsSession as Session
+					);
+				
+					if (mWp !== WeightProgress.Same) {
+						const mProgressPara: ProgressPara = new ProgressPara();
+						mProgressPara.ProgressListe = aProgressPara.ProgressListe;
+						mProgressPara.AusgangsSession = mProgressParaMerker.AusgangsSession;
+						mProgressPara.AusgangsUebung = mProgressParaMerker.AusgangsUebung;
+						mProgressPara.AusgangsSatz = mProgressParaMerker.AusgangsSatz;
+						mProgressPara.DbModule = mProgressParaMerker.DbModule;
+						mProgressPara.Programm = mProgressParaMerker.Programm;
+						mProgressPara.Progress = mProgressParaMerker.Progress;
+						mProgressPara.ProgressID = mProgressParaMerker.Progress ? mProgressParaMerker.Progress.ID : -1;
+						mProgressPara.AlteProgressID = mProgressParaMerker.AusgangsUebung.FkAltProgress;
+						mProgressPara.ProgressHasChanged = mProgressPara.AlteProgressID !== mProgressPara.ProgressID;
+						// mProgressPara.Wp = mProgressParaMerker.AusgangsUebung.FkProgress === undefined ? WeightProgress.Decrease : mProgressParaMerker.AusgangsUebung.WeightProgress;
+					
+						if (mProgressPara.ProgressHasChanged === true) {
+							if (
+								(mProgressParaMerker.AusgangsSatz.Status === SatzStatus.Wartet)
+								&& (Progress.StaticFindDoneSet(mProgressParaMerker.AusgangsSession, mProgressParaMerker.AusgangsUebung) === true)
+							)
+								mProgressPara.Wp = mWp;
+							else
+								mProgressPara.Wp = mProgressParaMerker.AusgangsSatz.Status === SatzStatus.Wartet ? WeightProgress.Decrease : mWp;
 						}
-						
-					});
+						else {
+							mProgressPara.Wp = mWp;
+						}
+					
+						mProgressPara.SatzDone = mProgressParaMerker.SatzDone;
+						Progress.StaticProgrammSetNextWeight(mProgressPara);
+					}
 			}
 		} else {
 			const mProgressPara: ProgressPara = new ProgressPara();
@@ -571,7 +616,11 @@ export class Progress implements IProgress {
 		if ((mProgressParaMerker.SatzDone) && (mProgressParaMerker.NextProgressFn)) {
 			mProgressParaMerker.NextProgressFn(mNextProgress);
 		}
-		return null;
+		
+		if (aProgressPara.ProgressExtraFn !== undefined)
+			aProgressPara.ProgressExtraFn(aProgressPara.AusgangsSession);
+		
+		return aProgressPara;
     }
 
 	public static StaticSessionSetNextWeight(aWp: WeightProgress, aSession: Session, aUebung: Uebung): void {
@@ -1091,16 +1140,16 @@ export class Progress implements IProgress {
 				}//for
 
 
-				let mUniqueSessionListe: Array<ISession> = [];
-				mUniqueSessionListe = mSessionListe.filter((s) =>
-					mUniqueSessionListe.indexOf(s) < 0
-				);
+				// let mUniqueSessionListe: Array<ISession> = [];
+				// mUniqueSessionListe = mSessionListe.filter((s) =>
+				// 	mUniqueSessionListe.indexOf(s) < 0
+				// );
 
-				mUniqueSessionListe.forEach((s) => {
-					if (aProgressPara.AusgangsSession.Kategorie02 !== SessionStatus.Laueft)
-						aProgressPara.DbModule.SessionSpeichern(s as Session);
+				// mUniqueSessionListe.forEach((s) => {
+				// 	if (aProgressPara.AusgangsSession.Kategorie02 !== SessionStatus.Laueft)
+				// 		aProgressPara.DbModule.SessionSpeichern(s as Session);
 				
-				});
+				// });
 		return null;
 	}
 }
