@@ -299,6 +299,12 @@ export class Progress implements IProgress {
 		for (let index = 0; index < mSessionListe.length; index++) {
 			const mPrtFertigeSession = mSessionListe[index];
 
+			// Übungen aus den Sessions des aktuellen Programms laden.
+			// Die Übungen müssen der Übung aus dem Übergabe-Parameter entsprechen.
+			// Das heißt, FKUebung muss die gleiche sein, wie die der Übung aus dem Übergabe-Parameter.
+			// Die Progress ID der Übungen muss die gleiche sein, wie die der Übung aus dem Übergabe-Parameter.
+			// Die Progress-Gruppe der Übungen die gleiche sein, wie die der Übung aus dem Übergabe-Parameter. 
+			// Anhand der Übungsliste kann dann entschieden werden, ob das Gewicht für weitere Trainingseinheiten erhöht oder verringert wird.
 			const mLadePara: LadePara = new LadePara();
 			mLadePara.WhereClause =
 			{
@@ -307,14 +313,15 @@ export class Progress implements IProgress {
 				FkProgress: aSessUebung.FkProgress,
 				ProgressGroup: aSessUebung.ProgressGroup
 			};
-
+            
 			mLadePara.And = (mUebung: Uebung) => {
+				// Alle Arbeits-Sätze der Übungen müssen fertig sein.
 				return mUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig;
 			};
 
-					
 			// Warten, bis Übungen geladen sind
 			let mUebungsListe: Array<Uebung> = await aDb.LadeSessionUebungen(aSession, mLadePara);
+
 				
 			if (mUebungsListe === undefined)
 				mUebungsListe = [];
