@@ -1179,46 +1179,46 @@ export class DexieSvcService extends Dexie {
 			// 	Loeschen
 			// }
 
-			await this.SessionSpeichern(aSession).then(
-				async () => {
-					const mIndex = this.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSession.ID);
-					if (mIndex > -1)
-						this.AktuellesProgramm.SessionListe.splice(mIndex, 1);
-		
-		
-					const mAkuelleSessionListe: Array<ISession> = this.AktuellesProgramm.SessionListe.filter((s) =>
-							s.Kategorie02 !== SessionStatus.Fertig
-							&& s.Kategorie02 !== SessionStatus.FertigTimeOut
-							|| s.ID === aSession.ID
-							|| s.ListenIndex === aSession.ListenIndex
-					);
-		
-					mNeueSession.ListenIndex = mAkuelleSessionListe.length + 1;
-					await this.SessionSpeichern(mNeueSession).then(
-						() => {
-		
-							if (mAkuelleSessionListe.length > 0) {
-								let index = 0
-								let mPtrSession: Session = mAkuelleSessionListe[index] as Session;
-								mPtrSession.ListenIndex = index;
-				
-								let mInterVallID = setInterval(async () => {
-									await this.SessionSpeichern(mPtrSession).then(
-										() => {
-											index++;
-											if (index >= mAkuelleSessionListe.length)
-												clearInterval(mInterVallID);
-											else {
-												let mPtrSession: Session = mAkuelleSessionListe[index] as Session;
-												mPtrSession.ListenIndex = index;
-											}
-										}); //await this.SessionSpeichern(mPtrSession).then
-								}, 1000);
-							}
-						}); // await this.SessionSpeichern(mNeueSession).then	
-				});//await this.SessionSpeichern(aSession).then
-				
+			await this.SessionSpeichern(aSession);
+			const mIndex = this.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSession.ID);
+			if (mIndex > -1)
+				this.AktuellesProgramm.SessionListe.splice(mIndex, 1);
 
+
+			const mAkuelleSessionListe: Array<ISession> = this.AktuellesProgramm.SessionListe.filter((s) =>
+					s.Kategorie02 !== SessionStatus.Fertig
+					&& s.Kategorie02 !== SessionStatus.FertigTimeOut
+					|| s.ID === aSession.ID
+					|| s.ListenIndex === aSession.ListenIndex
+			);
+
+			mNeueSession.ListenIndex = mAkuelleSessionListe.length + 1;
+			await this.SessionSpeichern(mNeueSession);
+			for (let index = 0; index < mAkuelleSessionListe.length; index++) {
+				let mPtrSession: Session = mAkuelleSessionListe[index] as Session;
+				mPtrSession.ListenIndex = index;
+				await this.SessionSpeichern(mPtrSession)
+			}
+
+			// if (mAkuelleSessionListe.length > 0) {
+			// 	let index = 0
+			// 	let mPtrSession: Session = mAkuelleSessionListe[index] as Session;
+			// 	mPtrSession.ListenIndex = index;
+
+			// 	let mInterVallID = setInterval(async () => {
+			// 		await this.SessionSpeichern(mPtrSession).then(
+			// 			() => {
+			// 				index++;
+			// 				if (index >= mAkuelleSessionListe.length)
+			// 					clearInterval(mInterVallID);
+			// 				else {
+			// 					let mPtrSession: Session = mAkuelleSessionListe[index] as Session;
+			// 					mPtrSession.ListenIndex = index;
+			// 				}
+			// 			}); //await this.SessionSpeichern(mPtrSession).then
+			// 	}, 1000);
+			// }
+		
 
 
 //			mAkuelleSessionListe.push(mNeueSession);	

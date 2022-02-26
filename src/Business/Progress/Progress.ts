@@ -321,7 +321,6 @@ export class Progress implements IProgress {
 
 			// Warten, bis Übungen geladen sind
 			let mUebungsListe: Array<Uebung> = await aDb.LadeSessionUebungen(aSession, mLadePara);
-
 				
 			if (mUebungsListe === undefined)
 				mUebungsListe = [];
