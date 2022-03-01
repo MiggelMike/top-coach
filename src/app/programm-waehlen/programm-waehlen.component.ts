@@ -29,6 +29,7 @@ export class ProgrammWaehlenComponent implements OnInit {
             () => (this.fDbModule.LadeProgramme(
                 {
                     fProgrammKategorie: ProgrammKategorie.Vorlage,
+                    WhereClause: {ProgrammKategorie : ProgrammKategorie.Vorlage.toString() },
                     OnProgrammAfterLoadFn: (mProgramme: TrainingsProgramm[]) => {
                         this.ProgrammListe = mProgramme;
                     }, // OnProgrammAfterLoadFn

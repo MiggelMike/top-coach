@@ -61,8 +61,8 @@ export class ScheibenComponent implements OnInit {
 		const mDialogData = new DialogData();
         mDialogData.textZeilen.push("Delete record?");
 		mDialogData.OkFn = (): void => {
-			this.fDexieSvcService.HantelscheibenTable.delete(aScheibe.ID);
-			this.GetHantelscheibenListe();
+			this.fDexieSvcService.DeleteHantelscheibe(aScheibe.ID)
+				.then( () => this.GetHantelscheibenListe() );
 		};
         this.fDialogService.JaNein(mDialogData);	
 	}

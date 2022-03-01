@@ -77,6 +77,7 @@ export interface IUebung {
     FkOrgProgress: number
     GewichtSteigerung: number;
     GewichtReduzierung: number;
+    AkuelleGewichtAenderung: number;
     EquipmentTyp: string;
     FailCount: number;
     ArbeitsSaetzeStatus: ArbeitsSaetzeStatus;
@@ -152,6 +153,7 @@ export class Uebung implements IUebung {
     public StammUebung: Uebung = null;
     public GewichtSteigerung: number = 0;
     public GewichtReduzierung: number = 0;
+    public AkuelleGewichtAenderung: number = 0;
     public ArbeitsSatzPause1: number = 0;
     public ArbeitsSatzPause2: number = 0;
     public AufwaermArbeitsSatzPause: number = 0;
@@ -172,7 +174,8 @@ export class Uebung implements IUebung {
         Object.defineProperty(this, 'Selected', { enumerable: false });
         Object.defineProperty(this, 'Expanded', { enumerable: false });
         Object.defineProperty(this, 'StammUebung', { enumerable: false });
-        Object.defineProperty(this, "SatzListe", { enumerable: false });
+        // Object.defineProperty(this, "SatzListe", { enumerable: false });
+        Object.defineProperty(this, "AkuelleGewichtAenderung", { enumerable: false });
     }
 
     public getFirstWaitingWorkSet(aFromIndex: number = 0): Satz {
@@ -314,7 +317,11 @@ export class Uebung implements IUebung {
     }
 
     public Copy(): Uebung {
-        return cloneDeep(this);
+        const mTmpSatzListe: Array<Satz> = this.SatzListe;
+        const mUebung = cloneDeep(this);
+        mUebung.SatzListe = mTmpSatzListe;
+        return mUebung;
+
     }
 
     public get LiftedWeight(): number {

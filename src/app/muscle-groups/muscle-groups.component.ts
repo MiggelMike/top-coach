@@ -54,7 +54,7 @@ export class MuscleGroupsComponent implements OnInit {
             this.fDexieSvcService.MuskelgruppeSpeichern(aMuskelGruppe)
                 .then(() => (this.fDexieSvcService.LadeMuskelGruppen(() => this.CopyMuskelList())));
         } else {
-            this.fDexieSvcService.MuskelGruppeTable.delete(aMuskelGruppe.ID)
+            this.fDexieSvcService.DeleteMuskelGruppe(aMuskelGruppe.ID)
                 .then(() => (this.fDexieSvcService.LadeMuskelGruppen(() => this.CopyMuskelList())));
         }
     }

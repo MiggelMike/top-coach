@@ -124,7 +124,7 @@ export class LanghantelComponent implements OnInit {
             if (mIndex > 0)
                 this.HantelListe.splice(mIndex,1);
             
-            this.fDexieSvcService.HantelTable.delete(aHantel.ID)
+            this.fDexieSvcService.DeleteHantelscheibe(aHantel.ID)
                 .then(() => (this.fDexieSvcService.LadeLanghanteln(() => this.CopyHantelList())));
         }
     }

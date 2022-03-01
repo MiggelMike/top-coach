@@ -43,7 +43,7 @@ export class TrainingsGewichtProgressComponent implements OnInit {
 	}
 
 	private DeletePrim(aProgress: Progress) {
-		this.fDexieService.ProgressTable.delete(aProgress.ID).then(() => this.CopyProgress());
+		this.fDexieService.DeleteProgress(aProgress.ID).then(() => this.CopyProgress());
 	}
 
 	private CopyProgress() {
