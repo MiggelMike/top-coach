@@ -1,6 +1,6 @@
 import { Zeitraum } from './../../Business/Dauer';
 import { SatzTyp } from './../../Business/Satz/Satz';
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { Satz } from 'src/Business/Satz/Satz';
 import { Uebung } from 'src/Business/Uebung/Uebung';
 import { DexieSvcService } from '../services/dexie-svc.service';
@@ -21,8 +21,12 @@ export class StoppuhrComponent implements OnInit {
 	private SoundEasyPlayed: boolean = false;
 	private SoundHardPlayed: boolean = false;
 	public NextSetText: string;
+	public showDuration: boolean = false;
 
-	constructor(public overlayRef: StoppUhrOverlayRef, public fDbModule: DexieSvcService, @Inject(cStoppUhrOverlayData) public aStoppUhrOverlayConfig: StoppUhrOverlayConfig) {
+	constructor(
+		private cd: ChangeDetectorRef,
+		public overlayRef: StoppUhrOverlayRef, public fDbModule: DexieSvcService, @Inject(cStoppUhrOverlayData) public aStoppUhrOverlayConfig: StoppUhrOverlayConfig)
+	{
 		this.Satz = aStoppUhrOverlayConfig.satz;
 		this.Uebung = aStoppUhrOverlayConfig.uebung;
 		this.SatzListenNr = aStoppUhrOverlayConfig.satznr;
@@ -33,7 +37,9 @@ export class StoppuhrComponent implements OnInit {
 		this.Gong.load();
 	}
 
-	ngOnInit(): void {}
+	ngOnInit(): void {
+		this.showDuration = true;
+	}
 
 	close() {
 		if (this.overlayRef != null) this.overlayRef.close();
@@ -56,6 +62,11 @@ export class StoppuhrComponent implements OnInit {
 		return this.Uebung.ArbeitsSatzPause2;
 	}
 
+	
+	ngAfterViewChecked(){
+		this.cd.detectChanges();
+	  }
+        
 
 
 	get PauseTime(): string {
@@ -76,7 +87,7 @@ export class StoppuhrComponent implements OnInit {
 			this.SoundHardPlayed = true;
 			this.Gong.play();
 		}
-
+	
 		return Zeitraum.FormatDauer(mDauerSec);
 	}
 }

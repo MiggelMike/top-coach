@@ -21,7 +21,8 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 	public fIsConstrained: boolean;
 	public fPopupPosition: XY_Position;
     public fPopupRef!: ElementRef;
-    public fConfig: SessionOverlayConfig;
+	public fConfig: SessionOverlayConfig;
+	public showDuration: boolean = false;
 
 
     constructor(
@@ -90,11 +91,11 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 
 
     ngOnInit(): void { 
-
+		this.showDuration = true;
     }
     
-    ngAfterViewInit() { }
-        
+	ngAfterViewInit() { }
+	
     
     close() {
         if(this.overlayRef != null)

@@ -201,7 +201,8 @@ export class Session extends SessionDB implements ISession {
     constructor() {
         super();
         const mJetzt = new Date();
-        this.SessionDauer = new Zeitraum(mJetzt,mJetzt, new MaxZeitraum(99,59,59));
+        this.SessionDauer = new Zeitraum(mJetzt, mJetzt, new MaxZeitraum(99, 59, 59));
+        Object.defineProperty(this, "UebungsListe", { enumerable: false });
     }
 
     public addUebung(aUebung: Uebung) {

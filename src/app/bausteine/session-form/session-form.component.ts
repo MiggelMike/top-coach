@@ -16,6 +16,7 @@ import { Uebung, UebungsKategorie02 } from "src/Business/Uebung/Uebung";
 import { UebungWaehlenData } from "src/app/uebung-waehlen/uebung-waehlen.component";
 import { Progress, ProgressPara } from 'src/Business/Progress/Progress';
 import { Satz, SatzStatus } from 'src/Business/Satz/Satz';
+import { NullVisitor } from '@angular/compiler/src/render3/r3_ast';
 
 @Component({
 	selector: "app-session-form",
@@ -147,7 +148,7 @@ export class SessionFormComponent implements OnInit {
 		(aPara as SessionFormComponent).fDexieSvcService.EvalAktuelleSessionListe((aPara as SessionFormComponent).Session, aPara);
 	}
 
-	public async SaveChangesPrim(aPara?: any) {
+	public SaveChangesPrim(aPara?: any): Promise<void> {
 		const mSessionForm: SessionFormComponent = aPara.that as SessionFormComponent;
 		
 		const mSession: Session = mSessionForm.Session;
@@ -178,7 +179,7 @@ export class SessionFormComponent implements OnInit {
 			aPara.DoProgressFn(this.Session);
 		
 
-		await mSessionForm.fDexieSvcService.SessionSpeichern(mSessionForm.Session).then(() => {
+		return mSessionForm.fDexieSvcService.SessionSpeichern(mSessionForm.Session).then(() => {
 			mSessionForm.cmpSession = mSessionForm.Session.Copy();
 		});
 				
@@ -275,11 +276,12 @@ export class SessionFormComponent implements OnInit {
 		mDialogData.textZeilen.push("Workout will be saved and closed.");
 		mDialogData.textZeilen.push("Do you want to proceed?");
 		mDialogData.OkData = this;
-		mDialogData.OkFn = async (aSessionForm: SessionFormComponent): Promise<void> => {
+		mDialogData.OkFn = (aSessionForm: SessionFormComponent) => {
 			aSessionForm.Session.SetSessionFertig();
-			await this.SaveChangesPrim({ that: aSessionForm });
-			if (aSessionForm.Session.UebungsListe.length > 0) {
-				const mPtrUebung = aSessionForm.Session.UebungsListe[0];
+			this.SaveChangesPrim({ that: aSessionForm }).then(() => {
+				if (aSessionForm.Session.UebungsListe.length > 0) {
+					const mPtrUebung = aSessionForm.Session.UebungsListe[0];
+
 				if (mPtrUebung.ArbeitsSatzListe.length > 0) {
 					const mProgressPara: ProgressPara = new ProgressPara();
 					mProgressPara.DbModule = this.fDexieSvcService;
@@ -296,18 +298,17 @@ export class SessionFormComponent implements OnInit {
 						this.fDexieSvcService.EvalAktuelleSessionListe(
 							aProgressExtraFnSession,
 							{
-								ExtraFn: () => {
+								ExtraFn: (aSession: Session) => {
 									const mIndex = this.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
 									if (mIndex > -1) this.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
 									this.router.navigate([""]);
 								}
 							});
+						}
+						Progress.StaticDoProgress(mProgressPara);
 					}
-					const mProgressPara2: ProgressPara = await Progress.StaticDoProgress(mProgressPara);
 				}
-
-			}
-			return null;
+			});
 		}
 		this.fDialogService.JaNein(mDialogData);
 	}

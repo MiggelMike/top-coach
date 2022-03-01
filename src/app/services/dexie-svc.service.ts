@@ -15,7 +15,7 @@ import { Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardUebung } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
-//  import { SIGXFSZ } from 'constants';
+var cloneDeep = require('lodash.clonedeep');
 
 export enum ErstellStatus {
     VomAnwenderErstellt,
@@ -986,11 +986,11 @@ export class DexieSvcService extends Dexie {
 		return await this.SatzTable.put(aSatz as Satz);
 	}
 
-	public SaetzeSpeichern(aSaetze: Array<ISatz>) {
-		this.SatzTable.bulkPut(aSaetze as Array<Satz>);
+	public async SaetzeSpeichern(aSaetze: Array<ISatz>) {
+		return this.SatzTable.bulkPut(aSaetze as Array<Satz>);
 	}
 
-	public UebungSpeichern(aUebung: Uebung): PromiseExtended<number> {
+	public async UebungSpeichern(aUebung: Uebung): Promise<number> {
 		aUebung.FkAltProgress = aUebung.FkProgress;
 		aUebung.AltWeightProgress = aUebung.WeightProgress;
 		
@@ -998,47 +998,55 @@ export class DexieSvcService extends Dexie {
 		if (aUebung.SatzListe !== undefined)
 			mSatzListe = aUebung.SatzListe.map(sz => sz);
 		
-		aUebung.SatzListe = undefined;
-		return this.UebungTable.put(aUebung)
-			.then( async (mUebungID: number) => {
-				// Uebung ist gespeichert.
-				// UebungsID in Saetze eintragen.
-				aUebung.ID = mUebungID;
-				if (mSatzListe !== undefined) {
-					for (let index = 0; index < mSatzListe.length; index++) {
-						const mSatz = mSatzListe[index];
-						mSatz.UebungID = mUebungID;
-						mSatz.SessionID = aUebung.SessionID;
-						await this.SatzSpeichern(mSatz);
-					}
-				}
-				aUebung.SatzListe = mSatzListe;
-				return mUebungID;
-			});
+		aUebung.SatzListe = [];
+		const mResult = await this.UebungTable.put(aUebung);
+			
+		if (mSatzListe !== undefined) {
+			for (let index = 0; index < mSatzListe.length; index++) {
+				const mSatz = mSatzListe[index];
+				mSatz.UebungID = aUebung.ID;
+				mSatz.SessionID = aUebung.SessionID;
+				const mGewichtDiff = cloneDeep(mSatz.GewichtDiff);
+				mSatz.GewichtDiff = [];
+				this.SatzSpeichern(mSatz);
+				mSatz.GewichtDiff = mGewichtDiff;
+			}
+			// this.SaetzeSpeichern(mSatzListe);
+		}
+		
+		aUebung.SatzListe = mSatzListe;
+		return mResult;
 	}
 
 	public async SessionSpeichern(aSession: Session, aAfterSaveFn?: AfterSaveFn): Promise<void> {
-		// return await this.transaction("rw", this.SessionTable, this.UebungTable, this.SatzTable, async () => {
-			const mUebungsListe: Array<Uebung> = aSession.UebungsListe.map(u => u);
-			aSession.UebungsListe = undefined;
-			return await this.SessionTable.put(aSession).then(
-				// Session ist gespeichert
-				// SessionID in Uebungen eintragen
-			    async (mSessionID: number) => {
-					for (let index = 0; index < mUebungsListe.length; index++) {
-						const mUebung = mUebungsListe[index];
-						mUebung.SessionID = mSessionID;
-						mUebung.ListenIndex = index;
-						await this.UebungSpeichern(mUebung);
-					}
-					aSession.ID = mSessionID;
-					aSession.UebungsListe = mUebungsListe;
+		return await this.transaction("rw", this.SessionTable, this.UebungTable, this.SatzTable, async () => {
+			const mUebungsListe: Array<Uebung> = [];
+			if (aSession.UebungsListe !== undefined) {
+				aSession.UebungsListe.forEach((u) =>
+					mUebungsListe.push(u.Copy())
+				);
+				aSession.UebungsListe = [];
+			}
 
-					if (aAfterSaveFn !== undefined)
-						aAfterSaveFn(aSession);
-				}
-			);
-		//  });
+			const mResult = await this.SessionTable.put(aSession);
+			// Session ist gespeichert
+			// SessionID in Uebungen eintragen
+			    
+			for (let index = 0; index < mUebungsListe.length; index++) {
+				const mUebung = mUebungsListe[index];
+				mUebung.SessionID = aSession.ID;
+				mUebung.ListenIndex = index;
+				await this.UebungSpeichern(mUebung);
+			}
+			// await this.UebungTable.bulkPut(mUebungsListe);
+			aSession.UebungsListe = mUebungsListe;
+
+			if (aAfterSaveFn !== undefined)
+				aAfterSaveFn(aSession);
+		
+			// return mResult;
+
+		});
 	}
 
 	public ProgrammSpeichern(aTrainingsProgramm: ITrainingsProgramm) {
@@ -1145,7 +1153,7 @@ export class DexieSvcService extends Dexie {
 		return mResultSession;
 	}
 
-	public async EvalAktuelleSessionListe(aSession: Session, aPara?: any): Promise<void>  {
+	public async EvalAktuelleSessionListe(aSession: Session, aPara?: any): Promise<void> {
 		if (this.AktuellesProgramm && this.AktuellesProgramm.SessionListe) {
 			const mSess: ISession = this.AktuellesProgramm.SessionListe.find((s) => s.ID === aSession.ID);
 			if (aSession.Kategorie02 === SessionStatus.Loeschen) {
@@ -1156,11 +1164,13 @@ export class DexieSvcService extends Dexie {
 				}
 			} else {
 				// Die Session ersteinmal in die Session-Liste des aktuellen Programms aufnehmen.
-		//		if (mSess === undefined) this.AktuellesProgramm.SessionListe.push(aSession);
+				//		if (mSess === undefined) this.AktuellesProgramm.SessionListe.push(aSession);
 			}
 		}
 
 		if (aSession.Kategorie02 === SessionStatus.Fertig || aSession.Kategorie02 === SessionStatus.Loeschen) {
+			await this.SessionSpeichern(aSession);
+
 			const mNeueSession: Session = aSession.Copy(true);
 			mNeueSession.init();
 			this.InitSessionSaetze(aSession, mNeueSession);
@@ -1169,7 +1179,7 @@ export class DexieSvcService extends Dexie {
 			mNeueSession.Expanded = false;
 
 			// export enum SessionStatus {
-			// 	NurLesen,
+			// 	NurLesen, 
 			// 	Bearbeitbar,
 			// 	Wartet,
 			// 	Pause,
@@ -1179,56 +1189,32 @@ export class DexieSvcService extends Dexie {
 			// 	Loeschen
 			// }
 
-			await this.SessionSpeichern(aSession);
 			const mIndex = this.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSession.ID);
 			if (mIndex > -1)
 				this.AktuellesProgramm.SessionListe.splice(mIndex, 1);
 
-
 			const mAkuelleSessionListe: Array<ISession> = this.AktuellesProgramm.SessionListe.filter((s) =>
-					s.Kategorie02 !== SessionStatus.Fertig
-					&& s.Kategorie02 !== SessionStatus.FertigTimeOut
-					|| s.ID === aSession.ID
-					|| s.ListenIndex === aSession.ListenIndex
+				s.Kategorie02 !== SessionStatus.Fertig
+				&& s.Kategorie02 !== SessionStatus.FertigTimeOut
+				|| s.ID === aSession.ID
+				|| s.ListenIndex === aSession.ListenIndex
 			);
 
-			mNeueSession.ListenIndex = mAkuelleSessionListe.length + 1;
-			await this.SessionSpeichern(mNeueSession);
+			
 			for (let index = 0; index < mAkuelleSessionListe.length; index++) {
 				let mPtrSession: Session = mAkuelleSessionListe[index] as Session;
 				mPtrSession.ListenIndex = index;
-				await this.SessionSpeichern(mPtrSession)
+				await this.SessionSpeichern(mPtrSession);
 			}
 
-			// if (mAkuelleSessionListe.length > 0) {
-			// 	let index = 0
-			// 	let mPtrSession: Session = mAkuelleSessionListe[index] as Session;
-			// 	mPtrSession.ListenIndex = index;
+			mNeueSession.ListenIndex = mAkuelleSessionListe.length + 1;
+			await this.SessionSpeichern(mNeueSession);
 
-			// 	let mInterVallID = setInterval(async () => {
-			// 		await this.SessionSpeichern(mPtrSession).then(
-			// 			() => {
-			// 				index++;
-			// 				if (index >= mAkuelleSessionListe.length)
-			// 					clearInterval(mInterVallID);
-			// 				else {
-			// 					let mPtrSession: Session = mAkuelleSessionListe[index] as Session;
-			// 					mPtrSession.ListenIndex = index;
-			// 				}
-			// 			}); //await this.SessionSpeichern(mPtrSession).then
-			// 	}, 1000);
-			// }
-		
-
-
-//			mAkuelleSessionListe.push(mNeueSession);	
 			if (aSession.Kategorie02 === SessionStatus.Loeschen)
 				this.SessionTable.delete(aSession.ID);
 			
-			if ((aPara !== undefined) && (aPara.ExtraFn !== undefined)) 
-				aPara.ExtraFn();
-			
-			return null;
-		}
+			if ((aPara !== undefined) && (aPara.ExtraFn !== undefined))
+				aPara.ExtraFn(mNeueSession);
+		}//if
 	}
 }

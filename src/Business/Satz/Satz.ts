@@ -157,7 +157,7 @@ export class Satz implements ISatz {
 
         // Nicht in Dexie-DB-Speichern -> enumerable: false        
         Object.defineProperty(this, "BodyWeight", { enumerable: false });
-        Object.defineProperty(this, "GewichtSteigerung", { enumerable: false });
+        Object.defineProperty(this, "GewichtDiff", { enumerable: false });
     }
 
     public hasChanged(aCmpSatz: ISatz): Boolean{
