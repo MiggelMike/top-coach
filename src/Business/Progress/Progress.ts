@@ -748,11 +748,11 @@ export class Progress implements IProgress {
 		}
 	}
 
-	private static StaticSetAllWeights(aUebung: Uebung, aAusgangsUebung: Uebung, aAusgangsSatz: Satz, aArithmetik: Arithmetik,  aWeight: number = this.cIgnoreWeight): void {
+	private static StaticSetAllWeights(aUebung: Uebung, aAusgangsUebung: Uebung, aAusgangsSatz: Satz, aArithmetik: Arithmetik, aWeight: number = this.cIgnoreWeight): void {
+		
 		aUebung.ArbeitsSatzListe.forEach(
 			(sz) => {
-				if (Progress.StaticEqualSet(aAusgangsSatz, sz) === false)
-				{
+				if (Progress.StaticEqualSet(aAusgangsSatz, sz) === false) {
 					if (aArithmetik === Arithmetik.Add) {
 						const mGewichtDiff: GewichtDiff = new GewichtDiff();
 						mGewichtDiff.Gewicht = aWeight;
@@ -768,7 +768,7 @@ export class Progress implements IProgress {
 						}
 					}
 				}
-			})
+			});
 	}
 
 	private static StaticSetIsDone(aSatz: Satz): boolean {
@@ -789,18 +789,18 @@ export class Progress implements IProgress {
 	}
 
 
-	private static StaticResetAllWeights(mUebung: Uebung, aProgressID: number): void {
-		mUebung.ArbeitsSatzListe.forEach(
+	private static StaticResetAllWeights(aUebung: Uebung, aProgressID: number): void {
+		aUebung.ArbeitsSatzListe.forEach(
 			(sz) => {
 				const mGewichtDiff = sz.GewichtDiff.find(
 					(gdiff) => {
 						return (
 							//    (gdiff.Uebung.FkAltProgress === aProgressID || mUebung.FkAltProgress === aProgressID)
 							   (gdiff.Uebung.FkAltProgress === aProgressID)
-							&& (mUebung.ID === gdiff.Uebung.ID)
+							&& (aUebung.ID === gdiff.Uebung.ID)
 							||
-							(		(mUebung.FkUebung === gdiff.Uebung.FkUebung)
-								&& 	(mUebung.ProgressGroup === gdiff.Uebung.ProgressGroup))
+							(		(aUebung.FkUebung === gdiff.Uebung.FkUebung)
+								&& 	(aUebung.ProgressGroup === gdiff.Uebung.ProgressGroup))
 							)
 					});
 				
