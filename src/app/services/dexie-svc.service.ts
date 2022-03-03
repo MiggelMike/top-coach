@@ -1130,7 +1130,7 @@ export class DexieSvcService extends Dexie {
 		}
 	}
 
-	private InitSessionSaetze(aQuellSession: Session, aZielSession: Session) {
+	public InitSessionSaetze(aQuellSession: Session, aZielSession: Session) {
 		aZielSession.UebungsListe = [];
 		for (let index = 0; index < aQuellSession.UebungsListe.length; index++) {
 			const mQuellUebung = aQuellSession.UebungsListe[index];
@@ -1246,9 +1246,7 @@ export class DexieSvcService extends Dexie {
 							u.ArbeitsSatzListe.forEach((sz) => sz.SetPresetWeight(Number(mPtrLetzerSatz.GewichtVorgabe)));
 						}
 					}
-					
-				}
-			);
+				});
 
 			mAkuelleSessionListe.push(mNeueSession);
 			
@@ -1257,9 +1255,6 @@ export class DexieSvcService extends Dexie {
 				mPtrSession.ListenIndex = index;
 				await this.SessionSpeichern(mPtrSession);
 			}
-
-			// mNeueSession.ListenIndex = mAkuelleSessionListe.length + 1;
-			// await this.SessionSpeichern(mNeueSession);
 
 			if (aSession.Kategorie02 === SessionStatus.Loeschen)
 				this.SessionTable.delete(aSession.ID);

@@ -282,32 +282,66 @@ export class SessionFormComponent implements OnInit {
 				if (aSessionForm.Session.UebungsListe.length > 0) {
 					const mPtrUebung = aSessionForm.Session.UebungsListe[0];
 
-				if (mPtrUebung.ArbeitsSatzListe.length > 0) {
-					const mProgressPara: ProgressPara = new ProgressPara();
-					mProgressPara.DbModule = this.fDexieSvcService;
-					mProgressPara.Programm = this.Programm;
-					mProgressPara.AusgangsSession = aSessionForm.Session;
-					mProgressPara.ProgressHasChanged = false;
-					mProgressPara.AusgangsUebung = mPtrUebung;
-					mProgressPara.AusgangsSatz = mPtrUebung.ArbeitsSatzListe[0];
-					mProgressPara.ProgressID = mPtrUebung.FkProgress;
-					mProgressPara.AlteProgressID = mPtrUebung.FkProgress;
-					mProgressPara.SatzDone = mPtrUebung.ArbeitsSatzListe[0].Status === SatzStatus.Fertig;
-					mProgressPara.ProgressListe = this.fDexieSvcService.ProgressListe;
-					mProgressPara.ProgressExtraFn = (aProgressExtraFnSession: Session) => {
-						this.fDexieSvcService.EvalAktuelleSessionListe(
-							aProgressExtraFnSession,
-							{
-								ExtraFn: (aSession: Session) => {
-									const mIndex = this.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
-									if (mIndex > -1) this.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
-									this.router.navigate([""]);
-								}
-							});
-						}
+
+					if (mPtrUebung.ArbeitsSatzListe.length > 0) {
+						
+						const mProgressPara: ProgressPara = new ProgressPara();
+						mProgressPara.DbModule = this.fDexieSvcService;
+						mProgressPara.Programm = this.Programm;
+						mProgressPara.AusgangsSession = aSessionForm.Session;
+						
+						
+						mProgressPara.NeueSession = aSessionForm.Session.Copy(true);
+						mProgressPara.NeueSession.init();
+						this.fDexieSvcService.InitSessionSaetze(aSessionForm.Session, mProgressPara.NeueSession as Session);
+						mProgressPara.NeueSession.FK_Programm = aSessionForm.Session.FK_Programm;
+						mProgressPara.NeueSession.FK_VorlageProgramm = aSessionForm.Session.FK_VorlageProgramm;
+						mProgressPara.NeueSession.Expanded = false;
+						mProgressPara.ProgressHasChanged = false;
+						mProgressPara.AusgangsUebung = mPtrUebung;
+						mProgressPara.AusgangsSatz = mPtrUebung.ArbeitsSatzListe[0];
+						mProgressPara.ProgressID = mPtrUebung.FkProgress;
+						mProgressPara.AlteProgressID = mPtrUebung.FkProgress;
+						mProgressPara.SatzDone = mPtrUebung.ArbeitsSatzListe[0].Status === SatzStatus.Fertig;
+						mProgressPara.ProgressListe = this.fDexieSvcService.ProgressListe;
+						mProgressPara.ProgressExtraFn = (aSession: Session) => {
+							const mIndex = this.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
+							if (mIndex > -1) this.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
+							this.router.navigate([""]);
+						};
+						
 						Progress.StaticDoProgress(mProgressPara);
+						//mProgressPara.ProgressExtraFn = (aProgressPara: ProgressPara) => {
+						// 	Progress.StaticDoProgress(aProgressPara);
+						// }
+
+						// this.fDexieSvcService.EvalAktuelleSessionListe(aSessionForm.Session, mProgressPara);
+
+						
+						// {
+						// });
+
+
+						// mProgressPara.ProgressExtraFn(aProgressPara.AusgangsSession);
+				
+		
+		
+
+
+						// mProgressPara.ProgressExtraFn = (aProgressExtraFnSession: Session) => {
+						// 	this.fDexieSvcService.EvalAktuelleSessionListe(
+						// 		aProgressExtraFnSession,
+						// 		{
+						// 			ExtraFn: (aSession: Session) => {
+						// 				const mIndex = this.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
+						// 				if (mIndex > -1) this.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
+						// 				this.router.navigate([""]);
+						// 			}
+						// 		});
+						// 	}
+						// 	Progress.StaticDoProgress(mProgressPara);}				
 					}
-				}
+				}				
 			});
 		}
 		this.fDialogService.JaNein(mDialogData);
