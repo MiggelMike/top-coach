@@ -270,7 +270,7 @@ export class Uebung implements IUebung {
         let mResult = 0;
         this.ArbeitsSatzListe.forEach(satz => {
             if(satz.Status === SatzStatus.Fertig)
-                mResult += satz.WdhAusgefuehrt;
+                mResult += Number(satz.WdhAusgefuehrt);
             
         });
         return mResult;
@@ -283,9 +283,9 @@ export class Uebung implements IUebung {
         let mResult = 0;
         this.ArbeitsSatzListe.forEach(satz => {
             if (aVorgabeWeightFrom === VorgabeWeightLimit.LowerLimit)
-                mResult += satz.WdhVonVorgabe;
+                mResult += Number(satz.WdhVonVorgabe);
             else
-                mResult += satz.WdhBisVorgabe;
+                mResult += Number(satz.WdhBisVorgabe);
         });
 
         return mResult;

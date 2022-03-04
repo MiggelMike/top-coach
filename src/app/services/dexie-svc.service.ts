@@ -1143,6 +1143,7 @@ export class DexieSvcService extends Dexie {
 			mQuellUebung.SatzListe.forEach((sz) => {
 				const mSatz: Satz = sz.Copy();
 				mSatz.ID = undefined;
+				mSatz.WdhAusgefuehrt = mSatz.WdhBisVorgabe;
 				mSatz.SessionID = aZielSession.ID;
 				mSatz.Status = SatzStatus.Wartet;
 				mUebung.SatzListe.push(mSatz);
