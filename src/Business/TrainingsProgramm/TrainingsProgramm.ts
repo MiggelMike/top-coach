@@ -26,13 +26,14 @@ export interface ITrainingsProgramm {
     SessionListe: Array<ISession>;
     Bearbeitbar: Boolean;
     Zyklen: number;
-    Init(aSessions: Array<ISession>): void;
+        Init(aSessions: Array<ISession>): void;
     Copy(): ITrainingsProgramm;
     ErstelleSessionsAusVorlage(aProgrammKategorie: ProgrammKategorie): ITrainingsProgramm;
     DeserializeProgramm(aJsonData: Object): ITrainingsProgramm;
     hasChanged(aCmpProgramm: ITrainingsProgramm): Boolean;
     resetProgram(aQuellProgram: ITrainingsProgramm): void
     SuchSatz(aSatz: Satz): Satz;
+    NummeriereSessions();
 }
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
@@ -57,6 +58,14 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
         this.ProgrammTyp = aProgrammTyp;
         Object.defineProperty(this, "pDbModule", { enumerable: false });
         Object.defineProperty(this, "SessionListe", { enumerable: false });
+    }
+
+    NummeriereSessions() {
+        if(this.SessionListe !== undefined){
+            for (let index = 0; index < this.SessionListe.length; index++) {
+                this.SessionListe[index].ListenIndex = index;;
+            }
+        }
     }
 
     resetProgram(aQuellProgram: ITrainingsProgramm): void{

@@ -1136,12 +1136,14 @@ export class DexieSvcService extends Dexie {
 			const mQuellUebung = aQuellSession.UebungsListe[index];
 			const mUebung: Uebung = mQuellUebung.Copy();
 			mUebung.ID = undefined;
+			mUebung.SessionID = aZielSession.ID;
 			mUebung.SatzListe = [];
 			mUebung.Expanded = false;
 
 			mQuellUebung.SatzListe.forEach((sz) => {
 				const mSatz: Satz = sz.Copy();
 				mSatz.ID = undefined;
+				mSatz.SessionID = aZielSession.ID;
 				mSatz.Status = SatzStatus.Wartet;
 				mUebung.SatzListe.push(mSatz);
 			});

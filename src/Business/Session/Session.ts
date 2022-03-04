@@ -77,14 +77,14 @@ export class Session extends SessionDB implements ISession {
         this.PausenListe = [];
         this.Kategorie02 = SessionStatus.Wartet;
         this.DauerInSek = 0;
-        this.UebungsListe.forEach(
-            (u) => {
-                u.SatzListe.forEach( s => {
-                    s.GewichtAusgefuehrt = 0;
-                    s.WdhAusgefuehrt = 0;
-                });
-            }
-        )
+        for (let index = 0; index < this.UebungsListe.length; index++) {
+            const mPtrUebung = this.UebungsListe[index];
+            mPtrUebung.SessionID = this.ID;
+            mPtrUebung.SatzListe.forEach(s => {
+                s.GewichtAusgefuehrt = 0;
+                s.WdhAusgefuehrt = 0;
+            });
+        }
     }
 
     public get IstAusVorgabe(): boolean {
