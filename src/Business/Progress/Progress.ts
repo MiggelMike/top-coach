@@ -571,7 +571,6 @@ export class Progress implements IProgress {
 				
 					if (mWp !== WeightProgress.Same) {
 						const mProgressPara: ProgressPara = new ProgressPara();
-
 						mProgressPara.ProgressListe = aProgressPara.ProgressListe;
 						mProgressPara.AusgangsSession = mProgressParaMerker.AusgangsSession;
 						mProgressPara.AusgangsUebung = mProgressParaMerker.AusgangsUebung;
