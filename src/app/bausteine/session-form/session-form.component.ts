@@ -285,6 +285,7 @@ export class SessionFormComponent implements OnInit {
 					const mNeueSession: Session = aSessionForm.Session.Copy(true);
 					mNeueSession.init();
 					this.fDexieSvcService.InitSessionSaetze(aSessionForm.Session, mNeueSession as Session);
+
 					mNeueSession.FK_Programm = aSessionForm.Session.FK_Programm;
 					mNeueSession.FK_VorlageProgramm = aSessionForm.Session.FK_VorlageProgramm;
 					mNeueSession.Expanded = false;
@@ -307,7 +308,8 @@ export class SessionFormComponent implements OnInit {
 							mProgressPara.AlteProgressID = mPtrUebung.FkProgress;
 							mProgressPara.SatzDone = mPtrUebung.ArbeitsSatzListe[0].Status === SatzStatus.Fertig;
 							mProgressPara.ProgressListe = this.fDexieSvcService.ProgressListe;
-							await Progress.StaticDoProgress(mProgressPara);
+							if(mPtrUebung.FkProgress !== undefined && Progress.StaticProgressEffectsRunningSession(mPtrUebung.FkProgress, mProgressPara) === false)
+								await Progress.StaticDoProgress(mProgressPara);
 						}
 					}//for
 

@@ -1134,16 +1134,34 @@ export class DexieSvcService extends Dexie {
 		aZielSession.UebungsListe = [];
 		for (let index = 0; index < aQuellSession.UebungsListe.length; index++) {
 			const mQuellUebung = aQuellSession.UebungsListe[index];
+			// Zielübung
 			const mUebung: Uebung = mQuellUebung.Copy();
 			mUebung.ID = undefined;
 			mUebung.SessionID = aZielSession.ID;
 			mUebung.SatzListe = [];
 			mUebung.Expanded = false;
 
+			let mGewicht: number;
+			let mProgress: Progress;
+			if (mQuellUebung.FkProgress !== undefined && mQuellUebung.FkProgress > 0) {
+				mProgress = this.ProgressListe.find((p) => p.ID === mQuellUebung.FkProgress);
+				if (   mProgress !== undefined
+					&& mProgress.ProgressSet === ProgressSet.First
+					&& mQuellUebung.SatzListe !== undefined
+				){
+					const mPtrSatz = mQuellUebung.SatzListe.find((sz) => sz.SatzListIndex > 0);
+					if (mPtrSatz !== undefined)
+						mGewicht = mPtrSatz.GewichtAusgefuehrt;
+				}
+			}
+				
 			mQuellUebung.SatzListe.forEach((sz) => {
+				// Zielsatz
 				const mSatz: Satz = sz.Copy();
 				mSatz.ID = undefined;
 				mSatz.WdhAusgefuehrt = mSatz.WdhBisVorgabe;
+				mSatz.GewichtAusgefuehrt = mGewicht !== undefined ? mGewicht : mSatz.GewichtAusgefuehrt;
+				mSatz.GewichtVorgabe = mSatz.GewichtAusgefuehrt;
 				mSatz.SessionID = aZielSession.ID;
 				mSatz.Status = SatzStatus.Wartet;
 				mUebung.SatzListe.push(mSatz);

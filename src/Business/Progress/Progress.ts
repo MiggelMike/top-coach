@@ -708,7 +708,7 @@ export class Progress implements IProgress {
 		return (aUebung.FkAltProgress !== undefined);
 	}
 
-	private static StaticProgressEffectsRunningSession(aProgressID: number, aProgressPara: ProgressPara ): boolean{
+	public static StaticProgressEffectsRunningSession(aProgressID: number, aProgressPara: ProgressPara ): boolean{
 		const mProgress: Progress = aProgressPara.ProgressListe.find((p) => p.ID === aProgressID);
 		if((mProgress) && (mProgress.ProgressSet === ProgressSet.First))
 			return true
