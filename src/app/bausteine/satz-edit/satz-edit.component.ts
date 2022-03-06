@@ -37,7 +37,7 @@ export class SatzEditComponent implements OnInit {
 
     constructor(
         private fDialogService: DialogeService,
-        private fStoppUhrService: StoppuhrSvcService,
+        public  fStoppUhrService: StoppuhrSvcService,
         private fGlobalService: GlobalService,
         private fPlateCalcSvcService: PlateCalcSvcService,
         private fDbModule: DexieSvcService
@@ -61,6 +61,11 @@ export class SatzEditComponent implements OnInit {
                 this.satz.FkHantel = mStammUebung.FkHantel;
             }
         }
+    }
+
+    ngOnDestroy() {
+        // if ((this.StoppuhrComponentVisible === true) && (this.fStoppUhrService.StoppuhrComponent !== undefined))
+        //     this.fStoppUhrService.StoppuhrComponent.close();
     }
 
     public DeleteSet() {
@@ -136,8 +141,10 @@ export class SatzEditComponent implements OnInit {
     }
 
     onClickSatzFertig(aSatz: ISatz, aChecked: boolean) {
-        if (this.fStoppUhrService.StoppuhrComponent)
+        if (this.fStoppUhrService.StoppuhrComponent) {
             this.fStoppUhrService.StoppuhrComponent.close();
+            this.StoppuhrComponent = undefined;
+        }
         
             
         let mHeader: string = '';
@@ -172,12 +179,11 @@ export class SatzEditComponent implements OnInit {
                 uebung: this.sessUebung,
                 satznr: this.rowNum + 1,
                 nextTimeWeight: aNextTimeWeight,
-                headerText: aHeaderText
+                headerText: aHeaderText,
             } as StoppUhrOverlayConfig;
     
     
         this.StoppuhrComponent = this.fStoppUhrService.open(this.StoppUhrOverlayConfig);
-        
     }
 
     onClickWdhVonVorgabe(aEvent: any) {

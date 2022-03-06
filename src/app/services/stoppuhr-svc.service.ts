@@ -1,3 +1,4 @@
+import { onFormShowFn, onFormCloseFn } from './dexie-svc.service';
 import { Injectable, ComponentRef, Injector, InjectionToken } from "@angular/core";
 import { Overlay, OverlayConfig, OverlayRef } from "@angular/cdk/overlay";
 import { ComponentPortal, PortalInjector } from "@angular/cdk/portal";
@@ -20,7 +21,9 @@ export interface StoppUhrOverlayConfig {
 	satznr?: number;
 	nextTimeWeight?: number;
     top?: number;
-    headerText?: string
+	headerText?: string
+	afterOpenFn?: onFormShowFn;
+	beforeCloseFn?: onFormCloseFn;
 }
 
 export const cStoppUhrOverlayData = new InjectionToken<Satz>("StoppUhr_Overlay_Component");
@@ -43,6 +46,7 @@ export class StoppuhrSvcService {
 
 	public StoppuhrOverlayRef: OverlayRef = null;
 	public StoppuhrComponent: StoppuhrComponent;
+	private DialogConfig = { ...DEFAULT_CONFIG };
 
 	constructor(private overlay: Overlay, private injector: Injector) {}
 
@@ -72,18 +76,26 @@ export class StoppuhrSvcService {
 	}
 
 	open(aConfig: StoppUhrOverlayConfig = {}): StoppuhrComponent {
-		const dialogConfig = { ...DEFAULT_CONFIG, ...aConfig };
+		this.DialogConfig  = { ...DEFAULT_CONFIG, ...aConfig };
 
-	  this.StoppuhrOverlayRef = this.createOverlay(dialogConfig);
+		this.StoppuhrOverlayRef = this.createOverlay(this.DialogConfig);
 		const dialogRef = new StoppUhrOverlayRef(this.StoppuhrOverlayRef);
 		this.StoppuhrOverlayRef.backdropClick().subscribe((_) => this.close());
-		this.StoppuhrComponent = this.attachDialogContainer(this.StoppuhrOverlayRef, dialogConfig, dialogRef);
+		this.StoppuhrComponent = this.attachDialogContainer(this.StoppuhrOverlayRef, this.DialogConfig, dialogRef);
 		this.StoppuhrComponent.fConfig = aConfig;
-    return this.StoppuhrComponent;
+		
+		if (aConfig.afterOpenFn !== undefined)
+			aConfig.afterOpenFn(this.StoppuhrComponent);
+		
+		return this.StoppuhrComponent;
 	}
 
 	close() {
 		this.StoppuhrComponent.close();
+		this.StoppuhrComponent = undefined;
+
+		if (this.DialogConfig.beforeCloseFn !== undefined)
+			this.DialogConfig.beforeCloseFn(this.StoppuhrComponent);
 	}
 
 	private getOverlayConfig(aConfig: StoppUhrOverlayConfig): OverlayConfig {

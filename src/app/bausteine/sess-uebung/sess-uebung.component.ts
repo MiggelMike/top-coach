@@ -1,13 +1,14 @@
 import { ITrainingsProgramm } from './../../../Business/TrainingsProgramm/TrainingsProgramm';
 import { Uebung, IUebung } from 'src/Business/Uebung/Uebung';
 import { ISession, Session } from './../../../Business/Session/Session';
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, ViewChildren, QueryList, ElementRef } from "@angular/core";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
 import { ISatz, Satz, SatzTyp, LiftTyp } from "./../../../Business/Satz/Satz";
 import { repMask, floatMask } from "./../../app.module";
 import { MatExpansionPanel } from '@angular/material/expansion';
+import { SatzEditComponent } from '../satz-edit/satz-edit.component';
 
 @Component({
     selector: "app-sess-uebung",
@@ -26,6 +27,7 @@ export class SessUebungComponent implements OnInit {
     @Input() panUebung1: MatExpansionPanel;
     @Input() bearbeitbar: Boolean;
     @Input() DeletedSatzList: Array<Satz> = [];
+    @ViewChildren("AppSatzEdit") SatzEditList: QueryList<SatzEditComponent>;
 
     constructor(
         private fDialogService: DialogeService,
@@ -33,7 +35,19 @@ export class SessUebungComponent implements OnInit {
     ) {
     }
 
-    ngOnInit(): void {}
+    ngOnInit(): void { }
+    
+    ngOnDestroy() {
+        this.SatzEditList.forEach(
+            (sz) => {
+                if (   (sz.fStoppUhrService !== undefined)
+                    && (sz.fStoppUhrService.StoppuhrComponent !== undefined)
+                    && (sz.fStoppUhrService.close !== undefined)
+                ) {
+                    sz.fStoppUhrService.close();
+                }
+            });
+    }
 
     public PasteSet() {
         if (this.fGlobalService.SatzKopie === null) {

@@ -3,7 +3,6 @@ import {  ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsPro
 import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
 import { Observable, of } from 'rxjs';
-import { Router } from '@angular/router';
 
 
 

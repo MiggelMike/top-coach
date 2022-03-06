@@ -67,6 +67,16 @@ export interface ThenFn {
 	(aData: any): void | any;
 }
 
+export interface onFormShowFn {
+	(aData: any): void | any;
+}
+
+export interface onFormCloseFn {
+	(aData: any): void | any;
+}
+
+
+
 
 
 export class LadePara {
