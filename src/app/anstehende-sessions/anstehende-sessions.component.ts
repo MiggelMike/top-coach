@@ -26,8 +26,8 @@ export class AnstehendeSessionsComponent implements OnInit {
     
     ngOnInit() {
         this.AnstehendeSessionObserver.subscribe(
-            () => {
-                this.fDbModule.LadeAktuellesProgramm();
+            async () => {
+                await this.fDbModule.LadeAktuellesProgramm();
             });
     }
                 

@@ -190,6 +190,8 @@ export class GzclpProgramm extends TrainingsProgramm {
 
 		// T2-Lift
 		mUebung = Uebung.StaticKopiere(this.pDbModule.SucheUebungPerName(aT2Uebung), UebungsKategorie02.Session);
+		mUebung.GewichtSteigerung = 1;
+		mUebung.GewichtReduzierung = 1;
 
 		// if (this.ProgrammKategorie === SessionKategorie.Konkret) {
 		//     this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.GzClpT2, aNeueSession);
@@ -214,7 +216,9 @@ export class GzclpProgramm extends TrainingsProgramm {
 
 		// T3-Lift
 		mUebung = Uebung.StaticKopiere(this.pDbModule.SucheUebungPerName(aT3Uebung), UebungsKategorie02.Session);
-
+		mUebung.GewichtSteigerung = 1;
+		mUebung.GewichtReduzierung = 1;
+		
 		// Arbeits-Saetze anfügen
 		for (let i = 0; i < 3; i++) {
 			mUebung.SatzListe.push(

@@ -766,7 +766,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public LadeAktuellesProgramm(aExtraFn?: AfterLoadFn) {
-		this.LadeProgramme({
+	  	return this.LadeProgramme({
 			fProgrammKategorie: ProgrammKategorie.AktuellesProgramm,
 			WhereClause: { ProgrammKategorie : ProgrammKategorie.AktuellesProgramm},
 

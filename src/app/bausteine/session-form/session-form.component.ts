@@ -271,8 +271,16 @@ export class SessionFormComponent implements OnInit {
 		this.Session.StarteDauerTimer();
 	}
 
-	public async SetDone(aSession: SessionFormComponent): Promise<void> {
-		if (aSession.fSessionStatsOverlayComponent) aSession.fSessionStatsOverlayComponent.close();
+	private async DoAfterDone(aSessionForm: SessionFormComponent) {
+		const mIndex = this.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
+		if (mIndex > -1) this.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
+		this.fDexieSvcService.AktuellesProgramm.NummeriereSessions();
+		await this.fDexieSvcService.ProgrammSpeichern(this.fDexieSvcService.AktuellesProgramm);
+		this.router.navigate([""]);
+	}
+
+	public async SetDone(aSessionFormComponent: SessionFormComponent): Promise<void> {
+		if (aSessionFormComponent.fSessionStatsOverlayComponent) aSessionFormComponent.fSessionStatsOverlayComponent.close();
 		const mDialogData = new DialogData();
 		mDialogData.textZeilen.push("Workout will be saved and closed.");
 		mDialogData.textZeilen.push("Do you want to proceed?");
@@ -292,8 +300,8 @@ export class SessionFormComponent implements OnInit {
 					this.Programm.SessionListe.push(mNeueSession);
 					this.Programm.NummeriereSessions();
 
-					for (let index = 0; index < aSessionForm.Session.UebungsListe.length; index++) {
-						const mPtrUebung = aSessionForm.Session.UebungsListe[index];
+					for (let mUebungIndex = 0; mUebungIndex < aSessionForm.Session.UebungsListe.length; mUebungIndex++) {
+						const mPtrUebung = aSessionForm.Session.UebungsListe[mUebungIndex];
 						if (mPtrUebung.ArbeitsSatzListe.length > 0) {
 							const mProgressPara: ProgressPara = new ProgressPara();
 							mProgressPara.SessionDone = true;
@@ -308,17 +316,15 @@ export class SessionFormComponent implements OnInit {
 							mProgressPara.AlteProgressID = mPtrUebung.FkProgress;
 							mProgressPara.SatzDone = mPtrUebung.ArbeitsSatzListe[0].Status === SatzStatus.Fertig;
 							mProgressPara.ProgressListe = this.fDexieSvcService.ProgressListe;
-							if(mPtrUebung.FkProgress !== undefined && Progress.StaticProgressEffectsRunningSession(mPtrUebung.FkProgress, mProgressPara) === false)
+							if (mPtrUebung.FkProgress !== undefined && Progress.StaticProgressEffectsRunningSession(mPtrUebung.FkProgress, mProgressPara) === false)
 								await Progress.StaticDoProgress(mProgressPara);
+							
+							if (mUebungIndex >= aSessionForm.Session.UebungsListe.length - 1) {
+								this.DoAfterDone(aSessionFormComponent);
+							}
 						}
 					}//for
-
-					const mIndex = this.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
-					if (mIndex > -1) this.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
-					this.fDexieSvcService.AktuellesProgramm.NummeriereSessions();
-					this.fDexieSvcService.ProgrammSpeichern(this.fDexieSvcService.AktuellesProgramm);
-					this.router.navigate([""]);
-				}				
+				} else this.DoAfterDone(aSessionFormComponent);
 			});
 		}
 		this.fDialogService.JaNein(mDialogData);
