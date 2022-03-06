@@ -569,7 +569,7 @@ export class Progress implements IProgress {
 						mProgressParaMerker.AusgangsSession as Session
 					);
 				
-					if (mWp !== WeightProgress.Same) {
+					// if (mWp !== WeightProgress.Same) {
 						const mProgressPara: ProgressPara = new ProgressPara();
 						mProgressPara.ProgressListe = aProgressPara.ProgressListe;
 						mProgressPara.AusgangsSession = mProgressParaMerker.AusgangsSession;
@@ -601,7 +601,7 @@ export class Progress implements IProgress {
 						mProgressPara.SatzDone = mProgressParaMerker.SatzDone;
 						mProgressPara.SessionDone = mProgressParaMerker.SessionDone;
 						Progress.StaticProgrammSetNextWeight(mProgressPara);
-					}
+					// }
 			}
 		} else {
 			const mProgressPara: ProgressPara = new ProgressPara();
