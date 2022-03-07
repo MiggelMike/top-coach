@@ -14,7 +14,7 @@ import { Location } from "@angular/common";
 import { GlobalService } from "src/app/services/global.service";
 import { Uebung, UebungsKategorie02 } from "src/Business/Uebung/Uebung";
 import { UebungWaehlenData } from "src/app/uebung-waehlen/uebung-waehlen.component";
-import { Progress, ProgressPara } from 'src/Business/Progress/Progress';
+import { Progress, ProgressPara, ProgressSet } from 'src/Business/Progress/Progress';
 import { Satz, SatzStatus } from 'src/Business/Satz/Satz';
 import { NullVisitor } from '@angular/compiler/src/render3/r3_ast';
 
@@ -303,21 +303,34 @@ export class SessionFormComponent implements OnInit {
 					for (let mUebungIndex = 0; mUebungIndex < aSessionForm.Session.UebungsListe.length; mUebungIndex++) {
 						const mPtrUebung = aSessionForm.Session.UebungsListe[mUebungIndex];
 						if (mPtrUebung.ArbeitsSatzListe.length > 0) {
-							const mProgressPara: ProgressPara = new ProgressPara();
-							mProgressPara.SessionDone = true;
-							mProgressPara.DbModule = this.fDexieSvcService;
-							mProgressPara.Programm = this.Programm;
-							mProgressPara.AusgangsSession = aSessionForm.Session;
-							mProgressPara.AlleSaetze = true;
-							mProgressPara.ProgressHasChanged = false;
-							mProgressPara.AusgangsUebung = mPtrUebung;
-							mProgressPara.AusgangsSatz = mPtrUebung.ArbeitsSatzListe[0];
-							mProgressPara.ProgressID = mPtrUebung.FkProgress;
-							mProgressPara.AlteProgressID = mPtrUebung.FkProgress;
-							mProgressPara.SatzDone = mPtrUebung.ArbeitsSatzListe[0].Status === SatzStatus.Fertig;
-							mProgressPara.ProgressListe = this.fDexieSvcService.ProgressListe;
-							if (mPtrUebung.FkProgress !== undefined && Progress.StaticProgressEffectsRunningSession(mPtrUebung.FkProgress, mProgressPara) === false)
-								await Progress.StaticDoProgress(mProgressPara);
+							if (mPtrUebung.FkProgress !== undefined)
+							{
+								const mProgressPara: ProgressPara = new ProgressPara();
+								mProgressPara.SessionDone = true;
+								mProgressPara.DbModule = this.fDexieSvcService;
+								mProgressPara.Programm = this.Programm;
+								mProgressPara.AusgangsSession = aSessionForm.Session;
+								mProgressPara.AlleSaetze = true;
+								mProgressPara.ProgressHasChanged = false;
+								mProgressPara.AusgangsUebung = mPtrUebung;
+								
+								mProgressPara.ProgressID = mPtrUebung.FkProgress;
+								mProgressPara.AlteProgressID = mPtrUebung.FkProgress;
+								
+								mProgressPara.ProgressListe = this.fDexieSvcService.ProgressListe;
+								mProgressPara.Progress = this.fDexieSvcService.ProgressListe.find((p) => p.ID === mProgressPara.AusgangsUebung.FkProgress);
+
+								if (mProgressPara.Progress.ProgressSet === ProgressSet.Last) {
+									mProgressPara.SatzDone = mPtrUebung.ArbeitsSatzListe[mPtrUebung.ArbeitsSatzListe.length-1].Status === SatzStatus.Fertig;
+									mProgressPara.AusgangsSatz = mPtrUebung.ArbeitsSatzListe[mPtrUebung.ArbeitsSatzListe.length-1];
+								} else {
+									mProgressPara.SatzDone = mPtrUebung.ArbeitsSatzListe[0].Status === SatzStatus.Fertig;
+									mProgressPara.AusgangsSatz = mPtrUebung.ArbeitsSatzListe[0];
+								}
+
+								if(Progress.StaticProgressEffectsRunningSession(mPtrUebung.FkProgress, mProgressPara) === false)
+									await Progress.StaticDoProgress(mProgressPara);
+							}
 							
 							if (mUebungIndex >= aSessionForm.Session.UebungsListe.length - 1) {
 								this.DoAfterDone(aSessionFormComponent);

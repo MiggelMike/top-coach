@@ -80,6 +80,7 @@ export interface IUebung {
     EquipmentTyp: string;
     FailCount: number;
     ArbeitsSaetzeStatus: ArbeitsSaetzeStatus;
+    getArbeitsSaetzeStatus(): ArbeitsSaetzeStatus;
     Vorlage: boolean;
     ListenIndex: number;
     AufwaermArbeitsSatzPause: number;
@@ -212,18 +213,29 @@ export class Uebung implements IUebung {
         return '00:00:00';
     }    
 
-    get ArbeitsSaetzeStatus(): ArbeitsSaetzeStatus {
-        if (this.ArbeitsSatzListe.length <= 0) return ArbeitsSaetzeStatus.KeinerVorhanden;
+    public getArbeitsSaetzeStatus(): ArbeitsSaetzeStatus
+    {
+        if (this.ArbeitsSatzListe.length <= 0) {
+            this.ArbeitsSaetzeStatus = ArbeitsSaetzeStatus.KeinerVorhanden;
+            return ArbeitsSaetzeStatus.KeinerVorhanden;
+        }
+
         let mAnzFertig: number = 0;
         this.ArbeitsSatzListe.forEach((s) => {
             if (s.Status === SatzStatus.Fertig)
                 mAnzFertig++;
         });
 
-        if (mAnzFertig >= this.ArbeitsSatzListe.length) return ArbeitsSaetzeStatus.AlleFertig;
+        if (mAnzFertig >= this.ArbeitsSatzListe.length) {
+            this.ArbeitsSaetzeStatus = ArbeitsSaetzeStatus.AlleFertig;  
+            return ArbeitsSaetzeStatus.AlleFertig;
+        }
 
+        this.ArbeitsSaetzeStatus = ArbeitsSaetzeStatus.NichtAlleFertig;
         return ArbeitsSaetzeStatus.NichtAlleFertig;
     }
+
+    public ArbeitsSaetzeStatus: ArbeitsSaetzeStatus = ArbeitsSaetzeStatus.KeinerVorhanden;
 
     public getPauseText(aSatzTyp: string): string {
         return Zeitraum.FormatDauer(0);

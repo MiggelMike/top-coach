@@ -12,7 +12,7 @@ import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
 import { AppData, IAppData } from './../../Business/Coach/Coach';
 import { Dexie, PromiseExtended } from 'dexie';
 import { Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
-import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardUebung } from "../../Business/Uebung/Uebung";
+import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardUebung, ArbeitsSaetzeStatus } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
 var cloneDeep = require('lodash.clonedeep');
@@ -342,9 +342,9 @@ export class DexieSvcService extends Dexie {
 
 	    // Dexie.delete("ConceptCoach");
 
-		this.version(12).stores({
+		this.version(13).stores({
 			AppData: "++id",
-			Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,[FK_Programm+FkUebung+FkProgress+ProgressGroup]",
+			Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus]",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
 			SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02],[FK_Programm+ListenIndex]",
 			Satz: "++ID,UebungID",
@@ -1153,15 +1153,28 @@ export class DexieSvcService extends Dexie {
 
 			let mGewicht: number;
 			let mProgress: Progress;
-			if (mQuellUebung.FkProgress !== undefined && mQuellUebung.FkProgress > 0) {
+			if (   mQuellUebung.FkProgress !== undefined
+				&& mQuellUebung.FkProgress > 0)
+			{
 				mProgress = this.ProgressListe.find((p) => p.ID === mQuellUebung.FkProgress);
 				if (   mProgress !== undefined
 					&& mProgress.ProgressSet === ProgressSet.First
 					&& mQuellUebung.SatzListe !== undefined
 				){
-					const mPtrSatz = mQuellUebung.SatzListe.find((sz) => sz.SatzListIndex > 0);
-					if (mPtrSatz !== undefined)
-						mGewicht = mPtrSatz.GewichtAusgefuehrt;
+					const mPtrQuellSatz = mQuellUebung.SatzListe.find((sz) => sz.SatzListIndex > 0);
+					if (mPtrQuellSatz !== undefined) {
+						if (   aQuellSession.Kategorie02 === SessionStatus.Fertig
+							&& mQuellUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig)
+						{
+							mGewicht = mPtrQuellSatz.GewichtAusgefuehrt;
+						}
+						else if (
+							   mPtrQuellSatz.GewichtDiff !== undefined
+							&& mPtrQuellSatz.GewichtDiff.length > 0)
+						{
+							mGewicht = mPtrQuellSatz.GewichtAusgefuehrt - mPtrQuellSatz.GewichtDiff[mPtrQuellSatz.GewichtDiff.length - 1].Gewicht;
+						}//if
+					}//if
 				}
 			}
 				
