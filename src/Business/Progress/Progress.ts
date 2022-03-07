@@ -132,9 +132,11 @@ export class Progress implements IProgress {
 			return aSessUebung.SummeWDH() >= aSessUebung.SummeVorgabeWDH(aVorgabeWeightLimit);
 
 		for (let index = 0; index < aSessUebung.ArbeitsSatzListe.length; index++) {
-			if (aVorgabeWeightLimit === VorgabeWeightLimit.UpperLimit && aSessUebung.ArbeitsSatzListe[index].WdhAusgefuehrt < aSessUebung.ArbeitsSatzListe[index].WdhBisVorgabe) return false;
+			if (   aVorgabeWeightLimit === VorgabeWeightLimit.UpperLimit
+				&& aSessUebung.ArbeitsSatzListe[index].WdhAusgefuehrt < aSessUebung.ArbeitsSatzListe[index].WdhBisVorgabe) return false;
 
-			if (aVorgabeWeightLimit === VorgabeWeightLimit.LowerLimit && aSessUebung.ArbeitsSatzListe[index].WdhAusgefuehrt < aSessUebung.ArbeitsSatzListe[index].WdhVonVorgabe) return false;
+			if (   aVorgabeWeightLimit === VorgabeWeightLimit.LowerLimit
+				&& aSessUebung.ArbeitsSatzListe[index].WdhAusgefuehrt < aSessUebung.ArbeitsSatzListe[index].WdhVonVorgabe) return false;
 		}
 		return true;
 	}
