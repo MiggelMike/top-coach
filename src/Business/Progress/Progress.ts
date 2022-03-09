@@ -6,7 +6,7 @@ import { AfterLoadFn, DexieSvcService } from 'src/app/services/dexie-svc.service
 import { ITrainingsProgramm, TrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { ISession, Session } from './../Session/Session';
 import { SessionStatus } from 'src/Business/SessionDB';
-import { ArbeitsSaetzeStatus, Uebung } from "../Uebung/Uebung";
+import { ArbeitsSaetzeStatus, Uebung, WdhVorgabeStatus } from "../Uebung/Uebung";
 import { Satz, SatzStatus } from '../Satz/Satz';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual')
@@ -164,128 +164,122 @@ export class Progress implements IProgress {
 		aSessUebung: Uebung,
 		aSession: Session
 	): Promise<WeightProgress> {
-		let mFailCount = (aSessUebung.FailCount < 0) ? 0 : aSessUebung.FailCount;
+		let mFailCount = (aSessUebung.MaxFailCount < 0) ? 0 : aSessUebung.MaxFailCount;
 		const mProgress: Progress = this;
 		
 		// return await aDb.transaction("r", [aDb.cSession, aDb.cUebung], async () => {
-			if ((aSessUebung.GewichtSteigerung === 0) && (aSessUebung.GewichtReduzierung === 0)) return WeightProgress.Same;
+		if ((aSessUebung.GewichtSteigerung === 0) && (aSessUebung.GewichtReduzierung === 0)) return WeightProgress.Same;
 
-		let mSessionListe: Array<Session> = [];
+		let mUebungsliste: Array<Uebung> = [];
 		
-			// Die Sessions nur laden, wenn die Anzahl der Fehlversuche größer 0 und abgeschlossen ist
+		// Die Übungen nur laden, wenn die Anzahl der Fehlversuche größer 0 und abgeschlossen ist
 		if (   mFailCount > 0
-			&& aSession.Kategorie02 === SessionStatus.Fertig) {
-			// Warten, bis Sessions geladen sind.
+			&& aSession.Kategorie02 === SessionStatus.Fertig)
+		{
 			const mLadePara: LadePara = new LadePara();
 			mLadePara.WhereClause = {
-				FK_VorlageProgramm: aVorlageProgrammID,
-				Kategorie02: SessionStatus.Fertig
-			};
-			mLadePara.And = (sess: Session): boolean => {
-				return sess.Datum <= aDatum;
-			};
-			// mLadePara.Limit = mFailCount;
-			mLadePara.SortBy = "Datum";
-			mLadePara.OnSessionAfterLoadFn = (aSessions: Array<Session>) => {
-				return aSessions.reverse();
+				FK_Programm: aSession.FK_Programm,
+				FkUebung: aSessUebung.FkUebung,
+				FkProgress: aSessUebung.FkProgress,
+				ProgressGroup: aSessUebung.ProgressGroup,
+				ArbeitsSaetzeStatus: ArbeitsSaetzeStatus.AlleFertig
 			};
 
-			mSessionListe = await aDb.LadeProgrammSessions(mLadePara);
-				
-			// mSessionListe = await aDb.SessionTable
-			// 	// Suche nach dem gleichen Programm und nur fertige Sessions.
-			// 	.where({ FK_VorlageProgramm: aVorlageProgrammID, Kategorie02: SessionStatus.Fertig })
-			// 	.and((sess: Session) => sess.Datum <= aDatum)
-			// 	// aFailCount ist die Anzahl der Fehlversuche.
-			// 	// Daher nur soviele Sessions laden, wie die Anzahl der Fehlversuche ist.
-			// 	.limit(mFailCount)
-			// 	.sortBy("Datum")
-			// 	.then((aSessions: Array<Session>) => {
-			// 		return aSessions.reverse();
-			// 	});
+			// mLadePara.And = (mUebung: Uebung): boolean => {
+			// 	return (mUebung.ID > mUebung.LastFailedID);
+			// 		// return (mUebung.ID !== aSessUebung.ID)
+			// 		// && (mUebung.Datum < aSessUebung.Datum);
+			// };
+
+			mLadePara.OnUebungAfterLoadFn = (mUebungen: Array<Uebung>) => {
+				const mResult: Array<Uebung> = [];
+				let mMaxID = 0;
+				for (let index = 0; index < mUebungen.length; index++) {
+					const mPtrUebung = mUebungen[index];
+					if (mPtrUebung.LastFailedID > mMaxID)
+						mMaxID = mPtrUebung.LastFailedID
+				}
+
+				for (let index = 0; index < mUebungen.length; index++) {
+					const mPtrUebung = mUebungen[index];
+					if (mMaxID > 0 && mMaxID === mPtrUebung.ID)
+						break;
+						
+					mResult.push(mPtrUebung);
+				}
+				return mResult;
+			};
+
+
+			mLadePara.Limit = mFailCount + 1;
+			mLadePara.SortBy = "Datum";
+
+			// Warten, bis Übungen geladen sind.
+			mUebungsliste = await aDb.LadeSessionUebungen(aSession.Copy(true), mLadePara, false /* false => Descending */);
+			// mUebungsliste = await aDb.LadeSessionUebungen(aSession.Copy(true), mLadePara);
+			const x = 0;
 		} // if
 
-			// public async LadeProgrammSessions(aLadePara: LadePara): Promise<Array<Session>> {
-			// 	// SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02]",
-			// 	let mSessions: Array<Session> = [];
-			// 	await this.table(this.cSession)
-			// 		.where(aLadePara.WhereClause)
-			// 		.toArray()
-			// 		.then((aSessions: Array<Session>) => {
-			// 			mSessions = aSessions;
-			// 			if (aLadePara !== undefined) {
-			// 				if (aLadePara.OnSessionNoRecordFn !== undefined) mSessions = aLadePara.OnSessionNoRecordFn(aLadePara);
-		
-			// 				if (aLadePara.OnSessionAfterLoadFn !== undefined) mSessions = aLadePara.OnSessionAfterLoadFn(mSessions);
-			// 			}
-			// 		});
-			// 	return mSessions;
-			// }
 
-			if ((mProgress.ProgressSet === ProgressSet.First)
-				&& (Progress.StaticSessionLaeuft(aSession) === true)
-			)
-				mSessionListe.push(aSession);
-
-			// Wenn aFailCount === 0 ist, brauchen die Sessions nicht geprüft werden.
-			if (mFailCount === 0) {
-				// Wenn aFailCount === 0, gibt es kein Rückgabe WeightProgress.Same
-				if (   mProgress.ProgressSet === ProgressSet.First
-					&& (aSession.Kategorie02 === SessionStatus.Laueft || aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig)
-					&& aSatzIndex === 0)
-				{
-					// Der erste Satz der Übung ist maßgebend.
-					if (aSessUebung.SatzWDH(0) >= aSessUebung.SatzBisVorgabeWDH(0))
-						// Die vorgegebenen Wiederholungen konnten erreicht werden
-						return WeightProgress.Increase;
-					// Die vorgegebenen Wiederholungen konnten nicht erreicht werden
-					if (mProgress.ProgressTyp === ProgressTyp.RepRangeSet) {
-						// Prüfen, ob das untere WDH-Limit erreicht ist 
-						if (aSessUebung.SatzWDH(0) < aSessUebung.SatzVonVorgabeWDH(0))
-							return WeightProgress.Decrease;
-					}
+		// Wenn aFailCount === 0 ist, brauchen die Sessions nicht geprüft werden.
+		if (mFailCount === 0) {
+			// Wenn aFailCount === 0, gibt es kein Rückgabe WeightProgress.Same
+			if (   mProgress.ProgressSet === ProgressSet.First
+				&& (aSession.Kategorie02 === SessionStatus.Laueft || aSessUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig)
+				&& aSatzIndex === 0)
+			{
+				// Der erste Satz der Übung ist maßgebend.
+				if (aSessUebung.SatzWDH(0) >= aSessUebung.SatzBisVorgabeWDH(0))
+					// Die vorgegebenen Wiederholungen konnten erreicht werden
+					return WeightProgress.Increase;
+				// Die vorgegebenen Wiederholungen konnten nicht erreicht werden
+				if (mProgress.ProgressTyp === ProgressTyp.RepRangeSet) {
+					// Prüfen, ob das untere WDH-Limit erreicht ist 
+					if (aSessUebung.SatzWDH(0) < aSessUebung.SatzVonVorgabeWDH(0))
+						return WeightProgress.Decrease;
 				}
+			}
 
-				if (   aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
-					&& mProgress.ProgressSet === ProgressSet.Last
-					&& aSatzIndex === aSessUebung.ArbeitsSatzListe.length - 1)
-				{
-					// Der letzte Satz der Übung ist maßgebend.
-					if (aSessUebung.SatzWDH(aSessUebung.ArbeitsSatzListe.length - 1) >= aSessUebung.SatzBisVorgabeWDH(aSessUebung.ArbeitsSatzListe.length - 1))
-						// Die vorgegebenen Wiederholungen konnten erreicht werden
-						return WeightProgress.Increase;
-					// Die vorgegebenen Wiederholungen konnten nicht erreicht werden
-					if (mProgress.ProgressTyp === ProgressTyp.RepRangeSet) {
-						// Prüfen, ob das untere WDH-Limit erreicht ist 
-						if (aSessUebung.SatzWDH(aSessUebung.ArbeitsSatzListe.length - 1) < aSessUebung.SatzVonVorgabeWDH(aSessUebung.ArbeitsSatzListe.length - 1))
-							return WeightProgress.Decrease;
-					}
+			if (   aSessUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig
+				&& mProgress.ProgressSet === ProgressSet.Last
+				&& aSatzIndex === aSessUebung.ArbeitsSatzListe.length - 1)
+			{
+				// Der letzte Satz der Übung ist maßgebend.
+				if (aSessUebung.SatzWDH(aSessUebung.ArbeitsSatzListe.length - 1) >= aSessUebung.SatzBisVorgabeWDH(aSessUebung.ArbeitsSatzListe.length - 1))
+					// Die vorgegebenen Wiederholungen konnten erreicht werden
+					return WeightProgress.Increase;
+				// Die vorgegebenen Wiederholungen konnten nicht erreicht werden
+				if (mProgress.ProgressTyp === ProgressTyp.RepRangeSet) {
+					// Prüfen, ob das untere WDH-Limit erreicht ist 
+					if (aSessUebung.SatzWDH(aSessUebung.ArbeitsSatzListe.length - 1) < aSessUebung.SatzVonVorgabeWDH(aSessUebung.ArbeitsSatzListe.length - 1))
+						return WeightProgress.Decrease;
 				}
+			}
 
-				if (   aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
-					&& mProgress.ProgressSet === ProgressSet.All)
-				{
-					// Alle Sätze der Übung.
-					if (mProgress.EvalSaetze(aSessUebung, VorgabeWeightLimit.UpperLimit))
-						// Die vorgegebenen Wiederholungen konnten erreicht werden
-						return WeightProgress.Increase;
-					// Die vorgegebenen Wiederholungen konnten nicht erreicht werden
-					if (mProgress.ProgressTyp === ProgressTyp.RepRangeSet) {
-						// Prüfen, ob das untere WDH-Limit erreicht ist 
-						if (mProgress.EvalSaetze(aSessUebung, VorgabeWeightLimit.LowerLimit) === false)
-							return WeightProgress.Decrease;
-					}
+			if (   aSessUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig
+				&& mProgress.ProgressSet === ProgressSet.All)
+			{
+				// Alle Sätze der Übung.
+				if (mProgress.EvalSaetze(aSessUebung, VorgabeWeightLimit.UpperLimit))
+					// Die vorgegebenen Wiederholungen konnten erreicht werden
+					return WeightProgress.Increase;
+				// Die vorgegebenen Wiederholungen konnten nicht erreicht werden
+				if (mProgress.ProgressTyp === ProgressTyp.RepRangeSet) {
+					// Prüfen, ob das untere WDH-Limit erreicht ist 
+					if (mProgress.EvalSaetze(aSessUebung, VorgabeWeightLimit.LowerLimit) === false)
+						return WeightProgress.Decrease;
 				}
-				// Es konnte noch kein Ergebnis ermittelt werden.
-				// Da aber aFailCount === 0 ist, wird mit dem gleichen Gewicht weiter gearbeitet.
-				return WeightProgress.Same;
-			} // if
+			}
+			// Es konnte noch kein Ergebnis ermittelt werden.
+			// Da aber aFailCount === 0 ist, wird mit dem gleichen Gewicht weiter gearbeitet.
+			return WeightProgress.Same;
+		} // if
 
 			// Wenn die Anzahl der geladenen Sessions kleiner als aFailCount ist, brauchen die Sessions nicht geprüft werden.
 			// if (mSessionListe.length < mFailCount) {
 				// aFailCount ist größer 0
 		if (   mProgress.ProgressSet === ProgressSet.First
-			&& (aSession.Kategorie02 === SessionStatus.Laueft || aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig)
+			&& (aSession.Kategorie02 === SessionStatus.Laueft || aSessUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig)
 			&& aSatzIndex === 0) {
 			// Der erste Satz der Übung ist maßgebend.
 			// Nur der erste Satz muss erledigt sein.
@@ -294,7 +288,7 @@ export class Progress implements IProgress {
 				return WeightProgress.Increase;
 		}
 
-		if (   aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
+		if (   aSessUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig
 			&& mProgress.ProgressSet === ProgressSet.Last
 			&& aSatzIndex === aSessUebung.ArbeitsSatzListe.length - 1) {
 			// Der letzte Satz der Übung ist maßgebend.
@@ -304,7 +298,7 @@ export class Progress implements IProgress {
 				return WeightProgress.Increase;
 		}
 
-		if (   aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
+		if (   aSessUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig
 			&& mProgress.ProgressSet === ProgressSet.All)
 		{
 			// Alle Sätze der Übung.
@@ -313,121 +307,70 @@ export class Progress implements IProgress {
 				return WeightProgress.Increase;
 		}
 
-		if (mSessionListe.length < mFailCount) 
-				return WeightProgress.Same;
+		if ((mUebungsliste === undefined)|| (mUebungsliste.length < mFailCount)) 
+			return WeightProgress.Same;
 
-			mFailCount = 0;
+		mFailCount = 0;
 
 			// Es konnte noch kein Ergebnis ermittelt werden.
-			// Die Sessions müssen geprüft werden.
-		for (let index = 0; index < mSessionListe.length; index++) {
-			const mPrtFertigeSession = mSessionListe[index];
-
-			// Übungen aus den Sessions des aktuellen Programms laden.
-			// Die Übungen müssen der Übung aus dem Übergabe-Parameter entsprechen.
-			// Das heißt, FKUebung muss die gleiche sein, wie die der Übung aus dem Übergabe-Parameter.
-			// Die Progress ID der Übungen muss die gleiche sein, wie die der Übung aus dem Übergabe-Parameter.
-			// Die Progress-Gruppe der Übungen die gleiche sein, wie die der Übung aus dem Übergabe-Parameter. 
-			// Anhand der Übungsliste kann dann entschieden werden, ob das Gewicht für weitere Trainingseinheiten erhöht oder verringert wird.
-			const mLadePara: LadePara = new LadePara();
-			mLadePara.WhereClause =
-			{
-				FK_Programm: mPrtFertigeSession.FK_Programm,
-				FkUebung: aSessUebung.FkUebung,
-				FkProgress: aSessUebung.FkProgress,
-				ProgressGroup: aSessUebung.ProgressGroup
-			};
-            
-			// mLadePara.And = (mUebung: Uebung) => {
-			// 	// Alle Arbeits-Sätze der Übungen müssen fertig sein.
-			// 	return mUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig;
-			// };
-
-			// Warten, bis Übungen geladen sind
-			let mUebungsListe: Array<Uebung> = await aDb.LadeSessionUebungen(aSession, mLadePara);
-				
-			if (mUebungsListe === undefined)
-				mUebungsListe = [];
-				
-			if (index === mSessionListe.indexOf(aSession)) {
-				aSession.UebungsListe.forEach((u) => {
-					if (u.FkUebung === aSessUebung.FkUebung
-						&& u.FkProgress === aSessUebung.FkProgress
-						&& u.ProgressGroup === aSessUebung.ProgressGroup
-					)
-						mUebungsListe.push(u)
-				});
+			// Die Uebunden müssen geprüft werden.
+		for (let index = 0; index < mUebungsliste.length; index++) {
+			const mPtrSessUebung = mUebungsliste[index];
+			// Der erste Satz ist maßgebend.
+			if (   mProgress.ProgressSet === ProgressSet.First
+				&& (aSession.Kategorie02 === SessionStatus.Laueft || aSessUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig)
+				&& aSatzIndex === 0) {
+				// Der erste Satz der Übung ist maßgebend.
+				if (mPtrSessUebung.SatzWDH(0) >= mPtrSessUebung.SatzBisVorgabeWDH(0))
+					// Die vorgegebenen Wiederholungen konnten erreicht werden
+					return WeightProgress.Increase;
+				else {
+					// Wenn der Prozesstyp nicht Blockset ist, muss 
+					if ((mProgress.ProgressTyp === ProgressTyp.BlockSet) ||
+						// er RepRange sein. Daher das untere Limit prüfen.
+						(mPtrSessUebung.SatzWDH(0) < mPtrSessUebung.SatzVonVorgabeWDH(0)))
+						mFailCount++
+				}
 			}
 
-			if (mUebungsListe.length > 0) {
-				for (let index = 0; index < mUebungsListe.length; index++) {
-					const mSessUebung = mUebungsListe[index];
-					// Nicht die Uebung aus den Übergabe-Parametern mit sich selbst vergleichen
-					// if (
-					// 	mSessUebung.ID === aSessUebung.ID ||
-					// 	// Nur Uebungen mit gleichen Progress-Schemas vergleichen
-					// 	// aSessUebung.FkProgress !== mSessUebung.FkProgress
-					// )
-					// 	continue;
+			// Der letzte Satz ist maßgebend.
+			if (   aSessUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig
+				&& mProgress.ProgressSet === ProgressSet.Last
+				&& aSatzIndex === mPtrSessUebung.ArbeitsSatzListe.length - 1) {
+				// Der letzte Satz der Übung ist maßgebend.
+				if (mPtrSessUebung.SatzWDH(mPtrSessUebung.ArbeitsSatzListe.length - 1) >= mPtrSessUebung.SatzBisVorgabeWDH(mPtrSessUebung.ArbeitsSatzListe.length - 1))
+					// Die vorgegebenen Wiederholungen konnten erreicht werden
+					return WeightProgress.Increase;
+				else {
+					// Wenn der Prozesstyp nicht Blockset ist, muss 
+					if ((mProgress.ProgressTyp === ProgressTyp.BlockSet) ||
+						// er RepRange sein. Daher das untere Limit prüfen.
+						(mPtrSessUebung.SatzWDH(mPtrSessUebung.ArbeitsSatzListe.length - 1) < mPtrSessUebung.SatzVonVorgabeWDH(mPtrSessUebung.ArbeitsSatzListe.length - 1)))
+						mFailCount++
+				}
+			}
 
-					// Der erste Satz ist maßgebend.
-					if (   mProgress.ProgressSet === ProgressSet.First
-						&& (aSession.Kategorie02 === SessionStatus.Laueft || aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig)
-						&& aSatzIndex === 0) {
-						// Der erste Satz der Übung ist maßgebend.
-						if (mSessUebung.SatzWDH(0) >= mSessUebung.SatzBisVorgabeWDH(0))
-							// Die vorgegebenen Wiederholungen konnten erreicht werden
-							return WeightProgress.Increase;
-						else {
-							// Wenn der Prozesstyp nicht Blockset ist, muss 
-							if ((mProgress.ProgressTyp === ProgressTyp.BlockSet) ||
-								// er RepRange sein. Daher das untere Limit prüfen.
-								(mSessUebung.SatzWDH(0) < mSessUebung.SatzVonVorgabeWDH(0)))
-								mFailCount++
-						}
-					}
-
-					// Der letzte Satz ist maßgebend.
-					if (   aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
-						&& mProgress.ProgressSet === ProgressSet.Last
-						&& aSatzIndex === mSessUebung.ArbeitsSatzListe.length - 1) {
-						// Der letzte Satz der Übung ist maßgebend.
-						if (mSessUebung.SatzWDH(mSessUebung.ArbeitsSatzListe.length - 1) >= mSessUebung.SatzBisVorgabeWDH(mSessUebung.ArbeitsSatzListe.length - 1))
-							// Die vorgegebenen Wiederholungen konnten erreicht werden
-							return WeightProgress.Increase;
-						else {
-							// Wenn der Prozesstyp nicht Blockset ist, muss 
-							if ((mProgress.ProgressTyp === ProgressTyp.BlockSet) ||
-								// er RepRange sein. Daher das untere Limit prüfen.
-								(mSessUebung.SatzWDH(mSessUebung.ArbeitsSatzListe.length - 1) < mSessUebung.SatzVonVorgabeWDH(mSessUebung.ArbeitsSatzListe.length - 1)))
-								mFailCount++
-						}
-					}
-
-					// Alle Sätze prüfen
-					if (aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig) {
-						if (mProgress.ProgressSet === ProgressSet.All) {
-							// Alle Sätze der Übung.
-							if (this.EvalSaetze(mSessUebung, VorgabeWeightLimit.UpperLimit))
-								// Die vorgegebenen Wiederholungen konnten erreicht werden
-								return WeightProgress.Increase;
-							else {
-								// Wenn der Prozesstyp nicht Blockset ist, muss... 
-								if ((mProgress.ProgressTyp === ProgressTyp.BlockSet) ||
-									// ...er RepRange sein. Daher das untere Limit prüfen.
-									(this.EvalSaetze(mSessUebung, VorgabeWeightLimit.LowerLimit) === false))
-									mFailCount++
-							}//if
-						}//if
+			// Alle Sätze prüfen
+			if (aSessUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig) {
+				if (mProgress.ProgressSet === ProgressSet.All) {
+					// Alle Sätze der Übung.
+					if (this.EvalSaetze(mPtrSessUebung, VorgabeWeightLimit.UpperLimit))
+						// Die vorgegebenen Wiederholungen konnten erreicht werden
+						return WeightProgress.Increase;
+					else {
+						// Wenn der Prozesstyp nicht Blockset ist, muss... 
+						if ((mProgress.ProgressTyp === ProgressTyp.BlockSet) ||
+							// ...er RepRange sein. Daher das untere Limit prüfen.
+							(this.EvalSaetze(mPtrSessUebung, VorgabeWeightLimit.LowerLimit) === false))
+							mFailCount++
 					}//if
-				} // for
-
-				if (mFailCount >= aSessUebung.FailCount)
-					return WeightProgress.Decrease;
-				else
-					return WeightProgress.Same;
+				}//if
 			}//if
-		}
+		} // for
+
+		if (mFailCount >= aSessUebung.MaxFailCount)
+			return WeightProgress.Decrease;
+		else
 			return WeightProgress.Same;
 	}
 
@@ -618,6 +561,7 @@ export class Progress implements IProgress {
 							mProgressPara.Wp = mWp;
 						}
 					
+						mProgressPara.AusgangsUebung.WeightProgress = mProgressPara.Wp;
 						mProgressPara.SatzDone = mProgressParaMerker.SatzDone;
 						mProgressPara.SessionDone = mProgressParaMerker.SessionDone;
 						Progress.StaticProgrammSetNextWeight(mProgressPara);
@@ -793,12 +737,21 @@ export class Progress implements IProgress {
 						Progress.StaticSetWeight(mGewichtDiff, sz, aArithmetik);
 					}
 					else {
-						if (sz.GewichtDiff.length > 0) {
-							const mGewichtDiff: GewichtDiff = sz.GewichtDiff.find((gdiff) => { return Progress.StaticEqualSet(gdiff.FromSet, aAusgangsSatz); })
-							if (mGewichtDiff !== undefined)
-								Progress.StaticSetWeight(mGewichtDiff, sz, aArithmetik);
+						let mGewichtDiff: GewichtDiff;
+						if (sz.GewichtDiff.length > 0) 
+							mGewichtDiff = sz.GewichtDiff.find((gdiff) => { return Progress.StaticEqualSet(gdiff.FromSet, aAusgangsSatz); })
+						else
+						{
+							mGewichtDiff = new GewichtDiff();
+							mGewichtDiff.FromSet = aAusgangsSatz;
+							mGewichtDiff.Uebung = aUebung;
+							mGewichtDiff.Gewicht = aWeight;
 						}
-					}
+						if (mGewichtDiff !== undefined)
+						{
+							Progress.StaticSetWeight(mGewichtDiff, sz, aArithmetik);
+						}
+					} // if
 				}
 			});
 	}
@@ -1157,6 +1110,10 @@ export class Progress implements IProgress {
 								Arithmetik.Sub,
 								aProgressPara.AlleSaetze,
 								aProgressPara.AusgangsUebung.GewichtReduzierung);
+							// aProgressPara.AusgangsUebung.LetzterWdhVorgabeStatus = WdhVorgabeStatus.NichtGeschafft;
+							mPtrArbeitUebung.FailCount++;
+							aProgressPara.AusgangsUebung.LastFailedID = aProgressPara.AusgangsUebung.ID;
+							mPtrArbeitUebung.LastFailedID = aProgressPara.AusgangsUebung.ID;
 							break;
 					} // switch
 				}

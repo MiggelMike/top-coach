@@ -38,6 +38,10 @@ export enum ArbeitsSaetzeStatus {
     AlleFertig
   }
   
+export enum WdhVorgabeStatus {
+    NichtGeschafft,
+    Geschafft
+  }
 
 export interface IUebung {
     ID: number;
@@ -78,9 +82,10 @@ export interface IUebung {
     GewichtSteigerung: number;
     GewichtReduzierung: number;
     EquipmentTyp: string;
+    MaxFailCount: number;
     FailCount: number;
-    ArbeitsSaetzeStatus: ArbeitsSaetzeStatus;
     getArbeitsSaetzeStatus(): ArbeitsSaetzeStatus;
+    ArbeitsSaetzeStatus: ArbeitsSaetzeStatus;
     Vorlage: boolean;
     ListenIndex: number;
     AufwaermArbeitsSatzPause: number;
@@ -95,6 +100,10 @@ export interface IUebung {
     ProgressGroup: string;
     WeightProgress: WeightProgress;
     AltWeightProgress: WeightProgress;
+    Datum: Date;
+    // LetzterWdhVorgabeStatus: WdhVorgabeStatus;
+    LastFailedID: number;
+    FK_Programm: number;
 }
 
 export enum StandardUebungsName {
@@ -123,13 +132,15 @@ export enum StandardUebungsName {
 export class Uebung implements IUebung {
     public ID: number;
     // Bei Session-Uebungen ist FkUebung der Schluessel zur Stamm-Uebung
+    public FK_Programm: number = 0;
     public FkUebung: number = 0;
     public FkHantel: number = 0;
     public ListenIndex: number = 0;
     public EquipmentTyp: string = '';
     public Name: string = '';
     public Typ: UebungsTyp = UebungsTyp.Undefined;
-    public FailCount: number = 3;
+    public MaxFailCount: number = 3;
+    public FailCount: number = 0;
     public Kategorieen01: Array<UebungsKategorie01> = [];
     public Kategorie02: UebungsKategorie02 = UebungsKategorie02.Stamm;
     public SessionID: number = 0;
@@ -157,6 +168,9 @@ export class Uebung implements IUebung {
     public ArbeitsSatzPause2: number = 0;
     public AufwaermArbeitsSatzPause: number = 0;
     public NaechsteUebungPause: number = 0;
+    public Datum: Date;
+    // public LetzterWdhVorgabeStatus: WdhVorgabeStatus = WdhVorgabeStatus.Geschafft;
+    public LastFailedID: number = 0;
 
     public Vorlage: boolean = false;
     public FkProgress: number = -1;
@@ -213,29 +227,30 @@ export class Uebung implements IUebung {
         return '00:00:00';
     }    
 
+    public ArbeitsSaetzeStatus: ArbeitsSaetzeStatus = ArbeitsSaetzeStatus.KeinerVorhanden;
+
     public getArbeitsSaetzeStatus(): ArbeitsSaetzeStatus
     {
         if (this.ArbeitsSatzListe.length <= 0) {
             this.ArbeitsSaetzeStatus = ArbeitsSaetzeStatus.KeinerVorhanden;
             return ArbeitsSaetzeStatus.KeinerVorhanden;
-        }
+        } else {
+            let mAnzFertig: number = 0;
+            this.ArbeitsSatzListe.forEach((s) => {
+                if (s.Status === SatzStatus.Fertig)
+                    mAnzFertig++;
+            });
 
-        let mAnzFertig: number = 0;
-        this.ArbeitsSatzListe.forEach((s) => {
-            if (s.Status === SatzStatus.Fertig)
-                mAnzFertig++;
-        });
-
-        if (mAnzFertig >= this.ArbeitsSatzListe.length) {
-            this.ArbeitsSaetzeStatus = ArbeitsSaetzeStatus.AlleFertig;  
-            return ArbeitsSaetzeStatus.AlleFertig;
+            if (mAnzFertig >= this.ArbeitsSatzListe.length) {
+                this.ArbeitsSaetzeStatus = ArbeitsSaetzeStatus.AlleFertig;
+                return ArbeitsSaetzeStatus.AlleFertig;;
+            }
         }
 
         this.ArbeitsSaetzeStatus = ArbeitsSaetzeStatus.NichtAlleFertig;
         return ArbeitsSaetzeStatus.NichtAlleFertig;
     }
 
-    public ArbeitsSaetzeStatus: ArbeitsSaetzeStatus = ArbeitsSaetzeStatus.KeinerVorhanden;
 
     public getPauseText(aSatzTyp: string): string {
         return Zeitraum.FormatDauer(0);
@@ -328,7 +343,7 @@ export class Uebung implements IUebung {
     public Copy(): Uebung {
         const mTmpSatzListe: Array<Satz> = [];
         this.SatzListe.forEach((sz) => mTmpSatzListe.push(sz.Copy()));
-        const mUebung = cloneDeep(this);
+        const mUebung: Uebung = cloneDeep(this);
         mUebung.SatzListe = mTmpSatzListe;
         return mUebung;
 

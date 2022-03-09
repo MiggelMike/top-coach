@@ -1,12 +1,12 @@
 import { ITrainingsProgramm } from './../../../Business/TrainingsProgramm/TrainingsProgramm';
-import { ArbeitsSaetzeStatus } from './../../../Business/Uebung/Uebung';
+import { ArbeitsSaetzeStatus, WdhVorgabeStatus } from './../../../Business/Uebung/Uebung';
 import { UebungService } from "./../../services/uebung.service";
 import { SessionStatus } from "./../../../Business/SessionDB";
 import { ISession, Session } from "src/Business/Session/Session";
 import { SessionStatsOverlayComponent } from "./../../session-stats-overlay/session-stats-overlay.component";
 import { SessionOverlayServiceService, SessionOverlayConfig } from "./../../services/session-overlay-service.service";
 import { DialogeService } from "./../../services/dialoge.service";
-import { DexieSvcService } from "./../../services/dexie-svc.service";
+import { DexieSvcService, ProgrammExtraParaDB } from "./../../services/dexie-svc.service";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { DialogData } from "src/app/dialoge/hinweis/hinweis.component";
@@ -175,6 +175,11 @@ export class SessionFormComponent implements OnInit {
 			}
 		}
 
+		for (let index = 0; index < mSession.UebungsListe.length; index++) {
+			const mPtrUebung = mSession.UebungsListe[index];
+			mPtrUebung.ArbeitsSaetzeStatus = mPtrUebung.getArbeitsSaetzeStatus();
+		}
+
 		if ((aPara !== undefined) && (aPara.DoProgressFn !== undefined)) 
 			aPara.DoProgressFn(this.Session);
 		
@@ -272,11 +277,13 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	private async DoAfterDone(aSessionForm: SessionFormComponent) {
-		const mIndex = this.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
-		if (mIndex > -1) this.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
-		this.fDexieSvcService.AktuellesProgramm.NummeriereSessions();
-		await this.fDexieSvcService.ProgrammSpeichern(this.fDexieSvcService.AktuellesProgramm);
-		this.router.navigate([""]);
+		const mIndex = aSessionForm.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
+		if (mIndex > -1) aSessionForm.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
+		aSessionForm.fDexieSvcService.AktuellesProgramm.NummeriereSessions();
+		const mProgrammExtraParaDB: ProgrammExtraParaDB = new ProgrammExtraParaDB();
+		mProgrammExtraParaDB.SessionExtraParaDB.UebungSpeicherParaDB.HalteWdhVorgabeStatus = true;
+		aSessionForm.fDexieSvcService.ProgrammSpeichern(aSessionForm.fDexieSvcService.AktuellesProgramm, mProgrammExtraParaDB).then
+			(() => this.router.navigate([""]));
 	}
 
 	public async SetDone(aSessionFormComponent: SessionFormComponent): Promise<void> {
@@ -331,10 +338,17 @@ export class SessionFormComponent implements OnInit {
 								if(Progress.StaticProgressEffectsRunningSession(mPtrUebung.FkProgress, mProgressPara) === false)
 									await Progress.StaticDoProgress(mProgressPara);
 							}
-							
-							if (mUebungIndex >= aSessionForm.Session.UebungsListe.length - 1) {
-								this.DoAfterDone(aSessionFormComponent);
+
+							const mPtrUebungAusNeuerSession: Uebung = mNeueSession.UebungsListe.find((u) => u.ListenIndex === mPtrUebung.ListenIndex);
+							if (mPtrUebungAusNeuerSession !== undefined) {
+								mPtrUebungAusNeuerSession.LastFailedID = mPtrUebung.LastFailedID;
 							}
+
+							if (mUebungIndex >= aSessionForm.Session.UebungsListe.length - 1)
+							{
+								this.DoAfterDone(aSessionFormComponent);
+
+							}//if
 						}
 					}//for
 				} else this.DoAfterDone(aSessionFormComponent);
