@@ -445,11 +445,6 @@ export class Progress implements IProgress {
 			}
 		}
 		
-		// mSatzListe.forEach((sz) => {
-		// 	sz.GewichtDiff = mDiff;
-		// 	sz.AddToDoneWeight(mDiff);
-		// 	sz.SetPresetWeight(sz.GewichtAusgefuehrt);
-		// });
 
 		let mNextUndoneSet: Satz = mSatzListe.shift();
 		let mFirstSetChecked: boolean = false;
