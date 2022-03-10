@@ -1,5 +1,5 @@
 import { AnstehendeSessionsComponent } from './../../app/anstehende-sessions/anstehende-sessions.component';
-import { ParaDB } from './../../app/services/dexie-svc.service';
+import { ParaDB, MinDatum, SortOrder } from './../../app/services/dexie-svc.service';
 import { Gewicht } from './../Konfiguration/Gewicht';
 import { GewichtDiff } from './../Satz/Satz';
 import { AfterLoadFn, DexieSvcService } from 'src/app/services/dexie-svc.service';
@@ -177,6 +177,8 @@ export class Progress implements IProgress {
 			&& aSession.Kategorie02 === SessionStatus.Fertig)
 		{
 			const mLadePara: ParaDB = new ParaDB();
+			mLadePara.SortOrder = SortOrder.descending;
+
 			mLadePara.WhereClause = {
 				FK_Programm: aSession.FK_Programm,
 				FkUebung: aSessUebung.FkUebung,
@@ -191,21 +193,51 @@ export class Progress implements IProgress {
 
 			mLadePara.OnUebungAfterLoadFn = (mUebungen: Array<Uebung>) => {
 				const mResult: Array<Uebung> = [];
-				let mMaxID = 0;
+ 
+				if (mUebungen.find((u) => u.ID === aSessUebung.ID) === undefined)
+					mUebungen.unshift(aSessUebung);
+				
+				let mMaxFailedDate = MinDatum;
 				for (let index = 0; index < mUebungen.length; index++) {
 					const mPtrUebung = mUebungen[index];
-					if (mPtrUebung.LastFailedID > mMaxID)
-						mMaxID = mPtrUebung.LastFailedID
+					if (mPtrUebung.LastFailedDate  > mMaxFailedDate)
+						mMaxFailedDate = mPtrUebung.LastFailedDate
+					
+					if (mPtrUebung.LastFailedDate  > mMaxFailedDate)
+						mMaxFailedDate = mPtrUebung.LastFailedDate
+					
 				}
 
 				for (let index = 0; index < mUebungen.length; index++) {
 					const mPtrUebung = mUebungen[index];
-					if (mMaxID > 0 && mMaxID === mPtrUebung.ID)
+					if (mMaxFailedDate === mPtrUebung.LastFailedDate)
 						break;
 						
 					mResult.push(mPtrUebung);
 				}
 				return mResult;
+
+				// const mResult: Array<Uebung> = [];
+				// let mMaxID = 0;
+				// for (let index = 0; index < mUebungen.length; index++) {
+				// 	const mPtrUebung = mUebungen[index];
+				// 	if (mPtrUebung.LastFailedID > mMaxID)
+				// 		mMaxID = mPtrUebung.LastFailedID
+					
+				// 	if (mPtrUebung.LastFailedDate !== undefined mPtrUebung.LastFailedDate  > mMaxID)
+				// 		mMaxID = mPtrUebung.LastFailedID
+					
+				// }
+
+				// for (let index = 0; index < mUebungen.length; index++) {
+				// 	const mPtrUebung = mUebungen[index];
+				// 	if (mMaxID > 0 && mMaxID === mPtrUebung.ID)
+				// 		break;
+						
+				// 	mResult.push(mPtrUebung);
+				// }
+				// return mResult;
+
 			};
 
 
@@ -213,7 +245,7 @@ export class Progress implements IProgress {
 			mLadePara.SortBy = "Datum";
 
 			// Warten, bis Übungen geladen sind.
-			mUebungsliste = await aDb.LadeSessionUebungen(aSession.Copy(true), mLadePara, false /* false => Descending */);
+			mUebungsliste = await aDb.LadeSessionUebungen(aSession.Copy(true), mLadePara);
 			const x = 0;
 		} // if
 
@@ -1029,8 +1061,10 @@ export class Progress implements IProgress {
 								aProgressPara.AusgangsUebung.GewichtReduzierung);
 							
 							mPtrArbeitUebung.FailCount++;
-							aProgressPara.AusgangsUebung.LastFailedID = aProgressPara.AusgangsUebung.ID;							
-							mPtrArbeitUebung.LastFailedID = aProgressPara.AusgangsUebung.ID;
+							// aProgressPara.AusgangsUebung.LastFailedID = aProgressPara.AusgangsUebung.ID;							
+							// mPtrArbeitUebung.LastFailedID = aProgressPara.AusgangsUebung.ID;
+							aProgressPara.AusgangsUebung.LastFailedDate = aProgressPara.AusgangsUebung.Datum;							
+							mPtrArbeitUebung.LastFailedDate = aProgressPara.AusgangsUebung.Datum;
 							break;
 					} // switch
 				}

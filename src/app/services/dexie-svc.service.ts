@@ -18,6 +18,14 @@ import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
 var cloneDeep = require('lodash.clonedeep');
 
+export const MinDatum = new Date(-8640000000000000);
+export const MaxDatum = new Date(8640000000000000);
+
+export enum SortOrder {
+	ascending,
+	descending
+}
+
 export enum ErstellStatus {
     VomAnwenderErstellt,
     AutomatischErstellt,
@@ -83,6 +91,7 @@ export class ParaDB {
 	Then?: ThenFn; 
 	Limit?: number = 10000000;
 	SortBy?: string = '';
+	SortOrder?: SortOrder = SortOrder.ascending;
     fProgrammTyp?: ProgrammTyp;
     fProgrammKategorie?: ProgrammKategorie; 
     OnProgrammBeforeLoadFn?: BeforeLoadFn; 
@@ -905,7 +914,7 @@ export class DexieSvcService extends Dexie {
 		// });
 	}
 
-	public async LadeSessionUebungen(aSession: ISession, aLadePara: ParaDB, aAscending: boolean = true): Promise<Array<Uebung>> {
+	public async LadeSessionUebungen(aSession: ISession, aLadePara: ParaDB): Promise<Array<Uebung>> {
 		if (aLadePara !== undefined && aLadePara.OnUebungBeforeLoadFn !== undefined)
 			aLadePara.OnUebungBeforeLoadFn(aLadePara);
 
@@ -917,7 +926,7 @@ export class DexieSvcService extends Dexie {
 			.sortBy(aLadePara === undefined || aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
 			.then( async (aUebungen: Array<Uebung>) => {
 				if (aUebungen.length > 0) {
-					if ((aAscending !== undefined) && (aAscending === true))
+					if ((aLadePara !== undefined) && (aLadePara.SortOrder !== undefined) &&(aLadePara.SortOrder === SortOrder.ascending))
 						// Die Abfrage wird standardmäßig absteigend ausgeführt.
 						// Falls also aufsteigend gewünscht wird, muss die Ergebnisliste umgekehrt werden.
 						aSession.UebungsListe = aUebungen.reverse();

@@ -1,3 +1,4 @@
+import { MinDatum } from './../../app/services/dexie-svc.service';
 import { Progress, ProgressGroup, WeightProgress } from 'src/Business/Progress/Progress';
 import { Zeitraum } from './../Dauer';
 import { Equipment } from './../Equipment/Equipment';
@@ -102,7 +103,8 @@ export interface IUebung {
     AltWeightProgress: WeightProgress;
     Datum: Date;
     // LetzterWdhVorgabeStatus: WdhVorgabeStatus;
-    LastFailedID: number;
+    // LastFailedID: number;
+    LastFailedDate: Date;
     FK_Programm: number;
 }
 
@@ -169,8 +171,8 @@ export class Uebung implements IUebung {
     public AufwaermArbeitsSatzPause: number = 0;
     public NaechsteUebungPause: number = 0;
     public Datum: Date;
-    // public LetzterWdhVorgabeStatus: WdhVorgabeStatus = WdhVorgabeStatus.Geschafft;
-    public LastFailedID: number = 0;
+    // public LastFailedID: number = 0;
+    public LastFailedDate: Date = MinDatum;
 
     public Vorlage: boolean = false;
     public FkProgress: number = -1;

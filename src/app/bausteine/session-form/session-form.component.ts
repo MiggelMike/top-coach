@@ -6,7 +6,7 @@ import { ISession, Session } from "src/Business/Session/Session";
 import { SessionStatsOverlayComponent } from "./../../session-stats-overlay/session-stats-overlay.component";
 import { SessionOverlayServiceService, SessionOverlayConfig } from "./../../services/session-overlay-service.service";
 import { DialogeService } from "./../../services/dialoge.service";
-import { DexieSvcService, ProgrammParaDB } from "./../../services/dexie-svc.service";
+import { DexieSvcService, MinDatum, ProgrammParaDB } from "./../../services/dexie-svc.service";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { DialogData } from "src/app/dialoge/hinweis/hinweis.component";
@@ -299,6 +299,8 @@ export class SessionFormComponent implements OnInit {
 					const mNeueSession: Session = aSessionForm.Session.Copy(true);
 					mNeueSession.init();
 					this.fDexieSvcService.InitSessionSaetze(aSessionForm.Session, mNeueSession as Session);
+					if(mNeueSession.UebungsListe !== undefined)
+						mNeueSession.UebungsListe.forEach((u) => u.LastFailedDate = MinDatum);
 
 					mNeueSession.FK_Programm = aSessionForm.Session.FK_Programm;
 					mNeueSession.FK_VorlageProgramm = aSessionForm.Session.FK_VorlageProgramm;
@@ -340,7 +342,8 @@ export class SessionFormComponent implements OnInit {
 
 							const mPtrUebungAusNeuerSession: Uebung = mNeueSession.UebungsListe.find((u) => u.ListenIndex === mPtrUebung.ListenIndex);
 							if (mPtrUebungAusNeuerSession !== undefined) {
-								mPtrUebungAusNeuerSession.LastFailedID = mPtrUebung.LastFailedID;
+								// mPtrUebungAusNeuerSession.LastFailedID = mPtrUebung.LastFailedID;
+								// mPtrUebungAusNeuerSession.LastFailedDate = mPtrUebung.LastFailedDate;
 							}
 
 							if (mUebungIndex >= aSessionForm.Session.UebungsListe.length - 1)
