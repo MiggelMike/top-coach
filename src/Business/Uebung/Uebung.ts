@@ -102,8 +102,6 @@ export interface IUebung {
     WeightProgress: WeightProgress;
     AltWeightProgress: WeightProgress;
     Datum: Date;
-    // LetzterWdhVorgabeStatus: WdhVorgabeStatus;
-    // LastFailedID: number;
     ReduceDate: Date;
     FK_Programm: number;
 }
@@ -171,7 +169,6 @@ export class Uebung implements IUebung {
     public AufwaermArbeitsSatzPause: number = 0;
     public NaechsteUebungPause: number = 0;
     public Datum: Date;
-    // public LastFailedID: number = 0;
     public ReduceDate: Date = MinDatum;
 
     public Vorlage: boolean = false;

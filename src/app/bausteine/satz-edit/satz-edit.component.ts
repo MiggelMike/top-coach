@@ -140,7 +140,7 @@ export class SatzEditComponent implements OnInit {
         this.plateCalcComponent = this.fPlateCalcSvcService.open(this.plateCalcOverlayConfig);
     }
 
-    onClickSatzFertig(aSatz: ISatz, aChecked: boolean) {
+    async onClickSatzFertig(aSatz: ISatz, aChecked: boolean) {
         if (this.fStoppUhrService.StoppuhrComponent) {
             this.fStoppUhrService.StoppuhrComponent.close();
             this.StoppuhrComponent = undefined;
@@ -153,7 +153,7 @@ export class SatzEditComponent implements OnInit {
         }
 
         const mProgressPara: ProgressPara = new ProgressPara();
-        mProgressPara.AusgangsSatz = aSatz as Satz;
+        mProgressPara.AusgangsSatz = aSatz.Copy();
         mProgressPara.AusgangsSession = this.sess;
         mProgressPara.AusgangsUebung = this.sessUebung;
         mProgressPara.Programm = this.programm;
@@ -163,12 +163,14 @@ export class SatzEditComponent implements OnInit {
         mProgressPara.ProgressListe = this.fDbModule.ProgressListe;
         // Routine zum Starten der Stoppuhr.
         mProgressPara.NextProgressFn = (aNextProgress: NextProgress) => {
-            this.DoStoppUhr(aNextProgress.Satz.GewichtAusgefuehrt,
+            this.DoStoppUhr(Number(aNextProgress.Satz.GewichtAusgefuehrt),
                 `"${aNextProgress.Uebung.Name}" - set #${(aNextProgress.Satz.SatzListIndex + 1).toString()} - weight: ${(aNextProgress.Satz.fGewichtVorgabe)}`
             );
 
         } 
-        Progress.StaticDoProgress(mProgressPara);
+        Progress.StaticDoProgress(mProgressPara).then((para) =>
+            aSatz = para.AusgangsSatz
+        );
     }
         
     
@@ -178,7 +180,7 @@ export class SatzEditComponent implements OnInit {
                 satz: this.satz as Satz,
                 uebung: this.sessUebung,
                 satznr: this.rowNum + 1,
-                nextTimeWeight: aNextTimeWeight,
+                nextTimeWeight: Number(aNextTimeWeight),
                 headerText: aHeaderText,
             } as StoppUhrOverlayConfig;
     
