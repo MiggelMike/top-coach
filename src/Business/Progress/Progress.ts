@@ -210,10 +210,10 @@ export class Progress implements IProgress {
 
 				for (let index = 0; index < mUebungen.length; index++) {
 					const mPtrUebung = mUebungen[index];
+					mResult.push(mPtrUebung);
 					if (mMaxFailedDate === mPtrUebung.LastFailedDate)
 						break;
 						
-					mResult.push(mPtrUebung);
 				}
 				return mResult;
 
@@ -241,7 +241,7 @@ export class Progress implements IProgress {
 			};
 
 
-			mLadePara.Limit = mFailCount + 1;
+			mLadePara.Limit = mFailCount;
 			mLadePara.SortBy = "Datum";
 
 			// Warten, bis Übungen geladen sind.
@@ -1063,8 +1063,8 @@ export class Progress implements IProgress {
 							mPtrArbeitUebung.FailCount++;
 							// aProgressPara.AusgangsUebung.LastFailedID = aProgressPara.AusgangsUebung.ID;							
 							// mPtrArbeitUebung.LastFailedID = aProgressPara.AusgangsUebung.ID;
-							aProgressPara.AusgangsUebung.LastFailedDate = aProgressPara.AusgangsUebung.Datum;							
-							mPtrArbeitUebung.LastFailedDate = aProgressPara.AusgangsUebung.Datum;
+							aProgressPara.AusgangsUebung.LastFailedDate = new Date();
+							mPtrArbeitUebung.LastFailedDate = aProgressPara.AusgangsUebung.LastFailedDate;
 							break;
 					} // switch
 				}

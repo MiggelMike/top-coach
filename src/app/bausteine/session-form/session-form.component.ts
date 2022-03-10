@@ -277,12 +277,15 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	private async DoAfterDone(aSessionForm: SessionFormComponent) {
-		// const mIndex = aSessionForm.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
-		// if (mIndex > -1) aSessionForm.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
-		aSessionForm.Session.SetSessionFertig();
+		const mIndex = aSessionForm.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
+		if (mIndex > -1) aSessionForm.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
 		aSessionForm.fDexieSvcService.AktuellesProgramm.NummeriereSessions();
-		await aSessionForm.fDexieSvcService.ProgrammSpeichern(aSessionForm.fDexieSvcService.AktuellesProgramm)
-			.then(() => this.router.navigate([""]));
+		await aSessionForm.fDexieSvcService.ProgrammSpeichern(aSessionForm.fDexieSvcService.AktuellesProgramm);
+		this.router.navigate([""]);
+
+
+		// await aSessionForm.fDexieSvcService.ProgrammSpeichern(aSessionForm.fDexieSvcService.AktuellesProgramm)
+		// 	.then(() => this.router.navigate([""]));
 	}
 
 	public async SetDone(aSessionFormComponent: SessionFormComponent): Promise<void> {
