@@ -141,20 +141,10 @@ export class Progress implements IProgress {
 		return true;
 	}
 
-	// public async WaitDetermineNextProgress(
-	// 	aDb: DexieSvcService,
-	// 	aDatum: Date,
-	// 	aVorlageProgrammID: number,
-	// 	aSatzIndex: number,
-	// 	aSessUebung: Uebung
-	// ): Promise<WeightProgress> {
-	// 	return await this.DetermineNextProgress(
-	// 		aDb,
-	// 		aDatum,
-	// 		aVorlageProgrammID,
-	// 		aSatzIndex,
-	// 		aSessUebung);
-	// }
+	private SetReduceDate(aUebung: Uebung, aDatum: Date, aDb: DexieSvcService) {
+		aUebung.ReduceDate = aDatum;
+		aDb.UebungSpeichern(aUebung);
+	}
 
 	public async DetermineNextProgress(
 		aDb: DexieSvcService,
@@ -166,7 +156,8 @@ export class Progress implements IProgress {
 	): Promise<WeightProgress> {
 		let mFailCount = (aSessUebung.MaxFailCount < 0) ? 0 : aSessUebung.MaxFailCount;
 		const mProgress: Progress = this;
-		
+		let mReduceUebung: Uebung = aSessUebung;
+			
 		// return await aDb.transaction("r", [aDb.cSession, aDb.cUebung], async () => {
 		if ((aSessUebung.GewichtSteigerung === 0) && (aSessUebung.GewichtReduzierung === 0)) return WeightProgress.Same;
 
@@ -200,26 +191,27 @@ export class Progress implements IProgress {
 				let mMaxFailedDate = MinDatum;
 				for (let index = 0; index < mUebungen.length; index++) {
 					const mPtrUebung = mUebungen[index];
-					if (mPtrUebung.LastFailedDate  > mMaxFailedDate)
-						mMaxFailedDate = mPtrUebung.LastFailedDate
+					if (mPtrUebung.ReduceDate  > mMaxFailedDate)
+						mMaxFailedDate = mPtrUebung.ReduceDate
 					
-					if (mPtrUebung.LastFailedDate  > mMaxFailedDate)
-						mMaxFailedDate = mPtrUebung.LastFailedDate
+					if (mPtrUebung.ReduceDate  > mMaxFailedDate)
+						mMaxFailedDate = mPtrUebung.ReduceDate
 					
 				}
 
 				for (let index = 0; index < mUebungen.length; index++) {
 					const mPtrUebung = mUebungen[index];
-					mResult.push(mPtrUebung);
-					if (mMaxFailedDate === mPtrUebung.LastFailedDate)
+					
+					if (mMaxFailedDate === mPtrUebung.ReduceDate)
 						break;
-						
+					
+					mResult.push(mPtrUebung);
 				}
 				return mResult;
 			};
 
 
-			mLadePara.Limit = mFailCount;
+			mLadePara.Limit = mFailCount - 1;
 			mLadePara.SortBy = "Datum";
 
 			// Warten, bis Übungen geladen sind.
@@ -242,8 +234,10 @@ export class Progress implements IProgress {
 				// Die vorgegebenen Wiederholungen konnten nicht erreicht werden
 				if (mProgress.ProgressTyp === ProgressTyp.RepRangeSet) {
 					// Prüfen, ob das untere WDH-Limit erreicht ist 
-					if (aSessUebung.SatzWDH(0) < aSessUebung.SatzVonVorgabeWDH(0))
+					if (aSessUebung.SatzWDH(0) < aSessUebung.SatzVonVorgabeWDH(0)) {
+						this.SetReduceDate(mReduceUebung, new Date(), aDb);
 						return WeightProgress.Decrease;
+					}
 				}
 			}
 
@@ -258,8 +252,10 @@ export class Progress implements IProgress {
 				// Die vorgegebenen Wiederholungen konnten nicht erreicht werden
 				if (mProgress.ProgressTyp === ProgressTyp.RepRangeSet) {
 					// Prüfen, ob das untere WDH-Limit erreicht ist 
-					if (aSessUebung.SatzWDH(aSessUebung.ArbeitsSatzListe.length - 1) < aSessUebung.SatzVonVorgabeWDH(aSessUebung.ArbeitsSatzListe.length - 1))
+					if (aSessUebung.SatzWDH(aSessUebung.ArbeitsSatzListe.length - 1) < aSessUebung.SatzVonVorgabeWDH(aSessUebung.ArbeitsSatzListe.length - 1)) {
+						this.SetReduceDate(mReduceUebung, new Date(), aDb);
 						return WeightProgress.Decrease;
+					}
 				}
 			}
 
@@ -273,8 +269,10 @@ export class Progress implements IProgress {
 				// Die vorgegebenen Wiederholungen konnten nicht erreicht werden
 				if (mProgress.ProgressTyp === ProgressTyp.RepRangeSet) {
 					// Prüfen, ob das untere WDH-Limit erreicht ist 
-					if (mProgress.EvalSaetze(aSessUebung, VorgabeWeightLimit.LowerLimit) === false)
+					if (mProgress.EvalSaetze(aSessUebung, VorgabeWeightLimit.LowerLimit) === false) {
+						this.SetReduceDate(mReduceUebung, new Date(), aDb);
 						return WeightProgress.Decrease;
+					}
 				}
 			}
 			// Es konnte noch kein Ergebnis ermittelt werden.
@@ -372,8 +370,10 @@ export class Progress implements IProgress {
 			}//if
 		} // for
 
-		if (mFailCount >= aSessUebung.MaxFailCount)
+		if (mFailCount >= aSessUebung.MaxFailCount) {
+			this.SetReduceDate(mReduceUebung, new Date(), aDb);
 			return WeightProgress.Decrease;
+		}
 		else
 			return WeightProgress.Same;
 	}
@@ -1038,8 +1038,8 @@ export class Progress implements IProgress {
 							mPtrArbeitUebung.FailCount++;
 							// aProgressPara.AusgangsUebung.LastFailedID = aProgressPara.AusgangsUebung.ID;							
 							// mPtrArbeitUebung.LastFailedID = aProgressPara.AusgangsUebung.ID;
-							aProgressPara.AusgangsUebung.LastFailedDate = new Date();
-							mPtrArbeitUebung.LastFailedDate = aProgressPara.AusgangsUebung.LastFailedDate;
+							// aProgressPara.AusgangsUebung.ReduceDate = new Date();
+							// mPtrArbeitUebung.ReduceDate = aProgressPara.AusgangsUebung.ReduceDate;
 							break;
 					} // switch
 				}

@@ -303,7 +303,7 @@ export class SessionFormComponent implements OnInit {
 					mNeueSession.init();
 					this.fDexieSvcService.InitSessionSaetze(aSessionForm.Session, mNeueSession as Session);
 					if(mNeueSession.UebungsListe !== undefined)
-						mNeueSession.UebungsListe.forEach((u) => u.LastFailedDate = MinDatum);
+						mNeueSession.UebungsListe.forEach((u) => u.ReduceDate = MinDatum);
 
 					mNeueSession.FK_Programm = aSessionForm.Session.FK_Programm;
 					mNeueSession.FK_VorlageProgramm = aSessionForm.Session.FK_VorlageProgramm;
@@ -343,16 +343,9 @@ export class SessionFormComponent implements OnInit {
 									await Progress.StaticDoProgress(mProgressPara);
 							}
 
-							const mPtrUebungAusNeuerSession: Uebung = mNeueSession.UebungsListe.find((u) => u.ListenIndex === mPtrUebung.ListenIndex);
-							if (mPtrUebungAusNeuerSession !== undefined) {
-								// mPtrUebungAusNeuerSession.LastFailedID = mPtrUebung.LastFailedID;
-								// mPtrUebungAusNeuerSession.LastFailedDate = mPtrUebung.LastFailedDate;
-							}
-
 							if (mUebungIndex >= aSessionForm.Session.UebungsListe.length - 1)
 							{
 								this.DoAfterDone(aSessionFormComponent);
-
 							}//if
 						}
 					}//for
