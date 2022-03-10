@@ -216,28 +216,6 @@ export class Progress implements IProgress {
 						
 				}
 				return mResult;
-
-				// const mResult: Array<Uebung> = [];
-				// let mMaxID = 0;
-				// for (let index = 0; index < mUebungen.length; index++) {
-				// 	const mPtrUebung = mUebungen[index];
-				// 	if (mPtrUebung.LastFailedID > mMaxID)
-				// 		mMaxID = mPtrUebung.LastFailedID
-					
-				// 	if (mPtrUebung.LastFailedDate !== undefined mPtrUebung.LastFailedDate  > mMaxID)
-				// 		mMaxID = mPtrUebung.LastFailedID
-					
-				// }
-
-				// for (let index = 0; index < mUebungen.length; index++) {
-				// 	const mPtrUebung = mUebungen[index];
-				// 	if (mMaxID > 0 && mMaxID === mPtrUebung.ID)
-				// 		break;
-						
-				// 	mResult.push(mPtrUebung);
-				// }
-				// return mResult;
-
 			};
 
 
@@ -304,9 +282,6 @@ export class Progress implements IProgress {
 			return WeightProgress.Same;
 		} // if
 
-			// Wenn die Anzahl der geladenen Sessions kleiner als aFailCount ist, brauchen die Sessions nicht geprüft werden.
-			// if (mSessionListe.length < mFailCount) {
-				// aFailCount ist größer 0
 		if (   mProgress.ProgressSet === ProgressSet.First
 			&& (aSession.Kategorie02 === SessionStatus.Laueft || aSessUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig)
 			&& aSatzIndex === 0) {
