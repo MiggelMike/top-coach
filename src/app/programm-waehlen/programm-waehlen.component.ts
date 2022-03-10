@@ -1,4 +1,4 @@
-import { DexieSvcService, LadePara } from './../services/dexie-svc.service';
+import { DexieSvcService, ParaDB, ProgrammParaDB } from './../services/dexie-svc.service';
 import { ITrainingsProgramm, ProgrammKategorie, ProgrammTyp, TrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Observable, of } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
@@ -25,26 +25,16 @@ export class ProgrammWaehlenComponent implements OnInit {
 
     public LadeTrainingsProgramme(): void {
         this.ProgrammListe = [];
+       
         this.ProgrammListeObserver.subscribe(
-            () => (this.fDbModule.LadeProgramme(
-                {
-                    fProgrammKategorie: ProgrammKategorie.Vorlage,
-                    WhereClause: {ProgrammKategorie : ProgrammKategorie.Vorlage.toString() },
-                    OnProgrammAfterLoadFn: (mProgramme: TrainingsProgramm[]) => {
-                        this.ProgrammListe = mProgramme;
-                    }, // OnProgrammAfterLoadFn
-                } as LadePara)
-            )
-            // () => {this.fDbModule.LadeProgramme(ProgrammKategorie.Vorlage,
-            //     (mProgramme) => {
-            //         // GZCLP ?
-            //         if (this.fDbModule.FindVorlageProgramm(mProgramme, ProgrammTyp.Gzclp) === false)
-            //             mProgramme.push(this.ErzeugeVorlageProgramm(ProgrammTyp.Gzclp) as TrainingsProgramm);
-                    
-            //         aLadeProgrammeFn(mProgramme);
-            //     }
-            // );
-    
+            () => {
+                const mProgrammParaDB: ProgrammParaDB = new ProgrammParaDB();
+                mProgrammParaDB.WhereClause = { ProgrammKategorie: ProgrammKategorie.Vorlage.toString() };
+                mProgrammParaDB.OnProgrammAfterLoadFn = (mProgramme: TrainingsProgramm[]) => {
+                    this.ProgrammListe = mProgramme;
+                }, // OnProgrammAfterLoadFn
+                this.fDbModule.LadeProgramme(mProgrammParaDB);
+            }
         );
     }
 

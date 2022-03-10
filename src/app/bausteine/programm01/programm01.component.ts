@@ -1,4 +1,4 @@
-import { DexieSvcService, LadePara } from './../../services/dexie-svc.service';
+import { DexieSvcService, ParaDB } from './../../services/dexie-svc.service';
 import { GlobalService } from "./../../services/global.service";
 import { Component, OnInit, Input } from "@angular/core";
 import { TrainingsProgramm, ITrainingsProgramm, ProgrammKategorie, ProgrammTyp } from "../../../Business/TrainingsProgramm/TrainingsProgramm";

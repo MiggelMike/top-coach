@@ -6,7 +6,7 @@ import { ISession, Session } from "src/Business/Session/Session";
 import { SessionStatsOverlayComponent } from "./../../session-stats-overlay/session-stats-overlay.component";
 import { SessionOverlayServiceService, SessionOverlayConfig } from "./../../services/session-overlay-service.service";
 import { DialogeService } from "./../../services/dialoge.service";
-import { DexieSvcService, ProgrammExtraParaDB } from "./../../services/dexie-svc.service";
+import { DexieSvcService, ProgrammParaDB } from "./../../services/dexie-svc.service";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { DialogData } from "src/app/dialoge/hinweis/hinweis.component";
@@ -126,12 +126,12 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	leave() {
-		this.fDexieSvcService.LadeAktuellesProgramm(
-			() => {
+		// this.fDexieSvcService.LadeAktuellesProgramm(
+		// 	() => {
 				this.location.back();
-			}
+		// 	}
 			
-		 );
+		//  );
 		
 	}
 
@@ -277,13 +277,12 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	private async DoAfterDone(aSessionForm: SessionFormComponent) {
-		const mIndex = aSessionForm.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
-		if (mIndex > -1) aSessionForm.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
+		// const mIndex = aSessionForm.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
+		// if (mIndex > -1) aSessionForm.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
+		aSessionForm.Session.SetSessionFertig();
 		aSessionForm.fDexieSvcService.AktuellesProgramm.NummeriereSessions();
-		const mProgrammExtraParaDB: ProgrammExtraParaDB = new ProgrammExtraParaDB();
-		mProgrammExtraParaDB.SessionExtraParaDB.UebungSpeicherParaDB.HalteWdhVorgabeStatus = true;
-		aSessionForm.fDexieSvcService.ProgrammSpeichern(aSessionForm.fDexieSvcService.AktuellesProgramm, mProgrammExtraParaDB).then
-			(() => this.router.navigate([""]));
+		await aSessionForm.fDexieSvcService.ProgrammSpeichern(aSessionForm.fDexieSvcService.AktuellesProgramm)
+			.then(() => this.router.navigate([""]));
 	}
 
 	public async SetDone(aSessionFormComponent: SessionFormComponent): Promise<void> {
