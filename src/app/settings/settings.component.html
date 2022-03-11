@@ -10,4 +10,21 @@
     <p><a  mat-button (click)="NavBarbells()">Barbells</a></p>
     <p><a  mat-button (click)="NavWeightIncrement()">Progression schemas</a></p>
     <p><a  mat-button (click)="NavBodyweight()">Bodyweight</a></p>
+
+    <!-- <div style="border-style:groove; border: 3px; border-color: blue; background-color: beige;"  fxLayoutAlign="center" > -->
+    <div class="center-item WeightUnit" fxLayout="column" fxFlex="80">
+        <div fxLayout="row wrap" fxLayoutAlign="center center">
+            <mat-label>Weight unit</mat-label>
+        </div>
+
+        <div fxLayout="row wrap" fxLayoutAlign="center center">
+                
+            <div class="center-item" layout-align="center center" fxFlex="75px">
+                <mat-checkbox [(ngModel)]="KG">KG</mat-checkbox>
+            </div>
+            <div class="center-item" layout-align="center center" fxFlex="75px">
+                <mat-checkbox [(ngModel)]="LBS">LBS</mat-checkbox>
+            </div>
+        </div>    
+    </div>
 </div>

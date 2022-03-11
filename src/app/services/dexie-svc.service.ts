@@ -1187,10 +1187,11 @@ export class DexieSvcService extends Dexie {
 		this.LadeProgramme(this.ProgramLadeStandardPara);
 	}
 
+	//#region  AppaData
 	private async InitAppData() {
 		this.AppDataTable = this.table(this.cAppData);
 		this.AppDataTable.mapToClass(AppData);
-		await this.AppDataTable.limit(1).first((aAppRec) => (this.AppRec = aAppRec));
+		await this.LadeAppData().then((aAppRec) => (this.AppRec = aAppRec));
 
 		if (!this.AppRec) {
 			this.AppRec = new AppData();
@@ -1199,6 +1200,19 @@ export class DexieSvcService extends Dexie {
 			});
 		}
 	}
+
+	public async LadeAppData(): Promise<AppData>{
+		return await this.AppDataTable
+			.limit(1)
+			.first((aAppRec) => {
+				return aAppRec;
+			});
+	}
+
+	public AppDataSpeichern(aAppData: AppData) {
+		this.AppDataTable.put(aAppData);
+	}
+	//#endregion
 
 	public InitSessionSaetze(aQuellSession: Session, aZielSession: Session) {
 		aZielSession.UebungsListe = [];

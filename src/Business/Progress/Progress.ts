@@ -43,6 +43,7 @@ export class ProgressPara {
 	ProgressListe?: Array<Progress>;
 	ProgressID: number = -1;
 	AlteProgressID: number = -1;
+	UserInfo: Array<string> = [];
 }
 
 export enum NextProgressStatus { 
@@ -524,6 +525,14 @@ export class Progress implements IProgress {
 					mProgressParaMerker.AusgangsUebung,
 					mProgressParaMerker.AusgangsSession as Session
 				);
+			
+			aProgressPara.UserInfo = [];
+			if (mWp === WeightProgress.Increase) {
+				// ''aProgressPara.UserInfo.push( #${(aNextProgress.Satz.SatzListIndex + 1).toString()} - weight: ${(aNextProgress.Satz.GewichtVorgabeStr)}` );
+				
+					aProgressPara.UserInfo.push(`Well done!` );
+			//		aProgressPara.UserInfo.push(`Lift #${}` );
+			}
 			
 			const mProgressPara: ProgressPara = new ProgressPara();
 			mProgressPara.ProgressListe = aProgressPara.ProgressListe;
