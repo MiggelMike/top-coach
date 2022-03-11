@@ -143,7 +143,7 @@ export class Progress implements IProgress {
 
 	private SetReduceDate(aUebung: Uebung, aDatum: Date, aDb: DexieSvcService) {
 		aUebung.ReduceDate = aDatum;
-		// aDb.UebungSpeichern(aUebung);
+		aDb.UebungSpeichern(aUebung);
 	}
 
 	public async DetermineNextProgress(
