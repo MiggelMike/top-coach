@@ -1,3 +1,4 @@
+import { AppData } from './../Coach/Coach';
 import { AnstehendeSessionsComponent } from './../../app/anstehende-sessions/anstehende-sessions.component';
 import { ParaDB, MinDatum, SortOrder } from './../../app/services/dexie-svc.service';
 import { Gewicht } from './../Konfiguration/Gewicht';
@@ -525,13 +526,16 @@ export class Progress implements IProgress {
 					mProgressParaMerker.AusgangsUebung,
 					mProgressParaMerker.AusgangsSession as Session
 				);
+
+			let mAppData: AppData;
+			aProgressPara.DbModule.LadeAppData()
+				.then( (aAppData) => mAppData = aAppData );
 			
 			aProgressPara.UserInfo = [];
 			if (mWp === WeightProgress.Increase) {
 				// ''aProgressPara.UserInfo.push( #${(aNextProgress.Satz.SatzListIndex + 1).toString()} - weight: ${(aNextProgress.Satz.GewichtVorgabeStr)}` );
-				
 					aProgressPara.UserInfo.push(`Well done!` );
-			//		aProgressPara.UserInfo.push(`Lift #${}` );
+					aProgressPara.UserInfo.push(`Lift #${aProgressPara.AusgangsSatz.GewichtVorgabe + aProgressPara.AusgangsUebung.GewichtSteigerung} #${mAppData.GewichtsEinheit}` );
 			}
 			
 			const mProgressPara: ProgressPara = new ProgressPara();
