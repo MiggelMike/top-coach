@@ -93,17 +93,17 @@ export class SatzEditComponent implements OnInit {
     }
 
     public SetWeightVorgabe(aEvent: any) {
-        this.satz.GewichtVorgabe = aEvent.target.value;
+        this.satz.GewichtVorgabe = Number(aEvent.target.value);
     }
 
     public SetVonWdhVorgabe(aEvent: any) {
-        this.satz.WdhVonVorgabe = aEvent.target.value;
+        this.satz.WdhVonVorgabe = Number(aEvent.target.value);
         if (this.satz.WdhBisVorgabe < this.satz.WdhVonVorgabe)
             this.satz.WdhBisVorgabe = this.satz.WdhVonVorgabe;
     }
     
     public SetBisWdhVorgabe(aEvent: any) {
-        this.satz.WdhBisVorgabe = aEvent.target.value;
+        this.satz.WdhBisVorgabe = Number(aEvent.target.value);
         if (this.satz.WdhVonVorgabe > this.satz.WdhBisVorgabe)
             this.satz.WdhVonVorgabe = this.satz.WdhBisVorgabe;
     }
@@ -113,7 +113,7 @@ export class SatzEditComponent implements OnInit {
     }
 
     public SetWeightAusgefuehrt(aEvent: any) {
-        this.satz.GewichtAusgefuehrt = aEvent.target.value;
+        this.satz.GewichtAusgefuehrt = Number(aEvent.target.value);
     }
     
     public CalcPlates($event) {
@@ -152,8 +152,21 @@ export class SatzEditComponent implements OnInit {
             mHeader = '';
         }
 
+        // for (let index = 0; index < this.sess.UebungsListe.length; index++) {
+        //     const mPtrUebung = this.sess.UebungsListe[index];
+        //     const mSuchSatz: Satz = mPtrUebung.SatzListe.find((sz) => sz.SatzListIndex === aSatz.SatzListIndex);
+        //     if (mSuchSatz !== undefined) {
+        //         mPtrUebung.SatzListe.splice(mSuchSatz.SatzListIndex, mSuchSatz.SatzListIndex);
+        //         mPtrUebung.SatzListe.push(aSatz as Satz);
+        //         mPtrUebung.SatzListe.sort((a: Satz, b: Satz) => {
+        //             return a.SatzListIndex - b.SatzListIndex;
+        //         });
+        //         break;
+        //     }
+        // }
+
         const mProgressPara: ProgressPara = new ProgressPara();
-        mProgressPara.AusgangsSatz = aSatz.Copy();
+        mProgressPara.AusgangsSatz = aSatz as Satz;
         mProgressPara.AusgangsSession = this.sess;
         mProgressPara.AusgangsUebung = this.sessUebung;
         mProgressPara.Programm = this.programm;
@@ -164,13 +177,11 @@ export class SatzEditComponent implements OnInit {
         // Routine zum Starten der Stoppuhr.
         mProgressPara.NextProgressFn = (aNextProgress: NextProgress) => {
             this.DoStoppUhr(Number(aNextProgress.Satz.GewichtAusgefuehrt),
-                `"${aNextProgress.Uebung.Name}" - set #${(aNextProgress.Satz.SatzListIndex + 1).toString()} - weight: ${(aNextProgress.Satz.fGewichtVorgabe)}`
+                `"${aNextProgress.Uebung.Name}" - set #${(aNextProgress.Satz.SatzListIndex + 1).toString()} - weight: ${(aNextProgress.Satz.GewichtVorgabeStr)}`
             );
+        }
 
-        } 
-        Progress.StaticDoProgress(mProgressPara).then((para) =>
-            aSatz = para.AusgangsSatz
-        );
+        await Progress.StaticDoProgress(mProgressPara);
     }
         
     
@@ -193,7 +204,7 @@ export class SatzEditComponent implements OnInit {
     }    
 
     public SetWdhAusgefuehrt(aEvent: any) {
-        this.satz.WdhAusgefuehrt = aEvent.target.value;
+        this.satz.WdhAusgefuehrt = Number(aEvent.target.value);
     }
     
     onClickWdhAusgefuehrt(aEvent: any) {

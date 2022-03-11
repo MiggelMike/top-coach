@@ -143,7 +143,7 @@ export class Progress implements IProgress {
 
 	private SetReduceDate(aUebung: Uebung, aDatum: Date, aDb: DexieSvcService) {
 		aUebung.ReduceDate = aDatum;
-		aDb.UebungSpeichern(aUebung);
+		// aDb.UebungSpeichern(aUebung);
 	}
 
 	public async DetermineNextProgress(
@@ -728,7 +728,7 @@ export class Progress implements IProgress {
 						let mGewichtDiff: GewichtDiff;
 						if (sz.GewichtDiff.length > 0) 
 							mGewichtDiff = sz.GewichtDiff.find((gdiff) => { return Progress.StaticEqualSet(gdiff.FromSet, aAusgangsSatz); })
-						else
+						else if (aWeight !== this.cIgnoreWeight)
 						{
 							mGewichtDiff = new GewichtDiff();
 							mGewichtDiff.FromSet = aAusgangsSatz;
@@ -1069,6 +1069,7 @@ export class Progress implements IProgress {
 						if (index < u.SatzListe.length) {
 							const mPrtSatz: Satz = mPtrArbeitUebung.SatzListe[index];
 							mPrtSatz.Status = u.SatzListe[index].Status;
+							mPrtSatz.WdhAusgefuehrt = u.SatzListe[index].WdhAusgefuehrt;
 							u.SatzListe[index] = mPrtSatz;
 						}
 					}

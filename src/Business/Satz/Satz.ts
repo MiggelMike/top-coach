@@ -1,3 +1,4 @@
+import { Gewicht } from './../Konfiguration/Gewicht';
 import { ISession } from 'src/Business/Session/Session';
 import { IUebung, Uebung } from '../Uebung/Uebung';
 import {formatNumber, NumberSymbol} from '@angular/common';
@@ -80,9 +81,19 @@ export interface ISatz {
 
 
 export class GewichtDiff {
-    Gewicht: number = 0;
+    private fGewicht: number = 0;
+    get Gewicht(): number
+    {
+        return Number(this.fGewicht);
+    }
+    set Gewicht(value:number)
+    {
+        this.fGewicht = Number(value);
+    }
+
     Uebung: Uebung;
     FromSet: Satz;
+
 }
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
@@ -93,11 +104,59 @@ export class Satz implements ISatz {
     public SatzTyp: SatzTyp = SatzTyp.Training;
     public Prozent: number = 0;
     public GewichtDiff: Array<GewichtDiff> = [];
-    public GewichtAusgefuehrt: number;
-    public WdhAusgefuehrt: number = 0;
-    public GewichtVorgabe: number = 0;
-    public WdhVonVorgabe: number = 0;
-    public WdhBisVorgabe: number = 0;
+    //#region GewichtAusgefuehrt 
+    private fGewichtAusgefuehrt: number;    
+    get GewichtAusgefuehrt():number
+    {
+        return Number(this.fGewichtAusgefuehrt);
+    }
+
+    set GewichtAusgefuehrt(aValue: number)
+    {
+        this.fGewichtAusgefuehrt = Number(aValue);
+    }
+    //#endregion
+    //#region WdhAusgefuehrt
+    private fWdhAusgefuehrt: number = 0;
+    get WdhAusgefuehrt(): number{
+        return Number(this.fWdhAusgefuehrt);
+    }
+
+    set WdhAusgefuehrt(aValue: number){
+        this.fWdhAusgefuehrt = Number(aValue);
+    }
+    //#endregion
+    //#region GewichtVorgabe 
+    private fGewichtVorgabe: number = 0;
+    get GewichtVorgabe(): number {
+        return Number(this.fGewichtVorgabe);
+    }
+    
+    set GewichtVorgabe(aValue: number) {
+        this.fGewichtVorgabe = Number(aValue);
+    }
+    //#endregion
+    //#region WdhVonVorgabe
+    private fWdhVonVorgabe: number = 0;
+    get WdhVonVorgabe(): number {
+        return Number(this.fWdhVonVorgabe);
+    }
+
+    set WdhVonVorgabe( aValue: number) {
+        this.fWdhVonVorgabe = Number(aValue);
+    }
+    //#endregion
+    //#region  WdhBisVorgabe
+    private fWdhBisVorgabe: number = 0;
+    get WdhBisVorgabe(): number {
+        return Number(this.fWdhBisVorgabe);
+    };
+
+    set WdhBisVorgabe( aValue: number) { 
+        this.fWdhBisVorgabe = Number(aValue);
+    };
+    //#endregion
+
     public PausenMinZeit: number = 0;
     public PausenMaxZeit: number = 0;
     public Status: SatzStatus = SatzStatus.Wartet;
@@ -106,13 +165,22 @@ export class Satz implements ISatz {
     public SatzGruppenNr: number = 0;
     public SatzListIndex: number = 0;
     public IncludeBodyweight: boolean = false;
-    public BodyWeight: number = 0;
+    //#region BodyWeight
+    private fBodyWeight: number = 0;
+    get BodyWeight(): number {
+        return Number(this.fBodyWeight);
+    }
+    set BodyWeight( aValue: number) {
+        this.fBodyWeight = Number(aValue);
+    }
+    //#endregion
+
     public FkHantel: number = 0;
     public Vorgabe: boolean = false;
 
     public get LiftedWeight(): number {
         if (this.Status === SatzStatus.Fertig) {
-            let mResult: number = this.WdhAusgefuehrt * this.GewichtAusgefuehrt;
+            let mResult: number = Number(this.WdhAusgefuehrt * this.GewichtAusgefuehrt);
             if (this.IncludeBodyweight) 
                 mResult += this.WdhAusgefuehrt * this.BodyWeight;
             return mResult;
@@ -120,7 +188,7 @@ export class Satz implements ISatz {
         return 0;
     }
 
-    public get fGewichtVorgabe(): string {
+    public get GewichtVorgabeStr(): string {
         return Number(this.GewichtVorgabe).toFixed(2);
     }
 
@@ -210,7 +278,7 @@ export class Satz implements ISatz {
         // const mDoneWeight: number = Number.parseFloat(aDoneWeight.toString());
         const tmp: number = Number(this.GewichtAusgefuehrt);
         const mDoneWeight: number = Number(aDoneWeight);
-        this.GewichtAusgefuehrt = tmp + mDoneWeight;
+        this.GewichtAusgefuehrt = Number(tmp + mDoneWeight);
     }
 
     public SetPresetWeight(aPresetWeight: number) {

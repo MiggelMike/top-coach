@@ -126,13 +126,7 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	leave() {
-		// this.fDexieSvcService.LadeAktuellesProgramm(
-		// 	() => {
-				this.location.back();
-		// 	}
-			
-		//  );
-		
+		this.location.back();
 	}
 
 	ngAfterViewInit() {
