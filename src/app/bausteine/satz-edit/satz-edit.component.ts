@@ -181,7 +181,17 @@ export class SatzEditComponent implements OnInit {
             );
         }
 
-        await Progress.StaticDoProgress(mProgressPara);
+        Progress.StaticDoProgress(mProgressPara).then((aProgressPara: ProgressPara) => {
+            aProgressPara.DbModule.LadeAppData()
+                .then((aAppData) => {
+                    aProgressPara.UserInfo = [];
+                    if (aProgressPara.Wp === WeightProgress.Increase) {
+                        aProgressPara.UserInfo.push(`Well done!`);
+                        aProgressPara.UserInfo.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe + aProgressPara.AusgangsUebung.GewichtSteigerung} ${aAppData.GewichtsEinheitText} next time`);
+                    }
+             });
+
+        });
     }
         
     

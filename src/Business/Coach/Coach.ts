@@ -6,6 +6,7 @@ export enum GewichtsEinheit {
 export interface IAppData {
     ID: number;
     GewichtsEinheit: GewichtsEinheit;
+    GewichtsEinheitText: string;
     // LetzteProgrammID: number;
     // LetzteSessionID: number;
     // LetzteSatzID: number;
@@ -18,6 +19,13 @@ export interface IAppData {
 export class AppData {
     public ID: number;
     GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
+
+    get GewichtsEinheitText(): string{
+        if (this.GewichtsEinheit === GewichtsEinheit.KG)
+            return 'KG'
+        else
+            return 'LBS';
+    } 
     // public LetzteProgrammID: number = 0;
     // public LetzteSessionID: number = 0;
     // public LetzteSatzID: number = 0;

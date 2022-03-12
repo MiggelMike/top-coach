@@ -517,7 +517,7 @@ export class Progress implements IProgress {
 					mProgressParaMerker.Progress.ProgressSet);                
 			
 		if (mProgressParaMerker.Progress) {
-			const mWp: WeightProgress =
+			aProgressPara.Wp =
 				await mProgressParaMerker.Progress.DetermineNextProgress(
 					mProgressParaMerker.DbModule,
 					new Date,
@@ -527,17 +527,6 @@ export class Progress implements IProgress {
 					mProgressParaMerker.AusgangsSession as Session
 				);
 
-			let mAppData: AppData;
-			aProgressPara.DbModule.LadeAppData()
-				.then( (aAppData) => mAppData = aAppData );
-			
-			aProgressPara.UserInfo = [];
-			if (mWp === WeightProgress.Increase) {
-				// ''aProgressPara.UserInfo.push( #${(aNextProgress.Satz.SatzListIndex + 1).toString()} - weight: ${(aNextProgress.Satz.GewichtVorgabeStr)}` );
-					aProgressPara.UserInfo.push(`Well done!` );
-					aProgressPara.UserInfo.push(`Lift #${aProgressPara.AusgangsSatz.GewichtVorgabe + aProgressPara.AusgangsUebung.GewichtSteigerung} #${mAppData.GewichtsEinheit}` );
-			}
-			
 			const mProgressPara: ProgressPara = new ProgressPara();
 			mProgressPara.ProgressListe = aProgressPara.ProgressListe;
 			mProgressPara.AusgangsSession = mProgressParaMerker.AusgangsSession;
@@ -558,12 +547,12 @@ export class Progress implements IProgress {
 					(mProgressParaMerker.AusgangsSatz.Status === SatzStatus.Wartet)
 					&& (Progress.StaticFindDoneSet(mProgressParaMerker.AusgangsSession, mProgressParaMerker.AusgangsUebung) === true)
 				)
-					mProgressPara.Wp = mWp;
+					mProgressPara.Wp = aProgressPara.Wp;
 				else
-					mProgressPara.Wp = mProgressParaMerker.AusgangsSatz.Status === SatzStatus.Wartet ? WeightProgress.Decrease : mWp;
+					mProgressPara.Wp = mProgressParaMerker.AusgangsSatz.Status === SatzStatus.Wartet ? WeightProgress.Decrease : aProgressPara.Wp;
 			}
 			else {
-				mProgressPara.Wp = mWp;
+				mProgressPara.Wp = aProgressPara.Wp;
 			}
 		
 			mProgressPara.AusgangsUebung.WeightProgress = mProgressPara.Wp;
@@ -1017,7 +1006,6 @@ export class Progress implements IProgress {
 			) {
 				if (
 					(      (aProgressPara.SessionDone === true)
-						// && (aProgressPara.NeueSession.UebungsListe.indexOf(mPtrArbeitUebung) > -1)
 						&& (mPtrArbeitUebung.FkUebung === aProgressPara.AusgangsUebung.FkUebung)
 						&& (mPtrArbeitUebung.FkProgress === aProgressPara.AusgangsUebung.FkProgress)
 						&& (mPtrArbeitUebung.ProgressGroup === aProgressPara.AusgangsUebung.ProgressGroup)
@@ -1037,6 +1025,7 @@ export class Progress implements IProgress {
 								Arithmetik.Add,
 								aProgressPara.AlleSaetze,
 								aProgressPara.AusgangsUebung.GewichtSteigerung);
+							
 							break;
 						
 						case WeightProgress.Decrease:
@@ -1049,14 +1038,11 @@ export class Progress implements IProgress {
 								aProgressPara.AusgangsUebung.GewichtReduzierung);
 							
 							mPtrArbeitUebung.FailCount++;
-							// aProgressPara.AusgangsUebung.LastFailedID = aProgressPara.AusgangsUebung.ID;							
-							// mPtrArbeitUebung.LastFailedID = aProgressPara.AusgangsUebung.ID;
-							// aProgressPara.AusgangsUebung.ReduceDate = new Date();
-							// mPtrArbeitUebung.ReduceDate = aProgressPara.AusgangsUebung.ReduceDate;
 							break;
 					} // switch
 				}
-				else if  (aProgressPara.SessionDone === false)  {
+				else if (aProgressPara.SessionDone === false) {
+					aProgressPara.Wp === WeightProgress.Decrease;
 					// Der Ausgangssatz ist nicht erledigt.
 					Progress.StaticSetAllWeights(
 						mPtrArbeitUebung,
