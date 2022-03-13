@@ -531,20 +531,9 @@ export class Progress implements IProgress {
 					aProgressPara.AusgangsSession as Session
 				);
 
-			// const mProgressPara: ProgressPara = new ProgressPara();
-			// mProgressPara.ProgressListe = aProgressPara.ProgressListe;
-			// mProgressPara.AusgangsSession = mProgressParaMerker.AusgangsSession;
-			// mProgressPara.AusgangsUebung = mProgressParaMerker.AusgangsUebung;
-			// mProgressPara.AusgangsSatz = mProgressParaMerker.AusgangsSatz;
-			// mProgressPara.DbModule = mProgressParaMerker.DbModule;
-			// mProgressPara.Programm = mProgressParaMerker.Programm;
-			// mProgressPara.Progress = mProgressParaMerker.Progress;
 			aProgressPara.ProgressID = aProgressPara.Progress ? aProgressPara.Progress.ID : -1;
 			aProgressPara.AlteProgressID = aProgressPara.AusgangsUebung.FkAltProgress;
 			aProgressPara.ProgressHasChanged = aProgressPara.AlteProgressID !== aProgressPara.ProgressID;
-			// aProgressPara.ProgressExtraFn = aProgressPara.ProgressExtraFn;
-			// aProgressPara.AlleSaetze = aProgressPara.AlleSaetze;
-			// aProgressPara.Wp = aProgressPara.AusgangsUebung.FkProgress === undefined ? WeightProgress.Decrease : aProgressPara.AusgangsUebung.WeightProgress;
 		
 			if (aProgressPara.ProgressHasChanged === true) {
 				if (
@@ -565,25 +554,6 @@ export class Progress implements IProgress {
 			Progress.StaticProgrammSetNextWeight(aProgressPara);
 			// aProgressPara = mProgressPara;
 		}
-		// } else {
-		// 	const mProgressPara: ProgressPara = new ProgressPara();
-		// 	mProgressPara.AusgangsSession = mProgressParaMerker.AusgangsSession;
-		// 	mProgressPara.AusgangsUebung = mProgressParaMerker.AusgangsUebung;
-		// 	mProgressPara.AusgangsSatz = mProgressParaMerker.AusgangsSatz;
-		// 	mProgressPara.DbModule = mProgressParaMerker.DbModule;
-		// 	mProgressPara.Programm = mProgressParaMerker.Programm;
-		// 	mProgressPara.Progress = mProgressParaMerker.Progress;
-		// 	mProgressPara.ProgressID = mProgressParaMerker.Progress ? mProgressParaMerker.Progress.ID : -1;
-		// 	mProgressPara.AlteProgressID = mProgressParaMerker.AusgangsUebung.FkAltProgress;
-		// 	mProgressPara.ProgressHasChanged = mProgressPara.AlteProgressID !== mProgressPara.ProgressID;
-		// 	mProgressPara.Wp = mProgressParaMerker.AusgangsUebung.FkProgress === undefined ? WeightProgress.Decrease : mProgressParaMerker.AusgangsUebung.WeightProgress;
-		// 	mProgressPara.SatzDone = mProgressParaMerker.SatzDone;
-		// 	mProgressPara.SessionDone = mProgressParaMerker.SessionDone;
-		// 	mProgressPara.ProgressListe = aProgressPara.ProgressListe;
-		// 	mProgressPara.ProgressExtraFn = mProgressPara.ProgressExtraFn;
-		// 	mProgressPara.AlleSaetze = aProgressPara.AlleSaetze;
-		// 	Progress.StaticProgrammSetNextWeight(mProgressPara);
-		// }
 		
 		if ((aProgressPara.SatzDone) && (aProgressPara.NextProgressFn)) {
 			aProgressPara.NextProgressFn(mNextProgress);
