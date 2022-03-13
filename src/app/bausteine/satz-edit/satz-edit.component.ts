@@ -188,7 +188,11 @@ export class SatzEditComponent implements OnInit {
                     if (aProgressPara.Wp === WeightProgress.Increase) {
                         aProgressPara.UserInfo.push(`Well done!`);
                         aProgressPara.UserInfo.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe + aProgressPara.AusgangsUebung.GewichtSteigerung} ${aAppData.GewichtsEinheitText} next time`);
+                    } else if (aProgressPara.Wp === WeightProgress.Decrease) {
+                        aProgressPara.UserInfo.push(`Well done!`);
+                        aProgressPara.UserInfo.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe + aProgressPara.AusgangsUebung.GewichtSteigerung} ${aAppData.GewichtsEinheitText} next time`);
                     }
+                        
              });
 
         });

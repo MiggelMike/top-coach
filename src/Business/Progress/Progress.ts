@@ -283,14 +283,18 @@ export class Progress implements IProgress {
 		} // if
 
 		if (   mProgress.ProgressSet === ProgressSet.First
-			&& (aSession.Kategorie02 === SessionStatus.Laueft || aSessUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig)
-			&& aSatzIndex === 0) {
-			// Der erste Satz der Übung ist maßgebend.
+			// && aSession.Kategorie02 === SessionStatus.Laueft
+			&& aSatzIndex === 0
 			// Nur der erste Satz muss erledigt sein.
-			if (aSessUebung.SatzWDH(0) >= aSessUebung.SatzBisVorgabeWDH(0))
+			&& (aSessUebung.SatzFertig(0) === true)
+			// Der erste Satz der Übung ist maßgebend.
+			&& aSessUebung.SatzWDH(0) >= aSessUebung.SatzBisVorgabeWDH(0)
+		)
+		{
 				// Die vorgegebenen Wiederholungen konnten erreicht werden
 				return WeightProgress.Increase;
 		}
+
 
 		if (   aSessUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig
 			&& mProgress.ProgressSet === ProgressSet.Last
@@ -495,70 +499,71 @@ export class Progress implements IProgress {
 		if (aProgressPara.ProgressListe === undefined)
 			return aProgressPara;
 
-		const mProgressParaMerker: ProgressPara = aProgressPara;
-		const mProgressListe: Array<Progress> = mProgressParaMerker.ProgressListe;
-		mProgressParaMerker.Progress = mProgressListe.find((p) => p.ID === mProgressParaMerker.AusgangsUebung.FkProgress);
+		// const mProgressParaMerker: ProgressPara = aProgressPara;
+		// const mProgressListe: Array<Progress> = mProgressParaMerker.ProgressListe;
+		aProgressPara.Progress = aProgressPara.ProgressListe.find((p) => p.ID === aProgressPara.AusgangsUebung.FkProgress);
 		// Sätze der aktuellen Übung durchnummerieren
-		mProgressParaMerker.AusgangsUebung.nummeriereSatzListe(mProgressParaMerker.AusgangsUebung.SatzListe);
+		aProgressPara.AusgangsUebung.nummeriereSatzListe(aProgressPara.AusgangsUebung.SatzListe);
 		// Hole alle Sätze aus der aktuellen Session, in der die aktuelle Übung mehrfach vorkommt
 		// Aus der Satzliste der aktuellen Übung die Sätze mit dem Status "Wartet" in mSatzliste sammeln
-		const mSatzListe = mProgressParaMerker.AusgangsSession.AlleUebungsSaetzeEinerProgressGruppe(mProgressParaMerker.AusgangsUebung, SatzStatus.Wartet);
-		const mSessionsListe: Array<Session> = mProgressParaMerker.DbModule.UpComingSessionList();
+		const mSatzListe = aProgressPara.AusgangsSession.AlleUebungsSaetzeEinerProgressGruppe(aProgressPara.AusgangsUebung, SatzStatus.Wartet);
+		const mSessionsListe: Array<Session> = aProgressPara.DbModule.UpComingSessionList();
 
 		let mNextProgress: NextProgress;
-		if ((mProgressParaMerker.SatzDone) && (mProgressParaMerker.Progress))
+		if ((aProgressPara.SatzDone) && (aProgressPara.Progress !== undefined))
 			mNextProgress =
 				Progress.StaticDoSaetzeProgress(
 					mSatzListe,
 					mSessionsListe,
-					mProgressParaMerker.AusgangsSatz as Satz,
-					mProgressParaMerker.AusgangsUebung,
-					mProgressParaMerker.AusgangsSession as Session,
-					mProgressParaMerker.Progress.ProgressSet);                
+					aProgressPara.AusgangsSatz as Satz,
+					aProgressPara.AusgangsUebung,
+					aProgressPara.AusgangsSession as Session,
+					aProgressPara.Progress.ProgressSet);                
 			
-		if (mProgressParaMerker.Progress) {
+		if (aProgressPara.Progress) {
 			aProgressPara.Wp =
-				await mProgressParaMerker.Progress.DetermineNextProgress(
-					mProgressParaMerker.DbModule,
+				await aProgressPara.Progress.DetermineNextProgress(
+					aProgressPara.DbModule,
 					new Date,
-					mProgressParaMerker.AusgangsSession.FK_VorlageProgramm,
-					mProgressParaMerker.AusgangsSatz.SatzListIndex,
-					mProgressParaMerker.AusgangsUebung,
-					mProgressParaMerker.AusgangsSession as Session
+					aProgressPara.AusgangsSession.FK_VorlageProgramm,
+					aProgressPara.AusgangsSatz.SatzListIndex,
+					aProgressPara.AusgangsUebung,
+					aProgressPara.AusgangsSession as Session
 				);
 
-			const mProgressPara: ProgressPara = new ProgressPara();
-			mProgressPara.ProgressListe = aProgressPara.ProgressListe;
-			mProgressPara.AusgangsSession = mProgressParaMerker.AusgangsSession;
-			mProgressPara.AusgangsUebung = mProgressParaMerker.AusgangsUebung;
-			mProgressPara.AusgangsSatz = mProgressParaMerker.AusgangsSatz;
-			mProgressPara.DbModule = mProgressParaMerker.DbModule;
-			mProgressPara.Programm = mProgressParaMerker.Programm;
-			mProgressPara.Progress = mProgressParaMerker.Progress;
-			mProgressPara.ProgressID = mProgressParaMerker.Progress ? mProgressParaMerker.Progress.ID : -1;
-			mProgressPara.AlteProgressID = mProgressParaMerker.AusgangsUebung.FkAltProgress;
-			mProgressPara.ProgressHasChanged = mProgressPara.AlteProgressID !== mProgressPara.ProgressID;
-			mProgressPara.ProgressExtraFn = aProgressPara.ProgressExtraFn;
-			mProgressPara.AlleSaetze = aProgressPara.AlleSaetze;
-			mProgressPara.Wp = mProgressParaMerker.AusgangsUebung.FkProgress === undefined ? WeightProgress.Decrease : mProgressParaMerker.AusgangsUebung.WeightProgress;
+			// const mProgressPara: ProgressPara = new ProgressPara();
+			// mProgressPara.ProgressListe = aProgressPara.ProgressListe;
+			// mProgressPara.AusgangsSession = mProgressParaMerker.AusgangsSession;
+			// mProgressPara.AusgangsUebung = mProgressParaMerker.AusgangsUebung;
+			// mProgressPara.AusgangsSatz = mProgressParaMerker.AusgangsSatz;
+			// mProgressPara.DbModule = mProgressParaMerker.DbModule;
+			// mProgressPara.Programm = mProgressParaMerker.Programm;
+			// mProgressPara.Progress = mProgressParaMerker.Progress;
+			aProgressPara.ProgressID = aProgressPara.Progress ? aProgressPara.Progress.ID : -1;
+			aProgressPara.AlteProgressID = aProgressPara.AusgangsUebung.FkAltProgress;
+			aProgressPara.ProgressHasChanged = aProgressPara.AlteProgressID !== aProgressPara.ProgressID;
+			// aProgressPara.ProgressExtraFn = aProgressPara.ProgressExtraFn;
+			// aProgressPara.AlleSaetze = aProgressPara.AlleSaetze;
+			// aProgressPara.Wp = aProgressPara.AusgangsUebung.FkProgress === undefined ? WeightProgress.Decrease : aProgressPara.AusgangsUebung.WeightProgress;
 		
-			if (mProgressPara.ProgressHasChanged === true) {
+			if (aProgressPara.ProgressHasChanged === true) {
 				if (
-					(mProgressParaMerker.AusgangsSatz.Status === SatzStatus.Wartet)
-					&& (Progress.StaticFindDoneSet(mProgressParaMerker.AusgangsSession, mProgressParaMerker.AusgangsUebung) === true)
+					(aProgressPara.AusgangsSatz.Status === SatzStatus.Wartet)
+					&& (Progress.StaticFindDoneSet(aProgressPara.AusgangsSession, aProgressPara.AusgangsUebung) === true)
 				)
-					mProgressPara.Wp = aProgressPara.Wp;
+				aProgressPara.Wp = aProgressPara.Wp;
 				else
-					mProgressPara.Wp = mProgressParaMerker.AusgangsSatz.Status === SatzStatus.Wartet ? WeightProgress.Decrease : aProgressPara.Wp;
+				aProgressPara.Wp = aProgressPara.AusgangsSatz.Status === SatzStatus.Wartet ? WeightProgress.Decrease : aProgressPara.Wp;
 			}
 			else {
-				mProgressPara.Wp = aProgressPara.Wp;
+				aProgressPara.Wp = aProgressPara.Wp;
 			}
 		
-			mProgressPara.AusgangsUebung.WeightProgress = mProgressPara.Wp;
-			mProgressPara.SatzDone = mProgressParaMerker.SatzDone;
-			mProgressPara.SessionDone = mProgressParaMerker.SessionDone;
-			Progress.StaticProgrammSetNextWeight(mProgressPara);
+			aProgressPara.AusgangsUebung.WeightProgress = aProgressPara.Wp;
+			aProgressPara.SatzDone = aProgressPara.SatzDone;
+			aProgressPara.SessionDone = aProgressPara.SessionDone;
+			Progress.StaticProgrammSetNextWeight(aProgressPara);
+			// aProgressPara = mProgressPara;
 		}
 		// } else {
 		// 	const mProgressPara: ProgressPara = new ProgressPara();
@@ -580,8 +585,8 @@ export class Progress implements IProgress {
 		// 	Progress.StaticProgrammSetNextWeight(mProgressPara);
 		// }
 		
-		if ((mProgressParaMerker.SatzDone) && (mProgressParaMerker.NextProgressFn)) {
-			mProgressParaMerker.NextProgressFn(mNextProgress);
+		if ((aProgressPara.SatzDone) && (aProgressPara.NextProgressFn)) {
+			aProgressPara.NextProgressFn(mNextProgress);
 		}
 		
 		return aProgressPara;
@@ -1042,7 +1047,7 @@ export class Progress implements IProgress {
 					} // switch
 				}
 				else if (aProgressPara.SessionDone === false) {
-					aProgressPara.Wp === WeightProgress.Decrease;
+					aProgressPara.Wp = WeightProgress.Decrease;
 					// Der Ausgangssatz ist nicht erledigt.
 					Progress.StaticSetAllWeights(
 						mPtrArbeitUebung,

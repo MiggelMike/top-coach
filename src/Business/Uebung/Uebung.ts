@@ -317,6 +317,13 @@ export class Uebung implements IUebung {
         return mResult;
     }
 
+    public SatzFertig(aSatzIndex: number): boolean {
+        if ((this.ArbeitsSatzListe === undefined)||(this.ArbeitsSatzListe.length < aSatzIndex))
+            return false;
+        
+        return this.ArbeitsSatzListe[aSatzIndex].Status === SatzStatus.Fertig;
+    }    
+
 
     public SatzWDH(aSatzIndex: number): number {
         if ((this.ArbeitsSatzListe === undefined)||(this.ArbeitsSatzListe.length < aSatzIndex))
