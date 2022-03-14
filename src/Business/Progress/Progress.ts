@@ -129,7 +129,7 @@ export class Progress implements IProgress {
 		return isEqual(this, aOtherProgress);
 	}
 
-	private EvalSaetze(aSessUebung: Uebung, aVorgabeWeightLimit: VorgabeWeightLimit): boolean {
+	public EvalSaetze(aSessUebung: Uebung, aVorgabeWeightLimit: VorgabeWeightLimit): boolean {
 		if (this.WeightCalculation === WeightCalculation.Sum)
 			return aSessUebung.SummeWDH() >= aSessUebung.SummeVorgabeWDH(aVorgabeWeightLimit);
 
@@ -143,9 +143,11 @@ export class Progress implements IProgress {
 		return true;
 	}
 
-	private SetReduceDate(aUebung: Uebung, aDatum: Date, aDb: DexieSvcService) {
-		aUebung.ReduceDate = aDatum;
-		aDb.UebungSpeichern(aUebung);
+	private EvalReduceDate(aSessionStatus: SessionStatus, aUebung: Uebung, aDatum: Date, aDb: DexieSvcService) {
+		if (aSessionStatus === SessionStatus.Fertig) {
+			aUebung.ReduceDate = aDatum;
+			aDb.UebungSpeichern(aUebung);
+		}
 	}
 
 	public async DetermineNextProgress(
@@ -226,7 +228,7 @@ export class Progress implements IProgress {
 		if (mFailCount === 0) {
 			// Wenn aFailCount === 0, gibt es kein Rückgabe WeightProgress.Same
 			if (   mProgress.ProgressSet === ProgressSet.First
-				&& (aSession.Kategorie02 === SessionStatus.Laueft || aSessUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig)
+				&& (aSession.Kategorie02 === SessionStatus.Laueft || aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig)
 				&& aSatzIndex === 0)
 			{
 				// Der erste Satz der Übung ist maßgebend.
@@ -237,13 +239,13 @@ export class Progress implements IProgress {
 				if (mProgress.ProgressTyp === ProgressTyp.RepRangeSet) {
 					// Prüfen, ob das untere WDH-Limit erreicht ist 
 					if (aSessUebung.SatzWDH(0) < aSessUebung.SatzVonVorgabeWDH(0)) {
-						this.SetReduceDate(mReduceUebung, new Date(), aDb);
+						this.EvalReduceDate(aSession.Kategorie02, mReduceUebung, new Date(), aDb);
 						return WeightProgress.Decrease;
 					}
 				}
 			}
 
-			if (   aSessUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig
+			if (   aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
 				&& mProgress.ProgressSet === ProgressSet.Last
 				&& aSatzIndex === aSessUebung.ArbeitsSatzListe.length - 1)
 			{
@@ -255,13 +257,13 @@ export class Progress implements IProgress {
 				if (mProgress.ProgressTyp === ProgressTyp.RepRangeSet) {
 					// Prüfen, ob das untere WDH-Limit erreicht ist 
 					if (aSessUebung.SatzWDH(aSessUebung.ArbeitsSatzListe.length - 1) < aSessUebung.SatzVonVorgabeWDH(aSessUebung.ArbeitsSatzListe.length - 1)) {
-						this.SetReduceDate(mReduceUebung, new Date(), aDb);
+						this.EvalReduceDate(aSession.Kategorie02, mReduceUebung, new Date(), aDb);
 						return WeightProgress.Decrease;
 					}
 				}
 			}
 
-			if (   aSessUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig
+			if (   aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
 				&& mProgress.ProgressSet === ProgressSet.All)
 			{
 				// Alle Sätze der Übung.
@@ -272,7 +274,7 @@ export class Progress implements IProgress {
 				if (mProgress.ProgressTyp === ProgressTyp.RepRangeSet) {
 					// Prüfen, ob das untere WDH-Limit erreicht ist 
 					if (mProgress.EvalSaetze(aSessUebung, VorgabeWeightLimit.LowerLimit) === false) {
-						this.SetReduceDate(mReduceUebung, new Date(), aDb);
+						this.EvalReduceDate(aSession.Kategorie02, mReduceUebung, new Date(), aDb);
 						return WeightProgress.Decrease;
 					}
 				}
@@ -286,7 +288,7 @@ export class Progress implements IProgress {
 			// && aSession.Kategorie02 === SessionStatus.Laueft
 			&& aSatzIndex === 0
 			// Nur der erste Satz muss erledigt sein.
-			&& (aSessUebung.SatzFertig(0) === true)
+			// && (aSessUebung.SatzFertig(0) === true)
 			// Der erste Satz der Übung ist maßgebend.
 			&& aSessUebung.SatzWDH(0) >= aSessUebung.SatzBisVorgabeWDH(0)
 		)
@@ -296,7 +298,7 @@ export class Progress implements IProgress {
 		}
 
 
-		if (   aSessUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig
+		if (   aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
 			&& mProgress.ProgressSet === ProgressSet.Last
 			&& aSatzIndex === aSessUebung.ArbeitsSatzListe.length - 1) {
 			// Der letzte Satz der Übung ist maßgebend.
@@ -306,7 +308,7 @@ export class Progress implements IProgress {
 				return WeightProgress.Increase;
 		}
 
-		if (   aSessUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig
+		if (   aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
 			&& mProgress.ProgressSet === ProgressSet.All)
 		{
 			// Alle Sätze der Übung.
@@ -326,7 +328,7 @@ export class Progress implements IProgress {
 			const mPtrSessUebung = mUebungsliste[index];
 			// Der erste Satz ist maßgebend.
 			if (   mProgress.ProgressSet === ProgressSet.First
-				&& (aSession.Kategorie02 === SessionStatus.Laueft || aSessUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig)
+				&& (aSession.Kategorie02 === SessionStatus.Laueft || aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig)
 				&& aSatzIndex === 0) {
 				// Der erste Satz der Übung ist maßgebend.
 				if (mPtrSessUebung.SatzWDH(0) >= mPtrSessUebung.SatzBisVorgabeWDH(0))
@@ -342,7 +344,7 @@ export class Progress implements IProgress {
 			}
 
 			// Der letzte Satz ist maßgebend.
-			if (   aSessUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig
+			if (   aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
 				&& mProgress.ProgressSet === ProgressSet.Last
 				&& aSatzIndex === mPtrSessUebung.ArbeitsSatzListe.length - 1) {
 				// Der letzte Satz der Übung ist maßgebend.
@@ -359,7 +361,7 @@ export class Progress implements IProgress {
 			}
 
 			// Alle Sätze prüfen
-			if (aSessUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig) {
+			if (aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig) {
 				if (mProgress.ProgressSet === ProgressSet.All) {
 					// Alle Sätze der Übung.
 					if (this.EvalSaetze(mPtrSessUebung, VorgabeWeightLimit.UpperLimit))
@@ -377,7 +379,7 @@ export class Progress implements IProgress {
 		} // for
 
 		if (mFailCount >= aSessUebung.MaxFailCount) {
-			this.SetReduceDate(mReduceUebung, new Date(), aDb);
+			this.EvalReduceDate(aSession.Kategorie02, mReduceUebung, new Date(), aDb);
 			return WeightProgress.Decrease;
 		}
 		else

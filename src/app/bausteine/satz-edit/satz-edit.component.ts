@@ -1,8 +1,8 @@
-import { NextProgress, Progress, ProgressPara, ProgressSet, ProgressTyp, WeightProgress } from './../../../Business/Progress/Progress';
+import { NextProgress, Progress, ProgressPara, ProgressSet, ProgressTyp, VorgabeWeightLimit, WeightProgress } from './../../../Business/Progress/Progress';
 import { DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { PlateCalcSvcService, PlateCalcOverlayConfig } from './../../services/plate-calc-svc.service';
 import { ISession, Session } from 'src/Business/Session/Session';
-import { Uebung } from './../../../Business/Uebung/Uebung';
+import { Uebung, ArbeitsSaetzeStatus } from './../../../Business/Uebung/Uebung';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit, Input } from "@angular/core";
 import { Satz, ISatz, SatzStatus } from "./../../../Business/Satz/Satz";
@@ -185,13 +185,38 @@ export class SatzEditComponent implements OnInit {
             aProgressPara.DbModule.LadeAppData()
                 .then((aAppData) => {
                     aProgressPara.UserInfo = [];
-                    if (aProgressPara.Wp === WeightProgress.Increase) {
-                        aProgressPara.UserInfo.push(`Well done!`);
-                        aProgressPara.UserInfo.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe + aProgressPara.AusgangsUebung.GewichtSteigerung} ${aAppData.GewichtsEinheitText} next time`);
-                    } else if (aProgressPara.Wp === WeightProgress.Decrease) {
-                        aProgressPara.UserInfo.push(`Well done!`);
-                        aProgressPara.UserInfo.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe + aProgressPara.AusgangsUebung.GewichtSteigerung} ${aAppData.GewichtsEinheitText} next time`);
+                    const mDialogData: DialogData = new DialogData();
+
+                    if (
+                        (aProgressPara.Progress.ProgressSet === ProgressSet.First)
+                        && (aSatz.SatzListIndex === 0)
+                        && (aProgressPara.Wp === WeightProgress.Increase)
+                    ) {
+                        mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe + aProgressPara.AusgangsUebung.GewichtSteigerung} ${aAppData.GewichtsEinheitText} for the next sets`);
+                        mDialogData.textZeilen.push(`of this exercise of the current workout.`);
                     }
+                    else {
+                        if (this.sessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig) {
+                            if (aProgressPara.Progress.ProgressSet === ProgressSet.First
+                                && this.sessUebung.SatzWDH(0) >= this.sessUebung.SatzBisVorgabeWDH(0)
+                                || aProgressPara.Wp === WeightProgress.Increase
+                            ) {
+                                mDialogData.textZeilen.push(`Well done!`);
+                                if (aProgressPara.Progress.ProgressSet === ProgressSet.First)
+                                    mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe} ${aAppData.GewichtsEinheitText} next time.`);
+                                else
+                                    mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe + aProgressPara.AusgangsUebung.GewichtSteigerung} ${aAppData.GewichtsEinheitText} next time.`);
+                            } else if (aProgressPara.Wp === WeightProgress.Decrease) {
+                                mDialogData.textZeilen.push(`You failed!`);
+                                mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe} ${aAppData.GewichtsEinheitText} next time.`);
+                            } else if (aProgressPara.Wp === WeightProgress.Same) {
+                                mDialogData.textZeilen.push(`Lift same weight next time.`);
+                                mDialogData.textZeilen.push(`${aProgressPara.AusgangsSatz.GewichtVorgabe} ${aAppData.GewichtsEinheitText}`);
+                            }
+                        }//if
+                    }
+                    if (mDialogData.textZeilen.length > 0)
+                        this.fDialogService.Hinweis(mDialogData);
                         
              });
 

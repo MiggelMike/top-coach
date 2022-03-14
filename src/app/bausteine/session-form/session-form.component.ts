@@ -333,7 +333,7 @@ export class SessionFormComponent implements OnInit {
 									mProgressPara.AusgangsSatz = mPtrUebung.ArbeitsSatzListe[0];
 								}
 
-								if(Progress.StaticProgressEffectsRunningSession(mPtrUebung.FkProgress, mProgressPara) === false)
+								// if(Progress.StaticProgressEffectsRunningSession(mPtrUebung.FkProgress, mProgressPara) === false)
 									await Progress.StaticDoProgress(mProgressPara);
 							}
 
