@@ -4,7 +4,7 @@ import { PlateCalcSvcService, PlateCalcOverlayConfig } from './../../services/pl
 import { ISession, Session } from 'src/Business/Session/Session';
 import { Uebung, ArbeitsSaetzeStatus } from './../../../Business/Uebung/Uebung';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { Satz, ISatz, SatzStatus } from "./../../../Business/Satz/Satz";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
@@ -183,12 +183,11 @@ export class SatzEditComponent implements OnInit {
             }
         }
 
-        Progress.StaticDoProgress(mProgressPara).then((aProgressPara: ProgressPara) => {
+        const mDialogData: DialogData = new DialogData();
+        Progress.StaticDoProgress(mProgressPara).then( (aProgressPara: ProgressPara) => {
             aProgressPara.DbModule.LadeAppData()
                 .then((aAppData) => {
                     aProgressPara.UserInfo = [];
-                    const mDialogData: DialogData = new DialogData();
-
                     if (
                         (aProgressPara.Progress.ProgressSet === ProgressSet.First)
                         && (aSatz.SatzListIndex === 0)
@@ -217,11 +216,11 @@ export class SatzEditComponent implements OnInit {
                             }
                         }//if
                     }
-                    if (mDialogData.textZeilen.length > 0)
+
+                    if (mDialogData.textZeilen.length > 0)            
                         this.fDialogService.Hinweis(mDialogData);
                         
-             });
-
+                });
         });
     }
         

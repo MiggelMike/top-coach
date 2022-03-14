@@ -34,7 +34,7 @@ export class Programm03Component implements OnInit {
     @Input() ShowStats: Boolean = false;
     @Input() StatsVisible: Boolean = false;
     @Input() DeletedExerciseList: Array<Uebung> = [];
-	@Input() DeletedSatzList: Array<Satz> = [];
+    @Input() DeletedSatzList: Array<Satz> = [];
     
     @ViewChildren("accUebung") accUebung: QueryList<MatAccordion>;
     @ViewChildren("panUebung") panUebung: QueryList<MatExpansionPanel>;
