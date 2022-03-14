@@ -105,7 +105,7 @@ export class Satz implements ISatz {
     public Prozent: number = 0;
     public GewichtDiff: Array<GewichtDiff> = [];
     //#region GewichtAusgefuehrt 
-    private fGewichtAusgefuehrt: number;    
+    private fGewichtAusgefuehrt: number = 0;    
     get GewichtAusgefuehrt():number
     {
         return Number(this.fGewichtAusgefuehrt);

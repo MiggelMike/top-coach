@@ -223,6 +223,8 @@ export class Progress implements IProgress {
 			const x = 0;
 		} // if
 
+		if (aSession.Kategorie02 !== SessionStatus.Laueft && aSessUebung.getArbeitsSaetzeStatus() !== ArbeitsSaetzeStatus.AlleFertig)
+			return WeightProgress.Same; 
 
 		// Wenn aFailCount === 0 ist, brauchen die Sessions nicht geprüft werden.
 		if (mFailCount === 0) {
@@ -285,7 +287,7 @@ export class Progress implements IProgress {
 		} // if
 
 		if (   mProgress.ProgressSet === ProgressSet.First
-			// && aSession.Kategorie02 === SessionStatus.Laueft
+			&& aSession.Kategorie02 === SessionStatus.Laueft
 			&& aSatzIndex === 0
 			// Nur der erste Satz muss erledigt sein.
 			// && (aSessUebung.SatzFertig(0) === true)
@@ -553,7 +555,7 @@ export class Progress implements IProgress {
 			aProgressPara.AusgangsUebung.WeightProgress = aProgressPara.Wp;
 			aProgressPara.SatzDone = aProgressPara.SatzDone;
 			aProgressPara.SessionDone = aProgressPara.SessionDone;
-			Progress.StaticProgrammSetNextWeight(aProgressPara);
+			await Progress.StaticProgrammSetNextWeight(aProgressPara);
 			// aProgressPara = mProgressPara;
 		}
 		

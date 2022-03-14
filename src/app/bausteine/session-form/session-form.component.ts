@@ -274,7 +274,12 @@ export class SessionFormComponent implements OnInit {
 		const mIndex = aSessionForm.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
 		if (mIndex > -1) aSessionForm.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
 		aSessionForm.fDexieSvcService.AktuellesProgramm.NummeriereSessions();
-		await aSessionForm.fDexieSvcService.ProgrammSpeichern(aSessionForm.fDexieSvcService.AktuellesProgramm);
+		try {
+			
+			await aSessionForm.fDexieSvcService.ProgrammSpeichern(aSessionForm.fDexieSvcService.AktuellesProgramm);
+		} catch (error) {
+			console.error(error);
+		}
 		this.router.navigate([""]);
 
 

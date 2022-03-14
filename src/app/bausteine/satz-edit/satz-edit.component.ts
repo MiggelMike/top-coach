@@ -176,9 +176,11 @@ export class SatzEditComponent implements OnInit {
         mProgressPara.ProgressListe = this.fDbModule.ProgressListe;
         // Routine zum Starten der Stoppuhr.
         mProgressPara.NextProgressFn = (aNextProgress: NextProgress) => {
-            this.DoStoppUhr(Number(aNextProgress.Satz.GewichtAusgefuehrt),
-                `"${aNextProgress.Uebung.Name}" - set #${(aNextProgress.Satz.SatzListIndex + 1).toString()} - weight: ${(aNextProgress.Satz.GewichtVorgabeStr)}`
-            );
+            if (aNextProgress !== undefined) {
+                this.DoStoppUhr(Number(aNextProgress.Satz.GewichtAusgefuehrt),
+                    `"${aNextProgress.Uebung.Name}" - set #${(aNextProgress.Satz.SatzListIndex + 1).toString()} - weight: ${(aNextProgress.Satz.GewichtVorgabeStr)}`
+                );
+            }
         }
 
         Progress.StaticDoProgress(mProgressPara).then((aProgressPara: ProgressPara) => {
