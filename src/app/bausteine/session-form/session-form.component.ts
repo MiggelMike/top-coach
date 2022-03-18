@@ -177,74 +177,11 @@ export class SessionFormComponent implements OnInit {
 		if ((aPara !== undefined) && (aPara.DoProgressFn !== undefined)) 
 			aPara.DoProgressFn(this.Session);
 		
-
-		return mSessionForm.fDexieSvcService.SessionSpeichern(mSessionForm.Session).then(() => {
-			mSessionForm.cmpSession = mSessionForm.Session.Copy();
-		});
-				
-		// if ((mSession.Kategorie02 === SessionStatus.Fertig) && (mSession.ProgressIsCalced === false)) {
-		// 	mSession.ProgressIsCalced = true;
-		// 	for (let mIndex = 0; mIndex < mSession.UebungsListe.length; mIndex++) {
-		// 		const mUebung = mSession.UebungsListe[mIndex];
-		// 		// Sofort zur nächsten Übung gehen, wenn keine Arbeitsätze vorhanden oder nicht alle fertig sind.  
-		// 		if ((mUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.KeinerVorhanden) ||
-		// 			(mUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.NichtAlleFertig))
-		// 			continue;
-				
-		// 		const mProgress: Progress = mSessionForm.fDexieSvcService.ProgressListe.find((mFindProgress) =>
-		// 			(mUebung.FkProgress !== undefined && mFindProgress.ID === mUebung.FkProgress)
-		// 		);
-
-		// 		if (mProgress) {
-		// 			for (let index = 0; index < mUebung.ArbeitsSatzListe.length; index++) {
-		// 				await mProgress.DetermineNextProgress(
-		// 					mSessionForm.fDexieSvcService,
-		// 					mSession.Datum,
-		// 					mSession.FK_VorlageProgramm,
-		// 					index,
-		// 					mUebung
-		// 				).then((mWeightProgress) => {
-		// 					let mProgressWeight = 0;
-
-		// 					switch (mWeightProgress) {
-		// 						case WeightProgress.Increase:
-		// 							mProgressWeight = mUebung.GewichtSteigerung;
-		// 							break;
-
-		// 						case WeightProgress.Decrease:
-		// 							mProgressWeight = -mUebung.GewichtReduzierung;
-		// 							break;
-		// 					} // switch
-
-		// 					if (mProgressWeight !== 0) {
-		// 						const mAnstehendeSessions: Array<ISession> =
-		// 							mSessionForm.fDexieSvcService.AktuellesProgramm.SessionListe
-		// 								.filter((s) =>
-		// 									// Session muss im Warte-Modus sein
-		// 									(s.Kategorie02 === SessionStatus.Wartet) &&
-		// 									// Die Uebung muss in der Session vorkommen.
-		// 									(s.UebungsListe.findIndex((u: Uebung) => u.FkUebung === mUebung.FkUebung) > -1)
-		// 								);
-
-		// 						mAnstehendeSessions.forEach((s) => {
-		// 							const mAnstehendeUebungen: Array<Uebung> = s.UebungsListe.filter((u: Uebung) => u.FkUebung === mUebung.FkUebung);
-		// 							mAnstehendeUebungen.forEach((u) => {
-		// 								u.ArbeitsSatzListe.forEach((sz) => {
-		// 									sz.GewichtVorgabe += mProgressWeight;
-		// 									sz.WdhAusgefuehrt = sz.GewichtVorgabe;
-		// 								})
-		// 								aPara.fDexieSvcService.SessionSpeichern(s).then(() => {
-											
-		// 								});
-		// 							});
-		// 						});
-								
-		// 					}
-		// 				});
-		// 			}//for
-		// 		}//if 
-		// 	}//for
-		// }
+		return mSessionForm.fDexieSvcService.SessionSpeichern(mSession)
+			// return mSessionForm.fDexieSvcService.SessionSpeichern(mSessionForm.Session)
+			.then(() => {
+				mSessionForm.cmpSession = mSessionForm.Session.Copy();
+			});
 	}
 
 	public CancelChanges(aPara: SessionFormComponent, aNavRoute: string) {
@@ -275,8 +212,9 @@ export class SessionFormComponent implements OnInit {
 		if (mIndex > -1) aSessionForm.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
 		aSessionForm.fDexieSvcService.AktuellesProgramm.NummeriereSessions();
 		try {
+			this.SaveChangesPrim({ that: aSessionForm });
+
 			
-			await aSessionForm.fDexieSvcService.ProgrammSpeichern(aSessionForm.fDexieSvcService.AktuellesProgramm);
 		} catch (error) {
 			console.error(error);
 		}
@@ -293,64 +231,76 @@ export class SessionFormComponent implements OnInit {
 		mDialogData.textZeilen.push("Workout will be saved and closed.");
 		mDialogData.textZeilen.push("Do you want to proceed?");
 		mDialogData.OkData = this;
-		mDialogData.OkFn = (aSessionForm: SessionFormComponent) => {
+		mDialogData.OkFn = async (aSessionForm: SessionFormComponent) => {
 			aSessionForm.Session.SetSessionFertig();
+			
+			if (aSessionForm.Session.UebungsListe.length > 0) {
+				const mNeueSession: Session = aSessionForm.Session.Copy(true);
+				mNeueSession.init();
+				this.fDexieSvcService.InitSessionSaetze(aSessionForm.Session, mNeueSession as Session);
+				if(mNeueSession.UebungsListe !== undefined)
+					mNeueSession.UebungsListe.forEach((u) => {
+						u.Failed = false;
+						u.FailDate = MinDatum;
+					});
 
-			this.SaveChangesPrim({ that: aSessionForm }).then( async () => {
-				if (aSessionForm.Session.UebungsListe.length > 0) {
-					const mNeueSession: Session = aSessionForm.Session.Copy(true);
-					mNeueSession.init();
-					this.fDexieSvcService.InitSessionSaetze(aSessionForm.Session, mNeueSession as Session);
-					if(mNeueSession.UebungsListe !== undefined)
-						mNeueSession.UebungsListe.forEach((u) => u.ReduceDate = MinDatum);
+				mNeueSession.FK_Programm = aSessionForm.Session.FK_Programm;
+				mNeueSession.FK_VorlageProgramm = aSessionForm.Session.FK_VorlageProgramm;
+				mNeueSession.Expanded = false;
+				this.Programm.SessionListe.push(mNeueSession);
+				this.Programm.NummeriereSessions();
+				
+				// const mCurrentDate = new Date();
+				// if(aSessionForm.Session.UebungsListe !== undefined)
+				// 	aSessionForm.Session.UebungsListe.forEach((u) => u.FailDate = mCurrentDate);
+				await this.fDexieSvcService.SessionSpeichern(aSessionForm.Session);				
 
-					mNeueSession.FK_Programm = aSessionForm.Session.FK_Programm;
-					mNeueSession.FK_VorlageProgramm = aSessionForm.Session.FK_VorlageProgramm;
-					mNeueSession.Expanded = false;
-					this.Programm.SessionListe.push(mNeueSession);
-					this.Programm.NummeriereSessions();
-					await this.fDexieSvcService.SessionSpeichern(mNeueSession);
+				const mSessions: Array<Session> = [mNeueSession];
+				for (let mSessionIndex = 0; mSessionIndex < mSessions.length; mSessionIndex++) {
+					const mPtrSession: Session = mSessions[mSessionIndex];
+					for (let mUebungIndex = 0; mUebungIndex < mPtrSession.UebungsListe.length; mUebungIndex++) {
+						const mPtrUebung = mPtrSession.UebungsListe[mUebungIndex];
+						// Fertig-Datum setzen
+						if (   mPtrUebung.ArbeitsSatzListe.length > 0 
+							&& mPtrUebung.FkProgress !== undefined)
+						{
+							const mProgressPara: ProgressPara = new ProgressPara();
+							mProgressPara.SessionDone = true;
+							mProgressPara.DbModule = this.fDexieSvcService;
+							mProgressPara.Programm = this.Programm;
+							mProgressPara.AusgangsSession = mPtrSession;
+							mProgressPara.AlleSaetze = true;
+							mProgressPara.ProgressHasChanged = false;
+							mProgressPara.AusgangsUebung = mPtrUebung;
+							
+							mProgressPara.FailUebung = aSessionForm.Session.UebungsListe.find((u) => {
+								if (u.FkUebung === mPtrUebung.FkUebung && u.ListenIndex === mPtrUebung.ListenIndex)
+									return u;
+								return undefined;
+							});
 
-					for (let mUebungIndex = 0; mUebungIndex < aSessionForm.Session.UebungsListe.length; mUebungIndex++) {
-						const mPtrUebung = aSessionForm.Session.UebungsListe[mUebungIndex];
-						if (mPtrUebung.ArbeitsSatzListe.length > 0) {
-							if (mPtrUebung.FkProgress !== undefined)
-							{
-								const mProgressPara: ProgressPara = new ProgressPara();
-								mProgressPara.SessionDone = true;
-								mProgressPara.DbModule = this.fDexieSvcService;
-								mProgressPara.Programm = this.Programm;
-								mProgressPara.AusgangsSession = aSessionForm.Session;
-								mProgressPara.AlleSaetze = true;
-								mProgressPara.ProgressHasChanged = false;
-								mProgressPara.AusgangsUebung = mPtrUebung;
-								
-								mProgressPara.ProgressID = mPtrUebung.FkProgress;
-								mProgressPara.AlteProgressID = mPtrUebung.FkProgress;
-								
-								mProgressPara.ProgressListe = this.fDexieSvcService.ProgressListe;
-								mProgressPara.Progress = this.fDexieSvcService.ProgressListe.find((p) => p.ID === mProgressPara.AusgangsUebung.FkProgress);
+							mProgressPara.ProgressID = mPtrUebung.FkProgress;
+							mProgressPara.AlteProgressID = mPtrUebung.FkProgress;
+							mProgressPara.ProgressListe = this.fDexieSvcService.ProgressListe;
+							mProgressPara.Progress = this.fDexieSvcService.ProgressListe.find((p) => p.ID === mProgressPara.AusgangsUebung.FkProgress);
 
-								if (mProgressPara.Progress.ProgressSet === ProgressSet.Last) {
-									mProgressPara.SatzDone = mPtrUebung.ArbeitsSatzListe[mPtrUebung.ArbeitsSatzListe.length-1].Status === SatzStatus.Fertig;
-									mProgressPara.AusgangsSatz = mPtrUebung.ArbeitsSatzListe[mPtrUebung.ArbeitsSatzListe.length-1];
-								} else {
-									mProgressPara.SatzDone = mPtrUebung.ArbeitsSatzListe[0].Status === SatzStatus.Fertig;
-									mProgressPara.AusgangsSatz = mPtrUebung.ArbeitsSatzListe[0];
-								}
-
-								// if(Progress.StaticProgressEffectsRunningSession(mPtrUebung.FkProgress, mProgressPara) === false)
-								if (mUebungIndex >= aSessionForm.Session.UebungsListe.length - 1) {
-									await Progress.StaticDoProgress(mProgressPara).then(() =>
-										this.DoAfterDone(aSessionFormComponent)
-									);
-								} else
-									await Progress.StaticDoProgress(mProgressPara);
-							}//if
-						}
+							if (mProgressPara.Progress.ProgressSet === ProgressSet.Last) {
+								mProgressPara.SatzDone = mPtrUebung.ArbeitsSatzListe[mPtrUebung.ArbeitsSatzListe.length - 1].Status === SatzStatus.Fertig;
+								mProgressPara.AusgangsSatz = mPtrUebung.ArbeitsSatzListe[mPtrUebung.ArbeitsSatzListe.length - 1];
+							} else {
+								mProgressPara.SatzDone = mPtrUebung.ArbeitsSatzListe[0].Status === SatzStatus.Fertig;
+								mProgressPara.AusgangsSatz = mPtrUebung.ArbeitsSatzListe[0];
+							}
+							await Progress.StaticDoProgress(mProgressPara);
+						}//if
 					}//for
-				} else this.DoAfterDone(aSessionFormComponent);
-			});
+				}//for
+				// if (   mSessionIndex >= mSessions.length - 1 
+				// 	&& mUebungIndex >= aSessionForm.Session.UebungsListe.length - 1
+				//    )
+				await this.fDexieSvcService.SessionSpeichern(mNeueSession);
+			}
+			this.DoAfterDone(aSessionFormComponent);
 		}
 		this.fDialogService.JaNein(mDialogData);
 	}

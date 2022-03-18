@@ -85,6 +85,7 @@ export interface IUebung {
     EquipmentTyp: string;
     MaxFailCount: number;
     FailCount: number;
+    Failed: boolean;
     getArbeitsSaetzeStatus(): ArbeitsSaetzeStatus;
     ArbeitsSaetzeStatus: ArbeitsSaetzeStatus;
     Vorlage: boolean;
@@ -102,7 +103,7 @@ export interface IUebung {
     WeightProgress: WeightProgress;
     AltWeightProgress: WeightProgress;
     Datum: Date;
-    ReduceDate: Date;
+    FailDate: Date;
     FK_Programm: number;
 }
 
@@ -141,6 +142,7 @@ export class Uebung implements IUebung {
     public Typ: UebungsTyp = UebungsTyp.Undefined;
     public MaxFailCount: number = 3;
     public FailCount: number = 0;
+    public Failed: boolean = false;
     public Kategorieen01: Array<UebungsKategorie01> = [];
     public Kategorie02: UebungsKategorie02 = UebungsKategorie02.Stamm;
     public SessionID: number = 0;
@@ -169,7 +171,7 @@ export class Uebung implements IUebung {
     public AufwaermArbeitsSatzPause: number = 0;
     public NaechsteUebungPause: number = 0;
     public Datum: Date;
-    public ReduceDate: Date = MinDatum;
+    public FailDate: Date = MinDatum;
 
     public Vorlage: boolean = false;
     public FkProgress: number = -1;

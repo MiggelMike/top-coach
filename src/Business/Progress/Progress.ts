@@ -1,9 +1,6 @@
-import { AppData } from './../Coach/Coach';
-import { AnstehendeSessionsComponent } from './../../app/anstehende-sessions/anstehende-sessions.component';
 import { ParaDB, MinDatum, SortOrder } from './../../app/services/dexie-svc.service';
-import { Gewicht } from './../Konfiguration/Gewicht';
 import { GewichtDiff } from './../Satz/Satz';
-import { AfterLoadFn, DexieSvcService } from 'src/app/services/dexie-svc.service';
+import { AfterLoadFn, DexieSvcService  } from 'src/app/services/dexie-svc.service';
 import { ITrainingsProgramm, TrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { ISession, Session } from './../Session/Session';
 import { SessionStatus } from 'src/Business/SessionDB';
@@ -32,6 +29,7 @@ export class ProgressPara {
 	AusgangsSession: ISession;
 	AlleSaetze: boolean = false;
 	DbModule: DexieSvcService;
+	FailUebung: Uebung;
 	AusgangsUebung: Uebung;
 	AusgangsSatz: Satz;
 	Progress: Progress;
@@ -144,15 +142,8 @@ export class Progress implements IProgress {
 		return true;
 	}
 
-	private EvalReduceDate(aSessionStatus: SessionStatus, aUebung: Uebung, aDatum: Date, aDb: DexieSvcService) {
-		if (aSessionStatus === SessionStatus.Fertig) {
-			aUebung.ReduceDate = aDatum;
-			aDb.UebungSpeichern(aUebung);
-		}
-	}
-
 	private EvalDecreaseType(aSession: Session, aUebung: Uebung, aDb: DexieSvcService): WeightProgress {
-		this.EvalReduceDate(aSession.Kategorie02, aUebung, new Date(), aDb);
+		// this.EvalReduceDate(aSession.Kategorie02, aUebung, new Date(), aDb);
 		if (aUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig)
 			return WeightProgress.DecreaseNextTime;
 		else
@@ -174,18 +165,18 @@ export class Progress implements IProgress {
 		// return await aDb.transaction("r", [aDb.cSession, aDb.cUebung], async () => {
 		if ((aSessUebung.GewichtSteigerung === 0) && (aSessUebung.GewichtReduzierung === 0)) return WeightProgress.Same;
 
-		let mUebungsliste: Array<Uebung> = [];
-		
+		let mUebungsliste: Array<Uebung> = [aSessUebung];
+
 		// Die Übungen nur laden, wenn die Anzahl der Fehlversuche größer 0 und abgeschlossen ist
 		if (    mFailCount > 0
-			&&
-			(      aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
-			|| (
-				    mProgress.ProgressSet === ProgressSet.First
-				&& 	aSession.Kategorie02 !== SessionStatus.Laueft
-				&& 	aSessUebung.SatzFertig(0) === true
-			   	)
-		  	)
+			// &&
+			// (      aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
+			// || (
+			// 	    mProgress.ProgressSet === ProgressSet.First
+			// 	&& 	aSession.Kategorie02 !== SessionStatus.Laueft
+			// 	&& 	aSessUebung.SatzFertig(0) === true
+			//    	)
+		  	// )
 		)
 		{
 			const mLadePara: ParaDB = new ParaDB();
@@ -200,46 +191,50 @@ export class Progress implements IProgress {
 			};
 
 			mLadePara.And = (mUebung: Uebung): boolean => {
-				return (mUebung.Datum < aSessUebung.Datum);
+				return (mUebung.Datum <= aSessUebung.Datum);
 			};
 
 			mLadePara.OnUebungAfterLoadFn = (mUebungen: Array<Uebung>) => {
 				const mResult: Array<Uebung> = [];
- 
-				// if (mUebungen.find((u) => u.ID === aSessUebung.ID) === undefined)
-				// 	mUebungen.unshift(aSessUebung);
+				if (mUebungen.find((u) => u.ID === aSessUebung.ID) === undefined) 
+					mUebungen.push(aSessUebung);
 				
-				let mMaxFailedDate = MinDatum;
+				mUebungen = mUebungen.sort((a, b) => {
+					return b.FailDate.valueOf() - a.FailDate.valueOf();
+				});
 
-			for (let index = 0; index < mUebungen.length; index++) {
-				const mPtrUebung = mUebungen[index];
-				if (mPtrUebung.ReduceDate  > mMaxFailedDate)
-				mMaxFailedDate = mPtrUebung.ReduceDate
-			}
-			
-			for (let index = 0; index < mUebungen.length; index++) {
-			// for (let index = mUebungen.length-1; index > -1; index--) {
-				const mPtrUebung = mUebungen[index];
-					
-				if (mMaxFailedDate === mPtrUebung.ReduceDate)
-					break;
-					
-					mResult.push(mPtrUebung);
+				let mMaxFailDate: Date = MinDatum;
+
+				for (let index = 0; index < mUebungen.length; index++) {
+					const mPtrUebung = mUebungen[index];
+
+					if (mPtrUebung.FailDate.valueOf() > mMaxFailDate.valueOf())
+						mMaxFailDate = mPtrUebung.FailDate;
+				}
+
+				for (let index = 0; index < mUebungen.length; index++) {
+					const mPtrUebung = mUebungen[index];
+					// if (mUebungsliste.find((u) => u.ID === mPtrUebung.ID) === undefined)
+						// mResult.push(mPtrUebung);
+						// if ((mPtrUebung.FailDate.valueOf() > mMaxFailDate.valueOf()) || (mPtrUebung.FailDate.valueOf() === MinDatum.valueOf()))
+						// if ((mPtrUebung.Datum.valueOf() > mMaxFailDate.valueOf()) || (mMaxFailDate.valueOf() === MinDatum.valueOf()))
+						if (mPtrUebung.Datum.valueOf() > mMaxFailDate.valueOf()) 
+							mResult.push(mPtrUebung)
 				}
 				return mResult;
-			};
+			}
 
-
-			mLadePara.Limit = aSessionDone === true ? mFailCount + 1 : mFailCount;
-			mLadePara.SortBy = "ReduceDate";
+			mLadePara.Limit = mFailCount;
+			mLadePara.SortBy = "FailDate";
 
 			// Warten, bis Übungen geladen sind.
 			mUebungsliste = await aDb.LadeSessionUebungen(aSession.Copy(true), mLadePara);
+					
 			const x = 0;
 		} // if
 
-		if (aSession.Kategorie02 !== SessionStatus.Laueft && aSessUebung.getArbeitsSaetzeStatus() !== ArbeitsSaetzeStatus.AlleFertig)
-			return WeightProgress.Same; 
+		// if (aSession.Kategorie02 !== SessionStatus.Laueft && aSessUebung.getArbeitsSaetzeStatus() !== ArbeitsSaetzeStatus.AlleFertig)
+		// 	return WeightProgress.Same; 
 
 		//#region mFailCount === 0
 		// Wenn aFailCount === 0 ist, brauchen die Sessions nicht geprüft werden.
@@ -377,7 +372,7 @@ export class Progress implements IProgress {
 			}
 
 			// Alle Sätze prüfen
-			if (aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig) {
+			// if (aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig) {
 				if (mProgress.ProgressSet === ProgressSet.All) {
 					// Alle Sätze der Übung.
 					if (this.EvalSaetze(mPtrSessUebung, VorgabeWeightLimit.UpperLimit))
@@ -391,7 +386,7 @@ export class Progress implements IProgress {
 							mFailCount++
 					}//if
 				}//if
-			}//if
+			// }//if
 		} // for
 
 		if (mFailCount >= aSessUebung.MaxFailCount) {
@@ -565,16 +560,15 @@ export class Progress implements IProgress {
 					else
 						aProgressPara.Wp = aProgressPara.AusgangsSatz.Status === SatzStatus.Wartet ? WeightProgress.Decrease : aProgressPara.Wp;
 				}
-				else {
-					aProgressPara.Wp = aProgressPara.Wp;
-				}
 		
-				aProgressPara.AusgangsUebung.WeightProgress = aProgressPara.Wp;
-				aProgressPara.SatzDone = aProgressPara.SatzDone;
-				aProgressPara.SessionDone = aProgressPara.SessionDone;
+				if (aProgressPara.FailUebung !== undefined) {
+					if (aProgressPara.AusgangsUebung.WeightProgress !== WeightProgress.Increase)
+						aProgressPara.FailUebung.Failed = true;
+					else
+						aProgressPara.FailUebung.Failed = false;
+				}
 			
 				await Progress.StaticProgrammSetNextWeight(aProgressPara);
-				// aProgressPara = mProgressPara;
 			} catch (error) {
 				console.error(error);
 			}
@@ -1021,40 +1015,53 @@ export class Progress implements IProgress {
 					switch (aProgressPara.Wp) {
 						case WeightProgress.Increase:
 							Progress.StaticSetAllWeights(
-								mPtrArbeitUebung,
+								aProgressPara.AusgangsUebung, //mPtrArbeitUebung,
 								aProgressPara.AusgangsUebung,
 								aProgressPara.AusgangsSatz,
 								Arithmetik.Add,
 								aProgressPara.AlleSaetze,
 								aProgressPara.AusgangsUebung.GewichtSteigerung);
 							
-							break;
+							mPtrArbeitUebung.Failed = true;
+							if (aProgressPara.FailUebung) 
+								aProgressPara.FailUebung.Failed = true;
+ 							break;
 						
 						case WeightProgress.Decrease:
 						case WeightProgress.DecreaseNextTime:	
 							Progress.StaticSetAllWeights(
-								mPtrArbeitUebung,
+								aProgressPara.AusgangsUebung, // mPtrArbeitUebung,
 								aProgressPara.AusgangsUebung,
 								aProgressPara.AusgangsSatz,
 								Arithmetik.Sub,
 								aProgressPara.AlleSaetze,
 								aProgressPara.AusgangsUebung.GewichtReduzierung);
 							
-							mPtrArbeitUebung.FailCount++;
+							if (aProgressPara.FailUebung) {
+								aProgressPara.FailUebung.Failed = true;
+								aProgressPara.FailUebung.FailDate = new Date();
+							}
+							break;
+						case WeightProgress.Same:
+							if (aProgressPara.FailUebung) 
+								aProgressPara.FailUebung.Failed = true;
 							break;
 					} // switch
+					
 				}
 				else if (aProgressPara.SessionDone === false) {
+					aProgressPara.AusgangsUebung.Failed = true;
 					aProgressPara.Wp = WeightProgress.Decrease;
 					// Der Ausgangssatz ist nicht erledigt.
 					Progress.StaticSetAllWeights(
-						mPtrArbeitUebung,
+						aProgressPara.AusgangsUebung, //mPtrArbeitUebung,
 						aProgressPara.AusgangsUebung,
 						aProgressPara.AusgangsSatz,
 						Arithmetik.Sub,
 						aProgressPara.AlleSaetze);
 				}
 			}
+			// aProgressPara.AusgangsUebung.SatzListe = mPtrArbeitUebung.SatzListe;
 					
 			aProgressPara.AusgangsSession.UebungsListe.find((u) => {
 				if ((u.SessionID === mPtrArbeitUebung.SessionID) &&
