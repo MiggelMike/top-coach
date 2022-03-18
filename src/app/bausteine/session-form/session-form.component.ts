@@ -309,6 +309,7 @@ export class SessionFormComponent implements OnInit {
 					mNeueSession.Expanded = false;
 					this.Programm.SessionListe.push(mNeueSession);
 					this.Programm.NummeriereSessions();
+					await this.fDexieSvcService.SessionSpeichern(mNeueSession);
 
 					for (let mUebungIndex = 0; mUebungIndex < aSessionForm.Session.UebungsListe.length; mUebungIndex++) {
 						const mPtrUebung = aSessionForm.Session.UebungsListe[mUebungIndex];
@@ -339,12 +340,12 @@ export class SessionFormComponent implements OnInit {
 								}
 
 								// if(Progress.StaticProgressEffectsRunningSession(mPtrUebung.FkProgress, mProgressPara) === false)
+								if (mUebungIndex >= aSessionForm.Session.UebungsListe.length - 1) {
+									await Progress.StaticDoProgress(mProgressPara).then(() =>
+										this.DoAfterDone(aSessionFormComponent)
+									);
+								} else
 									await Progress.StaticDoProgress(mProgressPara);
-							}
-
-							if (mUebungIndex >= aSessionForm.Session.UebungsListe.length - 1)
-							{
-								this.DoAfterDone(aSessionFormComponent);
 							}//if
 						}
 					}//for

@@ -363,7 +363,7 @@ export class DexieSvcService extends Dexie {
 			}, //OnProgrammNoRecorderLoadFn
 		} as ParaDB;
 
-	    // Dexie.delete("ConceptCoach");
+	    // Dexie.delete("ConceptCoach");s
 
 		this.version(18).stores({
 			AppData: "++id",

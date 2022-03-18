@@ -83,6 +83,7 @@ export enum WeightProgress {
 	Increase,
 	Decrease,
 	Same,
+	DecreaseNextTime,
 }
 
 export enum ProgressSet {
@@ -150,13 +151,21 @@ export class Progress implements IProgress {
 		}
 	}
 
+	private EvalDecreaseType(aSession: Session, aUebung: Uebung, aDb: DexieSvcService): WeightProgress {
+		this.EvalReduceDate(aSession.Kategorie02, aUebung, new Date(), aDb);
+		if (aUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig)
+			return WeightProgress.DecreaseNextTime;
+		else
+			return WeightProgress.Decrease;
+	}
+
+
 	public async DetermineNextProgress(
 		aDb: DexieSvcService,
-		aDatum: Date,
-		aVorlageProgrammID: number,
 		aSatzIndex: number,
 		aSessUebung: Uebung,
-		aSession: Session
+		aSession: Session,
+		aSessionDone: boolean
 	): Promise<WeightProgress> {
 		let mFailCount = (aSessUebung.MaxFailCount < 0) ? 0 : aSessUebung.MaxFailCount;
 		const mProgress: Progress = this;
@@ -168,8 +177,16 @@ export class Progress implements IProgress {
 		let mUebungsliste: Array<Uebung> = [];
 		
 		// Die Übungen nur laden, wenn die Anzahl der Fehlversuche größer 0 und abgeschlossen ist
-		if (   mFailCount > 0
-			&& aSession.Kategorie02 === SessionStatus.Fertig)
+		if (    mFailCount > 0
+			&&
+			(      aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
+			|| (
+				    mProgress.ProgressSet === ProgressSet.First
+				&& 	aSession.Kategorie02 !== SessionStatus.Laueft
+				&& 	aSessUebung.SatzFertig(0) === true
+			   	)
+		  	)
+		)
 		{
 			const mLadePara: ParaDB = new ParaDB();
 			mLadePara.SortOrder = SortOrder.descending;
@@ -189,25 +206,23 @@ export class Progress implements IProgress {
 			mLadePara.OnUebungAfterLoadFn = (mUebungen: Array<Uebung>) => {
 				const mResult: Array<Uebung> = [];
  
-				if (mUebungen.find((u) => u.ID === aSessUebung.ID) === undefined)
-					mUebungen.unshift(aSessUebung);
+				// if (mUebungen.find((u) => u.ID === aSessUebung.ID) === undefined)
+				// 	mUebungen.unshift(aSessUebung);
 				
 				let mMaxFailedDate = MinDatum;
-				for (let index = 0; index < mUebungen.length; index++) {
-					const mPtrUebung = mUebungen[index];
-					if (mPtrUebung.ReduceDate  > mMaxFailedDate)
-						mMaxFailedDate = mPtrUebung.ReduceDate
-					
-					if (mPtrUebung.ReduceDate  > mMaxFailedDate)
-						mMaxFailedDate = mPtrUebung.ReduceDate
-					
-				}
 
-				for (let index = 0; index < mUebungen.length; index++) {
-					const mPtrUebung = mUebungen[index];
+			for (let index = 0; index < mUebungen.length; index++) {
+				const mPtrUebung = mUebungen[index];
+				if (mPtrUebung.ReduceDate  > mMaxFailedDate)
+				mMaxFailedDate = mPtrUebung.ReduceDate
+			}
+			
+			for (let index = 0; index < mUebungen.length; index++) {
+			// for (let index = mUebungen.length-1; index > -1; index--) {
+				const mPtrUebung = mUebungen[index];
 					
-					if (mMaxFailedDate === mPtrUebung.ReduceDate)
-						break;
+				if (mMaxFailedDate === mPtrUebung.ReduceDate)
+					break;
 					
 					mResult.push(mPtrUebung);
 				}
@@ -215,8 +230,8 @@ export class Progress implements IProgress {
 			};
 
 
-			mLadePara.Limit = mFailCount - 1;
-			mLadePara.SortBy = "Datum";
+			mLadePara.Limit = aSessionDone === true ? mFailCount + 1 : mFailCount;
+			mLadePara.SortBy = "ReduceDate";
 
 			// Warten, bis Übungen geladen sind.
 			mUebungsliste = await aDb.LadeSessionUebungen(aSession.Copy(true), mLadePara);
@@ -226,6 +241,7 @@ export class Progress implements IProgress {
 		if (aSession.Kategorie02 !== SessionStatus.Laueft && aSessUebung.getArbeitsSaetzeStatus() !== ArbeitsSaetzeStatus.AlleFertig)
 			return WeightProgress.Same; 
 
+		//#region mFailCount === 0
 		// Wenn aFailCount === 0 ist, brauchen die Sessions nicht geprüft werden.
 		if (mFailCount === 0) {
 			// Wenn aFailCount === 0, gibt es kein Rückgabe WeightProgress.Same
@@ -241,8 +257,7 @@ export class Progress implements IProgress {
 				if (mProgress.ProgressTyp === ProgressTyp.RepRangeSet) {
 					// Prüfen, ob das untere WDH-Limit erreicht ist 
 					if (aSessUebung.SatzWDH(0) < aSessUebung.SatzVonVorgabeWDH(0)) {
-						this.EvalReduceDate(aSession.Kategorie02, mReduceUebung, new Date(), aDb);
-						return WeightProgress.Decrease;
+						return this.EvalDecreaseType(aSession, mReduceUebung, aDb);
 					}
 				}
 			}
@@ -259,8 +274,7 @@ export class Progress implements IProgress {
 				if (mProgress.ProgressTyp === ProgressTyp.RepRangeSet) {
 					// Prüfen, ob das untere WDH-Limit erreicht ist 
 					if (aSessUebung.SatzWDH(aSessUebung.ArbeitsSatzListe.length - 1) < aSessUebung.SatzVonVorgabeWDH(aSessUebung.ArbeitsSatzListe.length - 1)) {
-						this.EvalReduceDate(aSession.Kategorie02, mReduceUebung, new Date(), aDb);
-						return WeightProgress.Decrease;
+						return this.EvalDecreaseType(aSession, mReduceUebung, aDb);
 					}
 				}
 			}
@@ -276,8 +290,7 @@ export class Progress implements IProgress {
 				if (mProgress.ProgressTyp === ProgressTyp.RepRangeSet) {
 					// Prüfen, ob das untere WDH-Limit erreicht ist 
 					if (mProgress.EvalSaetze(aSessUebung, VorgabeWeightLimit.LowerLimit) === false) {
-						this.EvalReduceDate(aSession.Kategorie02, mReduceUebung, new Date(), aDb);
-						return WeightProgress.Decrease;
+						return this.EvalDecreaseType(aSession, mReduceUebung, aDb);
 					}
 				}
 			}
@@ -285,6 +298,7 @@ export class Progress implements IProgress {
 			// Da aber aFailCount === 0 ist, wird mit dem gleichen Gewicht weiter gearbeitet.
 			return WeightProgress.Same;
 		} // if
+		//#endregion
 
 		if (   mProgress.ProgressSet === ProgressSet.First
 			&& aSession.Kategorie02 === SessionStatus.Laueft
@@ -299,7 +313,6 @@ export class Progress implements IProgress {
 				return WeightProgress.Increase;
 		}
 
-
 		if (   aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
 			&& mProgress.ProgressSet === ProgressSet.Last
 			&& aSatzIndex === aSessUebung.ArbeitsSatzListe.length - 1) {
@@ -310,22 +323,23 @@ export class Progress implements IProgress {
 				return WeightProgress.Increase;
 		}
 
-		if (   aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
-			&& mProgress.ProgressSet === ProgressSet.All)
+		// Alle Sätze der Übung.
+		if (	mProgress.ProgressSet === ProgressSet.All
+			&&  aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
+			&& mProgress.EvalSaetze(aSessUebung, VorgabeWeightLimit.UpperLimit))
 		{
-			// Alle Sätze der Übung.
-			if (mProgress.EvalSaetze(aSessUebung, VorgabeWeightLimit.UpperLimit))
-				// Die vorgegebenen Wiederholungen konnten erreicht werden
-				return WeightProgress.Increase;
+		// Die vorgegebenen Wiederholungen konnten erreicht werden
+			WeightProgress.Increase;
 		}
 
 		if ((mUebungsliste === undefined)|| (mUebungsliste.length < mFailCount)) 
 			return WeightProgress.Same;
 
+		//#region Vorherige Uebungen prüfen
 		mFailCount = 0;
 
     		// Es konnte noch kein Ergebnis ermittelt werden.
-			// Die Uebunden müssen geprüft werden.
+			// Die Uebungen müssen geprüft werden.
 		for (let index = 0; index < mUebungsliste.length; index++) {
 			const mPtrSessUebung = mUebungsliste[index];
 			// Der erste Satz ist maßgebend.
@@ -381,11 +395,11 @@ export class Progress implements IProgress {
 		} // for
 
 		if (mFailCount >= aSessUebung.MaxFailCount) {
-			this.EvalReduceDate(aSession.Kategorie02, mReduceUebung, new Date(), aDb);
-			return WeightProgress.Decrease;
+			return this.EvalDecreaseType(aSession, mReduceUebung, aDb);
 		}
 		else
 			return WeightProgress.Same;
+		//#endregion
 	}
 
 	public static StaticDoSaetzeProgress(aWarteSatzListe: Array<Satz>, aUpComingSessionListe: Array<Session>, aAusgangsSatz: Satz, aUebung: Uebung, aAusgangsSession: Session, aProgressSet : ProgressSet,  aWeightProgress?: WeightProgress): NextProgress {
@@ -457,6 +471,7 @@ export class Progress implements IProgress {
 					break;
 				
 				case WeightProgress.Decrease:
+				case WeightProgress.DecreaseNextTime:
 					mDiff = aUebung.GewichtReduzierung;
 					break;
 			}
@@ -525,38 +540,45 @@ export class Progress implements IProgress {
 					aProgressPara.Progress.ProgressSet);                
 			
 		if (aProgressPara.Progress) {
-			aProgressPara.Wp =
-				await aProgressPara.Progress.DetermineNextProgress(
-					aProgressPara.DbModule,
-					new Date,
-					aProgressPara.AusgangsSession.FK_VorlageProgramm,
-					aProgressPara.AusgangsSatz.SatzListIndex,
-					aProgressPara.AusgangsUebung,
-					aProgressPara.AusgangsSession as Session
-				);
+			try {
+				
+				aProgressPara.Wp =
+					await aProgressPara.Progress.DetermineNextProgress(
+						aProgressPara.DbModule,
+						aProgressPara.AusgangsSatz.SatzListIndex,
+						aProgressPara.AusgangsUebung,
+						aProgressPara.AusgangsSession as Session,
+						aProgressPara.SessionDone
+					);
+			
 
-			aProgressPara.ProgressID = aProgressPara.Progress ? aProgressPara.Progress.ID : -1;
-			aProgressPara.AlteProgressID = aProgressPara.AusgangsUebung.FkAltProgress;
-			aProgressPara.ProgressHasChanged = aProgressPara.AlteProgressID !== aProgressPara.ProgressID;
+				aProgressPara.ProgressID = aProgressPara.Progress ? aProgressPara.Progress.ID : -1;
+				aProgressPara.AlteProgressID = aProgressPara.AusgangsUebung.FkAltProgress;
+				aProgressPara.ProgressHasChanged = aProgressPara.AlteProgressID !== aProgressPara.ProgressID;
 		
-			if (aProgressPara.ProgressHasChanged === true) {
-				if (
-					(aProgressPara.AusgangsSatz.Status === SatzStatus.Wartet)
-					&& (Progress.StaticFindDoneSet(aProgressPara.AusgangsSession, aProgressPara.AusgangsUebung) === true)
-				)
-				aProgressPara.Wp = aProgressPara.Wp;
-				else
-				aProgressPara.Wp = aProgressPara.AusgangsSatz.Status === SatzStatus.Wartet ? WeightProgress.Decrease : aProgressPara.Wp;
-			}
-			else {
-				aProgressPara.Wp = aProgressPara.Wp;
-			}
+				if (aProgressPara.ProgressHasChanged === true) {
+					if (
+						(aProgressPara.AusgangsSatz.Status === SatzStatus.Wartet)
+						&& (Progress.StaticFindDoneSet(aProgressPara.AusgangsSession, aProgressPara.AusgangsUebung) === true)
+					)
+						aProgressPara.Wp = aProgressPara.Wp;
+					else
+						aProgressPara.Wp = aProgressPara.AusgangsSatz.Status === SatzStatus.Wartet ? WeightProgress.Decrease : aProgressPara.Wp;
+				}
+				else {
+					aProgressPara.Wp = aProgressPara.Wp;
+				}
 		
-			aProgressPara.AusgangsUebung.WeightProgress = aProgressPara.Wp;
-			aProgressPara.SatzDone = aProgressPara.SatzDone;
-			aProgressPara.SessionDone = aProgressPara.SessionDone;
-			await Progress.StaticProgrammSetNextWeight(aProgressPara);
-			// aProgressPara = mProgressPara;
+				aProgressPara.AusgangsUebung.WeightProgress = aProgressPara.Wp;
+				aProgressPara.SatzDone = aProgressPara.SatzDone;
+				aProgressPara.SessionDone = aProgressPara.SessionDone;
+			
+				await Progress.StaticProgrammSetNextWeight(aProgressPara);
+				// aProgressPara = mProgressPara;
+			} catch (error) {
+				console.error(error);
+			}
+			
 		}
 		
 		if ((aProgressPara.SatzDone) && (aProgressPara.NextProgressFn)) {
@@ -576,7 +598,8 @@ export class Progress implements IProgress {
                             mDiff = u.GewichtSteigerung;
                             break;
                 
-                        case WeightProgress.Decrease:
+						case WeightProgress.Decrease:
+						case WeightProgress.DecreaseNextTime:
                             mDiff = u.GewichtReduzierung;
                             break;
                     }
@@ -1008,6 +1031,7 @@ export class Progress implements IProgress {
 							break;
 						
 						case WeightProgress.Decrease:
+						case WeightProgress.DecreaseNextTime:	
 							Progress.StaticSetAllWeights(
 								mPtrArbeitUebung,
 								aProgressPara.AusgangsUebung,

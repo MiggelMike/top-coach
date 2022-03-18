@@ -187,39 +187,51 @@ export class SatzEditComponent implements OnInit {
         Progress.StaticDoProgress(mProgressPara).then( (aProgressPara: ProgressPara) => {
             aProgressPara.DbModule.LadeAppData()
                 .then((aAppData) => {
-                    aProgressPara.UserInfo = [];
-                    if (
-                        (aProgressPara.Progress.ProgressSet === ProgressSet.First)
-                        && (aSatz.SatzListIndex === 0)
-                        && (aProgressPara.Wp === WeightProgress.Increase)
-                    ) {
-                        mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe + aProgressPara.AusgangsUebung.GewichtSteigerung} ${aAppData.GewichtsEinheitText} for the next sets`);
-                        mDialogData.textZeilen.push(`of this exercise of the current workout.`);
-                    }
-                    else {
-                        if (this.sessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig) {
-                            if (aProgressPara.Progress.ProgressSet === ProgressSet.First
-                                && this.sessUebung.SatzWDH(0) >= this.sessUebung.SatzBisVorgabeWDH(0)
-                                || aProgressPara.Wp === WeightProgress.Increase
-                            ) {
-                                mDialogData.textZeilen.push(`Well done!`);
-                                if (aProgressPara.Progress.ProgressSet === ProgressSet.First)
-                                    mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe} ${aAppData.GewichtsEinheitText} next time.`);
-                                else
-                                    mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe + aProgressPara.AusgangsUebung.GewichtSteigerung} ${aAppData.GewichtsEinheitText} next time.`);
-                            } else if (aProgressPara.Wp === WeightProgress.Decrease) {
-                                mDialogData.textZeilen.push(`You failed!`);
-                                mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe} ${aAppData.GewichtsEinheitText} next time.`);
-                            } else if (aProgressPara.Wp === WeightProgress.Same) {
-                                mDialogData.textZeilen.push(`Lift same weight next time.`);
-                                mDialogData.textZeilen.push(`${aProgressPara.AusgangsSatz.GewichtVorgabe} ${aAppData.GewichtsEinheitText}`);
-                            }
-                        }//if
-                    }
-
-                    if (mDialogData.textZeilen.length > 0)            
-                        this.fDialogService.Hinweis(mDialogData);
+                    try {
                         
+                        aProgressPara.UserInfo = [];
+                        if (
+                            (aProgressPara.Progress.ProgressSet === ProgressSet.First)
+                            && (aSatz.SatzListIndex === 0)
+                            && (aProgressPara.Wp === WeightProgress.Increase)
+                        ) {
+                            mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe + aProgressPara.AusgangsUebung.GewichtSteigerung} ${aAppData.GewichtsEinheitText} for the next sets`);
+                            mDialogData.textZeilen.push(`of this exercise of the current workout.`);
+                        }
+                        else {
+                            if (this.sessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig) {
+                                if (aProgressPara.Progress.ProgressSet === ProgressSet.First
+                                    && this.sessUebung.SatzWDH(0) >= this.sessUebung.SatzBisVorgabeWDH(0)
+                                    || aProgressPara.Wp === WeightProgress.Increase
+                                ) {
+                                    mDialogData.textZeilen.push(`Well done!`);
+                                    if (aProgressPara.Progress.ProgressSet === ProgressSet.First)
+                                        mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe} ${aAppData.GewichtsEinheitText} next time.`);
+                                    else
+                                        mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe + aProgressPara.AusgangsUebung.GewichtSteigerung} ${aAppData.GewichtsEinheitText} next time.`);
+                                }
+                                else if (
+                                        (aProgressPara.Wp === WeightProgress.Decrease || aProgressPara.Wp === WeightProgress.DecreaseNextTime)
+                                    &&  this.sessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig )
+                                {
+                                    mDialogData.textZeilen.push(`You failed!`);
+                                    if (aProgressPara.Wp === WeightProgress.DecreaseNextTime)
+                                        mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe} ${aAppData.GewichtsEinheitText} next time.`);
+                                    //     mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe - aProgressPara.AusgangsUebung.GewichtReduzierung} ${aAppData.GewichtsEinheitText} next time.`);
+                                    // else
+                                    //     mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe} ${aAppData.GewichtsEinheitText} next time.`);
+                                } else if (aProgressPara.Wp === WeightProgress.Same) {
+                                    mDialogData.textZeilen.push(`Lift same weight next time.`);
+                                    mDialogData.textZeilen.push(`${aProgressPara.AusgangsSatz.GewichtVorgabe} ${aAppData.GewichtsEinheitText}`);
+                                }
+                            }//if
+                        }
+                    
+                        if (mDialogData.textZeilen.length > 0)
+                            this.fDialogService.Hinweis(mDialogData);
+                    } catch (error) {
+                        console.log(error);
+                    }
                 });
         });
     }
