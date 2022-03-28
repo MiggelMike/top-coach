@@ -334,6 +334,11 @@ export class Uebung implements IUebung {
         return this.ArbeitsSatzListe[aSatzIndex].WdhAusgefuehrt;
     }
 
+    public SetzeArbeitsSaetzeGewichtNaechsteSession(aGewicht: number): void {
+        if (this.ArbeitsSatzListe !== undefined)
+            this.ArbeitsSatzListe.forEach((sz) => sz.GewichtNaechsteSession = aGewicht);
+    }
+
     public SatzVonVorgabeWDH(aSatzIndex: number): number {
         if ((this.ArbeitsSatzListe === undefined)||(this.ArbeitsSatzListe.length < aSatzIndex))
             return -1;

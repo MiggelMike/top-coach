@@ -104,6 +104,16 @@ export class Satz implements ISatz {
     public SatzTyp: SatzTyp = SatzTyp.Training;
     public Prozent: number = 0;
     public GewichtDiff: Array<GewichtDiff> = [];
+    //#region GewichtNaechsteSession 
+    private fGewichtNaechsteSession: number = 0;
+    get GewichtNaechsteSession(): number{
+        return Number(this.fGewichtNaechsteSession);
+    }
+
+    set GewichtNaechsteSession(aGewicht: number) {
+        this.fGewichtNaechsteSession = Number(aGewicht);
+    }
+    //#endregion
     //#region GewichtAusgefuehrt 
     private fGewichtAusgefuehrt: number = 0;    
     get GewichtAusgefuehrt():number
@@ -210,6 +220,7 @@ export class Satz implements ISatz {
         this.WdhVonVorgabe = aPara.WdhVonVorgabe ? aPara.WdhVonVorgabe : 0;
         this.WdhAusgefuehrt = aPara.WdhAusgefuehrt ? aPara.WdhAusgefuehrt : 0;
         this.GewichtVorgabe = aPara.GewichtVorgabe ? aPara.GewichtVorgabe : 0;
+        this.GewichtNaechsteSession = this.GewichtVorgabe;
         this.GewichtAusgefuehrt = aPara.GewichtAusgefuehrt
             ? aPara.GewichtAusgefuehrt
             : 0;

@@ -205,24 +205,28 @@ export class SatzEditComponent implements OnInit {
                                     || aProgressPara.Wp === WeightProgress.Increase
                                 ) {
                                     mDialogData.textZeilen.push(`Well done!`);
-                                    if (aProgressPara.Progress.ProgressSet === ProgressSet.First)
+                                    if (aProgressPara.Progress.ProgressSet === ProgressSet.First) {
                                         mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe} ${aAppData.GewichtsEinheitText} next time.`);
-                                    else
+                                        this.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtVorgabe);
+                                    }
+                                    else {
                                         mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe + aProgressPara.AusgangsUebung.GewichtSteigerung} ${aAppData.GewichtsEinheitText} next time.`);
+                                        this.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtVorgabe + aProgressPara.AusgangsUebung.GewichtSteigerung);
+                                    }
                                 }
                                 else if (
                                         (aProgressPara.Wp === WeightProgress.Decrease || aProgressPara.Wp === WeightProgress.DecreaseNextTime)
                                     &&  this.sessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig )
                                 {
                                     mDialogData.textZeilen.push(`You failed!`);
-                                    if (aProgressPara.Wp === WeightProgress.DecreaseNextTime)
+                                    if (aProgressPara.Wp === WeightProgress.DecreaseNextTime) {
                                         mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe} ${aAppData.GewichtsEinheitText} next time.`);
-                                    //     mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe - aProgressPara.AusgangsUebung.GewichtReduzierung} ${aAppData.GewichtsEinheitText} next time.`);
-                                    // else
-                                    //     mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe} ${aAppData.GewichtsEinheitText} next time.`);
+                                        this.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtVorgabe);
+                                    }
                                 } else if (aProgressPara.Wp === WeightProgress.Same) {
                                     mDialogData.textZeilen.push(`Lift same weight next time.`);
                                     mDialogData.textZeilen.push(`${aProgressPara.AusgangsSatz.GewichtVorgabe} ${aAppData.GewichtsEinheitText}`);
+                                    this.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtVorgabe);
                                 }
                             }//if
                         }

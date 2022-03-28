@@ -196,8 +196,8 @@ export class Progress implements IProgress {
 
 			mLadePara.OnUebungAfterLoadFn = (mUebungen: Array<Uebung>) => {
 				const mResult: Array<Uebung> = [];
-				if (mUebungen.find((u) => u.ID === aSessUebung.ID) === undefined) 
-					mUebungen.push(aSessUebung);
+				// if (mUebungen.find((u) => u.ID === aSessUebung.ID) === undefined) 
+				// 	mUebungen.push(aSessUebung);
 				
 				mUebungen = mUebungen.sort((a, b) => {
 					return b.FailDate.valueOf() - a.FailDate.valueOf();
@@ -229,8 +229,8 @@ export class Progress implements IProgress {
 
 			// Warten, bis Übungen geladen sind.
 			mUebungsliste = await aDb.LadeSessionUebungen(aSession.Copy(true), mLadePara);
-					
-			const x = 0;
+			if (mUebungsliste.find((u) => u.ID === aSessUebung.ID) === undefined) 
+				mUebungsliste.unshift(aSessUebung);
 		} // if
 
 		// if (aSession.Kategorie02 !== SessionStatus.Laueft && aSessUebung.getArbeitsSaetzeStatus() !== ArbeitsSaetzeStatus.AlleFertig)
@@ -372,21 +372,21 @@ export class Progress implements IProgress {
 			}
 
 			// Alle Sätze prüfen
-			// if (aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig) {
-				if (mProgress.ProgressSet === ProgressSet.All) {
-					// Alle Sätze der Übung.
-					if (this.EvalSaetze(mPtrSessUebung, VorgabeWeightLimit.UpperLimit))
-						// Die vorgegebenen Wiederholungen konnten erreicht werden
-						return WeightProgress.Increase;
-					else {
-						// Wenn der Prozesstyp nicht Blockset ist, muss... 
-						if ((mProgress.ProgressTyp === ProgressTyp.BlockSet) ||
-							// ...er RepRange sein. Daher das untere Limit prüfen.
-							(this.EvalSaetze(mPtrSessUebung, VorgabeWeightLimit.LowerLimit) === false))
-							mFailCount++
-					}//if
+			if (	mProgress.ProgressSet === ProgressSet.All
+				&& 	aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig )
+			{
+				// Alle Sätze der Übung.
+				if (this.EvalSaetze(mPtrSessUebung, VorgabeWeightLimit.UpperLimit))
+					// Die vorgegebenen Wiederholungen konnten erreicht werden
+					return WeightProgress.Increase;
+				else {
+					// Wenn der Prozesstyp nicht Blockset ist, muss... 
+					if ((mProgress.ProgressTyp === ProgressTyp.BlockSet) ||
+						// ...er RepRange sein. Daher das untere Limit prüfen.
+						(this.EvalSaetze(mPtrSessUebung, VorgabeWeightLimit.LowerLimit) === false))
+						mFailCount++
 				}//if
-			// }//if
+			}//if
 		} // for
 
 		if (mFailCount >= aSessUebung.MaxFailCount) {
@@ -893,7 +893,6 @@ export class Progress implements IProgress {
 			const mPtrTodoUebung: Uebung = mTodoListe[mTodoIndex].Uebung;
 			const mPrtArbeitSession = mTodoListe[mTodoIndex].Session;
 			let mPtrArbeitUebung: Uebung = mPtrTodoUebung;
-			const mNeueSession: boolean = mPrtArbeitSession.ID === undefined;
 
 			for (let mSessionIndex = 0; mSessionIndex < aProgressPara.Programm.SessionListe.length; mSessionIndex++) {
 				const mPrtSession = aProgressPara.Programm.SessionListe[mSessionIndex];
@@ -901,20 +900,19 @@ export class Progress implements IProgress {
 					(u.SessionID === mPtrTodoUebung.SessionID) &&
 					u.FkUebung === mPtrTodoUebung.FkUebung &&
 					u.ListenIndex === mPtrTodoUebung.ListenIndex &&
-					// u.FkProgress === mPtrTodoUebung.FkProgress &&
 					u.ProgressGroup === mPtrTodoUebung.ProgressGroup
 				);
 
 				if (mPtrArbeitUebung !== undefined)
 					break;
 			}
+				
 
 			if (   mPtrArbeitUebung === undefined
 				|| mPtrArbeitUebung.FkUebung !== aProgressPara.AusgangsUebung.FkUebung
 			   )
 				continue;
-
-					
+			
 			mPtrArbeitUebung.nummeriereSatzListe(mPtrArbeitUebung.SatzListe);
 					
 			if (Progress.StaticProgressHasChanged(aProgressPara)) {
@@ -1000,6 +998,8 @@ export class Progress implements IProgress {
 					)
 				)
 			) {
+				const mZielUebung: Uebung = aProgressPara.SessionDone === true ? aProgressPara.AusgangsUebung : mPtrArbeitUebung;
+					
 				if (
 					(      (aProgressPara.SessionDone === true)
 						&& (mPtrArbeitUebung.FkUebung === aProgressPara.AusgangsUebung.FkUebung)
@@ -1015,22 +1015,21 @@ export class Progress implements IProgress {
 					switch (aProgressPara.Wp) {
 						case WeightProgress.Increase:
 							Progress.StaticSetAllWeights(
-								aProgressPara.AusgangsUebung, //mPtrArbeitUebung,
+								mZielUebung, // mPtrArbeitUebung,
 								aProgressPara.AusgangsUebung,
 								aProgressPara.AusgangsSatz,
 								Arithmetik.Add,
 								aProgressPara.AlleSaetze,
 								aProgressPara.AusgangsUebung.GewichtSteigerung);
 							
-							mPtrArbeitUebung.Failed = true;
-							if (aProgressPara.FailUebung) 
-								aProgressPara.FailUebung.Failed = true;
+							if (aProgressPara.FailUebung !== undefined) 
+								aProgressPara.FailUebung.Failed = false;
  							break;
 						
 						case WeightProgress.Decrease:
 						case WeightProgress.DecreaseNextTime:	
 							Progress.StaticSetAllWeights(
-								aProgressPara.AusgangsUebung, // mPtrArbeitUebung,
+								mZielUebung, //mPtrArbeitUebung,
 								aProgressPara.AusgangsUebung,
 								aProgressPara.AusgangsSatz,
 								Arithmetik.Sub,
@@ -1043,18 +1042,19 @@ export class Progress implements IProgress {
 							}
 							break;
 						case WeightProgress.Same:
-							if (aProgressPara.FailUebung) 
+							if (aProgressPara.FailUebung !== undefined) 
 								aProgressPara.FailUebung.Failed = true;
 							break;
 					} // switch
 					
 				}
 				else if (aProgressPara.SessionDone === false) {
-					aProgressPara.AusgangsUebung.Failed = true;
+					if (aProgressPara.FailUebung !== undefined) 
+						aProgressPara.FailUebung.Failed = true;
+					
 					aProgressPara.Wp = WeightProgress.Decrease;
-					// Der Ausgangssatz ist nicht erledigt.
 					Progress.StaticSetAllWeights(
-						aProgressPara.AusgangsUebung, //mPtrArbeitUebung,
+						mZielUebung, // mPtrArbeitUebung,
 						aProgressPara.AusgangsUebung,
 						aProgressPara.AusgangsSatz,
 						Arithmetik.Sub,
@@ -1064,26 +1064,39 @@ export class Progress implements IProgress {
 			// aProgressPara.AusgangsUebung.SatzListe = mPtrArbeitUebung.SatzListe;
 					
 			aProgressPara.AusgangsSession.UebungsListe.find((u) => {
-				if ((u.SessionID === mPtrArbeitUebung.SessionID) &&
-					(u.FkUebung === mPtrArbeitUebung.FkUebung) &&
-					(u.ListenIndex === mPtrArbeitUebung.ListenIndex)) {
-					if (Progress.StaticEqualUebung(u, mPtrArbeitUebung) === true) {
-						if (u.FkAltProgress !== u.FkProgress) {
+				const mIsAusgangsUebung = (u.SessionID === aProgressPara.AusgangsUebung.SessionID)
+					&& (u.FkUebung === aProgressPara.AusgangsUebung.FkUebung)
+					&& (u.ListenIndex === aProgressPara.AusgangsUebung.ListenIndex);
+
+				if (   (u.SessionID === mPtrArbeitUebung.SessionID)
+					&& (u.FkUebung === mPtrArbeitUebung.FkUebung)
+					&& (u.ListenIndex === mPtrArbeitUebung.ListenIndex)
+					)
+				{
+					if (Progress.StaticEqualUebung(u, mPtrArbeitUebung) === true 
+						&&	u.FkAltProgress !== u.FkProgress)
+					{
 							Progress.StaticManageProgressID(u, aProgressPara.ProgressID);
 							Progress.StaticManageProgressID(mPtrArbeitUebung, aProgressPara.ProgressID);
 							Progress.StaticManageProgressID(aProgressPara.AusgangsUebung, aProgressPara.ProgressID);
-						}
-					}
+					}//if
+
 					for (let index = 0; index < mPtrArbeitUebung.SatzListe.length; index++) {
 						if (index < u.SatzListe.length) {
 							const mPrtSatz: Satz = mPtrArbeitUebung.SatzListe[index];
 							mPrtSatz.Status = u.SatzListe[index].Status;
 							mPrtSatz.WdhAusgefuehrt = u.SatzListe[index].WdhAusgefuehrt;
+							mPrtSatz.WdhVonVorgabe = u.SatzListe[index].WdhVonVorgabe;
+							mPrtSatz.WdhBisVorgabe = u.SatzListe[index].WdhBisVorgabe;
+							mPrtSatz.GewichtAusgefuehrt = u.SatzListe[index].GewichtAusgefuehrt;
+							mPrtSatz.GewichtVorgabe = u.SatzListe[index].GewichtVorgabe;
 							u.SatzListe[index] = mPrtSatz;
 						}
 					}
-
+					
 					u = mPtrArbeitUebung;
+					if (mIsAusgangsUebung === true)
+						aProgressPara.AusgangsUebung = mPtrArbeitUebung;
 					return true;
 				} // if
 				return false;

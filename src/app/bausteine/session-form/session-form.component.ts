@@ -242,6 +242,12 @@ export class SessionFormComponent implements OnInit {
 					mNeueSession.UebungsListe.forEach((u) => {
 						u.Failed = false;
 						u.FailDate = MinDatum;
+						if (u.ArbeitsSatzListe !== undefined) {
+							u.ArbeitsSatzListe.forEach((sz) => {
+								sz.GewichtAusgefuehrt = sz.GewichtNaechsteSession;
+								sz.GewichtVorgabe = sz.GewichtNaechsteSession;
+							});
+						}//if
 					});
 
 				mNeueSession.FK_Programm = aSessionForm.Session.FK_Programm;
