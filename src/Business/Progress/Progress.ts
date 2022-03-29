@@ -389,8 +389,9 @@ export class Progress implements IProgress {
 			{
 				// Alle Sätze der Übung.
 				if (this.EvalSaetze(mPtrSessUebung, VorgabeWeightLimit.UpperLimit))
-					// Die vorgegebenen Wiederholungen konnten erreicht werden
+					// Die vorgegebenen Wiederholungen konnten erreicht werden.
 					return WeightProgress.Increase;
+				
 				else {
 					// Wenn der Prozesstyp nicht Blockset ist, muss... 
 					if ((mProgress.ProgressTyp === ProgressTyp.BlockSet) ||
