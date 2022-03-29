@@ -150,6 +150,10 @@ export class Progress implements IProgress {
 			return WeightProgress.Decrease;
 	}
 
+	public FailCheck(aUebung: Uebung): WeightProgress{
+		return WeightProgress.Same;
+	}
+
 
 	public async DetermineNextProgress(
 		aDb: DexieSvcService,
@@ -192,12 +196,14 @@ export class Progress implements IProgress {
 
 			mLadePara.And = (mUebung: Uebung): boolean => {
 				return (mUebung.Datum <= aSessUebung.Datum);
+					// && (	mUebung.FailDate > aSessUebung.FailDate
+					// 	|| aSessUebung.FailDate.valueOf() === MinDatum.valueOf())
 			};
 
 			mLadePara.OnUebungAfterLoadFn = (mUebungen: Array<Uebung>) => {
 				const mResult: Array<Uebung> = [];
-				// if (mUebungen.find((u) => u.ID === aSessUebung.ID) === undefined) 
-				// 	mUebungen.push(aSessUebung);
+				if (mUebungen.find((u) => u.ID === aSessUebung.ID) === undefined) 
+					mUebungen.push(aSessUebung);
 				
 				mUebungen = mUebungen.sort((a, b) => {
 					return b.FailDate.valueOf() - a.FailDate.valueOf();
@@ -229,8 +235,8 @@ export class Progress implements IProgress {
 
 			// Warten, bis Übungen geladen sind.
 			mUebungsliste = await aDb.LadeSessionUebungen(aSession.Copy(true), mLadePara);
-			if (mUebungsliste.find((u) => u.ID === aSessUebung.ID) === undefined) 
-				mUebungsliste.unshift(aSessUebung);
+			// if (mUebungsliste.find((u) => u.ID === aSessUebung.ID) === undefined) 
+			// 	mUebungsliste.unshift(aSessUebung);
 		} // if
 
 		// if (aSession.Kategorie02 !== SessionStatus.Laueft && aSessUebung.getArbeitsSaetzeStatus() !== ArbeitsSaetzeStatus.AlleFertig)
@@ -239,7 +245,7 @@ export class Progress implements IProgress {
 		//#region mFailCount === 0
 		// Wenn aFailCount === 0 ist, brauchen die Sessions nicht geprüft werden.
 		if (mFailCount === 0) {
-			// Wenn aFailCount === 0, gibt es kein Rückgabe WeightProgress.Same
+			// Wenn aFailCount === 0, gibt es keine Rückgabe WeightProgress.Same
 			if (   mProgress.ProgressSet === ProgressSet.First
 				&& (aSession.Kategorie02 === SessionStatus.Laueft || aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig)
 				&& aSatzIndex === 0)
@@ -324,7 +330,7 @@ export class Progress implements IProgress {
 			&& mProgress.EvalSaetze(aSessUebung, VorgabeWeightLimit.UpperLimit))
 		{
 		// Die vorgegebenen Wiederholungen konnten erreicht werden
-			WeightProgress.Increase;
+  			return WeightProgress.Increase;
 		}
 
 		if ((mUebungsliste === undefined)|| (mUebungsliste.length < mFailCount)) 
@@ -350,15 +356,19 @@ export class Progress implements IProgress {
 					if ((mProgress.ProgressTyp === ProgressTyp.BlockSet) ||
 						// er RepRange sein. Daher das untere Limit prüfen.
 						(mPtrSessUebung.SatzWDH(0) < mPtrSessUebung.SatzVonVorgabeWDH(0)))
+					{
 						mFailCount++
+						continue;
+					}
 				}
 			}
 
 			// Der letzte Satz ist maßgebend.
 			if (   aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
-				&& mProgress.ProgressSet === ProgressSet.Last
-				&& aSatzIndex === mPtrSessUebung.ArbeitsSatzListe.length - 1) {
 				// Der letzte Satz der Übung ist maßgebend.
+				&& mProgress.ProgressSet === ProgressSet.Last
+				&& aSatzIndex === mPtrSessUebung.ArbeitsSatzListe.length - 1)
+			{
 				if (mPtrSessUebung.SatzWDH(mPtrSessUebung.ArbeitsSatzListe.length - 1) >= mPtrSessUebung.SatzBisVorgabeWDH(mPtrSessUebung.ArbeitsSatzListe.length - 1))
 					// Die vorgegebenen Wiederholungen konnten erreicht werden
 					return WeightProgress.Increase;
@@ -367,9 +377,12 @@ export class Progress implements IProgress {
 					if ((mProgress.ProgressTyp === ProgressTyp.BlockSet) ||
 						// er RepRange sein. Daher das untere Limit prüfen.
 						(mPtrSessUebung.SatzWDH(mPtrSessUebung.ArbeitsSatzListe.length - 1) < mPtrSessUebung.SatzVonVorgabeWDH(mPtrSessUebung.ArbeitsSatzListe.length - 1)))
+					{
 						mFailCount++
-				}
-			}
+						continue;
+					}//if
+				}//if
+			}//if
 
 			// Alle Sätze prüfen
 			if (	mProgress.ProgressSet === ProgressSet.All
@@ -384,7 +397,10 @@ export class Progress implements IProgress {
 					if ((mProgress.ProgressTyp === ProgressTyp.BlockSet) ||
 						// ...er RepRange sein. Daher das untere Limit prüfen.
 						(this.EvalSaetze(mPtrSessUebung, VorgabeWeightLimit.LowerLimit) === false))
+					{
 						mFailCount++
+						continue;
+					}
 				}//if
 			}//if
 		} // for

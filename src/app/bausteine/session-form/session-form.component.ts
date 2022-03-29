@@ -297,7 +297,7 @@ export class SessionFormComponent implements OnInit {
 								mProgressPara.SatzDone = mPtrUebung.ArbeitsSatzListe[0].Status === SatzStatus.Fertig;
 								mProgressPara.AusgangsSatz = mPtrUebung.ArbeitsSatzListe[0];
 							}
-							await Progress.StaticDoProgress(mProgressPara);
+							// await Progress.StaticDoProgress(mProgressPara);
 						}//if
 					}//for
 				}//for
