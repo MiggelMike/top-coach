@@ -220,7 +220,6 @@ export class Progress implements IProgress {
 
 		if ((aSessUebung.GewichtSteigerung === 0) && (aSessUebung.GewichtReduzierung === 0)) return WeightProgress.Same;
 
-		let mParaUebungFailed: boolean = false;
 		const mWeightProgressParaUebung = this.FailCheck(aDb, aSession, aSessUebung, aSessUebung, aSatzIndex);
 
 		if (mFailCount === 0 ||
@@ -229,7 +228,7 @@ export class Progress implements IProgress {
 
 
 		if (mWeightProgressParaUebung === WeightProgress.Decrease || mWeightProgressParaUebung === WeightProgress.DecreaseNextTime)
-			mParaUebungFailed = true;
+			aSessUebung.Failed = true;
 		
 		// Wenn aFailCount === 0 ist, brauchen die Sessions nicht geprüft werden.
 		if (mFailCount === 0)
@@ -238,7 +237,7 @@ export class Progress implements IProgress {
 		let mUebungsliste: Array<Uebung> = [aSessUebung];
 
 		// Die Übungen nur laden, wenn die Anzahl der Fehlversuche größer 0 und abgeschlossen ist
-		if (mFailCount > 0 && mParaUebungFailed)
+		if (mFailCount > 0 && aSessUebung.Failed)
 		{
 			const mLadePara: ParaDB = new ParaDB();
 			mLadePara.SortOrder = SortOrder.descending;
@@ -260,8 +259,11 @@ export class Progress implements IProgress {
 			mLadePara.OnUebungAfterLoadFn = (mUebungen: Array<Uebung>) => {
 				const mResult: Array<Uebung> = [];
 				const mAktuelleUebung = mUebungen.find((u) => u.ID === aSessUebung.ID);
-				if (mAktuelleUebung === undefined) 
-					mUebungen.push(aSessUebung);
+				if (mAktuelleUebung !== undefined) {
+					const mSpliceIndex = mUebungen.indexOf(mAktuelleUebung);
+					mUebungen.splice(mSpliceIndex,1);
+				}
+				mUebungen.push(aSessUebung);
 				
 				mUebungen = mUebungen.sort((a, b) => {
 					return b.FailDate.valueOf() - a.FailDate.valueOf();
@@ -282,7 +284,7 @@ export class Progress implements IProgress {
 						// mResult.push(mPtrUebung);
 						// if ((mPtrUebung.FailDate.valueOf() > mMaxFailDate.valueOf()) || (mPtrUebung.FailDate.valueOf() === MinDatum.valueOf()))
 						// if ((mPtrUebung.Datum.valueOf() > mMaxFailDate.valueOf()) || (mMaxFailDate.valueOf() === MinDatum.valueOf()))
-						if (mPtrUebung.Datum.valueOf() > mMaxFailDate.valueOf()) 
+						if (mPtrUebung.Datum.valueOf() > mMaxFailDate.valueOf() && mPtrUebung.Failed === true ) 
 							mResult.push(mPtrUebung)
 				}
 				return mResult;
@@ -388,19 +390,13 @@ export class Progress implements IProgress {
 				&& 	aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig )
 			{
 				// Alle Sätze der Übung.
-				if (this.EvalSaetze(mPtrSessUebung, VorgabeWeightLimit.UpperLimit))
-					// Die vorgegebenen Wiederholungen konnten erreicht werden.
-					return WeightProgress.Increase;
-				
-				else {
-					// Wenn der Prozesstyp nicht Blockset ist, muss... 
-					if ((mProgress.ProgressTyp === ProgressTyp.BlockSet) ||
-						// ...er RepRange sein. Daher das untere Limit prüfen.
-						(this.EvalSaetze(mPtrSessUebung, VorgabeWeightLimit.LowerLimit) === false))
-					{
-						mFailCount++
-						continue;
-					}
+				if (	(mProgress.ProgressTyp === ProgressTyp.BlockSet && this.EvalSaetze(mPtrSessUebung, VorgabeWeightLimit.UpperLimit) === false)
+					|| (mProgress.ProgressTyp === ProgressTyp.RepRangeSet && this.EvalSaetze(mPtrSessUebung, VorgabeWeightLimit.LowerLimit) === false)
+				)
+				{
+					// Die vorgegebenen Wiederholungen konnten nicht erreicht werden.
+					mFailCount++
+					continue;
 				}//if
 			}//if
 		} // for
@@ -577,12 +573,12 @@ export class Progress implements IProgress {
 						aProgressPara.Wp = aProgressPara.AusgangsSatz.Status === SatzStatus.Wartet ? WeightProgress.Decrease : aProgressPara.Wp;
 				}
 		
-				if (aProgressPara.FailUebung !== undefined) {
-					if (aProgressPara.AusgangsUebung.WeightProgress !== WeightProgress.Increase)
-						aProgressPara.FailUebung.Failed = true;
-					else
-						aProgressPara.FailUebung.Failed = false;
-				}
+				// if (aProgressPara.FailUebung !== undefined) {
+				// 	if (aProgressPara.AusgangsUebung.WeightProgress !== WeightProgress.Increase)
+				// 		aProgressPara.FailUebung.Failed = true;
+				// 	else
+				// 		aProgressPara.FailUebung.Failed = false;
+				// }
 			
 				await Progress.StaticProgrammSetNextWeight(aProgressPara);
 			} catch (error) {
@@ -1038,8 +1034,8 @@ export class Progress implements IProgress {
 								aProgressPara.AlleSaetze,
 								aProgressPara.AusgangsUebung.GewichtSteigerung);
 							
-							if (aProgressPara.FailUebung !== undefined) 
-								aProgressPara.FailUebung.Failed = false;
+							// if (aProgressPara.FailUebung !== undefined) 
+							// 	aProgressPara.FailUebung.Failed = false;
  							break;
 						
 						case WeightProgress.Decrease:
@@ -1053,20 +1049,20 @@ export class Progress implements IProgress {
 								aProgressPara.AusgangsUebung.GewichtReduzierung);
 							
 							if (aProgressPara.FailUebung) {
-								aProgressPara.FailUebung.Failed = true;
+								// aProgressPara.FailUebung.Failed = true;
 								aProgressPara.FailUebung.FailDate = new Date();
 							}
 							break;
 						case WeightProgress.Same:
-							if (aProgressPara.FailUebung !== undefined) 
-								aProgressPara.FailUebung.Failed = true;
+							// if (aProgressPara.FailUebung !== undefined) 
+							// 	aProgressPara.FailUebung.Failed = true;
 							break;
 					} // switch
 					
 				}
 				else if (aProgressPara.SessionDone === false) {
-					if (aProgressPara.FailUebung !== undefined) 
-						aProgressPara.FailUebung.Failed = true;
+					// if (aProgressPara.FailUebung !== undefined) 
+					// 	aProgressPara.FailUebung.Failed = true;
 					
 					aProgressPara.Wp = WeightProgress.Decrease;
 					Progress.StaticSetAllWeights(
