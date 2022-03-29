@@ -1,3 +1,4 @@
+import { MinDatum } from './../../services/dexie-svc.service';
 import { NextProgress, Progress, ProgressPara, ProgressSet, ProgressTyp, VorgabeWeightLimit, WeightProgress } from './../../../Business/Progress/Progress';
 import { DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { PlateCalcSvcService, PlateCalcOverlayConfig } from './../../services/plate-calc-svc.service';
@@ -188,8 +189,9 @@ export class SatzEditComponent implements OnInit {
             aProgressPara.DbModule.LadeAppData()
                 .then((aAppData) => {
                     try {
-                        
                         aProgressPara.UserInfo = [];
+                        this.sessUebung.WeightInitDate = MinDatum;
+
                         if (
                             (aProgressPara.Progress.ProgressSet === ProgressSet.First)
                             && (aSatz.SatzListIndex === 0)
@@ -197,6 +199,7 @@ export class SatzEditComponent implements OnInit {
                         ) {
                             mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe + aProgressPara.AusgangsUebung.GewichtSteigerung} ${aAppData.GewichtsEinheitText} for the next sets`);
                             mDialogData.textZeilen.push(`of this exercise of the current workout.`);
+                            this.sessUebung.WeightInitDate = new Date();
                         }
                         else {
                             if (this.sessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig) {
@@ -204,6 +207,7 @@ export class SatzEditComponent implements OnInit {
                                     && this.sessUebung.SatzWDH(0) >= this.sessUebung.SatzBisVorgabeWDH(0)
                                     || aProgressPara.Wp === WeightProgress.Increase
                                 ) {
+                                    this.sessUebung.WeightInitDate = new Date();
                                     mDialogData.textZeilen.push(`Well done!`);
                                     if (aProgressPara.Progress.ProgressSet === ProgressSet.First) {
                                         mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe} ${aAppData.GewichtsEinheitText} next time.`);
@@ -218,6 +222,7 @@ export class SatzEditComponent implements OnInit {
                                         (aProgressPara.Wp === WeightProgress.Decrease || aProgressPara.Wp === WeightProgress.DecreaseNextTime)
                                     &&  this.sessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig )
                                 {
+                                    this.sessUebung.WeightInitDate = new Date();
                                     mDialogData.textZeilen.push(`You failed!`);
                                     // if (aProgressPara.Wp === WeightProgress.DecreaseNextTime) {
                                         mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe - aProgressPara.AusgangsUebung.GewichtReduzierung} ${aAppData.GewichtsEinheitText} next time.`);

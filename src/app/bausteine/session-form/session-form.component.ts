@@ -241,7 +241,7 @@ export class SessionFormComponent implements OnInit {
 				if(mNeueSession.UebungsListe !== undefined)
 					mNeueSession.UebungsListe.forEach((u) => {
 						u.Failed = false;
-						u.FailDate = MinDatum;
+						u.WeightInitDate = MinDatum;
 						if (u.ArbeitsSatzListe !== undefined) {
 							u.ArbeitsSatzListe.forEach((sz) => {
 								sz.GewichtAusgefuehrt = sz.GewichtNaechsteSession;

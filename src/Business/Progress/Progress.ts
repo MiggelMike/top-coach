@@ -227,8 +227,8 @@ export class Progress implements IProgress {
 			return mWeightProgressParaUebung;
 
 
-		if (mWeightProgressParaUebung === WeightProgress.Decrease || mWeightProgressParaUebung === WeightProgress.DecreaseNextTime)
-			aSessUebung.Failed = true;
+		// if (mWeightProgressParaUebung === WeightProgress.Decrease || mWeightProgressParaUebung === WeightProgress.DecreaseNextTime)
+		// 	aSessUebung.Failed = true;
 		
 		// Wenn aFailCount === 0 ist, brauchen die Sessions nicht geprüft werden.
 		if (mFailCount === 0)
@@ -237,7 +237,7 @@ export class Progress implements IProgress {
 		let mUebungsliste: Array<Uebung> = [aSessUebung];
 
 		// Die Übungen nur laden, wenn die Anzahl der Fehlversuche größer 0 und abgeschlossen ist
-		if (mFailCount > 0 && aSessUebung.Failed)
+		if (mFailCount > 0)
 		{
 			const mLadePara: ParaDB = new ParaDB();
 			mLadePara.SortOrder = SortOrder.descending;
@@ -266,16 +266,16 @@ export class Progress implements IProgress {
 				mUebungen.push(aSessUebung);
 				
 				mUebungen = mUebungen.sort((a, b) => {
-					return b.FailDate.valueOf() - a.FailDate.valueOf();
+					return b.WeightInitDate.valueOf() - a.WeightInitDate.valueOf();
 				});
 				
-				let mMaxFailDate: Date = MinDatum;
+				let mWeightInitDate: Date = MinDatum;
 				
 				for (let index = 0; index < mUebungen.length; index++) {
 					const mPtrUebung = mUebungen[index];
 
-					if (mPtrUebung.FailDate.valueOf() > mMaxFailDate.valueOf())
-						mMaxFailDate = mPtrUebung.FailDate;
+					if (mPtrUebung.WeightInitDate.valueOf() > mWeightInitDate.valueOf())
+						mWeightInitDate = mPtrUebung.WeightInitDate;
 				}
 
 				for (let index = 0; index < mUebungen.length; index++) {
@@ -284,7 +284,7 @@ export class Progress implements IProgress {
 						// mResult.push(mPtrUebung);
 						// if ((mPtrUebung.FailDate.valueOf() > mMaxFailDate.valueOf()) || (mPtrUebung.FailDate.valueOf() === MinDatum.valueOf()))
 						// if ((mPtrUebung.Datum.valueOf() > mMaxFailDate.valueOf()) || (mMaxFailDate.valueOf() === MinDatum.valueOf()))
-						if (mPtrUebung.Datum.valueOf() > mMaxFailDate.valueOf() && mPtrUebung.Failed === true ) 
+						if (mPtrUebung.Datum.valueOf() > mWeightInitDate.valueOf()) 
 							mResult.push(mPtrUebung)
 				}
 				return mResult;
@@ -1050,7 +1050,7 @@ export class Progress implements IProgress {
 							
 							if (aProgressPara.FailUebung) {
 								// aProgressPara.FailUebung.Failed = true;
-								aProgressPara.FailUebung.FailDate = new Date();
+								// aProgressPara.FailUebung.WeightInitDate = new Date();
 							}
 							break;
 						case WeightProgress.Same:

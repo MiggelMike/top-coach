@@ -103,7 +103,7 @@ export interface IUebung {
     WeightProgress: WeightProgress;
     AltWeightProgress: WeightProgress;
     Datum: Date;
-    FailDate: Date;
+    WeightInitDate: Date;
     FK_Programm: number;
 }
 
@@ -171,7 +171,7 @@ export class Uebung implements IUebung {
     public AufwaermArbeitsSatzPause: number = 0;
     public NaechsteUebungPause: number = 0;
     public Datum: Date;
-    public FailDate: Date = MinDatum;
+    public WeightInitDate: Date = MinDatum;
 
     public Vorlage: boolean = false;
     public FkProgress: number = -1;
