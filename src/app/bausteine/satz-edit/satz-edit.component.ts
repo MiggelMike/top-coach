@@ -219,10 +219,10 @@ export class SatzEditComponent implements OnInit {
                                     &&  this.sessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig )
                                 {
                                     mDialogData.textZeilen.push(`You failed!`);
-                                    if (aProgressPara.Wp === WeightProgress.DecreaseNextTime) {
-                                        mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe} ${aAppData.GewichtsEinheitText} next time.`);
-                                        this.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtVorgabe);
-                                    }
+                                    // if (aProgressPara.Wp === WeightProgress.DecreaseNextTime) {
+                                        mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe - aProgressPara.AusgangsUebung.GewichtReduzierung} ${aAppData.GewichtsEinheitText} next time.`);
+                                        this.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtVorgabe - aProgressPara.AusgangsUebung.GewichtReduzierung);
+                                    // }
                                 } else if (aProgressPara.Wp === WeightProgress.Same) {
                                     mDialogData.textZeilen.push(`Lift same weight next time.`);
                                     mDialogData.textZeilen.push(`${aProgressPara.AusgangsSatz.GewichtVorgabe} ${aAppData.GewichtsEinheitText}`);
