@@ -199,6 +199,7 @@ export class SatzEditComponent implements OnInit {
                         ) {
                             mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe + aProgressPara.AusgangsUebung.GewichtSteigerung} ${aAppData.GewichtsEinheitText} for the next sets`);
                             mDialogData.textZeilen.push(`of this exercise of the current workout.`);
+                            mDialogData.textZeilen.push(`and also in upcoming workouts.`);
                             this.sessUebung.WeightInitDate = new Date();
                         }
                         else {

@@ -356,18 +356,15 @@ export class Progress implements IProgress {
 				{
 					// Die vorgegebenen Wiederholungen für den ersten Satz konnten erreicht werden.
 					// Der erste Satz ist also Ok.
-					// Jetzt prüfen, ob die Session läuft. 
-					if (aSession.Kategorie02 === SessionStatus.Laueft)
+					if (
 						// Die Session läuft.
-						// Es reicht, wenn der erste Satz abgeschlossen und OK ist.
-						return WeightProgress.Increase;
-					else {
-						if (aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig) {
+						// Dann reicht es, wenn der erste Satz abgeschlossen und OK ist.
+							(aSession.Kategorie02 === SessionStatus.Laueft)
 						// Die Session läuft NICHT.
-						// Die vorgegebenen Wiederholungen für den ersten Satz konnten erreicht werden.
-						// Eine weitere Bedingung ist, dass alle Sätze Abgeschlossen sein müssen.
-							return WeightProgress.Increase;
-						}//if		
+						// Dann müssen ALLE Sätze abgeschlossen sein.
+						|| (aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig))
+					{
+						return WeightProgress.Increase;
 					}//if
 
 				}
@@ -1032,7 +1029,12 @@ export class Progress implements IProgress {
 					)
 				)
 			) {
-				const mZielUebung: Uebung = aProgressPara.SessionDone === true ? aProgressPara.AusgangsUebung : mPtrArbeitUebung;
+				let mZielUebung: Uebung;
+
+				if ((aProgressPara.SessionDone === true) || (Progress.StaticSessionLaeuft(aProgressPara.AusgangsSession) === true))
+					mZielUebung = aProgressPara.AusgangsUebung;
+				else
+					mZielUebung = mPtrArbeitUebung;
 					
 				if (
 					(      (aProgressPara.SessionDone === true)
@@ -1124,6 +1126,7 @@ export class Progress implements IProgress {
 							mPrtSatz.WdhBisVorgabe = u.SatzListe[index].WdhBisVorgabe;
 							mPrtSatz.GewichtAusgefuehrt = u.SatzListe[index].GewichtAusgefuehrt;
 							mPrtSatz.GewichtVorgabe = u.SatzListe[index].GewichtVorgabe;
+							mPrtSatz.GewichtDiff = u.SatzListe[index].GewichtDiff;
 							u.SatzListe[index] = mPrtSatz;
 						}
 					}

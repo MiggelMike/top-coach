@@ -230,6 +230,13 @@ export class Uebung implements IUebung {
 
     public ArbeitsSaetzeStatus: ArbeitsSaetzeStatus = ArbeitsSaetzeStatus.KeinerVorhanden;
 
+    public getArbeitsSatzStatus(aSatzIndex: number): SatzStatus {
+        if ((this.ArbeitsSatzListe.length <= 0) || (aSatzIndex >= this.ArbeitsSatzListe.length) || (aSatzIndex < 0))
+            return undefined;
+        
+        return this.ArbeitsSatzListe[aSatzIndex].Status;
+    }
+
     public getArbeitsSaetzeStatus(): ArbeitsSaetzeStatus
     {
         if (this.ArbeitsSatzListe.length <= 0) {
