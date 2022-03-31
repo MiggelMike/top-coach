@@ -344,15 +344,35 @@ export class Progress implements IProgress {
 			// Die Uebungen müssen geprüft werden.
 		for (let index = 0; index < mUebungsliste.length; index++) {
 			const mPtrSessUebung = mUebungsliste[index];
+			//#region ProgressSet.First
 			// Der erste Satz ist maßgebend.
-			if (   mProgress.ProgressSet === ProgressSet.First
-				&& (aSession.Kategorie02 === SessionStatus.Laueft || aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig)
-				&& aSatzIndex === 0) {
+			if (   aSatzIndex === 0
+				&& mProgress.ProgressSet === ProgressSet.First
+				// Der erste Satz muss fertig sein.
+			    && aSessUebung.getArbeitsSatzStatus(0) === SatzStatus.Fertig)
+			{
 				// Der erste Satz der Übung ist maßgebend.
 				if (mPtrSessUebung.SatzWDH(0) >= mPtrSessUebung.SatzBisVorgabeWDH(0))
-					// Die vorgegebenen Wiederholungen konnten erreicht werden
-					return WeightProgress.Increase;
+				{
+					// Die vorgegebenen Wiederholungen für den ersten Satz konnten erreicht werden.
+					// Der erste Satz ist also Ok.
+					// Jetzt prüfen, ob die Session läuft. 
+					if (aSession.Kategorie02 === SessionStatus.Laueft)
+						// Die Session läuft.
+						// Es reicht, wenn der erste Satz abgeschlossen und OK ist.
+						return WeightProgress.Increase;
+					else {
+						if (aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig) {
+						// Die Session läuft NICHT.
+						// Die vorgegebenen Wiederholungen für den ersten Satz konnten erreicht werden.
+						// Eine weitere Bedingung ist, dass alle Sätze Abgeschlossen sein müssen.
+							return WeightProgress.Increase;
+						}//if		
+					}//if
+
+				}
 				else {
+					// Die vorgegebenen Wiederholungen für den ersten Satz konnten NICHT erreicht werden.
 					// Wenn der Prozesstyp nicht Blockset ist, muss 
 					if ((mProgress.ProgressTyp === ProgressTyp.BlockSet) ||
 						// er RepRange sein. Daher das untere Limit prüfen.
@@ -362,8 +382,9 @@ export class Progress implements IProgress {
 						continue;
 					}
 				}
-			}
-
+			}//if
+			//#endregion
+			//#region ProgressSet.Last
 			// Der letzte Satz ist maßgebend.
 			if (   aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
 				// Der letzte Satz der Übung ist maßgebend.
@@ -384,8 +405,8 @@ export class Progress implements IProgress {
 					}//if
 				}//if
 			}//if
-
-			// Alle Sätze prüfen
+			//#endregion
+			//#region ProgressSet.All   
 			if (	mProgress.ProgressSet === ProgressSet.All
 				&& 	aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig )
 			{
@@ -399,6 +420,7 @@ export class Progress implements IProgress {
 					continue;
 				}//if
 			}//if
+			//#endregion
 		} // for
 
 		if (mFailCount >= aSessUebung.MaxFailCount) {
