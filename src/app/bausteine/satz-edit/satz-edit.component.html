@@ -75,6 +75,7 @@
                                 (focusout)="SetWeightAusgefuehrt($event)"
                                 (click)="WeightAusgefuehrtClick($event)"
                                 (ngModelChange)="CalcPlates($event)"
+                                [disabled]="Disabled(satz)"
                                 type="text">
                     </mat-form-field>
 
@@ -95,16 +96,17 @@
                     <mat-label>{{satz.WdhVonVorgabe | number: '1.0'}} - {{satz.WdhBisVorgabe | number: '1.0'}}</mat-label>
                     <input matInput [textMask]="{mask: repMask, guide: false}" 
                            [ngModel]="satz.WdhAusgefuehrt" 
+                           [disabled]="Disabled(satz)"
                            (click)="onClickWdhAusgefuehrt($event)" 
                             (focusout)="SetWdhAusgefuehrt($event)" type="text">
                 </mat-form-field>
                 <!-- AMRAP  -->
                 <div class="center-item" layout-align="center center" fxFlex="30px">
-                    <mat-checkbox [(ngModel)]="satz.AMRAP"></mat-checkbox>
+                    <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP"></mat-checkbox>
                 </div>
                 <!-- Satz Include Bodyweight-Flag -->
                 <div class="center-item" layout-align="center center" fxFlex="25px">
-                    <mat-checkbox [(ngModel)]="satz.IncludeBodyweight"></mat-checkbox>
+                    <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.IncludeBodyweight"></mat-checkbox>
                 </div>
                 <!-- Satz Fertig-Flag -->
                 <div class="center-item" layout-align="center center" fxFlex="25px">

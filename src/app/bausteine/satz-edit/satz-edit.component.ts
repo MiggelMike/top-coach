@@ -141,6 +141,10 @@ export class SatzEditComponent implements OnInit {
         this.plateCalcComponent = this.fPlateCalcSvcService.open(this.plateCalcOverlayConfig);
     }
 
+    public Disabled(aSatz:ISatz): boolean{
+        return aSatz.Status === SatzStatus.Fertig;
+    }
+
     async onClickSatzFertig(aSatz: ISatz, aChecked: boolean) {
         if (this.fStoppUhrService.StoppuhrComponent) {
             this.fStoppUhrService.StoppuhrComponent.close();
@@ -152,19 +156,6 @@ export class SatzEditComponent implements OnInit {
         if (aChecked) {
             mHeader = '';
         }
-
-        // for (let index = 0; index < this.sess.UebungsListe.length; index++) {
-        //     const mPtrUebung = this.sess.UebungsListe[index];
-        //     const mSuchSatz: Satz = mPtrUebung.SatzListe.find((sz) => sz.SatzListIndex === aSatz.SatzListIndex);
-        //     if (mSuchSatz !== undefined) {
-        //         mPtrUebung.SatzListe.splice(mSuchSatz.SatzListIndex, mSuchSatz.SatzListIndex);
-        //         mPtrUebung.SatzListe.push(aSatz as Satz);
-        //         mPtrUebung.SatzListe.sort((a: Satz, b: Satz) => {
-        //             return a.SatzListIndex - b.SatzListIndex;
-        //         });
-        //         break;
-        //     }
-        // }
 
         const mProgressPara: ProgressPara = new ProgressPara();
         mProgressPara.AusgangsSatz = aSatz as Satz;
@@ -198,7 +189,7 @@ export class SatzEditComponent implements OnInit {
                             && (aProgressPara.Wp === WeightProgress.Increase)
                         ) {
                             mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe + aProgressPara.AusgangsUebung.GewichtSteigerung} ${aAppData.GewichtsEinheitText} for the next sets`);
-                            mDialogData.textZeilen.push(`of this exercise of the current workout.`);
+                            mDialogData.textZeilen.push(`of this exercise of the current workout`);
                             mDialogData.textZeilen.push(`and also in upcoming workouts.`);
                             this.sessUebung.WeightInitDate = new Date();
                         }
@@ -225,10 +216,8 @@ export class SatzEditComponent implements OnInit {
                                 {
                                     this.sessUebung.WeightInitDate = new Date();
                                     mDialogData.textZeilen.push(`You failed!`);
-                                    // if (aProgressPara.Wp === WeightProgress.DecreaseNextTime) {
-                                        mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe - aProgressPara.AusgangsUebung.GewichtReduzierung} ${aAppData.GewichtsEinheitText} next time.`);
-                                        this.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtVorgabe - aProgressPara.AusgangsUebung.GewichtReduzierung);
-                                    // }
+                                    mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtVorgabe - aProgressPara.AusgangsUebung.GewichtReduzierung} ${aAppData.GewichtsEinheitText} next time.`);
+                                    this.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtVorgabe - aProgressPara.AusgangsUebung.GewichtReduzierung);
                                 } else if (aProgressPara.Wp === WeightProgress.Same) {
                                     mDialogData.textZeilen.push(`Lift same weight next time.`);
                                     mDialogData.textZeilen.push(`${aProgressPara.AusgangsSatz.GewichtVorgabe} ${aAppData.GewichtsEinheitText}`);
