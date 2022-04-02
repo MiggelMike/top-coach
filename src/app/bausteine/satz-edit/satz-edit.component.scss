@@ -1,1 +1,5 @@
 @import "../../../styles.scss";
+
+.mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix::after, .mat-input-element:disabled {
+    color: rgba(0,0,0,1)!important;
+  }
