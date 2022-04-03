@@ -43,6 +43,43 @@
             </div>
         </div>
 
+        <mat-label>Rep-Range</mat-label>
+        <div fxLayout="row" fxFlex="100%" >
+            <div fxLayout="column" fxFlex="60%" >
+                <div fxLayout="row" fxFlex="100%" fxLayoutGap="5px" >
+                    <!-- Geplante Von-Vorgabe-Wdh. -->
+                    <mat-form-field class="align-right" fxFlex="30px">
+                        <mat-label>From</mat-label>
+                        <input  matInput [textMask]="{mask: repMask, guide: false}" 
+                                (click)="onInitOnClick($event)"
+                                [ngModel]="Satz.WdhVonVorgabe" 
+                                (focusout)="SetVonWdhVorgabe($event)" 
+                                type="text"
+                        >
+                    </mat-form-field>
+
+                    <!-- Geplante Bis-Vorgabe-Wdh. -->
+                    <mat-form-field class="align-right" fxFlex="30px">
+                        <mat-label>To</mat-label>
+                        <input  matInput [textMask]="{mask: repMask, guide: false}" 
+                                (click)="onInitOnClick($event)"
+                                [ngModel]="Satz.WdhBisVorgabe" 
+                                (focusout)="SetBisWdhVorgabe($event)" 
+                                type="text"
+                        >
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="mg-5" layout-align="end" layout-margin>
+                <mat-checkbox 
+                [(ngModel)]="RepRangeForAllSets" (click)="$event.stopPropagation()"
+                (change)="DoRepRangelAllSets($event.checked)"
+                >All sets
+                </mat-checkbox>
+            </div>
+        </div>
+
         <ng-container *ngIf="PlateList.length > 0">
             <div fxLayout="row" fxFlex="100%">
                 <mat-label>Plates per side</mat-label>

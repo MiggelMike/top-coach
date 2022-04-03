@@ -2,7 +2,7 @@ import { Uebung } from './../../Business/Uebung/Uebung';
 import { Hantelscheibe } from "./../../Business/Hantelscheibe/Hantelscheibe";
 import { PlateCalcOverlayRef, cPlateCalcOverlayData } from "./../services/plate-calc-svc.service";
 import { Component, Inject, OnInit } from "@angular/core";
-import { floatMask } from "../app.module";
+import { repMask, floatMask } from "../app.module";
 import { PlateCalcOverlayConfig } from "../services/plate-calc-svc.service";
 import { DexieSvcService } from "../services/dexie-svc.service";
 import { Satz } from "src/Business/Satz/Satz";
@@ -16,7 +16,8 @@ import { Observable, of } from "rxjs";
 })
 export class PlateCalcComponent implements OnInit {
 	public fConfig: PlateCalcOverlayConfig;
-	public floatMask = floatMask;
+  public floatMask = floatMask;
+  public repMask = repMask;
 	public PlateList: Array<Hantelscheibe>;
   public HantelListe: Array<Hantel>;
   public Hantel: Hantel;
@@ -26,6 +27,7 @@ export class PlateCalcComponent implements OnInit {
   public GewichtAusgefuehrt: number = 0;
   public SetForAllSets: boolean;
   public HantelForAllSets: boolean;
+  public RepRangeForAllSets: boolean;
   
   public get SatzNr(): string{
     if ((this.Uebung) && (this.Satz)) {
@@ -72,11 +74,39 @@ export class PlateCalcComponent implements OnInit {
     }
   }
 
+  public SetVonWdhVorgabe(aEvent: any) {
+    this.Satz.WdhVonVorgabe = Number(aEvent.target.value);
+    if (this.Satz.WdhBisVorgabe < this.Satz.WdhVonVorgabe)
+        this.Satz.WdhBisVorgabe = this.Satz.WdhVonVorgabe;
+}
+
+public SetBisWdhVorgabe(aEvent: any) {
+    this.Satz.WdhBisVorgabe = Number(aEvent.target.value);
+    if (this.Satz.WdhVonVorgabe > this.Satz.WdhBisVorgabe)
+        this.Satz.WdhVonVorgabe = this.Satz.WdhBisVorgabe;
+}
+
   public DoHantelAllSets(aChecked: boolean) {
     if ((this.Uebung)&&(this.Satz)&&((aChecked))) {
       this.Uebung.ArbeitsSatzListe.forEach((sz) => {
         if (sz.ID !== this.Satz.ID) {
             sz.FkHantel = this.Satz.FkHantel;
+        }
+      });
+    }
+  }
+
+  onInitOnClick(aEvent: any) {
+    aEvent.target.select();
+    aEvent.stopPropagation();
+}
+
+  public DoRepRangelAllSets(aChecked: boolean) {
+    if ((this.Uebung)&&(this.Satz)&&((aChecked))) {
+      this.Uebung.ArbeitsSatzListe.forEach((sz) => {
+        if (sz.ID !== this.Satz.ID) {
+          sz.WdhVonVorgabe = this.Satz.WdhVonVorgabe;
+          sz.WdhBisVorgabe = this.Satz.WdhBisVorgabe;
         }
       });
     }

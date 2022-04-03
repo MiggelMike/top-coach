@@ -110,7 +110,7 @@ export class SatzEditComponent implements OnInit {
     }
     
     onClickWdhBisVorgab(aEvent: any) {
-        aEvent.target.Select();
+        aEvent.target.select();
     }
 
     public SetWeightAusgefuehrt(aEvent: any) {
