@@ -1,23 +1,23 @@
 <app-toolbar></app-toolbar>
-<div fxLayout="row wrap" fxLayoutAlign="center center">
+<div fxLayout="row wrap" class="center-item">
+    <div fxLayout="column" class="center-item">
     <h4>Progress schemas</h4>
-</div>
 
-<div class="center-item" layout-align="center center">
     <a class='link-button-font btn btn-link' mat-flat-button (click)="DoNeuerProgress()">New Progress schema</a>
-</div>
 
 <ng-container *ngIf="ProgressListe">
-    <div class="center-item">
         <ng-container *ngFor="let progress of ProgressListe, index as i">
             <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%"  [ngClass]="{'HG-01': i % 2 === 0}">
-                <div fxLayout="column" fxFlex="200px" fxLayoutAlign="center start">
-                    <a mat-button (click)="EditProgress(progress)">{{progress.Name}}</a>
-                </div>
-                <div fxLayout="column" fxFlex="20%" fxLayoutAlign="center end">
-                    <a class="ref-button" mat-button (click)="DeleteProgress(progress)">Delete</a>
+                <div fxLayout="row" fxFlex="100%"> 
+                        <div fxLayout="column" fxFlex="300px" fxLayoutAlign="start start">
+                        <a mat-button (click)="EditProgress(progress)">{{progress.Name}}</a>
+                    </div>
+                    <div fxLayout="column" fxFlex="auto" fxLayoutAlign=" end">
+                        <a class="ref-button" mat-button (click)="DeleteProgress(progress)">Delete</a>
+                    </div>
                 </div>
             </div>
         </ng-container>
-    </div>
-</ng-container>
+    </ng-container>
+</div>
+</div>

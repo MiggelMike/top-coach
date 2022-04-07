@@ -162,8 +162,8 @@ export class Progress implements IProgress {
 			// Die vorgegebenen Wiederholungen konnten nicht erreicht werden
 			if (this.ProgressTyp === ProgressTyp.RepRangeSet) {
 				// Prüfen, ob das untere WDH-Limit erreicht ist 
-				if (aSessUebung.SatzWDH(0) < aSessUebung.SatzVonVorgabeWDH(0)) {
-					return this.EvalDecreaseType(aSession, aReduceUebung, aDb);
+				if (aSessUebung.SatzWDH(0) >= aSessUebung.SatzVonVorgabeWDH(0)) {
+					return WeightProgress.Increase;
 				}
 			}
 			return this.EvalDecreaseType(aSession, aReduceUebung, aDb);
@@ -197,8 +197,8 @@ export class Progress implements IProgress {
 			// Die vorgegebenen Wiederholungen konnten nicht erreicht werden
 			if (this.ProgressTyp === ProgressTyp.RepRangeSet) {
 				// Prüfen, ob das untere WDH-Limit erreicht ist 
-				if (this.EvalSaetze(aSessUebung, VorgabeWeightLimit.LowerLimit) === false) {
-					return this.EvalDecreaseType(aSession, aReduceUebung, aDb);
+				if (this.EvalSaetze(aSessUebung, VorgabeWeightLimit.LowerLimit) === true) {
+					return WeightProgress.Increase;
 				}
 			}
 			return this.EvalDecreaseType(aSession, aReduceUebung, aDb);
