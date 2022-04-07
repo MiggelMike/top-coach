@@ -8,14 +8,12 @@
 <ng-container *ngIf="ProgressListe">
         <ng-container *ngFor="let progress of ProgressListe, index as i">
             <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%"  [ngClass]="{'HG-01': i % 2 === 0}">
-                <div fxLayout="row" fxFlex="100%"> 
                         <div fxLayout="column" fxFlex="300px" fxLayoutAlign="start start">
                         <a mat-button (click)="EditProgress(progress)">{{progress.Name}}</a>
                     </div>
                     <div fxLayout="column" fxFlex="auto" fxLayoutAlign=" end">
                         <a class="ref-button" mat-button (click)="DeleteProgress(progress)">Delete</a>
                     </div>
-                </div>
             </div>
         </ng-container>
     </ng-container>
