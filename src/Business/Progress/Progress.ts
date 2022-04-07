@@ -197,9 +197,8 @@ export class Progress implements IProgress {
 			// Die vorgegebenen Wiederholungen konnten nicht erreicht werden
 			if (this.ProgressTyp === ProgressTyp.RepRangeSet) {
 				// Prüfen, ob das untere WDH-Limit erreicht ist 
-				if (this.EvalSaetze(aSessUebung, VorgabeWeightLimit.LowerLimit) === true) {
+				if(this.EvalSaetze(aSessUebung, VorgabeWeightLimit.LowerLimit) === true)
 					return WeightProgress.Increase;
-				}
 			}
 			return this.EvalDecreaseType(aSession, aReduceUebung, aDb);
 		}
