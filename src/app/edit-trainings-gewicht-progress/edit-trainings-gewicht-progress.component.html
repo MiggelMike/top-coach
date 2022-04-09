@@ -1,6 +1,7 @@
 <mat-icon (click)="back()">arrow_back</mat-icon>
-<div fxLayout="row wrap" fxLayoutAlign="center center">
+<div fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="5px">
     <h4>New/edit progress schema</h4>
+    <img src="..\..\assets\icons\24x24 Free Application Icons\24x24_free_application_icons_icons_pack_120732\png\24x24\Help.png" (click)="ShowInfo()" >
 </div>
 
 <div fxLayout="row wrap" fxLayoutAlign="center center">
@@ -13,7 +14,7 @@
         </div>
     </div>
 
-    <div class="height-100" fxLayout="row wrap" fxLayoutAlign="center center" fxLayout.lt-sm="row wrap" fxFlex="100%">
+    <!-- <div class="height-100" fxLayout="row wrap" fxLayoutAlign="center center" fxLayout.lt-sm="row wrap" fxFlex="100%">
         <mat-label>
             <h6>Progress type</h6>
         </mat-label>
@@ -23,7 +24,7 @@
                 <mat-radio-button class="tp-radio-button" [value]="1">Rep range</mat-radio-button>
             </mat-radio-group>
         </div>
-    </div>
+    </div> -->
 
     <div class="height-150" fxLayout="row wrap" fxLayoutAlign="center center" fxLayout.lt-sm="row wrap" fxFlex="100%">
         <mat-label>

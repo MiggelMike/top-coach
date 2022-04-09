@@ -32,6 +32,15 @@ export class EditTrainingsGewichtProgressComponent implements OnInit {
 		this.Progress.AdditionalReps = aEvent.target.value;
 	}
 
+	ShowInfo() {
+		// const mDialogData = new DialogData();
+		// mDialogData.textZeilen.push("If ");
+		// mDialogData.textZeilen.push("The sum of the repetitions of all sets must be at least the sum of the above target reps of all sets.");
+		// // mDialogData.OkFn = (): void => this.location.back();		
+		// this.fDialogService.Hinweis(mDialogData);
+		
+	}
+
 	back() {
 		if (this.Progress.isEqual(this.CmpProgress)) this.location.back();
 		else {
