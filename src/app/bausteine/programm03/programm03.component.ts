@@ -5,7 +5,7 @@ import { GlobalService } from 'src/app/services/global.service';
 import { MatAccordion, MatExpansionPanel } from '@angular/material/expansion';
 import { ISession } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
-import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList  } from "@angular/core";
+import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, Output, EventEmitter  } from "@angular/core";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { of } from 'rxjs';
@@ -59,7 +59,7 @@ export class Programm03Component implements OnInit {
 
     ngOnInit() {
     }
-    
+
     constructor(
         @Inject(LOCALE_ID) localID: string,
         private fGlobalService: GlobalService,
@@ -81,6 +81,8 @@ export class Programm03Component implements OnInit {
             //         top: -1000
             //     } as SessionOverlayConfig;
     }
+
+    
 
     drop(event: CdkDragDrop<Uebung[]>) {
         this.session.UebungsListe[event.previousIndex].ListenIndex = event.currentIndex;
@@ -116,14 +118,32 @@ export class Programm03Component implements OnInit {
     }
 
     PanelUebungOpened(aUebung: Uebung) {
-        if (aUebung.Expanded)
-            aUebung.Expanded = true;
+        aUebung.Expanded = true;
+
+        if (this.panUebung === undefined)
+            return;
+        
+        const mIndex = this.session.UebungsListe.indexOf(aUebung);
+        if (mIndex > -1) {
+            const mPanUebungListe = this.panUebung.toArray();
+            mPanUebungListe[mIndex].expanded = aUebung.Expanded;
+        }
+        
         this.accCheckUebungPanels();
     }
 
     PanelUebungClosed(aUebung: Uebung) {
-        if (aUebung.Expanded)
-            aUebung.Expanded = false;
+        aUebung.Expanded = false;
+
+        if (this.panUebung === undefined)
+            return;
+
+        const mIndex = this.session.UebungsListe.indexOf(aUebung);
+        if (mIndex > -1) {
+            const mPanUebungListe = this.panUebung.toArray();
+            mPanUebungListe[mIndex].expanded = aUebung.Expanded;
+        }
+
         this.accCheckUebungPanels();
     }
 

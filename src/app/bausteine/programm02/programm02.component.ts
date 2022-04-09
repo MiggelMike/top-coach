@@ -45,13 +45,6 @@ export class Programm02Component implements OnInit {
 	public ClickData: Programm02Component;
 	private SessionListObserver: Observable<Array<ISession>>;
 	
-	
-
-
-	public SessionPanelsExpanded1(): Boolean {
-		if (this.SessionPanelsExpanded === true) return true;
-		return false;
-	}
 
 
 	drop(event: CdkDragDrop<ISession[]>) {

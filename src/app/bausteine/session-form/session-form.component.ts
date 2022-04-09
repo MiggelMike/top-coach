@@ -138,8 +138,16 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	public SaveChanges(aPara: any) {
-		(aPara as SessionFormComponent).SaveChangesPrim({ that: aPara });
-		(aPara as SessionFormComponent).fDexieSvcService.EvalAktuelleSessionListe((aPara as SessionFormComponent).Session, aPara);
+		(aPara as SessionFormComponent).SaveChangesPrim({
+			that: aPara
+			// EvalFn: () => {
+			// 	const mSessionForm: SessionFormComponent = aPara as SessionFormComponent;
+			// 	mSessionForm.fDexieSvcService.EvalAktuelleSessionListe(mSessionForm.Session, aPara).then(
+			// 		() => {
+			// 			mSessionForm.cmpSession = mSessionForm.Session.Copy();
+			// 		});
+			// }
+	    });
 	}
 
 	public SaveChangesPrim(aPara?: any): Promise<void> {
@@ -180,6 +188,9 @@ export class SessionFormComponent implements OnInit {
 		return mSessionForm.fDexieSvcService.SessionSpeichern(mSession)
 			// return mSessionForm.fDexieSvcService.SessionSpeichern(mSessionForm.Session)
 			.then(() => {
+				// if (aPara !== undefined)
+				// 	aPara.EvalFn();
+				// else mSessionForm.cmpSession = mSessionForm.Session.Copy();
 				mSessionForm.cmpSession = mSessionForm.Session.Copy();
 			});
 	}
