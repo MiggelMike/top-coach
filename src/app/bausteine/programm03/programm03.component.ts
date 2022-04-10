@@ -49,7 +49,7 @@ export class Programm03Component implements OnInit {
     public LocaleID: string;
     private UebungPanelsObserver = {
         next: (x: MatExpansionPanel) => {
-            this.accCheckUebungPanels();
+            this.accCheckUebungPanels(this.SessUeb);
         },
         error: (err) =>
             console.error("UebungPanelsObserver got an error: " + err),
@@ -122,14 +122,9 @@ export class Programm03Component implements OnInit {
 
         if (this.panUebung === undefined)
             return;
+       
         
-        const mIndex = this.session.UebungsListe.indexOf(aUebung);
-        if (mIndex > -1) {
-            const mPanUebungListe = this.panUebung.toArray();
-            mPanUebungListe[mIndex].expanded = aUebung.Expanded;
-        }
-        
-        this.accCheckUebungPanels();
+        this.accCheckUebungPanels(aUebung);
     }
 
     PanelUebungClosed(aUebung: Uebung) {
@@ -138,29 +133,29 @@ export class Programm03Component implements OnInit {
         if (this.panUebung === undefined)
             return;
 
-        const mIndex = this.session.UebungsListe.indexOf(aUebung);
-        if (mIndex > -1) {
-            const mPanUebungListe = this.panUebung.toArray();
-            mPanUebungListe[mIndex].expanded = aUebung.Expanded;
-        }
-
-        this.accCheckUebungPanels();
+            
+        this.accCheckUebungPanels(aUebung);
     }
-
-    accCheckUebungPanels() {
-        if (!this.panUebung) return;
-
-        let mAllClosed = true;
-       
-        if (this.session.UebungsListe.length > 0) {
-            const mPanUebungListe = this.panUebung.toArray();
-            for (let index = 0; index < mPanUebungListe.length; index++) {
-                this.session.UebungsListe[index].Expanded = mPanUebungListe[index].expanded;
-                if (mPanUebungListe[index].expanded) {
-                    mAllClosed = false;
-                    break;
-                }
+        
+        accCheckUebungPanels(aUebung: Uebung) {
+            if (!this.panUebung) return;
+            
+            const mIndex = this.session.UebungsListe.indexOf(aUebung);
+            if (mIndex > -1) {
+                const mPanUebungListe = this.panUebung.toArray();
+                mPanUebungListe[mIndex].expanded = aUebung.Expanded;
             }
+            let mAllClosed = true;
+        
+            if (this.session.UebungsListe.length > 0) {
+                const mPanUebungListe = this.panUebung.toArray();
+                for (let index = 0; index < mPanUebungListe.length; index++) {
+                    this.session.UebungsListe[index].Expanded = mPanUebungListe[index].expanded;
+                    if (mPanUebungListe[index].expanded) {
+                        mAllClosed = false;
+                        break;
+                    }
+                }
         }
 
         if (mAllClosed) {

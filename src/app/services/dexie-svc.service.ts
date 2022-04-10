@@ -1106,7 +1106,7 @@ export class DexieSvcService extends Dexie {
 		return mResult;
 	}
 
-	public async SessionSpeichern(aSession: Session, aSessionExtraParaDB?: SessionParaDB): Promise<void> {
+	public async SessionSpeichern(aSession: Session, aSessionExtraParaDB?: SessionParaDB): Promise<Session> {
 		return await this.transaction("rw", this.SessionTable, this.UebungTable, this.SatzTable, async () => {
 			const mUebungsListe: Array<Uebung> = [];
 			if (aSession.UebungsListe !== undefined) {
@@ -1142,6 +1142,8 @@ export class DexieSvcService extends Dexie {
 
 			if ((aSessionExtraParaDB !== undefined) && aSessionExtraParaDB.OnAfterSaveFn !== undefined)
 				aSessionExtraParaDB.OnAfterSaveFn(aSession);
+			
+			return aSession;
 		});
 	}
 

@@ -187,11 +187,11 @@ export class SessionFormComponent implements OnInit {
 		
 		return mSessionForm.fDexieSvcService.SessionSpeichern(mSession)
 			// return mSessionForm.fDexieSvcService.SessionSpeichern(mSessionForm.Session)
-			.then(() => {
+			.then((aSession:Session) => {
 				// if (aPara !== undefined)
 				// 	aPara.EvalFn();
 				// else mSessionForm.cmpSession = mSessionForm.Session.Copy();
-				mSessionForm.cmpSession = mSessionForm.Session.Copy();
+				mSessionForm.cmpSession = aSession.Copy();
 			});
 	}
 

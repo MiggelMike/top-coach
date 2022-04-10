@@ -80,7 +80,8 @@ export class Programm02Component implements OnInit {
 		return (aSess.Kategorie02 === SessionStatus.Wartet);
 	}
 
-	constructor(private fDialogService: DialogeService, private fGlobalService: GlobalService, private fUebungService: UebungService, public fDbModule: DexieSvcService, private router: Router) {}
+	constructor(private fDialogService: DialogeService, private fGlobalService: GlobalService, private fUebungService: UebungService, public fDbModule: DexieSvcService, private router: Router) {
+	}
 
 	ngAfterViewInit() {
 		this.panUebung.forEach((pan) => {
