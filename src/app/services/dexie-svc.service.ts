@@ -839,11 +839,9 @@ export class DexieSvcService extends Dexie {
 	} // Aktuelles Programm laden
 
 	public PrepAkuellesProgramm(aProgramm: ITrainingsProgramm) {
-		let mNeueSessions: Array<SessionDB> = [];
-		let mUndoneSessions: Array<SessionDB> = [];
 		let mDoneSessions: Array<SessionDB> = [];
 
-		const mVorlageProgramm = this.VorlageProgramme.find((p) => {
+		this.VorlageProgramme.find((p) => {
 			if (p.ProgrammTyp === aProgramm.ProgrammTyp) return p;
 			return null;
 		});
