@@ -72,6 +72,9 @@ export interface AndFn {
 	(aData?: any): boolean;
 }
 
+export interface FilterFn {
+	(aData?: any): boolean;
+}
 
 export interface ThenFn {
 	(aData: any): void | any;
@@ -88,6 +91,7 @@ export interface onFormCloseFn {
 export class ParaDB {
 	Data?: any;
 	WhereClause?: {};
+	Filter?: FilterFn = () => { return true };;
 	And?: AndFn = () => { return true };
 	Then?: ThenFn;
 	// Or?: OrFn;
@@ -816,16 +820,11 @@ export class DexieSvcService extends Dexie {
 				const mPtrProgramm: TrainingsProgramm = aProgramme[index];
 				const mSessionPara: SessionParaDB = new SessionParaDB();
 				mSessionPara.WhereClause = { FK_Programm: mPtrProgramm.id };
-				mSessionPara.OnSessionAfterLoadFn = (aSessionListe: Array<Session>) => {
-					const mResult: Array<Session> = [];
-					aSessionListe.forEach((ss) => {
-						if (ss.Kategorie02 === SessionStatus.Wartet
-							|| ss.Kategorie02 === SessionStatus.Laueft
-							|| ss.Kategorie02 === SessionStatus.Pause)
-							mResult.push(ss);
-					});
-					return mResult;
-				};
+				mSessionPara.Filter = (aSession: Session) => {
+						return aSession.Kategorie02 === SessionStatus.Wartet
+							|| aSession.Kategorie02 === SessionStatus.Laueft
+							|| aSession.Kategorie02 === SessionStatus.Pause;
+				 };
 
 				await this.LadeProgrammSessions(mSessionPara)
 					.then((aSessionListe: Array<Session>) => mPtrProgramm.SessionListe = aSessionListe);
@@ -885,7 +884,7 @@ export class DexieSvcService extends Dexie {
 			return await this.SessionTable
 				.where(aLadePara === undefined || aLadePara.WhereClause === undefined ? { FK_Programm: 0 } : aLadePara.WhereClause)
 				.and((aLadePara === undefined || aLadePara.And === undefined ? () => { return 1 === 1 } : (session: Session) => aLadePara.And(session)))
-				// .or((aLadePara === undefined || aLadePara.Or === undefined ? (s: any) => { return null } : (s: any) => aLadePara.Or(s)))
+				.filter((aLadePara === undefined || aLadePara.Filter === undefined ? () => { return 1 === 1 } : (session: Session) => aLadePara.Filter(session)))
 				.limit(aLadePara === undefined || aLadePara.Limit === undefined ? Number.MAX_SAFE_INTEGER : aLadePara.Limit)
 				.sortBy(aLadePara === undefined || aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
 				.then( async (aSessions: Array<Session>) => {

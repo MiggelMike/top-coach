@@ -3,7 +3,7 @@ import { ISessionDB, SessionDB } from "./../../../Business/SessionDB";
 import { SessionStatus } from "../../../Business/SessionDB";
 import { UebungWaehlenData } from "./../../uebung-waehlen/uebung-waehlen.component";
 import { UebungsKategorie02 } from "./../../../Business/Uebung/Uebung";
-import { DexieSvcService, onDeleteFn } from "./../../services/dexie-svc.service";
+import { DexieSvcService, onDeleteFn, ProgrammParaDB } from "./../../services/dexie-svc.service";
 import { Session } from "./../../../Business/Session/Session";
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Output, EventEmitter, Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";
@@ -25,8 +25,9 @@ import { Satz } from "src/Business/Satz/Satz";
 })
 export class Programm02Component implements OnInit {
 	@Input() programm: ITrainingsProgramm = null;
+	@Input() programmTyp: string = "";	
 	@Output() ProgrammSavedEvent = new EventEmitter<ITrainingsProgramm>();
-	@Input() SessionListe: Array<ISession> = [];
+	// @Input() SessionListe: Array<ISession> = [];
 	@Input() showButtons: Boolean = false;
 	@Input() showSaveButtons: Boolean = false;
 	@Input() bearbeitbar: Boolean = false;
@@ -41,6 +42,7 @@ export class Programm02Component implements OnInit {
 	private isExpanded: Boolean = true;
 	private CmpSessionListe: Array<ISession> = [];
 	private DelSessionListe: Array<ISession> = [];
+	public SessionListe: Array<ISession> = [];
 	public ToggleButtonText: string;
 	public ClickData: Programm02Component;
 	private SessionListObserver: Observable<Array<ISession>>;
@@ -84,6 +86,23 @@ export class Programm02Component implements OnInit {
 	}
 
 	ngAfterViewInit() {
+		if (this.programmTyp === "AktuellesProgramm") {
+			this.fDbModule.LadeAktuellesProgramm().then((aPogramme) => {
+				if (aPogramme.length > 0)
+					this.programm = aPogramme[0] as ITrainingsProgramm;
+				this.SessionListe = this.programm.SessionListe;
+			});
+		} else {
+
+			const mProgrammPara: ProgrammParaDB = new ProgrammParaDB();
+			mProgrammPara.WhereClause = { id: this.programm.id };
+			this.fDbModule.LadeProgramme(mProgrammPara).then((aPogramme) => {
+				if (aPogramme.length > 0)
+					this.programm = aPogramme[0] as ITrainingsProgramm;
+				this.SessionListe = this.programm.SessionListe;
+			});
+		}
+
 		this.panUebung.forEach((pan) => {
 			pan.expanded = this.SessionPanelsExpanded;
 		});
