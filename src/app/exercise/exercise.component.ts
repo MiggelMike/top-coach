@@ -23,6 +23,7 @@ export class ExerciseComponent implements OnInit {
 	{
 		const x = 0;
 		const mNavigation = this.router.getCurrentNavigation();
+		this.fDexieSvcService.LadeStammUebungen();
 		const mState = mNavigation.extras.state as { SelectMode: boolean; SelectedExerciseList: Array<Uebung>};
 		if (mState && mState.SelectMode && mState.SelectedExerciseList) {
 			this.SelectMode = mState.SelectMode;
