@@ -10,9 +10,7 @@
                         <mat-expansion-panel-header>
                             <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start">
                                 <mat-form-field class="align-left" fxFlex="auto">
-                                    <ng-container *ngIf='bearbeitbar'>
-                                    </ng-container>
-                                        <input matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
+                                    <input matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
                                 </mat-form-field>
 
                                 <ng-container *ngIf='StartButtonVisible'>

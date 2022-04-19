@@ -186,7 +186,7 @@ export class Programm02Component implements OnInit {
 
 	public AddExercise(aSession: ISession) {
 		if (this.fDbModule.StammUebungsListe.length === 0) this.fDbModule.LadeStammUebungen();
-		else this.fUebungService.UebungWaehlen(this.fDbModule.StammUebungsListe, aSession as Session, this.SelectUebungDelegate);
+		else this.fUebungService.UebungWaehlen(aSession as Session, this.SelectUebungDelegate);
 	}
 
 	public PasteExcercise(aSession: ISession) {

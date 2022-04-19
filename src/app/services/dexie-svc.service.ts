@@ -769,10 +769,10 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
-	public async LadeStammUebungen(aAfterLoadFn?: AfterLoadFn) {
+	public async LadeStammUebungen(aAfterLoadFn?: AfterLoadFn): Promise<Array<Uebung>> {
 		this.StammUebungsListe = [];
 		const mAnlegen: Array<Uebung> = new Array<Uebung>();
-		await this.table(this.cUebung)
+		return await this.table(this.cUebung)
 			.where("Kategorie02")
 			.equals(UebungsKategorie02.Stamm as number)
 			.toArray()
@@ -799,6 +799,7 @@ export class DexieSvcService extends Dexie {
 					this.LadeProgramme(this.ProgramLadeStandardPara);
 					// this.LadeAktuellesProgramm();
 				}
+				return mUebungen;
 			});
 	}
 

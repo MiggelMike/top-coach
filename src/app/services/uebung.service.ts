@@ -1,3 +1,4 @@
+import { DexieSvcService } from './dexie-svc.service';
 import { Observable } from 'rxjs';
 import { Session } from 'src/Business/Session/Session';
 import { Uebung } from 'src/Business/Uebung/Uebung';
@@ -20,7 +21,7 @@ export class UebungService {
     @JsonProperty()
     public LetzteUebungID: number = 0;
 
-    constructor(public fDialog?: MatDialog) { }
+    constructor(private fDbModule: DexieSvcService, public fDialog?: MatDialog ) { }
 
     public EditUebung(aUebung: Uebung, aUebungsListe: Array<Uebung>) {
         const mUebungEditData: UebungEditData = new UebungEditData();
@@ -46,7 +47,7 @@ export class UebungService {
     }
 
 
-    public UebungWaehlen(aUebungsListe: Array<Uebung>, aSession: Session, aSelectFn: any) {
+    public UebungWaehlen(aSession: Session, aSelectFn: any) {
         const mUebungWaehlenData: UebungWaehlenData = new UebungWaehlenData();
 
         const mDialogConfig = new MatDialogConfig();
@@ -56,22 +57,31 @@ export class UebungService {
         mDialogConfig.disableClose = false;
         mDialogConfig.autoFocus = true;
 
-        aUebungsListe.forEach(
-            (mUebung) => {
-                if (!mUebung.Selected)
-                    mUebung.Selected = false;
+        this.fDbModule.LadeStammUebungen().then(
+            (aUebungen: Array<Uebung>) => {
+                aUebungen.forEach(
+                    (mUebung) => {
+                        if (!mUebung.Selected)
+                            mUebung.Selected = false;
+                    }
+                );
+
+                this.Uebungen = aUebungen;
+                mDialogConfig.data = mUebungWaehlenData;
+                mDialogConfig.hasBackdrop = false;
+        
+        
+                mUebungWaehlenData.fUebungsListe = aUebungen;
+                mUebungWaehlenData.OkClickFn = aSelectFn;
+                mUebungWaehlenData.fSession = aSession;
+                // mUebungWaehlenData.fMatDialog = this.fDialog;
+        
+                mUebungWaehlenData.fMatDialog = this.fDialog.open(UebungWaehlenComponent, mDialogConfig);
+        
             }
-        );
+        )
+        
 
-        mDialogConfig.data = mUebungWaehlenData;
-        mDialogConfig.hasBackdrop = false;
-
-        mUebungWaehlenData.fUebungsListe = aUebungsListe;
-        mUebungWaehlenData.OkClickFn = aSelectFn;
-        mUebungWaehlenData.fSession = aSession;
-        // mUebungWaehlenData.fMatDialog = this.fDialog;
-
-        mUebungWaehlenData.fMatDialog = this.fDialog.open(UebungWaehlenComponent, mDialogConfig);
     }
 
     public AddUebung(aUebung: Uebung) {

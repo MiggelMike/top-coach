@@ -88,7 +88,6 @@ export class SessionFormComponent implements OnInit {
 
 	AddExercise() {
 		this.fUebungService.UebungWaehlen(
-			this.fDexieSvcService.UebungListeSortedByName,
 			this.Session,
             // Funktion für den Ok-Button
 			(aUebungWaehlenData: UebungWaehlenData) => {
@@ -221,6 +220,7 @@ export class SessionFormComponent implements OnInit {
 	private async DoAfterDone(aSessionForm: SessionFormComponent) {
 		const mIndex = aSessionForm.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
 		if (mIndex > -1) aSessionForm.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
+		
 		aSessionForm.fDexieSvcService.AktuellesProgramm.NummeriereSessions();
 		try {
 			this.SaveChangesPrim({ that: aSessionForm });
@@ -229,7 +229,6 @@ export class SessionFormComponent implements OnInit {
 		} catch (error) {
 			console.error(error);
 		}
-		this.router.navigate([""]);
 
 
 		// await aSessionForm.fDexieSvcService.ProgrammSpeichern(aSessionForm.fDexieSvcService.AktuellesProgramm)
@@ -238,6 +237,7 @@ export class SessionFormComponent implements OnInit {
 
 	public async SetDone(aSessionFormComponent: SessionFormComponent): Promise<void> {
 		if (aSessionFormComponent.fSessionStatsOverlayComponent) aSessionFormComponent.fSessionStatsOverlayComponent.close();
+		
 		const mDialogData = new DialogData();
 		mDialogData.textZeilen.push("Workout will be saved and closed.");
 		mDialogData.textZeilen.push("Do you want to proceed?");
@@ -316,6 +316,7 @@ export class SessionFormComponent implements OnInit {
 				// 	&& mUebungIndex >= aSessionForm.Session.UebungsListe.length - 1
 				//    )
 				await this.fDexieSvcService.SessionSpeichern(mNeueSession);
+				this.router.navigate([""]);
 			}
 			this.DoAfterDone(aSessionFormComponent);
 		}

@@ -1,9 +1,11 @@
 <ng-container *ngIf="session && session.UebungsListe && (session.UebungsListe.length > 0)">
     <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
     <!-- <span class="mg-5">{{session.Name}}</span> -->
-    <mat-form-field class="mg-5">
-        <input class="font-bold" matInput [(ngModel)]="session.Name" maxlength="30" type="text">
-    </mat-form-field>
+    <ng-container *ngIf='bearbeitbar'> 
+        <mat-form-field class="mg-5">
+            <input class="font-bold" matInput [(ngModel)]="session.Name" maxlength="30" type="text">
+        </mat-form-field>
+    </ng-container> 
 
     <!-- <div cdkDropList (cdkDropListDropped)="drop($event)">
         <div *ngFor="let sess of SortedSessionListe, index as i" cdkDrag cdkDragRootElement="accSession"> -->

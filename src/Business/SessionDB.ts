@@ -68,8 +68,8 @@ export class SessionDB implements ISessionDB {
     public DauerTimer: any;
     get BodyWeight(): number { return 0; };
     public BodyWeightAtSessionStart: number;
-    public UebungsListe: Array<Uebung> = new Array<Uebung>();
-    public PausenListe: Array<Pause> = new Array<Pause>();
+    public UebungsListe: Array<Uebung> = [];
+    public PausenListe: Array<Pause> = [];
 
     constructor() {
        Object.defineProperty(this, "UebungsListe", { enumerable: false });

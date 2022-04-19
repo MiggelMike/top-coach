@@ -107,12 +107,12 @@ export class Programm03Component implements OnInit {
         if (this.isExpanded) {
             this.accUebung.forEach((acc) => acc.closeAll());
             this.isExpanded = false;
-            this.ToggleButtonText = "Open all excercises";
+            this.ToggleButtonText = "Open all exercises";
             this.SessUeb.Expanded = false;
         } else {
             this.accUebung.forEach((acc) => acc.openAll());
             this.isExpanded = true;
-            this.ToggleButtonText = "Close all excercises";
+            this.ToggleButtonText = "Close all exercises";
             this.SessUeb.Expanded = true;
         }
     }

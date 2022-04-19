@@ -30,7 +30,9 @@ export class UebungWaehlenComponent implements OnInit {
         public dialogEditRef: MatDialogRef<EditExerciseComponent>,
         public dialogRef: MatDialogRef<UebungWaehlenComponent>,
         @Inject(MAT_DIALOG_DATA) public data: UebungWaehlenData
-    ) {}
+    ) {
+        const x = 0;
+    }
 
     ngOnInit(): void { 
     }
@@ -56,6 +58,5 @@ export class UebungWaehlenComponent implements OnInit {
             new Uebung(),
             aUebungListe
  		);
-        
     }
 }

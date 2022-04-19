@@ -153,16 +153,19 @@ export class Session extends SessionDB implements ISession {
 
     public override get LiftedWeight():number {
         let mResult: number = 0;
-        // this.UebungsListe.forEach(u => mResult + u.LiftedWeight);
-
-        for (let index = 0; index < this.UebungsListe.length; index++) {
-            const mUebung = this.UebungsListe[index];
-            mResult = mResult + mUebung.LiftedWeight;
+        if (this.UebungsListe !== undefined) {
+            for (let index = 0; index < this.UebungsListe.length; index++) {
+                const mUebung = this.UebungsListe[index];
+                mResult = mResult + mUebung.LiftedWeight;
+            }
         }
         return mResult;
     }
 
     public ExtractUebungen(aUebungen: Array<Uebung>) {
+        if (this.UebungsListe === undefined)
+            return;
+            
         this.UebungsListe.forEach((u) => {
             const mFindUebung = aUebungen.find((r: Uebung) => r.FkUebung === u.FkUebung);
             if (mFindUebung === undefined)
@@ -171,7 +174,10 @@ export class Session extends SessionDB implements ISession {
     }
 
     public Copy(aKomplett?: boolean): Session {
-        const mNeueSession : Session = cloneDeep(this);
+        const mNeueSession: Session = cloneDeep(this);
+        if(mNeueSession.UebungsListe === undefined)
+            mNeueSession.UebungsListe = [];
+        
         if(aKomplett !== undefined )
         {
             mNeueSession.UebungsListe = [];
