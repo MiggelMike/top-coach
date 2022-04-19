@@ -71,15 +71,22 @@ export class Programm03Component implements OnInit {
         if (this.fGlobalService.Comp03PanelUebungObserver === null)
             this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;
         
+            
             // const mNavigation = this.router.getCurrentNavigation();
             // const mState = mNavigation.extras.state as { uebung: Uebung; };
             
             // this.fSessionOverlayConfig =
             //     {
-            //         session: this.Session,
-            //         left: -1000,
-            //         top: -1000
-            //     } as SessionOverlayConfig;
+                //         session: this.Session,
+                //         left: -1000,
+                //         top: -1000
+                //     } as SessionOverlayConfig;
+            }
+            
+    ngAfterViewInit() {
+        this.session.UebungsListe.forEach( (mUebung: Uebung) => {
+            this.accCheckUebungPanels(mUebung);
+        });
     }
 
     
@@ -156,16 +163,16 @@ export class Programm03Component implements OnInit {
                         break;
                     }
                 }
-        }
+            }
 
-        if (mAllClosed) {
-            this.isExpanded = false;
-            this.ToggleButtonText = "Open all excercises";
-        } else {
-            this.isExpanded = true;
-            this.ToggleButtonText = "Close all excercises";
+            if (mAllClosed) {
+                this.isExpanded = false;
+                this.ToggleButtonText = "Open all excercises";
+            } else {
+                this.isExpanded = true;
+                this.ToggleButtonText = "Close all excercises";
+            }
         }
-    }
 
 
     public DeleteExercise(aRowNum: number, aUebung: Uebung) {
