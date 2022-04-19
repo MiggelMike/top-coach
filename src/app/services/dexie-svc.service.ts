@@ -236,15 +236,22 @@ export class DexieSvcService extends Dexie {
 					mNeueSession.ListenIndex = index;
 					mNeueSession.FK_VorlageProgramm = aSelectedProgram.id;
 
+					mNeueSession.UebungsListe.forEach( (mUebung) => {
+						mUebung.WarmUpVisible = (mUebung.AufwaermSatzListe !== undefined) && (mUebung.AufwaermSatzListe.length > 0);
+						mUebung.CooldownVisible = (mUebung.AbwaermSatzListe !== undefined) && (mUebung.AbwaermSatzListe.length > 0);
+					});
+
+
 					if (aInitialWeightList !== undefined) {
 						aInitialWeightList.forEach((iw) => {
 							const mUebung = mNeueSession.UebungsListe.find((u) => u.FkUebung === iw.UebungID);
-							if (mUebung !== undefined)
+							if (mUebung !== undefined) {
 								mUebung.ArbeitsSatzListe.forEach((sz) => {
 									sz.GewichtVorgabe = iw.Weight;
 									sz.GewichtAusgefuehrt = iw.Weight;
 									sz.WdhAusgefuehrt = sz.WdhBisVorgabe;
 								});
+							}
 						});
 					}
 					mProgramm.SessionListe.push(mNeueSession);
