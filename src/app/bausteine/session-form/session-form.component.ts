@@ -80,8 +80,22 @@ export class SessionFormComponent implements OnInit {
 		if (this.Session.isEqual(this.cmpSession)) this.leave();
 		else {
 			const mDialogData = new DialogData();
-			mDialogData.textZeilen.push("Cancel unsaved changes?");
-			mDialogData.OkFn = (): void => this.leave();
+			mDialogData.textZeilen.push("Save changes?");
+			mDialogData.ShowAbbruch = true;
+			
+			mDialogData.OkFn = (): void => {
+				this.leave();
+				this.SaveChangesPrim({ that: this });
+			}
+
+			mDialogData.CancelFn = (): void => {
+				const mCancelDialogData = new DialogData();
+				mCancelDialogData.textZeilen.push("Changes will be lost!");
+				mCancelDialogData.textZeilen.push("Are you shure?");
+				mCancelDialogData.OkFn = (): void => this.leave();
+				this.fDialogService.JaNein(mCancelDialogData);
+			}
+
 			this.fDialogService.JaNein(mDialogData);
 		}
 	}

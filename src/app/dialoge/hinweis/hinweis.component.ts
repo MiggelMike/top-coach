@@ -18,6 +18,7 @@ export class DialogData {
     CancelFn: ICancelCallback;
     OkData: any;
     CancelData: any;
+    ShowAbbruch: boolean = false;
 }
 
 @Component({
@@ -43,5 +44,10 @@ export class DialogComponent {
         this.dialogRef.close();
         if (this.data.CancelFn !== undefined)
             this.data.CancelFn(this.data.CancelData);
+    }
+
+
+    onAbbruchClick(): void {
+        this.dialogRef.close();
     }
 }

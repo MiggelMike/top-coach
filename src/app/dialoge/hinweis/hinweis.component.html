@@ -23,5 +23,11 @@
             <a class='link-button-font btn-link' mat-button (click)="onOkClick()">Ok</a>
         </ng-container>
 
+        
+        <ng-container *ngIf="data.ShowAbbruch === true">
+            <a class='link-button-font btn-link' mat-button (click)="onAbbruchClick()">Abort</a>
+        </ng-container>
+
+
     </div>
 </div>
