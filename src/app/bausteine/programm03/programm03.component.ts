@@ -35,11 +35,11 @@ export class Programm03Component implements OnInit {
     @Input() StatsVisible: Boolean = false;
     @Input() DeletedExerciseList: Array<Uebung> = [];
     @Input() DeletedSatzList: Array<Satz> = [];
+    @Input() SofortSpeichern: Boolean = false;
     
     @ViewChildren("accUebung") accUebung: QueryList<MatAccordion>;
     @ViewChildren("panUebung") panUebung: QueryList<MatExpansionPanel>;
     @ViewChild(CdkOverlayOrigin) cdkOverlayOrigin: CdkOverlayOrigin;
-    // @ViewChild('Session') div: ElementRef;
     private fExerciseOverlayConfig: ExerciseOverlayConfig;
     private fExerciseSettingsComponent: ExerciseSettingsComponent;
 
@@ -70,26 +70,13 @@ export class Programm03Component implements OnInit {
         this.LocaleID = localID;
         if (this.fGlobalService.Comp03PanelUebungObserver === null)
             this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;
-        
-            
-            // const mNavigation = this.router.getCurrentNavigation();
-            // const mState = mNavigation.extras.state as { uebung: Uebung; };
-            
-            // this.fSessionOverlayConfig =
-            //     {
-                //         session: this.Session,
-                //         left: -1000,
-                //         top: -1000
-                //     } as SessionOverlayConfig;
-            }
+    }
             
     ngAfterViewInit() {
         this.session.UebungsListe.forEach( (mUebung: Uebung) => {
             this.accCheckUebungPanels(mUebung);
         });
     }
-
-    
 
     drop(event: CdkDragDrop<Uebung[]>) {
         this.session.UebungsListe[event.previousIndex].ListenIndex = event.currentIndex;
@@ -98,10 +85,6 @@ export class Programm03Component implements OnInit {
     
     public get UebungsListe(): Array<Uebung>{
         return Uebung.StaticUebungsListeSortByListenIndex(this.session.UebungsListe);
-    }
-
-    SetPlusWeight(aUuebung: Uebung, $event) {
-        
     }
 
     ngOnDestroy() {
@@ -216,6 +199,7 @@ export class Programm03Component implements OnInit {
             session: this.session,
             left: (aEvent as PointerEvent).pageX - (aEvent as PointerEvent).offsetX,
             top: (aEvent as PointerEvent).clientY - (aEvent as PointerEvent).offsetY,
+            sofortSpeichern: this.SofortSpeichern
 
         } as ExerciseOverlayConfig;
         

@@ -30,6 +30,7 @@ export class Programm02Component implements OnInit {
 	// @Input() SessionListe: Array<ISession> = [];
 	@Input() showButtons: Boolean = false;
 	@Input() showSaveButtons: Boolean = false;
+	@Input() SofortSpeichern: Boolean = false;
 	@Input() bearbeitbar: Boolean = false;
 	@Input() StartButtonVisible: boolean = false;
 	@Input() SessionPanelsExpanded: boolean = false;

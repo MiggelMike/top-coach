@@ -20,17 +20,19 @@ export interface ExerciseOverlayConfig {
 	session?: Session;
 	left?: number;
 	top?: number;
+	sofortSpeichern?: boolean;
 }
 
 export const cExerciseOverlayData = new InjectionToken<ExerciseOverlayConfig>("Exercise_Settings_Overlay_Component");
 
 const DEFAULT_CONFIG: ExerciseOverlayConfig = {
-  hasBackdrop: true,
-  height: 400,
-  width: 250,
+	hasBackdrop: true,
+	height: 400,
+	width: 250,
 	backdropClass: "dark-backdrop",
 	uebung: null,
-	programm: null
+	programm: null,
+	sofortSpeichern: false
 	// panelClass: 'tm-file-preview-dialog-panel',
 
 	//   `div {

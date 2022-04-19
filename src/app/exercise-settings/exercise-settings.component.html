@@ -9,28 +9,39 @@
                 <div class="align-left mg-top-5" fxLayout="column" fxLayoutGap="5px" style="overflow-y: hidden;">
                     <div fxLayout="row wrap" fxFlex="100%">
                         <div layout-align="start" layout-margin>
-                            <mat-checkbox [(ngModel)]="SessUeb.WarmUpVisible" (click)="$event.stopPropagation()">Show Warmup
+                            <mat-checkbox [(ngModel)]="SessUeb.WarmUpVisible"
+                             (click)="$event.stopPropagation()"
+                             (change)="SetWarmupVisible($event)">Show Warmup
                             </mat-checkbox>
                         </div>
                     </div>
         
                     <div fxLayout="row" fxFlex="100%">
                         <div layout-align="start" layout-margin>
-                            <mat-checkbox [(ngModel)]="SessUeb.CooldownVisible" (click)="$event.stopPropagation()">Show Cooldown
+                            <mat-checkbox 
+                                [(ngModel)]="SessUeb.CooldownVisible" 
+                                (change)="SetCooldownVisible($event)"
+                                (click)="$event.stopPropagation()">Show Cooldown
                             </mat-checkbox>
                         </div>
                     </div>
         
                     <div fxLayout="row" fxFlex="100%">
                         <div layout-align="start" layout-margin>
-                            <mat-checkbox [(ngModel)]="SessUeb.IncludeWarmupWeight" (click)="$event.stopPropagation()">Add Warmup-Weight
+                            <mat-checkbox 
+                                [(ngModel)]="SessUeb.IncludeWarmupWeight"
+                                (click)="$event.stopPropagation()"
+                                (change)="SetIncludeWarmupWeight($event)">Add Warmup-Weight
                             </mat-checkbox>
                         </div>
                     </div>
         
                     <div fxLayout="row" fxFlex="100%">
                         <div layout-align="start" layout-margin>
-                            <mat-checkbox [(ngModel)]="SessUeb.IncludeCoolDownWeight" (click)="$event.stopPropagation()">Add Cooldown-Weight
+                            <mat-checkbox 
+                                [(ngModel)]="SessUeb.IncludeCoolDownWeight" 
+                                (change)="SetIncludeCoolDownWeight($event)"
+                                (click)="$event.stopPropagation()">Add Cooldown-Weight
                             </mat-checkbox>
                         </div>
                     </div>
@@ -41,7 +52,9 @@
                 <div class="align-left mg-top-5" fxLayout="column" fxLayoutGap="5px">
                     <mat-form-field>
                         <mat-label>Progression schema</mat-label>
-                        <mat-select [(ngModel)]="SessUeb.FkProgress" (selectionChange)="onChangeProgressSchema($event)">
+                        <mat-select 
+                            [(ngModel)]="SessUeb.FkProgress"
+                            (selectionChange)="onChangeProgressSchema($event)">
                             <mat-option [value]="0"></mat-option>
                             <mat-option *ngFor="let progress of ProgressListe" [value]="progress.ID"> {{ progress.Name }}</mat-option>
                         </mat-select>
@@ -63,7 +76,8 @@
                         <mat-form-field class="align-right" fxFlex="90%">
                             <mat-label>Weight progression</mat-label>
                             <input matInput [textMask]="{mask: floatMask, guide: false }"
-                                [ngModel]="(SessUeb.GewichtSteigerung | number: '1.2')" (focusout)="SetGewichtSteigerung($event)"
+                                [ngModel]=" (SessUeb.GewichtSteigerung | number: '1.2')"
+                                (focusout)="SetGewichtSteigerung($event)"
                                 type="text">
                         </mat-form-field>
                     </div>
@@ -72,7 +86,8 @@
                         <mat-form-field class="align-right" fxFlex="90%">
                             <mat-label>Weight reduction</mat-label>
                             <input matInput [textMask]="{mask: floatMask, guide: false }"
-                                [ngModel]="(SessUeb.GewichtReduzierung | number: '1.2')" (focusout)="SetGewichtReduzierung($event)"
+                                [ngModel]="(SessUeb.GewichtReduzierung | number: '1.2')" 
+                                (focusout)="SetGewichtReduzierung($event)"
                                 type="text">
                         </mat-form-field>
                     </div>
@@ -81,7 +96,8 @@
                         <mat-form-field class="align-right" fxFlex="90%">
                             <mat-label>Fail count</mat-label>
                             <input matInput [textMask]="{mask: Int3DigitMask, guide: false }"
-                                [ngModel]="(SessUeb.FailCount | number: '1.0')" (focusout)="SetFailCount($event)"
+                                [ngModel]="(SessUeb.FailCount | number: '1.0')"
+                                (focusout)="SetFailCount($event)"
                                 type="text">
                         </mat-form-field>
                     </div>        
@@ -95,7 +111,8 @@
                             <mat-label>Pause seconds between last warm up and first work set</mat-label>
                             <input matInput
                                 [textMask]="{mask: Int3DigitMask, guide: false }"
-                                [ngModel]="(SessUeb.AufwaermArbeitsSatzPause | number: '1.0')" (focusout)="SetAufwaermArbeitsSatzPause($event)"
+                                [ngModel]="(SessUeb.AufwaermArbeitsSatzPause | number: '1.0')"
+                                (focusout)="SetAufwaermArbeitsSatzPause($event)"
                                 type="text">
                         </mat-form-field>
                     </div>        

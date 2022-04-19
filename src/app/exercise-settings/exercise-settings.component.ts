@@ -72,22 +72,27 @@ export class ExerciseSettingsComponent {
 		mProgressPara.ProgressHasChanged = (this.SessUeb.FkProgress !== this.SessUeb.FkAltProgress) && (this.SessUeb.ArbeitsSatzListe[0].Status === SatzStatus.Fertig);
 		mProgressPara.ProgressListe = this.fDbModule.ProgressListe;
 		Progress.StaticDoProgress(mProgressPara);
+		this.EvalSofortSpeichern();
 	}
 
 	SetAufwaermArbeitsSatzPause(aEvent: any) {
 		this.SessUeb.AufwaermArbeitsSatzPause = aEvent.target.value;
+		this.EvalSofortSpeichern();
 	}
 
 	SetArbeitsSatzPause1(aEvent: any) {
 		this.SessUeb.ArbeitsSatzPause1 = aEvent.target.value;
+		this.EvalSofortSpeichern();
 	}
 
 	SetArbeitsSatzPause2(aEvent: any) {
 		this.SessUeb.ArbeitsSatzPause2 = aEvent.target.value;
+		this.EvalSofortSpeichern();
 	}
 
 	SetNextExercisePause(aEvent: any) {
 		this.SessUeb.NaechsteUebungPause = aEvent.target.value;
+		this.EvalSofortSpeichern();
 	}
 
 
@@ -120,13 +125,41 @@ export class ExerciseSettingsComponent {
 
 	SetGewichtSteigerung(aEvent: any) {
 		this.SessUeb.GewichtSteigerung = aEvent.target.value;
+		this.EvalSofortSpeichern();
 	}
 
 	SetGewichtReduzierung(aEvent: any) {
 		this.SessUeb.GewichtReduzierung = aEvent.target.value;
+		this.EvalSofortSpeichern();
 	}
 
 	SetFailCount(aEvent: any) {
-		this.SessUeb.MaxFailCount = aEvent.target.value;
+		this.SessUeb.FailCount = aEvent.target.value;
+		this.EvalSofortSpeichern();
+	}
+
+	private EvalSofortSpeichern() {
+		if((this.fConfig.sofortSpeichern !== undefined) && (this.fConfig.sofortSpeichern === true))
+			this.fDbModule.UebungSpeichern(this.SessUeb as Uebung);
+	}
+
+	SetWarmupVisible(aEvent: any) {
+		this.SessUeb.WarmUpVisible = aEvent.checked;
+		this.EvalSofortSpeichern();
+	}
+
+	SetIncludeWarmupWeight(aEvent: any) {
+		this.SessUeb.IncludeWarmupWeight = aEvent.checked;
+		this.EvalSofortSpeichern();
+	}
+
+	SetCooldownVisible(aEvent: any) {
+		this.SessUeb.CooldownVisible = aEvent.checked;
+		this.EvalSofortSpeichern();
+	}
+
+	SetIncludeCoolDownWeight(aEvent: any) {
+		this.SessUeb.IncludeCoolDownWeight = aEvent.checked;
+		this.EvalSofortSpeichern();
 	}
 }
