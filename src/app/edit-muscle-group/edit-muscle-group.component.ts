@@ -53,17 +53,6 @@ export class EditMuscleGroupComponent implements OnInit {
 
 		this.fDialogService.JaNein(mDialogData);
 	}
-
-
-	//   if (this.Muskelgruppe.isEqual(this.CmpMuskelgruppe))
-	// 	  this.location.back();
-    // else {
-    //   const mDialogData = new DialogData();
-    //   mDialogData.textZeilen.push('Cancel unsaved changes?');
-    //   mDialogData.OkFn = (): void => this.location.back();
-
-    //   this.fDialogService.JaNein(mDialogData);
-    // }
   }
 
   ngAfterViewInit() {

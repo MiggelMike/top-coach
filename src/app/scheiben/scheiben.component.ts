@@ -87,14 +87,36 @@ export class ScheibenComponent implements OnInit {
 	}
 
 	back() {
-		const mTmpScheibenComponent: ScheibenComponent = this;
-		if (mTmpScheibenComponent.ChangesExist() === false) mTmpScheibenComponent.location.back();
+		if (this.ChangesExist() === false) this.location.back();
 		else {
-			const mDialogData = new DialogData();
-			mDialogData.textZeilen.push("Cancel unsaved changes?");
-			mDialogData.OkFn = (): void => mTmpScheibenComponent.location.back();
-			mTmpScheibenComponent.fDialogService.JaNein(mDialogData);
+		const mDialogData = new DialogData();
+		mDialogData.textZeilen.push("Save changes?");
+		mDialogData.ShowAbbruch = true;
+		
+		mDialogData.OkFn = (): void => {
+			this.SaveChanges();
 		}
+
+		mDialogData.CancelFn = (): void => {
+			const mCancelDialogData = new DialogData();
+			mCancelDialogData.textZeilen.push("Changes will be lost!");
+			mCancelDialogData.textZeilen.push("Are you shure?");
+			mCancelDialogData.OkFn = (): void => this.location.back();
+			this.fDialogService.JaNein(mCancelDialogData);
+		}
+
+		this.fDialogService.JaNein(mDialogData);
+	}
+		
+		
+		// const mTmpScheibenComponent: ScheibenComponent = this;
+		// if (mTmpScheibenComponent.ChangesExist() === false) mTmpScheibenComponent.location.back();
+		// else {
+		// 	const mDialogData = new DialogData();
+		// 	mDialogData.textZeilen.push("Cancel unsaved changes?");
+		// 	mDialogData.OkFn = (): void => mTmpScheibenComponent.location.back();
+		// 	mTmpScheibenComponent.fDialogService.JaNein(mDialogData);
+		// }
 	}
 
 	private CopyHantelscheibenList() {
@@ -105,21 +127,21 @@ export class ScheibenComponent implements OnInit {
 	}
 
 	SaveChanges() {
-		const mTmpEditScheibenComponent: ScheibenComponent = this.ClickData as ScheibenComponent;
+		// const mTmpEditScheibenComponent: ScheibenComponent = this.ClickData as ScheibenComponent;
 		// const mOhneName: Array<Hantelscheibe> = mTmpEditScheibenComponent.HantelscheibenListe.filter((h) => h.Name.trim() === "");
 		// if (mOhneName.length > 0) {
 		// const mDialogData = new DialogData();
 		// mDialogData.textZeilen.push("A barbell must have a name!");
 		// mTmpEditScheibenComponent.fDialogService.Hinweis(mDialogData);
 		// } else {
-		mTmpEditScheibenComponent.fDexieSvcService
-			.InsertHantelscheiben(mTmpEditScheibenComponent.HantelscheibenListe)
-			.then((mDummy) => mTmpEditScheibenComponent.GetHantelscheibenListe())
+		this.fDexieSvcService
+			.InsertHantelscheiben(this.HantelscheibenListe)
+			.then((mDummy) => this.location.back())
 			.catch((e) => {
 				if (e.message.indexOf("[Durchmesser+Gewicht]") > 0) {
 					const mDialogData = new DialogData();
 					mDialogData.textZeilen.push("Diameter and Weight must be unique!");
-					mTmpEditScheibenComponent.fDialogService.Hinweis(mDialogData);
+					this.fDialogService.Hinweis(mDialogData);
 				} else alert(e);
 			});
 	}
