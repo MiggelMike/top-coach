@@ -164,8 +164,6 @@ export class Uebung implements IUebung {
     public FkMuskel05: number = 0;
     public MuskelGruppe: string = '';
     public StammUebung: Uebung = null;
-    public GewichtSteigerung: number = 0;
-    public GewichtReduzierung: number = 0;
     public ArbeitsSatzPause1: number = 0;
     public ArbeitsSatzPause2: number = 0;
     public AufwaermArbeitsSatzPause: number = 0;
@@ -190,6 +188,30 @@ export class Uebung implements IUebung {
         Object.defineProperty(this, 'StammUebung', { enumerable: false });
         // Object.defineProperty(this, "AkuelleGewichtAenderung", { enumerable: false });
     }
+
+    //#region GewichtSteigerung
+    private fGewichtSteigerung: number = 0;
+
+    set GewichtSteigerung(aValue: number) {
+        this.fGewichtSteigerung = Number(aValue);
+    }
+
+    get GewichtSteigerung(): number {
+        return Number(this.fGewichtSteigerung);
+    }
+    //#endregion
+    //#region GewichtReduzierung 
+    private fGewichtReduzierung: number = 0;
+
+    set GewichtReduzierung(aValue: number) {
+        this.fGewichtReduzierung = Number(aValue);
+    }
+
+    get GewichtReduzierung(): number {
+        return Number(this.fGewichtReduzierung);
+    }
+    //#endregion
+
 
     public getFirstWaitingWorkSet(aFromIndex: number = 0): Satz {
         for (let index = aFromIndex; index < this.ArbeitsSatzListe.length; index++) {
