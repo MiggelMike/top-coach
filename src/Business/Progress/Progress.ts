@@ -191,7 +191,7 @@ export class Progress implements IProgress {
 			&& this.ProgressSet === ProgressSet.All)
 		{
 			// Alle Sätze der Übung.
-			if (this.EvalSaetze(aSessUebung, VorgabeWeightLimit.UpperLimit))
+			if (this.EvalSaetze(aSessUebung, VorgabeWeightLimit.LowerLimit))
 				// Die vorgegebenen Wiederholungen konnten erreicht werden
 				return WeightProgress.Increase;
 			// Die vorgegebenen Wiederholungen konnten nicht erreicht werden
@@ -407,7 +407,7 @@ export class Progress implements IProgress {
 				&& 	aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig )
 			{
 				// Alle Sätze der Übung.
-				if (	(mProgress.ProgressTyp === ProgressTyp.BlockSet && this.EvalSaetze(mPtrSessUebung, VorgabeWeightLimit.UpperLimit) === false)
+				if (	(mProgress.ProgressTyp === ProgressTyp.BlockSet && this.EvalSaetze(mPtrSessUebung, VorgabeWeightLimit.LowerLimit) === false)
 					|| (mProgress.ProgressTyp === ProgressTyp.RepRangeSet && this.EvalSaetze(mPtrSessUebung, VorgabeWeightLimit.LowerLimit) === false)
 				)
 				{
@@ -947,7 +947,8 @@ export class Progress implements IProgress {
 				continue;
 			
 			mPtrArbeitUebung.nummeriereSatzListe(mPtrArbeitUebung.SatzListe);
-					
+
+			//#region Progress has changed
 			if (Progress.StaticProgressHasChanged(aProgressPara)) {
 				// Schleifen-Übung <> Ausgangs-Übung 
 				if ((Progress.StaticEqualUebung(mPtrArbeitUebung, aProgressPara.AusgangsUebung) === false)
@@ -988,8 +989,9 @@ export class Progress implements IProgress {
 					Progress.StaticResetAllWeights(mPtrArbeitUebung, aProgressPara.AlteProgressID);
 				} //if					
 			} // if
-				
+			//#endregion				
 
+			
 			if (
 				(
 					// Schleifen-Übung = Ausgangs-Übung
@@ -1015,7 +1017,7 @@ export class Progress implements IProgress {
 					(Progress.StaticEqualUebung(mPtrArbeitUebung, aProgressPara.AusgangsUebung) === true)
 					// Der Prozess der Übung wirkt sich nicht auf  laufende Sessions aus 
 					&& (Progress.StaticProgressEffectsRunningSession(mPtrArbeitUebung.FkProgress, aProgressPara) === false)
-					&& (mPtrArbeitUebung.FkProgress === aProgressPara.AusgangsUebung.FkProgress)
+					&& (mPtrArbeitUebung.FkProgress === aProgressPara.AusgangsUebung .FkProgress)
 					&& (mPtrArbeitUebung.ProgressGroup === aProgressPara.AusgangsUebung.ProgressGroup)
 					// Ausgangs-Session läuft nicht
 					&& (Progress.StaticSessionLaeuft(aProgressPara.AusgangsSession) === false)
