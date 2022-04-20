@@ -74,8 +74,10 @@
                                 [ngModel]="(satz.GewichtAusgefuehrt | number: '1.2')" 
                                 (focusout)="SetWeightAusgefuehrt($event)"
                                 
-                                (pointerdown)="MouseDown(satz,$event)"
-                                (pointerup)="MouseUp($event)"
+                                (mousedown)="MouseDown(satz,$event)"
+                                (mouseup)="MouseUp($event)"
+                                (touchstart)="MouseDown(satz,$event)"
+                                (touchend)="MouseUp($event)"
                                 (ngModelChange)="CalcPlates($event)"
                                 [disabled]="Disabled(satz)"
                                 type="text">
