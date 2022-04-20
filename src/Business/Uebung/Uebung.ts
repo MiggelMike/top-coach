@@ -362,7 +362,8 @@ export class Uebung implements IUebung {
 
     public Copy(): Uebung {
         const mTmpSatzListe: Array<Satz> = [];
-        this.SatzListe.forEach((sz) => mTmpSatzListe.push(sz.Copy()));
+        if(this.SatzListe !== undefined)
+            this.SatzListe.forEach((sz) => mTmpSatzListe.push(sz.Copy()));
         const mUebung: Uebung = cloneDeep(this);
         mUebung.SatzListe = mTmpSatzListe;
         return mUebung;

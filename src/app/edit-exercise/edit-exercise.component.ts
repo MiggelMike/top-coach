@@ -74,43 +74,52 @@ export class EditExerciseComponent implements OnInit {
 
     
     back() {
-		if (this.Uebung.isEqual(this.CmpUebung))
-			this.location.back();
+		if (this.Uebung.isEqual(this.CmpUebung)) this.location.back();
 		else {
-		  const mDialogData = new DialogData();
-		  mDialogData.textZeilen.push('Cancel unsaved changes?');
-		  mDialogData.OkFn = (): void => this.location.back();
-	
-		  this.fDialogService.JaNein(mDialogData);
+			const mDialogData = new DialogData();
+			mDialogData.textZeilen.push("Save changes?");
+			mDialogData.ShowAbbruch = true;
+			
+			mDialogData.OkFn = (): void => {
+				this.SaveChanges();
+			}
+
+			mDialogData.CancelFn = (): void => {
+				const mCancelDialogData = new DialogData();
+				mCancelDialogData.textZeilen.push("Changes will be lost!");
+				mCancelDialogData.textZeilen.push("Are you shure?");
+				mCancelDialogData.OkFn = (): void => this.location.back();
+				this.fDialogService.JaNein(mCancelDialogData);
+			}
+
+			this.fDialogService.JaNein(mDialogData);
 		}
     }
 
     SaveChanges() {
-		const mTmpEditExerciseComponent: EditExerciseComponent = this.ClickData as EditExerciseComponent;
-		if (mTmpEditExerciseComponent.Uebung.Name.trim() === '') {
+		if (this.Uebung.Name.trim() === '') {
 			const mDialogData = new DialogData();
 			mDialogData.textZeilen.push('Please enter a name!');
-			mTmpEditExerciseComponent.fDialogService.Hinweis(mDialogData);
+			this.fDialogService.Hinweis(mDialogData);
 		} else {
 			if (
-				(mTmpEditExerciseComponent.Uebung.ID === undefined || mTmpEditExerciseComponent.Uebung.ID <= 0)
-				&& mTmpEditExerciseComponent.fDexieService.FindUebung(mTmpEditExerciseComponent.Uebung)
+				(this.Uebung.ID === undefined || this.Uebung.ID <= 0)
+				&& this.fDexieService.FindUebung(this.Uebung)
 			) {
 				const mDialogData = new DialogData();
 				mDialogData.textZeilen.push(
-					`There is already an exercise with name "${mTmpEditExerciseComponent.Uebung.Name}"!`
+					`There is already an exercise with name "${this.Uebung.Name}"!`
 				);
-				mTmpEditExerciseComponent.fDialogService.Hinweis(mDialogData);
+				this.fDialogService.Hinweis(mDialogData);
 			} else {
-				
-				
-				mTmpEditExerciseComponent.fDexieService.UebungSpeichern(mTmpEditExerciseComponent.Uebung)
+				this.location.back();
+				this.fDexieService.UebungSpeichern(this.Uebung)
 					.then(() => {
-						let mUebungListe: Array<Uebung> = (mTmpEditExerciseComponent.fDialog.componentInstance as EditExerciseComponent).UebungEditData.fUebungListe;
-						mTmpEditExerciseComponent.CmpUebung = mTmpEditExerciseComponent.Uebung.Copy();
-						const mIndex = (mTmpEditExerciseComponent.fDialog.componentInstance as EditExerciseComponent).UebungEditData.fUebungListe.findIndex((u) => u.ID === mTmpEditExerciseComponent.Uebung.ID);
+						let mUebungListe: Array<Uebung> = this.UebungEditData.fUebungListe;
+						this.CmpUebung = this.Uebung.Copy();
+						const mIndex = this.UebungEditData.fUebungListe.findIndex((u) => u.ID === this.Uebung.ID);
 						if (mIndex < 0) {
-							mUebungListe.push(mTmpEditExerciseComponent.Uebung);
+							mUebungListe.push(this.Uebung);
 							mUebungListe = mUebungListe.sort(
 								(s1, s2) => {
 									if (s1.Name > s2.Name)
@@ -122,11 +131,11 @@ export class EditExerciseComponent implements OnInit {
 							);
 						}
 						
-						(mTmpEditExerciseComponent.fDialog.componentInstance as EditExerciseComponent).UebungEditData.fUebungListe.push(mTmpEditExerciseComponent.Uebung);
-						mTmpEditExerciseComponent.fDexieService.LadeStammUebungen(
+						(this.fDialog.componentInstance as EditExerciseComponent).UebungEditData.fUebungListe.push(this.Uebung);
+						this.fDexieService.LadeStammUebungen(
 							() => {
-								if (mTmpEditExerciseComponent.fDialog)
-									mTmpEditExerciseComponent.fDialog.close();
+								if (this.fDialog)
+									this.fDialog.close();
 							}
 						);
 					});
