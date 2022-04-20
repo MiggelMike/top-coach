@@ -32,15 +32,38 @@ export class EditMuscleGroupComponent implements OnInit {
   ngOnInit(): void {}
 
   back() {
-	  if (this.Muskelgruppe.isEqual(this.CmpMuskelgruppe))
-		  this.location.back();
-    else {
-      const mDialogData = new DialogData();
-      mDialogData.textZeilen.push('Cancel unsaved changes?');
-      mDialogData.OkFn = (): void => this.location.back();
+	  
+	if (this.Muskelgruppe.isEqual(this.CmpMuskelgruppe)) this.location.back();
+	else {
+		const mDialogData = new DialogData();
+		mDialogData.textZeilen.push("Save changes?");
+		mDialogData.ShowAbbruch = true;
+		
+		mDialogData.OkFn = (): void => {
+			this.SaveChanges();
+		}
 
-      this.fDialogService.JaNein(mDialogData);
-    }
+		mDialogData.CancelFn = (): void => {
+			const mCancelDialogData = new DialogData();
+			mCancelDialogData.textZeilen.push("Changes will be lost!");
+			mCancelDialogData.textZeilen.push("Are you shure?");
+			mCancelDialogData.OkFn = (): void => this.location.back();
+			this.fDialogService.JaNein(mCancelDialogData);
+		}
+
+		this.fDialogService.JaNein(mDialogData);
+	}
+
+
+	//   if (this.Muskelgruppe.isEqual(this.CmpMuskelgruppe))
+	// 	  this.location.back();
+    // else {
+    //   const mDialogData = new DialogData();
+    //   mDialogData.textZeilen.push('Cancel unsaved changes?');
+    //   mDialogData.OkFn = (): void => this.location.back();
+
+    //   this.fDialogService.JaNein(mDialogData);
+    // }
   }
 
   ngAfterViewInit() {
@@ -48,31 +71,31 @@ export class EditMuscleGroupComponent implements OnInit {
   }
 
 	SaveChanges() {
-		const mTmpEditMuscleGroupComponent: EditMuscleGroupComponent = this.ClickData as EditMuscleGroupComponent;
-		if (mTmpEditMuscleGroupComponent.Muskelgruppe.Name.trim() === '') {
+		if (this.Muskelgruppe.Name.trim() === '') {
 			const mDialogData = new DialogData();
 			mDialogData.textZeilen.push('Please enter a name!');
-			mTmpEditMuscleGroupComponent.fDialogService.Hinweis(mDialogData);
+			this.fDialogService.Hinweis(mDialogData);
 		} else {
+			this.location.back();
 			if (
-				(mTmpEditMuscleGroupComponent.Muskelgruppe.ID === undefined ||
-					mTmpEditMuscleGroupComponent.Muskelgruppe.ID <= 0) &&
-				mTmpEditMuscleGroupComponent.fDexieSvcService.FindMuskel(
-					mTmpEditMuscleGroupComponent.Muskelgruppe
+				(this.Muskelgruppe.ID === undefined ||
+					this.Muskelgruppe.ID <= 0) &&
+				this.fDexieSvcService.FindMuskel(
+					this.Muskelgruppe
 				)
 			) {
 				const mDialogData = new DialogData();
 				mDialogData.textZeilen.push(
-					`There is already a muscle with name "${mTmpEditMuscleGroupComponent.Muskelgruppe.Name}"!`
+					`There is already a muscle with name "${this.Muskelgruppe.Name}"!`
 				);
-				mTmpEditMuscleGroupComponent.fDialogService.Hinweis(mDialogData);
+				this.fDialogService.Hinweis(mDialogData);
 			} else {
-				mTmpEditMuscleGroupComponent.fDexieSvcService
-					.MuskelgruppeSpeichern(mTmpEditMuscleGroupComponent.Muskelgruppe)
+				this.fDexieSvcService
+					.MuskelgruppeSpeichern(this.Muskelgruppe)
 					.then((mID: number) => {
-						mTmpEditMuscleGroupComponent.Muskelgruppe.ID = mID;
-						mTmpEditMuscleGroupComponent.CmpMuskelgruppe = mTmpEditMuscleGroupComponent.Muskelgruppe.Copy();
-						mTmpEditMuscleGroupComponent.fDexieSvcService.LadeMuskelGruppen();
+						this.Muskelgruppe.ID = mID;
+						this.CmpMuskelgruppe = this.Muskelgruppe.Copy();
+						this.fDexieSvcService.LadeMuskelGruppen();
 					});
 			}
 		}
