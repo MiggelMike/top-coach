@@ -93,7 +93,7 @@
 
                 <!-- Ausgefuerte Wdh. -->
                 <mat-form-field class="align-right" fxFlex="40px">
-                    <mat-label>{{satz.WdhVonVorgabe | number: '1.0'}} - {{satz.WdhBisVorgabe | number: '1.0'}}</mat-label>
+                    <mat-label>{{satz.WdhBisVorgabe | number: '1.0'}}</mat-label>
                     <input matInput [textMask]="{mask: repMask, guide: false}" 
                            [ngModel]="satz.WdhAusgefuehrt" 
                            [disabled]="Disabled(satz)"

@@ -43,12 +43,12 @@
             </div>
         </div>
 
-        <mat-label>Rep-Range</mat-label>
+        <mat-label>Reps</mat-label>
         <div fxLayout="row" fxFlex="100%" >
             <div fxLayout="column" fxFlex="60%" >
                 <div fxLayout="row" fxFlex="100%" fxLayoutGap="5px" >
                     <!-- Geplante Von-Vorgabe-Wdh. -->
-                    <mat-form-field class="align-right" fxFlex="30px">
+                    <!-- <mat-form-field class="align-right" fxFlex="30px">
                         <mat-label>From</mat-label>
                         <input  matInput [textMask]="{mask: repMask, guide: false}" 
                                 (click)="onInitOnClick($event)"
@@ -56,11 +56,11 @@
                                 (focusout)="SetVonWdhVorgabe($event)" 
                                 type="text"
                         >
-                    </mat-form-field>
+                    </mat-form-field> -->
 
                     <!-- Geplante Bis-Vorgabe-Wdh. -->
                     <mat-form-field class="align-right" fxFlex="30px">
-                        <mat-label>To</mat-label>
+                        <!-- <mat-label>Reps</mat-label> -->
                         <input  matInput [textMask]="{mask: repMask, guide: false}" 
                                 (click)="onInitOnClick($event)"
                                 [ngModel]="Satz.WdhBisVorgabe" 
