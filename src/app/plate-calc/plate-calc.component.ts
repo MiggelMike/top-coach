@@ -64,12 +64,18 @@ export class PlateCalcComponent implements OnInit {
     return this.Hantel.Gewicht === this.GewichtAusgefuehrt;
   }
 
+  private SetsAreEqual(aSatz1: Satz, aSatz2: Satz): boolean{
+    if ((aSatz1.ID !== undefined)&&(aSatz2.ID !== undefined)) 
+      return (aSatz1.ID === aSatz2.ID);
+    
+    return (aSatz1.SatzListIndex === aSatz2.SatzListIndex);
+  }
+
   public DoWeightAllSets(aChecked: boolean) {
     if ((this.Uebung)&&(this.Satz)&&((aChecked))) {
       this.Uebung.ArbeitsSatzListe.forEach((sz) => {
-        if (sz.ID !== this.Satz.ID) {
+        if(this.SetsAreEqual(sz, this.Satz) === false)
             sz.GewichtAusgefuehrt = this.Satz.GewichtAusgefuehrt;
-        }
       });
     }
   }
@@ -89,9 +95,8 @@ public SetBisWdhVorgabe(aEvent: any) {
   public DoHantelAllSets(aChecked: boolean) {
     if ((this.Uebung)&&(this.Satz)&&((aChecked))) {
       this.Uebung.ArbeitsSatzListe.forEach((sz) => {
-        if (sz.ID !== this.Satz.ID) {
+        if(this.SetsAreEqual(sz, this.Satz) === false)
             sz.FkHantel = this.Satz.FkHantel;
-        }
       });
     }
   }
@@ -104,7 +109,7 @@ public SetBisWdhVorgabe(aEvent: any) {
   public DoRepRangelAllSets(aChecked: boolean) {
     if ((this.Uebung)&&(this.Satz)&&((aChecked))) {
       this.Uebung.ArbeitsSatzListe.forEach((sz) => {
-        if (sz.ID !== this.Satz.ID) {
+        if(this.SetsAreEqual(sz, this.Satz) === false) {
           sz.WdhVonVorgabe = this.Satz.WdhVonVorgabe;
           sz.WdhBisVorgabe = this.Satz.WdhBisVorgabe;
         }
