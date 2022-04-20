@@ -35,6 +35,9 @@ export class SatzEditComponent implements OnInit {
     private StoppUhrOverlayConfig: StoppUhrOverlayConfig;
     public StoppuhrComponent: StoppuhrComponent;
     private Progress: Progress;
+    private interval: any;
+    private sekunden: number = 0;
+    private readonly cDelayMilliSeconds: number = 500;
 
     constructor(
         private fDialogService: DialogeService,
@@ -125,20 +128,52 @@ export class SatzEditComponent implements OnInit {
        
     }
 
+    public MouseDown(aSatz: ISatz, aEvent: any) {
+        aEvent.stopPropagation();
+        if (this.Disabled(aSatz))
+            return;
+        
+        aEvent.target.select();
+        
+        this.interval = setInterval(() => {
+            this.sekunden++;
+        }, this.cDelayMilliSeconds)
+    }    
+
+    public MouseUp(aEvent: any) {
+        aEvent.stopPropagation();
+        clearInterval(this.interval);
+        if (this.sekunden >= 1) {
+            this.plateCalcOverlayConfig =
+                {
+                    satz: this.satz,
+                    uebung: this.sessUebung,
+                    left: (aEvent as PointerEvent).pageX - (aEvent as PointerEvent).offsetX,
+                    top: (aEvent as PointerEvent).clientY - (aEvent as PointerEvent).offsetY,
+                } as PlateCalcOverlayConfig;
+        
+            
+            this.plateCalcComponent = this.fPlateCalcSvcService.open(this.plateCalcOverlayConfig);
+        }
+        this.sekunden = 0;
+    }
+  
+
     public WeightAusgefuehrtClick(aEvent: any) {
+        
         aEvent.stopPropagation();
         aEvent.target.select();
 
-        this.plateCalcOverlayConfig =
-            {
-                satz: this.satz,
-                uebung: this.sessUebung,
-                left: (aEvent as PointerEvent).pageX - (aEvent as PointerEvent).offsetX,
-                top: (aEvent as PointerEvent).clientY - (aEvent as PointerEvent).offsetY,
-            } as PlateCalcOverlayConfig;
+        // this.plateCalcOverlayConfig =
+        //     {
+        //         satz: this.satz,
+        //         uebung: this.sessUebung,
+        //         left: (aEvent as PointerEvent).pageX - (aEvent as PointerEvent).offsetX,
+        //         top: (aEvent as PointerEvent).clientY - (aEvent as PointerEvent).offsetY,
+        //     } as PlateCalcOverlayConfig;
         
             
-        this.plateCalcComponent = this.fPlateCalcSvcService.open(this.plateCalcOverlayConfig);
+        // this.plateCalcComponent = this.fPlateCalcSvcService.open(this.plateCalcOverlayConfig);
     }
 
     public Disabled(aSatz:ISatz): boolean{

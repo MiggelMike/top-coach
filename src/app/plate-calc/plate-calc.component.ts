@@ -5,7 +5,7 @@ import { Component, Inject, OnInit } from "@angular/core";
 import { repMask, floatMask } from "../app.module";
 import { PlateCalcOverlayConfig } from "../services/plate-calc-svc.service";
 import { DexieSvcService } from "../services/dexie-svc.service";
-import { Satz } from "src/Business/Satz/Satz";
+import { Satz, SatzStatus } from "src/Business/Satz/Satz";
 import { Hantel } from "src/Business/Hantel/Hantel";
 import { Observable, of } from "rxjs";
 
@@ -71,6 +71,7 @@ export class PlateCalcComponent implements OnInit {
     return (aSatz1.SatzListIndex === aSatz2.SatzListIndex);
   }
 
+
   public DoWeightAllSets(aChecked: boolean) {
     if ((this.Uebung)&&(this.Satz)&&((aChecked))) {
       this.Uebung.ArbeitsSatzListe.forEach((sz) => {
@@ -86,11 +87,11 @@ export class PlateCalcComponent implements OnInit {
         this.Satz.WdhBisVorgabe = this.Satz.WdhVonVorgabe;
 }
 
-public SetBisWdhVorgabe(aEvent: any) {
-    this.Satz.WdhBisVorgabe = Number(aEvent.target.value);
-    if (this.Satz.WdhVonVorgabe > this.Satz.WdhBisVorgabe)
-        this.Satz.WdhVonVorgabe = this.Satz.WdhBisVorgabe;
-}
+  public SetBisWdhVorgabe(aEvent: any) {
+      this.Satz.WdhBisVorgabe = Number(aEvent.target.value);
+      if (this.Satz.WdhVonVorgabe > this.Satz.WdhBisVorgabe)
+          this.Satz.WdhVonVorgabe = this.Satz.WdhBisVorgabe;
+  }
 
   public DoHantelAllSets(aChecked: boolean) {
     if ((this.Uebung)&&(this.Satz)&&((aChecked))) {

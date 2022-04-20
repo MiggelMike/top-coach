@@ -73,7 +73,9 @@
                         <input  matInput [textMask]="{mask: floatMask, guide: false }"
                                 [ngModel]="(satz.GewichtAusgefuehrt | number: '1.2')" 
                                 (focusout)="SetWeightAusgefuehrt($event)"
-                                (click)="WeightAusgefuehrtClick($event)"
+                                
+                                (pointerdown)="MouseDown(satz,$event)"
+                                (pointerup)="MouseUp($event)"
                                 (ngModelChange)="CalcPlates($event)"
                                 [disabled]="Disabled(satz)"
                                 type="text">
@@ -98,7 +100,8 @@
                            [ngModel]="satz.WdhAusgefuehrt" 
                            [disabled]="Disabled(satz)"
                            (click)="onClickWdhAusgefuehrt($event)" 
-                            (focusout)="SetWdhAusgefuehrt($event)" type="text">
+                           (focusout)="SetWdhAusgefuehrt($event)" 
+                           type="text">
                 </mat-form-field>
                 <!-- AMRAP  -->
                 <div class="center-item" layout-align="center center" fxFlex="30px">

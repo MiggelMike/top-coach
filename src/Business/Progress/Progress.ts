@@ -517,6 +517,9 @@ export class Progress implements IProgress {
 					mWaitingExercise = aUebung;
 					mFirstSetChecked = true;
 				} else mWaitingExercise = aAusgangsSession.getFirstWaitingExercise(aUebung.ListenIndex + 1);
+
+				if (mWaitingExercise === undefined)
+					mWaitingExercise = aAusgangsSession.getFirstWaitingExercise(aUebung.ListenIndex);
 			
 				if (mWaitingExercise) {
 					mResult.Uebung = mWaitingExercise;
