@@ -14,18 +14,6 @@
         </div>
     </div>
 
-    <!-- <div class="height-100" fxLayout="row wrap" fxLayoutAlign="center center" fxLayout.lt-sm="row wrap" fxFlex="100%">
-        <mat-label>
-            <h6>Progress type</h6>
-        </mat-label>
-        <div fxLayout="row wrap" fxLayoutAlign="center center" fxLayout.lt-sm="row wrap" fxFlex="100%">
-            <mat-radio-group class="tp-radio-group" [(ngModel)] = "Progress.ProgressTyp">
-                <mat-radio-button class="tp-radio-button" [value]="0">Block set</mat-radio-button>
-                <mat-radio-button class="tp-radio-button" [value]="1">Rep range</mat-radio-button>
-            </mat-radio-group>
-        </div>
-    </div> -->
-
     <div class="height-150" fxLayout="row wrap" fxLayoutAlign="center center" fxLayout.lt-sm="row wrap" fxFlex="100%">
         <mat-label>
             <h6>Relevant sets for progress determination</h6>
@@ -59,58 +47,6 @@
         </mat-form-field>
     </div>
 
-    <!--          
-
-         <mat-form-field class="mg-5">
-            <mat-label>Involved Muscle #1</mat-label>
-            <mat-select [(ngModel)]="Uebung.FkMuskel01">
-                <mat-option [value]="0"></mat-option>
-                <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-form-field class="mg-5">
-            <mat-label>Involved Muscle #2</mat-label>
-            <mat-select [(ngModel)]="Uebung.FkMuskel02">
-                <mat-option [value]="0"></mat-option>
-                <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-form-field class="mg-5">
-            <mat-label>Involved Muscle #3</mat-label>
-            <mat-select [(ngModel)]="Uebung.FkMuskel03">
-                <mat-option [value]="0"></mat-option>
-                <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-form-field class="mg-5">
-            <mat-label>Involved Muscle #4</mat-label>
-            <mat-select [(ngModel)]="Uebung.FkMuskel04">
-                <mat-option [value]="0"></mat-option>
-                <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-form-field class="mg-5">
-            <mat-label>Involved Muscle #5</mat-label>
-            <mat-select [(ngModel)]="Uebung.FkMuskel05">
-                <mat-option [value]="0"></mat-option>
-                <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
-            <mat-label>Notes</mat-label>
-        </div>
-        <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
-            <md-input-container fxFlex="100%">
-                <textarea [(ngModel)]="Uebung.Beschreibung" mdInput placeholder="Notes" rows="3" fxFlex="100%"
-                    maxlength="1000" class="colors-textarea"></textarea>
-            </md-input-container>
-        </div> -->
-
-    <app-data-store-buttons [SaveClick]="SaveChanges" [CancelClick]="CancelChanges" [ClickData]="this">
-    </app-data-store-buttons>
+    <!-- <app-data-store-buttons [SaveClick]="SaveChanges" [CancelClick]="CancelChanges" [ClickData]="this">
+    </app-data-store-buttons> -->
 </div>

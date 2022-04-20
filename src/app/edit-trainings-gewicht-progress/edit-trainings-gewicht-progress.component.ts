@@ -45,32 +45,53 @@ export class EditTrainingsGewichtProgressComponent implements OnInit {
 		if (this.Progress.isEqual(this.CmpProgress)) this.location.back();
 		else {
 			const mDialogData = new DialogData();
-			mDialogData.textZeilen.push("Cancel unsaved changes?");
-			mDialogData.OkFn = (): void => this.location.back();
+			mDialogData.textZeilen.push("Save changes?");
+			mDialogData.ShowAbbruch = true;
+			
+			mDialogData.OkFn = (): void => {
+				this.SaveChanges();
+			}
+
+			mDialogData.CancelFn = (): void => {
+				const mCancelDialogData = new DialogData();
+				mCancelDialogData.textZeilen.push("Changes will be lost!");
+				mCancelDialogData.textZeilen.push("Are you shure?");
+				mCancelDialogData.OkFn = (): void => this.location.back();
+				this.fDialogService.JaNein(mCancelDialogData);
+			}
 
 			this.fDialogService.JaNein(mDialogData);
 		}
+
+
+
+		// if (this.Progress.isEqual(this.CmpProgress)) this.location.back();
+		// else {
+		// 	const mDialogData = new DialogData();
+		// 	mDialogData.textZeilen.push("Cancel unsaved changes?");
+		// 	mDialogData.OkFn = (): void => this.location.back();
+
+		// 	this.fDialogService.JaNein(mDialogData);
+		// }
 	}
 
 	SaveChanges() {
-		const mTmpEditTrainingsGewichtProgressComponent: EditTrainingsGewichtProgressComponent = this.ClickData as EditTrainingsGewichtProgressComponent;
-		if (mTmpEditTrainingsGewichtProgressComponent.Progress.Name.trim() === "") {
+		if (this.Progress.Name.trim() === "") {
 			const mDialogData = new DialogData();
 			mDialogData.textZeilen.push("Please enter a name!");
-			mTmpEditTrainingsGewichtProgressComponent.fDialogService.Hinweis(mDialogData);
+			this.fDialogService.Hinweis(mDialogData);
 		} else {
-			mTmpEditTrainingsGewichtProgressComponent.fDexieService.ProgressSpeichern(mTmpEditTrainingsGewichtProgressComponent.Progress as Progress)
+			this.fDexieService.ProgressSpeichern(this.Progress as Progress)
 				.then(() => {
-					mTmpEditTrainingsGewichtProgressComponent.CmpProgress = mTmpEditTrainingsGewichtProgressComponent.Progress.Copy();
-					mTmpEditTrainingsGewichtProgressComponent.fDexieService.LadeProgress();
+					this.location.back();
 				}).catch((e) => {
 					const mDialogData = new DialogData();
 					if(e.message.indexOf('at least one key does not satisfy the uniqueness requirements') > -1) 
-							mDialogData.textZeilen.push(`There is already a progess schema with name "${mTmpEditTrainingsGewichtProgressComponent.Progress.Name}"!`);
+							mDialogData.textZeilen.push(`There is already a progess schema with name "${this.Progress.Name}"!`);
 					else
 						mDialogData.textZeilen.push(e.message);
 					
-					mTmpEditTrainingsGewichtProgressComponent.fDialogService.Hinweis(mDialogData);
+					this.fDialogService.Hinweis(mDialogData);
 				});
 		}
 	}
