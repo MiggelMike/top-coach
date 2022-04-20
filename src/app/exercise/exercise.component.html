@@ -1,8 +1,12 @@
+
 <ng-container *ngIf="SelectMode === false">
-    <app-toolbar></app-toolbar>
+    
+        <app-toolbar></app-toolbar>
+
 </ng-container>
 
-<div fxLayout="row wrap" fxLayoutAlign="center center">
+<div class="center-item" fxLayout="column">
+<div fxLayout="row wrap"  fxFlex="100%" >
     <ng-container *ngIf="SelectMode === false; else elseBlock">
         <h4>Exercises</h4>
     </ng-container>
@@ -13,38 +17,39 @@
 </div>
 
 <ng-container *ngIf="UebungListeSortedByName">
-
-    <div class="center-item" layout-align="center start">
+    
+    <div fxLayout="row wrap"  fxFlex="100%" > 
         <a class='link-button-font' mat-flat-button (click)="NewExercise()">New exercise</a>
     </div>
+    
+    <div class="center-item" fxLayout="column" fxFlex="100%">
+        <ng-container *ngFor="let uebung of UebungListeSortedByName, index as i">
+            <div fxLayout="row wrap"  fxFlex="100%" fxLayoutAlign="center center" fxLayoutGap="2px" 
+                [ngClass]="{'HG-01': i % 2 === 0}">
+                <ng-container *ngIf="SelectMode">
+                    <div fxLayout="column" fxFlex="5%">
+                        <mat-checkbox class="mg-5" [(ngModel)]="uebung.Selected"></mat-checkbox>
+                    </div>
+                </ng-container>
 
-    <ng-container *ngFor="let uebung of UebungListeSortedByName, index as i">
-        <div class="mg-5" fxLayout="row wrap" fxLayoutAlign="center" fxLayoutGap="2px"
-            [ngClass]="{'HG-01': i % 2 === 0}">
-            <ng-container *ngIf="SelectMode">
-                <div fxLayout="column" fxFlex="5%">
-                    <mat-checkbox class="mg-5" [(ngModel)]="uebung.Selected"></mat-checkbox>
+                <div fxLayout="column" fxFlex="250px">
+                    <a mat-button (click)="EditExercise(uebung)">{{uebung.Name}}</a>
                 </div>
-            </ng-container>
 
-            <div fxLayout="column" fxFlex="30%">
-                <span class="mg-5"><a>{{uebung.Name}}</a></span>
+
+                <div fxLayout="column" layout-align="center center" fxFlex="0 0 auto">
+                    <a [ngClass]="['ref-button']" mat-flat-button
+                        (click)="DeleteExercise(uebung)">Delete</a>
+                </div>
             </div>
-
-            <a [ngClass]="['ref-button']" mat-button
-                (click)="EditExercise(uebung)">Edit</a>
-
-            <div class="center-item" fxLayout="column" layout-align="center center" fxFlex="0 0 auto">
-                <a [ngClass]="['ref-button']" mat-flat-button
-                    (click)="DeleteExercise(uebung)">Delete</a>
+        </ng-container>
+        
+        <ng-container *ngIf="SelectMode">
+            <div fxLayout="row" fxLayoutAlign="center center">
+                <a class='ref-button' mat-flat-button (click)="OkClickFn()">Ok</a>
+                <a class='ref-button' mat-flat-button (click)="CancelClickFn()">Cancel</a>
             </div>
-        </div>
-    </ng-container>
-
-    <ng-container *ngIf="SelectMode">
-        <div fxLayout="row" fxLayoutAlign="center center">
-            <a class='ref-button' mat-flat-button (click)="OkClickFn()">Ok</a>
-            <a class='ref-button' mat-flat-button (click)="CancelClickFn()">Cancel</a>
-        </div>
-    </ng-container>
+        </ng-container>
+    </div>
 </ng-container>
+</div>
