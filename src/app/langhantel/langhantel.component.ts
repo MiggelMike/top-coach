@@ -25,7 +25,7 @@ export class LanghantelComponent implements OnInit {
         public fDialogService: DialogeService,
         private location: Location
     ) {
-        this.CopyHantelList();
+        this.fDexieSvcService.LadeLanghanteln().then(() => this.CopyHantelList());
     }
 
     private CopyHantelList() {
@@ -77,30 +77,40 @@ export class LanghantelComponent implements OnInit {
     }
 
     back() {
-        const mTmpEditHantelComponent: LanghantelComponent = this;
-        if (mTmpEditHantelComponent.ChangesExist() === false)
-        mTmpEditHantelComponent.location.back();
-        else {
-            const mDialogData = new DialogData();
-            mDialogData.textZeilen.push("Cancel unsaved changes?");
-            mDialogData.OkFn = (): void => mTmpEditHantelComponent.location.back();
+        if (this.ChangesExist() === false) this.location.back();
+		else {
+			const mDialogData = new DialogData();
+			mDialogData.textZeilen.push("Save changes?");
+			mDialogData.ShowAbbruch = true;
+			
+			mDialogData.OkFn = (): void => {
+				this.SaveChanges();
+			}
 
-            mTmpEditHantelComponent.fDialogService.JaNein(mDialogData);
-        }
+			mDialogData.CancelFn = (): void => {
+				const mCancelDialogData = new DialogData();
+				mCancelDialogData.textZeilen.push("Changes will be lost!");
+				mCancelDialogData.textZeilen.push("Are you shure?");
+				mCancelDialogData.OkFn = (): void => this.location.back();
+				this.fDialogService.JaNein(mCancelDialogData);
+			}
+
+			this.fDialogService.JaNein(mDialogData);
+		}
     }
 
     SaveChanges() {
-        const mTmpEditHantelComponent: LanghantelComponent = this.ClickData as LanghantelComponent;
-        const mOhneName: Array<Hantel> = mTmpEditHantelComponent.HantelListe.filter(h => h.Name.trim() === '');
+        const mOhneName: Array<Hantel> = this.HantelListe.filter(h => h.Name.trim() === '');
         
         if (mOhneName.length > 0) {
             const mDialogData = new DialogData();
             mDialogData.textZeilen.push("A barbell must have a name!");
-            mTmpEditHantelComponent.fDialogService.Hinweis(mDialogData);
+            this.fDialogService.Hinweis(mDialogData);
         } else {
-            mTmpEditHantelComponent.fDexieSvcService
-                .InsertHanteln(mTmpEditHantelComponent.HantelListe)
-                .then((mDummy) => (mTmpEditHantelComponent.fDexieSvcService.LadeLanghanteln(() => mTmpEditHantelComponent.CopyHantelList())));
+            this.fDexieSvcService
+                .InsertHanteln(this.HantelListe)
+                .then((mDummy) => (this.location.back()));
+                // .catch((err) => alert(err));
         }
     }
 
@@ -118,7 +128,7 @@ export class LanghantelComponent implements OnInit {
             // sonst werden sie beim Programm-Start wieder erzeugt.
             aHantel.HantelStatus = ErstellStatus.Geloescht;
             this.fDexieSvcService.HantelSpeichern(aHantel)
-                .then(() => (this.fDexieSvcService.LadeLanghanteln(() => this.CopyHantelList())));
+                .then(() => (this.location.back()));
         } else {
             const mIndex = this.HantelListe.indexOf(aHantel);
             if (mIndex > 0)

@@ -47,25 +47,45 @@ export class EditLanghantelComponent implements OnInit {
     }
 
     back() {
-        if (this.Hantel.isEqual(this.CmpHantel))
-            this.location.back();
-        else {
-            const mDialogData = new DialogData();
-            mDialogData.textZeilen.push("Cancel unsaved changes?");
-            mDialogData.OkFn = (): void => this.location.back();
+        if(this.Hantel.isEqual(this.CmpHantel)) this.location.back();
+		else {
+			const mDialogData = new DialogData();
+			mDialogData.textZeilen.push("Save changes?");
+			mDialogData.ShowAbbruch = true;
+			
+			mDialogData.OkFn = (): void => {
+				this.SaveChanges();
+			}
 
-            this.fDialogService.JaNein(mDialogData);
-        }
+			mDialogData.CancelFn = (): void => {
+				const mCancelDialogData = new DialogData();
+				mCancelDialogData.textZeilen.push("Changes will be lost!");
+				mCancelDialogData.textZeilen.push("Are you shure?");
+				mCancelDialogData.OkFn = (): void => this.location.back();
+				this.fDialogService.JaNein(mCancelDialogData);
+			}
+
+			this.fDialogService.JaNein(mDialogData);
+		}
+
+
+
+        // if (this.Hantel.isEqual(this.CmpHantel))
+        //     this.location.back();
+        // else {
+        //     const mDialogData = new DialogData();
+        //     mDialogData.textZeilen.push("Cancel unsaved changes?");
+        //     mDialogData.OkFn = (): void => this.location.back();
+
+        //     this.fDialogService.JaNein(mDialogData);
+        // }
     }
 
     SaveChanges() {
-        const mTmpEditHantelComponent: EditLanghantelComponent = this.ClickData as EditLanghantelComponent;
-        mTmpEditHantelComponent.fDexieSvcService
-            .HantelSpeichern(mTmpEditHantelComponent.Hantel)
+        this.fDexieSvcService
+            .HantelSpeichern(this.Hantel)
             .then((mID) => {
-                mTmpEditHantelComponent.Hantel.ID = mID;
-                mTmpEditHantelComponent.CmpHantel = mTmpEditHantelComponent.Hantel.Copy();
-                mTmpEditHantelComponent.fDexieSvcService.LadeLanghanteln();
+                this.location.back();
             });
     }
 
