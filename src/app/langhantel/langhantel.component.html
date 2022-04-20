@@ -8,35 +8,34 @@
 <ng-container *ngIf="HantelListe">
     <ng-container *ngFor="let Hantel of HantelListe, index as i">
         <div fxLayout="row wrap" fxLayoutAlign="center center" >
-            <div fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="2px" fxFlex="100%"   [ngClass]="{'HG-01': i % 2 === 0}">
-                <mat-form-field class="align-left" fxFlex="35%">
-                    <mat-label>Name</mat-label>
-                    <input matInput [(ngModel)]="Hantel.Name" maxlength="50" type="text">
-                </mat-form-field>
-                
-                <mat-form-field class="align-right" fxFlex="14%">
-                    <mat-label>Diameter</mat-label>
-                    <input matInput 
-                    [textMask]="{mask: Int2DigitMask, guide: false }" 
-                    (focusout)="SetDiameter(Hantel,$event)"  
-                    [ngModel]="Hantel.Durchmesser"
-                    type="text">
-                </mat-form-field>
-                
-                <mat-form-field class="align-right" fxFlex="14%">
-                    <mat-label>Gewicht</mat-label>
-                    <input 
-                    matInput 
-                    [textMask]="{mask: floatMask, guide: false }" 
-                    [ngModel]="Hantel.Gewicht"
-                    (focusout)="SetGewicht(Hantel,$event)"  
-                    type="text">
-                </mat-form-field>
-                
-                <div  fxFlex="14%">
+            <div fxLayout="row wrap" fxLayoutAlign="center center"  fxFlex="90%" fxLayoutGap="2px"    [ngClass]="{'HG-01': i % 2 === 0}">
+                    <mat-form-field class="align-left" fxFlex="auto">
+                        <mat-label>Name</mat-label>
+                        <input matInput [(ngModel)]="Hantel.Name" maxlength="50" type="text">
+                    </mat-form-field>
                     
-                    <a class="ref-button" mat-flat-button (click)="Delete(Hantel)">Delete</a>
-                </div>
+                    <mat-form-field class="align-right" fxFlex="10%">
+                        <mat-label>Diameter</mat-label>
+                        <input matInput 
+                        [textMask]="{mask: Int2DigitMask, guide: false }" 
+                        (focusout)="SetDiameter(Hantel,$event)"  
+                        [ngModel]="Hantel.Durchmesser"
+                        type="text">
+                    </mat-form-field>
+                    
+                    <mat-form-field class="align-right" fxFlex="10%">
+                        <mat-label>Gewicht</mat-label>
+                        <input 
+                        matInput 
+                        [textMask]="{mask: floatMask, guide: false }" 
+                        [ngModel]="Hantel.Gewicht"
+                        (focusout)="SetGewicht(Hantel,$event)"  
+                        type="text">
+                    </mat-form-field>
+                    
+                    <div  fxFlex="10%">
+                        <a class="ref-button" mat-flat-button (click)="Delete(Hantel)">Delete</a>
+                    </div>
             </div>
         </div>
     </ng-container>

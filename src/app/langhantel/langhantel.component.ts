@@ -16,6 +16,8 @@ export class LanghantelComponent implements OnInit {
     public floatMask = floatMask;
     public repMask = repMask;
     public Int2DigitMask = Int2DigitMask;
+    LoeschListe: Array<Hantel> = [];
+    LoeschListeAutomatischErstellte: Array<Hantel> = [];
     HantelListe: Array<Hantel> = [];
     CmpHantelListe: Array<Hantel> = [];
     public ClickData: LanghantelComponent;
@@ -107,10 +109,16 @@ export class LanghantelComponent implements OnInit {
             mDialogData.textZeilen.push("A barbell must have a name!");
             this.fDialogService.Hinweis(mDialogData);
         } else {
+            this.LoeschListe.forEach( (aHantel: Hantel) => {
+                this.fDexieSvcService.Deletehantel(aHantel);
+            });
+
+            this.fDexieSvcService
+                .InsertHanteln(this.LoeschListeAutomatischErstellte);
+
             this.fDexieSvcService
                 .InsertHanteln(this.HantelListe)
                 .then((mDummy) => (this.location.back()));
-                // .catch((err) => alert(err));
         }
     }
 
@@ -123,20 +131,17 @@ export class LanghantelComponent implements OnInit {
     }
 
     private DeletePrim(aHantel: Hantel) {
+        const mIndex = this.HantelListe.indexOf(aHantel);
+        if (mIndex > 0)
+            this.HantelListe.splice(mIndex, 1);
+        
         if (aHantel.HantelStatus === ErstellStatus.AutomatischErstellt) {
             // Automatisch erstellte nicht löschen, sonder auf "Geloescht" setzen,
             // sonst werden sie beim Programm-Start wieder erzeugt.
             aHantel.HantelStatus = ErstellStatus.Geloescht;
-            this.fDexieSvcService.HantelSpeichern(aHantel)
-                .then(() => (this.location.back()));
-        } else {
-            const mIndex = this.HantelListe.indexOf(aHantel);
-            if (mIndex > 0)
-                this.HantelListe.splice(mIndex,1);
-            
-            this.fDexieSvcService.DeleteHantelscheibe(aHantel.ID)
-                .then(() => (this.fDexieSvcService.LadeLanghanteln(() => this.CopyHantelList())));
-        }
+            this.LoeschListeAutomatischErstellte.push(aHantel);
+        } else    
+            this.LoeschListe.push(aHantel);
     }
 
     Delete(aHantel: Hantel) {

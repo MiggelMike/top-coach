@@ -683,6 +683,11 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
+	public Deletehantel(aHantel: Hantel) {
+		this.HantelTable.delete(aHantel.ID);
+	}
+
+
 	public LadeLanghanteln(aAfterLoadFn?: AfterLoadFn): PromiseExtended<void> {
 		this.LangHantelListe = [];
 		return this.table(this.cHantel)
