@@ -18,10 +18,18 @@
                     <mat-expansion-panel #panUebung='matExpansionPanel' [expanded]="SessUeb.Expanded"
                         (closed)="PanelUebungClosed(SessUeb)" (opened)="PanelUebungOpened(SessUeb)">
                         <mat-expansion-panel-header>
-                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxFlex="100%">
-                                <div layout-align="start center" fxFlex="0 0 70%">
+                            <div fxLayout="row wrap" fxLayoutGap="2px" fxLayout.lt-sm="row wrap" fxFlex="100%">
+                                <div layout-align="start center" fxFlex="0 0 50%">
                                     <h6 flex>#{{i+1}} {{SessUeb.Name}}</h6>
                                 </div>
+
+                                <ng-container *ngIf="bearbeitbar">
+                                    <a  [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
+                                        (click)="CopyExcercise(SessUeb, $event)">Copy exercise</a>
+
+                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
+                                        (click)="DeleteExercise(i+1,SessUeb,$event)">Delete Exercise</a>
+                                </ng-container>
 
                                 <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
                                     (click)="DoSettings(SessUeb, $event)">Settings</a>
@@ -57,7 +65,7 @@
                                     </app-sess-uebung>
                                 </ng-container>
 
-                                <ng-container *ngIf="bearbeitbar">
+                                <!-- <ng-container *ngIf="bearbeitbar">
                                     <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
                                         <div class="center-item" layout-align="center center">
                                             <a [ngClass]="['link-button-font']" mat-flat-button
@@ -69,7 +77,7 @@
                                                 (click)="DeleteExercise(i+1,SessUeb)">Delete Exercise</a>
                                         </div>
                                     </div>
-                                </ng-container>
+                                </ng-container> -->
                             </div>
                         </div>
                     </mat-expansion-panel>

@@ -158,7 +158,8 @@ export class Programm03Component implements OnInit {
         }
 
 
-    public DeleteExercise(aRowNum: number, aUebung: Uebung) {
+    public DeleteExercise(aRowNum: number, aUebung: Uebung, aEvent: Event) {
+        aEvent.stopPropagation();
         const mDialogData = new DialogData();
         mDialogData.textZeilen.push(`Delete exercise #${aRowNum} "${aUebung.Name}" ?`);
         mDialogData.OkFn = (): void => {
@@ -186,7 +187,8 @@ export class Programm03Component implements OnInit {
         this.fDialogService.JaNein(mDialogData);
     }
 
-    public CopyExcercise(aUebung: Uebung) {
+    public CopyExcercise(aUebung: Uebung, aEvent: Event) {
+        aEvent.stopPropagation();
         this.fGlobalService.SessUebungKopie = aUebung.Copy();
     }
 
