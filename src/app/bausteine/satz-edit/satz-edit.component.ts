@@ -36,7 +36,6 @@ export class SatzEditComponent implements OnInit {
     public StoppuhrComponent: StoppuhrComponent;
     private Progress: Progress;
     private interval: any;
-    private sekunden: number = 0;
     private readonly cDelayMilliSeconds: number = 500;
 
     constructor(
@@ -68,8 +67,6 @@ export class SatzEditComponent implements OnInit {
     }
 
     ngOnDestroy() {
-        // if ((this.StoppuhrComponentVisible === true) && (this.fStoppUhrService.StoppuhrComponent !== undefined))
-        //     this.fStoppUhrService.StoppuhrComponent.close();
     }
 
     public DeleteSet() {
@@ -78,7 +75,6 @@ export class SatzEditComponent implements OnInit {
         mDialogData.OkFn = (): void => {
             const index: number = this.sessUebung.SatzListe.indexOf(this.satz as Satz);
             if (index !== -1) {
-                // @Input() DeletedSatzList: Array < Satz > =[];
                 if (this.satz.ID > 0)
                     this.DeletedSatzList.push(this.satz as Satz);
                 this.sessUebung.SatzListe.splice(index, 1);
@@ -136,14 +132,7 @@ export class SatzEditComponent implements OnInit {
         aEvent.target.select();
         
         this.interval = setInterval(() => {
-            this.sekunden++;
-        }, this.cDelayMilliSeconds)
-    }    
-
-    public MouseUp(aEvent: any) {
-        aEvent.stopPropagation();
-        clearInterval(this.interval);
-        if (this.sekunden >= 1) {
+            clearInterval(this.interval);
             this.plateCalcOverlayConfig =
                 {
                     satz: this.satz,
@@ -154,8 +143,13 @@ export class SatzEditComponent implements OnInit {
         
             
             this.plateCalcComponent = this.fPlateCalcSvcService.open(this.plateCalcOverlayConfig);
-        }
-        this.sekunden = 0;
+
+        }, this.cDelayMilliSeconds)
+    }    
+
+    public MouseUp(aEvent: any) {
+        aEvent.stopPropagation();
+        clearInterval(this.interval);
     }
   
 
