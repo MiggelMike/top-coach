@@ -16,6 +16,7 @@ import { Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardUebung, ArbeitsSaetzeStatus } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
+import { is } from '@angular-package/type';
 var cloneDeep = require('lodash.clonedeep');
 
 export const MinDatum = new Date(-8640000000000000);
@@ -90,7 +91,7 @@ export interface onFormCloseFn {
 
 export class ParaDB {
 	Data?: any;
-	WhereClause?: {};
+	WhereClause?: {} | string;
 	Filter?: FilterFn = () => { return true };;
 	And?: AndFn = () => { return true };
 	Then?: ThenFn;
@@ -889,47 +890,54 @@ export class DexieSvcService extends Dexie {
 		});
 	}
 
+	public async LadeHistorySessions(): Promise<Array<Session>>  {
+		return await this.SessionTable
+			.where("Kategorie02")
+			.anyOf([SessionStatus.Fertig, SessionStatus.FertigTimeOut])
+			.toArray()
+			.then((aSessionListe) => { return aSessionListe; } );
+	}
+
 	public async LadeProgrammSessions(aLadePara: SessionParaDB): Promise<Array<Session>> {
-		// SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02]",
-		// return this.transaction("rw", this.SessionTable, this.UebungTable, this.SatzTable, async () => {
-			return await this.SessionTable
-				.where(aLadePara === undefined || aLadePara.WhereClause === undefined ? { FK_Programm: 0 } : aLadePara.WhereClause)
-				.and((aLadePara === undefined || aLadePara.And === undefined ? () => { return 1 === 1 } : (session: Session) => aLadePara.And(session)))
-				.filter((aLadePara === undefined || aLadePara.Filter === undefined ? () => { return 1 === 1 } : (session: Session) => aLadePara.Filter(session)))
-				.limit(aLadePara === undefined || aLadePara.Limit === undefined ? Number.MAX_SAFE_INTEGER : aLadePara.Limit)
-				.sortBy(aLadePara === undefined || aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
-				.then( async (aSessions: Array<Session>) => {
-					const mLadePara: ParaDB = new ParaDB();
-					for (let index = 0; index < aSessions.length; index++) {
-						const mPtrSession = aSessions[index];
-						mLadePara.WhereClause = { SessionID: mPtrSession.ID };
 
-						mLadePara.ExtraFn = async (aLadePara: ParaDB) => {
-							aLadePara.Data.Uebung.FK_Programm = aLadePara.Data.Session.FK_Programm;
-							aLadePara.Data.Uebung.Datum = aLadePara.Data.Session.Datum;
-							// Session-Übungen sind keine Stamm-Übungen.
-							// Ist der Schlüssel zur Stamm-Übung gesetzt?
-							if (aLadePara.Data.Uebung.FkUebung > 0) {
-								//Der Schlüssel zur Stamm-Übung ist gesetzt
-								const mStammUebung = this.StammUebungsListe.find((mGefundeneUebung) => mGefundeneUebung.ID === aLadePara.Data.Uebung.FkUebung);
-								if (mStammUebung !== undefined) aLadePara.Data.Uebung.Name = mStammUebung.Name;
-							} else {
-								// Der Schlüssel zur Stamm-Übung sollte normalerweise gesetzt sein
-								const mStammUebung = this.StammUebungsListe.find((mGefundeneUebung) => mGefundeneUebung.Name === aLadePara.Data.Uebung.Name);
-								if (mStammUebung !== undefined) aLadePara.Data.Uebung.FkUebung = mStammUebung.ID;
-							}
-							await this.UebungSpeichern(aLadePara.Data.Uebung);
+		return await this.SessionTable
+			.where(aLadePara === undefined || aLadePara.WhereClause === undefined ?  { FK_Programm: 0 } : aLadePara.WhereClause)
+			.and((aLadePara === undefined || aLadePara.And === undefined ?  () => { return 1 === 1 }  : (session: Session) => aLadePara.And(session)))
+			.filter((aLadePara === undefined || aLadePara.Filter === undefined ? () => { return 1 === 1 } : (session: Session) => aLadePara.Filter(session)))
+			.limit(aLadePara === undefined || aLadePara.Limit === undefined ? Number.MAX_SAFE_INTEGER : aLadePara.Limit)
+			.sortBy(aLadePara === undefined || aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
+			.then( async (aSessions: Array<Session>) => {
+				const mLadePara: ParaDB = new ParaDB();
+				for (let index = 0; index < aSessions.length; index++) {
+					const mPtrSession = aSessions[index];
+					mLadePara.WhereClause = { SessionID: mPtrSession.ID };
 
-						};//mLadePara.ExtraFn
-						await this.LadeSessionUebungen(mPtrSession, mLadePara);
-					}
+					mLadePara.ExtraFn = async (aLadePara: ParaDB) => {
+						aLadePara.Data.Uebung.FK_Programm = aLadePara.Data.Session.FK_Programm;
+						aLadePara.Data.Uebung.Datum = aLadePara.Data.Session.Datum;
+						// Session-Übungen sind keine Stamm-Übungen.
+						// Ist der Schlüssel zur Stamm-Übung gesetzt?
+						if (aLadePara.Data.Uebung.FkUebung > 0) {
+							//Der Schlüssel zur Stamm-Übung ist gesetzt
+							const mStammUebung = this.StammUebungsListe.find((mGefundeneUebung) => mGefundeneUebung.ID === aLadePara.Data.Uebung.FkUebung);
+							if (mStammUebung !== undefined) aLadePara.Data.Uebung.Name = mStammUebung.Name;
+						} else {
+							// Der Schlüssel zur Stamm-Übung sollte normalerweise gesetzt sein
+							const mStammUebung = this.StammUebungsListe.find((mGefundeneUebung) => mGefundeneUebung.Name === aLadePara.Data.Uebung.Name);
+							if (mStammUebung !== undefined) aLadePara.Data.Uebung.FkUebung = mStammUebung.ID;
+						}
+						await this.UebungSpeichern(aLadePara.Data.Uebung);
 
-					if (aLadePara !== undefined) {
-						if (aLadePara.OnSessionNoRecordFn !== undefined) aSessions = aLadePara.OnSessionNoRecordFn(aLadePara);
-						if (aLadePara.OnSessionAfterLoadFn !== undefined) aSessions = aLadePara.OnSessionAfterLoadFn(aSessions);
-					}
-					return aSessions;
-				});
+					};//mLadePara.ExtraFn
+					await this.LadeSessionUebungen(mPtrSession, mLadePara);
+				}
+
+				if (aLadePara !== undefined) {
+					if (aLadePara.OnSessionNoRecordFn !== undefined) aSessions = aLadePara.OnSessionNoRecordFn(aLadePara);
+					if (aLadePara.OnSessionAfterLoadFn !== undefined) aSessions = aLadePara.OnSessionAfterLoadFn(aSessions);
+				}
+				return aSessions;
+			});
 		// });
 	}
 
