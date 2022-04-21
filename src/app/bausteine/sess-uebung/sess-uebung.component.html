@@ -1,8 +1,21 @@
 <ng-container *ngIf="session" >
     <mat-accordion multi="true">
         <mat-expansion-panel [expanded]="true">
+
             <mat-expansion-panel-header>
-                <div>{{satzTypText}}</div>
+                <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutGap="2px" fxLayoutAlign="flex-start center"  >
+                    <span>{{satzTypText}}</span>
+
+                    <ng-container *ngIf='bearbeitbar'>
+                        <!-- <div class="center-item" layout-align="center center"> -->
+                            <a  [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="AddSet($event)">Add Set</a>
+                        <!-- </div> -->
+
+                        <!-- <div class="center-item" layout-align="center center"> -->
+                            <a [ngClass]="['link-button-font','HG-01']" mat-flat-button (click)="PasteSet($event)">Paste Set</a>
+                        <!-- </div> -->
+                    </ng-container>
+                </div>
             </mat-expansion-panel-header>
             
             <ng-container *ngIf='bearbeitbar; then  BearbeitbarBlock else NurLesenBlock'>
@@ -29,14 +42,6 @@
                         </app-satz-edit>
                     </ng-container>
 
-                    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
-                        <div class="center-item" layout-align="center center">
-                            <a [ngClass]="['link-button-font']" mat-flat-button (click)="AddSet()">Add Set</a>
-                        </div>
-                        <div class="center-item" layout-align="center center">
-                            <a [ngClass]="['link-button-font']" mat-flat-button (click)="PasteSet()">Paste Set</a>
-                        </div>
-                    </div>
                 </div>
             </ng-template>
 

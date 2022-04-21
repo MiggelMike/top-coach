@@ -51,6 +51,8 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 	}
 	
 	get GewichtsEinheit(): string {
+		if (this.AppData === undefined)
+			return '';
 		return this.AppData.GewichtsEinheitText;
 	}
 

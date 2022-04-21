@@ -49,7 +49,8 @@ export class SessUebungComponent implements OnInit {
             });
     }
 
-    public PasteSet() {
+    public PasteSet(aEvent: Event) {
+        aEvent.stopPropagation();
         if (this.fGlobalService.SatzKopie === null) {
             const mDialoData = new DialogData();
             mDialoData.textZeilen.push("No data to paste!");
@@ -76,7 +77,8 @@ export class SessUebungComponent implements OnInit {
         this.sessUebung.SatzListe.push(mSatz);
     }
 
-    public AddSet() {
+    public AddSet(aEvent: Event) {
+        aEvent.stopPropagation();
         let mSatz: Satz;
         switch (this.satzTypText) {
             case "Warm up sets":
