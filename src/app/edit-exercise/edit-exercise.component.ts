@@ -70,25 +70,34 @@ export class EditExerciseComponent implements OnInit {
 	
 	public get HantelListe(): Array<Hantel>{
 		return this.fDexieService.LangHantelListe;
-    }
+	}
+	
+	closeDialog() {
+		this.onBeforeClose( () => this.fDialog.close());
+	}
 
-    
-    back() {
-		if (this.Uebung.isEqual(this.CmpUebung)) this.location.back();
+	back() {
+		this.onBeforeClose( () => this.location.back());
+	}
+	
+	onBeforeClose(aGoBackFn: any) {
+		this.Uebung.SatzListe = [];
+		this.CmpUebung.SatzListe = [];
+		if (this.Uebung.isEqual(this.CmpUebung)) aGoBackFn();
 		else {
 			const mDialogData = new DialogData();
 			mDialogData.textZeilen.push("Save changes?");
 			mDialogData.ShowAbbruch = true;
 			
 			mDialogData.OkFn = (): void => {
-				this.SaveChanges();
+				this.SaveChanges(aGoBackFn);
 			}
 
 			mDialogData.CancelFn = (): void => {
 				const mCancelDialogData = new DialogData();
 				mCancelDialogData.textZeilen.push("Changes will be lost!");
 				mCancelDialogData.textZeilen.push("Are you shure?");
-				mCancelDialogData.OkFn = (): void => this.location.back();
+				mCancelDialogData.OkFn = (): void => aGoBackFn();
 				this.fDialogService.JaNein(mCancelDialogData);
 			}
 
@@ -96,7 +105,7 @@ export class EditExerciseComponent implements OnInit {
 		}
     }
 
-    SaveChanges() {
+    SaveChanges(aGoBackFn: any) {
 		if (this.Uebung.Name.trim() === '') {
 			const mDialogData = new DialogData();
 			mDialogData.textZeilen.push('Please enter a name!');
@@ -112,7 +121,7 @@ export class EditExerciseComponent implements OnInit {
 				);
 				this.fDialogService.Hinweis(mDialogData);
 			} else {
-				this.location.back();
+				aGoBackFn();
 				this.fDexieService.UebungSpeichern(this.Uebung)
 					.then(() => {
 						let mUebungListe: Array<Uebung> = this.UebungEditData.fUebungListe;

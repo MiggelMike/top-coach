@@ -1,10 +1,14 @@
-<ng-container *ngIf="fDialog === undefined">
+<ng-container *ngIf="fDialog === undefined; else Dialog">
     <mat-icon (click)="back()">arrow_back</mat-icon>
 </ng-container>
 
-    <div fxLayout="row wrap" fxLayoutAlign="center center">
-        <h4>New/edit exercise</h4>
-    </div>
+<ng-template #Dialog> 
+    <mat-icon (click)="closeDialog()">arrow_back</mat-icon>
+</ng-template>
+
+<div fxLayout="row wrap" fxLayoutAlign="center center">
+    <h4>New/edit exercise</h4>
+</div>
 
 <div fxLayout="row wrap" fxLayoutAlign="center center">
     <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxFlex="100%">
