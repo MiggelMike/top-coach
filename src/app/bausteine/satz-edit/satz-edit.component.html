@@ -1,6 +1,6 @@
 <div fxLayout="column" fxFlex="100%">
     <!-- Spalten-Titel -->
-    <div fxLayout="row" fxLayoutGap="2px" fxFlex="100%">
+    <div fxLayout="row" fxLayoutGap="5px" fxFlex="100%">
         <ng-container *ngIf="rowNum === 0">
             <ng-container *ngIf="(sess.Kategorie02 === 3 || sess.Kategorie02 === 4 || sess.Kategorie02 === 5); then TitelNoShowPlan else TitelShowPlan"></ng-container>
                 <!-- Spalten-Titel waehrend des Trainings  -->
@@ -106,15 +106,15 @@
                            type="text">
                 </mat-form-field>
                 <!-- AMRAP  -->
-                <div class="center-item" layout-align="center center" fxFlex="30px">
+                <div class="ml-10 center-item" layout-align="center center" fxFlex="30px">
                     <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP"></mat-checkbox>
                 </div>
                 <!-- Satz Include Bodyweight-Flag -->
-                <div class="center-item" layout-align="center center" fxFlex="25px">
+                <div class="ml-5 center-item" layout-align="center center" fxFlex="25px">
                     <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.IncludeBodyweight"></mat-checkbox>
                 </div>
                 <!-- Satz Fertig-Flag -->
-                <div class="center-item" layout-align="center center" fxFlex="25px">
+                <div class="ml-5 center-item" layout-align="center center" fxFlex="25px">
                     <mat-checkbox [(ngModel)]="SatzFertig"
                     (change)="onClickSatzFertig(satz, $event.checked)"
                     ></mat-checkbox>
@@ -136,8 +136,8 @@
                 </mat-form-field>
 
                 <!-- Geplante Von-Vorgabe-Wdh. -->
-                <mat-form-field class="align-right" fxFlex="30px">
-                    <mat-label>From</mat-label>
+                <mat-form-field class="align-right" fxFlex="50px">
+                    <mat-label>Reps</mat-label>
                     <input  matInput [textMask]="{mask: repMask, guide: false}" 
                             [ngModel]="satz.WdhVonVorgabe" 
                             (focusout)="SetVonWdhVorgabe($event)" 
@@ -147,7 +147,7 @@
                 </mat-form-field>
 
                 <!-- Geplante Bis-Vorgabe-Wdh. -->
-                <mat-form-field class="align-right" fxFlex="30px">
+                <!-- <mat-form-field class="align-right" fxFlex="30px">
                     <mat-label>To</mat-label>
                     <input  matInput [textMask]="{mask: repMask, guide: false}" 
                             [ngModel]="satz.WdhBisVorgabe" 
@@ -155,15 +155,15 @@
                             (click)="onClickWdhBisVorgab($event)" 
                             type="text"
                     >
-                </mat-form-field>
+                </mat-form-field> -->
 
                 <!-- AMRAP  -->
-                <div class="center-item" layout-align="center center" fxFlex="35px">
+                <div class="ml-10 center-item" layout-align="center center" fxFlex="35px">
                     <mat-checkbox [(ngModel)]="satz.AMRAP"></mat-checkbox>
                 </div>
             </ng-template>
 
-        <div class="center-item" layout-align="center center">
+        <div class="ml-10 center-item" layout-align="center center">
             <a [ngClass]="['link-button-font']" mat-flat-button (click)="DeleteSet()">Delete</a>
         </div>
 
