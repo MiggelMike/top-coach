@@ -1,9 +1,11 @@
+import { AppData } from './../../Business/Coach/Coach';
 import { SessionOverlayConfig } from './../services/session-overlay-service.service';
 import { ElementRef  } from '@angular/core';
 import { XY_Position, ModalPositionService } from './../services/modal-position.service';
 import { ISession } from './../../Business/Session/Session';
 import { Component, OnInit, Inject, InjectionToken, AfterViewInit,ViewContainerRef, TemplateRef, ViewChild } from '@angular/core';
 import { cSessionStatsOverlayData, SessionOverlayRef } from '../services/session-overlay-service.service';
+import { DexieSvcService } from '../services/dexie-svc.service';
 
 
 @Component({
@@ -23,11 +25,13 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
     public fPopupRef!: ElementRef;
 	public fConfig: SessionOverlayConfig;
 	public showDuration: boolean = false;
+	public AppData: AppData;
 
 
     constructor(
         public overlayRef: SessionOverlayRef,
-        public _ModalPositionService: ModalPositionService,
+		public _ModalPositionService: ModalPositionService,
+		public fDexieService: DexieSvcService,
         @Inject(cSessionStatsOverlayData) public sess: ISession
     ) {
         this.fAnchorPosition = {
@@ -40,8 +44,15 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 			top: 0
         };
         
-        this.fIsConstrained = false;
-    }
+		this.fIsConstrained = false;
+		
+		this.fDexieService.LadeAppData()
+			.then((aAppData) => this.AppData = aAppData);
+	}
+	
+	get GewichtsEinheit(): string {
+		return this.AppData.GewichtsEinheitText;
+	}
 
     public handleMousedown( event: MouseEvent ) : void {
 		event.preventDefault();

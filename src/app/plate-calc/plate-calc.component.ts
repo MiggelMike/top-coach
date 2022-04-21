@@ -223,7 +223,7 @@ export class PlateCalcComponent implements OnInit {
 		this.overlayRef = null;
 	}
 
-	public SetWeightVorgabe(aEvent: any) {
+	public SetWeightAusgefuehrt(aEvent: any) {
     this.Satz.GewichtAusgefuehrt = aEvent.target.value;
     this.DoWeightAllSets(this.SetForAllSets);
   }
