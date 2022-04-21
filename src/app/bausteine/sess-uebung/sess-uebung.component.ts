@@ -1,7 +1,7 @@
 import { ITrainingsProgramm } from './../../../Business/TrainingsProgramm/TrainingsProgramm';
 import { Uebung, IUebung } from 'src/Business/Uebung/Uebung';
 import { ISession, Session } from './../../../Business/Session/Session';
-import { Component, OnInit, Input, ViewChildren, QueryList, ElementRef } from "@angular/core";
+import { Component, OnInit, Input, ViewChildren, QueryList, ElementRef, ViewChild } from "@angular/core";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
@@ -28,6 +28,8 @@ export class SessUebungComponent implements OnInit {
     @Input() bearbeitbar: Boolean;
     @Input() DeletedSatzList: Array<Satz> = [];
     @ViewChildren("AppSatzEdit") SatzEditList: QueryList<SatzEditComponent>;
+    @ViewChild("ExpansionPanel") ExpansionPanel:MatExpansionPanel;
+    
 
     constructor(
         private fDialogService: DialogeService,
@@ -50,7 +52,9 @@ export class SessUebungComponent implements OnInit {
     }
 
     public PasteSet(aEvent: Event) {
-        aEvent.stopPropagation();
+        if(this.ExpansionPanel.expanded === true)
+            aEvent.stopPropagation();
+        
         if (this.fGlobalService.SatzKopie === null) {
             const mDialoData = new DialogData();
             mDialoData.textZeilen.push("No data to paste!");
@@ -78,7 +82,9 @@ export class SessUebungComponent implements OnInit {
     }
 
     public AddSet(aEvent: Event) {
-        aEvent.stopPropagation();
+        if(this.ExpansionPanel.expanded === true)
+            aEvent.stopPropagation();
+        
         let mSatz: Satz;
         switch (this.satzTypText) {
             case "Warm up sets":
