@@ -933,7 +933,8 @@ export class DexieSvcService extends Dexie {
 		return await this.SessionTable
 			.where("Kategorie02")
 			.anyOf([SessionStatus.Fertig, SessionStatus.FertigTimeOut])
-			.toArray()
+			.reverse()
+			.sortBy("Datum")
 			.then((aSessionListe) => { return aSessionListe; } );
 	}
 
@@ -1027,7 +1028,7 @@ export class DexieSvcService extends Dexie {
 							aLadePara.ExtraFn(mExtraFnPara);
 						}
 						
-						await this.LadeUebungsSaetze(mPtrUebung);
+						await this.LadeUebungsSaetzeEx(mPtrUebung);
 					};
 
 					if (aLadePara !== undefined && aLadePara.OnUebungAfterLoadFn !== undefined) aUebungen = aLadePara.OnUebungAfterLoadFn(aUebungen);
@@ -1038,7 +1039,17 @@ export class DexieSvcService extends Dexie {
 
 	}
 
-	public async LadeUebungsSaetze(aUebung: Uebung, aLadePara?: ParaDB): Promise<Array<Satz>> {
+	public async LadeUebungsSaetze(aUebungID: number): Promise<Array<Satz>> {
+		return await this.SatzTable
+			.where("UebungID")
+			.equals(aUebungID)
+			.toArray()
+			.then((aSaetze: Array<Satz>) => {
+				return aSaetze;
+			});
+	}
+
+	public async LadeUebungsSaetzeEx(aUebung: Uebung, aLadePara?: ParaDB): Promise<Array<Satz>> {
 		if (aLadePara !== undefined && aLadePara.OnSatzBeforeLoadFn !== undefined) aLadePara.OnSatzBeforeLoadFn(aLadePara);
 
 		return this.SatzTable

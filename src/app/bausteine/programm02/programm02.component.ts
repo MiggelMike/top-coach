@@ -73,7 +73,7 @@ export class Programm02Component implements OnInit {
 				return "Go ahead";
 			case SessionStatus.Fertig:
 			case SessionStatus.FertigTimeOut:
-				return "Finished";
+				return "View";
 			default:
 				return "?";
 		}
@@ -84,6 +84,13 @@ export class Programm02Component implements OnInit {
 	}
 
 	constructor(private fDialogService: DialogeService, private fGlobalService: GlobalService, private fUebungService: UebungService, public fDbModule: DexieSvcService, private router: Router) {
+	}
+
+	panelOpened(sess: ISession) {
+		if (sess.UebungsListe === undefined || sess.UebungsListe.length <= 0) {
+			this.fDbModule.LadeSessionUebungen(sess.ID)
+				.then((aUebungsliste) => sess.UebungsListe = aUebungsliste);
+		}
 	}
 
 	ngAfterViewInit() {

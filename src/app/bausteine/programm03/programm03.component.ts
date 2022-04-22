@@ -110,9 +110,13 @@ export class Programm03Component implements OnInit {
     PanelUebungOpened(aUebung: Uebung) {
         aUebung.Expanded = true;
 
+        if (aUebung.SatzListe === undefined || aUebung.SatzListe.length <= 0) {
+            this.fDbModule.LadeUebungsSaetze(aUebung.ID)
+                .then((aSatzliste) => aUebung.SatzListe = aSatzliste);
+        }
+
         if (this.panUebung === undefined)
             return;
-       
         
         this.accCheckUebungPanels(aUebung);
     }

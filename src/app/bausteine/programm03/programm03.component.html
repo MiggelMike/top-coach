@@ -15,8 +15,11 @@
             <!-- <ng-container [SessUeb]="SessUeb"></ng-container> -->
             <div class="mg-top-5"  cdkDrag >
                 <mat-accordion #accUebung='matAccordion' multi="true">
-                    <mat-expansion-panel #panUebung='matExpansionPanel' [expanded]="SessUeb.Expanded"
-                        (closed)="PanelUebungClosed(SessUeb)" (opened)="PanelUebungOpened(SessUeb)">
+                    <mat-expansion-panel 
+                        #panUebung='matExpansionPanel' 
+                        [expanded]="SessUeb.Expanded && SessUeb.SatzListe.length > 0"
+                        (closed)="PanelUebungClosed(SessUeb)" 
+                        (opened)="PanelUebungOpened(SessUeb)">
                         <mat-expansion-panel-header>
                             <div fxLayout="row wrap" fxLayoutGap="2px" fxLayout.lt-sm="row wrap" fxFlex="100%">
                                 <div layout-align="start center" fxFlex="0 0 50%">
