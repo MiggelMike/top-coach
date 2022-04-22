@@ -117,14 +117,17 @@ export class ParaDB {
 }    
 
 export class UebungParaDB extends ParaDB {
+	LadeSaetze?: boolean;
 }
 
 export class SessionParaDB extends ParaDB {
 	UebungSpeicherParaDB?: UebungParaDB;
+	LadeUebungen?: boolean;
 }
 
 export class ProgrammParaDB extends ParaDB {
 	SessionParaDB?: SessionParaDB;
+	LadeSession?: boolean;
 }
 
 
@@ -816,7 +819,28 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
-	public LadeAktuellesProgramm() {
+	public async LadeAktuellesProgramm(aProgrammParaDB?: ProgrammParaDB): Promise<ITrainingsProgramm>  { 
+		return await this.ProgrammTable
+			.where("ProgrammKategorie")
+			.equals(ProgrammKategorie.AktuellesProgramm)
+			.toArray()
+			.then( async (aProgrammListe: Array<ITrainingsProgramm>) => {
+				if (aProgrammListe.length > 0) {
+					if ((aProgrammParaDB !== undefined) &&
+						(aProgrammParaDB.LadeSession !== undefined)
+					) {
+						await this.LadeProgrammSessions(aProgrammListe[0].id, aProgrammParaDB.SessionParaDB)
+							.then(
+								(aSessionListe) => aProgrammListe[0].SessionListe = aSessionListe
+							);
+					}//if
+					return aProgrammListe[0];
+				}//if
+				return undefined;
+			});
+	}
+
+	public LadeAktuellesProgrammEx() {
 		const mProgrammParaDB: ProgrammParaDB = new ProgrammParaDB();
 		
 		mProgrammParaDB.WhereClause = {
@@ -840,7 +864,7 @@ export class DexieSvcService extends Dexie {
 							|| aSession.Kategorie02 === SessionStatus.Pause;
 				 };
 
-				await this.LadeProgrammSessions(mSessionPara)
+				await this.LadeProgrammSessionsEx(mSessionPara)
 					.then((aSessionListe: Array<Session>) => mPtrProgramm.SessionListe = aSessionListe);
 			}		
 
@@ -890,6 +914,21 @@ export class DexieSvcService extends Dexie {
 		});
 	}
 
+	public async LadeProgrammSessions(aProgrammID: number, aSessionParaDB?: SessionParaDB): Promise<Array<Session>>  {
+		return await this.SessionTable
+			.where("FK_Programm")
+			.equals(aProgrammID)
+			.toArray()
+			.then((aSessionListe) => {
+				if (aSessionParaDB !== undefined) {
+					if (aSessionParaDB.LadeUebungen) {
+						
+					}//if
+				}//if
+				return aSessionListe;
+			});
+	}
+
 	public async LadeHistorySessions(): Promise<Array<Session>>  {
 		return await this.SessionTable
 			.where("Kategorie02")
@@ -898,7 +937,7 @@ export class DexieSvcService extends Dexie {
 			.then((aSessionListe) => { return aSessionListe; } );
 	}
 
-	public async LadeProgrammSessions(aLadePara: SessionParaDB): Promise<Array<Session>> {
+	public async LadeProgrammSessionsEx(aLadePara: SessionParaDB): Promise<Array<Session>> {
 
 		return await this.SessionTable
 			.where(aLadePara === undefined || aLadePara.WhereClause === undefined ?  { FK_Programm: 0 } : aLadePara.WhereClause)
@@ -929,7 +968,7 @@ export class DexieSvcService extends Dexie {
 						await this.UebungSpeichern(aLadePara.Data.Uebung);
 
 					};//mLadePara.ExtraFn
-					await this.LadeSessionUebungen(mPtrSession, mLadePara);
+					await this.LadeSessionUebungenEx(mPtrSession, mLadePara);
 				}
 
 				if (aLadePara !== undefined) {
@@ -941,7 +980,23 @@ export class DexieSvcService extends Dexie {
 		// });
 	}
 
-	public async LadeSessionUebungen(aSession: ISession, aLadePara: ParaDB): Promise<Array<Uebung>> {
+	public async LadeSessionUebungen(aSessionID: number, aUebungParaDB?: UebungParaDB): Promise<Array<Uebung>> {
+		return await this.UebungTable
+			.where("SessionID")
+			.equals(aSessionID)
+			.toArray()
+			.then(async (aUebungen: Array<Uebung>) => {
+				if (aUebungParaDB !== undefined) {
+					if (aUebungParaDB.LadeSaetze) {
+						
+					}//if
+				}//if
+				return aUebungen;
+			});
+		
+	}
+
+	public async LadeSessionUebungenEx(aSession: ISession, aLadePara: ParaDB): Promise<Array<Uebung>> {
 		if (aLadePara !== undefined && aLadePara.OnUebungBeforeLoadFn !== undefined)
 			aLadePara.OnUebungBeforeLoadFn(aLadePara);
 
@@ -1075,10 +1130,10 @@ export class DexieSvcService extends Dexie {
 						const mLadePara: SessionParaDB = new SessionParaDB();
 						// SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02]",
 						mLadePara.WhereClause = { FK_Programm: mPtrProgramm.id };
-						await this.LadeProgrammSessions(mLadePara)
+						await this.LadeProgrammSessionsEx(mLadePara)
 							.then((aSessionListe: Array<Session>) => mPtrProgramm.SessionListe = aSessionListe);
 					}
-					else await this.LadeProgrammSessions(aProgrammPara.SessionParaDB);
+					else await this.LadeProgrammSessionsEx(aProgrammPara.SessionParaDB);
 				
 				}
 				if (aProgrammPara.OnProgrammAfterLoadFn !== undefined) aProgrammPara.OnProgrammAfterLoadFn(aProgramme);
@@ -1288,7 +1343,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	private async LastSession(aSession: Session): Promise<Session> {
-		const mSessions: Array<Session> = await this.LadeProgrammSessions({
+		const mSessions: Array<Session> = await this.LadeProgrammSessionsEx({
 			OnSessionAfterLoadFn: (aSessions: Array<Session>) => {
 				aSessions = aSessions.filter((s: Session) => s.ID !== aSession.ID && s.Datum <= aSession.Datum);
 
@@ -1315,7 +1370,7 @@ export class DexieSvcService extends Dexie {
 		let mResultSession = undefined;
 		if (mSessions.length > 0) {
 			mResultSession = mSessions.pop();
-			await this.LadeSessionUebungen(mResultSession, { WhereClause: { SessionID: mResultSession.ID } }).then((mUebungen) => {
+			await this.LadeSessionUebungenEx(mResultSession, { WhereClause: { SessionID: mResultSession.ID } }).then((mUebungen) => {
 				const x = mUebungen;
 			});
 		}

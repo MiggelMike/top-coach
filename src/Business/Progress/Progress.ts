@@ -293,7 +293,7 @@ export class Progress implements IProgress {
 			mLadePara.SortBy = "FailDate";
 
 			// Warten, bis Übungen geladen sind.
-			mUebungsliste = await aDb.LadeSessionUebungen(aSession.Copy(true), mLadePara);
+			mUebungsliste = await aDb.LadeSessionUebungenEx(aSession.Copy(true), mLadePara);
 			
 			// if (mParaUebungFailed === true) {
 			// 	aSessUebung.FailDate = new Date();

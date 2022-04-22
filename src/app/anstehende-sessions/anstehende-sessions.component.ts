@@ -13,6 +13,7 @@ import { Observable, of } from 'rxjs';
 })
 export class AnstehendeSessionsComponent implements OnInit {
     public isCollapsed = false;
+    public Programm: ITrainingsProgramm;
     
     public AnstehendeSessionObserver: Observable<ITrainingsProgramm>;
     
@@ -24,19 +25,14 @@ export class AnstehendeSessionsComponent implements OnInit {
     }
     
     ngOnInit() {
-        this.AnstehendeSessionObserver.subscribe(
-            async () => {
-                await this.fDbModule.LadeAktuellesProgramm();
+        this.fDbModule.LadeAktuellesProgramm()
+            .then((aProgramme) => {
+                this.Programm = aProgramme;
             });
     }
-                
+
     public get AktuellesProgramm(): ITrainingsProgramm {
-        let mProgram: ITrainingsProgramm;
-        if ((this.fDbModule.AktuellesProgramm) && (this.fDbModule.AktuellesProgramm.SessionListe)) {
-            mProgram = this.fDbModule.AktuellesProgramm;
-            mProgram.SessionListe = this.fDbModule.UpComingSessionList();
-        }
-        return mProgram;
+        return this.Programm;
     }
                 
     beforePanelOpened(aSess: Session) {

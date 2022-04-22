@@ -88,7 +88,7 @@ export class Programm02Component implements OnInit {
 
 	ngAfterViewInit() {
 		if (this.programmTyp === "AktuellesProgramm") {
-			this.fDbModule.LadeAktuellesProgramm().then((aPogramme) => {
+			this.fDbModule.LadeAktuellesProgrammEx().then((aPogramme) => {
 				if (aPogramme.length > 0)
 					this.programm = aPogramme[0] as ITrainingsProgramm;
 				this.SessionListe = this.programm.SessionListe;
@@ -135,7 +135,7 @@ export class Programm02Component implements OnInit {
 				this.fDbModule.DeleteSession(aSession as Session);
 
 				this.SessionListObserver.subscribe(() => {
-					this.fDbModule.LadeAktuellesProgramm();//this.SortedSessionListe;
+					this.fDbModule.LadeAktuellesProgrammEx();//this.SortedSessionListe;
 				 })
 				
 				if (this.fGlobalService.Comp03PanelUebungObserver != null) {
