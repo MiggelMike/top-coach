@@ -121,7 +121,7 @@ export class UebungParaDB extends ParaDB {
 }
 
 export class SessionParaDB extends ParaDB {
-	UebungSpeicherParaDB?: UebungParaDB;
+	UebungParaDB?: UebungParaDB;
 	LadeUebungen?: boolean;
 }
 
@@ -919,10 +919,14 @@ export class DexieSvcService extends Dexie {
 			.where("FK_Programm")
 			.equals(aProgrammID)
 			.toArray()
-			.then((aSessionListe) => {
+			.then( async (aSessionListe) => {
 				if (aSessionParaDB !== undefined) {
 					if (aSessionParaDB.LadeUebungen) {
-						
+						for (let index = 0; index < aSessionListe.length; index++) {
+							const mPtrSession = aSessionListe[index];
+							await this.LadeSessionUebungen(mPtrSession.ID, aSessionParaDB.UebungParaDB)
+								.then((aUebungsListe) => mPtrSession.UebungsListe = aUebungsListe);
+						}
 					}//if
 				}//if
 				return aSessionListe;
@@ -986,15 +990,18 @@ export class DexieSvcService extends Dexie {
 			.where("SessionID")
 			.equals(aSessionID)
 			.toArray()
-			.then(async (aUebungen: Array<Uebung>) => {
+			.then(async (aUebungsliste: Array<Uebung>) => {
 				if (aUebungParaDB !== undefined) {
 					if (aUebungParaDB.LadeSaetze) {
-						
+						for (let index = 0;  index < aUebungsliste.length; index++) {
+							const mPtrUebung = aUebungsliste[index];
+							await this.LadeUebungsSaetze(mPtrUebung.ID)
+								.then( (aSatzListe) => mPtrUebung.SatzListe = aSatzListe);
+						}
 					}//if
 				}//if
-				return aUebungen;
+				return aUebungsliste;
 			});
-		
 	}
 
 	public async LadeSessionUebungenEx(aSession: ISession, aLadePara: ParaDB): Promise<Array<Uebung>> {
