@@ -33,7 +33,7 @@ export class ProgrammWaehlenComponent implements OnInit {
                 mProgrammParaDB.OnProgrammAfterLoadFn = (mProgramme: TrainingsProgramm[]) => {
                     this.ProgrammListe = mProgramme;
                 }, // OnProgrammAfterLoadFn
-                this.fDbModule.LadeProgramme(mProgrammParaDB);
+                this.fDbModule.LadeProgrammeEx(mProgrammParaDB);
             }
         );
     }

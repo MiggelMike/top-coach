@@ -111,7 +111,7 @@ export class Programm02Component implements OnInit {
 
 			const mProgrammPara: ProgrammParaDB = new ProgrammParaDB();
 			mProgrammPara.WhereClause = { id: this.programm.id };
-			this.fDbModule.LadeProgramme(mProgrammPara).then((aPogramme) => {
+			this.fDbModule.LadeProgrammeEx(mProgrammPara).then((aPogramme) => {
 				if (aPogramme.length > 0)
 					this.programm = aPogramme[0] as ITrainingsProgramm;
 				this.SessionListe = this.programm.SessionListe;

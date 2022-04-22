@@ -7,6 +7,7 @@ var cloneDeep = require('lodash.clonedeep');
 export enum ProgrammTyp {
     Custom = "Custom",
     Gzclp = "Gzclp",
+    HypertrophicSpecific = "HypertrophicSpecific"
 }
 
 export enum ProgrammKategorie {
