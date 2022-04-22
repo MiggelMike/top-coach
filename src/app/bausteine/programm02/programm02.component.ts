@@ -87,7 +87,14 @@ export class Programm02Component implements OnInit {
 	}
 
 	ngAfterViewInit() {
-		if (this.programmTyp === "AktuellesProgramm") {
+		if (this.programmTyp === "history") {
+			this.fDbModule.LadeHistorySessions().then(
+				(aSessionListe) => {
+					this.SessionListe = aSessionListe;
+				}
+			);
+		}
+		else  if (this.programmTyp === "AktuellesProgramm") {
 			this.fDbModule.LadeAktuellesProgrammEx().then((aPogramme) => {
 				if (aPogramme.length > 0)
 					this.programm = aPogramme[0] as ITrainingsProgramm;
@@ -165,7 +172,8 @@ export class Programm02Component implements OnInit {
 	}
 
 	public get SortedSessionListe(): Array<ISession> {
-		return this.fDbModule.SortSessionByListenIndex(this.SessionListe as Array<Session>);
+		if (this.programmTyp === "history") return this.SessionListe;
+		else return this.fDbModule.SortSessionByListenIndex(this.SessionListe as Array<Session>);
     }
 	
 	private DeleteSessionPrim(aSession: ISession, aRowNum: number, aOnDelete: onDeleteFn ) {

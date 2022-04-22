@@ -9,15 +9,9 @@ import { Session } from 'src/Business/Session/Session';
 	styleUrls: ['./history.component.scss'],
 })
 export class HistoryComponent implements OnInit {
-	public SessionListe: Array<Session>;
-
-	constructor(private fDbModule: DexieSvcService) {
+	constructor() {
 	}
 	
 	ngOnInit(): void {
-		this.fDbModule.LadeHistorySessions().then(
-		  (aSessionListe) => this.SessionListe = aSessionListe
-		);
-
 	}
 }
