@@ -117,17 +117,17 @@ export class ParaDB {
 }    
 
 export class UebungParaDB extends ParaDB {
-	LadeSaetze?: boolean;
+	SaetzeBeachten?: boolean;
 }
 
 export class SessionParaDB extends ParaDB {
 	UebungParaDB?: UebungParaDB;
-	LadeUebungen?: boolean;
+	UebungenBeachten?: boolean;
 }
 
 export class ProgrammParaDB extends ParaDB {
 	SessionParaDB?: SessionParaDB;
-	LadeSession?: boolean;
+	SessionBeachten?: boolean;
 }
 
 
@@ -831,7 +831,7 @@ export class DexieSvcService extends Dexie {
 			.then(async (aProgrammListe: Array<ITrainingsProgramm>) => {
 				if (aProgrammListe.length > 0) {
 					if ((aProgrammParaDB !== undefined) &&
-						(aProgrammParaDB.LadeSession !== undefined)
+						(aProgrammParaDB.SessionBeachten !== undefined)
 					) {
 						await this.LadeProgrammSessions(aProgrammListe[0].id, aProgrammParaDB.SessionParaDB)
 							.then(
@@ -925,7 +925,7 @@ export class DexieSvcService extends Dexie {
 			.toArray()
 			.then(async (aSessionListe) => {
 				if (aSessionParaDB !== undefined) {
-					if (aSessionParaDB.LadeUebungen) {
+					if (aSessionParaDB.UebungenBeachten) {
 						for (let index = 0; index < aSessionListe.length; index++) {
 							const mPtrSession = aSessionListe[index];
 							await this.LadeSessionUebungen(mPtrSession.ID, aSessionParaDB.UebungParaDB)
@@ -996,7 +996,7 @@ export class DexieSvcService extends Dexie {
 			.toArray()
 			.then(async (aUebungsliste: Array<Uebung>) => {
 				if (aUebungParaDB !== undefined) {
-					if (aUebungParaDB.LadeSaetze) {
+					if (aUebungParaDB.SaetzeBeachten) {
 						for (let index = 0; index < aUebungsliste.length; index++) {
 							const mPtrUebung = aUebungsliste[index];
 							await this.LadeUebungsSaetze(mPtrUebung.ID)
@@ -1140,7 +1140,7 @@ export class DexieSvcService extends Dexie {
 			.equals(ProgrammKategorie.Vorlage)
 			.sortBy("Name")
 			.then(async(aProgrammliste) => {
-				if ((aProgrammPara !== undefined) && (aProgrammPara.LadeSession !== undefined)) {
+				if ((aProgrammPara !== undefined) && (aProgrammPara.SessionBeachten !== undefined)) {
 					for (let index = 0; index < aProgrammliste.length; index++) {
 						const mPtrProgramm = aProgrammliste[index];
 						await this.LadeProgrammSessions(mPtrProgramm.id, aProgrammPara.SessionParaDB)

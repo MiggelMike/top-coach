@@ -1,4 +1,4 @@
-import { DexieSvcService  } from './../services/dexie-svc.service';
+import { DexieSvcService, ProgrammParaDB  } from './../services/dexie-svc.service';
 import {  ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
@@ -19,15 +19,16 @@ export class AnstehendeSessionsComponent implements OnInit {
     
     constructor(
         private fDbModule: DexieSvcService
-        //, private router: Router
     ) {
         this.AnstehendeSessionObserver = of(this.fDbModule.AktuellesProgramm);
     }
     
     ngOnInit() {
         this.fDbModule.LadeAktuellesProgramm()
-            .then((aProgramme) => {
+            .then( async (aProgramme) => {
                 this.Programm = aProgramme;
+                await this.fDbModule.LadeProgrammSessions(this.Programm.id)
+                    .then((aSessionListe) => this.Programm.SessionListe = aSessionListe);
             });
     }
 
