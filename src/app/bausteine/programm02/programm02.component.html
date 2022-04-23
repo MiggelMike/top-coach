@@ -5,7 +5,7 @@
     </ng-container>
 
     <div cdkDropList (cdkDropListDropped)="drop($event)">
-        <div *ngFor="let sess of SortedSessionListe, index as i" cdkDrag>
+        <div *ngFor="let sess of SortedSessionListe, index as i" cdkDrag [cdkDragDisabled]="programmTyp === 'history' ">
             <div fxLayoutGap="10px">
                 <mat-accordion #accSession="matAccordion" multi="true">
                     <mat-expansion-panel 

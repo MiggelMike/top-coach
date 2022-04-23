@@ -384,7 +384,7 @@ export class DexieSvcService extends Dexie {
 			AppData: "++id",
 			Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus]",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
-			SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02],[FK_Programm+Kategorie02]",
+			SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02],[FK_Programm+Kategorie02],ListenIndex",
 			Satz: "++ID,UebungID",
 			MuskelGruppe: "++ID,Name,MuscleGroupKategorie01",
 			Equipment: "++ID,Name",
@@ -918,11 +918,29 @@ export class DexieSvcService extends Dexie {
 		});
 	}
 
+	public async LadeUpcomingSessions(aProgrammID: number, aSessionParaDB?: SessionParaDB): Promise<Array<Session>> {
+		return await this.SessionTable
+			.where({FK_Programm: aProgrammID, Kategorie02: SessionStatus.Wartet })
+			.sortBy("ListenIndex")
+			.then(async (aSessionListe) => {
+				if (aSessionParaDB !== undefined) {
+					if (aSessionParaDB.UebungenBeachten) {
+						for (let index = 0; index < aSessionListe.length; index++) {
+							const mPtrSession = aSessionListe[index];
+							await this.LadeSessionUebungen(mPtrSession.ID, aSessionParaDB.UebungParaDB)
+								.then((aUebungsListe) => mPtrSession.UebungsListe = aUebungsListe);
+						}
+					}//if
+				}//if
+				return aSessionListe;
+			});
+	}
+
 	public async LadeProgrammSessions(aProgrammID: number, aSessionParaDB?: SessionParaDB): Promise<Array<Session>> {
 		return await this.SessionTable
 			.where("FK_Programm")
 			.equals(aProgrammID)
-			.toArray()
+			.sortBy("ListenIndex")
 			.then(async (aSessionListe) => {
 				if (aSessionParaDB !== undefined) {
 					if (aSessionParaDB.UebungenBeachten) {

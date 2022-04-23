@@ -27,8 +27,10 @@ export class AnstehendeSessionsComponent implements OnInit {
         this.fDbModule.LadeAktuellesProgramm()
             .then( async (aProgramme) => {
                 this.Programm = aProgramme;
-                await this.fDbModule.LadeProgrammSessions(this.Programm.id)
-                    .then((aSessionListe) => this.Programm.SessionListe = aSessionListe);
+                await this.fDbModule.LadeUpcomingSessions(this.Programm.id)
+                    .then((aSessionListe) => {
+                        this.Programm.SessionListe = aSessionListe;
+                    });
             });
     }
 

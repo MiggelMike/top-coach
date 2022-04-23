@@ -281,9 +281,11 @@ export class SessionFormComponent implements OnInit {
 				this.Programm.SessionListe.push(mNeueSession);
 				this.Programm.NummeriereSessions();
 				
-				// const mCurrentDate = new Date();
-				// if(aSessionForm.Session.UebungsListe !== undefined)
-				// 	aSessionForm.Session.UebungsListe.forEach((u) => u.FailDate = mCurrentDate);
+				// this.Programm.SessionListe.find((aSess) => {
+				// 	if (aSess.ID === aSessionForm.Session.ID)
+				// 		aSessionForm.Session.ListenIndex = aSess.ListenIndex;
+				// });
+
 				await this.fDexieSvcService.SessionSpeichern(aSessionForm.Session);				
 
 				const mSessions: Array<Session> = [mNeueSession];
