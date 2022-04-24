@@ -13,7 +13,7 @@
     <div cdkDropList  (cdkDropListDropped)="drop($event)">
         <ng-container *ngFor="let SessUeb of UebungsListe, index as i; let isOdd=odd">
             <!-- <ng-container [SessUeb]="SessUeb"></ng-container> -->
-            <div class="mg-top-5"  cdkDrag >
+            <div class="mg-top-5"  cdkDrag [cdkDragDisabled]="programmTyp === 'history'">
                 <mat-accordion #accUebung='matAccordion' multi="true">
                     <mat-expansion-panel 
                         #panUebung='matExpansionPanel' 

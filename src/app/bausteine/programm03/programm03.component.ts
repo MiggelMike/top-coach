@@ -75,9 +75,18 @@ export class Programm03Component implements OnInit {
     }
             
     ngAfterViewInit() {
-        this.session.UebungsListe.forEach( (mUebung: Uebung) => {
-            this.accCheckUebungPanels(mUebung);
-        });
+        if (this.session.UebungsListe !== undefined) {
+            if (this.session.UebungsListe.length > 0) {
+                this.session.UebungsListe.forEach((mUebung: Uebung) => {
+                    this.accCheckUebungPanels(mUebung);
+                });
+            } else {
+                this.accUebung.forEach((acc) => acc.closeAll());
+                this.isExpanded = false;
+                this.ToggleButtonText = "Open all exercises";
+                this.SessUeb.Expanded = false;
+            }
+        }
     }
 
     drop(event: CdkDragDrop<Uebung[]>) {
@@ -103,6 +112,7 @@ export class Programm03Component implements OnInit {
             this.SessUeb.Expanded = false;
         } else {
             this.accUebung.forEach((acc) => acc.openAll());
+            this.session.UebungsListe.forEach((aUebung) => this.CheckUebungSatzliste(aUebung));
             this.isExpanded = true;
             this.ToggleButtonText = "Close all exercises";
             this.SessUeb.Expanded = true;
@@ -112,10 +122,7 @@ export class Programm03Component implements OnInit {
     PanelUebungOpened(aUebung: Uebung) {
         aUebung.Expanded = true;
 
-        if (aUebung.SatzListe === undefined || aUebung.SatzListe.length <= 0) {
-            this.fDbModule.LadeUebungsSaetze(aUebung.ID)
-                .then((aSatzliste) => aUebung.SatzListe = aSatzliste);
-        }
+        this.CheckUebungSatzliste(aUebung);
 
         if (this.panUebung === undefined)
             return;
@@ -132,36 +139,45 @@ export class Programm03Component implements OnInit {
             
         this.accCheckUebungPanels(aUebung);
     }
+
+    private CheckUebungSatzliste(aUebung: Uebung) {
+        if (aUebung.SatzListe === undefined || aUebung.SatzListe.length <= 0) {
+            this.fDbModule.LadeUebungsSaetze(aUebung.ID)
+                .then((aSatzliste) => aUebung.SatzListe = aSatzliste);
+        }
+    }
+
         
-        accCheckUebungPanels(aUebung: Uebung) {
-            if (!this.panUebung) return;
-            
-            const mIndex = this.session.UebungsListe.indexOf(aUebung);
-            if (mIndex > -1) {
-                const mPanUebungListe = this.panUebung.toArray();
-                mPanUebungListe[mIndex].expanded = aUebung.Expanded;
-            }
-            let mAllClosed = true;
+    accCheckUebungPanels(aUebung: Uebung) {
+        if (!this.panUebung) return;
         
-            if (this.session.UebungsListe.length > 0) {
-                const mPanUebungListe = this.panUebung.toArray();
-                for (let index = 0; index < mPanUebungListe.length; index++) {
-                    this.session.UebungsListe[index].Expanded = mPanUebungListe[index].expanded;
-                    if (mPanUebungListe[index].expanded) {
-                        mAllClosed = false;
-                        break;
-                    }
+        const mIndex = this.session.UebungsListe.indexOf(aUebung);
+        if (mIndex > -1) {
+            const mPanUebungListe = this.panUebung.toArray();
+            mPanUebungListe[mIndex].expanded = aUebung.Expanded;
+        }
+        let mAllClosed = true;
+    
+        if (this.session.UebungsListe.length > 0) {
+            const mPanUebungListe = this.panUebung.toArray();
+            for (let index = 0; index < mPanUebungListe.length; index++) {
+                const mPtrUebung: Uebung = this.session.UebungsListe[index];
+                this.CheckUebungSatzliste(mPtrUebung);
+                mPtrUebung.Expanded = mPanUebungListe[index].expanded;
+                if (mPanUebungListe[index].expanded) {
+                    mAllClosed = false;
                 }
             }
-
-            if (mAllClosed) {
-                this.isExpanded = false;
-                this.ToggleButtonText = "Open all excercises";
-            } else {
-                this.isExpanded = true;
-                this.ToggleButtonText = "Close all excercises";
-            }
         }
+
+        if (mAllClosed) {
+            this.isExpanded = false;
+            this.ToggleButtonText = "Open all excercises";
+        } else {
+            this.isExpanded = true;
+            this.ToggleButtonText = "Close all excercises";
+        }
+    }
 
 
     public DeleteExercise(aRowNum: number, aUebung: Uebung, aEvent: Event) {
