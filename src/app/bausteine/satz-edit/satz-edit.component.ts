@@ -14,6 +14,7 @@ import { floatMask, repMask } from './../../app.module';
 import { PlateCalcComponent } from 'src/app/plate-calc/plate-calc.component';
 import { StoppuhrComponent } from 'src/app/stoppuhr/stoppuhr.component';
 import { StoppUhrOverlayConfig, StoppuhrSvcService } from 'src/app/services/stoppuhr-svc.service';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
     selector: "app-satz-edit",
@@ -22,6 +23,7 @@ import { StoppUhrOverlayConfig, StoppuhrSvcService } from 'src/app/services/stop
 })
 export class SatzEditComponent implements OnInit {
     @Input() programm: ITrainingsProgramm = null;
+    @Input() programmTyp: string = '';
     @Input() sess: ISession;
     @Input() sessUebung: Uebung;
     @Input() satz: ISatz;
@@ -154,20 +156,8 @@ export class SatzEditComponent implements OnInit {
   
 
     public WeightAusgefuehrtClick(aEvent: any) {
-        
         aEvent.stopPropagation();
         aEvent.target.select();
-
-        // this.plateCalcOverlayConfig =
-        //     {
-        //         satz: this.satz,
-        //         uebung: this.sessUebung,
-        //         left: (aEvent as PointerEvent).pageX - (aEvent as PointerEvent).offsetX,
-        //         top: (aEvent as PointerEvent).clientY - (aEvent as PointerEvent).offsetY,
-        //     } as PlateCalcOverlayConfig;
-        
-            
-        // this.plateCalcComponent = this.fPlateCalcSvcService.open(this.plateCalcOverlayConfig);
     }
 
     public Disabled(aSatz:ISatz): boolean{
@@ -175,6 +165,9 @@ export class SatzEditComponent implements OnInit {
     }
 
     async onClickSatzFertig(aSatz: ISatz, aChecked: boolean) {
+        if (this.programmTyp === 'history')
+            return;
+
         if (this.fStoppUhrService.StoppuhrComponent) {
             this.fStoppUhrService.StoppuhrComponent.close();
             this.StoppuhrComponent = undefined;
