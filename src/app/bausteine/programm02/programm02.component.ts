@@ -294,7 +294,7 @@ export class Programm02Component implements OnInit {
 
 	private startSessionPrim(aSession: ISession) {
 
-		if (aSession.Kategorie02 === SessionStatus.Fertig || aSession.Kategorie02 === SessionStatus.FertigTimeOut) return;
+		// if (aSession.Kategorie02 === SessionStatus.Fertig || aSession.Kategorie02 === SessionStatus.FertigTimeOut) return;
 
 		switch (aSession.Kategorie02) {
 			case SessionStatus.Wartet:
@@ -308,14 +308,15 @@ export class Programm02Component implements OnInit {
 				break;
 		}
 
-		this.router.navigate(["sessionFormComponent"], { state: { sess: aSession,  AnzSessionInProgram : this.programm.MaxSessions } });
+		this.router.navigate(["sessionFormComponent"], { state: { sess: aSession } });
 	}
 
 
 	public startSession(aEvent: Event, aSession: ISession) {
 		aEvent.stopPropagation();
+
 		this.startSessionPrim(aSession);
-		this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession,  AnzSessionInProgram : this.programm.MaxSessions } });
+		this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession } });
 	}
 
 	public SaveChanges():void {

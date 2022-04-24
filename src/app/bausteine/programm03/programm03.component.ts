@@ -36,6 +36,7 @@ export class Programm03Component implements OnInit {
     @Input() DeletedExerciseList: Array<Uebung> = [];
     @Input() DeletedSatzList: Array<Satz> = [];
     @Input() SofortSpeichern: Boolean = false;
+    @Input() programmTyp: string = "";
     
     @ViewChildren("accUebung") accUebung: QueryList<MatAccordion>;
     @ViewChildren("panUebung") panUebung: QueryList<MatExpansionPanel>;

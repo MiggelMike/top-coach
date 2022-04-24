@@ -25,7 +25,7 @@ import { NullVisitor } from '@angular/compiler/src/render3/r3_ast';
 })
 export class SessionFormComponent implements OnInit {
 	public Session: Session;
-	public AnzSessionInProgram: number = 0;
+	// public AnzSessionInProgram: number = 0;
 	public Programm: ITrainingsProgramm;
 	public cmpSession: Session;
 	public BodyWeight: number = 0;
@@ -37,7 +37,7 @@ export class SessionFormComponent implements OnInit {
 
 	constructor(
 		private router: Router,
-		public fDexieSvcService: DexieSvcService,
+		public fDbModule: DexieSvcService,
 		private fDialogService: DialogeService,
 		private fGlobalService: GlobalService,
 		private fUebungService: UebungService,
@@ -45,12 +45,19 @@ export class SessionFormComponent implements OnInit {
 		private location: Location
 	) {
 		const mNavigation = this.router.getCurrentNavigation();
-		const mState = mNavigation.extras.state as { programm: ITrainingsProgramm, sess: Session; AnzSessionInProgram: number };
-		mState.sess.BodyWeightAtSessionStart = this.fDexieSvcService.getBodyWeight();
+		const mState = mNavigation.extras.state as { programm: ITrainingsProgramm, sess: Session };
+		mState.sess.BodyWeightAtSessionStart = this.fDbModule.getBodyWeight();
 		this.Programm = mState.programm;
 		this.Session = mState.sess.Copy();
-		this.cmpSession = mState.sess.Copy();
-		this.AnzSessionInProgram = mState.AnzSessionInProgram;
+
+		if((this.Session.UebungsListe === undefined) || (this.Session.UebungsListe.length <= 0))
+		this.fDbModule.LadeSessionUebungen(this.Session.ID).then(
+			(aUebungsListe) => {
+				this.Session.UebungsListe = aUebungsListe;
+				this.cmpSession = this.Session.Copy();
+			}
+			)
+		else this.cmpSession = mState.sess.Copy();
 
 		if (this.Session.Kategorie02 === SessionStatus.Pause || this.Session.Kategorie02 === SessionStatus.Wartet || this.Session.Kategorie02 === SessionStatus.Laueft) {
 			if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length < 1) this.Session.AddPause();
@@ -147,7 +154,7 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.BodyWeight = this.fDexieSvcService.getBodyWeight();
+		this.BodyWeight = this.fDbModule.getBodyWeight();
 	}
 
 	public SaveChanges(aPara: any) {
@@ -174,7 +181,7 @@ export class SessionFormComponent implements OnInit {
 			const mUebung = mCmpSession.UebungsListe[index];
 			const mSuchUebung = mSession.UebungsListe.find((u) => u.ID === mUebung.ID);
 			if (mSuchUebung === undefined)
-				mSessionForm.fDexieSvcService.DeleteUebung(mUebung);
+				mSessionForm.fDbModule.DeleteUebung(mUebung);
 		}
 
 		// In der Session gelöschte Sätze auch aus der DB löschen.
@@ -185,7 +192,7 @@ export class SessionFormComponent implements OnInit {
 				for (let mSatzIndex = 0; mSatzIndex < mCmpUebung.SatzListe.length; mSatzIndex++) {
 					const mCmpSatz = mCmpUebung.SatzListe[mSatzIndex];
 					if (mSuchUebung.SatzListe.find((mSuchSatz) => mSuchSatz.ID === mCmpSatz.ID) === undefined)
-					mSessionForm.fDexieSvcService.DeleteSatz(mCmpSatz);
+					mSessionForm.fDbModule.DeleteSatz(mCmpSatz);
 				}
 			}
 		}
@@ -198,7 +205,7 @@ export class SessionFormComponent implements OnInit {
 		if ((aPara !== undefined) && (aPara.DoProgressFn !== undefined)) 
 			aPara.DoProgressFn(this.Session);
 		
-		return mSessionForm.fDexieSvcService.SessionSpeichern(mSession)
+		return mSessionForm.fDbModule.SessionSpeichern(mSession)
 			// return mSessionForm.fDexieSvcService.SessionSpeichern(mSessionForm.Session)
 			.then((aSession:Session) => {
 				// if (aPara !== undefined)
@@ -232,10 +239,10 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	private async DoAfterDone(aSessionForm: SessionFormComponent) {
-		const mIndex = aSessionForm.fDexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
-		if (mIndex > -1) aSessionForm.fDexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
+		const mIndex = aSessionForm.fDbModule.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
+		if (mIndex > -1) aSessionForm.fDbModule.AktuellesProgramm.SessionListe.splice(mIndex, 1);
 		
-		aSessionForm.fDexieSvcService.AktuellesProgramm.NummeriereSessions();
+		aSessionForm.fDbModule.AktuellesProgramm.NummeriereSessions();
 		try {
 			this.SaveChangesPrim({ that: aSessionForm });
 
@@ -262,7 +269,7 @@ export class SessionFormComponent implements OnInit {
 			if (aSessionForm.Session.UebungsListe.length > 0) {
 				const mNeueSession: Session = aSessionForm.Session.Copy(true);
 				mNeueSession.init();
-				this.fDexieSvcService.InitSessionSaetze(aSessionForm.Session, mNeueSession as Session);
+				this.fDbModule.InitSessionSaetze(aSessionForm.Session, mNeueSession as Session);
 				if(mNeueSession.UebungsListe !== undefined)
 					mNeueSession.UebungsListe.forEach((u) => {
 						u.Failed = false;
@@ -286,7 +293,7 @@ export class SessionFormComponent implements OnInit {
 				// 		aSessionForm.Session.ListenIndex = aSess.ListenIndex;
 				// });
 
-				await this.fDexieSvcService.SessionSpeichern(aSessionForm.Session);				
+				await this.fDbModule.SessionSpeichern(aSessionForm.Session);				
 
 				const mSessions: Array<Session> = [mNeueSession];
 				for (let mSessionIndex = 0; mSessionIndex < mSessions.length; mSessionIndex++) {
@@ -299,7 +306,7 @@ export class SessionFormComponent implements OnInit {
 						{
 							const mProgressPara: ProgressPara = new ProgressPara();
 							mProgressPara.SessionDone = true;
-							mProgressPara.DbModule = this.fDexieSvcService;
+							mProgressPara.DbModule = this.fDbModule;
 							mProgressPara.Programm = this.Programm;
 							mProgressPara.AusgangsSession = mPtrSession;
 							mProgressPara.AlleSaetze = true;
@@ -314,8 +321,8 @@ export class SessionFormComponent implements OnInit {
 
 							mProgressPara.ProgressID = mPtrUebung.FkProgress;
 							mProgressPara.AlteProgressID = mPtrUebung.FkProgress;
-							mProgressPara.ProgressListe = this.fDexieSvcService.ProgressListe;
-							mProgressPara.Progress = this.fDexieSvcService.ProgressListe.find((p) => p.ID === mProgressPara.AusgangsUebung.FkProgress);
+							mProgressPara.ProgressListe = this.fDbModule.ProgressListe;
+							mProgressPara.Progress = this.fDbModule.ProgressListe.find((p) => p.ID === mProgressPara.AusgangsUebung.FkProgress);
 
 							if (mProgressPara.Progress.ProgressSet === ProgressSet.Last) {
 								mProgressPara.SatzDone = mPtrUebung.ArbeitsSatzListe[mPtrUebung.ArbeitsSatzListe.length - 1].Status === SatzStatus.Fertig;
@@ -331,7 +338,7 @@ export class SessionFormComponent implements OnInit {
 				// if (   mSessionIndex >= mSessions.length - 1 
 				// 	&& mUebungIndex >= aSessionForm.Session.UebungsListe.length - 1
 				//    )
-				await this.fDexieSvcService.SessionSpeichern(mNeueSession);
+				await this.fDbModule.SessionSpeichern(mNeueSession);
 				this.router.navigate([""]);
 			}
 			this.DoAfterDone(aSessionFormComponent);
