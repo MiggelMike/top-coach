@@ -7,6 +7,17 @@
         </mat-form-field>
     </ng-container> 
 
+    <ng-container *ngIf="programmTyp ==='history'"> 
+        <div class="font-size-smaller" fxLayout="row wrap">
+            <mat-label class="ml-5">History</mat-label>
+            <div class="ml-10">
+                <span> {{session.GestartedWann | date: 'mediumDate'}} {{session.GestartedWann | date:'shortTime'}}</span>
+            </div>
+        </div>
+            
+    </ng-container> 
+    
+
     <!-- <div cdkDropList (cdkDropListDropped)="drop($event)">
         <div *ngFor="let sess of SortedSessionListe, index as i" cdkDrag cdkDragRootElement="accSession"> -->
 
