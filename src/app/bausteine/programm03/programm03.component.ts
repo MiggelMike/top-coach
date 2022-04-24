@@ -27,6 +27,7 @@ import { Satz } from 'src/Business/Satz/Satz';
 export class Programm03Component implements OnInit {
     @Input() programm: ITrainingsProgramm;
     @Input() session: ISession;
+    @Input() cmpSession: ISession;
     @Input() SessUeb: Uebung;
     @Input() rowNum: number = 0;
     @Input() bearbeitbar: Boolean;

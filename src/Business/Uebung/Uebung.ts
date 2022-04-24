@@ -310,7 +310,7 @@ export class Uebung implements IUebung {
             if (this.SatzListe.length != aCmpUebung.SatzListe.length) return true;
 
             for (let index = 0; index < this.SatzListe.length; index++) {
-                if (this.SatzListe[index].hasChanged(aCmpUebung.SatzListe[index])) {
+                if (this.SatzListe[index].isEqual(aCmpUebung.SatzListe[index])) {
                     console.log('Set #' + index.toString() + ' has changed.');
                     return true;
                 }

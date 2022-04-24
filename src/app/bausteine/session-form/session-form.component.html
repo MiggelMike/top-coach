@@ -6,9 +6,11 @@
 
     <app-programm03 
         [session]="Session" 
+        [cmpSession]="cmpSession" 
         [bearbeitbar]="true" 
         [ShowStats]="true" 
         [programm]="Programm" 
+        [programmTyp]="programmTyp"
         [DeletedExerciseList]="DeletedExerciseList"
         [DeletedSatzList]="DeletedSatzList">
     </app-programm03>
@@ -28,18 +30,21 @@
             </div>
         </ng-container>
         
-        <div class="center-item" layout-align="center center">
-            <a class='link-button-font' mat-flat-button (click)="SetDone(this)">Done</a>
-        </div>
-        
-        
-        <div class="center-item" layout-align="center center">
-            <a [ngClass]="'link-button-font'" mat-flat-button (click)="AddExercise()">Add exercise</a>
-        </div>
-        
-        <div class="center-item" layout-align="center center">
-            <a [ngClass]="'link-button-font'" mat-flat-button (click)="PasteExcercise()">Paste Exercise</a>
-        </div>
+        <ng-container *ngIf="programmTyp !== 'history'">
+
+            <div class="center-item" layout-align="center center">
+                <a class='link-button-font' mat-flat-button (click)="SetDone(this)">Done</a>
+            </div>
+            
+            
+            <div class="center-item" layout-align="center center">
+                <a [ngClass]="'link-button-font'" mat-flat-button (click)="AddExercise()">Add exercise</a>
+            </div>
+            
+            <div class="center-item" layout-align="center center">
+                <a [ngClass]="'link-button-font'" mat-flat-button (click)="PasteExcercise()">Paste Exercise</a>
+            </div>
+        </ng-container>
         
         
     </div>

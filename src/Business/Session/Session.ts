@@ -93,11 +93,94 @@ export class Session extends SessionDB implements ISession {
 
 
     public isEqual(aOtherSession: Session): boolean {
-        const mSession = this.Copy();
-        const mCmpSession = aOtherSession.Copy();
+        const mSession = this.Copy(true);
+        const mCmpSession = aOtherSession.Copy(true);
+        
         mCmpSession.DauerFormatted = mSession.DauerFormatted;
         mCmpSession.UebungsListe.forEach(u => u.Expanded = false);
         mSession.UebungsListe.forEach(u => u.Expanded = false);
+
+        // for (let index = 0; index < mSession.UebungsListe.length; index++) {
+        //     const mPtrUebung = mSession.UebungsListe[index];
+        //     const mCmpPtrUebung = mCmpSession.UebungsListe[index];
+
+        //     for (let mindex1 = 0; mindex1 < mPtrUebung.SatzListe.length; mindex1++) {
+        //         const mPtrSatz = mPtrUebung.SatzListe[mindex1];
+        //         const mCmpPtrSatz = mCmpPtrUebung.SatzListe[mindex1];
+
+        //         if (mPtrSatz.isEqual(mCmpPtrSatz) === false)
+        //             break;
+                
+        //     }
+
+        //     if (mPtrUebung.isEqual(mCmpPtrUebung) === false )
+        //         break
+
+        //     if (mCmpPtrUebung.Beschreibung !== mPtrUebung.Beschreibung)
+        //         break;
+            
+        //     if (mCmpPtrUebung.BodyWeight !== mPtrUebung.BodyWeight)
+        //         break;
+            
+        //     if (mCmpPtrUebung.CooldownVisible !== mPtrUebung.CooldownVisible)
+        //         break;
+            
+        //     if (mCmpPtrUebung.EquipmentTyp !== mPtrUebung.EquipmentTyp)
+        //         break;
+            
+        //     if (mCmpPtrUebung.Expanded !== mPtrUebung.Expanded)
+        //         break;
+            
+        //     if (mCmpPtrUebung.FK_Programm !== mPtrUebung.FK_Programm)
+        //         break;
+            
+        //     if (mCmpPtrUebung.FailCount !== mPtrUebung.FailCount)
+        //         break;
+
+        //     if (mCmpPtrUebung.Failed !== mPtrUebung.Failed)
+        //         break;
+
+        //     if (mCmpPtrUebung.FkAltProgress !== mPtrUebung.FkAltProgress)
+        //         break;
+            
+        //     if (mCmpPtrUebung.FkHantel !== mPtrUebung.FkHantel)
+        //         break;
+
+        //     if (mCmpPtrUebung.FkMuskel01 !== mPtrUebung.FkMuskel01)
+        //         break;
+            
+        //     if (mCmpPtrUebung.FkMuskel02 !== mPtrUebung.FkMuskel02)
+        //         break;
+
+        //     if (mCmpPtrUebung.FkMuskel03 !== mPtrUebung.FkMuskel03)
+        //         break;
+
+        //     if (mCmpPtrUebung.FkMuskel04 !== mPtrUebung.FkMuskel04)
+        //         break;
+
+        //     if (mCmpPtrUebung.FkOrgProgress !== mPtrUebung.FkOrgProgress)
+        //         break;
+            
+        //     if (mCmpPtrUebung.FkProgress !== mPtrUebung.FkProgress)
+        //         break;
+
+        //     if (mCmpPtrUebung.GewichtReduzierung !== mPtrUebung.GewichtReduzierung)
+        //         break;
+            
+        //     if (mCmpPtrUebung.GewichtReduzierung !== mPtrUebung.GewichtReduzierung)
+        //         break;
+
+            
+        //     if (mCmpPtrUebung.Datum.valueOf() !== mPtrUebung.Datum.valueOf())
+        //         break;
+            
+        //     if (mCmpPtrUebung.WeightInitDate.valueOf() !== mPtrUebung.WeightInitDate.valueOf())
+        //         break;
+
+        //     if (mPtrUebung.Expanded !== mCmpPtrUebung.Expanded)
+        //         break;
+        // }
+        // return isEqual(this, aOtherSession);
         return isEqual(mSession,mCmpSession);
     }    
 
@@ -173,7 +256,7 @@ export class Session extends SessionDB implements ISession {
         });
     }
 
-    public Copy(aKomplett?: boolean): Session {
+    public Copy(aKomplett: boolean, aCopyID: boolean = false): Session {
         const mNeueSession: Session = cloneDeep(this);
         if(mNeueSession.UebungsListe === undefined)
             mNeueSession.UebungsListe = [];
@@ -181,7 +264,10 @@ export class Session extends SessionDB implements ISession {
         if(aKomplett !== undefined )
         {
             mNeueSession.UebungsListe = [];
-            mNeueSession.ID = undefined;
+            
+            if (aCopyID === false)
+                mNeueSession.ID = undefined;
+            
             if (this.UebungsListe !== undefined) {
                 for (let index1 = 0; index1 < this.UebungsListe.length; index1++) {
                     const mPrtUebung = this.UebungsListe[index1];

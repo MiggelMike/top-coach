@@ -6,7 +6,7 @@ import { ISession, Session } from "src/Business/Session/Session";
 import { SessionStatsOverlayComponent } from "./../../session-stats-overlay/session-stats-overlay.component";
 import { SessionOverlayServiceService, SessionOverlayConfig } from "./../../services/session-overlay-service.service";
 import { DialogeService } from "./../../services/dialoge.service";
-import { DexieSvcService, MinDatum, ProgrammParaDB } from "./../../services/dexie-svc.service";
+import { DexieSvcService, MinDatum, ProgrammParaDB, UebungParaDB } from "./../../services/dexie-svc.service";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { DialogData } from "src/app/dialoge/hinweis/hinweis.component";
@@ -27,6 +27,7 @@ export class SessionFormComponent implements OnInit {
 	public Session: Session;
 	// public AnzSessionInProgram: number = 0;
 	public Programm: ITrainingsProgramm;
+	public programmTyp: string = '';
 	public cmpSession: Session;
 	public BodyWeight: number = 0;
 	public fSessionStatsOverlayComponent: SessionStatsOverlayComponent = null;
@@ -45,19 +46,22 @@ export class SessionFormComponent implements OnInit {
 		private location: Location
 	) {
 		const mNavigation = this.router.getCurrentNavigation();
-		const mState = mNavigation.extras.state as { programm: ITrainingsProgramm, sess: Session };
+		const mState = mNavigation.extras.state as { programm: ITrainingsProgramm, sess: Session, programmTyp: string };
 		mState.sess.BodyWeightAtSessionStart = this.fDbModule.getBodyWeight();
+		this.programmTyp = mState.programmTyp;
 		this.Programm = mState.programm;
-		this.Session = mState.sess.Copy();
+		this.Session = mState.sess.Copy(true,true);
 
-		if((this.Session.UebungsListe === undefined) || (this.Session.UebungsListe.length <= 0))
-		this.fDbModule.LadeSessionUebungen(this.Session.ID).then(
-			(aUebungsListe) => {
-				this.Session.UebungsListe = aUebungsListe;
-				this.cmpSession = this.Session.Copy();
-			}
-			)
-		else this.cmpSession = mState.sess.Copy();
+		if ((this.Session.UebungsListe === undefined) || (this.Session.UebungsListe.length <= 0)) {
+			const mUebungParaDB: UebungParaDB = new UebungParaDB();
+			mUebungParaDB.SaetzeBeachten = true;
+			this.fDbModule.LadeSessionUebungen(this.Session.ID,mUebungParaDB).then(
+				(aUebungsListe) => {
+					this.Session.UebungsListe = aUebungsListe;
+				    this.cmpSession = this.Session.Copy(true, true);
+				})
+		}
+		else this.cmpSession = mState.sess.Copy(true,true);
 
 		if (this.Session.Kategorie02 === SessionStatus.Pause || this.Session.Kategorie02 === SessionStatus.Wartet || this.Session.Kategorie02 === SessionStatus.Laueft) {
 			if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length < 1) this.Session.AddPause();
@@ -150,7 +154,7 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	ngAfterViewInit() {
-		this.cmpSession = this.Session.Copy();
+		this.cmpSession = this.Session.Copy(true,true);
 	}
 
 	ngOnInit(): void {
@@ -211,7 +215,7 @@ export class SessionFormComponent implements OnInit {
 				// if (aPara !== undefined)
 				// 	aPara.EvalFn();
 				// else mSessionForm.cmpSession = mSessionForm.Session.Copy();
-				mSessionForm.cmpSession = aSession.Copy();
+				mSessionForm.cmpSession = aSession.Copy(true,true);
 			});
 	}
 

@@ -308,7 +308,7 @@ export class Programm02Component implements OnInit {
 				break;
 		}
 
-		this.router.navigate(["sessionFormComponent"], { state: { sess: aSession } });
+		this.router.navigate(["sessionFormComponent"], { state: { sess: aSession, programmTyp: this.programmTyp } });
 	}
 
 
@@ -316,7 +316,7 @@ export class Programm02Component implements OnInit {
 		aEvent.stopPropagation();
 
 		this.startSessionPrim(aSession);
-		this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession } });
+		this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
 	}
 
 	public SaveChanges():void {

@@ -20,6 +20,7 @@ export class SessUebungComponent implements OnInit {
     public repMask = repMask;
     @Input() satzTypText: string = "";
     @Input() programm: ITrainingsProgramm = null;
+    @Input() programmTyp: string ='';
     @Input() session: ISession = null;
     @Input() sessUebung: Uebung;
     @Input() satzListe: Array<Satz>;
