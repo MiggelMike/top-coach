@@ -52,7 +52,8 @@ export class SessionFormComponent implements OnInit {
 		this.Programm = mState.programm;
 		this.Session = mState.sess.Copy(true,true);
 
-		if ((this.Session.UebungsListe === undefined) || (this.Session.UebungsListe.length <= 0)) {
+		
+		if ( (this.Session.ID !== undefined) && ((this.Session.UebungsListe === undefined) || (this.Session.UebungsListe.length <= 0))) {
 			const mUebungParaDB: UebungParaDB = new UebungParaDB();
 			mUebungParaDB.SaetzeBeachten = true;
 			this.fDbModule.LadeSessionUebungen(this.Session.ID,mUebungParaDB).then(
