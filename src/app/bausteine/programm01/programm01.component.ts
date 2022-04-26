@@ -43,6 +43,13 @@ export class Programm01Component implements OnInit {
          this.fDialogService.JaNein(mDialogData);
     }
 
+    panelOpened() {
+        if ((this.programm.SessionListe === undefined) || (this.programm.SessionListe.length <= 0)) {
+            this.fDbModul.LadeProgrammSessions(this.programm.id)
+                .then((aSessionListe) => this.programm.SessionListe = aSessionListe);
+        }
+    }
+
     SelectThisWorkoutClick(aSelectedProgram: ITrainingsProgramm, $event: any): void {
         $event.stopPropagation();
         this.fDbModul.FindAktuellesProgramm()

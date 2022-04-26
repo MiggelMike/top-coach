@@ -28,12 +28,8 @@ export class ProgrammWaehlenComponent implements OnInit {
        
         this.ProgrammListeObserver.subscribe(
             () => {
-                const mProgrammParaDB: ProgrammParaDB = new ProgrammParaDB();
-                mProgrammParaDB.WhereClause = { ProgrammKategorie: ProgrammKategorie.Vorlage.toString() };
-                mProgrammParaDB.OnProgrammAfterLoadFn = (mProgramme: TrainingsProgramm[]) => {
-                    this.ProgrammListe = mProgramme;
-                }, // OnProgrammAfterLoadFn
-                this.fDbModule.LadeProgrammeEx(mProgrammParaDB);
+                this.fDbModule.LadeStandardProgramme()
+                    .then((aProgrammListe) => this.ProgrammListe = aProgrammListe);
             }
         );
     }
