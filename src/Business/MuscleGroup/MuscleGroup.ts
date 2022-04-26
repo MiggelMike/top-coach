@@ -21,7 +21,8 @@ export enum MuscleGroupKategorie02 {
     InnerAdductorMagnus = 'Inner-Adductor-Magnus',
     Triceps = 'Triceps',
     Biceps = 'Biceps',
-    Calves = 'Calves' 
+    Calves = 'Calves', 
+    Neck = 'Neck' 
 }
 
 

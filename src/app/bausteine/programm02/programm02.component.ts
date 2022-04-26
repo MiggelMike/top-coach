@@ -25,9 +25,9 @@ import { Satz } from "src/Business/Satz/Satz";
 })
 export class Programm02Component implements OnInit {
 	@Input() programm: ITrainingsProgramm = null;
+	@Input() SessionListe: Array<ISession> = [];
 	@Input() programmTyp: string = "";	
 	@Output() ProgrammSavedEvent = new EventEmitter<ITrainingsProgramm>();
-	// @Input() SessionListe: Array<ISession> = [];
 	@Input() showButtons: Boolean = false;
 	@Input() showSaveButtons: Boolean = false;
 	@Input() SofortSpeichern: Boolean = false;
@@ -43,7 +43,6 @@ export class Programm02Component implements OnInit {
 	private isExpanded: Boolean = true;
 	private CmpSessionListe: Array<ISession> = [];
 	private DelSessionListe: Array<ISession> = [];
-	public SessionListe: Array<ISession> = [];
 	public ToggleButtonText: string;
 	public ClickData: Programm02Component;
 	private SessionListObserver: Observable<Array<ISession>>;
@@ -94,29 +93,23 @@ export class Programm02Component implements OnInit {
 	}
 
 	ngAfterViewInit() {
-		if (this.programmTyp === "history") {
-			this.fDbModule.LadeHistorySessions().then(
-				(aSessionListe) => {
-					this.SessionListe = aSessionListe;
-				}
-			);
-		}
-		else  if (this.programmTyp === "AktuellesProgramm") {
-			this.fDbModule.LadeAktuellesProgrammEx().then((aPogramme) => {
-				if (aPogramme.length > 0)
-					this.programm = aPogramme[0] as ITrainingsProgramm;
-				this.SessionListe = this.programm.SessionListe;
-			});
-		} else {
+		// if (this.programmTyp === "history") {
+		// 	this.fDbModule.LadeHistorySessions().then(
+		// 		(aSessionListe) => {
+		// 			this.SessionListe = aSessionListe;
+		// 		}
+		// 	);
+		// }
+	    // else {
 
-			const mProgrammPara: ProgrammParaDB = new ProgrammParaDB();
-			mProgrammPara.WhereClause = { id: this.programm.id };
-			this.fDbModule.LadeProgrammeEx(mProgrammPara).then((aPogramme) => {
-				if (aPogramme.length > 0)
-					this.programm = aPogramme[0] as ITrainingsProgramm;
-				this.SessionListe = this.programm.SessionListe;
-			});
-		}
+		// 	const mProgrammPara: ProgrammParaDB = new ProgrammParaDB();
+		// 	mProgrammPara.WhereClause = { id: this.programm.id };
+		// 	this.fDbModule.LadeProgrammeEx(mProgrammPara).then((aPogramme) => {
+		// 		if (aPogramme.length > 0)
+		// 			this.programm = aPogramme[0] as ITrainingsProgramm;
+		// 		this.SessionListe = this.programm.SessionListe;
+		// 	});
+		// }
 
 		this.panUebung.forEach((pan) => {
 			pan.expanded = this.SessionPanelsExpanded;
@@ -149,7 +142,7 @@ export class Programm02Component implements OnInit {
 				this.fDbModule.DeleteSession(aSession as Session);
 
 				this.SessionListObserver.subscribe(() => {
-					this.fDbModule.LadeAktuellesProgrammEx();//this.SortedSessionListe;
+					this.fDbModule.LadeAktuellesProgramm();//this.SortedSessionListe;
 				 })
 				
 				if (this.fGlobalService.Comp03PanelUebungObserver != null) {

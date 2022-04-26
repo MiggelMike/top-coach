@@ -27,7 +27,7 @@ export interface ITrainingsProgramm {
     SessionListe: Array<ISession>;
     Bearbeitbar: Boolean;
     Zyklen: number;
-        Init(aSessions: Array<ISession>): void;
+    Init(aSessions: Array<ISession>): void;
     Copy(): ITrainingsProgramm;
     ErstelleSessionsAusVorlage(aProgrammKategorie: ProgrammKategorie): ITrainingsProgramm;
     DeserializeProgramm(aJsonData: Object): ITrainingsProgramm;
@@ -121,7 +121,7 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
                 for (let index2 = 0; index2 < mUebung.SatzListe.length; index2++) {
                     // Satz
                     const mSatz = mUebung.SatzListe[index2];
-                    mSatz.WdhAusgefuehrt = mSatz.WdhBisVorgabe;
+                    mSatz.WdhAusgefuehrt = mSatz.WdhVonVorgabe;
                     mSatz.GewichtAusgefuehrt = mSatz.GewichtVorgabe;
                 }
             }

@@ -1,3 +1,4 @@
+import { HypertrophicProgramm } from '../../Business/TrainingsProgramm/Hypertrophic';
 import { WdhVorgabeStatus } from './../../Business/Uebung/Uebung';
 import { InitialWeight } from './../../Business/Uebung/InitialWeight';
 import { Progress, ProgressSet, ProgressTyp, WeightCalculation, WeightProgressTime, ProgressPara } from './../../Business/Progress/Progress';
@@ -17,6 +18,7 @@ import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardU
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
 import { is } from '@angular-package/type';
+import { retry } from 'rxjs';
 var cloneDeep = require('lodash.clonedeep');
 
 export const MinDatum = new Date(-8640000000000000);
@@ -268,46 +270,48 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public get HantenscheibeListeSortedByDiameterAndWeight(): Array<Hantelscheibe> {
-		let mResult: Array<Hantelscheibe> = this.HantelscheibenListe.map((mScheibe) => mScheibe);
+		return this.HantelscheibenListe;
+		// let mResult: Array<Hantelscheibe> = this.HantelscheibenListe.map((mScheibe) => mScheibe);
 
-		mResult.sort((hs1: Hantelscheibe, hs2: Hantelscheibe) => {
-			const d1: number = Number(hs1.Durchmesser);
-			const g1: number = Number(hs1.Gewicht);
-			const d2: number = Number(hs2.Durchmesser);
-			const g2: number = Number(hs2.Gewicht);
+		// mResult.sort((hs1: Hantelscheibe, hs2: Hantelscheibe) => {
+		// 	const d1: number = Number(hs1.Durchmesser);
+		// 	const g1: number = Number(hs1.Gewicht);
+		// 	const d2: number = Number(hs2.Durchmesser);
+		// 	const g2: number = Number(hs2.Gewicht);
 
-			if (d1 > d2) return 1;
+		// 	if (d1 > d2) return 1;
 
-			if (d1 < d2) return -1;
+		// 	if (d1 < d2) return -1;
 
-			if (g1 > g2) return 1;
+		// 	if (g1 > g2) return 1;
 
-			if (g1 < g2) return -1;
+		// 	if (g1 < g2) return -1;
 
-			return 0;
-		});
-		return mResult;
+		// 	return 0;
+		// });
+		// return mResult;
 	}
 
 	public LanghantelListeSortedByName(aIgnorGeloeschte: Boolean = true): Array<Hantel> {
-		let mResult: Array<Hantel> = this.LangHantelListe.map((mHantel) => mHantel);
+		return this.LangHantelListe;
+		// let mResult: Array<Hantel> = this.LangHantelListe.map((mHantel) => mHantel);
 
-		if (aIgnorGeloeschte) {
-			mResult = mResult.filter((h) => h.HantelStatus !== ErstellStatus.Geloescht);
-		}
+		// if (aIgnorGeloeschte) {
+		// 	mResult = mResult.filter((h) => h.HantelStatus !== ErstellStatus.Geloescht);
+		// }
 
-		mResult.sort((u1, u2) => {
-			if (u1.Name > u2.Name) {
-				return 1;
-			}
+		// mResult.sort((u1, u2) => {
+		// 	if (u1.Name > u2.Name) {
+		// 		return 1;
+		// 	}
 
-			if (u1.Name < u2.Name) {
-				return -1;
-			}
+		// 	if (u1.Name < u2.Name) {
+		// 		return -1;
+		// 	}
 
-			return 0;
-		});
-		return mResult;
+		// 	return 0;
+		// });
+		// return mResult;
 	}
 
 	public get EquipmentTypListe(): Array<string> {
@@ -322,20 +326,21 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public get EquipmentTypListeSorted(): Array<string> {
-		const mResult: Array<string> = this.EquipmentTypListe.map((mEquipmentTyp) => mEquipmentTyp);
-		mResult.sort((u1, u2) => {
-			if (u1 > u2) {
-				return 1;
-			}
+		return this.EquipmentTypListe;
+		// const mResult: Array<string> = this.EquipmentTypListe.map((mEquipmentTyp) => mEquipmentTyp);
+		// mResult.sort((u1, u2) => {
+		// 	if (u1 > u2) {
+		// 		return 1;
+		// 	}
 
-			if (u1 < u2) {
-				return -1;
-			}
+		// 	if (u1 < u2) {
+		// 		return -1;
+		// 	}
 
-			return 0;
-		});
+		// 	return 0;
+		// });
 
-		return mResult;
+		// return mResult;
 	}
 
 	//public ProgrammListeObserver: Observable<TrainingsProgramm[]>;
@@ -347,38 +352,7 @@ export class DexieSvcService extends Dexie {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
 		}
 
-		// this.ProgramLadeStandardPara = new ProgrammParaDB();
-		// this.ProgramLadeStandardPara = {
-		// 	fProgrammKategorie: ProgrammKategorie.Vorlage,
-		// 	fProgramme: this.VorlageProgramme,
-
-		// 	WhereClause: { ProgrammKategorie: ProgrammKategorie.Vorlage.toString() },
-
-		// 	OnProgrammBeforeLoadFn: (aData) => {
-		// 		this.VorlageProgramme = [];
-		// 	},
-
-		// 	OnProgrammNoRecordFn: undefined, //() => { },
-
-		// 	OnProgrammAfterLoadFn: (aProgramme) => {
-		// 		this.VorlageProgramme = aProgramme;
-		// 		const mProgramme: Array<TrainingsProgramm> = aProgramme as Array<TrainingsProgramm>;
-		// 		const mAnlegen: Array<ProgrammTyp.Gzclp> = new Array<ProgrammTyp.Gzclp>();
-		// 		const mProg: TrainingsProgramm = mProgramme.find((p) => p.ProgrammTyp === ProgrammTyp.Gzclp);
-
-		// 		if (mProg === undefined) mAnlegen.push(ProgrammTyp.Gzclp);
-		// 		else {
-		// 			if (mProgramme.find((p) => p.ProgrammTyp === ProgrammTyp.Gzclp) === undefined) {
-		// 				// Standard-Programm gefunden
-		// 				mProgramme.push(mProg);
-		// 			}
-		// 		}
-
-		// 		for (let index = 0; index < mAnlegen.length; index++) this.ErzeugeVorlageProgramm(mAnlegen[index]);
-		// 	}, //OnProgrammNoRecorderLoadFn
-		// } as ParaDB;
-
-		// Dexie.delete("ConceptCoach");
+		//  Dexie.delete("ConceptCoach");s
 
 		this.version(18).stores({
 			AppData: "++id",
@@ -403,55 +377,58 @@ export class DexieSvcService extends Dexie {
 	}
 
 	get UebungListeSortedByName(): Array<Uebung> {
-		const mResult: Array<Uebung> = this.StammUebungsListe.map((mUebung) => mUebung);
-		mResult.sort((u1, u2) => {
-			if (u1.Name > u2.Name) {
-				return 1;
-			}
+		return this.StammUebungsListe;
+		// const mResult: Array<Uebung> = this.StammUebungsListe.map((mUebung) => mUebung);
+		// mResult.sort((u1, u2) => {
+		// 	if (u1.Name > u2.Name) {
+		// 		return 1;
+		// 	}
 
-			if (u1.Name < u2.Name) {
-				return -1;
-			}
+		// 	if (u1.Name < u2.Name) {
+		// 		return -1;
+		// 	}
 
-			return 0;
-		});
+		// 	return 0;
+		// });
 
-		return mResult;
+		// return mResult;
 	}
 
 	MuskelgruppeListeSortedByName(): Array<MuscleGroup> {
-		const mResult: Array<MuscleGroup> = this.MuskelGruppenListe.map((mMuskelgruppe) => mMuskelgruppe);
+		return this.MuskelGruppenListe;
+		// const mResult: Array<MuscleGroup> = this.MuskelGruppenListe.map((mMuskelgruppe) => mMuskelgruppe);
 
-		mResult.sort((u1, u2) => {
-			if (u1.Name > u2.Name) {
-				return 1;
-			}
+		// mResult.sort((u1, u2) => {
+		// 	if (u1.Name > u2.Name) {
+		// 		return 1;
+		// 	}
 
-			if (u1.Name < u2.Name) {
-				return -1;
-			}
+		// 	if (u1.Name < u2.Name) {
+		// 		return -1;
+		// 	}
 
-			return 0;
-		});
+		// 	return 0;
+		// });
 
-		return mResult;
+		// return mResult;
 	}
 
 	get EquipmentListSortedByDisplayName(): Array<Equipment> {
-		const mResult: Array<Equipment> = this.EquipmentListe.map((mEquipment) => mEquipment);
-		mResult.sort((u1, u2) => {
-			if (u1.DisplayName > u2.DisplayName) {
-				return 1;
-			}
+		return this.EquipmentListe;
+		// const mResult: Array<Equipment> = this.EquipmentListe.map((mEquipment) => mEquipment);
+		// mResult.sort((u1, u2) => {
+		// 	if (u1.DisplayName > u2.DisplayName) {
+		// 		return 1;
+		// 	}
 
-			if (u1.DisplayName < u2.DisplayName) {
-				return -1;
-			}
+		// 	if (u1.DisplayName < u2.DisplayName) {
+		// 		return -1;
+		// 	}
 
-			return 0;
-		});
+		// 	return 0;
+		// });
 
-		return mResult;
+		// return mResult;
 	}
 
 	private InitAll() {
@@ -583,20 +560,21 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public ProgressListeSortedByName(): Array<Progress> {
-		let mResult: Array<Progress> = this.ProgressListe.map((mProgress) => mProgress);
+		return this.ProgressListe
+		// let mResult: Array<Progress> = this.ProgressListe.map((mProgress) => mProgress);
 
-		mResult.sort((u1, u2) => {
-			if (u1.Name > u2.Name) {
-				return 1;
-			}
+		// mResult.sort((u1, u2) => {
+		// 	if (u1.Name > u2.Name) {
+		// 		return 1;
+		// 	}
 
-			if (u1.Name < u2.Name) {
-				return -1;
-			}
+		// 	if (u1.Name < u2.Name) {
+		// 		return -1;
+		// 	}
 
-			return 0;
-		});
-		return mResult;
+		// 	return 0;
+		// });
+		// return mResult;
 	}
 
 	public ProgressSpeichern(aProgess: Progress) {
@@ -640,24 +618,25 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public MuskelListeSortedByName(aIgnorGeloeschte: Boolean = true): Array<MuscleGroup> {
-		let mResult: Array<MuscleGroup> = this.MuskelGruppenListe.map((mMuskel) => mMuskel);
+		return this.MuskelGruppenListe;
+		// let mResult: Array<MuscleGroup> = this.MuskelGruppenListe.map((mMuskel) => mMuskel);
 
-		if (aIgnorGeloeschte) {
-			mResult = mResult.filter((h) => h.Status !== ErstellStatus.Geloescht);
-		}
+		// if (aIgnorGeloeschte) {
+		// 	mResult = mResult.filter((h) => h.Status !== ErstellStatus.Geloescht);
+		// }
 
-		mResult.sort((u1, u2) => {
-			if (u1.Name > u2.Name) {
-				return 1;
-			}
+		// mResult.sort((u1, u2) => {
+		// 	if (u1.Name > u2.Name) {
+		// 		return 1;
+		// 	}
 
-			if (u1.Name < u2.Name) {
-				return -1;
-			}
+		// 	if (u1.Name < u2.Name) {
+		// 		return -1;
+		// 	}
 
-			return 0;
-		});
-		return mResult;
+		// 	return 0;
+		// });
+		// return mResult;
 	}
 
 	public DeleteMuskelGruppe(aMuskelGruppeID: number) {
@@ -745,7 +724,7 @@ export class DexieSvcService extends Dexie {
 						() => {
 							this.LadeProgress().then(() => this.LadeStammUebungen())
 						});
-				}
+				} else this.LadeStammUebungen();
 			});
 	}
 
@@ -816,7 +795,16 @@ export class DexieSvcService extends Dexie {
 					// mProgrammParaDB.LadeSession = true;
 					// mProgrammParaDB.SessionParaDB = new SessionParaDB();
 					// mProgrammParaDB.SessionParaDB.LadeUebungen
-					this.LadeStandardProgramme();
+					this.LadeStandardProgramme()
+						.then(async (aProgrammListe) => {
+							if (aProgrammListe.find((programm) => programm.ProgrammTyp === ProgrammTyp.Gzclp) === undefined)
+								await this.ProgrammSpeichern(GzclpProgramm.ErzeugeGzclpVorlage(this));
+							
+							if (aProgrammListe.find((programm) => programm.ProgrammTyp === ProgrammTyp.HypertrophicSpecific) === undefined)
+								await this.ProgrammSpeichern(HypertrophicProgramm.ErzeugeHypertrophicVorlage(this));
+							
+							await this.LadeStandardProgramme()
+						});
 					// this.LadeAktuellesProgramm();
 				}
 				return mUebungen;
@@ -829,6 +817,7 @@ export class DexieSvcService extends Dexie {
 			.equals(ProgrammKategorie.AktuellesProgramm)
 			.toArray()
 			.then(async (aProgrammListe: Array<ITrainingsProgramm>) => {
+				const x = 0;
 				if (aProgrammListe.length > 0) {
 					if ((aProgrammParaDB !== undefined) &&
 						(aProgrammParaDB.SessionBeachten !== undefined)
@@ -923,6 +912,7 @@ export class DexieSvcService extends Dexie {
 			.where({FK_Programm: aProgrammID, Kategorie02: SessionStatus.Wartet })
 			.sortBy("ListenIndex")
 			.then(async (aSessionListe) => {
+				const x = 0;
 				if (aSessionParaDB !== undefined) {
 					if (aSessionParaDB.UebungenBeachten) {
 						for (let index = 0; index < aSessionListe.length; index++) {

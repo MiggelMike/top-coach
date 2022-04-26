@@ -9,9 +9,16 @@ import { Session } from 'src/Business/Session/Session';
 	styleUrls: ['./history.component.scss'],
 })
 export class HistoryComponent implements OnInit {
-	constructor() {
+	SessionListe: Array<Session> = [];
+
+	constructor(private fDbModul: DexieSvcService) {
 	}
 	
 	ngOnInit(): void {
+		this.fDbModul.LadeHistorySessions().then(
+			(aSessionListe) => {
+				this.SessionListe = aSessionListe;
+			}
+		);
 	}
 }

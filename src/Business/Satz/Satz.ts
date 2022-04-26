@@ -19,6 +19,7 @@ export enum LiftTyp {
     GzClpT1 = 'GzClpT1',
     GzClpT2 = 'GzClpT2',
     GzClpT3 = 'GzClpT3',
+    Normal = 'Normal'
 }
 
 export enum SatzStatus {

@@ -108,25 +108,30 @@ export interface IUebung {
 }
 
 export enum StandardUebungsName {
-  Squat = 'Squat',
-  Deadlift = 'Deadlift',
-  Benchpress = 'Benchpress',
-  OverheadPress = 'Overhead-Press',
-  AB_Rollout = 'AB-Rollout',
-  AB_Wheel = 'AB-Wheel',
-  BackExtension = 'Back-Extension',
-  BarbellRow = 'Barbell-Row',
-  BentOverDumbbellRaise = 'Bent-Over-Dumbbell-Raise',
-  BlastStrapPushUp = 'Blast-Strap-Push-Up',
-  CableKickBacks = 'Cable-Kick-Backs',
-  CablePushDown = 'Cable-Push-Down',
-  CableRow = 'Cable-Row',
-  CalfRaises = 'Calf-Raises',
-  ChestSupportedRows = 'Chest-Supported-Rows',
-  ChinUps = 'Chin-Ups',
-  PullUps = 'Pull-Ups',
-  LatPullDowns = 'Lat-Pull-Downs',
-  Dips = 'Dips',
+    Squat = 'Squat',
+    Deadlift = 'Deadlift',
+    Benchpress = 'Benchpress',
+    OverheadPress = 'Overhead-Press',
+    AB_Rollout = 'AB-Rollout',
+    AB_Wheel = 'AB-Wheel',
+    BackExtension = 'Back-Extension',
+    BarbellRow = 'Barbell-Row',
+    BentOverDumbbellRaise = 'Bent-Over-Dumbbell-Raise',
+    BlastStrapPushUp = 'Blast-Strap-Push-Up',
+    CableKickBacks = 'Cable-Kick-Backs',
+    CablePushDown = 'Cable-Push-Down',
+    CableRow = 'Cable-Row',
+    CalfRaises = 'Calf-Raises',
+    ChestSupportedRows = 'Chest-Supported-Rows',
+    ChinUps = 'Chin-Ups',
+    PullUps = 'Pull-Ups',
+    LatPullDowns = 'Lat-Pull-Downs',
+    StandingLegCurls = 'Standing-Leg-Curls',
+    NeckExtensions = 'Neck-Extensions',
+    NeckCurls = 'Neck-Curls',
+    TricepsPushDown = 'Triceps-Push-Down',
+    Dips = 'Dips',
+
 }
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
@@ -588,7 +593,8 @@ export class StandardUebung {
     }
 
     public static getStandardUebung(aStandardUebungsName: StandardUebungsName): StandardUebung{
-        return StandardUebungListe.find(u => u.StandardUebungName === aStandardUebungsName);
+        const mStandardUebung: StandardUebung = StandardUebungListe.find(u => u.StandardUebungName === aStandardUebungsName);
+        return mStandardUebung;
     }
 }
 
@@ -731,7 +737,7 @@ export const StandardUebungListe: Array<StandardUebung> = new Array<StandardUebu
 
     new StandardUebung(
         'Pull-Ups',
-        StandardUebungsName.Dips,
+        StandardUebungsName.PullUps,
         UebungsTyp.Kraft,
         MuscleGroupKategorie02.Back,
         MuscleGroupKategorie02.Arms
@@ -745,5 +751,36 @@ export const StandardUebungListe: Array<StandardUebung> = new Array<StandardUebu
         MuscleGroupKategorie02.Triceps,
         MuscleGroupKategorie02.Chest,
         MuscleGroupKategorie02.Shoulders
+    ),
+
+    new StandardUebung(
+        'Standing-Leg-Curls',
+        StandardUebungsName.StandingLegCurls,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Legs,
+        MuscleGroupKategorie02.Quadriceps,
+        MuscleGroupKategorie02.Hamstrings
+    ),
+
+    new StandardUebung(
+        'Neck-Extensions',
+        StandardUebungsName.NeckExtensions,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Neck
+    ),
+
+    new StandardUebung(
+        'Neck-Curls',
+        StandardUebungsName.NeckCurls,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Neck
+    ),
+
+    new StandardUebung(
+        'Triceps-Push-Down',
+        StandardUebungsName.TricepsPushDown,
+        UebungsTyp.Kraft,
+        MuscleGroupKategorie02.Arms,
+        MuscleGroupKategorie02.Triceps
     )
 );

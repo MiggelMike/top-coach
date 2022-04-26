@@ -40,52 +40,6 @@ export class GzclpProgramm extends TrainingsProgramm {
 		return s;
 	}
 
-	private ErzeugeAufwaermSaetze(aUebung: Uebung, aLiftTyp: LiftTyp, aUebung_Sess: Uebung) {
-		// Aufwärm-Saetze anfügen
-		// for (let i = 0; i < 3; i++) {
-		//     switch (i) {
-		//         case 0:
-		//             aUebung_Sess.Saetze.push(
-		//                 this.NeuerSatz(
-		//                     SatzTyp.Aufwaermen,
-		//                     aLiftTyp,
-		//                     4,
-		//                     40,
-		//                     aUebung_Sess,
-		//                     aUebung,
-		//                     false
-		//                 )
-		//             );
-		//             break;
-		//         case 1:
-		//             aUebung_Sess.Saetze.push(
-		//                 this.NeuerSatz(
-		//                     SatzTyp.Aufwaermen,
-		//                     aLiftTyp,
-		//                     3,
-		//                     50,
-		//                     aUebung_Sess,
-		//                     aUebung,
-		//                     false
-		//                 )
-		//             );
-		//             break;
-		//         default:
-		//             aUebung_Sess.Saetze.push(
-		//                 this.NeuerSatz(
-		//                     SatzTyp.Aufwaermen,
-		//                     aLiftTyp,
-		//                     2,
-		//                     60,
-		//                     aUebung_Sess,
-		//                     aUebung,
-		//                     false
-		//                 )
-		//             );
-		//     }
-		// }
-	}
-
 	protected override InitSession(aSessionNr: number): Array<ISession> {
 		const mSessions = new Array<ISession>();
 		const mNeueSession = new Session();
@@ -168,8 +122,6 @@ export class GzclpProgramm extends TrainingsProgramm {
 		if (mProgress !== undefined)
 			mUebung.FkProgress = mProgress.ID;
 		
-		// this.ErzeugeAufwaermSaetze(mUebung, LiftTyp.Custom, aNeueSession);
-
 		// Arbeits-Saetze anfügen
 		let mAnzSaetze = 5;
 		for (let i = 0; i < mAnzSaetze; i++) {
@@ -177,7 +129,7 @@ export class GzclpProgramm extends TrainingsProgramm {
 				Satz.NeuerSatz(
 					SatzTyp.Training,
 					LiftTyp.GzClpT3,
-					0, // Von-Wdh-Vorgabe
+					3, // Von-Wdh-Vorgabe
 					3, // Bis-Wdh-Vorgabe
 					100, // Prozent
 					0, // SessionID
