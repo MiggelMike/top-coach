@@ -1,4 +1,4 @@
-import { DexieSvcService, ProgrammParaDB  } from './../services/dexie-svc.service';
+import { DexieSvcService, ProgrammParaDB, SessionParaDB } from './../services/dexie-svc.service';
 import {  ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
@@ -22,15 +22,27 @@ export class AnstehendeSessionsComponent implements OnInit {
     ) {
         this.AnstehendeSessionObserver = of(this.fDbModule.AktuellesProgramm);
     }
+
+    private LadeSessions  (aOffSet: number) {
+        const mSessionParaDB: SessionParaDB = new SessionParaDB();
+        mSessionParaDB.OffSet = aOffSet;
+        mSessionParaDB.Limit = 5;
+        this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
+            .then( (aSessionListe) => {
+                if (aSessionListe.length > 0) {
+                    this.Programm.SessionListe = this.Programm.SessionListe.concat(aSessionListe);
+                    this.LadeSessions(this.Programm.SessionListe.length);
+                }
+            });
+    }
+    
     
     ngOnInit() {
         this.fDbModule.LadeAktuellesProgramm()
             .then( async (aProgramme) => {
                 this.Programm = aProgramme;
-                await this.fDbModule.LadeUpcomingSessions(this.Programm.id)
-                    .then((aSessionListe) => {
-                        this.Programm.SessionListe = aSessionListe;
-                    });
+                this.Programm.SessionListe = [];
+                this.LadeSessions(0);
             });
     }
 

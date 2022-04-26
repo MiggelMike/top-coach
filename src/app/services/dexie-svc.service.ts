@@ -97,7 +97,7 @@ export class ParaDB {
 	Filter?: FilterFn = () => { return true };;
 	And?: AndFn = () => { return true };
 	Then?: ThenFn;
-	// Or?: OrFn;
+	OffSet?: number = 0;
 	Limit?: number = 10000000;
 	SortBy?: string = '';
 	SortOrder?: SortOrder = SortOrder.ascending;
@@ -907,13 +907,12 @@ export class DexieSvcService extends Dexie {
 		});
 	}
 
-	public async LadeUpcomingSessions(aProgrammID: number, aSessionParaDB?: SessionParaDB): Promise<Array<Session>> {
+	public async LadeUpcomingSessions(aProgrammID: number, aZielSessionliste: Array<Session>, aSessionParaDB?: SessionParaDB)  {
 		return await this.SessionTable
-			// .where({FK_Programm: aProgrammID, Kategorie02: SessionStatus.Pause })
-
 			.where("[FK_Programm+Kategorie02]")
-			.anyOf([[aProgrammID,SessionStatus.Laueft], [aProgrammID,SessionStatus.Pause], [aProgrammID,SessionStatus.Wartet]])
-
+			.anyOf([[aProgrammID, SessionStatus.Laueft], [aProgrammID, SessionStatus.Pause], [aProgrammID, SessionStatus.Wartet]])
+			.offset(aSessionParaDB !== undefined && aSessionParaDB.OffSet !== undefined ? aSessionParaDB.OffSet : 0) 
+            .limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : 1000000) 
 			.sortBy("ListenIndex")
 			.then(async (aSessionListe) => {
 				const x = 0;

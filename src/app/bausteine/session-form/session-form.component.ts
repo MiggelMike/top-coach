@@ -198,7 +198,7 @@ export class SessionFormComponent implements OnInit {
 		
 		return this.fDbModule.SessionSpeichern(this.Session)
 			.then((aSession:Session) => {
-				// this.cmpSession = aSession.Copy(true,true);
+				this.cmpSession = aSession.Copy(true,true);
 			});
 	}
 
