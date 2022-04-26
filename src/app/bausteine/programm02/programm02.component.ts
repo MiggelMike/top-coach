@@ -3,7 +3,7 @@ import { ISessionDB, SessionDB } from "./../../../Business/SessionDB";
 import { SessionStatus } from "../../../Business/SessionDB";
 import { UebungWaehlenData } from "./../../uebung-waehlen/uebung-waehlen.component";
 import { UebungsKategorie02 } from "./../../../Business/Uebung/Uebung";
-import { DexieSvcService, onDeleteFn, ProgrammParaDB } from "./../../services/dexie-svc.service";
+import { DexieSvcService, onDeleteFn, ProgrammParaDB, UebungParaDB } from "./../../services/dexie-svc.service";
 import { Session } from "./../../../Business/Session/Session";
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Output, EventEmitter, Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";
@@ -85,10 +85,24 @@ export class Programm02Component implements OnInit {
 	constructor(private fDialogService: DialogeService, private fGlobalService: GlobalService, private fUebungService: UebungService, public fDbModule: DexieSvcService, private router: Router) {
 	}
 
-	panelOpened(sess: ISession) {
-		if (sess.UebungsListe === undefined || sess.UebungsListe.length <= 0) {
-			this.fDbModule.LadeSessionUebungen(sess.ID)
-				.then((aUebungsliste) => sess.UebungsListe = aUebungsliste);
+	private LadeUebungen(aSess: ISession, aUebungPara: UebungParaDB)  {
+		this.fDbModule.LadeSessionUebungen(aSess.ID,aUebungPara)
+			.then((aUebungsliste) => {
+				if (aUebungsliste.length > 0) {
+					aSess.UebungsListe = aSess.UebungsListe.concat(aUebungsliste);
+					aUebungPara.OffSet = aSess.UebungsListe.length;
+					this.LadeUebungen(aSess, aUebungPara);
+				}
+			});
+	}
+		
+	
+	panelOpened(aSess: ISession) {
+		if (aSess.UebungsListe === undefined || aSess.UebungsListe.length <= 0) {
+			const mUebungPara: UebungParaDB = new UebungParaDB();
+			mUebungPara.OffSet = 0;
+			mUebungPara.Limit = 5;
+			this.LadeUebungen(aSess,mUebungPara);
 		}
 	}
 

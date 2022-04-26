@@ -1,4 +1,4 @@
-import { DexieSvcService } from 'src/app/services/dexie-svc.service';
+import { DexieSvcService, SessionParaDB } from 'src/app/services/dexie-svc.service';
 import { Component, OnInit } from '@angular/core';
 import { Session } from 'src/Business/Session/Session';
 
@@ -13,12 +13,21 @@ export class HistoryComponent implements OnInit {
 
 	constructor(private fDbModul: DexieSvcService) {
 	}
+
+	private LadeSessions (aOffSet: number) {
+        const mSessionParaDB: SessionParaDB = new SessionParaDB();
+        mSessionParaDB.OffSet = aOffSet;
+        mSessionParaDB.Limit = 5;
+        this.fDbModul.LadeHistorySessions(mSessionParaDB)
+            .then( (aSessionListe) => {
+                if (aSessionListe.length > 0) {
+					this.SessionListe = this.SessionListe.concat(aSessionListe);
+					this.LadeSessions(this.SessionListe.length);
+                }
+            });
+    }
 	
 	ngOnInit(): void {
-		this.fDbModul.LadeHistorySessions().then(
-			(aSessionListe) => {
-				this.SessionListe = aSessionListe;
-			}
-		);
+		this.LadeSessions(0);
 	}
 }

@@ -907,7 +907,7 @@ export class DexieSvcService extends Dexie {
 		});
 	}
 
-	public async LadeUpcomingSessions(aProgrammID: number, aZielSessionliste: Array<Session>, aSessionParaDB?: SessionParaDB)  {
+	public async LadeUpcomingSessions(aProgrammID: number, aSessionParaDB?: SessionParaDB):Promise<Array<Session>>  {
 		return await this.SessionTable
 			.where("[FK_Programm+Kategorie02]")
 			.anyOf([[aProgrammID, SessionStatus.Laueft], [aProgrammID, SessionStatus.Pause], [aProgrammID, SessionStatus.Wartet]])
@@ -948,10 +948,12 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
-	public async LadeHistorySessions(): Promise<Array<Session>> {
+	public async LadeHistorySessions(aSessionParaDB: SessionParaDB): Promise<Array<Session>> {
 		return await this.SessionTable
 			.where("Kategorie02")
 			.anyOf([SessionStatus.Fertig, SessionStatus.FertigTimeOut])
+			.offset(aSessionParaDB !== undefined && aSessionParaDB.OffSet !== undefined ? aSessionParaDB.OffSet : 0) 
+            .limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : 1000000) 
 			.reverse()
 			.sortBy("Datum")
 			.then((aSessionListe) => { return aSessionListe; });
@@ -1004,6 +1006,8 @@ export class DexieSvcService extends Dexie {
 		return await this.UebungTable
 			.where("SessionID")
 			.equals(aSessionID)
+			.offset(aUebungParaDB !== undefined && aUebungParaDB.OffSet !== undefined ? aUebungParaDB.OffSet : 0) 
+            .limit(aUebungParaDB !== undefined && aUebungParaDB.Limit !== undefined ? aUebungParaDB.Limit : 1000000) 
 			.toArray()
 			.then(async (aUebungsliste: Array<Uebung>) => {
 				if (aUebungParaDB !== undefined) {
