@@ -95,9 +95,9 @@ export class SessionFormComponent implements OnInit {
 			mDialogData.textZeilen.push("Save changes?");
 			mDialogData.ShowAbbruch = true;
 			
-			mDialogData.OkFn = (): void => {
+			mDialogData.OkFn = async () => {
+				await this.SaveChangesPrim();
 				this.leave();
-				this.SaveChangesPrim({ that: this });
 			}
 
 			mDialogData.CancelFn = (): void => {
@@ -163,60 +163,42 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	public SaveChanges(aPara: any) {
-		(aPara as SessionFormComponent).SaveChangesPrim({
-			that: aPara
-			// EvalFn: () => {
-			// 	const mSessionForm: SessionFormComponent = aPara as SessionFormComponent;
-			// 	mSessionForm.fDexieSvcService.EvalAktuelleSessionListe(mSessionForm.Session, aPara).then(
-			// 		() => {
-			// 			mSessionForm.cmpSession = mSessionForm.Session.Copy();
-			// 		});
-			// }
-	    });
+		(aPara as SessionFormComponent).SaveChangesPrim();
 	}
 
-	public SaveChangesPrim(aPara?: any): Promise<void> {
-		const mSessionForm: SessionFormComponent = aPara.that as SessionFormComponent;
-		
-		const mSession: Session = mSessionForm.Session;
-		const mCmpSession: Session = mSessionForm.cmpSession;
-
+	public SaveChangesPrim(): Promise<void> {
 		// In der Session gelöschte Übungen auch aus der DB löschen.
-		for (let index = 0; index < mCmpSession.UebungsListe.length; index++) {
-			const mUebung = mCmpSession.UebungsListe[index];
-			const mSuchUebung = mSession.UebungsListe.find((u) => u.ID === mUebung.ID);
+		for (let index = 0; index < this.cmpSession.UebungsListe.length; index++) {
+			const mUebung = this.cmpSession.UebungsListe[index];
+			const mSuchUebung = this.Session.UebungsListe.find((u) => u.ID === mUebung.ID);
 			if (mSuchUebung === undefined)
-				mSessionForm.fDbModule.DeleteUebung(mUebung);
+				this.fDbModule.DeleteUebung(mUebung);
 		}
 
 		// In der Session gelöschte Sätze auch aus der DB löschen.
-		for (let index = 0; index < mCmpSession.UebungsListe.length; index++) {
-			const mCmpUebung = mCmpSession.UebungsListe[index];
-			const mSuchUebung = mSession.UebungsListe.find((u) => u.ID === mCmpUebung.ID);
+		for (let index = 0; index < this.cmpSession.UebungsListe.length; index++) {
+			const mCmpUebung = this.cmpSession.UebungsListe[index];
+			const mSuchUebung = this.Session.UebungsListe.find((u) => u.ID === mCmpUebung.ID);
 			if (mSuchUebung !== undefined) {
 				for (let mSatzIndex = 0; mSatzIndex < mCmpUebung.SatzListe.length; mSatzIndex++) {
 					const mCmpSatz = mCmpUebung.SatzListe[mSatzIndex];
 					if (mSuchUebung.SatzListe.find((mSuchSatz) => mSuchSatz.ID === mCmpSatz.ID) === undefined)
-					mSessionForm.fDbModule.DeleteSatz(mCmpSatz);
+					this.fDbModule.DeleteSatz(mCmpSatz);
 				}
 			}
 		}
 
-		for (let index = 0; index < mSession.UebungsListe.length; index++) {
-			const mPtrUebung = mSession.UebungsListe[index];
+		for (let index = 0; index < this.Session.UebungsListe.length; index++) {
+			const mPtrUebung = this.Session.UebungsListe[index];
 			mPtrUebung.ArbeitsSaetzeStatus = mPtrUebung.getArbeitsSaetzeStatus();
 		}
 
-		if ((aPara !== undefined) && (aPara.DoProgressFn !== undefined)) 
-			aPara.DoProgressFn(this.Session);
+		// if ((aPara !== undefined) && (aPara.DoProgressFn !== undefined)) 
+		// 	aPara.DoProgressFn(this.Session);
 		
-		return mSessionForm.fDbModule.SessionSpeichern(mSession)
-			// return mSessionForm.fDexieSvcService.SessionSpeichern(mSessionForm.Session)
+		return this.fDbModule.SessionSpeichern(this.Session)
 			.then((aSession:Session) => {
-				// if (aPara !== undefined)
-				// 	aPara.EvalFn();
-				// else mSessionForm.cmpSession = mSessionForm.Session.Copy();
-				mSessionForm.cmpSession = aSession.Copy(true,true);
+				// this.cmpSession = aSession.Copy(true,true);
 			});
 	}
 
@@ -248,21 +230,11 @@ export class SessionFormComponent implements OnInit {
 		if (mIndex > -1) aSessionForm.fDbModule.AktuellesProgramm.SessionListe.splice(mIndex, 1);
 		
 		aSessionForm.fDbModule.AktuellesProgramm.NummeriereSessions();
-		try {
-			this.SaveChangesPrim({ that: aSessionForm });
-
-			
-		} catch (error) {
-			console.error(error);
-		}
-
-
-		// await aSessionForm.fDexieSvcService.ProgrammSpeichern(aSessionForm.fDexieSvcService.AktuellesProgramm)
-		// 	.then(() => this.router.navigate([""]));
+		this.SaveChangesPrim();
 	}
 
-	public async SetDone(aSessionFormComponent: SessionFormComponent): Promise<void> {
-		if (aSessionFormComponent.fSessionStatsOverlayComponent) aSessionFormComponent.fSessionStatsOverlayComponent.close();
+	public async SetDone(): Promise<void> {
+		if (this.fSessionStatsOverlayComponent !== undefined) this.fSessionStatsOverlayComponent.close();
 		
 		const mDialogData = new DialogData();
 		mDialogData.textZeilen.push("Workout will be saved and closed.");
@@ -346,7 +318,7 @@ export class SessionFormComponent implements OnInit {
 				await this.fDbModule.SessionSpeichern(mNeueSession);
 				this.router.navigate([""]);
 			}
-			this.DoAfterDone(aSessionFormComponent);
+			this.DoAfterDone(this);
 		}
 		this.fDialogService.JaNein(mDialogData);
 	}

@@ -909,7 +909,11 @@ export class DexieSvcService extends Dexie {
 
 	public async LadeUpcomingSessions(aProgrammID: number, aSessionParaDB?: SessionParaDB): Promise<Array<Session>> {
 		return await this.SessionTable
-			.where({FK_Programm: aProgrammID, Kategorie02: SessionStatus.Wartet })
+			// .where({FK_Programm: aProgrammID, Kategorie02: SessionStatus.Pause })
+
+			.where("[FK_Programm+Kategorie02]")
+			.anyOf([[aProgrammID,SessionStatus.Laueft], [aProgrammID,SessionStatus.Pause], [aProgrammID,SessionStatus.Wartet]])
+
 			.sortBy("ListenIndex")
 			.then(async (aSessionListe) => {
 				const x = 0;
@@ -1228,6 +1232,7 @@ export class DexieSvcService extends Dexie {
 		return await this.transaction("rw", this.SessionTable, this.UebungTable, this.SatzTable, async () => {
 			const mUebungsListe: Array<Uebung> = [];
 			if (aSession.UebungsListe !== undefined) {
+				const x = 0;
 				for (let index = 0; index < aSession.UebungsListe.length; index++) {
 					const mPtrUebung = aSession.UebungsListe[index];
 					const mPtrCopyOfUebung = mPtrUebung.Copy();
