@@ -23,6 +23,9 @@ var cloneDeep = require('lodash.clonedeep');
 
 export const MinDatum = new Date(-8640000000000000);
 export const MaxDatum = new Date(8640000000000000);
+export const cSessionSelectLimit = 1;
+export const cUebungSelectLimit = 1;
+export const cSatzSelectLimit = 1;
 
 export enum SortOrder {
 	ascending,
@@ -280,47 +283,10 @@ export class DexieSvcService extends Dexie {
 
 	public get HantenscheibeListeSortedByDiameterAndWeight(): Array<Hantelscheibe> {
 		return this.HantelscheibenListe;
-		// let mResult: Array<Hantelscheibe> = this.HantelscheibenListe.map((mScheibe) => mScheibe);
-
-		// mResult.sort((hs1: Hantelscheibe, hs2: Hantelscheibe) => {
-		// 	const d1: number = Number(hs1.Durchmesser);
-		// 	const g1: number = Number(hs1.Gewicht);
-		// 	const d2: number = Number(hs2.Durchmesser);
-		// 	const g2: number = Number(hs2.Gewicht);
-
-		// 	if (d1 > d2) return 1;
-
-		// 	if (d1 < d2) return -1;
-
-		// 	if (g1 > g2) return 1;
-
-		// 	if (g1 < g2) return -1;
-
-		// 	return 0;
-		// });
-		// return mResult;
 	}
 
 	public LanghantelListeSortedByName(aIgnorGeloeschte: Boolean = true): Array<Hantel> {
 		return this.LangHantelListe;
-		// let mResult: Array<Hantel> = this.LangHantelListe.map((mHantel) => mHantel);
-
-		// if (aIgnorGeloeschte) {
-		// 	mResult = mResult.filter((h) => h.HantelStatus !== ErstellStatus.Geloescht);
-		// }
-
-		// mResult.sort((u1, u2) => {
-		// 	if (u1.Name > u2.Name) {
-		// 		return 1;
-		// 	}
-
-		// 	if (u1.Name < u2.Name) {
-		// 		return -1;
-		// 	}
-
-		// 	return 0;
-		// });
-		// return mResult;
 	}
 
 	public get EquipmentTypListe(): Array<string> {
@@ -351,9 +317,6 @@ export class DexieSvcService extends Dexie {
 
 		// return mResult;
 	}
-
-	//public ProgrammListeObserver: Observable<TrainingsProgramm[]>;
-	//public ProgrammListe: Array<TrainingsProgramm> = [];
 
 	constructor(private fDialogeService: DialogeService, @Optional() @SkipSelf() parentModule?: DexieSvcService) {
 		super("ConceptCoach");
@@ -570,20 +533,6 @@ export class DexieSvcService extends Dexie {
 
 	public ProgressListeSortedByName(): Array<Progress> {
 		return this.ProgressListe
-		// let mResult: Array<Progress> = this.ProgressListe.map((mProgress) => mProgress);
-
-		// mResult.sort((u1, u2) => {
-		// 	if (u1.Name > u2.Name) {
-		// 		return 1;
-		// 	}
-
-		// 	if (u1.Name < u2.Name) {
-		// 		return -1;
-		// 	}
-
-		// 	return 0;
-		// });
-		// return mResult;
 	}
 
 	public ProgressSpeichern(aProgess: Progress) {
@@ -608,6 +557,7 @@ export class DexieSvcService extends Dexie {
 
 	public LadeHantelscheiben(aAfterLoadFn?: AfterLoadFn) {
 		this.table(this.cHantelscheibe)
+			.orderBy(["Durchmesser","Gewicht"])
 			.toArray()
 			.then((mHantelscheibenListe) => {
 				this.HantelscheibenListe = mHantelscheibenListe;
@@ -618,6 +568,7 @@ export class DexieSvcService extends Dexie {
 	public LadeMuskelGruppen(aAfterLoadFn?: AfterLoadFn) {
 		this.MuskelGruppenListe = [];
 		this.table(this.cMuskelGruppe)
+			.orderBy("Name")
 			.toArray()
 			.then((mMuskelgruppenListe) => {
 				this.MuskelGruppenListe = mMuskelgruppenListe;
@@ -628,24 +579,6 @@ export class DexieSvcService extends Dexie {
 
 	public MuskelListeSortedByName(aIgnorGeloeschte: Boolean = true): Array<MuscleGroup> {
 		return this.MuskelGruppenListe;
-		// let mResult: Array<MuscleGroup> = this.MuskelGruppenListe.map((mMuskel) => mMuskel);
-
-		// if (aIgnorGeloeschte) {
-		// 	mResult = mResult.filter((h) => h.Status !== ErstellStatus.Geloescht);
-		// }
-
-		// mResult.sort((u1, u2) => {
-		// 	if (u1.Name > u2.Name) {
-		// 		return 1;
-		// 	}
-
-		// 	if (u1.Name < u2.Name) {
-		// 		return -1;
-		// 	}
-
-		// 	return 0;
-		// });
-		// return mResult;
 	}
 
 	public DeleteMuskelGruppe(aMuskelGruppeID: number) {
@@ -684,7 +617,7 @@ export class DexieSvcService extends Dexie {
 		this.LangHantelListe = [];
 		return this.table(this.cHantel)
 			.where({ Typ: HantelTyp.Barbell })
-			.toArray()
+			.sortBy("Name")
 			.then((mHantelListe) => {
 				this.LangHantelListe = mHantelListe;
 
@@ -917,6 +850,28 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async LadeUpcomingSessions(aProgrammID: number, aSessionParaDB?: SessionParaDB):Promise<Array<Session>>  {
+		return await this.SessionTable
+			.where("[FK_Programm+Kategorie02]")
+			.anyOf([[aProgrammID, SessionStatus.Laueft], [aProgrammID, SessionStatus.Pause], [aProgrammID, SessionStatus.Wartet]])
+			.offset(aSessionParaDB !== undefined && aSessionParaDB.OffSet !== undefined ? aSessionParaDB.OffSet : 0) 
+            .limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : 1000000) 
+			.sortBy("ListenIndex")
+			.then(async (aSessionListe) => {
+				const x = 0;
+				if (aSessionParaDB !== undefined) {
+					if (aSessionParaDB.UebungenBeachten) {
+						for (let index = 0; index < aSessionListe.length; index++) {
+							const mPtrSession = aSessionListe[index];
+							await this.LadeSessionUebungen(mPtrSession.ID, aSessionParaDB.UebungParaDB)
+								.then((aUebungsListe) => mPtrSession.UebungsListe = aUebungsListe);
+						}
+					}//if
+				}//if
+				return aSessionListe;
+			});
+	}
+
+	private async LadeUpcomingSessionsPrim(aProgrammID: number, aSessionParaDB?: SessionParaDB):Promise<Array<Session>>  {
 		return await this.SessionTable
 			.where("[FK_Programm+Kategorie02]")
 			.anyOf([[aProgrammID, SessionStatus.Laueft], [aProgrammID, SessionStatus.Pause], [aProgrammID, SessionStatus.Wartet]])

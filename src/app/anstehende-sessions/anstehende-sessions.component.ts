@@ -1,4 +1,4 @@
-import { DexieSvcService, ProgrammParaDB, SessionParaDB } from './../services/dexie-svc.service';
+import { cSessionSelectLimit, DexieSvcService, ProgrammParaDB, SessionParaDB } from './../services/dexie-svc.service';
 import {  ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
@@ -26,7 +26,7 @@ export class AnstehendeSessionsComponent implements OnInit {
     private LadeSessions  (aOffSet: number = 0) {
         const mSessionParaDB: SessionParaDB = new SessionParaDB();
         mSessionParaDB.OffSet = aOffSet;
-        mSessionParaDB.Limit = 3;
+        mSessionParaDB.Limit = cSessionSelectLimit;
         this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
             .then( (aSessionListe) => {
                 if (aSessionListe.length > 0) {
