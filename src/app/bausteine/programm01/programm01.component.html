@@ -1,7 +1,7 @@
 <!-- "programm" wird in Eltern-Komponente gesetzt. -->
-<div *ngIf="programm" class="accordion" id="accordionProgramme">
+<div  *ngIf="programm" class="mg-lr-30 accordion" id="accordionProgramme">
     <mat-accordion #accordion="matAccordion" multi="true">
-        <mat-expansion-panel #panProgramm='matExpansionPanel'
+        <mat-expansion-panel  #panProgramm='matExpansionPanel'
             (opened) = "panelOpened()">
             <mat-expansion-panel-header (click)="$event.stopPropagation()">
                 <div fxLayout="row wrap" fxLayoutAlign="center center">
