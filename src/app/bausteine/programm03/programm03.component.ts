@@ -1,11 +1,11 @@
-import { DexieSvcService } from './../../services/dexie-svc.service';
+import { cSatzSelectLimit, DexieSvcService, SatzParaDB } from './../../services/dexie-svc.service';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { Uebung  } from './../../../Business/Uebung/Uebung';
 import { GlobalService } from 'src/app/services/global.service';
 import { MatAccordion, MatExpansionPanel } from '@angular/material/expansion';
 import { ISession } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
-import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, Output, EventEmitter  } from "@angular/core";
+import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, Output, EventEmitter, ChangeDetectionStrategy  } from "@angular/core";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { of } from 'rxjs';
@@ -21,6 +21,7 @@ import { Satz } from 'src/Business/Satz/Satz';
     selector: "app-programm03",
     templateUrl: "./programm03.component.html",
     styleUrls: ["./programm03.component.scss"],
+    // changeDetection: ChangeDetectionStrategy.OnPush
 })
     
     
@@ -104,7 +105,7 @@ export class Programm03Component implements OnInit {
         
     }
 
-    toggleUebungen(): void {
+    async toggleUebungen() {
         if (this.isExpanded) {
             this.accUebung.forEach((acc) => acc.closeAll());
             this.isExpanded = false;
@@ -112,17 +113,19 @@ export class Programm03Component implements OnInit {
             this.SessUeb.Expanded = false;
         } else {
             this.accUebung.forEach((acc) => acc.openAll());
-            this.session.UebungsListe.forEach((aUebung) => this.CheckUebungSatzliste(aUebung));
+            for (let index = 0; index < this.session.UebungsListe.length; index++) {
+                await this.CheckUebungSatzliste(this.session.UebungsListe[index]);
+            }
             this.isExpanded = true;
             this.ToggleButtonText = "Close all exercises";
             this.SessUeb.Expanded = true;
         }
     }
 
-    PanelUebungOpened(aUebung: Uebung) {
+    async PanelUebungOpened(aUebung: Uebung) {
         aUebung.Expanded = true;
 
-        this.CheckUebungSatzliste(aUebung);
+        await this.CheckUebungSatzliste(aUebung);
 
         if (this.panUebung === undefined)
             return;
@@ -140,15 +143,28 @@ export class Programm03Component implements OnInit {
         this.accCheckUebungPanels(aUebung);
     }
 
-    private CheckUebungSatzliste(aUebung: Uebung) {
+    private async LadeUebungsSaetze(aUebung: Uebung, aSatzParaDB?: SatzParaDB ) {
+        await this.fDbModule.LadeUebungsSaetze(aUebung.ID, aSatzParaDB)
+            .then( (aSatzliste) => {
+                if (aSatzliste.length > 0) {
+                    aUebung.SatzListe = aSatzliste;
+                    // const mSatzParaDB: SatzParaDB = new SatzParaDB();
+                    // mSatzParaDB.Limit = cSatzSelectLimit;
+                    // mSatzParaDB.OffSet = aUebung.SatzListe.length;
+                    // this.LadeUebungsSaetze(aUebung, mSatzParaDB);
+                }
+            });
+    }
+
+    private async CheckUebungSatzliste(aUebung: Uebung): Promise<any> {
         if (aUebung.SatzListe === undefined || aUebung.SatzListe.length <= 0) {
-            this.fDbModule.LadeUebungsSaetze(aUebung.ID)
-                .then((aSatzliste) => aUebung.SatzListe = aSatzliste);
+            aUebung.SatzListe = [];
+            await this.LadeUebungsSaetze(aUebung);
         }
     }
 
         
-    accCheckUebungPanels(aUebung: Uebung) {
+    async accCheckUebungPanels(aUebung: Uebung) {
         if (!this.panUebung) return;
         
         const mIndex = this.session.UebungsListe.indexOf(aUebung);
@@ -162,7 +178,7 @@ export class Programm03Component implements OnInit {
             const mPanUebungListe = this.panUebung.toArray();
             for (let index = 0; index < mPanUebungListe.length; index++) {
                 const mPtrUebung: Uebung = this.session.UebungsListe[index];
-                this.CheckUebungSatzliste(mPtrUebung);
+                await this.CheckUebungSatzliste(mPtrUebung);
                 mPtrUebung.Expanded = mPanUebungListe[index].expanded;
                 if (mPanUebungListe[index].expanded) {
                     mAllClosed = false;

@@ -129,6 +129,7 @@ export class SessUebungComponent implements OnInit {
         } //switch
         
         this.sessUebung.SatzListe.push(mSatz);
+        this.sessUebung.nummeriereSatzListe(this.sessUebung.SatzListe);
         return mSatz;
     }
 }

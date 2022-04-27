@@ -26,6 +26,8 @@ export const MaxDatum = new Date(8640000000000000);
 export const cSessionSelectLimit = 1;
 export const cUebungSelectLimit = 1;
 export const cSatzSelectLimit = 1;
+//Number.MAX_SAFE_INTEGER
+export const cMaxLimnit = 1000000;
 
 export enum SortOrder {
 	ascending,
@@ -101,7 +103,7 @@ export class ParaDB {
 	And?: AndFn = () => { return true };
 	Then?: ThenFn;
 	OffSet?: number = 0;
-	Limit?: number = 10000000;
+	Limit?: number = cMaxLimnit;
 	SortBy?: string = '';
 	SortOrder?: SortOrder = SortOrder.ascending;
     fProgrammTyp?: ProgrammTyp;
@@ -324,7 +326,7 @@ export class DexieSvcService extends Dexie {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
 		}
 
-		//  Dexie.delete("ConceptCoach");s
+		//   Dexie.delete("ConceptCoach");
 
 		this.version(18).stores({
 			AppData: "++id",
@@ -854,7 +856,7 @@ export class DexieSvcService extends Dexie {
 			.where("[FK_Programm+Kategorie02]")
 			.anyOf([[aProgrammID, SessionStatus.Laueft], [aProgrammID, SessionStatus.Pause], [aProgrammID, SessionStatus.Wartet]])
 			.offset(aSessionParaDB !== undefined && aSessionParaDB.OffSet !== undefined ? aSessionParaDB.OffSet : 0) 
-            .limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : 1000000) 
+            .limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : cMaxLimnit) 
 			.sortBy("ListenIndex")
 			.then(async (aSessionListe) => {
 				const x = 0;
@@ -876,7 +878,7 @@ export class DexieSvcService extends Dexie {
 			.where("[FK_Programm+Kategorie02]")
 			.anyOf([[aProgrammID, SessionStatus.Laueft], [aProgrammID, SessionStatus.Pause], [aProgrammID, SessionStatus.Wartet]])
 			.offset(aSessionParaDB !== undefined && aSessionParaDB.OffSet !== undefined ? aSessionParaDB.OffSet : 0) 
-            .limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : 1000000) 
+            .limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : cMaxLimnit) 
 			.sortBy("ListenIndex")
 			.then(async (aSessionListe) => {
 				const x = 0;
@@ -897,6 +899,8 @@ export class DexieSvcService extends Dexie {
 		return await this.SessionTable
 			.where("FK_Programm")
 			.equals(aProgrammID)
+			.offset(aSessionParaDB !== undefined && aSessionParaDB.OffSet !== undefined ? aSessionParaDB.OffSet : 0) 
+            .limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : cMaxLimnit) 
 			.sortBy("ListenIndex")
 			.then(async (aSessionListe) => {
 				if (aSessionParaDB !== undefined) {
@@ -917,7 +921,7 @@ export class DexieSvcService extends Dexie {
 			.where("Kategorie02")
 			.anyOf([SessionStatus.Fertig, SessionStatus.FertigTimeOut])
 			.offset(aSessionParaDB !== undefined && aSessionParaDB.OffSet !== undefined ? aSessionParaDB.OffSet : 0) 
-            .limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : 1000000) 
+            .limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : cMaxLimnit) 
 			.reverse()
 			.sortBy("Datum")
 			.then((aSessionListe) => { return aSessionListe; });
@@ -929,7 +933,7 @@ export class DexieSvcService extends Dexie {
 			.where(aLadePara === undefined || aLadePara.WhereClause === undefined ? { FK_Programm: 0 } : aLadePara.WhereClause)
 			.and((aLadePara === undefined || aLadePara.And === undefined ? () => { return 1 === 1 } : (session: Session) => aLadePara.And(session)))
 			.filter((aLadePara === undefined || aLadePara.Filter === undefined ? () => { return 1 === 1 } : (session: Session) => aLadePara.Filter(session)))
-			.limit(aLadePara === undefined || aLadePara.Limit === undefined ? Number.MAX_SAFE_INTEGER : aLadePara.Limit)
+			.limit(aLadePara === undefined || aLadePara.Limit === undefined ? cMaxLimnit : aLadePara.Limit)
 			.sortBy(aLadePara === undefined || aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
 			.then(async (aSessions: Array<Session>) => {
 				const mLadePara: ParaDB = new ParaDB();
@@ -971,7 +975,7 @@ export class DexieSvcService extends Dexie {
 			.where("SessionID")
 			.equals(aSessionID)
 			.offset(aUebungParaDB !== undefined && aUebungParaDB.OffSet !== undefined ? aUebungParaDB.OffSet : 0) 
-            .limit(aUebungParaDB !== undefined && aUebungParaDB.Limit !== undefined ? aUebungParaDB.Limit : 1000000) 
+            .limit(aUebungParaDB !== undefined && aUebungParaDB.Limit !== undefined ? aUebungParaDB.Limit : cMaxLimnit) 
 			.toArray()
 			.then(async (aUebungsliste: Array<Uebung>) => {
 				if (aUebungParaDB !== undefined) {
@@ -995,7 +999,7 @@ export class DexieSvcService extends Dexie {
 			.where(aLadePara === undefined || aLadePara.WhereClause === undefined ? { SessionID: aSession.ID } : aLadePara.WhereClause)
 			.and((aLadePara === undefined || aLadePara.And === undefined ? () => { return 1 === 1 } : (aUebung: Uebung) => aLadePara.And(aUebung)))
 			.reverse()
-			.limit(aLadePara === undefined || aLadePara.Limit === undefined ? Number.MAX_SAFE_INTEGER : aLadePara.Limit)
+			.limit(aLadePara === undefined || aLadePara.Limit === undefined ? cMaxLimnit : aLadePara.Limit)
 			.sortBy(aLadePara === undefined || aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
 			.then(async (aUebungen: Array<Uebung>) => {
 				if (aUebungen.length > 0) {
@@ -1028,11 +1032,13 @@ export class DexieSvcService extends Dexie {
 
 	}
 
-	public async LadeUebungsSaetze(aUebungID: number): Promise<Array<Satz>> {
+	public async LadeUebungsSaetze(aUebungID: number, aLadePara?: SatzParaDB): Promise<Array<Satz>> {
 		return await this.SatzTable
 			.where("UebungID")
 			.equals(aUebungID)
-			.toArray()
+			.offset(aLadePara !== undefined && aLadePara.OffSet !== undefined ? aLadePara.OffSet : 0) 
+			.limit(aLadePara === undefined || aLadePara.Limit === undefined ? cMaxLimnit : aLadePara.Limit)
+			.sortBy(aLadePara === undefined || aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
 			.then((aSaetze: Array<Satz>) => {
 				return aSaetze;
 			});
@@ -1044,7 +1050,8 @@ export class DexieSvcService extends Dexie {
 		return this.SatzTable
 			.where(aLadePara === undefined || aLadePara.WhereClause === undefined ? { UebungID: aUebung.ID } : aLadePara.WhereClause)
 			.and((aLadePara === undefined || aLadePara.And === undefined ? () => { return 1 === 1 } : (satz: Satz) => aLadePara.And(satz)))
-			.limit(aLadePara === undefined || aLadePara.Limit === undefined ? Number.MAX_SAFE_INTEGER : aLadePara.Limit)
+			.offset(aLadePara !== undefined && aLadePara.OffSet !== undefined ? aLadePara.OffSet : 0) 
+			.limit(aLadePara === undefined || aLadePara.Limit === undefined ? cMaxLimnit : aLadePara.Limit)
 			.sortBy(aLadePara === undefined || aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
 			.then((aSaetze: Array<Satz>) => {
 				if (aSaetze.length > 0) {
@@ -1136,7 +1143,7 @@ export class DexieSvcService extends Dexie {
 		return await this.ProgrammTable
 			.where(aProgrammPara === undefined || aProgrammPara.WhereClause === undefined ? { id: 0 } : aProgrammPara.WhereClause)
 			.and((aProgrammPara === undefined || aProgrammPara.And === undefined ? () => { return 1 === 1 } : (programm: ITrainingsProgramm) => aProgrammPara.And(programm)))
-			.limit(aProgrammPara === undefined || aProgrammPara.Limit === undefined ? Number.MAX_SAFE_INTEGER : aProgrammPara.Limit)
+			.limit(aProgrammPara === undefined || aProgrammPara.Limit === undefined ? cMaxLimnit : aProgrammPara.Limit)
 			.sortBy(aProgrammPara === undefined || aProgrammPara.SortBy === undefined ? '' : aProgrammPara.SortBy)
 			//		.then((aLadePara === undefined || aLadePara.Then === undefined ? (aProgramme: Array<ITrainingsProgramm>) => { return aProgramme } : (aProgramme: Array<ITrainingsProgramm>) => aLadePara.Then(aProgramme)));
 			.then((aProgrammPara === undefined || aProgrammPara.Then === undefined ? async (aProgramme: Array<ITrainingsProgramm>) => {

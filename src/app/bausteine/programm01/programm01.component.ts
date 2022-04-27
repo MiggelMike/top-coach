@@ -1,4 +1,5 @@
-import { DexieSvcService, ParaDB } from './../../services/dexie-svc.service';
+import { SessionParaDB } from 'src/app/services/dexie-svc.service';
+import { DexieSvcService, ParaDB, cSessionSelectLimit } from './../../services/dexie-svc.service';
 import { GlobalService } from "./../../services/global.service";
 import { Component, OnInit, Input } from "@angular/core";
 import { TrainingsProgramm, ITrainingsProgramm, ProgrammKategorie, ProgrammTyp } from "../../../Business/TrainingsProgramm/TrainingsProgramm";
@@ -43,10 +44,23 @@ export class Programm01Component implements OnInit {
          this.fDialogService.JaNein(mDialogData);
     }
 
+    private LadeSessions(aSessionLadePara?: SessionParaDB) {
+        this.fDbModul.LadeProgrammSessions(this.programm.id, aSessionLadePara)
+            .then((aSessionListe) => {
+                if (aSessionListe.length > 0) {
+                    this.programm.SessionListe = this.programm.SessionListe.concat(aSessionListe);
+                    const mSessionLadePara: SessionParaDB = new SessionParaDB();
+                    mSessionLadePara.Limit = cSessionSelectLimit;
+                    mSessionLadePara.OffSet = aSessionListe.length;
+                    this.LadeSessions(mSessionLadePara);
+                }
+            });
+    }
+
     panelOpened() {
         if ((this.programm.SessionListe === undefined) || (this.programm.SessionListe.length <= 0)) {
-            this.fDbModul.LadeProgrammSessions(this.programm.id)
-                .then((aSessionListe) => this.programm.SessionListe = aSessionListe);
+            this.programm.SessionListe = [];
+            this.LadeSessions();
         }
     }
 

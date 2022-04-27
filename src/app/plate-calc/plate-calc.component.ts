@@ -81,16 +81,25 @@ export class PlateCalcComponent implements OnInit {
     }
   }
 
+  public SetWdhVorgabe(aEvent: any) {
+    this.SetVonWdhVorgabe(aEvent);
+    this.SetWdhAusgefuehrt(aEvent);
+  }
+
   public SetVonWdhVorgabe(aEvent: any) {
     this.Satz.WdhVonVorgabe = Number(aEvent.target.value);
     if (this.Satz.WdhBisVorgabe < this.Satz.WdhVonVorgabe)
-        this.Satz.WdhBisVorgabe = this.Satz.WdhVonVorgabe;
+      this.Satz.WdhBisVorgabe = this.Satz.WdhVonVorgabe;
 }
 
   public SetBisWdhVorgabe(aEvent: any) {
       this.Satz.WdhBisVorgabe = Number(aEvent.target.value);
       if (this.Satz.WdhVonVorgabe > this.Satz.WdhBisVorgabe)
           this.Satz.WdhVonVorgabe = this.Satz.WdhBisVorgabe;
+  }
+
+  public SetWdhAusgefuehrt(aEvent: any) {
+    this.Satz.WdhAusgefuehrt = Number(aEvent.target.value);
   }
 
   public DoHantelAllSets(aChecked: boolean) {
@@ -113,6 +122,7 @@ export class PlateCalcComponent implements OnInit {
         if(this.SetsAreEqual(sz, this.Satz) === false) {
           sz.WdhVonVorgabe = this.Satz.WdhVonVorgabe;
           sz.WdhBisVorgabe = this.Satz.WdhBisVorgabe;
+          sz.WdhAusgefuehrt = this.Satz.WdhVonVorgabe; 
         }
       });
     }

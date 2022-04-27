@@ -99,6 +99,7 @@ export class Programm02Component implements OnInit {
 	
 	panelOpened(aSess: ISession) {
 		if (aSess.UebungsListe === undefined || aSess.UebungsListe.length <= 0) {
+			aSess.UebungsListe = [];
 			const mUebungPara: UebungParaDB = new UebungParaDB();
 			mUebungPara.OffSet = 0;
 			mUebungPara.Limit = cUebungSelectLimit;

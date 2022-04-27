@@ -4,17 +4,19 @@
         <mat-expansion-panel  #panProgramm='matExpansionPanel'
             (opened) = "panelOpened()">
             <mat-expansion-panel-header (click)="$event.stopPropagation()">
-                <div fxLayout="row wrap" fxLayoutAlign="center center">
-                    <div>{{programm.Name}}</div>
-                    <!-- <a [ngClass]="['link-button-font']" mat-flat-button  (click)="togglePanels($event)">Open all</a> -->
+                <div fxLayout="row wrap" fxLayoutGap="2px" fxLayoutAlign="center center">
+
+                    <div fxLayout="column" fxFlex="200px">{{programm.Name}}</div>
                     <!-- Soll ein Work-Out gewaehlt werden? -->
                     <ng-container *ngIf="programmLadeContext; then AuswahlBlock"></ng-container>
 
                     <ng-template #AuswahlBlock>
-                        <div class="ml-5">
-                            <a class="btn btn-link" mat-button (click)="SelectThisWorkoutClick(programm,$event)"><span class="tc-font-size-small">Select</span></a>
+                        <div fxLayout="column" fxFlex="100px">
+                            <a [ngClass]="['link-button-font', 'HG-01']" mat-button (click)="SelectThisWorkoutClick(programm,$event)"><span class="tc-font-size-small">Select</span></a>
+                        </div>
                             <!-- { path: 'programmedit', component: WorkoutFormComponent }, -->
-                            <a  class="btn btn-link" mat-button [routerLink]="['/workoutform']" (click)="EditThisWorkoutClick($event)"><span class="tc-font-size-small">Edit</span></a>
+                        <div fxLayout="column" fxFlex="auto">                            
+                            <a [ngClass]="['link-button-font', 'HG-01']" mat-button [routerLink]="['/workoutform']" (click)="EditThisWorkoutClick($event)"><span class="tc-font-size-small">Edit</span></a>
                         </div>
                      </ng-template>
 

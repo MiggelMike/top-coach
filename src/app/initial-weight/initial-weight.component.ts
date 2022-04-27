@@ -1,3 +1,4 @@
+import { SessionParaDB, UebungParaDB } from './../services/dexie-svc.service';
 import { InitialWeight } from "./../../Business/Uebung/InitialWeight";
 import { TrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit } from "@angular/core";
@@ -19,28 +20,36 @@ export class InitialWeightComponent implements OnInit {
 	InitialWeightList: Array<InitialWeight> = [];
 	public floatMask = floatMask;
 
-	constructor(private router: Router, public fDexieService: DexieSvcService, private location: Location, public fDialogService: DialogeService) {
+	constructor(private router: Router, public fDbModule: DexieSvcService, private location: Location, public fDialogService: DialogeService) {
 		const mNavigation = this.router.getCurrentNavigation();
 		const mState = mNavigation.extras.state as { Program: TrainingsProgramm };
 		this.Program = mState.Program;
 		const mUebungen: Array<Uebung> = [];
-		this.Program.SessionListe.forEach((s) => s.ExtractUebungen(mUebungen));
+		const mSessionLadePara: SessionParaDB = new SessionParaDB();
+		mSessionLadePara.UebungenBeachten = true;
+		mSessionLadePara.UebungParaDB = new UebungParaDB();
+		mSessionLadePara.UebungParaDB.SaetzeBeachten = true;
+		this.fDbModule.LadeProgrammSessions(this.Program.id, mSessionLadePara)
+			.then((aSessionListe) => {
+				this.Program.SessionListe = aSessionListe;
+				this.Program.SessionListe.forEach((s) => s.ExtractUebungen(mUebungen));
+				mUebungen.forEach((u) => {
+					const mInitialWeight = new InitialWeight();
+					mInitialWeight.Name = u.Name;
+					mInitialWeight.UebungID = u.FkUebung;
+					mInitialWeight.Weight = 0;
+					this.InitialWeightList.push(mInitialWeight);
+				});
+		
+				this.InitialWeightList = this.InitialWeightList.sort((a: InitialWeight, b: InitialWeight) => {
+					if (a.Name > b.Name) return 1;
+		
+					if (a.Name < b.Name) return -1;
+		
+					return 0;
+				});
+			});
 
-		mUebungen.forEach((u) => {
-			const mInitialWeight = new InitialWeight();
-			mInitialWeight.Name = u.Name;
-			mInitialWeight.UebungID = u.FkUebung;
-			mInitialWeight.Weight = 0;
-			this.InitialWeightList.push(mInitialWeight);
-		});
-
-		this.InitialWeightList = this.InitialWeightList.sort((a: InitialWeight, b: InitialWeight) => {
-			if (a.Name > b.Name) return 1;
-
-			if (a.Name < b.Name) return -1;
-
-			return 0;
-		});
 	}
 
 	ngOnInit(): void {}
@@ -54,14 +63,14 @@ export class InitialWeightComponent implements OnInit {
 	}
 
 	OkClick() {
-		this.fDexieService.SetAktuellesProgramm(this.Program, this.InitialWeightList).then(() => this.router.navigate(['']));
+		this.fDbModule.SetAktuellesProgramm(this.Program, this.InitialWeightList).then(() => this.router.navigate(['']));
 	}
 
 	CancelClick() {
 		const mDialogData = new DialogData();
 		mDialogData.textZeilen.push("Go ahead without initial weights?");
 		mDialogData.OkFn = (): void => {
-			this.fDexieService.SetAktuellesProgramm(this.Program
+			this.fDbModule.SetAktuellesProgramm(this.Program
 			).then(() => this.router.navigate([''])
 		)};
 		this.fDialogService.JaNein(mDialogData);
