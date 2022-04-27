@@ -6,7 +6,7 @@ import { ISession, Session } from "src/Business/Session/Session";
 import { SessionStatsOverlayComponent } from "./../../session-stats-overlay/session-stats-overlay.component";
 import { SessionOverlayServiceService, SessionOverlayConfig } from "./../../services/session-overlay-service.service";
 import { DialogeService } from "./../../services/dialoge.service";
-import { DexieSvcService, MinDatum, ProgrammParaDB, UebungParaDB } from "./../../services/dexie-svc.service";
+import { cUebungSelectLimit, DexieSvcService, MinDatum, ProgrammParaDB, UebungParaDB } from "./../../services/dexie-svc.service";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { DialogData } from "src/app/dialoge/hinweis/hinweis.component";
@@ -53,14 +53,12 @@ export class SessionFormComponent implements OnInit {
 		this.Session = mState.sess.Copy(true,true);
 
 		
-		if ( (this.Session.ID !== undefined) && ((this.Session.UebungsListe === undefined) || (this.Session.UebungsListe.length <= 0))) {
+		if ((this.Session.ID !== undefined) && ((this.Session.UebungsListe === undefined) || (this.Session.UebungsListe.length <= 0))) {
 			const mUebungParaDB: UebungParaDB = new UebungParaDB();
-			mUebungParaDB.SaetzeBeachten = true;
-			this.fDbModule.LadeSessionUebungen(this.Session.ID,mUebungParaDB).then(
-				(aUebungsListe) => {
-					this.Session.UebungsListe = aUebungsListe;
-				    this.cmpSession = this.Session.Copy(true, true);
-				})
+			mUebungParaDB.Limit = cUebungSelectLimit;
+			mUebungParaDB.OffSet = 0;
+  			mUebungParaDB.SaetzeBeachten = true;
+			this.LadeUebungen(mUebungParaDB);
 		}
 		else this.cmpSession = mState.sess.Copy(true,true);
 
@@ -76,6 +74,21 @@ export class SessionFormComponent implements OnInit {
 		} as SessionOverlayConfig;
 
 		this.doStats();
+	}
+
+	private LadeUebungen(aUebungParaDB: UebungParaDB) {
+		this.fDbModule.LadeSessionUebungen(this.Session.ID, aUebungParaDB).then(
+			(aUebungsListe) => {
+				if (aUebungsListe.length > 0) {
+					this.Session.UebungsListe = this.Session.UebungsListe.concat(aUebungsListe);
+					const mUebungParaDB: UebungParaDB = new UebungParaDB();
+					mUebungParaDB.SaetzeBeachten = aUebungParaDB.SaetzeBeachten;
+					mUebungParaDB.Limit = aUebungParaDB.Limit;
+					mUebungParaDB.OffSet = this.Session.UebungsListe.length;
+					this.LadeUebungen(mUebungParaDB);
+					// 
+				}  else this.cmpSession = this.Session.Copy(true, true);
+			});
 	}
 
 	doStats() {

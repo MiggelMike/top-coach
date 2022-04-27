@@ -33,8 +33,8 @@
                         (opened)="PanelUebungOpened(SessUeb)">
                         <mat-expansion-panel-header>
                             <div fxLayout="row wrap" fxLayoutGap="2px" fxLayout.lt-sm="row wrap" fxFlex="auto">
-                                <div layout-align="start center" fxFlex="0 0 50%">
-                                    <h6 flex>#{{i+1}} {{SessUeb.Name}}</h6>
+                                <div layout-align="start center" fxFlex="0 0 40%">
+                                    <span class="tc-font-size-smaller font-bold">#{{i+1}} {{SessUeb.Name}}</span>
                                 </div>
 
                                 <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button

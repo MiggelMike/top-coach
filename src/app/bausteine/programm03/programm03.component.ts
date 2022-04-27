@@ -85,7 +85,8 @@ export class Programm03Component implements OnInit {
                 this.accUebung.forEach((acc) => acc.closeAll());
                 this.isExpanded = false;
                 this.ToggleButtonText = "Open all exercises";
-                this.SessUeb.Expanded = false;
+                if(this.SessUeb !== undefined)
+                    this.SessUeb.Expanded = false;
             }
         }
     }
@@ -106,7 +107,8 @@ export class Programm03Component implements OnInit {
     }
 
     async toggleUebungen() {
-        if (this.isExpanded) {
+        if (this.isExpanded)
+        {
             this.accUebung.forEach((acc) => acc.closeAll());
             this.isExpanded = false;
             this.ToggleButtonText = "Open all exercises";
@@ -114,18 +116,20 @@ export class Programm03Component implements OnInit {
         } else {
             this.accUebung.forEach((acc) => acc.openAll());
             for (let index = 0; index < this.session.UebungsListe.length; index++) {
-                await this.CheckUebungSatzliste(this.session.UebungsListe[index]);
+                this.CheckUebungSatzliste(this.session.UebungsListe[index]);
             }
             this.isExpanded = true;
             this.ToggleButtonText = "Close all exercises";
-            this.SessUeb.Expanded = true;
+            if(this.SessUeb !== undefined)
+                this.SessUeb.Expanded = true;
         }
     }
 
     async PanelUebungOpened(aUebung: Uebung) {
-        aUebung.Expanded = true;
+        if(aUebung !== undefined)
+            aUebung.Expanded = true;
 
-        await this.CheckUebungSatzliste(aUebung);
+        this.CheckUebungSatzliste(aUebung);
 
         if (this.panUebung === undefined)
             return;
@@ -134,7 +138,8 @@ export class Programm03Component implements OnInit {
     }
 
     PanelUebungClosed(aUebung: Uebung) {
-        aUebung.Expanded = false;
+        if(aUebung !== undefined )
+            aUebung.Expanded = false;
 
         if (this.panUebung === undefined)
             return;
@@ -143,15 +148,19 @@ export class Programm03Component implements OnInit {
         this.accCheckUebungPanels(aUebung);
     }
 
-    private async LadeUebungsSaetze(aUebung: Uebung, aSatzParaDB?: SatzParaDB ) {
+    private async LadeUebungsSaetze(aUebung: Uebung, aSatzParaDB?: SatzParaDB) : Promise<void> {
         await this.fDbModule.LadeUebungsSaetze(aUebung.ID, aSatzParaDB)
-            .then( (aSatzliste) => {
+            .then( async (aSatzliste) => {
                 if (aSatzliste.length > 0) {
-                    aUebung.SatzListe = aSatzliste;
-                    // const mSatzParaDB: SatzParaDB = new SatzParaDB();
-                    // mSatzParaDB.Limit = cSatzSelectLimit;
-                    // mSatzParaDB.OffSet = aUebung.SatzListe.length;
-                    // this.LadeUebungsSaetze(aUebung, mSatzParaDB);
+                    // aUebung.SatzListe = aSatzliste;
+                    aSatzliste.forEach((aSatz) => {
+                        if (aUebung.SatzListe.find((aCmpSatz) => aSatz.ID === aCmpSatz.ID) === undefined)
+                            aUebung.SatzListe.push(aSatz);
+                    });
+                    const mSatzParaDB: SatzParaDB = new SatzParaDB();
+                    mSatzParaDB.Limit = cSatzSelectLimit;
+                    mSatzParaDB.OffSet = aUebung.SatzListe.length;
+                    await this.LadeUebungsSaetze(aUebung, mSatzParaDB);
                 }
             });
     }
@@ -159,7 +168,10 @@ export class Programm03Component implements OnInit {
     private async CheckUebungSatzliste(aUebung: Uebung): Promise<any> {
         if (aUebung.SatzListe === undefined || aUebung.SatzListe.length <= 0) {
             aUebung.SatzListe = [];
-            await this.LadeUebungsSaetze(aUebung);
+            const mSatzParaDB: SatzParaDB = new SatzParaDB();
+            mSatzParaDB.Limit = cSatzSelectLimit;
+            mSatzParaDB.OffSet = 0;            
+            await this.LadeUebungsSaetze(aUebung, mSatzParaDB);
         }
     }
 
@@ -178,11 +190,12 @@ export class Programm03Component implements OnInit {
             const mPanUebungListe = this.panUebung.toArray();
             for (let index = 0; index < mPanUebungListe.length; index++) {
                 const mPtrUebung: Uebung = this.session.UebungsListe[index];
-                await this.CheckUebungSatzliste(mPtrUebung);
+                this.CheckUebungSatzliste(mPtrUebung);
                 mPtrUebung.Expanded = mPanUebungListe[index].expanded;
                 if (mPanUebungListe[index].expanded) {
                     mAllClosed = false;
                 }
+                
             }
         }
 
