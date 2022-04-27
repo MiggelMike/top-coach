@@ -101,7 +101,7 @@ export class Programm02Component implements OnInit {
 		if (aSess.UebungsListe === undefined || aSess.UebungsListe.length <= 0) {
 			const mUebungPara: UebungParaDB = new UebungParaDB();
 			mUebungPara.OffSet = 0;
-			mUebungPara.Limit = 5;
+			mUebungPara.Limit = 1;
 			this.LadeUebungen(aSess,mUebungPara);
 		}
 	}
@@ -325,6 +325,20 @@ export class Programm02Component implements OnInit {
 		this.startSessionPrim(aSession);
 		this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
 	}
+
+	public resetSession(aEvent: Event,aSession: ISession, aRowNum: number) {
+		aEvent.stopPropagation();
+		const mDialogData = new DialogData();
+		mDialogData.textZeilen.push(`All sets will be reset as well!`);
+		mDialogData.textZeilen.push(`Reset session "${aSession.Name}"?`);
+		mDialogData.OkFn = () => {
+			aSession.Reset();
+			this.fDbModule.SessionSpeichern(aSession as Session);
+		}
+		this.fDialogService.JaNein(mDialogData);
+
+	}
+
 
 	public SaveChanges():void {
 		//this.ClickData.programm.SessionListe;// = this.SessionListe;

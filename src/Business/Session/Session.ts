@@ -24,8 +24,9 @@ export interface ISession extends ISessionDB {
     AlleUebungenDerAktuellenProgressGruppe(aUebung: Uebung, aProgessID?: number): Array<Uebung>;
     AlleUebungenDerAltenProgressGruppe(aUebung: Uebung, aProgessID?: number): Array<Uebung>;
     SetNextWeight(aWp: WeightProgress, aUebung: Uebung);
-    isEqual(aOtherSession: Session): boolean
-    SucheSatz(aSatz: Satz):Satz
+    isEqual(aOtherSession: Session): boolean;
+    SucheSatz(aSatz: Satz): Satz;
+    Reset();
 
 }
 
@@ -35,6 +36,10 @@ export class Session extends SessionDB implements ISession {
         for (let index = 0; index < aUebungsListe.length; index++)
             aUebungsListe[index].ListenIndex = index;
     }
+
+    public Reset() {
+        this.init(false);
+    };
 
     public SucheSatz(aSatz: Satz): Satz {
         let mResult: Satz;
@@ -72,8 +77,9 @@ export class Session extends SessionDB implements ISession {
         return undefined;
     }
 
-    public init(): void {
-        this.ID = undefined;
+    public init(aResetID: boolean = true): void {
+        if(aResetID === true)
+            this.ID = undefined;
         this.PausenListe = [];
         this.Kategorie02 = SessionStatus.Wartet;
         this.DauerInSek = 0;
@@ -83,6 +89,7 @@ export class Session extends SessionDB implements ISession {
             mPtrUebung.SatzListe.forEach(s => {
                 s.GewichtAusgefuehrt = 0;
                 s.WdhAusgefuehrt = 0;
+                s.Status = SatzStatus.Wartet;
             });
         }
     }

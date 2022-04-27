@@ -24,15 +24,15 @@
     <div cdkDropList  (cdkDropListDropped)="drop($event)">
         <ng-container *ngFor="let SessUeb of UebungsListe, index as i; let isOdd=odd">
             <!-- <ng-container [SessUeb]="SessUeb"></ng-container> -->
-            <div class="mg-top-5"  cdkDrag [cdkDragDisabled]="programmTyp === 'history'">
-                <mat-accordion #accUebung='matAccordion' multi="true">
+            <div class="mg-lr-30" layout-align="center center" cdkDrag [cdkDragDisabled]="programmTyp === 'history'">
+                <mat-accordion  #accUebung='matAccordion' multi="true">
                     <mat-expansion-panel 
                         #panUebung='matExpansionPanel' 
                         [expanded]="SessUeb.Expanded && SessUeb.SatzListe.length > 0"
                         (closed)="PanelUebungClosed(SessUeb)" 
                         (opened)="PanelUebungOpened(SessUeb)">
                         <mat-expansion-panel-header>
-                            <div fxLayout="row wrap" fxLayoutGap="2px" fxLayout.lt-sm="row wrap" fxFlex="100%">
+                            <div fxLayout="row wrap" fxLayoutGap="2px" fxLayout.lt-sm="row wrap" fxFlex="auto">
                                 <div layout-align="start center" fxFlex="0 0 50%">
                                     <h6 flex>#{{i+1}} {{SessUeb.Name}}</h6>
                                 </div>
@@ -53,7 +53,7 @@
                         </mat-expansion-panel-header>
 
                         <div class="card-body">
-                            <div fxLayout="column" fxLayoutGap="2px" fxFlex="100%">
+                            <div fxLayout="column" fxLayoutGap="2px" fxFlex="auto">
                                 <ng-container *ngIf="SessUeb.AufwaermSatzListe && SessUeb.WarmUpVisible">
                                     <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Warm up sets'"
                                         [satzListe]="SessUeb.AufwaermSatzListe" 

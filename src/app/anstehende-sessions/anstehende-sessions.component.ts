@@ -23,10 +23,10 @@ export class AnstehendeSessionsComponent implements OnInit {
         this.AnstehendeSessionObserver = of(this.fDbModule.AktuellesProgramm);
     }
 
-    private LadeSessions  (aOffSet: number) {
+    private LadeSessions  (aOffSet: number = 0) {
         const mSessionParaDB: SessionParaDB = new SessionParaDB();
         mSessionParaDB.OffSet = aOffSet;
-        mSessionParaDB.Limit = 5;
+        mSessionParaDB.Limit = 3;
         this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
             .then( (aSessionListe) => {
                 if (aSessionListe.length > 0) {
@@ -42,7 +42,7 @@ export class AnstehendeSessionsComponent implements OnInit {
             .then( async (aProgramme) => {
                 this.Programm = aProgramme;
                 this.Programm.SessionListe = [];
-                this.LadeSessions(0);
+                this.LadeSessions();
             });
     }
 

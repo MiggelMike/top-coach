@@ -118,18 +118,27 @@ export class ParaDB {
 	ExtraFn?: ExtraFn;
 }    
 
-export class UebungParaDB extends ParaDB {
+export class SatzParaDB extends ParaDB {
 	SaetzeBeachten?: boolean;
+	SatzListe?: Array<Satz>;
+}
+
+export class UebungParaDB extends ParaDB {
+	SatzParaDB?: SatzParaDB;
+	SaetzeBeachten?: boolean;
+	UebungsListe?: Array<Uebung>;
 }
 
 export class SessionParaDB extends ParaDB {
 	UebungParaDB?: UebungParaDB;
 	UebungenBeachten?: boolean;
+	SessionListe?: Array<Session>;
 }
 
 export class ProgrammParaDB extends ParaDB {
 	SessionParaDB?: SessionParaDB;
 	SessionBeachten?: boolean;
+	ProgrammListe?: Array<TrainingsProgramm>;
 }
 
 

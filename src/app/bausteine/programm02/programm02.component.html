@@ -6,14 +6,14 @@
 
     <div cdkDropList (cdkDropListDropped)="drop($event)">
         <div *ngFor="let sess of SortedSessionListe, index as i" cdkDrag [cdkDragDisabled]="programmTyp === 'history' ">
-            <div fxLayoutGap="10px">
+            <div fxLayoutGap="10px" >
                 <mat-accordion #accSession="matAccordion" multi="true">
                     <mat-expansion-panel 
                         (opened) = "panelOpened(sess)"
                         #panSession='matExpansionPanel' 
                         class="HG-01">
                         <mat-expansion-panel-header>
-                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start center">
+                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="flex-start center">
                                 <mat-form-field class="align-left" fxFlex="auto">
                                     <input matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
                                 </mat-form-field>
@@ -25,11 +25,18 @@
                                 </ng-container>
 
                                 <ng-container *ngIf='StartButtonVisible'>
-                                    <div class="center-item" layout-align="center center" fxFlex="0 0 auto">
-                                        <a [ngClass]="['ml-5', 'link-button-font', 'HG-01']" 
+                                    <div class="center-item" layout-align="center center" fxFlex="auto">
+                                        <a [ngClass]="['ml-5','link-button-font', 'HG-01']" 
                                            mat-flat-button
                                             (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
                                     </div>
+<!-- 
+                                    <div class="center-item" layout-align="center center" fxFlex="auto">
+                                        <a [ngClass]="['ml-5', 'link-button-font', 'HG-01']" 
+                                           mat-flat-button
+                                            (click)="resetSession($event, sess, i+1)">Reset Session</a>
+                                    </div> -->
+
 
                                     <ng-container *ngIf="sess.IstAusVorgabe === false && programmTyp !== 'history'">
                                         <div class="center-item" layout-align="center center" fxFlex="0 0 auto">
