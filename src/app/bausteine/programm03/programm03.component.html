@@ -54,8 +54,11 @@
 
                         <div class="card-body">
                             <div fxLayout="column" fxLayoutGap="2px" fxFlex="auto">
-                                <ng-container *ngIf="SessUeb.AufwaermSatzListe && SessUeb.WarmUpVisible">
-                                    <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Warm up sets'"
+                                <ng-container *ngIf="SessUeb.WarmUpVisible === true">
+                                    <app-sess-uebung 
+                                        [panUebung1]="panUebung"
+                                        [rowNum]="i" 
+                                        [satzTypText]="'Warm up sets'"
                                         [satzListe]="SessUeb.AufwaermSatzListe" 
                                         [session]="session"
                                         [DeletedSatzList]="DeletedSatzList"
@@ -67,7 +70,10 @@
                                 </ng-container>
 
                                 <ng-container *ngIf="SessUeb.ArbeitsSatzListe">
-                                    <app-sess-uebung [panUebung1]=panUebung [rowNum]="i" [satzTypText]="'Work sets'"
+                                    <app-sess-uebung 
+                                        [panUebung1]="panUebung" 
+                                        [rowNum]="i" 
+                                        [satzTypText]="'Work sets'"
                                         [satzListe]="SessUeb.ArbeitsSatzListe" 
                                         [session]="session"
                                         [programm]="programm"
@@ -78,16 +84,18 @@
                                     </app-sess-uebung>
                                 </ng-container>
 
-                                <ng-container *ngIf="SessUeb.AbwaermSatzListe  && SessUeb.CooldownVisible">
-                                    <app-sess-uebung [panUebung1]=panUebung [rowNum]="i"
+                                <ng-container *ngIf="SessUeb.CooldownVisible === true">
+                                    <app-sess-uebung 
+                                        [panUebung1]="panUebung"
+                                        [rowNum]="i"
                                         [satzTypText]="'Cool down sets'"
                                         [satzListe]="SessUeb.AbwaermSatzListe"
                                         [programm]="programm"
                                         [DeletedSatzList]="DeletedSatzList"
                                         [session]="session" 
                                         [programmTyp]="programmTyp"
-                                        [sessUebung]="SessUeb" [
-                                        bearbeitbar]="bearbeitbar">
+                                        [sessUebung]="SessUeb" 
+                                        [bearbeitbar]="bearbeitbar">
                                     </app-sess-uebung>
                                 </ng-container>
 

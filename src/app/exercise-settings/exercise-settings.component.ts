@@ -40,17 +40,17 @@ export class ExerciseSettingsComponent {
 		public overlayRef: ExerciseOverlayRef,
 		public fDbModule: DexieSvcService,
 		@Inject(cExerciseOverlayData)
-		public aExerciseOverlayConfig:ExerciseOverlayConfig
+		public fExerciseOverlayConfig:ExerciseOverlayConfig
 	) {
 		const mProgressPara: ProgressPara = new ProgressPara();
 		mProgressPara.AfterLoadFn = (aProgressPara: ProgressPara ) => (this.ProgressListe = aProgressPara.ProgressListe);
 		// mProgressPara.ProgressListe = this.ProgressListe;
 		this.fDbModule.LadeProgress(mProgressPara);
 		this.ProgressGroupListe = ProgressGroup;
-		this.SessUeb = aExerciseOverlayConfig.uebung;
-		this.Session = aExerciseOverlayConfig.session;
-		this.Programm = aExerciseOverlayConfig.programm;
-		this.fConfig = aExerciseOverlayConfig;
+		this.SessUeb = fExerciseOverlayConfig.uebung;
+		this.Session = fExerciseOverlayConfig.session;
+		this.Programm = fExerciseOverlayConfig.programm;
+		this.fConfig = fExerciseOverlayConfig;
 	}
 
 	SetProgressGroup(aEvent:any) {

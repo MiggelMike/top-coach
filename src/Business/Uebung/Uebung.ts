@@ -469,7 +469,7 @@ export class Uebung implements IUebung {
     }
 
     public get AufwaermSatzListe(): Array<Satz> {
-        const mResult = new Array<Satz>();
+        const mResult = [];
         if (!this.SatzListe) return mResult;
 
         this.SatzListe.forEach((mSatz) => {
@@ -493,7 +493,7 @@ export class Uebung implements IUebung {
     }
 
     public get AbwaermSatzListe(): Array<Satz> {
-        const mResult = new Array<Satz>();
+        const mResult = [];
         if (!this.SatzListe) return mResult;
 
         this.SatzListe.forEach((mSatz) => {

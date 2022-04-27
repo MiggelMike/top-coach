@@ -9,7 +9,8 @@
                 <div class="align-left mg-top-5" fxLayout="column" fxLayoutGap="5px" style="overflow-y: hidden;">
                     <div fxLayout="row wrap" fxFlex="100%">
                         <div layout-align="start" layout-margin>
-                            <mat-checkbox [(ngModel)]="SessUeb.WarmUpVisible"
+                            <mat-checkbox
+                             [(ngModel)]="SessUeb.WarmUpVisible"
                              (click)="$event.stopPropagation()"
                              (change)="SetWarmupVisible($event)">Show Warmup
                             </mat-checkbox>
@@ -20,8 +21,8 @@
                         <div layout-align="start" layout-margin>
                             <mat-checkbox 
                                 [(ngModel)]="SessUeb.CooldownVisible" 
-                                (change)="SetCooldownVisible($event)"
-                                (click)="$event.stopPropagation()">Show Cooldown
+                                (click)="$event.stopPropagation()"
+                                (change)="SetCooldownVisible($event)">Show Cooldown
                             </mat-checkbox>
                         </div>
                     </div>
