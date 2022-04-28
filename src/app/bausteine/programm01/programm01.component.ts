@@ -58,7 +58,7 @@ export class Programm01Component implements OnInit {
     }
 
     panelOpened() {
-        this.CheckSessions();
+        this.fDbModul.CheckSessions(this.programm);
     }
     
     SelectThisWorkoutClick(aSelectedProgram: ITrainingsProgramm, $event: any): void {
@@ -81,19 +81,7 @@ export class Programm01Component implements OnInit {
                 }
             });
         }
-
    
-    private CheckSessions(aPromiseFn?: PromiseFn) {
-        if ((this.programm.SessionListe === undefined) || (this.programm.SessionListe.length <= 0)) {
-            this.programm.SessionListe = [];
-            this.LadeSessions()
-                .then(() => {
-                    if (aPromiseFn !== undefined)
-                        aPromiseFn();
-                });
-        }
-        
-    }
 
     EditThisWorkoutClick($event): void {
         $event.stopPropagation();

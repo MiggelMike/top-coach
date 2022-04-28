@@ -1,6 +1,6 @@
 import { DexieSvcService, SessionParaDB } from 'src/app/services/dexie-svc.service';
 import { Component, OnInit } from '@angular/core';
-import { Session } from 'src/Business/Session/Session';
+import { ISession } from 'src/Business/Session/Session';
 
 
 @Component({
@@ -9,7 +9,7 @@ import { Session } from 'src/Business/Session/Session';
 	styleUrls: ['./history.component.scss'],
 })
 export class HistoryComponent implements OnInit {
-	SessionListe: Array<Session> = [];
+	SessionListe: Array<ISession> = [];
 
 	constructor(private fDbModul: DexieSvcService) {
 	}

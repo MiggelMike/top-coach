@@ -1,3 +1,4 @@
+import { ISession } from 'src/Business/Session/Session';
 import { SessionParaDB, UebungParaDB } from './../services/dexie-svc.service';
 import { InitialWeight } from "./../../Business/Uebung/InitialWeight";
 import { TrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";

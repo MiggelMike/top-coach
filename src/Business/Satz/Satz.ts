@@ -186,10 +186,15 @@ export class Satz implements ISatz {
     //#region BodyWeight
     private fBodyWeight: number = 0;
     get BodyWeight(): number {
+        if (Number.isNaN(this.fBodyWeight) === true)
+            this.fBodyWeight = 0;
         return Number(this.fBodyWeight);
     }
-    set BodyWeight( aValue: number) {
-        this.fBodyWeight = Number(aValue);
+    set BodyWeight(aValue: number) {
+        if (Number.isNaN(aValue) === true)
+            this.fBodyWeight = 0;
+        else
+            this.fBodyWeight = Number(aValue);
     }
     //#endregion
 

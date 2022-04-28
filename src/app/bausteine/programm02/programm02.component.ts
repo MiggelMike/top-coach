@@ -1,9 +1,9 @@
-import { ISession } from "src/Business/Session/Session";
+import { ISession, SessionCopyPara } from "src/Business/Session/Session";
 import { ISessionDB, SessionDB } from "./../../../Business/SessionDB";
 import { SessionStatus } from "../../../Business/SessionDB";
 import { UebungWaehlenData } from "./../../uebung-waehlen/uebung-waehlen.component";
 import { UebungsKategorie02 } from "./../../../Business/Uebung/Uebung";
-import { cUebungSelectLimit, DexieSvcService, onDeleteFn, ProgrammParaDB, UebungParaDB } from "./../../services/dexie-svc.service";
+import { cUebungSelectLimit, DexieSvcService, onDeleteFn, ProgrammParaDB, SessionParaDB, UebungParaDB } from "./../../services/dexie-svc.service";
 import { Session } from "./../../../Business/Session/Session";
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Output, EventEmitter, Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";
@@ -295,7 +295,12 @@ export class Programm02Component implements OnInit {
 			return;
 		}
 
-		const mSession: ISessionDB = this.fGlobalService.SessionKopie.Copy();
+		const mSessionCopyPara = new SessionCopyPara();
+		mSessionCopyPara.Komplett = true;
+		mSessionCopyPara.CopySessionID = false;
+		mSessionCopyPara.CopyUebungID = false;
+		mSessionCopyPara.CopySatzID = false;
+		const mSession: ISessionDB = this.fGlobalService.SessionKopie.Copy(mSessionCopyPara);
 		//mSession.FK_Programm = this.programmID;
 		this.SessionListe.push(mSession as Session);
 	}
@@ -304,27 +309,32 @@ export class Programm02Component implements OnInit {
 
 		// if (aSession.Kategorie02 === SessionStatus.Fertig || aSession.Kategorie02 === SessionStatus.FertigTimeOut) return;
 
-		switch (aSession.Kategorie02) {
-			case SessionStatus.Wartet:
-				aSession.GestartedWann = new Date();
-				aSession.Kategorie02 = SessionStatus.Laueft;
-				aSession.Datum = new Date();
-				break;
-
-			case SessionStatus.Pause:
-				aSession.StarteDauerTimer();
-				break;
-		}
-
-		this.router.navigate(["sessionFormComponent"], { state: {  programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
+		
+		const mSessionParaDB: SessionParaDB = new SessionParaDB();
+		mSessionParaDB.UebungenBeachten = true;
+		mSessionParaDB.UebungParaDB = new UebungParaDB();
+		mSessionParaDB.UebungParaDB.SaetzeBeachten = true;
+		this.fDbModule.LadeEineSession(aSession.ID, mSessionParaDB)
+		.then((aLoadedSession) => {
+				switch (aLoadedSession.Kategorie02) {
+					case SessionStatus.Wartet:
+						aLoadedSession.GestartedWann = new Date();
+						aLoadedSession.Kategorie02 = SessionStatus.Laueft;
+						aLoadedSession.Datum = new Date();
+						break;
+		
+					case SessionStatus.Pause:
+						aLoadedSession.StarteDauerTimer();
+						break;
+				}
+				this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aLoadedSession, programmTyp: this.programmTyp } });
+			});
 	}
 
 
 	public startSession(aEvent: Event, aSession: ISession) {
 		aEvent.stopPropagation();
-
 		this.startSessionPrim(aSession);
-		this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
 	}
 
 	public resetSession(aEvent: Event,aSession: ISession, aRowNum: number) {

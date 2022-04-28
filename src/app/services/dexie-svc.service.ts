@@ -1,3 +1,4 @@
+import { SessionCopyPara } from './../../Business/Session/Session';
 import { HypertrophicProgramm } from '../../Business/TrainingsProgramm/Hypertrophic';
 import { WdhVorgabeStatus } from './../../Business/Uebung/Uebung';
 import { InitialWeight } from './../../Business/Uebung/InitialWeight';
@@ -17,8 +18,6 @@ import { Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardUebung, ArbeitsSaetzeStatus } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
-import { is } from '@angular-package/type';
-import { retry } from 'rxjs';
 var cloneDeep = require('lodash.clonedeep');
 
 export const MinDatum = new Date(-8640000000000000);
@@ -200,7 +199,7 @@ export class DexieSvcService extends Dexie {
 				this.AktuellesProgramm.SessionListe.filter(
 					(s) => (s.Kategorie02 !== SessionStatus.Fertig && s.Kategorie02 !== SessionStatus.FertigTimeOut)
 				);
-			return this.SortSessionByListenIndex(this.AktuellesProgramm.SessionListe as Array<Session>);
+			return this.SortSessionByListenIndex(this.AktuellesProgramm.SessionListe as Array<ISession>);
 		}
 		return undefined;
 	}
@@ -282,7 +281,13 @@ export class DexieSvcService extends Dexie {
 				mProgramm.SessionListe = [];
 				for (let index = 0; index < aSelectedProgram.SessionListe.length; index++) {
 					const mPrtSession = aSelectedProgram.SessionListe[index];
-					const mNeueSession = mPrtSession.Copy(true);
+
+					const mSessionCopyPara = new SessionCopyPara();
+					mSessionCopyPara.Komplett = true;
+					mSessionCopyPara.CopySessionID = true;
+					mSessionCopyPara.CopyUebungID = false;
+					mSessionCopyPara.CopySatzID = false;
+					const mNeueSession = mPrtSession.Copy(mSessionCopyPara);
 					mNeueSession.ListenIndex = index;
 					mNeueSession.FK_VorlageProgramm = aSelectedProgram.id;
 
@@ -832,7 +837,7 @@ export class DexieSvcService extends Dexie {
 				};
 
 				await this.LadeProgrammSessionsEx(mSessionPara)
-					.then((aSessionListe: Array<Session>) => mPtrProgramm.SessionListe = aSessionListe);
+					.then((aSessionListe: Array<Session>) => mPtrProgramm.SessionListe = aSessionListe)
 			}
 
 			if (mProgrammParaDB.OnProgrammAfterLoadFn !== undefined) mProgrammParaDB.OnProgrammAfterLoadFn(aProgramme);
@@ -925,6 +930,30 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
+	public async LadeEineSession(aSessionID: number, aSessionParaDB?: SessionParaDB): Promise<Session> {
+		return await this.SessionTable
+			.where("ID")
+			.equals(aSessionID)
+			.offset(aSessionParaDB !== undefined && aSessionParaDB.OffSet !== undefined ? aSessionParaDB.OffSet : 0) 
+			.limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : cMaxLimnit)
+			.toArray()
+			.then(async (aSessionListe) => {
+				if (aSessionParaDB !== undefined) {
+					if (aSessionParaDB.UebungenBeachten) {
+						for (let index = 0; index < aSessionListe.length; index++) {
+							const mPtrSession = aSessionListe[index];
+							await this.LadeSessionUebungen(mPtrSession.ID, aSessionParaDB.UebungParaDB)
+								.then((aUebungsListe) => mPtrSession.UebungsListe = aUebungsListe);
+						}
+					}//if
+				}//if
+				if (aSessionListe.length > 0)
+					return aSessionListe[0];
+				else
+					return undefined;
+			});
+	}
+
 	public async LadeProgrammSessions(aProgrammID: number, aSessionParaDB?: SessionParaDB): Promise<Array<Session>> {
 		return await this.SessionTable
 			.where("FK_Programm")
@@ -988,7 +1017,7 @@ export class DexieSvcService extends Dexie {
 						await this.UebungSpeichern(aLadePara.Data.Uebung);
 
 					};//mLadePara.ExtraFn
-					await this.LadeSessionUebungenEx(mPtrSession, mLadePara);
+					await this.LadeSessionUebungenEx(mPtrSession, aLadePara.UebungParaDB);
 				}
 
 				if (aLadePara !== undefined) {
@@ -1013,7 +1042,9 @@ export class DexieSvcService extends Dexie {
 						for (let index = 0; index < aUebungsliste.length; index++) {
 							const mPtrUebung = aUebungsliste[index];
 							await this.LadeUebungsSaetze(mPtrUebung.ID)
-								.then((aSatzListe) => mPtrUebung.SatzListe = aSatzListe);
+								.then((aSatzListe) => {
+									mPtrUebung.SatzListe = aSatzListe;
+								});
 						}
 					}//if
 				}//if
@@ -1292,9 +1323,9 @@ export class DexieSvcService extends Dexie {
 							if (   aProgrammExtraParaDB !== undefined
 								&& aProgrammExtraParaDB.SessionParaDB !== undefined
 							)
-								await this.SessionSpeichern(mPtrSession as Session, aProgrammExtraParaDB.SessionParaDB);
+								await this.SessionSpeichern(mPtrSession, aProgrammExtraParaDB.SessionParaDB);
 							else
-								await this.SessionSpeichern(mPtrSession as Session);
+								await this.SessionSpeichern(mPtrSession);
 						}
 						aTrainingsProgramm.SessionListe = mSessionListe;
 					}
@@ -1450,7 +1481,10 @@ export class DexieSvcService extends Dexie {
 		if (aSession.Kategorie02 === SessionStatus.Fertig || aSession.Kategorie02 === SessionStatus.Loeschen) {
 			await this.SessionSpeichern(aSession);
 
-			const mNeueSession: Session = aSession.Copy(true);
+			const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+			mSessionCopyPara.CopySatzID = false;
+			mSessionCopyPara.CopyUebungID = false;
+			const mNeueSession: Session = aSession.Copy(mSessionCopyPara);
 			mNeueSession.init();
 			this.InitSessionSaetze(aSession, mNeueSession);
 			mNeueSession.FK_Programm = aSession.FK_Programm;
@@ -1498,7 +1532,7 @@ export class DexieSvcService extends Dexie {
 			mAkuelleSessionListe.push(mNeueSession);
 			
 			for (let index = 0; index < mAkuelleSessionListe.length; index++) {
-				let mPtrSession: Session = mAkuelleSessionListe[index] as Session;
+				let mPtrSession: ISession = mAkuelleSessionListe[index];
 				mPtrSession.ListenIndex = index;
 				await this.SessionSpeichern(mPtrSession);
 			}

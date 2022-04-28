@@ -2,7 +2,7 @@ import { ParaDB, MinDatum, SortOrder } from './../../app/services/dexie-svc.serv
 import { GewichtDiff } from './../Satz/Satz';
 import { AfterLoadFn, DexieSvcService  } from 'src/app/services/dexie-svc.service';
 import { ITrainingsProgramm, TrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
-import { ISession, Session } from './../Session/Session';
+import { ISession, Session, SessionCopyPara } from './../Session/Session';
 import { SessionStatus } from 'src/Business/SessionDB';
 import { ArbeitsSaetzeStatus, Uebung, WdhVorgabeStatus } from "../Uebung/Uebung";
 import { Satz, SatzStatus } from '../Satz/Satz';
@@ -293,7 +293,13 @@ export class Progress implements IProgress {
 			mLadePara.SortBy = "FailDate";
 
 			// Warten, bis Übungen geladen sind.
-			mUebungsliste = await aDb.LadeSessionUebungenEx(aSession.Copy(true), mLadePara);
+
+			const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+			mSessionCopyPara.Komplett = true;
+			mSessionCopyPara.CopySessionID = false;
+			mSessionCopyPara.CopyUebungID = false;
+			mSessionCopyPara.CopySatzID = false;
+			mUebungsliste = await aDb.LadeSessionUebungenEx(aSession.Copy(mSessionCopyPara), mLadePara);
 			
 			// if (mParaUebungFailed === true) {
 			// 	aSessUebung.FailDate = new Date();
