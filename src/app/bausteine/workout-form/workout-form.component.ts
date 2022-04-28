@@ -1,5 +1,5 @@
+import { DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { Router } from '@angular/router';
-import { GlobalService } from "src/app/services/global.service";
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit } from "@angular/core";
 import { DialogeService } from 'src/app/services/dialoge.service';
@@ -16,22 +16,22 @@ export class WorkoutFormComponent implements OnInit  {
     public cmpProgramm: ITrainingsProgramm;
 
     constructor(
-        private fGlobalService: GlobalService,
         private router: Router,
         private fDialogService: DialogeService,
+        private fDbModule: DexieSvcService
     ) {
-        pogramm muss übergeben werden
+        const mNavigation = this.router.getCurrentNavigation();
+        const mState = mNavigation.extras.state as { programm: ITrainingsProgramm };
+        this.programm = mState.programm;
+        this.fDbModule.CheckSessions(this.programm);
+        this.cmpProgramm = mState.programm.Copy();
     }
 
     CopyProgramm(aProgramm: ITrainingsProgramm) {
         this.cmpProgramm = aProgramm.Copy();    
     }
 
-    ngOnInit() {
-        this.programm = this.fGlobalService.EditWorkout;
-        if(this.fGlobalService.EditWorkout)
-            this.cmpProgramm = this.fGlobalService.EditWorkout.Copy();
-    }
+    ngOnInit() {}
 
     CancelChanges(aPara: WorkoutFormComponent, aNavRoute: string) {
         const mDialogData = new DialogData();

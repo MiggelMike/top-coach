@@ -82,6 +82,7 @@ export class Programm01Component implements OnInit {
             });
         }
 
+   
     private CheckSessions(aPromiseFn?: PromiseFn) {
         if ((this.programm.SessionListe === undefined) || (this.programm.SessionListe.length <= 0)) {
             this.programm.SessionListe = [];
@@ -96,12 +97,6 @@ export class Programm01Component implements OnInit {
 
     EditThisWorkoutClick($event): void {
         $event.stopPropagation();
-        this.CheckSessions(() => {
-            this.fGlobalService.EditWorkout = this.programm;
-            if (this.fGlobalService.EditWorkout.SessionListe)
-                this.fGlobalService.EditWorkout.SessionListe.forEach(
-                    (sess) => (sess.Kategorie01 = SessionStatus.Bearbeitbar)
-                );
-        });
+        this.router.navigate(["/workoutform"], { state: { programm: this.programm } });
     }
 }

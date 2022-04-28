@@ -23,9 +23,9 @@ var cloneDeep = require('lodash.clonedeep');
 
 export const MinDatum = new Date(-8640000000000000);
 export const MaxDatum = new Date(8640000000000000);
-export const cSessionSelectLimit = 1;
-export const cUebungSelectLimit = 1;
-export const cSatzSelectLimit = 1;
+export const cSessionSelectLimit = 3;
+export const cUebungSelectLimit = 3;
+export const cSatzSelectLimit = 3;
 //Number.MAX_SAFE_INTEGER
 export const cMaxLimnit = 1000000;
 
@@ -238,6 +238,31 @@ export class DexieSvcService extends Dexie {
 	public DeleteSatz(aSatz: Satz) {
 		this.SatzTable.delete(aSatz.ID);
 	}
+
+    private LadeSessions(aProgramm: ITrainingsProgramm, aSessionLadePara?: SessionParaDB) : Promise<void> {
+        return this.LadeProgrammSessions(aProgramm.id, aSessionLadePara)
+            .then((aSessionListe) => {
+                if (aSessionListe.length > 0) {
+                    aProgramm.SessionListe = aProgramm.SessionListe.concat(aSessionListe);
+                    const mSessionLadePara: SessionParaDB = new SessionParaDB();
+                    mSessionLadePara.Limit = cSessionSelectLimit;
+                    mSessionLadePara.OffSet = aSessionListe.length;
+                    this.LadeSessions(aProgramm, mSessionLadePara);
+                }
+            });
+    }	
+
+	public async CheckSessions(aProgramm: ITrainingsProgramm, aPromiseFn?: PromiseFn) : Promise<void> {
+		if ((aProgramm.SessionListe === undefined) || (aProgramm.SessionListe.length <= 0)) {
+			aProgramm.SessionListe = [];
+			this.LadeSessions(aProgramm)
+				.then(() => {
+					if (aPromiseFn !== undefined)
+						aPromiseFn();
+				});
+		}
+		return;
+    }
 
 	public SetAktuellesProgramm(aSelectedProgram: TrainingsProgramm, aInitialWeightList?: Array<InitialWeight>): Promise<void> {
 		return this.FindAktuellesProgramm().then((p) => {
