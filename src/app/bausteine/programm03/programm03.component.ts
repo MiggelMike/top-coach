@@ -77,15 +77,15 @@ export class Programm03Component implements OnInit {
             
     ngAfterViewInit() {
         if (this.session.UebungsListe !== undefined) {
-            if(this.session.UebungsListe.length <= 0) {
-                this.fDbModule.LadeSessionUebungen(this.session.ID)
-                    .then((aUebungsListe) => {
-                        this.session.UebungsListe = aUebungsListe;
-                        this.session.UebungsListe.forEach((mUebung: Uebung) => {
-                            this.accCheckUebungPanels(mUebung);
-                        });
-                    });
-            }
+            // if(this.session.UebungsListe.length <= 0) {
+            //     this.fDbModule.LadeSessionUebungen(this.session.ID)
+            //         .then((aUebungsListe) => {
+            //             this.session.UebungsListe = aUebungsListe;
+            //             this.session.UebungsListe.forEach((mUebung: Uebung) => {
+            //                 this.accCheckUebungPanels(mUebung);
+            //             });
+            //         });
+            // }
 
             if (this.session.UebungsListe.length > 0) {
                 this.session.UebungsListe.forEach((mUebung: Uebung) => {

@@ -28,7 +28,8 @@ export class Programm01Component implements OnInit {
         private router: Router
     ) {}
 
-    ngOnInit() { }
+    ngOnInit() {
+     }
 
     private SelectWorkout(aSelectedProgram: ITrainingsProgramm) {
         const mDialogData = new DialogData();

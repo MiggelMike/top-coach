@@ -23,11 +23,11 @@ export class AnstehendeSessionsComponent implements OnInit {
         this.AnstehendeSessionObserver = of(this.fDbModule.AktuellesProgramm);
     }
 
-    private LadeSessions  (aOffSet: number = 0) {
+    private async LadeSessions  (aOffSet: number = 0):Promise<void> {
         const mSessionParaDB: SessionParaDB = new SessionParaDB();
         mSessionParaDB.OffSet = aOffSet;
         mSessionParaDB.Limit = cSessionSelectLimit;
-        this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
+        await this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
             .then( (aSessionListe) => {
                 if (aSessionListe.length > 0) {
                     this.Programm.SessionListe = this.Programm.SessionListe.concat(aSessionListe);
@@ -39,8 +39,8 @@ export class AnstehendeSessionsComponent implements OnInit {
     
     ngOnInit() {
         this.fDbModule.LadeAktuellesProgramm()
-            .then( async (aProgramme) => {
-                this.Programm = aProgramme;
+            .then( async (aProgramm) => {
+                this.Programm = aProgramm;
                 this.Programm.SessionListe = [];
                 this.LadeSessions();
             });

@@ -85,13 +85,18 @@ export class Programm02Component implements OnInit {
 	constructor(private fDialogService: DialogeService, private fGlobalService: GlobalService, private fUebungService: UebungService, public fDbModule: DexieSvcService, private router: Router) {
 	}
 
-	private LadeUebungen(aSess: ISession, aUebungPara: UebungParaDB)  {
-		this.fDbModule.LadeSessionUebungen(aSess.ID,aUebungPara)
-			.then((aUebungsliste) => {
+	private async LadeUebungen(aSess: ISession, aUebungPara: UebungParaDB):Promise<void>  {
+		await this.fDbModule.LadeSessionUebungen(aSess.ID,aUebungPara)
+			.then( async (aUebungsliste) => {
 				if (aUebungsliste.length > 0) {
-					aSess.UebungsListe = aSess.UebungsListe.concat(aUebungsliste);
-					aUebungPara.OffSet = aSess.UebungsListe.length;
-					this.LadeUebungen(aSess, aUebungPara);
+					// aUebungsliste.forEach((aUebung) => {
+					// 	if (aSess.UebungsListe.find((aSessUebung) => {
+					// 		if (aSessUebung.ID === aUebung.ID) return aUebung; else return undefined;  }) === undefined) aSess.UebungsListe.push(aUebung);
+					// });
+					//aSess.UebungsListe = aSess.UebungsListe.concat(aUebungsliste);
+					aSess.UebungsListe = aUebungsliste;
+//					aUebungPara.OffSet = aSess.UebungsListe.length;
+					// await this.LadeUebungen(aSess, aUebungPara);
 				}
 			});
 	}
@@ -101,9 +106,13 @@ export class Programm02Component implements OnInit {
 		if (aSess.UebungsListe === undefined || aSess.UebungsListe.length <= 0) {
 			aSess.UebungsListe = [];
 			const mUebungPara: UebungParaDB = new UebungParaDB();
-			mUebungPara.OffSet = 0;
-			mUebungPara.Limit = cUebungSelectLimit;
-			this.LadeUebungen(aSess,mUebungPara);
+			// mUebungPara.OffSet = 0;
+			// mUebungPara.Limit = cUebungSelectLimit;
+			this.LadeUebungen(aSess, mUebungPara).then(
+				() => {
+				
+					const x = 0;
+				});
 		}
 	}
 
@@ -310,25 +319,25 @@ export class Programm02Component implements OnInit {
 		// if (aSession.Kategorie02 === SessionStatus.Fertig || aSession.Kategorie02 === SessionStatus.FertigTimeOut) return;
 
 		
-		const mSessionParaDB: SessionParaDB = new SessionParaDB();
-		mSessionParaDB.UebungenBeachten = true;
-		mSessionParaDB.UebungParaDB = new UebungParaDB();
-		mSessionParaDB.UebungParaDB.SaetzeBeachten = true;
-		this.fDbModule.LadeEineSession(aSession.ID, mSessionParaDB)
-		.then((aLoadedSession) => {
-				switch (aLoadedSession.Kategorie02) {
-					case SessionStatus.Wartet:
-						aLoadedSession.GestartedWann = new Date();
-						aLoadedSession.Kategorie02 = SessionStatus.Laueft;
-						aLoadedSession.Datum = new Date();
-						break;
+		// const mSessionParaDB: SessionParaDB = new SessionParaDB();
+		// mSessionParaDB.UebungenBeachten = true;
+		// mSessionParaDB.UebungParaDB = new UebungParaDB();
+		// mSessionParaDB.UebungParaDB.SaetzeBeachten = true;
+		// this.fDbModule.LadeEineSession(aSession.ID, mSessionParaDB)
+		// .then((aLoadedSession) => {
+		// 		switch (aLoadedSession.Kategorie02) {
+		// 			case SessionStatus.Wartet:
+		// 				aLoadedSession.GestartedWann = new Date();
+		// 				aLoadedSession.Kategorie02 = SessionStatus.Laueft;
+		// 				aLoadedSession.Datum = new Date();
+		// 				break;
 		
-					case SessionStatus.Pause:
-						aLoadedSession.StarteDauerTimer();
-						break;
-				}
-				this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aLoadedSession, programmTyp: this.programmTyp } });
-			});
+		// 			case SessionStatus.Pause:
+		// 				aLoadedSession.StarteDauerTimer();
+		// 				break;
+		// 		}
+		// 	});
+			this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
 	}
 
 

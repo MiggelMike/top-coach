@@ -56,41 +56,69 @@ export class SessionFormComponent implements OnInit {
 		mSessionCopyPara.CopyUebungID = true;
 		mSessionCopyPara.CopySatzID = true;
 		this.Session = mState.sess.Copy(mSessionCopyPara);
-		this.cmpSession = mState.sess.Copy(mSessionCopyPara);
+		// this.cmpSession = mState.sess.Copy(mSessionCopyPara);
 
-		this.fSessionOverlayConfig = {
-			session: this.Session,
-			left: -1000,
-			top: -1000,
-		} as SessionOverlayConfig;
+		// this.fSessionOverlayConfig = {
+		// 	session: this.Session,
+		// 	left: -1000,
+		// 	top: -1000,
+		// } as SessionOverlayConfig;
 
-		if (this.Session.Kategorie02 === SessionStatus.Pause || this.Session.Kategorie02 === SessionStatus.Wartet || this.Session.Kategorie02 === SessionStatus.Laueft) {
-			if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length < 1) this.Session.AddPause();
-			else this.Session.StarteDauerTimer();
-		}
+		// if (this.Session.Kategorie02 === SessionStatus.Pause || this.Session.Kategorie02 === SessionStatus.Wartet || this.Session.Kategorie02 === SessionStatus.Laueft) {
+		// 	if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length < 1) this.Session.AddPause();
+		// 	else this.Session.StarteDauerTimer();
+		// }
 
-		this.doStats();
-		
+		// this.doStats();
+
 		// const mSessionParaDB: SessionParaDB = new SessionParaDB();
 		// mSessionParaDB.UebungenBeachten = true;
 		// mSessionParaDB.UebungParaDB = new UebungParaDB();
 		// mSessionParaDB.UebungParaDB.SaetzeBeachten = true;
-
-		// this.fDbModule.LadeEineSession(mState.sess.ID, mSessionParaDB)
-		// 	.then((aSession) => {
-		// 		this.Session = aSession;
-				
-				
-		// 		const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
-		// 		mSessionCopyPara.Komplett = true;
-		// 		mSessionCopyPara.CopySessionID = true;
-		// 		mSessionCopyPara.CopyUebungID = true;
-		// 		mSessionCopyPara.CopySatzID = true;
-				
-
-				
-		// 		this.doStats();
+		// this.fDbModule.LadeEineSession(aSession.ID, mSessionParaDB)
+		// .then((aLoadedSession) => {
+		// 		switch (aLoadedSession.Kategorie02) {
+		// 			case SessionStatus.Wartet:
+		// 				aLoadedSession.GestartedWann = new Date();
+		// 				aLoadedSession.Kategorie02 = SessionStatus.Laueft;
+		// 				aLoadedSession.Datum = new Date();
+		// 				break;
+		
+		// 			case SessionStatus.Pause:
+		// 				aLoadedSession.StarteDauerTimer();
+		// 				break;
+		// 		}
 		// 	});
+		
+		const mSessionParaDB: SessionParaDB = new SessionParaDB();
+		mSessionParaDB.UebungenBeachten = true;
+		mSessionParaDB.UebungParaDB = new UebungParaDB();
+		mSessionParaDB.UebungParaDB.SaetzeBeachten = true;
+
+		this.fDbModule.LadeEineSession(mState.sess.ID, mSessionParaDB)
+			.then((aSession) => {
+				this.Session = aSession;
+				
+				const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+				mSessionCopyPara.Komplett = true;
+				mSessionCopyPara.CopySessionID = true;
+				mSessionCopyPara.CopyUebungID = true;
+				mSessionCopyPara.CopySatzID = true;
+				this.cmpSession = this.Session.Copy(mSessionCopyPara);
+						
+				this.fSessionOverlayConfig = {
+					session: this.Session,
+					left: -1000,
+					top: -1000,
+				} as SessionOverlayConfig;
+		
+				if (this.Session.Kategorie02 === SessionStatus.Pause || this.Session.Kategorie02 === SessionStatus.Wartet || this.Session.Kategorie02 === SessionStatus.Laueft) {
+					if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length < 1) this.Session.AddPause();
+					else this.Session.StarteDauerTimer();
+				}
+		
+				this.doStats();
+			});
 
 		
 		// if ((this.Session.ID !== undefined) && ((this.Session.UebungsListe === undefined) || (this.Session.UebungsListe.length <= 0))) {

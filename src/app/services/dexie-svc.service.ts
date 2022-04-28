@@ -22,9 +22,9 @@ var cloneDeep = require('lodash.clonedeep');
 
 export const MinDatum = new Date(-8640000000000000);
 export const MaxDatum = new Date(8640000000000000);
-export const cSessionSelectLimit = 3;
-export const cUebungSelectLimit = 3;
-export const cSatzSelectLimit = 3;
+export const cSessionSelectLimit = 1;
+export const cUebungSelectLimit = 1;
+export const cSatzSelectLimit = 1;
 //Number.MAX_SAFE_INTEGER
 export const cMaxLimnit = 1000000;
 
@@ -284,7 +284,7 @@ export class DexieSvcService extends Dexie {
 
 					const mSessionCopyPara = new SessionCopyPara();
 					mSessionCopyPara.Komplett = true;
-					mSessionCopyPara.CopySessionID = true;
+					mSessionCopyPara.CopySessionID = false;
 					mSessionCopyPara.CopyUebungID = false;
 					mSessionCopyPara.CopySatzID = false;
 					const mNeueSession = mPrtSession.Copy(mSessionCopyPara);
@@ -894,13 +894,14 @@ export class DexieSvcService extends Dexie {
             .limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : cMaxLimnit) 
 			.sortBy("ListenIndex")
 			.then(async (aSessionListe) => {
-				const x = 0;
 				if (aSessionParaDB !== undefined) {
 					if (aSessionParaDB.UebungenBeachten) {
 						for (let index = 0; index < aSessionListe.length; index++) {
 							const mPtrSession = aSessionListe[index];
 							await this.LadeSessionUebungen(mPtrSession.ID, aSessionParaDB.UebungParaDB)
-								.then((aUebungsListe) => mPtrSession.UebungsListe = aUebungsListe);
+								.then((aUebungsListe) => {
+									mPtrSession.UebungsListe = aUebungsListe;
+								});
 						}
 					}//if
 				}//if
