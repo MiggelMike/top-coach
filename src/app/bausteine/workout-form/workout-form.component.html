@@ -1,18 +1,21 @@
     <app-toolbar></app-toolbar>
 
     <ng-container *ngIf="programm">
-        <div fxLayout="row" fxLayoutAlign="flex-center">
-            <div><strong>{{programm.Name}}</strong></div>
-        </div>
+        <div class="container">
+            <div fxLayout="row" fxLayoutAlign="flex-center">
+                <div><strong>{{programm.Name}}</strong></div>
+            </div>
         
-        <ng-container *ngIf="programm.SessionListe">
-            <app-programm02 [programm]="programm" 
-                            [SessionListe]="programm.SessionListe" 
-                            [showButtons]="true" 
-                            [showSaveButtons]="true" 
-                            [bearbeitbar]="true"
-                            (ProgrammSavedEvent)="CopyProgramm($event)">
-            </app-programm02>
-        </ng-container>
+            <ng-container *ngIf="programm.SessionListe">
+                <app-programm02 
+                    [programm]="programm" 
+                    [SessionListe]="programm.SessionListe" 
+                    [showButtons]="true" 
+                    [showSaveButtons]="true" 
+                    [bearbeitbar]="true"
+                    (ProgrammSavedEvent)="CopyProgramm($event)">
+                </app-programm02>
+            </ng-container>
+        </div>
     </ng-container>
 

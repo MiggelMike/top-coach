@@ -19,7 +19,9 @@ export class WorkoutFormComponent implements OnInit  {
         private fGlobalService: GlobalService,
         private router: Router,
         private fDialogService: DialogeService,
-    ) {}
+    ) {
+        pogramm muss übergeben werden
+    }
 
     CopyProgramm(aProgramm: ITrainingsProgramm) {
         this.cmpProgramm = aProgramm.Copy();    

@@ -96,6 +96,11 @@ export interface onFormCloseFn {
 	(aData: any): void | any;
 }
 
+export interface PromiseFn {
+	(aData?: any): void | any;
+}
+
+
 export class ParaDB {
 	Data?: any;
 	WhereClause?: {} | string;

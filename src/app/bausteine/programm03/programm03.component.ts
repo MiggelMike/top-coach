@@ -77,6 +77,16 @@ export class Programm03Component implements OnInit {
             
     ngAfterViewInit() {
         if (this.session.UebungsListe !== undefined) {
+            if(this.session.UebungsListe.length <= 0) {
+                this.fDbModule.LadeSessionUebungen(this.session.ID)
+                    .then((aUebungsListe) => {
+                        this.session.UebungsListe = aUebungsListe;
+                        this.session.UebungsListe.forEach((mUebung: Uebung) => {
+                            this.accCheckUebungPanels(mUebung);
+                        });
+                    });
+            }
+
             if (this.session.UebungsListe.length > 0) {
                 this.session.UebungsListe.forEach((mUebung: Uebung) => {
                     this.accCheckUebungPanels(mUebung);
@@ -182,7 +192,8 @@ export class Programm03Component implements OnInit {
         const mIndex = this.session.UebungsListe.indexOf(aUebung);
         if (mIndex > -1) {
             const mPanUebungListe = this.panUebung.toArray();
-            mPanUebungListe[mIndex].expanded = aUebung.Expanded;
+            if(mPanUebungListe.length-1 >= mIndex)
+                mPanUebungListe[mIndex].expanded = aUebung.Expanded;
         }
         let mAllClosed = true;
     

@@ -1,4 +1,4 @@
-import { SessionParaDB } from 'src/app/services/dexie-svc.service';
+import { PromiseFn, SessionParaDB } from 'src/app/services/dexie-svc.service';
 import { DexieSvcService, ParaDB, cSessionSelectLimit } from './../../services/dexie-svc.service';
 import { GlobalService } from "./../../services/global.service";
 import { Component, OnInit, Input } from "@angular/core";
@@ -44,8 +44,8 @@ export class Programm01Component implements OnInit {
          this.fDialogService.JaNein(mDialogData);
     }
 
-    private LadeSessions(aSessionLadePara?: SessionParaDB) {
-        this.fDbModul.LadeProgrammSessions(this.programm.id, aSessionLadePara)
+    private LadeSessions(aSessionLadePara?: SessionParaDB) : Promise<void> {
+        return this.fDbModul.LadeProgrammSessions(this.programm.id, aSessionLadePara)
             .then((aSessionListe) => {
                 if (aSessionListe.length > 0) {
                     this.programm.SessionListe = this.programm.SessionListe.concat(aSessionListe);
@@ -58,16 +58,13 @@ export class Programm01Component implements OnInit {
     }
 
     panelOpened() {
-        if ((this.programm.SessionListe === undefined) || (this.programm.SessionListe.length <= 0)) {
-            this.programm.SessionListe = [];
-            this.LadeSessions();
-        }
+        this.CheckSessions();
     }
-
+    
     SelectThisWorkoutClick(aSelectedProgram: ITrainingsProgramm, $event: any): void {
         $event.stopPropagation();
         this.fDbModul.FindAktuellesProgramm()
-            .then((p) => {
+        .then((p) => {
                 if (p.find( (prog) => prog.FkVorlageProgramm === aSelectedProgram.id ) !== undefined ) {
                     const mDialogData = new DialogData();
                     mDialogData.textZeilen.push("The program is already chosen!");
@@ -83,14 +80,28 @@ export class Programm01Component implements OnInit {
                     this.SelectWorkout(aSelectedProgram);
                 }
             });
+        }
+
+    private CheckSessions(aPromiseFn?: PromiseFn) {
+        if ((this.programm.SessionListe === undefined) || (this.programm.SessionListe.length <= 0)) {
+            this.programm.SessionListe = [];
+            this.LadeSessions()
+                .then(() => {
+                    if (aPromiseFn !== undefined)
+                        aPromiseFn();
+                });
+        }
+        
     }
 
     EditThisWorkoutClick($event): void {
         $event.stopPropagation();
-        this.fGlobalService.EditWorkout = this.programm;
-        if (this.fGlobalService.EditWorkout.SessionListe)
-            this.fGlobalService.EditWorkout.SessionListe.forEach(
-                (sess) => (sess.Kategorie01 = SessionStatus.Bearbeitbar)
-            );
+        this.CheckSessions(() => {
+            this.fGlobalService.EditWorkout = this.programm;
+            if (this.fGlobalService.EditWorkout.SessionListe)
+                this.fGlobalService.EditWorkout.SessionListe.forEach(
+                    (sess) => (sess.Kategorie01 = SessionStatus.Bearbeitbar)
+                );
+        });
     }
 }
