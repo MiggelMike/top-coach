@@ -50,15 +50,15 @@ export class Programm03Component implements OnInit {
     private isExpanded: Boolean = true;
     public ToggleButtonText = "Close all excercises";
     public LocaleID: string;
-    private UebungPanelsObserver = {
-        next: (x: MatExpansionPanel) => {
-            this.accCheckUebungPanels(this.SessUeb);
-        },
-        error: (err) =>
-            console.error("UebungPanelsObserver got an error: " + err),
-        complete: () =>
-            console.log("UebungPanelsObserver got a complete notification"),
-    };
+    // private UebungPanelsObserver = {
+    //     next: (x: MatExpansionPanel) => {
+    //         this.accCheckUebungPanels(this.SessUeb);
+    //     },
+    //     error: (err) =>
+    //         console.error("UebungPanelsObserver got an error: " + err),
+    //     complete: () =>
+    //         console.log("UebungPanelsObserver got a complete notification"),
+    // };
 
     ngOnInit() {
     }
@@ -71,8 +71,8 @@ export class Programm03Component implements OnInit {
         private fDbModule: DexieSvcService
     ) {
         this.LocaleID = localID;
-        if (this.fGlobalService.Comp03PanelUebungObserver === null)
-            this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;
+        // if (this.fGlobalService.Comp03PanelUebungObserver === null)
+        //     this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;
     }
             
     ngAfterViewInit() {

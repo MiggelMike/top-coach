@@ -798,12 +798,15 @@ export class DexieSvcService extends Dexie {
 			.then(async (aProgrammListe: Array<ITrainingsProgramm>) => {
 				const x = 0;
 				if (aProgrammListe.length > 0) {
+					this.AktuellesProgramm = aProgrammListe[0];
 					if ((aProgrammParaDB !== undefined) &&
 						(aProgrammParaDB.SessionBeachten !== undefined)
 					) {
 						await this.LadeProgrammSessions(aProgrammListe[0].id, aProgrammParaDB.SessionParaDB)
 							.then(
-								(aSessionListe) => aProgrammListe[0].SessionListe = aSessionListe
+								(aSessionListe) => {
+									aProgrammListe[0].SessionListe = aSessionListe;
+								}
 							);
 					}//if
 					return aProgrammListe[0];

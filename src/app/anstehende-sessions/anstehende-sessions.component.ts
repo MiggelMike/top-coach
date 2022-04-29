@@ -1,4 +1,4 @@
-import { cSessionSelectLimit, DexieSvcService, ProgrammParaDB, SessionParaDB } from './../services/dexie-svc.service';
+import { cSessionSelectLimit, DexieSvcService, ProgrammParaDB, SessionParaDB, UebungParaDB } from './../services/dexie-svc.service';
 import {  ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';

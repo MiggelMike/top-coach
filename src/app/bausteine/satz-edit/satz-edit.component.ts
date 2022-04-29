@@ -1,4 +1,4 @@
-import { MinDatum } from './../../services/dexie-svc.service';
+import { MinDatum, UebungParaDB } from './../../services/dexie-svc.service';
 import { NextProgress, Progress, ProgressPara, ProgressSet, ProgressTyp, VorgabeWeightLimit, WeightProgress } from './../../../Business/Progress/Progress';
 import { DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { PlateCalcSvcService, PlateCalcOverlayConfig } from './../../services/plate-calc-svc.service';
@@ -65,6 +65,15 @@ export class SatzEditComponent implements OnInit {
                 this.satz.FkHantel = mStammUebung.FkHantel;
             }
         }
+
+        // this.programm.SessionListe.forEach((aSession) => {
+        //     if ((aSession.UebungsListe === undefined) || (aSession.UebungsListe.length <= 0)) {
+        //         const mUebungParaDB: UebungParaDB = new UebungParaDB();
+        //         mUebungParaDB.SaetzeBeachten = true;
+        //         this.fDbModule.LadeSessionUebungen(aSession.ID, mUebungParaDB)
+        //             .then((aUebungen) => aSession.UebungsListe = aUebungen);
+        //     }
+        // });
     }
 
     ngOnDestroy() {
