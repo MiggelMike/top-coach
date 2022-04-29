@@ -1,9 +1,8 @@
-import { PromiseFn, SessionParaDB } from 'src/app/services/dexie-svc.service';
+import { SessionParaDB } from 'src/app/services/dexie-svc.service';
 import { DexieSvcService, ParaDB, cSessionSelectLimit } from './../../services/dexie-svc.service';
 import { GlobalService } from "./../../services/global.service";
 import { Component, OnInit, Input } from "@angular/core";
 import { TrainingsProgramm, ITrainingsProgramm, ProgrammKategorie, ProgrammTyp } from "../../../Business/TrainingsProgramm/TrainingsProgramm";
-import { SessionStatus } from '../../../Business/SessionDB';
 import { DialogeService } from 'src/app/services/dialoge.service';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
 import { Router } from '@angular/router';

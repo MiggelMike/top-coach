@@ -58,18 +58,17 @@ export class SessionFormComponent implements OnInit {
 		this.Session = mState.sess.Copy(mSessionCopyPara);
 		// this.cmpSession = mState.sess.Copy(mSessionCopyPara);
 
-		// this.fSessionOverlayConfig = {
-		// 	session: this.Session,
-		// 	left: -1000,
-		// 	top: -1000,
-		// } as SessionOverlayConfig;
+		this.fSessionOverlayConfig = {
+			session: this.Session,
+			left: -1000,
+			top: -1000,
+		} as SessionOverlayConfig;
 
-		// if (this.Session.Kategorie02 === SessionStatus.Pause || this.Session.Kategorie02 === SessionStatus.Wartet || this.Session.Kategorie02 === SessionStatus.Laueft) {
-		// 	if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length < 1) this.Session.AddPause();
-		// 	else this.Session.StarteDauerTimer();
-		// }
+		if (this.Session.Kategorie02 === SessionStatus.Pause || this.Session.Kategorie02 === SessionStatus.Wartet || this.Session.Kategorie02 === SessionStatus.Laueft) {
+			if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length < 1) this.Session.AddPause();
+			else this.Session.StarteDauerTimer();
+		}
 
-		// this.doStats();
 
 		// const mSessionParaDB: SessionParaDB = new SessionParaDB();
 		// mSessionParaDB.UebungenBeachten = true;
@@ -328,6 +327,7 @@ export class SessionFormComponent implements OnInit {
 		mDialogData.textZeilen.push("Do you want to proceed?");
 		mDialogData.OkData = this;
 		mDialogData.OkFn = async (aSessionForm: SessionFormComponent) => {
+			this.router.navigate([""]);
 			aSessionForm.Session.SetSessionFertig();
 			
 			if (aSessionForm.Session.UebungsListe.length > 0) {
@@ -406,9 +406,9 @@ export class SessionFormComponent implements OnInit {
 				// 	&& mUebungIndex >= aSessionForm.Session.UebungsListe.length - 1
 				//    )
 				await this.fDbModule.SessionSpeichern(mNeueSession);
-				this.router.navigate([""]);
+				this.DoAfterDone(this);
+				// this.router.navigate([""]);
 			}
-			this.DoAfterDone(this);
 		}
 		this.fDialogService.JaNein(mDialogData);
 	}
