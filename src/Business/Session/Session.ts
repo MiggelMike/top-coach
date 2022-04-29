@@ -138,8 +138,7 @@ export class Session extends SessionDB implements ISession {
             this.DauerFormatted = Zeitraum.FormatDauer(this.SessionDauer.MaxDauer);
             this.Kategorie02 = SessionStatus.FertigTimeOut;
         }
-        else
-            this.DauerFormatted = Zeitraum.FormatDauer(mDauerMinusPause);
+        else this.DauerFormatted = Zeitraum.FormatDauer(mDauerMinusPause);
     }
 
     public CalcPause(): number {

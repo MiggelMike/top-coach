@@ -37,17 +37,24 @@
                                     <span class="tc-font-size-smaller font-bold">#{{i+1}} {{SessUeb.Name}}</span>
                                 </div>
 
-                                <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
-                                    (click)="DoSettings(SessUeb, $event)">Settings
-                                </a>
                                 
-                                <ng-container *ngIf="bearbeitbar && programmTyp !== 'history'">
-                                    <a  [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
-                                        (click)="CopyExcercise(SessUeb, $event)">Copy exercise</a>
+                                <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
+                                (click)="DoSettings(SessUeb, $event)">Settings
+                            </a>
+                            
+                            <ng-container *ngIf="bearbeitbar && programmTyp !== 'history'">
+                                <a  [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
+                                (click)="CopyExcercise(SessUeb, $event)">Copy exercise</a>
+                                
+                                <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
+                                (click)="DeleteExercise(i+1,SessUeb,$event)">Delete Exercise</a>
+                            </ng-container>
 
-                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
-                                        (click)="DeleteExercise(i+1,SessUeb,$event)">Delete Exercise</a>
-                                </ng-container>
+                            <ng-container *ngIf="SessUeb.getArbeitsSaetzeStatus() === 2">
+                                <div fxLayout="column" class="height-10">
+                                    <img class="mg-top-5 ml-10" src="./../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png//24x24/Apply.png" />
+                                </div>
+                            </ng-container>
 
                             </div>
                         </mat-expansion-panel-header>
