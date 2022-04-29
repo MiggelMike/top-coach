@@ -110,15 +110,32 @@ export class SessionFormComponent implements OnInit {
 					left: -1000,
 					top: -1000,
 				} as SessionOverlayConfig;
-		
-				if (this.Session.Kategorie02 === SessionStatus.Pause || this.Session.Kategorie02 === SessionStatus.Wartet || this.Session.Kategorie02 === SessionStatus.Laueft) {
-					if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length < 1) this.Session.AddPause();
-					else this.Session.StarteDauerTimer();
+
+				switch (this.Session.Kategorie02) {
+					case SessionStatus.Wartet:
+						this.Session.GestartedWann = new Date();
+						this.Session.Kategorie02 = SessionStatus.Laueft;
+						this.Session.Datum = new Date();
+						break;
+					
+					case SessionStatus.Pause:
+						this.Session.StarteDauerTimer();
+						break;
 				}
+
+				if (((aSession.Kategorie02 === SessionStatus.Wartet) ||
+				     (aSession.Kategorie02 === SessionStatus.Pause) ||
+				     (aSession.Kategorie02 === SessionStatus.Laueft)) 
+			    &&
+			         (aSession.UebungsListe === undefined ||
+				      aSession.UebungsListe.length < 1)) this.Session.AddPause();
+			    else aSession.StarteDauerTimer();				
 		
 				this.doStats();
 			});
 
+
+		
 		
 		// if ((this.Session.ID !== undefined) && ((this.Session.UebungsListe === undefined) || (this.Session.UebungsListe.length <= 0))) {
 		// 	const mUebungParaDB: UebungParaDB = new UebungParaDB();
