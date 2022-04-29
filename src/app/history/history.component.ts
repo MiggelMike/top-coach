@@ -2,7 +2,7 @@ import { cSessionSelectLimit } from './../services/dexie-svc.service';
 import { DexieSvcService, SessionParaDB } from 'src/app/services/dexie-svc.service';
 import { Component, OnInit } from '@angular/core';
 import { ISession } from 'src/Business/Session/Session';
-
+import { repMask } from './../../app/app.module';
 
 @Component({
 	selector: 'app-history',
@@ -12,8 +12,18 @@ import { ISession } from 'src/Business/Session/Session';
 export class HistoryComponent implements OnInit {
 	SessionListe: Array<ISession> = [];
 	LadeLimit: number = 10;
+	public repMask = repMask;
 
 	constructor(private fDbModul: DexieSvcService) {
+
+
+	}
+
+	SetLadeLimit(aEvent: any) {
+		// aEvent.stopPropagation();
+		this.LadeLimit = Number(aEvent.target.value);
+		this.SessionListe = [];
+		this.LadeSessions(0);
 	}
 
 	private LadeSessions (aOffSet: number) {

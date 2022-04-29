@@ -1,13 +1,25 @@
 <app-toolbar></app-toolbar>
 <div class="container">
-    <p class="font-bold">History</p>
+    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutGap="20px" fxLayoutAlign="flex-start center" [style.margin-top]="'5px'">
+
+        <p class="font-bold">History</p>
+
+        <mat-form-field class="align-right"  fxFlex="100px">
+            <mat-label>Load sessions</mat-label>
+            <input matInput [textMask]="{mask: repMask, guide: false}" 
+                   [ngModel]="LadeLimit" 
+                   (focusout)="SetLadeLimit($event)" 
+                   type="text">
+        </mat-form-field>
+    </div>
+
     <app-programm02 [showButtons]="false"
-                    [showSaveButtons] = "false" 
-                    [programmTyp] = "'history'"
-                    [SessionListe] = "SessionListe"
-                    [bearbeitbar]="false"
-                    [StartButtonVisible]= "true"
-                    [SofortSpeichern]= "true"
-                    [SessionPanelsExpanded] = "false">
+        [showSaveButtons] = "false" 
+        [programmTyp] = "'history'"
+        [SessionListe] = "SessionListe"
+        [bearbeitbar]="false"
+        [StartButtonVisible]= "true"
+        [SofortSpeichern]= "true"
+        [SessionPanelsExpanded] = "false">
     </app-programm02>
 </div>

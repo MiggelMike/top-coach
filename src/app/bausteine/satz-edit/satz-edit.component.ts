@@ -2,7 +2,7 @@ import { MinDatum } from './../../services/dexie-svc.service';
 import { NextProgress, Progress, ProgressPara, ProgressSet, ProgressTyp, VorgabeWeightLimit, WeightProgress } from './../../../Business/Progress/Progress';
 import { DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { PlateCalcSvcService, PlateCalcOverlayConfig } from './../../services/plate-calc-svc.service';
-import { ISession, Session } from 'src/Business/Session/Session';
+import { ISession } from 'src/Business/Session/Session';
 import { Uebung, ArbeitsSaetzeStatus } from './../../../Business/Uebung/Uebung';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
@@ -14,7 +14,6 @@ import { floatMask, repMask } from './../../app.module';
 import { PlateCalcComponent } from 'src/app/plate-calc/plate-calc.component';
 import { StoppuhrComponent } from 'src/app/stoppuhr/stoppuhr.component';
 import { StoppUhrOverlayConfig, StoppuhrSvcService } from 'src/app/services/stoppuhr-svc.service';
-import { ThrowStmt } from '@angular/compiler';
 
 @Component({
     selector: "app-satz-edit",
