@@ -38,6 +38,7 @@ export class SessionFormComponent implements OnInit {
 		private router: Router,
 		public fDbModule: DexieSvcService,
 		private fDialogService: DialogeService,
+		private fLoadingDialog: DialogeService,
 		private fGlobalService: GlobalService,
 		private fUebungService: UebungService,
 		private fSessionOverlayServiceService: SessionOverlayServiceService,
@@ -90,7 +91,8 @@ export class SessionFormComponent implements OnInit {
 					mSessionCopyPara.CopyUebungID = true;
 					mSessionCopyPara.CopySatzID = true;
 					this.cmpSession = this.Session.Copy(mSessionCopyPara);
-	
+
+					this.fLoadingDialog.fDialog.closeAll();
 					this.doStats();
 				}
 			});
@@ -186,16 +188,24 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	ngAfterViewInit() {
-		const mSessionParaDB: SessionParaDB = new SessionParaDB();
-		this.fDbModule.LadeEineSession(this.Session.ID, mSessionParaDB)
-			.then((aSession) => {
-				this.Session = aSession;
-				const mUebungParaDB: UebungParaDB = new UebungParaDB();
-				 mUebungParaDB.Limit = cUebungSelectLimit;
-				 mUebungParaDB.OffSet = 0;
-				 mUebungParaDB.SaetzeBeachten = true;
- 				 this.LadeUebungen(mUebungParaDB);
-			});
+		const mDialogData = new DialogData();
+		mDialogData.ShowAbbruch = false;
+		mDialogData.ShowOk = false;
+		this.fLoadingDialog.Loading(mDialogData);
+		try {
+			const mSessionParaDB: SessionParaDB = new SessionParaDB();
+			this.fDbModule.LadeEineSession(this.Session.ID, mSessionParaDB)
+				.then((aSession) => {
+					this.Session = aSession;
+					const mUebungParaDB: UebungParaDB = new UebungParaDB();
+					mUebungParaDB.Limit = cUebungSelectLimit;
+					mUebungParaDB.OffSet = 0;
+					mUebungParaDB.SaetzeBeachten = true;
+					this.LadeUebungen(mUebungParaDB);
+				});
+		} catch {
+			this.fLoadingDialog.fDialog.closeAll();
+		}
 	}
 
 	ngOnInit(): void {

@@ -56,6 +56,7 @@ import { ToolbarComponent } from './bausteine/toolbar/toolbar.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 // import {
 //     MatAutocompleteModule,
@@ -215,6 +216,7 @@ export const floatMask = createNumberMask({
       DragDropModule,
       MatRadioModule,
       MatTabsModule,
+      MatProgressBarModule,
         
         MatSliderModule,  
         MatToolbarModule,

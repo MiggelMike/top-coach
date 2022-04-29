@@ -2,6 +2,8 @@ import { DexieSvcService, ParaDB, ProgrammParaDB } from './../services/dexie-svc
 import { ITrainingsProgramm, ProgrammKategorie, ProgrammTyp, TrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Observable, of } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
+import { DialogeService } from '../services/dialoge.service';
+import { DialogData } from '../dialoge/hinweis/hinweis.component';
 
 
 @Component({
@@ -13,14 +15,23 @@ export class ProgrammWaehlenComponent implements OnInit {
     public ProgrammListeObserver: Observable<ITrainingsProgramm[]>;
     public ProgrammListe: Array<ITrainingsProgramm> = [];
 
-    constructor(public fDbModule: DexieSvcService
+    constructor(
+        public fDbModule: DexieSvcService,
+		private fLoadingDialog: DialogeService
+
     ) {}
 
     ngOnInit() {
         this.ProgrammListeObserver = of(this.ProgrammListe);
-        this.LadeTrainingsProgramme();
-        //this.fDexieService.LadeVorlageProgramme();
-
+        const mDialogData = new DialogData();
+		mDialogData.ShowAbbruch = false;
+		mDialogData.ShowOk = false;
+        this.fLoadingDialog.Loading(mDialogData);
+        try {
+            this.LadeTrainingsProgramme();
+        } catch (error) {
+            this.fLoadingDialog.fDialog.closeAll();
+        }
     }
 
     public LadeTrainingsProgramme(): void {
@@ -29,7 +40,10 @@ export class ProgrammWaehlenComponent implements OnInit {
         this.ProgrammListeObserver.subscribe(
             () => {
                 this.fDbModule.LadeStandardProgramme()
-                    .then((aProgrammListe) => this.ProgrammListe = aProgrammListe);
+                    .then((aProgrammListe) => {
+                        this.ProgrammListe = aProgrammListe;
+                        this.fLoadingDialog.fDialog.closeAll();
+                    });
             }
         );
     }

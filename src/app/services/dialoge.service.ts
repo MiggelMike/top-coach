@@ -4,7 +4,8 @@ import { MatDialogConfig, MatDialog, DialogPosition, MatDialogRef, MAT_DIALOG_DA
 
 export enum DialogTyp {
     Hinweis = 'Hinweis',
-    Frage = 'Frage'
+    Frage = 'Frage',
+    Loading = 'Loading'
 }
 
 
@@ -20,16 +21,12 @@ export class DialogeService {
     private DialogBasis(aDialogData: DialogData): void {
         const mDialogConfig = new MatDialogConfig();
         mDialogConfig.width = 'auto';
-        mDialogConfig.height = '280px';
+        mDialogConfig.height = aDialogData.height;
         mDialogConfig.disableClose = true;
         mDialogConfig.autoFocus = true;
         mDialogConfig.data = aDialogData;
         mDialogConfig.hasBackdrop = false;
-        
-
-        const dialogRef = this.fDialog.open(DialogComponent, mDialogConfig );
-        dialogRef.afterClosed().subscribe(result => {
-        });
+        this.fDialog.open(DialogComponent, mDialogConfig );
     }
 
     public Hinweis(aDialogData: DialogData): void {
@@ -39,6 +36,17 @@ export class DialogeService {
 
     public JaNein(aDialogData: DialogData): void {
         aDialogData.typ = DialogTyp.Frage;
+        this.DialogBasis(aDialogData);
+    }
+
+    public Loading(aDialogData: DialogData): void {
+        if(aDialogData.textZeilen.length <= 0)
+            aDialogData.textZeilen.push('Loading');
+        
+        if (aDialogData.height.trim() !== '')
+            aDialogData.height = '150px';
+            
+        aDialogData.typ = DialogTyp.Loading;
         this.DialogBasis(aDialogData);
     }
 }

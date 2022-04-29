@@ -16,9 +16,11 @@ export class DialogData {
     typ: DialogTyp;
     OkFn: IOkCallback;
     CancelFn: ICancelCallback;
+    height: string = '280px';
     OkData: any;
     CancelData: any;
     ShowAbbruch: boolean = false;
+    ShowOk: boolean = true;
 }
 
 @Component({
@@ -32,7 +34,9 @@ export class DialogComponent {
     constructor(
         public dialogRef: MatDialogRef<DialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: DialogData
-    ) { }
+    ) {
+        const x = data;
+    }
 
     onOkClick(): void {
         this.dialogRef.close();

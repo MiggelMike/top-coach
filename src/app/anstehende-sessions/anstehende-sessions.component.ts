@@ -3,6 +3,8 @@ import {  ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsPro
 import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
 import { Observable, of } from 'rxjs';
+import { DialogeService } from '../services/dialoge.service';
+import { DialogData } from '../dialoge/hinweis/hinweis.component';
 
 
 
@@ -18,7 +20,8 @@ export class AnstehendeSessionsComponent implements OnInit {
     public AnstehendeSessionObserver: Observable<ITrainingsProgramm>;
     
     constructor(
-        private fDbModule: DexieSvcService
+        private fDbModule: DexieSvcService,
+		private fLoadingDialog: DialogeService
     ) {
         this.AnstehendeSessionObserver = of(this.fDbModule.AktuellesProgramm);
     }
@@ -33,17 +36,26 @@ export class AnstehendeSessionsComponent implements OnInit {
                     this.Programm.SessionListe = this.Programm.SessionListe.concat(aSessionListe);
                     this.LadeSessions(this.Programm.SessionListe.length);
                 }
+                else this.fLoadingDialog.fDialog.closeAll();
             });
     }
     
     
     ngOnInit() {
-        this.fDbModule.LadeAktuellesProgramm()
-            .then( async (aProgramm) => {
-                this.Programm = aProgramm;
-                this.Programm.SessionListe = [];
-                this.LadeSessions();
-            });
+        const mDialogData = new DialogData();
+		mDialogData.ShowAbbruch = false;
+		mDialogData.ShowOk = false;
+        this.fLoadingDialog.Loading(mDialogData);
+        try {
+            this.fDbModule.LadeAktuellesProgramm()
+                .then( async (aProgramm) => {
+                    this.Programm = aProgramm;
+                    this.Programm.SessionListe = [];
+                    this.LadeSessions();
+                });
+        } catch (error) {
+            this.fLoadingDialog.fDialog.closeAll();
+        }
     }
 
     public get AktuellesProgramm(): ITrainingsProgramm {
