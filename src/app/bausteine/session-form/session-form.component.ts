@@ -227,6 +227,7 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	leave() {
+		if (this.fSessionStatsOverlayComponent !== undefined) this.fSessionStatsOverlayComponent.close();
 		this.location.back();
 	}
 
@@ -320,7 +321,7 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	public async SetDone(): Promise<void> {
-		if (this.fSessionStatsOverlayComponent !== undefined) this.fSessionStatsOverlayComponent.close();
+		// if (this.fSessionStatsOverlayComponent !== undefined) this.fSessionStatsOverlayComponent.close();
 		
 		const mDialogData = new DialogData();
 		mDialogData.textZeilen.push("Workout will be saved and closed.");
