@@ -57,45 +57,46 @@ export class SessionFormComponent implements OnInit {
 		mSessionCopyPara.CopyUebungID = true;
 		mSessionCopyPara.CopySatzID = true;
 		this.Session = mState.sess.Copy(mSessionCopyPara);
+		this.cmpSession = mState.sess.Copy(mSessionCopyPara);
 	}
 
 	public LadeUebungen(aUebungParaDB: UebungParaDB) {
-		this.fDbModule.LadeSessionUebungen(this.Session.ID, aUebungParaDB).then(
-			(aUebungsListe) => {
-				if (aUebungsListe.length > 0) {
-					this.Session.UebungsListe = this.Session.UebungsListe.concat(aUebungsListe);
-					const mUebungParaDB: UebungParaDB = new UebungParaDB();
-					mUebungParaDB.SaetzeBeachten = aUebungParaDB.SaetzeBeachten;
-					mUebungParaDB.Limit = aUebungParaDB.Limit;
-					mUebungParaDB.OffSet = this.Session.UebungsListe.length;
-					this.LadeUebungen(mUebungParaDB);
-					// 
-				} else {
-					switch (this.Session.Kategorie02) {
-						case SessionStatus.Wartet:
-							this.Session.GestartedWann = new Date();
-							this.Session.Kategorie02 = SessionStatus.Laueft;
-							this.Session.Datum = new Date();
-							this.EvalStart();
-							break;
+		// this.fDbModule.LadeSessionUebungen(this.Session.ID, aUebungParaDB).then(
+		// 	(aUebungsListe) => {
+		// 		if (aUebungsListe.length > 0) {
+		// 			this.Session.UebungsListe = this.Session.UebungsListe.concat(aUebungsListe);
+		// 			const mUebungParaDB: UebungParaDB = new UebungParaDB();
+		// 			mUebungParaDB.SaetzeBeachten = aUebungParaDB.SaetzeBeachten;
+		// 			mUebungParaDB.Limit = aUebungParaDB.Limit;
+		// 			mUebungParaDB.OffSet = this.Session.UebungsListe.length;
+		// 			this.LadeUebungen(mUebungParaDB);
+		// 			// 
+		// 		} else {
+		// 			switch (this.Session.Kategorie02) {
+		// 				case SessionStatus.Wartet:
+		// 					this.Session.GestartedWann = new Date();
+		// 					this.Session.Kategorie02 = SessionStatus.Laueft;
+		// 					this.Session.Datum = new Date();
+		// 					this.EvalStart();
+		// 					break;
 						
-						case SessionStatus.Pause:
-						case SessionStatus.Laueft:
-							this.EvalStart();
-							break;
-					}//switch
+		// 				case SessionStatus.Pause:
+		// 				case SessionStatus.Laueft:
+		// 					this.EvalStart();
+		// 					break;
+		// 			}//switch
 
-					const mSessionCopyPara = new SessionCopyPara();
-					mSessionCopyPara.Komplett = true;
-					mSessionCopyPara.CopySessionID = true;
-					mSessionCopyPara.CopyUebungID = true;
-					mSessionCopyPara.CopySatzID = true;
-					this.cmpSession = this.Session.Copy(mSessionCopyPara);
+		// 			const mSessionCopyPara = new SessionCopyPara();
+		// 			mSessionCopyPara.Komplett = true;
+		// 			mSessionCopyPara.CopySessionID = true;
+		// 			mSessionCopyPara.CopyUebungID = true;
+		// 			mSessionCopyPara.CopySatzID = true;
+		// 			this.cmpSession = this.Session.Copy(mSessionCopyPara);
 
-					this.fLoadingDialog.fDialog.closeAll();
-					this.doStats();
-				}
-			});
+		// 			this.fLoadingDialog.fDialog.closeAll();
+		// 			this.doStats();
+		// 		}
+		// 	});
 	}
 
 	private EvalStart() {
@@ -183,29 +184,29 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	leave() {
-		if (this.fSessionStatsOverlayComponent !== undefined) this.fSessionStatsOverlayComponent.close();
+		if (this.fSessionStatsOverlayComponent !== undefined && this.fSessionStatsOverlayComponent !== null) this.fSessionStatsOverlayComponent.close();
 		this.location.back();
 	}
 
 	ngAfterViewInit() {
-		const mDialogData = new DialogData();
-		mDialogData.ShowAbbruch = false;
-		mDialogData.ShowOk = false;
-		this.fLoadingDialog.Loading(mDialogData);
-		try {
-			const mSessionParaDB: SessionParaDB = new SessionParaDB();
-			this.fDbModule.LadeEineSession(this.Session.ID, mSessionParaDB)
-				.then((aSession) => {
-					this.Session = aSession;
-					const mUebungParaDB: UebungParaDB = new UebungParaDB();
-					mUebungParaDB.Limit = cUebungSelectLimit;
-					mUebungParaDB.OffSet = 0;
-					mUebungParaDB.SaetzeBeachten = true;
-					this.LadeUebungen(mUebungParaDB);
-				});
-		} catch {
-			this.fLoadingDialog.fDialog.closeAll();
-		}
+		// const mDialogData = new DialogData();
+		// mDialogData.ShowAbbruch = false;
+		// mDialogData.ShowOk = false;
+		// this.fLoadingDialog.Loading(mDialogData);
+		// try {
+		// 	const mSessionParaDB: SessionParaDB = new SessionParaDB();
+		// 	this.fDbModule.LadeEineSession(this.Session.ID, mSessionParaDB)
+		// 		.then((aSession) => {
+		// 			this.Session = aSession;
+		// 			const mUebungParaDB: UebungParaDB = new UebungParaDB();
+		// 			mUebungParaDB.Limit = cUebungSelectLimit;
+		// 			mUebungParaDB.OffSet = 0;
+		// 			mUebungParaDB.SaetzeBeachten = true;
+		// 			this.LadeUebungen(mUebungParaDB);
+		// 		});
+		// } catch {
+		// 	this.fLoadingDialog.fDialog.closeAll();
+		// }
 	}
 
 	ngOnInit(): void {

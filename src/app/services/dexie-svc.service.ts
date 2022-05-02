@@ -796,7 +796,6 @@ export class DexieSvcService extends Dexie {
 			.equals(ProgrammKategorie.AktuellesProgramm)
 			.toArray()
 			.then(async (aProgrammListe: Array<ITrainingsProgramm>) => {
-				const x = 0;
 				if (aProgrammListe.length > 0) {
 					this.AktuellesProgramm = aProgrammListe[0];
 					if ((aProgrammParaDB !== undefined) &&

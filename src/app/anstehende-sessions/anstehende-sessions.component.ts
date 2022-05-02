@@ -1,4 +1,4 @@
-import { cSessionSelectLimit, DexieSvcService, ProgrammParaDB, SessionParaDB, UebungParaDB } from './../services/dexie-svc.service';
+import { cSessionSelectLimit, cUebungSelectLimit, DexieSvcService, ProgrammParaDB, SessionParaDB, UebungParaDB } from './../services/dexie-svc.service';
 import {  ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
@@ -16,6 +16,7 @@ import { DialogData } from '../dialoge/hinweis/hinweis.component';
 export class AnstehendeSessionsComponent implements OnInit {
     public isCollapsed = false;
     public Programm: ITrainingsProgramm;
+    private worker: Worker;
     
     public AnstehendeSessionObserver: Observable<ITrainingsProgramm>;
     
@@ -36,26 +37,27 @@ export class AnstehendeSessionsComponent implements OnInit {
                     this.Programm.SessionListe = this.Programm.SessionListe.concat(aSessionListe);
                     this.LadeSessions(this.Programm.SessionListe.length);
                 }
-                else this.fLoadingDialog.fDialog.closeAll();
+                else {
+                    this.worker.postMessage('LadeUebungen');
+                    this.fLoadingDialog.fDialog.closeAll();
+                }
             });
     }
     
     
     ngOnInit() {
-        const mDialogData = new DialogData();
-		mDialogData.ShowAbbruch = false;
-		mDialogData.ShowOk = false;
-        this.fLoadingDialog.Loading(mDialogData);
-        try {
-            this.fDbModule.LadeAktuellesProgramm()
-                .then( async (aProgramm) => {
-                    this.Programm = aProgramm;
-                    this.Programm.SessionListe = [];
-                    this.LadeSessions();
-                });
-        } catch (error) {
-            this.fLoadingDialog.fDialog.closeAll();
-        }
+        this.DoWorker();
+        // this.fLoadingDialog.Loading(mDialogData);
+        // try {
+        //     this.fDbModule.LadeAktuellesProgramm()
+        //         .then( async (aProgramm) => {
+        //             this.Programm = aProgramm;
+        //             this.Programm.SessionListe = [];
+        //             this.LadeSessions();
+        //         });
+        // } catch (error) {
+        //     this.fLoadingDialog.fDialog.closeAll();
+        // }
     }
 
     public get AktuellesProgramm(): ITrainingsProgramm {
@@ -68,5 +70,52 @@ export class AnstehendeSessionsComponent implements OnInit {
 
     beforePanelClosed(aSess: Session) {
         aSess.Expanded = false;
+    }
+
+    DoWorker() {
+        if (typeof Worker !== 'undefined') {
+            this.worker = new Worker(new URL('./anstehende-sessions.worker', import.meta.url));
+            const mDialogData = new DialogData();
+            mDialogData.ShowAbbruch = false;
+            mDialogData.ShowOk = false;
+            this.worker.addEventListener('message', ({ data }) => {
+                if (data.action === "LadeAktuellesProgramm") {
+                    this.fLoadingDialog.Loading(mDialogData);
+                    try {
+                        this.fDbModule.LadeAktuellesProgramm()
+                            .then(async (aProgramm) => {
+                                this.Programm = this.fDbModule.AktuellesProgramm;
+                                this.Programm.SessionListe = [];
+                                this.LadeSessions();
+                            });
+                    } catch (error) {
+                        this.fLoadingDialog.fDialog.closeAll();
+                    }
+                } // if
+                else if (data.action === "LadeUebungen") {
+                    const mUebungParaDB: UebungParaDB = new UebungParaDB();
+                    // mUebungParaDB.Limit = cUebungSelectLimit;
+                    // mUebungParaDB.OffSet = 0;
+                    mUebungParaDB.SaetzeBeachten = true;
+                    this.fDbModule.AktuellesProgramm.SessionListe.forEach(
+                        (aSession) => {
+                            this.fDbModule.LadeSessionUebungen(aSession.ID, mUebungParaDB).then(
+                                (aUebungsListe) => {
+                                    if (aUebungsListe.length > 0) {
+                                        aSession.UebungsListe = aUebungsListe;
+                                    }
+                                });
+                        });//for
+                }//if
+            });
+
+              this.worker.onmessage = ({ data }) => {
+                console.log(data);
+            };
+            this.worker.postMessage('LadeAktuellesProgramm');
+        } else {
+            // Web Workers are not supported in this environment.
+            // You should add a fallback so that your program still executes correctly.
+        }
     }
 }
