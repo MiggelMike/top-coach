@@ -144,10 +144,8 @@ export class Progress implements IProgress {
 
 	private EvalDecreaseType(aSession: Session, aUebung: Uebung, aDb: DexieSvcService): WeightProgress {
 		// this.EvalReduceDate(aSession.Kategorie02, aUebung, new Date(), aDb);
-		if (aUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig)
-			return WeightProgress.DecreaseNextTime;
-		else
-			return WeightProgress.Decrease;
+		if (aUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig) return WeightProgress.DecreaseNextTime;
+		else return WeightProgress.Decrease;
 	}
 
 	public FailCheck(aDb: DexieSvcService, aSession: Session, aSessUebung: Uebung, aReduceUebung: Uebung, aSatzIndex: number): WeightProgress {

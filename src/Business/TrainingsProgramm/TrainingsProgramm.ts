@@ -1,5 +1,4 @@
-import { SessionStatus } from './../SessionDB';
-import { ISession } from 'src/Business/Session/Session';
+import { ISession, SessionCopyPara } from 'src/Business/Session/Session';
 import { DexieSvcService } from './../../app/services/dexie-svc.service';
 import { Satz } from '../Satz/Satz';
 var cloneDeep = require('lodash.clonedeep');
@@ -101,8 +100,16 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
     }
 
     public Copy(): ITrainingsProgramm {
-        return cloneDeep(this);
-
+        const mCopyofProgram: ITrainingsProgramm = cloneDeep(this);
+        mCopyofProgram.SessionListe = [];
+        const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+		mSessionCopyPara.Komplett = true;
+		mSessionCopyPara.CopySessionID = true;
+		mSessionCopyPara.CopyUebungID = true;
+		mSessionCopyPara.CopySatzID = true;
+        for (let index = 0; index < this.SessionListe.length; index++) 
+            mCopyofProgram.SessionListe.push(this.SessionListe[index].Copy(mSessionCopyPara));
+        return mCopyofProgram;
     }
 
     public ErstelleSessionsAusVorlage(aProgrammKategorie : ProgrammKategorie): ITrainingsProgramm {

@@ -171,6 +171,7 @@ export class DexieSvcService extends Dexie {
 
 	AktuellerProgrammTyp: ProgrammTyp;
 	AktuellesProgramm: ITrainingsProgramm;
+	CmpAktuellesProgramm: ITrainingsProgramm;
 	VorlageProgramme: Array<TrainingsProgramm> = [];
 	AppRec: IAppData;
 	AppDataTable: Dexie.Table<AppData, number>;
@@ -361,7 +362,7 @@ export class DexieSvcService extends Dexie {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
 		}
 
-		//   Dexie.delete("ConceptCoach");
+		//    Dexie.delete("ConceptCoach");
 
 		this.version(18).stores({
 			AppData: "++id",
@@ -904,7 +905,7 @@ export class DexieSvcService extends Dexie {
 								.then((aUebungsListe) => {
 									mPtrSession.UebungsListe = aUebungsListe;
 								});
-						}
+						}//for
 					}//if
 				}//if
 				return aSessionListe;

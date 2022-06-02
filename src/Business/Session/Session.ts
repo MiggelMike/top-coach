@@ -313,6 +313,7 @@ export class Session extends SessionDB implements ISession {
         }
     }
 
+    
     public AlleUebungsSaetzeEinerProgressGruppe(aUebung: Uebung, aStatus: SatzStatus): Array<Satz> {
         let mSatzListe: Array<Satz> = [];
         const mUebungsListe: Array<Uebung> = this.AlleUebungenDerAktuellenProgressGruppe(aUebung);

@@ -106,13 +106,7 @@ export class Programm02Component implements OnInit {
 		if (aSess.UebungsListe === undefined || aSess.UebungsListe.length <= 0) {
 			aSess.UebungsListe = [];
 			const mUebungPara: UebungParaDB = new UebungParaDB();
-			// mUebungPara.OffSet = 0;
-			// mUebungPara.Limit = cUebungSelectLimit;
-			this.LadeUebungen(aSess, mUebungPara).then(
-				() => {
-				
-					const x = 0;
-				});
+			this.LadeUebungen(aSess, mUebungPara);
 		}
 	}
 

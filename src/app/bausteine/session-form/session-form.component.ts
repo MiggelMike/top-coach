@@ -13,7 +13,7 @@ import { Location } from "@angular/common";
 import { GlobalService } from "src/app/services/global.service";
 import { Uebung, UebungsKategorie02 } from "src/Business/Uebung/Uebung";
 import { UebungWaehlenData } from "src/app/uebung-waehlen/uebung-waehlen.component";
-import { ProgressPara, ProgressSet } from 'src/Business/Progress/Progress';
+import { Progress, ProgressPara, ProgressSet } from 'src/Business/Progress/Progress';
 import { Satz, SatzStatus } from 'src/Business/Satz/Satz';
 
 @Component({
@@ -58,6 +58,19 @@ export class SessionFormComponent implements OnInit {
 		mSessionCopyPara.CopySatzID = true;
 		this.Session = mState.sess.Copy(mSessionCopyPara);
 		this.cmpSession = mState.sess.Copy(mSessionCopyPara);
+		switch (this.Session.Kategorie02) {
+			case SessionStatus.Wartet:
+				this.Session.GestartedWann = new Date();
+				this.Session.Kategorie02 = SessionStatus.Laueft;
+				this.Session.Datum = new Date();
+				this.EvalStart();
+				break;
+							
+			case SessionStatus.Pause:
+			case SessionStatus.Laueft:
+				this.EvalStart();
+				break;
+		}//switch
 	}
 
 	public LadeUebungen(aUebungParaDB: UebungParaDB) {
@@ -189,27 +202,20 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	ngAfterViewInit() {
-		// const mDialogData = new DialogData();
-		// mDialogData.ShowAbbruch = false;
-		// mDialogData.ShowOk = false;
-		// this.fLoadingDialog.Loading(mDialogData);
-		// try {
-		// 	const mSessionParaDB: SessionParaDB = new SessionParaDB();
-		// 	this.fDbModule.LadeEineSession(this.Session.ID, mSessionParaDB)
-		// 		.then((aSession) => {
-		// 			this.Session = aSession;
-		// 			const mUebungParaDB: UebungParaDB = new UebungParaDB();
-		// 			mUebungParaDB.Limit = cUebungSelectLimit;
-		// 			mUebungParaDB.OffSet = 0;
-		// 			mUebungParaDB.SaetzeBeachten = true;
-		// 			this.LadeUebungen(mUebungParaDB);
-		// 		});
-		// } catch {
-		// 	this.fLoadingDialog.fDialog.closeAll();
-		// }
 	}
 
 	ngOnInit(): void {
+		if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length <= 0) {
+			this.Session.UebungsListe = [];
+			const mUebungPara: UebungParaDB = new UebungParaDB();
+			this.fDbModule.LadeSessionUebungen(this.Session.ID, mUebungPara)
+			.then( async (aUebungsliste) => {
+				if (aUebungsliste.length > 0) {
+					this.Session.UebungsListe = aUebungsliste;
+				}
+			});
+		}
+
 		this.BodyWeight = this.fDbModule.getBodyWeight();
 	}
 
@@ -284,6 +290,7 @@ export class SessionFormComponent implements OnInit {
 		
 		aSessionForm.fDbModule.AktuellesProgramm.NummeriereSessions();
 		this.SaveChangesPrim();
+		// this.router.navigate([""]);
 	}
 
 	public async SetDone(): Promise<void> {
@@ -317,6 +324,38 @@ export class SessionFormComponent implements OnInit {
 				mNeueSession.FK_Programm = aSessionForm.Session.FK_Programm;
 				mNeueSession.FK_VorlageProgramm = aSessionForm.Session.FK_VorlageProgramm;
 				mNeueSession.Expanded = false;
+
+
+				mNeueSession.UebungsListe.forEach((mQuellUebung) => {
+					if (mQuellUebung.ArbeitsSatzListe && mQuellUebung.ArbeitsSatzListe.length > 0) {
+						this.Programm.SessionListe.forEach((mSession) => {
+							if (mSession.ID !== aSessionForm.Session.ID) {
+								// Lade aus mSession alle Übungen die gleich mUebung sind
+								mSession.UebungsListe.forEach((mDestUebung) => {
+									const mDestSatzPtrListe: Array<Satz> = mDestUebung.ArbeitsSatzListe;
+									if (mDestUebung.FkUebung === mQuellUebung.FkUebung) {
+										for (let index = 0; index < mDestSatzPtrListe.length; index++) {
+											const mDestSatzPtr: Satz = mDestSatzPtrListe[index];
+											let mQuellSatzPtr: Satz;
+									
+											if (mDestSatzPtr.SatzListIndex < mQuellUebung.ArbeitsSatzListe.length )
+												mQuellSatzPtr = mQuellUebung.ArbeitsSatzListe[mDestSatzPtr.SatzListIndex];
+											else
+												mQuellSatzPtr = mQuellUebung.ArbeitsSatzListe[0];
+										
+											mDestSatzPtr.GewichtNaechsteSession = mQuellSatzPtr.GewichtNaechsteSession;
+											mDestSatzPtr.GewichtAusgefuehrt = mQuellSatzPtr.GewichtNaechsteSession;
+											mDestSatzPtr.GewichtVorgabe = mQuellSatzPtr.GewichtNaechsteSession;
+											this.fDbModule.SatzSpeichern(mDestSatzPtr);
+										}//for
+									}
+								});
+
+							}
+						});
+					}//if
+				}); 
+
 				this.Programm.SessionListe.push(mNeueSession);
 				this.Programm.NummeriereSessions();
 				
@@ -363,7 +402,7 @@ export class SessionFormComponent implements OnInit {
 				}//for
 				await this.fDbModule.SessionSpeichern(mNeueSession);
 				this.DoAfterDone(this);
-			}
+	}
 		}
 		this.fDialogService.JaNein(mDialogData);
 	}
