@@ -17,13 +17,13 @@ export class AnstehendeSessionsComponent implements OnInit {
     public isCollapsed = false;
     private worker: Worker;
     
-    public AnstehendeSessionObserver: Observable<ITrainingsProgramm>;
+    // public AnstehendeSessionObserver: Observable<ITrainingsProgramm>;
     
     constructor(
         private fDbModule: DexieSvcService,
 		private fLoadingDialog: DialogeService
         ) {
-            this.AnstehendeSessionObserver = of(this.fDbModule.AktuellesProgramm);
+            // this.AnstehendeSessionObserver = of(this.fDbModule.AktuellesProgramm);
         }
         
     public get Programm(): ITrainingsProgramm {
@@ -32,20 +32,13 @@ export class AnstehendeSessionsComponent implements OnInit {
 
     private async LadeSessions  (aOffSet: number = 0):Promise<void> {
         const mSessionParaDB: SessionParaDB = new SessionParaDB();
-        mSessionParaDB.OffSet = aOffSet;
+        // mSessionParaDB.OffSet = aOffSet;
       //  mSessionParaDB.Limit = cSessionSelectLimit;
-        await this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
-        .then( (aSessionListe) => {
-            if (aSessionListe.length > 0) {
-                    this.fDbModule.AktuellesProgramm.SessionListe = this.fDbModule.AktuellesProgramm.SessionListe.concat(aSessionListe);
-                    // this.LadeSessions(this.Programm.SessionListe.length);
-                }
-                else {
-                    this.worker.postMessage('LadeUebungen');
-                    // this.fLoadingDialog.fDialog.closeAll();
-                }
+        this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
+            .then((aSessionListe) => {
+                this.fDbModule.AktuellesProgramm.SessionListe = aSessionListe;
             });
-        }
+    }
         
         
     ngOnInit() {
@@ -76,56 +69,77 @@ export class AnstehendeSessionsComponent implements OnInit {
     }
 
     DoWorker() {
+        // if (this.fDbModule.AktuellesProgramm === undefined) {
+        //     this.fDbModule.LadeAktuellesProgramm()
+        //         .then(async (aProgramm) => {
+        //             if (aProgramm !== undefined) {
+        //                 this.fDbModule.AktuellesProgramm.SessionListe = [];
+        //                 const mSessionParaDB: SessionParaDB = new SessionParaDB();
+        //                 this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
+        //                     .then((aSessionListe) => {
+        //                         this.fDbModule.AktuellesProgramm.SessionListe = aSessionListe;
+        //                     });
+        //             }
+        //         });
+        // }
+
+        const that: AnstehendeSessionsComponent = this;
         if (typeof Worker !== 'undefined') {
-            this.worker = new Worker(new URL('./anstehende-sessions.worker', import.meta.url));
+            that.worker = new Worker(new URL('./anstehende-sessions.worker', import.meta.url));
             // const mDialogData = new DialogData();
             // mDialogData.ShowAbbruch = false;
             // mDialogData.ShowOk = false;
-            this.worker.addEventListener('message', ({ data }) => {
+            that.worker.addEventListener('message', ({ data }) => {
                 if (data.action === "LadeAktuellesProgramm") {
                     // this.fLoadingDialog.Loading(mDialogData);
-                    try {
-                        this.fDbModule.LadeAktuellesProgramm()
-                            .then(async (aProgramm) => {
-                                if (aProgramm !== undefined) {
-                                    this.fDbModule.AktuellesProgramm.SessionListe = [];
-                                    this.LadeSessions();
-                                } // else this.fLoadingDialog.fDialog.closeAll();
-                            });
-                    } catch (error) {
-                        // this.fLoadingDialog.fDialog.closeAll();
+                    if (that.fDbModule.AktuellesProgramm === undefined) {
+                        try {
+                            that.fDbModule.LadeAktuellesProgramm()
+                                .then(async (aProgramm) => {
+                                    if (aProgramm !== undefined) {
+                                        that.fDbModule.AktuellesProgramm.SessionListe = [];
+                                        that.LadeSessions();
+                                    } // else this.fLoadingDialog.fDialog.closeAll();
+                                });
+                        } catch (error) {
+                            // this.fLoadingDialog.fDialog.closeAll();
+                        }
                     }
                 } // if
                 else if (data.action === "LadeUebungen") {
-                    this.Programm.SessionListe = this.fDbModule.AktuellesProgramm.SessionListe;
+                    that.Programm.SessionListe = that.fDbModule.AktuellesProgramm.SessionListe;
                     // if (this.fDbModule.AktuellesProgramm.SessionListe === undefined || this.fDbModule.AktuellesProgramm.SessionListe.length <= 0) {
                         const mUebungParaDB: UebungParaDB = new UebungParaDB();
                         // mUebungParaDB.Limit = cUebungSelectLimit;
                         // mUebungParaDB.OffSet = 0;
                         mUebungParaDB.SaetzeBeachten = true;
-                        this.fDbModule.AktuellesProgramm.SessionListe.forEach(
+                        that.fDbModule.AktuellesProgramm.SessionListe.forEach(
                             (aSession) => {
-                                this.fDbModule.LadeSessionUebungen(aSession.ID, mUebungParaDB).then(
+                                that.fDbModule.LadeSessionUebungen(aSession.ID, mUebungParaDB).then(
                                     (aUebungsListe) => {
                                         if (aUebungsListe.length > 0) aSession.UebungsListe = aUebungsListe;
-                                        else this.fDbModule.CmpAktuellesProgramm = this.fDbModule.AktuellesProgramm.Copy();
+                                        else that.fDbModule.CmpAktuellesProgramm = that.fDbModule.AktuellesProgramm.Copy();
                                     });
                                 });//for
                                 // }
                             }//if
                         });
                         
-                        this.worker.onmessage = ({ data }) => {
-                            console.log(data);
-                        };
-            this.worker.postMessage('LadeAktuellesProgramm');
+                        // that.worker.onmessage = ({ data }) => {
+                        //     console.log(data);
+                        // };
+            that.worker.postMessage('LadeAktuellesProgramm');
         } else {
             // Web Workers are not supported in this environment.
             // You should add a fallback so that your program still executes correctly.
         }
     }
+
+    ngAfterContentInit() {
+        
+        
+    }
     
     ngAfterViewInit() {
-       
     }
 }

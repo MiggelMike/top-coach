@@ -22,6 +22,7 @@ import { Satz, SatzStatus } from 'src/Business/Satz/Satz';
 	styleUrls: ["./session-form.component.scss"],
 })
 export class SessionFormComponent implements OnInit {
+	private worker: Worker;
 	public Session: Session;
 	// public AnzSessionInProgram: number = 0;
 	public Programm: ITrainingsProgramm;
@@ -72,6 +73,36 @@ export class SessionFormComponent implements OnInit {
 				break;
 		}//switch
 	}
+
+	DoWorker() {
+        if (typeof Worker !== 'undefined') {
+            this.worker = new Worker(new URL('./session-form.worker', import.meta.url));
+            this.worker.addEventListener('message', ({ data }) => {
+                if (data.action === "LadeUebungen") {
+					const mUebungParaDB: UebungParaDB = new UebungParaDB();
+					// mUebungParaDB.Limit = cUebungSelectLimit;
+					// mUebungParaDB.OffSet = 0;
+					mUebungParaDB.SaetzeBeachten = true;
+					this.Programm.SessionListe.forEach(
+						(aSession) => {
+							this.fDbModule.LadeSessionUebungen(aSession.ID, mUebungParaDB).then(
+								(aUebungsListe) => {
+									if (aUebungsListe.length > 0) aSession.UebungsListe = aUebungsListe;
+									else this.fDbModule.CmpAktuellesProgramm = this.fDbModule.AktuellesProgramm.Copy();
+								});
+						});//foreach
+                }//if
+            });
+                        
+            this.worker.onmessage = ({ data }) => {
+                            console.log(data);
+            };
+            this.worker.postMessage('LadeUebungen');
+        } else {
+            // Web Workers are not supported in this environment.
+            // You should add a fallback so that your program still executes correctly.
+        }
+    }
 
 	public LadeUebungen(aUebungParaDB: UebungParaDB) {
 		// this.fDbModule.LadeSessionUebungen(this.Session.ID, aUebungParaDB).then(
@@ -205,6 +236,7 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.DoWorker();
 		if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length <= 0) {
 			this.Session.UebungsListe = [];
 			const mUebungPara: UebungParaDB = new UebungParaDB();
@@ -223,7 +255,7 @@ export class SessionFormComponent implements OnInit {
 		(aPara as SessionFormComponent).SaveChangesPrim();
 	}
 
-	public SaveChangesPrim(): Promise<void> {
+	public async SaveChangesPrim(): Promise<void> {
 		// In der Session gelöschte Übungen auch aus der DB löschen.
 		for (let index = 0; index < this.cmpSession.UebungsListe.length; index++) {
 			const mUebung = this.cmpSession.UebungsListe[index];
@@ -250,14 +282,14 @@ export class SessionFormComponent implements OnInit {
 			mPtrUebung.ArbeitsSaetzeStatus = mPtrUebung.getArbeitsSaetzeStatus();
 		}
 
-		return this.fDbModule.SessionSpeichern(this.Session)
+		this.fDbModule.SessionSpeichern(this.Session)
 			.then((aSession: Session) => {
-				const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
-				mSessionCopyPara.Komplett = true;
-				mSessionCopyPara.CopySessionID = true;
-				mSessionCopyPara.CopyUebungID = false;
-				mSessionCopyPara.CopySatzID = false;
-				this.cmpSession = aSession.Copy(mSessionCopyPara);
+				// const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+				// mSessionCopyPara.Komplett = true;
+				// mSessionCopyPara.CopySessionID = true;
+				// mSessionCopyPara.CopyUebungID = false;
+				// mSessionCopyPara.CopySatzID = false;
+				// this.cmpSession = aSession.Copy(mSessionCopyPara);
 			});
 	}
 
@@ -284,13 +316,14 @@ export class SessionFormComponent implements OnInit {
 		this.Session.StarteDauerTimer();
 	}
 
-	private async DoAfterDone(aSessionForm: SessionFormComponent) {
+	private DoAfterDone(aSessionForm: SessionFormComponent) {
 		const mIndex = aSessionForm.fDbModule.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
 		if (mIndex > -1) aSessionForm.fDbModule.AktuellesProgramm.SessionListe.splice(mIndex, 1);
 		
+		aSessionForm.fDbModule.AktuellesProgramm.SessionListe = this.Programm.SessionListe;
 		aSessionForm.fDbModule.AktuellesProgramm.NummeriereSessions();
-		this.SaveChangesPrim();
-		// this.router.navigate([""]);
+		this.SaveChangesPrim().then(() => this.router.navigate(['/']));
+		// this.SaveChangesPrim();
 	}
 
 	public async SetDone(): Promise<void> {
@@ -299,9 +332,7 @@ export class SessionFormComponent implements OnInit {
 		mDialogData.textZeilen.push("Do you want to proceed?");
 		mDialogData.OkData = this;
 		mDialogData.OkFn = async (aSessionForm: SessionFormComponent) => {
-			this.router.navigate([""]);
 			aSessionForm.Session.SetSessionFertig();
-			
 			if (aSessionForm.Session.UebungsListe.length > 0) {
 				const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
 				mSessionCopyPara.CopyUebungID = false;
@@ -328,6 +359,7 @@ export class SessionFormComponent implements OnInit {
 
 				mNeueSession.UebungsListe.forEach((mQuellUebung) => {
 					if (mQuellUebung.ArbeitsSatzListe && mQuellUebung.ArbeitsSatzListe.length > 0) {
+						const mSatzListe: Array<Satz> = [];
 						this.Programm.SessionListe.forEach((mSession) => {
 							if (mSession.ID !== aSessionForm.Session.ID) {
 								// Lade aus mSession alle Übungen die gleich mUebung sind
@@ -346,11 +378,13 @@ export class SessionFormComponent implements OnInit {
 											mDestSatzPtr.GewichtNaechsteSession = mQuellSatzPtr.GewichtNaechsteSession;
 											mDestSatzPtr.GewichtAusgefuehrt = mQuellSatzPtr.GewichtNaechsteSession;
 											mDestSatzPtr.GewichtVorgabe = mQuellSatzPtr.GewichtNaechsteSession;
-											this.fDbModule.SatzSpeichern(mDestSatzPtr);
+											mSatzListe.push(mDestSatzPtr);
 										}//for
 									}
 								});
 
+								if(mSatzListe.length > 0)
+									this.fDbModule.SaetzeSpeichern(mSatzListe);
 							}
 						});
 					}//if
@@ -358,8 +392,8 @@ export class SessionFormComponent implements OnInit {
 
 				this.Programm.SessionListe.push(mNeueSession);
 				this.Programm.NummeriereSessions();
-				
-				await this.fDbModule.SessionSpeichern(aSessionForm.Session);				
+			
+				// this.fDbModule.SessionSpeichern(aSessionForm.Session);				
 
 				const mSessions: Array<Session> = [mNeueSession];
 				for (let mSessionIndex = 0; mSessionIndex < mSessions.length; mSessionIndex++) {
@@ -400,7 +434,8 @@ export class SessionFormComponent implements OnInit {
 						}//if
 					}//for
 				}//for
-				await this.fDbModule.SessionSpeichern(mNeueSession);
+
+				this.fDbModule.SessionSpeichern(mNeueSession);
 				this.DoAfterDone(this);
 	}
 		}
@@ -411,3 +446,15 @@ export class SessionFormComponent implements OnInit {
 		return this.Session.Kategorie02 !== SessionStatus.Fertig && this.Session.Kategorie02 !== SessionStatus.FertigTimeOut;
 	}
 }
+
+// if (typeof Worker !== 'undefined') {
+//   // Create a new
+//   const worker = new Worker(new URL('./session-form.worker', import.meta.url));
+//   worker.onmessage = ({ data }) => {
+//     console.log(`page got message: ${data}`);
+//   };
+//   worker.postMessage('hello');
+// } else {
+//   // Web Workers are not supported in this environment.
+//   // You should add a fallback so that your program still executes correctly.
+// }
