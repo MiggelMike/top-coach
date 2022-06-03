@@ -16,44 +16,29 @@ import { DialogData } from '../dialoge/hinweis/hinweis.component';
 export class AnstehendeSessionsComponent implements OnInit {
     public isCollapsed = false;
     private worker: Worker;
-    
-    // public AnstehendeSessionObserver: Observable<ITrainingsProgramm>;
+    private fProgramm: ITrainingsProgramm;
     
     constructor(
         private fDbModule: DexieSvcService,
 		private fLoadingDialog: DialogeService
-        ) {
-            // this.AnstehendeSessionObserver = of(this.fDbModule.AktuellesProgramm);
-        }
+        ) {}
         
     public get Programm(): ITrainingsProgramm {
-        return this.fDbModule.AktuellesProgramm;
+        return this.fProgramm;
     }
 
     private async LadeSessions  (aOffSet: number = 0):Promise<void> {
         const mSessionParaDB: SessionParaDB = new SessionParaDB();
-        // mSessionParaDB.OffSet = aOffSet;
-      //  mSessionParaDB.Limit = cSessionSelectLimit;
         this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
             .then((aSessionListe) => {
                 this.fDbModule.AktuellesProgramm.SessionListe = aSessionListe;
+                aSessionListe.forEach((mSession) => this.fProgramm.SessionListe.push(mSession));
             });
     }
         
         
     ngOnInit() {
         this.DoWorker();
-        // this.fLoadingDialog.Loading(mDialogData);
-        // try {
-        //     this.fDbModule.LadeAktuellesProgramm()
-        //         .then( async (aProgramm) => {
-        //             this.Programm = aProgramm;
-        //             this.Programm.SessionListe = [];
-        //             this.LadeSessions();
-        //         });
-        // } catch (error) {
-        // //    this.fLoadingDialog.fDialog.closeAll();
-        // }
     }
 
     public get AktuellesProgramm(): ITrainingsProgramm {
@@ -69,20 +54,6 @@ export class AnstehendeSessionsComponent implements OnInit {
     }
 
     DoWorker() {
-        // if (this.fDbModule.AktuellesProgramm === undefined) {
-        //     this.fDbModule.LadeAktuellesProgramm()
-        //         .then(async (aProgramm) => {
-        //             if (aProgramm !== undefined) {
-        //                 this.fDbModule.AktuellesProgramm.SessionListe = [];
-        //                 const mSessionParaDB: SessionParaDB = new SessionParaDB();
-        //                 this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
-        //                     .then((aSessionListe) => {
-        //                         this.fDbModule.AktuellesProgramm.SessionListe = aSessionListe;
-        //                     });
-        //             }
-        //         });
-        // }
-
         const that: AnstehendeSessionsComponent = this;
         if (typeof Worker !== 'undefined') {
             that.worker = new Worker(new URL('./anstehende-sessions.worker', import.meta.url));
@@ -92,26 +63,23 @@ export class AnstehendeSessionsComponent implements OnInit {
             that.worker.addEventListener('message', ({ data }) => {
                 if (data.action === "LadeAktuellesProgramm") {
                     // this.fLoadingDialog.Loading(mDialogData);
-                    if (that.fDbModule.AktuellesProgramm === undefined) {
                         try {
                             that.fDbModule.LadeAktuellesProgramm()
                                 .then(async (aProgramm) => {
                                     if (aProgramm !== undefined) {
                                         that.fDbModule.AktuellesProgramm.SessionListe = [];
+                                        this.fProgramm = that.fDbModule.AktuellesProgramm.Copy();
                                         that.LadeSessions();
                                     } // else this.fLoadingDialog.fDialog.closeAll();
                                 });
                         } catch (error) {
-                            // this.fLoadingDialog.fDialog.closeAll();
+                            this.fLoadingDialog.fDialog.closeAll();
                         }
-                    }
                 } // if
                 else if (data.action === "LadeUebungen") {
                     that.Programm.SessionListe = that.fDbModule.AktuellesProgramm.SessionListe;
                     // if (this.fDbModule.AktuellesProgramm.SessionListe === undefined || this.fDbModule.AktuellesProgramm.SessionListe.length <= 0) {
                         const mUebungParaDB: UebungParaDB = new UebungParaDB();
-                        // mUebungParaDB.Limit = cUebungSelectLimit;
-                        // mUebungParaDB.OffSet = 0;
                         mUebungParaDB.SaetzeBeachten = true;
                         that.fDbModule.AktuellesProgramm.SessionListe.forEach(
                             (aSession) => {
@@ -129,17 +97,6 @@ export class AnstehendeSessionsComponent implements OnInit {
                         //     console.log(data);
                         // };
             that.worker.postMessage('LadeAktuellesProgramm');
-        } else {
-            // Web Workers are not supported in this environment.
-            // You should add a fallback so that your program still executes correctly.
         }
-    }
-
-    ngAfterContentInit() {
-        
-        
-    }
-    
-    ngAfterViewInit() {
     }
 }
