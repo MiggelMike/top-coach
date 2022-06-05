@@ -29,6 +29,7 @@
                     <mat-expansion-panel 
                         #panUebung='matExpansionPanel' 
                         [expanded]="SessUeb.Expanded && SessUeb.SatzListe.length > 0"
+                        [disabled]="checkingSets"
                         (closed)="PanelUebungClosed(SessUeb)" 
                         (opened)="PanelUebungOpened(SessUeb)">
                         <mat-expansion-panel-header>

@@ -45,6 +45,7 @@ export class Programm03Component implements OnInit {
     @ViewChild(CdkOverlayOrigin) cdkOverlayOrigin: CdkOverlayOrigin;
     private fExerciseOverlayConfig: ExerciseOverlayConfig;
     private fExerciseSettingsComponent: ExerciseSettingsComponent;
+    public checkingSets: boolean = false;
 
     public floatMask = floatMask;
     private isExpanded: Boolean = true;
@@ -136,15 +137,22 @@ export class Programm03Component implements OnInit {
     }
 
     async PanelUebungOpened(aUebung: Uebung) {
-        if(aUebung !== undefined)
-            aUebung.Expanded = true;
+        try {
+            this.checkingSets = true;
 
-        this.CheckUebungSatzliste(aUebung);
-
-        if (this.panUebung === undefined)
-            return;
-        
-        this.accCheckUebungPanels(aUebung);
+            if (aUebung !== undefined)
+                aUebung.Expanded = true;
+    
+                
+            if (this.panUebung === undefined)
+                return;
+                
+                
+            // this.CheckUebungSatzliste(aUebung);
+            // this.accCheckUebungPanels(aUebung);
+        } finally {
+            this.checkingSets = false;
+        }
     }
 
     PanelUebungClosed(aUebung: Uebung) {
@@ -180,7 +188,7 @@ export class Programm03Component implements OnInit {
             aUebung.SatzListe = [];
             const mSatzParaDB: SatzParaDB = new SatzParaDB();
             mSatzParaDB.Limit = cSatzSelectLimit;
-            mSatzParaDB.OffSet = 0;            
+            mSatzParaDB.OffSet = 0;
             await this.LadeUebungsSaetze(aUebung, mSatzParaDB);
         }
     }
@@ -196,9 +204,12 @@ export class Programm03Component implements OnInit {
                 mPanUebungListe[mIndex].expanded = aUebung.Expanded;
         }
         let mAllClosed = true;
-    
+        
         if (this.session.UebungsListe.length > 0) {
+            this.checkingSets = false;
+            
             const mPanUebungListe = this.panUebung.toArray();
+            this.checkingSets = true;
             for (let index = 0; index < mPanUebungListe.length; index++) {
                 const mPtrUebung: Uebung = this.session.UebungsListe[index];
                 this.CheckUebungSatzliste(mPtrUebung);
@@ -207,6 +218,7 @@ export class Programm03Component implements OnInit {
                     mAllClosed = false;
                 }
                 
+                this.checkingSets = false;
             }
         }
 
