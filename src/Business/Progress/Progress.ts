@@ -264,47 +264,15 @@ export class Progress implements IProgress {
 					mUebung.Datum.valueOf() <= aSession.Datum.valueOf() &&
 					mUebung.Datum.valueOf() > mLastFailDate.valueOf()
 				);
-				//return (mUebung.Datum.valueOf() <= aSessUebung.Datum.valueOf());
-				// if (mUebung.Datum <= aSessUebung.Datum &&
-				// 	mUebung.WeightInitDate.valueOf() > MinDatum.valueOf()) return true;
-				// return false;
-
-					// && (	mUebung.FailDate > aSessUebung.FailDate
-					// 	|| aSessUebung.FailDate.valueOf() === MinDatum.valueOf())
 			};
 
 			mLadePara.OnUebungAfterLoadFn = (mUebungen: Array<Uebung>) => {
-				const mResult: Array<Uebung> = [];
 				const mAktuelleUebung = mUebungen.find((u) => u.ID === aSessUebung.ID);
 				if (mAktuelleUebung !== undefined) {
 					const mSpliceIndex = mUebungen.indexOf(mAktuelleUebung);
 					mUebungen.splice(mSpliceIndex,1);
 				}
-				// mUebungen.push(aSessUebung);
-				
-				mUebungen = mUebungen.sort((a, b) => {
-					return b.WeightInitDate.valueOf() - a.WeightInitDate.valueOf();
-				});
-				
-				let mWeightInitDate: Date = MinDatum;
-				
-				for (let index = 0; index < mUebungen.length; index++) {
-					const mPtrUebung = mUebungen[index];
-
-					if (mPtrUebung.WeightInitDate.valueOf() > mWeightInitDate.valueOf())
-						mWeightInitDate = mPtrUebung.WeightInitDate;
-				}
-
-				for (let index = 0; index < mUebungen.length; index++) {
-					const mPtrUebung = mUebungen[index];
-					// if (mUebungsliste.find((u) => u.ID === mPtrUebung.ID) === undefined)
-						// mResult.push(mPtrUebung);
-						// if ((mPtrUebung.FailDate.valueOf() > mMaxFailDate.valueOf()) || (mPtrUebung.FailDate.valueOf() === MinDatum.valueOf()))
-						// if ((mPtrUebung.Datum.valueOf() > mMaxFailDate.valueOf()) || (mMaxFailDate.valueOf() === MinDatum.valueOf()))
-						if (mPtrUebung.Datum.valueOf() > mWeightInitDate.valueOf()) 
-							mResult.push(mPtrUebung)
-				}
-				return mResult;
+				return mUebungen;
 			}
 
 			mLadePara.Limit = mFailCount + 1;
@@ -319,44 +287,7 @@ export class Progress implements IProgress {
 			mSessionCopyPara.CopySatzID = false;
 			mUebungsliste = await aDb.LadeSessionUebungenEx(aSession.Copy(mSessionCopyPara), mLadePara);
 			mUebungsliste.push(aSessUebung);
-			
-			// if (mParaUebungFailed === true) {
-			// 	aSessUebung.FailDate = new Date();
-			// }
 		} // if
-
-
-		// if (   mProgress.ProgressSet === ProgressSet.First
-		// 	&& aSession.Kategorie02 === SessionStatus.Laueft
-		// 	&& aSatzIndex === 0
-		// 	// Nur der erste Satz muss erledigt sein.
-		// 	// && (aSessUebung.SatzFertig(0) === true)
-		// 	// Der erste Satz der Übung ist maßgebend.
-		// 	&& aSessUebung.SatzWDH(0) >= aSessUebung.SatzBisVorgabeWDH(0)
-		// )
-		// {
-		// 		// Die vorgegebenen Wiederholungen konnten erreicht werden
-		// 		return WeightProgress.Increase;
-		// }
-
-		// if (   aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
-		// 	&& mProgress.ProgressSet === ProgressSet.Last
-		// 	&& aSatzIndex === aSessUebung.ArbeitsSatzListe.length - 1) {
-		// 	// Der letzte Satz der Übung ist maßgebend.
-		// 	// Alle Sätze müssen erledigt sein.
-		// 	if (aSessUebung.SatzWDH(aSessUebung.ArbeitsSatzListe.length - 1) >= aSessUebung.SatzBisVorgabeWDH(aSessUebung.ArbeitsSatzListe.length - 1))
-		// 		// Die vorgegebenen Wiederholungen konnten erreicht werden
-		// 		return WeightProgress.Increase;
-		// }
-
-		// // Alle Sätze der Übung.
-		// if (	mProgress.ProgressSet === ProgressSet.All
-		// 	&&  aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
-		// 	&& mProgress.EvalSaetze(aSessUebung, VorgabeWeightLimit.UpperLimit))
-		// {
-		// // Die vorgegebenen Wiederholungen konnten erreicht werden
-  		// 	return WeightProgress.Increase;
-		// }
 
 		if ((mUebungsliste === undefined)|| (mUebungsliste.length < mFailCount)) 
 			return WeightProgress.Same;
