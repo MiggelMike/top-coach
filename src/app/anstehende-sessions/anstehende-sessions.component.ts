@@ -61,22 +61,23 @@ export class AnstehendeSessionsComponent implements OnInit {
             that.worker = new Worker(new URL('./anstehende-sessions.worker', import.meta.url));
             that.worker.addEventListener('message', ({ data }) => {
                 if (data.action === "LadeAktuellesProgramm") {
-                    const mDialogData = new DialogData();
-                    mDialogData.ShowAbbruch = false;
-                    mDialogData.ShowOk = false;
-                    this.fLoadingDialog.Loading(mDialogData);
-                    try {
-                        that.fDbModule.LadeAktuellesProgramm()
-                            .then(async (aProgramm) => {
-                                if (aProgramm !== undefined) {
+                    that.fDbModule.LadeAktuellesProgramm()
+                        .then(async (aProgramm) => {
+                            if (aProgramm !== undefined) {
+                                const mDialogData = new DialogData();
+                                mDialogData.ShowAbbruch = false;
+                                mDialogData.ShowOk = false;
+                                this.fLoadingDialog.Loading(mDialogData);
+                                try {
                                     that.fDbModule.AktuellesProgramm.SessionListe = [];
                                     this.fProgramm = that.fDbModule.AktuellesProgramm.Copy();
                                     that.LadeSessions();
+                                } catch (error) {
+                                    this.fLoadingDialog.fDialog.closeAll();
                                 }
-                            });
-                    } catch (error) {
-                        this.fLoadingDialog.fDialog.closeAll();
-                    }
+                            }
+
+                        });
                 } // if
                 else if (data.action === "LadeUebungen") {
                     try {

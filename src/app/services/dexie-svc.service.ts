@@ -13,7 +13,7 @@ import { DialogeService } from './dialoge.service';
 import { ISatz, Satz, SatzStatus, GewichtDiff } from './../../Business/Satz/Satz';
 import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
 import { AppData, IAppData } from './../../Business/Coach/Coach';
-import { Collection, Dexie, PromiseExtended, WhereClause } from 'dexie';
+import { Dexie, PromiseExtended } from 'dexie';
 import { Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardUebung, ArbeitsSaetzeStatus } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
@@ -366,7 +366,7 @@ export class DexieSvcService extends Dexie {
 
 		this.version(18).stores({
 			AppData: "++id",
-			Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus]",
+			Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
 			SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02],[FK_Programm+Kategorie02],ListenIndex",
 			Satz: "++ID,UebungID",
@@ -1056,6 +1056,18 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
+	public async LoadLastFailDate(aUebungParaDB: UebungParaDB): Promise<Date> {
+		const mDummy: ISession = new Session();
+		return await this.LadeSessionUebungenEx(mDummy, aUebungParaDB)
+			.then((mUebungen) => {
+				if (mUebungen.length > 0)
+					return mUebungen[0].WeightInitDate;
+				else
+					return MinDatum;
+			});
+	}
+
+
 	public async LadeSessionUebungenEx(aSession: ISession, aLadePara: ParaDB): Promise<Array<Uebung>> {
 		if (aLadePara !== undefined && aLadePara.OnUebungBeforeLoadFn !== undefined)
 			aLadePara.OnUebungBeforeLoadFn(aLadePara);
@@ -1067,6 +1079,7 @@ export class DexieSvcService extends Dexie {
 			.limit(aLadePara === undefined || aLadePara.Limit === undefined ? cMaxLimnit : aLadePara.Limit)
 			.sortBy(aLadePara === undefined || aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
 			.then(async (aUebungen: Array<Uebung>) => {
+				const x = 0;
 				if (aUebungen.length > 0) {
 					if ((aLadePara !== undefined) && (aLadePara.SortOrder !== undefined) && (aLadePara.SortOrder === SortOrder.ascending))
 						// Die Abfrage wird standardmäßig absteigend ausgeführt.
@@ -1277,25 +1290,29 @@ export class DexieSvcService extends Dexie {
 					const mPtrCopyOfUebung = mPtrUebung.Copy();
 					
 					// if (
-					// 	aSessionExtraParaDB !== undefined
-					// 	&& aSessionExtraParaDB.UebungSpeicherParaDB !== undefined
-					// 	&& aSessionExtraParaDB.UebungSpeicherParaDB.HalteWdhVorgabeStatus === true
-					// )
-					// 	mPtrCopyOfUebung.LastFailedID = mPtrUebung.LastFailedID;
-					
-					mUebungsListe.push(mPtrCopyOfUebung);
+						// 	aSessionExtraParaDB !== undefined
+						// 	&& aSessionExtraParaDB.UebungSpeicherParaDB !== undefined
+						// 	&& aSessionExtraParaDB.UebungSpeicherParaDB.HalteWdhVorgabeStatus === true
+						// )
+						// 	mPtrCopyOfUebung.LastFailedID = mPtrUebung.LastFailedID;
+						
+						mUebungsListe.push(mPtrCopyOfUebung);
 				}
 			}
 			aSession.UebungsListe = [];
 			aSession.Datum = aSession.Datum === null || undefined ? new Date() : aSession.Datum;
-
+			
 			const mResult = await this.SessionTable.put(aSession);
 			// Session ist gespeichert
 			for (let index = 0; index < mUebungsListe.length; index++) {
 				const mUebung = mUebungsListe[index];
 				// SessionID in Uebung eintragen
 				mUebung.SessionID = aSession.ID;
+				mUebung.FK_Programm = aSession.FK_Programm;
 				mUebung.ListenIndex = index;
+				// if (mUebung.Datum === undefined)
+				// 	mUebung.Datum = new Date();
+				// mUebung.Datum
 				mUebung.Datum = aSession.Datum;
 				// Uebung speichern
 				await this.UebungSpeichern(mUebung);

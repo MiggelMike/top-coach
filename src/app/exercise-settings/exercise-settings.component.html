@@ -97,7 +97,7 @@
                         <mat-form-field class="align-right" fxFlex="90%">
                             <mat-label>Fail count</mat-label>
                             <input matInput [textMask]="{mask: Int3DigitMask, guide: false }"
-                                [ngModel]="(SessUeb.FailCount | number: '1.0')"
+                                [ngModel]="(SessUeb.MaxFailCount | number: '1.0')"
                                 (focusout)="SetFailCount($event)"
                                 type="text">
                         </mat-form-field>

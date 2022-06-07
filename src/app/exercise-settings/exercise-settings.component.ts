@@ -134,7 +134,7 @@ export class ExerciseSettingsComponent {
 	}
 
 	SetFailCount(aEvent: any) {
-		this.SessUeb.FailCount = aEvent.target.value;
+		this.SessUeb.MaxFailCount = aEvent.target.value;
 		this.EvalSofortSpeichern();
 	}
 

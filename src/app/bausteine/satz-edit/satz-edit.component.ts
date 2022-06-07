@@ -206,12 +206,16 @@ export class SatzEditComponent implements OnInit {
         }
 
         const mDialogData: DialogData = new DialogData();
+        const that = this;
         Progress.StaticDoProgress(mProgressPara).then( (aProgressPara: ProgressPara) => {
             aProgressPara.DbModule.LadeAppData()
                 .then((aAppData) => {
                     try {
                         aProgressPara.UserInfo = [];
-                        this.sessUebung.WeightInitDate = MinDatum;
+
+                        that.sessUebung.WeightInitDate = MinDatum;
+
+
 
                         if (
                             (aProgressPara.Progress.ProgressSet === ProgressSet.First)
@@ -221,44 +225,57 @@ export class SatzEditComponent implements OnInit {
                             mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung} ${aAppData.GewichtsEinheitText} for the next sets`);
                             mDialogData.textZeilen.push(`of this exercise of the current workout`);
                             mDialogData.textZeilen.push(`and also in upcoming workouts.`);
-                            this.sessUebung.WeightInitDate = new Date();
-                            this.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung);
+                            that.sessUebung.WeightInitDate = new Date();
+                            that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung);
                         }
                         else {
-                            if (this.sessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig) {
+                            if (that.sessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig) {
                                 if (aProgressPara.Progress.ProgressSet === ProgressSet.First
-                                    && this.sessUebung.SatzWDH(0) >= this.sessUebung.SatzBisVorgabeWDH(0)
+                                    && that.sessUebung.SatzWDH(0) >= that.sessUebung.SatzBisVorgabeWDH(0)
                                     || aProgressPara.Wp === WeightProgress.Increase
                                 ) {
-                                    this.sessUebung.WeightInitDate = new Date();
+                                    that.sessUebung.WeightInitDate = new Date();
                                     mDialogData.textZeilen.push(`Well done!`);
                                     if (aProgressPara.Progress.ProgressSet === ProgressSet.First) {
                                         mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtAusgefuehrt} ${aAppData.GewichtsEinheitText} next time.`);
-                                        this.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt);
+                                        that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt);
                                     }
                                     else {
                                         mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung} ${aAppData.GewichtsEinheitText} next time.`);
-                                        this.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung);
+                                        that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung);
                                     }
                                 }
                                 else if (
                                         (aProgressPara.Wp === WeightProgress.Decrease || aProgressPara.Wp === WeightProgress.DecreaseNextTime)
-                                    &&  this.sessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig )
+                                    &&  that.sessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig )
                                 {
-                                    this.sessUebung.WeightInitDate = new Date();
+                                    that.sessUebung.WeightInitDate = new Date();
                                     mDialogData.textZeilen.push(`You failed!`);
                                     mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtAusgefuehrt - aProgressPara.AusgangsUebung.GewichtReduzierung} ${aAppData.GewichtsEinheitText} next time.`);
-                                    this.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt - aProgressPara.AusgangsUebung.GewichtReduzierung);
+                                    that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt - aProgressPara.AusgangsUebung.GewichtReduzierung);
                                 } else if (aProgressPara.Wp === WeightProgress.Same) {
                                     mDialogData.textZeilen.push(`Lift same weight next time.`);
                                     mDialogData.textZeilen.push(`${aProgressPara.AusgangsSatz.GewichtAusgefuehrt} ${aAppData.GewichtsEinheitText}`);
-                                    this.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt);
+                                    that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt);
                                 }
                             }//if
                         }
+
+                        // that.programm.SessionListe.find((mSession) => {
+                        //     if (that.sess.ID === mSession.ID) {
+                        //         mSession.UebungsListe = that.sess.UebungsListe;
+                        //         mSession that.sess = 
+                        //     }
+                        // });
+
+                        // that.sess.UebungsListe.find((mUebung) => {
+                        //     if (mUebung.ListenIndex === that.sessUebung.ListenIndex)
+                        //        mUebung = that.sessUebung;
+                        // });
+
                     
                         if (mDialogData.textZeilen.length > 0)
-                            this.fDialogService.Hinweis(mDialogData);
+                            that.fDialogService.Hinweis(mDialogData);
                     } catch (error) {
                         console.log(error);
                     }

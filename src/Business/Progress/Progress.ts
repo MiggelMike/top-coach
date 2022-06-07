@@ -237,8 +237,10 @@ export class Progress implements IProgress {
 		if (mFailCount > 0)
 		{
 			const mLadePara: ParaDB = new ParaDB();
+			
 			mLadePara.SortOrder = SortOrder.descending;
 
+			// FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus
 			mLadePara.WhereClause = {
 				FK_Programm: aSession.FK_Programm,
 				FkUebung: aSessUebung.FkUebung,
@@ -248,7 +250,25 @@ export class Progress implements IProgress {
 			};
 
 			mLadePara.And = (mUebung: Uebung): boolean => {
-				return (mUebung.Datum <= aSessUebung.Datum);
+				return (
+					mUebung.WeightInitDate.valueOf() > MinDatum.valueOf()
+				);
+			};
+
+			mLadePara.Limit = 1;
+			mLadePara.SortBy = "WeightInitDate";
+			const mLastFailDate = await aDb.LoadLastFailDate(mLadePara);
+
+			mLadePara.And = (mUebung: Uebung): boolean => {
+				return (
+					mUebung.Datum.valueOf() <= aSession.Datum.valueOf() &&
+					mUebung.Datum.valueOf() > mLastFailDate.valueOf()
+				);
+				//return (mUebung.Datum.valueOf() <= aSessUebung.Datum.valueOf());
+				// if (mUebung.Datum <= aSessUebung.Datum &&
+				// 	mUebung.WeightInitDate.valueOf() > MinDatum.valueOf()) return true;
+				// return false;
+
 					// && (	mUebung.FailDate > aSessUebung.FailDate
 					// 	|| aSessUebung.FailDate.valueOf() === MinDatum.valueOf())
 			};
@@ -260,7 +280,7 @@ export class Progress implements IProgress {
 					const mSpliceIndex = mUebungen.indexOf(mAktuelleUebung);
 					mUebungen.splice(mSpliceIndex,1);
 				}
-				mUebungen.push(aSessUebung);
+				// mUebungen.push(aSessUebung);
 				
 				mUebungen = mUebungen.sort((a, b) => {
 					return b.WeightInitDate.valueOf() - a.WeightInitDate.valueOf();
@@ -287,8 +307,8 @@ export class Progress implements IProgress {
 				return mResult;
 			}
 
-			mLadePara.Limit = mFailCount;
-			mLadePara.SortBy = "FailDate";
+			mLadePara.Limit = mFailCount + 1;
+			mLadePara.SortBy = "Datum";
 
 			// Warten, bis Übungen geladen sind.
 
@@ -298,6 +318,7 @@ export class Progress implements IProgress {
 			mSessionCopyPara.CopyUebungID = false;
 			mSessionCopyPara.CopySatzID = false;
 			mUebungsliste = await aDb.LadeSessionUebungenEx(aSession.Copy(mSessionCopyPara), mLadePara);
+			mUebungsliste.push(aSessUebung);
 			
 			// if (mParaUebungFailed === true) {
 			// 	aSessUebung.FailDate = new Date();
@@ -352,7 +373,7 @@ export class Progress implements IProgress {
 			if (   aSatzIndex === 0
 				&& mProgress.ProgressSet === ProgressSet.First
 				// Der erste Satz muss fertig sein.
-			    && aSessUebung.getArbeitsSatzStatus(0) === SatzStatus.Fertig)
+			    && mPtrSessUebung.getArbeitsSatzStatus(0) === SatzStatus.Fertig)
 			{
 				// Der erste Satz der Übung ist maßgebend.
 				if (mPtrSessUebung.SatzWDH(0) >= mPtrSessUebung.SatzBisVorgabeWDH(0))
@@ -365,7 +386,7 @@ export class Progress implements IProgress {
 							(aSession.Kategorie02 === SessionStatus.Laueft)
 						// Die Session läuft NICHT.
 						// Dann müssen ALLE Sätze abgeschlossen sein.
-						|| (aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig))
+						|| (mPtrSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig))
 					{
 						return WeightProgress.Increase;
 					}//if
@@ -386,7 +407,7 @@ export class Progress implements IProgress {
 			//#endregion
 			//#region ProgressSet.Last
 			// Der letzte Satz ist maßgebend.
-			if (   aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
+			if (   mPtrSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
 				// Der letzte Satz der Übung ist maßgebend.
 				&& mProgress.ProgressSet === ProgressSet.Last
 				&& aSatzIndex === mPtrSessUebung.ArbeitsSatzListe.length - 1)
@@ -408,7 +429,7 @@ export class Progress implements IProgress {
 			//#endregion
 			//#region ProgressSet.All   
 			if (	mProgress.ProgressSet === ProgressSet.All
-				&& 	aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig )
+				&& 	mPtrSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig )
 			{
 				// Alle Sätze der Übung.
 				if (	(mProgress.ProgressTyp === ProgressTyp.BlockSet && this.EvalSaetze(mPtrSessUebung, VorgabeWeightLimit.LowerLimit) === false)
