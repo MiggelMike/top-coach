@@ -215,8 +215,6 @@ export class SatzEditComponent implements OnInit {
 
                         that.sessUebung.WeightInitDate = MinDatum;
 
-
-
                         if (
                             (aProgressPara.Progress.ProgressSet === ProgressSet.First)
                             && (aSatz.SatzListIndex === 0)

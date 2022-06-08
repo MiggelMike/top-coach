@@ -1068,7 +1068,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 
-	public async LadeSessionUebungenEx(aSession: ISession, aLadePara: ParaDB): Promise<Array<Uebung>> {
+	public async LadeSessionUebungenEx(aSession: ISession, aLadePara?: ParaDB): Promise<Array<Uebung>> {
 		if (aLadePara !== undefined && aLadePara.OnUebungBeforeLoadFn !== undefined)
 			aLadePara.OnUebungBeforeLoadFn(aLadePara);
 
@@ -1482,6 +1482,15 @@ export class DexieSvcService extends Dexie {
 		}
 
 		return mResultSession;
+	}
+
+	public async CheckSessionSaetze(aSession: Session) {
+		if (aSession.UebungsListe.length === 0) {
+			const mUebungParaDB: UebungParaDB = new UebungParaDB();
+			mUebungParaDB.SaetzeBeachten = true;
+			await this.LadeSessionUebungenEx(aSession, mUebungParaDB)
+				.then((mUebungen) => aSession.UebungsListe = mUebungen )
+		}
 	}
 
 	public async EvalAktuelleSessionListe(aSession: Session, aPara?: any): Promise<void> {

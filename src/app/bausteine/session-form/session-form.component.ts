@@ -33,6 +33,7 @@ export class SessionFormComponent implements OnInit {
 	private fSessionOverlayConfig: SessionOverlayConfig;
 	public DeletedExerciseList: Array<Uebung> = [];
 	public DeletedSatzList: Array<Satz> = [];
+	private fWorkerActive: boolean = false;
 	// private SelectedExerciseList: Array<Uebung> = [];
 
 	constructor(
@@ -78,7 +79,8 @@ export class SessionFormComponent implements OnInit {
         if (typeof Worker !== 'undefined') {
             this.worker = new Worker(new URL('./session-form.worker', import.meta.url));
             this.worker.addEventListener('message', ({ data }) => {
-                if (data.action === "LadeUebungen") {
+				if (data.action === "LadeUebungen") {
+					this.fWorkerActive = true;
 					const mUebungParaDB: UebungParaDB = new UebungParaDB();
 					// mUebungParaDB.Limit = cUebungSelectLimit;
 					// mUebungParaDB.OffSet = 0;
@@ -91,7 +93,8 @@ export class SessionFormComponent implements OnInit {
 									else this.fDbModule.CmpAktuellesProgramm = this.fDbModule.AktuellesProgramm.Copy();
 								});
 						});//foreach
-                }//if
+					this.fWorkerActive = false;
+				}//if
             });
                         
             this.worker.onmessage = ({ data }) => {
@@ -236,19 +239,24 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		// this.DoWorker();
+		this.DoWorker();
 		if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length <= 0) {
 			this.Session.UebungsListe = [];
 			const mUebungPara: UebungParaDB = new UebungParaDB();
 			this.fDbModule.LadeSessionUebungen(this.Session.ID, mUebungPara)
-			.then( async (aUebungsliste) => {
-				if (aUebungsliste.length > 0) {
-					this.Session.UebungsListe = aUebungsliste;
-				}
-			});
-		}
-
+				.then(async (aUebungsliste) => {
+					if (aUebungsliste.length > 0) {
+						this.Session.UebungsListe = aUebungsliste;
+						this.LadeSaetze();
+					}
+				});
+		} else this.LadeSaetze();
+		
 		this.BodyWeight = this.fDbModule.getBodyWeight();
+	}
+	
+	private LadeSaetze() {
+		this.Session.UebungsListe.forEach((mUebung) => this.fDbModule.LadeUebungsSaetze(mUebung.ID).then((mSaetze) => mUebung.SatzListe = mSaetze ));
 	}
 
 	public SaveChanges(aPara: any) {
@@ -362,11 +370,15 @@ export class SessionFormComponent implements OnInit {
 					mNeueSession.FK_VorlageProgramm = aSessionForm.Session.FK_VorlageProgramm;
 					mNeueSession.Expanded = false;
 
+					for (let index = 0; index < this.Programm.SessionListe.length; index++) {
+						const mPtrSession  = this.Programm.SessionListe[index];
+						await this.fDbModule.CheckSessionSaetze(mPtrSession);
+					}
 
 					mNeueSession.UebungsListe.forEach((mQuellUebung) => {
 						if (mQuellUebung.ArbeitsSatzListe && mQuellUebung.ArbeitsSatzListe.length > 0) {
 							const mSatzListe: Array<Satz> = [];
-							this.Programm.SessionListe.forEach((mSession) => {
+							this.Programm.SessionListe.forEach( async (mSession) => {
 								if (mSession.ID !== aSessionForm.Session.ID) {
 									// Lade aus mSession alle Übungen die gleich mUebung sind
 									mSession.UebungsListe.forEach((mDestUebung) => {
