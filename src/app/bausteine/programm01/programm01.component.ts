@@ -1,4 +1,4 @@
-import { SessionParaDB } from 'src/app/services/dexie-svc.service';
+import { SessionParaDB, UebungParaDB } from 'src/app/services/dexie-svc.service';
 import { DexieSvcService, ParaDB, cSessionSelectLimit } from './../../services/dexie-svc.service';
 import { GlobalService } from "./../../services/global.service";
 import { Component, OnInit, Input } from "@angular/core";
@@ -6,6 +6,7 @@ import { TrainingsProgramm, ITrainingsProgramm, ProgrammKategorie, ProgrammTyp }
 import { DialogeService } from 'src/app/services/dialoge.service';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
 import { Router } from '@angular/router';
+import { Uebung } from 'src/Business/Uebung/Uebung';
 
 
 @Component({
@@ -32,20 +33,7 @@ export class Programm01Component implements OnInit {
      }
 
     private SelectWorkout(aSelectedProgram: ITrainingsProgramm) {
-        const mDialogData = new DialogData();
-        mDialogData.hasBackDrop = true;
-        mDialogData.textZeilen.push("Do want to set initial weights?");
-        mDialogData.OkFn = (): void => {
-            this.router.navigate(["/app-initial-weight"], { state: { Program: aSelectedProgram } });
-        }
-
-        mDialogData.CancelFn = (): void => {
-            this.fDbModul.SetAktuellesProgramm(aSelectedProgram as TrainingsProgramm)
-                .then(() =>
-                    this.router.navigate(['/'])
-                );
-         }
-         this.fDialogService.JaNein(mDialogData);
+        this.router.navigate(["/app-initial-weight"], { state: { Program: aSelectedProgram } });
     }
 
     private LadeSessions(aSessionLadePara?: SessionParaDB) : Promise<void> {

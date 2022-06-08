@@ -23,29 +23,29 @@ export class ProgrammWaehlenComponent implements OnInit {
 
     ngOnInit() {
         this.ProgrammListeObserver = of(this.ProgrammListe);
-        const mDialogData = new DialogData();
-		mDialogData.ShowAbbruch = false;
-		mDialogData.ShowOk = false;
-        this.fLoadingDialog.Loading(mDialogData);
-        try {
-            this.LadeTrainingsProgramme();
-        } catch (error) {
-            this.fLoadingDialog.fDialog.closeAll();
-        }
+        this.LadeTrainingsProgramme();
     }
-
+    
     public LadeTrainingsProgramme(): void {
         this.ProgrammListe = [];
-       
+        
         this.ProgrammListeObserver.subscribe(
             () => {
-                this.fDbModule.LadeStandardProgramme()
-                    .then((aProgrammListe) => {
-                        this.ProgrammListe = aProgrammListe;
-                        this.fLoadingDialog.fDialog.closeAll();
-                    });
-            }
-        );
+                const mDialogData = new DialogData();
+                mDialogData.ShowAbbruch = false;
+                mDialogData.ShowOk = false;
+                this.fLoadingDialog.Loading(mDialogData);
+                try {
+                    this.fDbModule.LadeStandardProgramme()
+                        .then((aProgrammListe) => {
+                            this.fLoadingDialog.fDialog.closeAll();
+                            this.ProgrammListe = aProgrammListe;
+                        });
+                }
+                catch {
+                    this.fLoadingDialog.fDialog.closeAll();
+                }
+            });
     }
 
     public TrainingsProgrammeVorhanden(): Boolean {
