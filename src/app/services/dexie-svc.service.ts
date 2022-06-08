@@ -265,14 +265,22 @@ export class DexieSvcService extends Dexie {
     }
 
 	public SetAktuellesProgramm(aSelectedProgram: TrainingsProgramm, aInitialWeightList?: Array<InitialWeight>): Promise<void> {
-		return this.FindAktuellesProgramm().then((p) => {
+		return this.FindAktuellesProgramm().then( async (p) => {
 			for (let index = 0; index < p.length; index++) {
 				const mPtrProgramm = p[index];
 				mPtrProgramm.ProgrammKategorie = ProgrammKategorie.Aktiv;
 				this.ProgrammSpeichern(mPtrProgramm);
 			}
 
-
+			if (aSelectedProgram.SessionListe === undefined || aSelectedProgram.SessionListe.length <= 0) {
+				const mSessionLadePara: SessionParaDB = new SessionParaDB();
+				mSessionLadePara.UebungenBeachten = true;
+				mSessionLadePara.UebungParaDB = new UebungParaDB();
+				mSessionLadePara.UebungParaDB.SaetzeBeachten = true;
+				await this.LadeProgrammSessions(aSelectedProgram.id, mSessionLadePara)
+					.then((mSessions) => aSelectedProgram.SessionListe = mSessions);
+			}
+			
 			const mProgramm = aSelectedProgram.Copy();
 			mProgramm.id = undefined;
 			mProgramm.FkVorlageProgramm = aSelectedProgram.id;

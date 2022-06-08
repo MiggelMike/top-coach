@@ -14,7 +14,9 @@
 
                         <ng-template #AuswahlBlock>
                             <div fxLayout="column" fxFlex="100px">
-                                <a [ngClass]="['link-button-font', 'HG-01']" mat-button (click)="SelectThisWorkoutClick(programm,$event)"><span class="tc-font-size-small">Select</span></a>
+                                <a [ngClass]="['link-button-font', 'HG-01']" 
+                                   [disabled] = "SelectBtnDisabled"
+                                   mat-button (click)="SelectThisWorkoutClick(programm,$event)"><span class="tc-font-size-small">Select</span></a>
                             </div>
                                 <!-- { path: 'programmedit', component: WorkoutFormComponent }, -->
                             <div fxLayout="column" fxFlex="auto">                            

@@ -25,7 +25,7 @@ export class DialogeService {
         mDialogConfig.disableClose = true;
         mDialogConfig.autoFocus = true;
         mDialogConfig.data = aDialogData;
-        mDialogConfig.hasBackdrop = false;
+        mDialogConfig.hasBackdrop = aDialogData.hasBackDrop;
         this.fDialog.open(DialogComponent, mDialogConfig );
     }
 

@@ -19,9 +19,10 @@ export class Programm01Component implements OnInit {
     @Input() showButtons: boolean | false;
     @Input() showSaveButtons: boolean | false;
     @Input() programmtext: { value: null };
+    
+    SelectBtnDisabled: boolean = false;
 
     constructor(
-        private fGlobalService: GlobalService,
         private fDbModul: DexieSvcService,
         public fDialogService: DialogeService,
         private router: Router
@@ -32,14 +33,17 @@ export class Programm01Component implements OnInit {
 
     private SelectWorkout(aSelectedProgram: ITrainingsProgramm) {
         const mDialogData = new DialogData();
+        mDialogData.hasBackDrop = true;
         mDialogData.textZeilen.push("Do want to set initial weights?");
         mDialogData.OkFn = (): void => {
-           this.router.navigate(["/app-initial-weight"], { state: { Program: aSelectedProgram } });
+            this.router.navigate(["/app-initial-weight"], { state: { Program: aSelectedProgram } });
         }
 
         mDialogData.CancelFn = (): void => {
             this.fDbModul.SetAktuellesProgramm(aSelectedProgram as TrainingsProgramm)
-                .then(() =>  this.router.navigate([""]) );
+                .then(() =>
+                    this.router.navigate(['/'])
+                );
          }
          this.fDialogService.JaNein(mDialogData);
     }
@@ -62,11 +66,13 @@ export class Programm01Component implements OnInit {
     }
     
     SelectThisWorkoutClick(aSelectedProgram: ITrainingsProgramm, $event: any): void {
+        this.SelectBtnDisabled = false;
         $event.stopPropagation();
         this.fDbModul.FindAktuellesProgramm()
         .then((p) => {
                 if (p.find( (prog) => prog.FkVorlageProgramm === aSelectedProgram.id ) !== undefined ) {
                     const mDialogData = new DialogData();
+                    mDialogData.hasBackDrop = true;
                     mDialogData.textZeilen.push("The program is already chosen!");
                     mDialogData.textZeilen.push("Do want to add it anyway?");
                     mDialogData.OkFn = (): void => {
@@ -75,6 +81,11 @@ export class Programm01Component implements OnInit {
                         );
                         this.SelectWorkout(aSelectedProgram);
                     }
+
+                    mDialogData.CancelFn = (): void => {
+                        this.SelectBtnDisabled = false;
+                     }            
+
                     this.fDialogService.JaNein(mDialogData);
                 } else {
                     this.SelectWorkout(aSelectedProgram);
