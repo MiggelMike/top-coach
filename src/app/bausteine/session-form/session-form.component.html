@@ -1,8 +1,12 @@
  
 <ng-container *ngIf="BackButtonVisible === true">
-
-     <mat-icon (click)="back()">arrow_back</mat-icon>
+        <mat-icon (click)="back()">arrow_back</mat-icon>
 </ng-container>
+
+<ng-container *ngIf="BackButtonVisible === false">
+    <img src="../../../assets/icons/lock.png">
+</ng-container>
+
 
 <!-- 
 <a [ngClass]="['link-button-font', 'HG-01','mr-5']" mat-flat-button (click)="doStats()">Stats

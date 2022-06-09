@@ -100,15 +100,17 @@ export class SessionFormComponent implements OnInit {
 					mUebungParaDB.SaetzeBeachten = true;
 					this.Programm.SessionListe.forEach(
 						(aSession) => {
-							this.fDbModule.LadeSessionUebungen(aSession.ID, mUebungParaDB).then(
-								(aUebungsListe) => {
-									if (aUebungsListe.length > 0) aSession.UebungsListe = aUebungsListe;
-									else this.fDbModule.CmpAktuellesProgramm = this.fDbModule.AktuellesProgramm.Copy();
-									if (this.cmpSession.UebungsListe === undefined || this.cmpSession.UebungsListe.length <= 0) {
-										this.cmpSession.UebungsListe = [];
-										aSession.UebungsListe.forEach((mUebung) => this.cmpSession.UebungsListe.push(mUebung.Copy()));
-									}
-								});
+							if (this.Session.ID !== aSession.ID) {
+								this.fDbModule.LadeSessionUebungen(aSession.ID, mUebungParaDB).then(
+									(aUebungsListe) => {
+										if (aUebungsListe.length > 0) aSession.UebungsListe = aUebungsListe;
+										else this.fDbModule.CmpAktuellesProgramm = this.fDbModule.AktuellesProgramm.Copy();
+										if (this.cmpSession.UebungsListe === undefined || this.cmpSession.UebungsListe.length <= 0) {
+											this.cmpSession.UebungsListe = [];
+											aSession.UebungsListe.forEach((mUebung) => this.cmpSession.UebungsListe.push(mUebung.Copy()));
+										}
+									});
+								}
 							});//foreach
 				}//if
             });
@@ -255,18 +257,19 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		// if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length <= 0) {
+		// 	this.Session.UebungsListe = [];
+		// 	const mUebungPara: UebungParaDB = new UebungParaDB();
+		// 	this.fDbModule.LadeSessionUebungen(this.Session.ID, mUebungPara)
+		// 	.then(async (aUebungsliste) => {
+		// 		if (aUebungsliste.length > 0) {
+		// 			this.Session.UebungsListe = aUebungsliste;
+		// 			this.LadeSaetze();
+		// 		}
+		// 	});
+		// } else this.LadeSaetze();
+
 		this.DoWorker();
-		if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length <= 0) {
-			this.Session.UebungsListe = [];
-			const mUebungPara: UebungParaDB = new UebungParaDB();
-			this.fDbModule.LadeSessionUebungen(this.Session.ID, mUebungPara)
-				.then(async (aUebungsliste) => {
-					if (aUebungsliste.length > 0) {
-						this.Session.UebungsListe = aUebungsliste;
-						this.LadeSaetze();
-					}
-				});
-		} else this.LadeSaetze();
 		
 		this.BodyWeight = this.fDbModule.getBodyWeight();
 	}
