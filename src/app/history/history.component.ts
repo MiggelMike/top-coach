@@ -5,6 +5,8 @@ import { ISession } from 'src/Business/Session/Session';
 import { repMask } from './../../app/app.module';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
+import { AppData } from 'src/Business/Coach/Coach';
+import { throwIfEmpty } from 'rxjs';
 
 @Component({
 	selector: 'app-history',
@@ -15,15 +17,24 @@ export class HistoryComponent implements OnInit {
 	SessionListe: Array<ISession> = [];
 	LadeLimit: number = 10;
 	public repMask = repMask;
+	public AppData: AppData;
 
 	constructor(
 		private fDbModul: DexieSvcService,
 		private fLoadingDialog: DialogeService
-	) {}
+	) {
+		this.fDbModul.LadeAppData()
+			.then((mAppData) => {
+				this.AppData = mAppData;
+				this.LadeLimit = mAppData.MaxHistorySessions;
+			} );
+	}
 
 	SetLadeLimit(aEvent: any) {
 		// aEvent.stopPropagation();
 		this.LadeLimit = Number(aEvent.target.value);
+		this.AppData.MaxHistorySessions = this.LadeLimit;
+		this.fDbModul.AppDataSpeichern(this.AppData);
 		this.SessionListe = [];
 		this.LadeSessions(0);
 	}

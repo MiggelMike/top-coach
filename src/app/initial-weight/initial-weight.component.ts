@@ -21,7 +21,11 @@ export class InitialWeightComponent implements OnInit {
 	InitialWeightList: Array<InitialWeight> = [];
 	public floatMask = floatMask;
 
-	constructor(private router: Router, public fDbModule: DexieSvcService, private location: Location, public fDialogService: DialogeService) {
+	constructor(private router: Router,
+		public fDbModule: DexieSvcService,
+		private fLoadingDialog: DialogeService,
+		public fDialogService: DialogeService)
+	{
 		const mNavigation = this.router.getCurrentNavigation();
 		const mState = mNavigation.extras.state as { Program: TrainingsProgramm };
 		this.Program = mState.Program;
@@ -59,13 +63,30 @@ export class InitialWeightComponent implements OnInit {
 		aWeightItem.Weight = aEvent.target.value;
 	}
 
+	OnFocus(aEvent: any) {
+		aEvent.target.select();
+	}
+
 	onInitialWeightClick(aEvent: any) {
 		aEvent.target.select();
 	}
 
 	OkClick() {
-		this.fDbModule.SetAktuellesProgramm(this.Program, this.InitialWeightList).then(() => this.router.navigate(['']));
+		const mDialogData = new DialogData();
+		mDialogData.ShowAbbruch = false;
+		mDialogData.ShowOk = false;
+		mDialogData.textZeilen.push('Preparing program');
+		this.fLoadingDialog.Loading(mDialogData);
+		try {
+			this.fDbModule.SetAktuellesProgramm(this.Program, this.InitialWeightList).then(() => {
+				this.fLoadingDialog.fDialog.closeAll();
+				this.router.navigate([''])
+			});
+		} catch (error) {
+			this.fLoadingDialog.fDialog.closeAll();
+		}
 	}
+
 
 	CancelClick() {
 		const mDialogData = new DialogData();
@@ -77,3 +98,15 @@ export class InitialWeightComponent implements OnInit {
 		this.fDialogService.JaNein(mDialogData);
 	}
 }
+
+// if (typeof Worker !== 'undefined') {
+//   // Create a new
+//   const worker = new Worker(new URL('./initial-weight.worker', import.meta.url));
+//   worker.onmessage = ({ data }) => {
+//     console.log(`page got message: ${data}`);
+//   };
+//   worker.postMessage('hello');
+// } else {
+//   // Web Workers are not supported in this environment.
+//   // You should add a fallback so that your program still executes correctly.
+// }

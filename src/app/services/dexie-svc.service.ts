@@ -173,7 +173,7 @@ export class DexieSvcService extends Dexie {
 	AktuellesProgramm: ITrainingsProgramm;
 	CmpAktuellesProgramm: ITrainingsProgramm;
 	VorlageProgramme: Array<TrainingsProgramm> = [];
-	AppRec: IAppData;
+	AppRec: AppData;
 	AppDataTable: Dexie.Table<AppData, number>;
 	private UebungTable: Dexie.Table<Uebung, number>;
 	private SatzTable: Dexie.Table<Satz, number>;
@@ -269,8 +269,17 @@ export class DexieSvcService extends Dexie {
 			if (p) {
 				for (let index = 0; index < p.length; index++) {
 					const mPtrProgramm = p[index];
+					// Die Kategorie des bisherigen aktuellen Programms wird auf "Aktiv" gesetzt
 					mPtrProgramm.ProgrammKategorie = ProgrammKategorie.Aktiv;
-					this.ProgrammSpeichern(mPtrProgramm);
+					const mSessionLadePara: SessionParaDB = new SessionParaDB();
+					mSessionLadePara.UebungenBeachten = true;
+					mSessionLadePara.UebungParaDB = new UebungParaDB();
+					mSessionLadePara.UebungParaDB.SaetzeBeachten = true;
+					await this.LadeProgrammSessions(mPtrProgramm.id, mSessionLadePara)
+						.then( async (mSessions) => {
+							mPtrProgramm.SessionListe = mSessions;
+							await this.ProgrammSpeichern(mPtrProgramm);
+						});
 				}
 			}
 
@@ -286,6 +295,7 @@ export class DexieSvcService extends Dexie {
 			const mProgramm = aSelectedProgram.Copy();
 			mProgramm.id = undefined;
 			mProgramm.FkVorlageProgramm = aSelectedProgram.id;
+			// Die Kategorie des ausgewählten Programms wird auf "AktuellesProgramm" gesetzt
 			mProgramm.ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
 
 			if (mProgramm.SessionListe) {

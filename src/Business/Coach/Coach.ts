@@ -7,6 +7,7 @@ export interface IAppData {
     ID: number;
     GewichtsEinheit: GewichtsEinheit;
     GewichtsEinheitText: string;
+    MaxHistorySessions: number;
     // LetzteProgrammID: number;
     // LetzteSessionID: number;
     // LetzteSatzID: number;
@@ -19,6 +20,18 @@ export interface IAppData {
 export class AppData {
     public ID: number;
     GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
+    
+    private fMaxHistorySessions: number = 10;
+    get MaxHistorySessions(): number {
+        if ((this.fMaxHistorySessions === Number.NaN)||(this.fMaxHistorySessions === undefined))
+            this.fMaxHistorySessions = 10;
+        return Number(this.fMaxHistorySessions);
+    }
+
+    set MaxHistorySessions(value: number) {
+        this.fMaxHistorySessions = Number(value);
+    }    
+
 
     get GewichtsEinheitText(): string{
         if (this.GewichtsEinheit === GewichtsEinheit.KG)
