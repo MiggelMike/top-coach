@@ -5,7 +5,7 @@ import { SessionStatus } from "./../../../Business/SessionDB";
 import { SessionStatsOverlayComponent } from "./../../session-stats-overlay/session-stats-overlay.component";
 import { SessionOverlayServiceService, SessionOverlayConfig } from "./../../services/session-overlay-service.service";
 import { DialogeService } from "./../../services/dialoge.service";
-import { cUebungSelectLimit, DexieSvcService, MinDatum, ProgrammParaDB, SessionParaDB, UebungParaDB } from "./../../services/dexie-svc.service";
+import { cUebungSelectLimit, DexieSvcService, ExtraFn, MinDatum, ProgrammParaDB, SessionParaDB, UebungParaDB } from "./../../services/dexie-svc.service";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { DialogData } from "src/app/dialoge/hinweis/hinweis.component";
@@ -24,7 +24,7 @@ import { Satz, SatzStatus } from 'src/Business/Satz/Satz';
 export class SessionFormComponent implements OnInit {
 	private worker: Worker;
 	public Session: Session;
-	// public AnzSessionInProgram: number = 0;
+	public BackButtonVisible: boolean = false;
 	public Programm: ITrainingsProgramm;
 	public programmTyp: string = '';
 	public cmpSession: Session;
@@ -33,8 +33,8 @@ export class SessionFormComponent implements OnInit {
 	private fSessionOverlayConfig: SessionOverlayConfig;
 	public DeletedExerciseList: Array<Uebung> = [];
 	public DeletedSatzList: Array<Satz> = [];
-	private fWorkerActive: boolean = false;
-	// private SelectedExerciseList: Array<Uebung> = [];
+	
+	
 
 	constructor(
 		private router: Router,
@@ -52,14 +52,13 @@ export class SessionFormComponent implements OnInit {
 		mState.sess.BodyWeightAtSessionStart = this.fDbModule.getBodyWeight();
 		this.programmTyp = mState.programmTyp;
 		this.Programm = mState.programm;
-		//
 		const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
 		mSessionCopyPara.Komplett = true;
 		mSessionCopyPara.CopySessionID = true;
 		mSessionCopyPara.CopyUebungID = true;
 		mSessionCopyPara.CopySatzID = true;
 		this.Session = mState.sess.Copy(mSessionCopyPara);
-		this.cmpSession = mState.sess.Copy(mSessionCopyPara);
+		//
 		switch (this.Session.Kategorie02) {
 			case SessionStatus.Wartet:
 				this.Session.GestartedWann = new Date();
@@ -67,12 +66,27 @@ export class SessionFormComponent implements OnInit {
 				this.Session.Datum = new Date();
 				this.EvalStart();
 				break;
-							
+				
 			case SessionStatus.Pause:
 			case SessionStatus.Laueft:
 				this.EvalStart();
 				break;
 		}//switch
+		
+		this.cmpSession = this.Session.Copy(mSessionCopyPara);
+		
+		const mUebungParaDB: UebungParaDB = new UebungParaDB();
+		mUebungParaDB.SaetzeBeachten = true;
+		this.fDbModule.LadeSessionUebungen(this.Session.ID, mUebungParaDB).then(
+			(aUebungsListe) => {
+				if (aUebungsListe.length > 0) this.Session.UebungsListe = aUebungsListe;
+				else this.fDbModule.CmpAktuellesProgramm = this.fDbModule.AktuellesProgramm.Copy();
+				if (this.cmpSession.UebungsListe === undefined || this.cmpSession.UebungsListe.length <= 0) {
+					this.cmpSession.UebungsListe = [];
+					this.Session.UebungsListe.forEach((mUebung) => this.cmpSession.UebungsListe.push(mUebung.Copy()));
+					this.BackButtonVisible = true;
+				}
+			});
 	}
 
 	DoWorker() {
@@ -80,7 +94,6 @@ export class SessionFormComponent implements OnInit {
             this.worker = new Worker(new URL('./session-form.worker', import.meta.url));
             this.worker.addEventListener('message', ({ data }) => {
 				if (data.action === "LadeUebungen") {
-					this.fWorkerActive = true;
 					const mUebungParaDB: UebungParaDB = new UebungParaDB();
 					// mUebungParaDB.Limit = cUebungSelectLimit;
 					// mUebungParaDB.OffSet = 0;
@@ -91,9 +104,12 @@ export class SessionFormComponent implements OnInit {
 								(aUebungsListe) => {
 									if (aUebungsListe.length > 0) aSession.UebungsListe = aUebungsListe;
 									else this.fDbModule.CmpAktuellesProgramm = this.fDbModule.AktuellesProgramm.Copy();
+									if (this.cmpSession.UebungsListe === undefined || this.cmpSession.UebungsListe.length <= 0) {
+										this.cmpSession.UebungsListe = [];
+										aSession.UebungsListe.forEach((mUebung) => this.cmpSession.UebungsListe.push(mUebung.Copy()));
+									}
 								});
-						});//foreach
-					this.fWorkerActive = false;
+							});//foreach
 				}//if
             });
                         
@@ -168,7 +184,7 @@ export class SessionFormComponent implements OnInit {
 		if (this.fSessionStatsOverlayComponent) this.fSessionStatsOverlayComponent.close();
 	}
 
-	back() {
+	async back() {
 		if (this.Session.isEqual(this.cmpSession)) this.leave();
 		else {
 			const mDialogData = new DialogData();

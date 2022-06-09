@@ -39,6 +39,7 @@ export class Programm03Component implements OnInit {
     @Input() DeletedSatzList: Array<Satz> = [];
     @Input() SofortSpeichern: Boolean = false;
     @Input() programmTyp: string = "";
+    @Output() DoStats = new EventEmitter();
     
     @ViewChildren("accUebung") accUebung: QueryList<MatAccordion>;
     @ViewChildren("panUebung") panUebung: QueryList<MatExpansionPanel>;
@@ -100,6 +101,11 @@ export class Programm03Component implements OnInit {
                     this.SessUeb.Expanded = false;
             }
         }
+    }
+
+    DoStatsFn() {
+        if (this.DoStats !== undefined)
+            this.DoStats.emit();
     }
 
     drop(event: CdkDragDrop<Uebung[]>) {

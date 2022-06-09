@@ -1,7 +1,7 @@
 <ng-container *ngIf="SessionListe && (SessionListe.length > 0)">
-    <a [ngClass]="['link-button-font']" mat-flat-button (click)="toggleSessions()">{{ToggleButtonText}}</a>
+    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleSessions()">{{ToggleButtonText}}</a>
     <ng-container *ngIf="programmTyp !== 'history'">
-        <a [ngClass]="['link-button-font']" mat-flat-button (click)="AdditionalSession()">Additional session</a>
+        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="AdditionalSession()">Additional session</a>
     </ng-container>
 
     <div cdkDropList (cdkDropListDropped)="drop($event)">

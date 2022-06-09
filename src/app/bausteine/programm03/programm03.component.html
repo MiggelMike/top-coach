@@ -1,5 +1,11 @@
+
 <ng-container *ngIf="session && session.UebungsListe && (session.UebungsListe.length > 0)">
+    
+    <ng-container *ngIf="DoStatsFn !== undefined">
+        <a [ngClass]="['link-button-font', 'HG-01', 'mr-5']" mat-flat-button (click)="DoStatsFn()">Stats</a>
+    </ng-container>
     <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
+
     <!-- <span class="mg-5">{{session.Name}}</span> -->
     <ng-container *ngIf='bearbeitbar'> 
         <mat-form-field class="mg-5">

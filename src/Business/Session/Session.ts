@@ -114,15 +114,96 @@ export class Session extends SessionDB implements ISession {
 		mSessionCopyPara.CopySatzID = true;
         
         const mSession = this.Copy(mSessionCopyPara);
-        mSession.UebungsListe.forEach(u => u.Expanded = false);
-
         const mCmpSession = aOtherSession.Copy(mSessionCopyPara);
 		mCmpSession.DauerInSek = mSession.DauerInSek;
-		mCmpSession.DauerFormatted = mSession.DauerFormatted;
-		mCmpSession.DauerTimer = mSession.DauerTimer; 
-        mCmpSession.UebungsListe.forEach(u => u.Expanded = false);
+        mCmpSession.DauerFormatted = mSession.DauerFormatted;
+
+        if (mSession.UebungsListe.length !== mCmpSession.UebungsListe.length)
+            return false;
+
+        for (let index = 0; index < mSession.UebungsListe.length; index++) {
+            const mPtrUebung = mSession.UebungsListe[index];
+            const mPtrCmpUebung = mCmpSession.UebungsListe[index];
+            mPtrUebung.ArbeitsSaetzeStatus = mPtrUebung.getArbeitsSaetzeStatus();
+            mPtrUebung.Expanded = false;
+            mPtrCmpUebung.ArbeitsSaetzeStatus = mPtrCmpUebung.getArbeitsSaetzeStatus();
+            mPtrCmpUebung.Expanded = false;
+
+            if (mPtrUebung.SatzListe.length !== mPtrCmpUebung.SatzListe.length)
+                return false;
+            
+            for (let index1 = 0; index1 < mPtrUebung.SatzListe.length; index1++) {
+                const mPtrSatz = mPtrUebung.SatzListe[index1];
+                const mPtrCmpSatz = mPtrCmpUebung.SatzListe[index1];
+                mPtrCmpSatz.BodyWeight = mPtrSatz.BodyWeight;
+            }
+        }
+
+        return isEqual(mSession, mCmpSession);
+
+        // mCmpSession.UebungsListe.forEach(u => {
+        //     u.Expanded = false;
+        //     u.ArbeitsSaetzeStatus = u.getArbeitsSaetzeStatus();
+        // });
+
+        // mSession.UebungsListe.forEach(u => {
+        //     u.Expanded = false;
+        //     u.ArbeitsSaetzeStatus = u.getArbeitsSaetzeStatus();
+        // });
+
+        // // let xmResult: boolean = isEqual(mSession, mCmpSession);
+
+        // const mCmpSessionUebungsListe = mCmpSession.UebungsListe;
+        // mCmpSession.UebungsListe = [];
+        // const mSessionUebungsListe = mSession.UebungsListe;
+        // mSession.UebungsListe = [];
+        // let mResult: Boolean = isEqual(mSession, mCmpSession);
+        // if (mResult === true) {
+        //     if (mCmpSessionUebungsListe.length !== mSessionUebungsListe.length)
+        //         return false;
+                
+        //     mCmpSessionUebungsListe.forEach(u => {
+        //         u.Expanded = false;
+        //         u.ArbeitsSaetzeStatus = u.getArbeitsSaetzeStatus();
+        //     });
+
+        //     mSessionUebungsListe.forEach(u => {
+        //         u.Expanded = false;
+        //         u.ArbeitsSaetzeStatus = u.getArbeitsSaetzeStatus();
+        //     });
+
+        //     for (let index = 0; index < mSessionUebungsListe.length; index++) {
+        //         const mPtrUebung = mSessionUebungsListe[index];
+        //         const mPtrCmpUebung = mCmpSessionUebungsListe[index];
+        //         const mPtrUebungSatzListe: Array<Satz> = mPtrUebung.SatzListe;
+        //         const mPtrCmpUebungSatzListe: Array<Satz> = mPtrCmpUebung.SatzListe;
+
+        //         if (mPtrUebung.SatzListe.length !== mPtrCmpUebung.SatzListe.length)
+        //             return false;
+                    
+        //         mPtrUebung.SatzListe = [];
+        //         mPtrCmpUebung.SatzListe = [];
+
+        //         mResult = mPtrUebung.isEqual(mPtrCmpUebung);
+        //         mPtrUebung.SatzListe = mPtrUebungSatzListe;
+        //         mPtrCmpUebung.SatzListe = mPtrCmpUebungSatzListe;
+
+        //         if (mResult === false)
+        //             return false;
+                
+        //         for (let index1 = 0; index1 < mPtrUebung.SatzListe.length; index1++) {
+        //             const mPtrSatz = mPtrUebung.SatzListe[index1];
+        //             const mPtrCmpSatz = mPtrCmpUebung.SatzListe[index1];
+        //             mPtrCmpSatz.BodyWeight = mPtrSatz.BodyWeight;
+        //             mResult = mPtrSatz.isEqual(mPtrCmpSatz);
+
+        //             if (mResult === false)
+        //                 return false;
+        //         }
+        //     }
+        // }
         
-        return isEqual(mSession,mCmpSession) === true;
+        // return mResult as boolean;
     }    
 
     public CalcDauer(): void {
