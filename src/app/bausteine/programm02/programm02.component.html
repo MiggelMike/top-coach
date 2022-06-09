@@ -65,24 +65,21 @@
                         <ng-container *ngIf="showButtons">
                             <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
                                 <div class="center-item" layout-align="center center">
-                                    <a [ngClass]="'link-button-font'" mat-flat-button (click)="CopySession(sess)">Copy
-                                        Session</a>
+                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="CopySession(sess)">Copy Session</a>
                                 </div>
 
                                 <div class="center-item" layout-align="center center">
-                                    <a [ngClass]="'link-button-font'" mat-flat-button (click)="DeleteSession($event, sess,i)">Delete Session</a>
+                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteSession($event, sess,i)">Delete Session</a>
                                 </div>
                             </div>
 
                             <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
                                 <div class="center-item" layout-align="center center">
-                                    <a [ngClass]="'link-button-font'" mat-flat-button (click)="AddExercise(sess)">Add
-                                        exercise</a>
+                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="AddExercise(sess)">Add exercise</a>
                                 </div>
 
                                 <div class="center-item" layout-align="center center">
-                                    <a [ngClass]="'link-button-font'" mat-flat-button (click)="PasteExcercise(sess)">Paste
-                                        Exercise</a>
+                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="PasteExcercise(sess)">Paste Exercise</a>
                                 </div>
                             </div>
                         </ng-container>

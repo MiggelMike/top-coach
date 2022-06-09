@@ -34,17 +34,17 @@
                         (opened)="PanelUebungOpened(SessUeb)">
                         <mat-expansion-panel-header>
                             <div fxLayout="row wrap" fxLayoutGap="2px" fxLayout.lt-sm="row wrap" fxFlex="auto">
-                                <div layout-align="start center" fxFlex="0 0 40%">
+                                <div layout-align="start center" fxFlex="0 0 35%">
                                     <span class="tc-font-size-smaller font-bold">#{{i+1}} {{SessUeb.Name}}</span>
                                 </div>
 
                                 
-                                <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
+                                <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="60px"
                                 (click)="DoSettings(SessUeb, $event)">Settings
                             </a>
                             
                             <ng-container *ngIf="bearbeitbar && programmTyp !== 'history'">
-                                <a  [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
+                                <a  [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="85px"
                                 (click)="CopyExcercise(SessUeb, $event)">Copy exercise</a>
                                 
                                 <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
