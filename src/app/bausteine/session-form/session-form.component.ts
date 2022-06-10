@@ -230,20 +230,7 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		// if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length <= 0) {
-		// 	this.Session.UebungsListe = [];
-		// 	const mUebungPara: UebungParaDB = new UebungParaDB();
-		// 	this.fDbModule.LadeSessionUebungen(this.Session.ID, mUebungPara)
-		// 	.then(async (aUebungsliste) => {
-		// 		if (aUebungsliste.length > 0) {
-		// 			this.Session.UebungsListe = aUebungsliste;
-		// 			this.LadeSaetze();
-		// 		}
-		// 	});
-		// } else this.LadeSaetze();
-
 		this.DoWorker();
-		
 		this.BodyWeight = this.fDbModule.getBodyWeight();
 	}
 	
@@ -347,16 +334,18 @@ export class SessionFormComponent implements OnInit {
 					mNeueSession.init();
 					this.fDbModule.InitSessionSaetze(aSessionForm.Session, mNeueSession as Session);
 					if (mNeueSession.UebungsListe !== undefined)
-						mNeueSession.UebungsListe.forEach((u) => {
-							u.Failed = false;
-							u.WeightInitDate = MinDatum;
-							if (u.ArbeitsSatzListe !== undefined) {
-								u.ArbeitsSatzListe.forEach((sz) => {
+						for (let index = 0; index < mNeueSession.UebungsListe.length; index++) {
+							const mPtrNeueUebung: Uebung = mNeueSession.UebungsListe[index];
+							const mPtrAlteUebung: Uebung = aSessionForm.Session.UebungsListe[index];
+							mPtrNeueUebung.Failed = false;
+							mPtrNeueUebung.WeightInitDate = MinDatum;
+							if (mPtrNeueUebung.ArbeitsSatzListe !== undefined) {
+								mPtrNeueUebung.ArbeitsSatzListe.forEach((sz) => {
 									sz.GewichtAusgefuehrt = sz.GewichtNaechsteSession;
 									sz.GewichtVorgabe = sz.GewichtNaechsteSession;
 								});
-							}//if
-						});
+							}//if						
+						}
 
 					mNeueSession.FK_Programm = aSessionForm.Session.FK_Programm;
 					mNeueSession.FK_VorlageProgramm = aSessionForm.Session.FK_VorlageProgramm;

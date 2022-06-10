@@ -1,21 +1,20 @@
 <div #anchorRef cdkDrag cdkDragRootElement=".cdk-overlay-pane" [style.top.px]="top" [style.left.px]="left"
     (mousedown)="handleMousedown( $event )">
 
-    <mat-card class="font-overlay-label overlay-width">
-        <!-- <p class="tc-font-size-small font-bold">{{sess.Name}}</p> -->
+    <mat-card class="font-14-label overlay-width">
         <div fxLayout="column" fxFlex="100%">
 
             <div fxLayout="row wrap" fxFlex="100%">
                 <mat-form-field class="align-left" fxFlex="100%">
-                    <mat-label class="font-overlay-label">Name</mat-label>
-                    <input  class="font-overlay-data" #Name matInput [(ngModel)]="sess.Name" maxlength="30" type="text">
+                    <mat-label class="font-14-label">Name</mat-label>
+                    <input  class="font-14-data" #Name matInput [(ngModel)]="sess.Name" maxlength="30" type="text">
                 </mat-form-field>
             </div>
 
-            <p class="font-overlay-data"><span class="font-overlay-label">Start</span> {{sess.GestartedWann | date: 'mediumDate'}} {{sess.GestartedWann | date:'shortTime'}}</p>
-            <p class="font-overlay-data"><span class="font-overlay-label">Body weight at start</span> {{sess.BodyWeight | number: '1.2'}} {{GewichtsEinheit}}</p>
-            <p class="font-overlay-data"><span class="font-overlay-label">Weight lifted</span> {{sess.LiftedWeight | number: '1.2'}} {{GewichtsEinheit}}</p>
-            <p class="font-overlay-data"><span class="font-overlay-label">Duration</span> {{sess.DauerFormatted}}</p>
+            <p class="font-14-data"><span class="font-14-label">Start</span> {{sess.GestartedWann | date: 'mediumDate'}} {{sess.GestartedWann | date:'shortTime'}}</p>
+            <p class="font-14-data"><span class="font-14-label">Body weight at start</span> {{sess.BodyWeight | number: '1.2'}} {{GewichtsEinheit}}</p>
+            <p class="font-14-data"><span class="font-14-label">Weight lifted</span> {{sess.LiftedWeight | number: '1.2'}} {{GewichtsEinheit}}</p>
+            <p class="font-14-data"><span class="font-14-label">Duration</span> {{sess.DauerFormatted}}</p>
 
             <div fxLayout="row wrap" fxLayoutAlign="center center">
                 <a mat-button (click)="close()"><span class="tc-font-size-small">close</span></a>
