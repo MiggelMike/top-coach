@@ -24,39 +24,39 @@
         [DeletedSatzList]="DeletedSatzList">
     </app-programm03>
     
-    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center" [style.margin-top]="'5px'">
-        <ng-container *ngIf="PauseButtonVisible()">
-            <div class="center-item" layout-align="center center">
-                <ng-container *ngIf="Paused; then unpauseBlock else pauseBlock"></ng-container>
+    <ng-container *ngIf="ready">
+        <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center" [style.margin-top]="'5px'">
+            <ng-container *ngIf="PauseButtonVisible()">
+                <div class="center-item" layout-align="center center">
+                    <ng-container *ngIf="Paused; then unpauseBlock else pauseBlock"></ng-container>
+                    
+                    <ng-template #pauseBlock>
+                        <a class='link-button-font' mat-flat-button (click)="SetPause()">Pause</a>
+                    </ng-template>
+                    
+                    <ng-template #unpauseBlock>
+                        <a class='link-button-font' mat-flat-button (click)="GoAhead()">Go ahead</a>
+                    </ng-template>
+                </div>
+            </ng-container>
+        
+            <ng-container *ngIf="programmTyp !== 'history'">
                 
-                <ng-template #pauseBlock>
-                    <a class='link-button-font' mat-flat-button (click)="SetPause()">Pause</a>
-                </ng-template>
+                <div class="center-item" layout-align="center center">
+                    <a class='link-button-font' mat-flat-button (click)="SetDone()">Done</a>
+                </div>
                 
-                <ng-template #unpauseBlock>
-                    <a class='link-button-font' mat-flat-button (click)="GoAhead()">Go ahead</a>
-                </ng-template>
-            </div>
-        </ng-container>
-        
-        <ng-container *ngIf="programmTyp !== 'history'">
-
-            <div class="center-item" layout-align="center center">
-                <a class='link-button-font' mat-flat-button (click)="SetDone()">Done</a>
-            </div>
-            
-            
-            <div class="center-item" layout-align="center center">
-                <a [ngClass]="'link-button-font'" mat-flat-button (click)="AddExercise()">Add exercise</a>
-            </div>
-            
-            <div class="center-item" layout-align="center center">
-                <a [ngClass]="'link-button-font'" mat-flat-button (click)="PasteExcercise()">Paste Exercise</a>
-            </div>
-        </ng-container>
-        
-        
-    </div>
+                
+                <div class="center-item" layout-align="center center">
+                    <a [ngClass]="'link-button-font'" mat-flat-button (click)="AddExercise()">Add exercise</a>
+                </div>
+                
+                <div class="center-item" layout-align="center center">
+                    <a [ngClass]="'link-button-font'" mat-flat-button (click)="PasteExcercise()">Paste Exercise</a>
+                </div>
+            </ng-container>
+        </div>
+    </ng-container>
 
     
     <!-- <app-data-store-buttons [SaveClick]="SaveChanges" [CancelClick]="CancelChanges" [ClickData]="this">

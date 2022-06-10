@@ -223,6 +223,7 @@ export class Programm03Component implements OnInit {
             mAllClosed = true;
             this.checkingSets = false;
             
+            
             const mPanUebungListe = this.panUebung.toArray();
             this.checkingSets = true;
             for (let index = 0; index < mPanUebungListe.length; index++) {

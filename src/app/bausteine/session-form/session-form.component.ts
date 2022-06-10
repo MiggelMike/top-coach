@@ -23,6 +23,7 @@ import { Satz, SatzStatus } from 'src/Business/Satz/Satz';
 })
 export class SessionFormComponent implements OnInit {
 	private worker: Worker;
+	public ready: boolean = false;
 	public Session: Session;
 	public BackButtonVisible: boolean = false;
 	public Programm: ITrainingsProgramm;
@@ -41,12 +42,12 @@ export class SessionFormComponent implements OnInit {
 		public fDbModule: DexieSvcService,
 		private fDialogService: DialogeService,
 		private fSavingDialog: DialogeService,
+		private fLoadingDialog: DialogeService,
 		private fGlobalService: GlobalService,
 		private fUebungService: UebungService,
 		private fSessionOverlayServiceService: SessionOverlayServiceService,
 		private location: Location
 	) {
-		// this.fSessionOverlayConfig = new SessionOverlayConfig();
 		const mNavigation = this.router.getCurrentNavigation();
 		const mState = mNavigation.extras.state as { programm: ITrainingsProgramm, sess: Session, programmTyp: string };
 		mState.sess.BodyWeightAtSessionStart = this.fDbModule.getBodyWeight();
@@ -72,21 +73,35 @@ export class SessionFormComponent implements OnInit {
 				this.EvalStart();
 				break;
 		}//switch
-		
+
 		this.cmpSession = this.Session.Copy(mSessionCopyPara);
 		
-		const mUebungParaDB: UebungParaDB = new UebungParaDB();
-		mUebungParaDB.SaetzeBeachten = true;
-		this.fDbModule.LadeSessionUebungen(this.Session.ID, mUebungParaDB).then(
-			(aUebungsListe) => {
-				if (aUebungsListe.length > 0) this.Session.UebungsListe = aUebungsListe;
-				else this.fDbModule.CmpAktuellesProgramm = this.fDbModule.AktuellesProgramm.Copy();
-				if (this.cmpSession.UebungsListe === undefined || this.cmpSession.UebungsListe.length <= 0) {
-					this.cmpSession.UebungsListe = [];
-					this.Session.UebungsListe.forEach((mUebung) => this.cmpSession.UebungsListe.push(mUebung.Copy()));
-					this.BackButtonVisible = true;
-				}
-			});
+		const mDialogData = new DialogData();
+		mDialogData.ShowAbbruch = false;
+		mDialogData.ShowOk = false;
+		mDialogData.textZeilen.push('Session data is being loaded!')
+		this.fLoadingDialog.Loading(mDialogData);
+		try {
+			
+			const mUebungParaDB: UebungParaDB = new UebungParaDB();
+			mUebungParaDB.SaetzeBeachten = true;
+			this.fDbModule.LadeSessionUebungen(this.Session.ID, mUebungParaDB).then(
+				(aUebungsListe) => {
+					if (aUebungsListe.length > 0) this.Session.UebungsListe = aUebungsListe;
+					else this.fDbModule.CmpAktuellesProgramm = this.fDbModule.AktuellesProgramm.Copy();
+					
+					if (this.cmpSession.UebungsListe === undefined || this.cmpSession.UebungsListe.length <= 0) {
+						this.cmpSession.UebungsListe = [];
+						this.Session.UebungsListe.forEach((mUebung) => this.cmpSession.UebungsListe.push(mUebung.Copy()));
+						this.BackButtonVisible = true;
+						this.doStats();
+						this.ready = true;
+						this.fLoadingDialog.fDialog.closeAll();
+					}else this.fLoadingDialog.fDialog.closeAll();
+				});
+		} catch (error) {
+			this.fLoadingDialog.fDialog.closeAll();
+		}
 	}
 
 	DoWorker() {
@@ -114,10 +129,6 @@ export class SessionFormComponent implements OnInit {
 							});//foreach
 				}//if
             });
-                        
-            // this.worker.onmessage = ({ data }) => {
-            //                 console.log(data);
-            // };
             this.worker.postMessage('LadeUebungen');
         } else {
             // Web Workers are not supported in this environment.
@@ -125,48 +136,10 @@ export class SessionFormComponent implements OnInit {
         }
     }
 
-	public LadeUebungen(aUebungParaDB: UebungParaDB) {
-		// this.fDbModule.LadeSessionUebungen(this.Session.ID, aUebungParaDB).then(
-		// 	(aUebungsListe) => {
-		// 		if (aUebungsListe.length > 0) {
-		// 			this.Session.UebungsListe = this.Session.UebungsListe.concat(aUebungsListe);
-		// 			const mUebungParaDB: UebungParaDB = new UebungParaDB();
-		// 			mUebungParaDB.SaetzeBeachten = aUebungParaDB.SaetzeBeachten;
-		// 			mUebungParaDB.Limit = aUebungParaDB.Limit;
-		// 			mUebungParaDB.OffSet = this.Session.UebungsListe.length;
-		// 			this.LadeUebungen(mUebungParaDB);
-		// 			// 
-		// 		} else {
-		// 			switch (this.Session.Kategorie02) {
-		// 				case SessionStatus.Wartet:
-		// 					this.Session.GestartedWann = new Date();
-		// 					this.Session.Kategorie02 = SessionStatus.Laueft;
-		// 					this.Session.Datum = new Date();
-		// 					this.EvalStart();
-		// 					break;
-						
-		// 				case SessionStatus.Pause:
-		// 				case SessionStatus.Laueft:
-		// 					this.EvalStart();
-		// 					break;
-		// 			}//switch
-
-		// 			const mSessionCopyPara = new SessionCopyPara();
-		// 			mSessionCopyPara.Komplett = true;
-		// 			mSessionCopyPara.CopySessionID = true;
-		// 			mSessionCopyPara.CopyUebungID = true;
-		// 			mSessionCopyPara.CopySatzID = true;
-		// 			this.cmpSession = this.Session.Copy(mSessionCopyPara);
-
-		// 			this.fLoadingDialog.fDialog.closeAll();
-		// 			this.doStats();
-		// 		}
-		// 	});
-	}
-
 	private EvalStart() {
-		if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length < 1) this.Session.AddPause();
-		else this.Session.StarteDauerTimer();				
+		// if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length < 1) this.Session.AddPause();
+		// else this.Session.StarteDauerTimer();				
+		this.Session.StarteDauerTimer();				
 	}
 
 	doStats() {
