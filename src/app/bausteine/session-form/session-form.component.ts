@@ -79,7 +79,7 @@ export class SessionFormComponent implements OnInit {
 		const mDialogData = new DialogData();
 		mDialogData.ShowAbbruch = false;
 		mDialogData.ShowOk = false;
-		mDialogData.textZeilen.push('Session data is being loaded!')
+		mDialogData.textZeilen.push('Loading session');
 		this.fLoadingDialog.Loading(mDialogData);
 		try {
 			
@@ -89,7 +89,7 @@ export class SessionFormComponent implements OnInit {
 				(aUebungsListe) => {
 					if (aUebungsListe.length > 0) this.Session.UebungsListe = aUebungsListe;
 					else this.fDbModule.CmpAktuellesProgramm = this.fDbModule.AktuellesProgramm.Copy();
-					
+
 					if (this.cmpSession.UebungsListe === undefined || this.cmpSession.UebungsListe.length <= 0) {
 						this.cmpSession.UebungsListe = [];
 						this.Session.UebungsListe.forEach((mUebung) => this.cmpSession.UebungsListe.push(mUebung.Copy()));
