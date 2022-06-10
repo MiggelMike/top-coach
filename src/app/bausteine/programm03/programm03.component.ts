@@ -40,6 +40,7 @@ export class Programm03Component implements OnInit {
     @Input() SofortSpeichern: Boolean = false;
     @Input() programmTyp: string = "";
     @Output() DoStats = new EventEmitter();
+    @Output() DoPanels = new EventEmitter();
     
     @ViewChildren("accUebung") accUebung: QueryList<MatAccordion>;
     @ViewChildren("panUebung") panUebung: QueryList<MatExpansionPanel>;
@@ -94,11 +95,13 @@ export class Programm03Component implements OnInit {
                     this.accCheckUebungPanels(mUebung);
                 });
             } else {
-                this.accUebung.forEach((acc) => acc.closeAll());
-                this.isExpanded = false;
-                this.ToggleButtonText = "Open all exercises";
-                if(this.SessUeb !== undefined)
-                    this.SessUeb.Expanded = false;
+                this.accCheckUebungPanels();
+
+                // this.accUebung.forEach((acc) => acc.closeAll());
+                // this.isExpanded = false;
+                // this.ToggleButtonText = "Open all exercises";
+                // if(this.SessUeb !== undefined)
+                //     this.SessUeb.Expanded = false;
             }
         }
     }
@@ -106,6 +109,10 @@ export class Programm03Component implements OnInit {
     DoStatsFn() {
         if (this.DoStats !== undefined)
             this.DoStats.emit();
+    }
+
+    DoPanelsFn() {
+        const x = 0;
     }
 
     drop(event: CdkDragDrop<Uebung[]>) {
@@ -132,9 +139,9 @@ export class Programm03Component implements OnInit {
             this.SessUeb.Expanded = false;
         } else {
             this.accUebung.forEach((acc) => acc.openAll());
-            for (let index = 0; index < this.session.UebungsListe.length; index++) {
-                this.CheckUebungSatzliste(this.session.UebungsListe[index]);
-            }
+            // for (let index = 0; index < this.session.UebungsListe.length; index++) {
+            //     this.CheckUebungSatzliste(this.session.UebungsListe[index]);
+            // }
             this.isExpanded = true;
             this.ToggleButtonText = "Close all exercises";
             if(this.SessUeb !== undefined)
@@ -154,7 +161,7 @@ export class Programm03Component implements OnInit {
                 return;
                 
                 
-            // this.CheckUebungSatzliste(aUebung);
+            this.CheckUebungSatzliste(aUebung);
             // this.accCheckUebungPanels(aUebung);
         } finally {
             this.checkingSets = false;
@@ -200,25 +207,26 @@ export class Programm03Component implements OnInit {
     }
 
         
-    async accCheckUebungPanels(aUebung: Uebung) {
+    async accCheckUebungPanels(aUebung?: Uebung) {
         if (!this.panUebung) return;
         
-        const mIndex = this.session.UebungsListe.indexOf(aUebung);
-        if (mIndex > -1) {
-            const mPanUebungListe = this.panUebung.toArray();
-            if(mPanUebungListe.length-1 >= mIndex)
-                mPanUebungListe[mIndex].expanded = aUebung.Expanded;
-        }
-        let mAllClosed = true;
+        let mAllClosed = false;
+
+        if (this.session.UebungsListe.length > 0 && aUebung !== undefined) {
+            const mIndex = this.session.UebungsListe.indexOf(aUebung);
+            if (mIndex > -1) {
+                const mPanUebungListe = this.panUebung.toArray();
+                if(mPanUebungListe.length-1 >= mIndex)
+                    mPanUebungListe[mIndex].expanded = aUebung.Expanded;
+            }
         
-        if (this.session.UebungsListe.length > 0) {
+            mAllClosed = true;
             this.checkingSets = false;
             
             const mPanUebungListe = this.panUebung.toArray();
             this.checkingSets = true;
             for (let index = 0; index < mPanUebungListe.length; index++) {
                 const mPtrUebung: Uebung = this.session.UebungsListe[index];
-                this.CheckUebungSatzliste(mPtrUebung);
                 mPtrUebung.Expanded = mPanUebungListe[index].expanded;
                 if (mPanUebungListe[index].expanded) {
                     mAllClosed = false;

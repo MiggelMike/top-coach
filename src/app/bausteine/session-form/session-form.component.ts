@@ -115,9 +115,9 @@ export class SessionFormComponent implements OnInit {
 				}//if
             });
                         
-            this.worker.onmessage = ({ data }) => {
-                            console.log(data);
-            };
+            // this.worker.onmessage = ({ data }) => {
+            //                 console.log(data);
+            // };
             this.worker.postMessage('LadeUebungen');
         } else {
             // Web Workers are not supported in this environment.

@@ -33,8 +33,8 @@ export class AnstehendeSessionsComponent implements OnInit {
             .then((aSessionListe) => {
                 this.fDbModule.AktuellesProgramm.SessionListe = aSessionListe;
                 aSessionListe.forEach((mSession) => this.fProgramm.SessionListe.push(mSession));
-                // this.worker.postMessage('LadeUebungen');
                 this.fLoadingDialog.fDialog.closeAll();
+                // this.worker.postMessage('LadeUebungen');
             });
     }
         
@@ -81,16 +81,18 @@ export class AnstehendeSessionsComponent implements OnInit {
                 } // if
                 else if (data.action === "LadeUebungen") {
                     try {
-                        that.Programm.SessionListe = that.fDbModule.AktuellesProgramm.SessionListe;
+                        // that.Programm.SessionListe = that.fDbModule.AktuellesProgramm.SessionListe;
                         const mUebungParaDB: UebungParaDB = new UebungParaDB();
                         // mUebungParaDB.SaetzeBeachten = true;
                         that.fDbModule.AktuellesProgramm.SessionListe.forEach(
                             (aSession) => {
-                                that.fDbModule.LadeSessionUebungen(aSession.ID, mUebungParaDB).then(
-                                    (aUebungsListe) => {
-                                        if (aUebungsListe.length > 0) aSession.UebungsListe = aUebungsListe;
-                                        else that.fDbModule.CmpAktuellesProgramm = that.fDbModule.AktuellesProgramm.Copy();
-                                    });
+                                if (aSession.UebungsListe === undefined || aSession.UebungsListe.length <= 0) {
+                                    that.fDbModule.LadeSessionUebungen(aSession.ID, mUebungParaDB).then(
+                                        (aUebungsListe) => {
+                                            if (aUebungsListe.length > 0) aSession.UebungsListe = aUebungsListe;
+                                            else that.fDbModule.CmpAktuellesProgramm = that.fDbModule.AktuellesProgramm.Copy();
+                                        });
+                                }
                             });//for
                             this.fLoadingDialog.fDialog.closeAll();
                     } catch (error) {

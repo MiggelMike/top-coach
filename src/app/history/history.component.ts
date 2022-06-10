@@ -6,7 +6,6 @@ import { repMask } from './../../app/app.module';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { AppData } from 'src/Business/Coach/Coach';
-import { throwIfEmpty } from 'rxjs';
 
 @Component({
 	selector: 'app-history',
@@ -39,6 +38,10 @@ export class HistoryComponent implements OnInit {
 		this.LadeSessions(0);
 	}
 
+	OnLeaveFn() {
+		this.fLoadingDialog.fDialog.closeAll(); 
+	}
+
 	private LadeSessions (aOffSet: number) {
         const mSessionParaDB: SessionParaDB = new SessionParaDB();
         mSessionParaDB.OffSet = aOffSet;
@@ -49,20 +52,19 @@ export class HistoryComponent implements OnInit {
 					this.SessionListe = this.SessionListe.concat(aSessionListe);
 					this.LadeSessions(this.SessionListe.length);
 				}
-				else this.fLoadingDialog.fDialog.closeAll(); 
+				// else this.fLoadingDialog.fDialog.closeAll(); 
             });
     }
 	
 	ngOnInit(): void {
-		const mDialogData = new DialogData();
-		mDialogData.ShowAbbruch = false;
-		mDialogData.ShowOk = false;
-		this.fLoadingDialog.Loading(mDialogData);
+		// const mDialogData = new DialogData();
+		// mDialogData.ShowAbbruch = false;
+		// mDialogData.ShowOk = false;
+		// this.fLoadingDialog.Loading(mDialogData);
 		try {
-			this.fLoadingDialog.Loading(mDialogData);
 			this.LadeSessions(0);
 		} catch {
-			this.fLoadingDialog.fDialog.closeAll();
+			// this.fLoadingDialog.fDialog.closeAll();
 		}
 	}
 }

@@ -28,6 +28,7 @@ export class Programm02Component implements OnInit {
 	@Input() SessionListe: Array<ISession> = [];
 	@Input() programmTyp: string = "";	
 	@Output() ProgrammSavedEvent = new EventEmitter<ITrainingsProgramm>();
+	@Output() OnLeaveFn = new EventEmitter();
 	@Input() showButtons: Boolean = false;
 	@Input() showSaveButtons: Boolean = false;
 	@Input() SofortSpeichern: Boolean = false;
@@ -40,8 +41,8 @@ export class Programm02Component implements OnInit {
 	@ViewChildren("accSession") accSession: QueryList<MatAccordion>;
 	@ViewChildren("panSession") panUebung: QueryList<MatExpansionPanel>;
 
-	private isExpanded: Boolean = true;
 	private CmpSessionListe: Array<ISession> = [];
+	private isExpanded: Boolean = true;
 	private DelSessionListe: Array<ISession> = [];
 	public ToggleButtonText: string;
 	public ClickData: Programm02Component;
@@ -86,8 +87,8 @@ export class Programm02Component implements OnInit {
 	}
 
 	private async LadeUebungen(aSess: ISession, aUebungPara: UebungParaDB):Promise<void>  {
-		await this.fDbModule.LadeSessionUebungen(aSess.ID,aUebungPara)
-			.then( async (aUebungsliste) => {
+		 this.fDbModule.LadeSessionUebungen(aSess.ID,aUebungPara)
+			.then( (aUebungsliste) => {
 				if (aUebungsliste.length > 0) {
 					// aUebungsliste.forEach((aUebung) => {
 					// 	if (aSess.UebungsListe.find((aSessUebung) => {
@@ -331,7 +332,11 @@ export class Programm02Component implements OnInit {
 		// 				break;
 		// 		}
 		// 	});
-			this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
+		
+		if (this.OnLeaveFn !== undefined)
+			this.OnLeaveFn.emit();
+		
+		this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
 	}
 
 

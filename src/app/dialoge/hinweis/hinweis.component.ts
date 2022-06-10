@@ -21,7 +21,7 @@ export class DialogData {
     CancelData: any;
     ShowAbbruch: boolean = false;
     ShowOk: boolean = true;
-    hasBackDrop: boolean = false;
+    hasBackDrop: boolean = true;
 }
 
 @Component({
