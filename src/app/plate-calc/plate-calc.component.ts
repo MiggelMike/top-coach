@@ -28,6 +28,7 @@ export class PlateCalcComponent implements OnInit {
 	public SetForAllSets: boolean;
 	public HantelForAllSets: boolean;
 	public RepRangeForAllSets: boolean;
+	public DoneRepsForAllSets: boolean;
 
 	public get SatzNr(): string {
 		if (this.Uebung && this.Satz) {
@@ -88,23 +89,21 @@ export class PlateCalcComponent implements OnInit {
 		}
 	}
 
-	public SetWdhVorgabe(aEvent: any) {
-		this.SetVonWdhVorgabe(aEvent);
-		this.SetWdhAusgefuehrt(aEvent);
-	}
-
 	public SetVonWdhVorgabe(aEvent: any) {
 		this.Satz.WdhVonVorgabe = Number(aEvent.target.value);
 		if (this.Satz.WdhBisVorgabe < this.Satz.WdhVonVorgabe) this.Satz.WdhBisVorgabe = this.Satz.WdhVonVorgabe;
+		this.DoRepRangelAllSets(this.RepRangeForAllSets);
 	}
 
 	public SetBisWdhVorgabe(aEvent: any) {
 		this.Satz.WdhBisVorgabe = Number(aEvent.target.value);
 		if (this.Satz.WdhVonVorgabe > this.Satz.WdhBisVorgabe) this.Satz.WdhVonVorgabe = this.Satz.WdhBisVorgabe;
+		this.DoRepRangelAllSets(this.RepRangeForAllSets);
 	}
 
 	public SetWdhAusgefuehrt(aEvent: any) {
 		this.Satz.WdhAusgefuehrt = Number(aEvent.target.value);
+		this.DoDoneRepsAllSets(this.DoneRepsForAllSets);
 	}
 
 	public DoHantelAllSets(aChecked: boolean) {
@@ -133,36 +132,59 @@ export class PlateCalcComponent implements OnInit {
 	}
 
 	public DoRepRangelAllSets(aChecked: boolean) {
-    if (this.Uebung && this.Satz && aChecked) {
-      if (this.Satz.SatzTyp === SatzTyp.Aufwaermen) {
-        this.Uebung.AufwaermSatzListe.forEach((sz) => {
-          if (this.SetsAreEqual(sz, this.Satz) === false) {
-            sz.WdhVonVorgabe = this.Satz.WdhVonVorgabe;
-            sz.WdhBisVorgabe = this.Satz.WdhBisVorgabe;
-            sz.WdhAusgefuehrt = this.Satz.WdhVonVorgabe;
-          }
-        });
-      }
-      else if (this.Satz.SatzTyp === SatzTyp.Training) {
-        this.Uebung.ArbeitsSatzListe.forEach((sz) => {
-          if (this.SetsAreEqual(sz, this.Satz) === false) {
-            sz.WdhVonVorgabe = this.Satz.WdhVonVorgabe;
-            sz.WdhBisVorgabe = this.Satz.WdhBisVorgabe;
-            sz.WdhAusgefuehrt = this.Satz.WdhVonVorgabe;
-          }
-        });
-      }
-      else if (this.Satz.SatzTyp === SatzTyp.Abwaermen) {
-        this.Uebung.AbwaermSatzListe.forEach((sz) => {
-          if (this.SetsAreEqual(sz, this.Satz) === false) {
-            sz.WdhVonVorgabe = this.Satz.WdhVonVorgabe;
-            sz.WdhBisVorgabe = this.Satz.WdhBisVorgabe;
-            sz.WdhAusgefuehrt = this.Satz.WdhVonVorgabe;
-          }
-        });
-      }
+		if (this.Uebung && this.Satz && aChecked) {
+			if (this.Satz.SatzTyp === SatzTyp.Aufwaermen) {
+				this.Uebung.AufwaermSatzListe.forEach((sz) => {
+					if (this.SetsAreEqual(sz, this.Satz) === false) {
+						sz.WdhVonVorgabe = this.Satz.WdhVonVorgabe;
+						sz.WdhBisVorgabe = this.Satz.WdhBisVorgabe;
+					}
+				});
+			}
+			else if (this.Satz.SatzTyp === SatzTyp.Training) {
+				this.Uebung.ArbeitsSatzListe.forEach((sz) => {
+					if (this.SetsAreEqual(sz, this.Satz) === false) {
+						sz.WdhVonVorgabe = this.Satz.WdhVonVorgabe;
+						sz.WdhBisVorgabe = this.Satz.WdhBisVorgabe;
+					}
+				});
+			}
+			else if (this.Satz.SatzTyp === SatzTyp.Abwaermen) {
+				this.Uebung.AbwaermSatzListe.forEach((sz) => {
+					if (this.SetsAreEqual(sz, this.Satz) === false) {
+						sz.WdhVonVorgabe = this.Satz.WdhVonVorgabe;
+						sz.WdhBisVorgabe = this.Satz.WdhBisVorgabe;
+					}
+				});
+			}
 		}
 	}
+
+	public DoDoneRepsAllSets(aChecked: boolean) {
+		if (this.Uebung && this.Satz && aChecked) {
+		  if (this.Satz.SatzTyp === SatzTyp.Aufwaermen) {
+			this.Uebung.AufwaermSatzListe.forEach((sz) => {
+			  if (this.SetsAreEqual(sz, this.Satz) === false) {
+				sz.WdhAusgefuehrt = this.Satz.WdhAusgefuehrt;
+			  }
+			});
+		  }
+		  else if (this.Satz.SatzTyp === SatzTyp.Training) {
+			this.Uebung.ArbeitsSatzListe.forEach((sz) => {
+			  if (this.SetsAreEqual(sz, this.Satz) === false) {
+				sz.WdhAusgefuehrt = this.Satz.WdhAusgefuehrt;
+			  }
+			});
+		  }
+		  else if (this.Satz.SatzTyp === SatzTyp.Abwaermen) {
+			this.Uebung.AbwaermSatzListe.forEach((sz) => {
+			  if (this.SetsAreEqual(sz, this.Satz) === false) {
+				sz.WdhAusgefuehrt = this.Satz.WdhAusgefuehrt;
+			  }
+			});
+		  }
+			}
+		}
 
 	onClickWeightVorgabe(aEvent: any) {
 		aEvent.target.select();

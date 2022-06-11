@@ -53,7 +53,7 @@
                         <input  matInput [textMask]="{mask: repMask, guide: false}" 
                                 (click)="onInitOnClick($event)"
                                 [ngModel]="Satz.WdhVonVorgabe" 
-                                (focusout)="SetWdhVorgabe($event)" 
+                                (focusout)="SetVonWdhVorgabe($event)" 
                                 type="text"
                         >
                     </mat-form-field> 
@@ -75,6 +75,32 @@
                 <mat-checkbox 
                 [(ngModel)]="RepRangeForAllSets" (click)="$event.stopPropagation()"
                 (change)="DoRepRangelAllSets($event.checked)"
+                >All sets
+                </mat-checkbox>
+            </div>
+        </div>
+
+        <mat-label>Done reps</mat-label>
+        <div fxLayout="row" fxFlex="100%" >
+            <div fxLayout="column" fxFlex="60%" >
+                <div fxLayout="row" fxFlex="100%" fxLayoutGap="5px" >
+                    <!-- Geplante Von-Vorgabe-Wdh. -->
+                    <mat-form-field class="align-right" fxFlex="30px">
+                        <mat-label>Reps</mat-label>
+                        <input  matInput [textMask]="{mask: repMask, guide: false}" 
+                                (click)="onInitOnClick($event)"
+                                [ngModel]="Satz.WdhAusgefuehrt" 
+                                (focusout)="SetWdhAusgefuehrt($event)" 
+                                type="text"
+                        >
+                    </mat-form-field> 
+                </div>
+            </div>
+
+            <div class="mg-5" layout-align="end" layout-margin>
+                <mat-checkbox 
+                [(ngModel)]="DoneRepsForAllSets" (click)="$event.stopPropagation()"
+                (change)="DoDoneRepsAllSets($event.checked)"
                 >All sets
                 </mat-checkbox>
             </div>
