@@ -333,10 +333,9 @@ export class SessionFormComponent implements OnInit {
 					const mNeueSession: Session = aSessionForm.Session.Copy(mSessionCopyPara);
 					mNeueSession.init();
 					this.fDbModule.InitSessionSaetze(aSessionForm.Session, mNeueSession as Session);
-					if (mNeueSession.UebungsListe !== undefined)
+					if (mNeueSession.UebungsListe !== undefined){
 						for (let index = 0; index < mNeueSession.UebungsListe.length; index++) {
 							const mPtrNeueUebung: Uebung = mNeueSession.UebungsListe[index];
-							const mPtrAlteUebung: Uebung = aSessionForm.Session.UebungsListe[index];
 							mPtrNeueUebung.Failed = false;
 							mPtrNeueUebung.WeightInitDate = MinDatum;
 							if (mPtrNeueUebung.ArbeitsSatzListe !== undefined) {
@@ -345,7 +344,8 @@ export class SessionFormComponent implements OnInit {
 									sz.GewichtVorgabe = sz.GewichtNaechsteSession;
 								});
 							}//if						
-						}
+						}//for
+					}//if
 
 					mNeueSession.FK_Programm = aSessionForm.Session.FK_Programm;
 					mNeueSession.FK_VorlageProgramm = aSessionForm.Session.FK_VorlageProgramm;
