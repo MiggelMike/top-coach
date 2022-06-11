@@ -5,7 +5,7 @@
         <p class="font-bold">History</p>
 
         <mat-form-field class="align-right"  fxFlex="100px">
-            <mat-label>Load sessions</mat-label>
+            <mat-label>Max sessions</mat-label>
             <input matInput [textMask]="{mask: repMask, guide: false}" 
                    [ngModel]="LadeLimit" 
                    (focusout)="SetLadeLimit($event)" 
@@ -13,7 +13,8 @@
         </mat-form-field>
     </div>
 
-    <app-programm02 [showButtons]="false"
+    <app-programm02 
+        [showButtons]="false"
         [showSaveButtons] = "false" 
         [programmTyp] = "'history'"
         [SessionListe] = "SessionListe"

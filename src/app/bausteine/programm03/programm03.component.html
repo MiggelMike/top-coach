@@ -1,9 +1,10 @@
 
 <ng-container *ngIf="session && session.UebungsListe && (session.UebungsListe.length > 0)">
     
-    <ng-container *ngIf="DoStatsFn !== undefined">
+    <ng-container *ngIf="StatsButtonVisible">
         <a [ngClass]="['link-button-font', 'HG-01', 'mr-5']" mat-flat-button (click)="DoStatsFn()">Stats</a>
     </ng-container>
+
     <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
 
     <!-- <span class="mg-5">{{session.Name}}</span> -->
@@ -14,8 +15,8 @@
     </ng-container> 
 
     <ng-container *ngIf="programmTyp ==='history'"> 
-        <div class="font-size-smaller" fxLayout="row wrap">
-            <mat-label class="ml-5">History</mat-label>
+        <div class="font-14-data" fxLayout="row wrap">
+            <mat-label class="ml-5">History --- </mat-label>
             <div class="ml-10">
                 <span> {{session.GestartedWann | date: 'mediumDate'}} {{session.GestartedWann | date:'shortTime'}}</span>
             </div>

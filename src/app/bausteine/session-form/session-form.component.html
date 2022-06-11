@@ -1,16 +1,11 @@
  
-<ng-container *ngIf="BackButtonVisible === true">
-        <mat-icon (click)="back()">arrow_back</mat-icon>
-</ng-container>
+    <ng-container *ngIf="BackButtonVisible === true">
+            <mat-icon (click)="back()">arrow_back</mat-icon>
+    </ng-container>
 
-<ng-container *ngIf="BackButtonVisible === false">
-    <mat-icon>pan_tool</mat-icon>
-</ng-container> 
-
-
-<!-- 
-<a [ngClass]="['link-button-font', 'HG-01','mr-5']" mat-flat-button (click)="doStats()">Stats
-</a> -->
+    <ng-container *ngIf="BackButtonVisible === false">
+        <mat-icon>pan_tool</mat-icon>
+    </ng-container> 
 
     <app-programm03 
         [session]="Session" 
@@ -20,6 +15,7 @@
         [programm]="Programm" 
         [programmTyp]="programmTyp"
         [DeletedExerciseList]="DeletedExerciseList"
+        [StatsButtonVisible]="true"
         (DoStats)="doStats()"
         [DeletedSatzList]="DeletedSatzList">
     </app-programm03>

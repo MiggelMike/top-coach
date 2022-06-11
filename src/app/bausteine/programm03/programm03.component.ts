@@ -39,6 +39,8 @@ export class Programm03Component implements OnInit {
     @Input() DeletedSatzList: Array<Satz> = [];
     @Input() SofortSpeichern: Boolean = false;
     @Input() programmTyp: string = "";
+    @Input() StatsButtonVisible: boolean = false;
+
     @Output() DoStats = new EventEmitter();
     @Output() DoPanels = new EventEmitter();
     

@@ -3,8 +3,6 @@ import { DexieSvcService, SessionParaDB } from 'src/app/services/dexie-svc.servi
 import { Component, OnInit } from '@angular/core';
 import { ISession } from 'src/Business/Session/Session';
 import { repMask } from './../../app/app.module';
-import { DialogeService } from '../services/dialoge.service';
-import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { AppData } from 'src/Business/Coach/Coach';
 
 @Component({
@@ -20,7 +18,6 @@ export class HistoryComponent implements OnInit {
 
 	constructor(
 		private fDbModul: DexieSvcService,
-		private fLoadingDialog: DialogeService
 	) {
 		this.fDbModul.LadeAppData()
 			.then((mAppData) => {
@@ -39,7 +36,6 @@ export class HistoryComponent implements OnInit {
 	}
 
 	OnLeaveFn() {
-		this.fLoadingDialog.fDialog.closeAll(); 
 	}
 
 	private LadeSessions (aOffSet: number) {
@@ -52,19 +48,10 @@ export class HistoryComponent implements OnInit {
 					this.SessionListe = this.SessionListe.concat(aSessionListe);
 					this.LadeSessions(this.SessionListe.length);
 				}
-				// else this.fLoadingDialog.fDialog.closeAll(); 
             });
     }
 	
 	ngOnInit(): void {
-		// const mDialogData = new DialogData();
-		// mDialogData.ShowAbbruch = false;
-		// mDialogData.ShowOk = false;
-		// this.fLoadingDialog.Loading(mDialogData);
-		try {
-			this.LadeSessions(0);
-		} catch {
-			// this.fLoadingDialog.fDialog.closeAll();
-		}
+		this.LadeSessions(0);
 	}
 }

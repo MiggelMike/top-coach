@@ -97,7 +97,10 @@ export class SessionFormComponent implements OnInit {
 						this.doStats();
 						this.ready = true;
 						this.fLoadingDialog.fDialog.closeAll();
-					}else this.fLoadingDialog.fDialog.closeAll();
+					} else {
+						this.BackButtonVisible = true;
+						this.fLoadingDialog.fDialog.closeAll();
+					}
 				});
 		} catch (error) {
 			this.fLoadingDialog.fDialog.closeAll();
