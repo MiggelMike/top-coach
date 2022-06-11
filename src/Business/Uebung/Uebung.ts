@@ -1,7 +1,6 @@
 import { MinDatum } from './../../app/services/dexie-svc.service';
-import { Progress, ProgressGroup, WeightProgress } from 'src/Business/Progress/Progress';
+import { ProgressGroup, WeightProgress } from 'src/Business/Progress/Progress';
 import { Zeitraum } from './../Dauer';
-import { Equipment } from './../Equipment/Equipment';
 import { MuscleGroupKategorie02 } from '../MuscleGroup/MuscleGroup';
 import { VorgabeWeightLimit } from '../Progress/Progress';
 import { Satz, SatzTyp, LiftTyp, SatzPausen, SatzStatus } from './../Satz/Satz';
@@ -42,8 +41,41 @@ export enum ArbeitsSaetzeStatus {
 export enum WdhVorgabeStatus {
     NichtGeschafft,
     Geschafft
-  }
+}
 
+
+export class InUpcomingSessionSetzen {
+    Progress: boolean = false;
+    ProgressGroup: boolean = false;
+    WarmUpVisible: boolean = false;
+    CooldownVisible: boolean = false;
+    IncludeWarmupWeight: boolean = false;
+    IncludeCoolDownWeight: boolean = false;
+    MaxFailCount: boolean = false;
+    GewichtSteigerung: boolean = false;
+    GewichtReduzierung: boolean = false;
+    AufwaermArbeitsSatzPause: boolean = false;
+    ArbeitsSatzPause1: boolean = false;
+    ArbeitsSatzPause2: boolean = false;
+    NaechsteUebungPause: boolean = false;
+    public init() {
+        this.Progress = false;
+        this.ProgressGroup = false;
+        this.WarmUpVisible = false;
+        this.CooldownVisible = false;
+        this.IncludeWarmupWeight = false;
+        this.IncludeCoolDownWeight = false;
+        this.MaxFailCount = false;
+        this.GewichtSteigerung = false;
+        this.GewichtReduzierung = false;
+        this.AufwaermArbeitsSatzPause = false;
+        this.ArbeitsSatzPause1 = false;
+        this.ArbeitsSatzPause2 = false;
+        this.NaechsteUebungPause = false;
+    }
+}
+
+  
 export interface IUebung {
     ID: number;
     // Bei Session-Uebungen ist FkUebung der Schluessel zur Stamm-Uebung
@@ -105,6 +137,7 @@ export interface IUebung {
     Datum: Date;
     WeightInitDate: Date;
     FK_Programm: number;
+    InUpcomingSessionSetzen: InUpcomingSessionSetzen;
 }
 
 export enum StandardUebungsName {
@@ -183,6 +216,7 @@ export class Uebung implements IUebung {
     public WeightProgress: WeightProgress = WeightProgress.Same;
     public AltWeightProgress: WeightProgress = WeightProgress.Same;
     public ProgressGroup: string = ProgressGroup[0];
+    public InUpcomingSessionSetzen: InUpcomingSessionSetzen = new InUpcomingSessionSetzen();
 
     constructor() {
         // Nicht in Dexie-DB-Speichern -> enumerable: false
@@ -191,6 +225,7 @@ export class Uebung implements IUebung {
         Object.defineProperty(this, 'Selected', { enumerable: false });
         Object.defineProperty(this, 'Expanded', { enumerable: false });
         Object.defineProperty(this, 'StammUebung', { enumerable: false });
+        Object.defineProperty(this, 'InUpcomingSessionSetzen', { enumerable: false });
         // Object.defineProperty(this, "AkuelleGewichtAenderung", { enumerable: false });
     }
 

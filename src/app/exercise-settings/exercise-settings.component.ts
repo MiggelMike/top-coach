@@ -4,12 +4,30 @@ import { Hantel } from './../../Business/Hantel/Hantel';
 import { DexieSvcService } from "src/app/services/dexie-svc.service";
 import { floatMask, Int3DigitMask } from "./../app.module";
 import { cExerciseOverlayData } from "./../services/exercise-setting-svc.service";
-import { IUebung, Uebung } from "./../../Business/Uebung/Uebung";
+import { InUpcomingSessionSetzen, IUebung, Uebung } from "./../../Business/Uebung/Uebung";
 import { Component, Inject } from "@angular/core";
 import { ExerciseOverlayConfig, ExerciseOverlayRef } from "../services/exercise-setting-svc.service";
 import { Progress, ProgressGroup } from "src/Business/Progress/Progress";
 import { SatzStatus } from 'src/Business/Satz/Satz';
 import { ISession } from 'src/Business/Session/Session';
+import { DialogeService } from '../services/dialoge.service';
+import { DialogData } from '../dialoge/hinweis/hinweis.component';
+
+enum InUpcomingSessionSetzenTyp {
+	Progress,
+	ProgressGroup,
+	WarmUpVisible, 
+	CooldownVisible,
+	IncludeWarmupWeight,
+	IncludeCoolDownWeight,
+	MaxFailCount,
+	GewichtSteigerung,
+	GewichtReduzierung,
+	AufwaermArbeitsSatzPause,
+	ArbeitsSatzPause1,
+	ArbeitsSatzPause2,
+	NaechsteUebungPause
+}
 
 @Component({
 	selector: "app-exercise-settings",
@@ -39,6 +57,7 @@ export class ExerciseSettingsComponent {
 	constructor(
 		public overlayRef: ExerciseOverlayRef,
 		public fDbModule: DexieSvcService,
+		private fDialogService: DialogeService,
 		@Inject(cExerciseOverlayData)
 		public fExerciseOverlayConfig:ExerciseOverlayConfig
 	) {
@@ -61,6 +80,62 @@ export class ExerciseSettingsComponent {
 		}
 	}
 
+	DoInUpcomingSession(aInUpcomingSessionSetzen: InUpcomingSessionSetzen, aInUpcomingSessionSetzenTyp: InUpcomingSessionSetzenTyp, aValue: boolean) {
+		switch (aInUpcomingSessionSetzenTyp) {
+			case InUpcomingSessionSetzenTyp.Progress:
+				aInUpcomingSessionSetzen.Progress = aValue;
+				break;
+
+				case InUpcomingSessionSetzenTyp.ProgressGroup:
+					aInUpcomingSessionSetzen.ProgressGroup = aValue;
+					break;
+				
+				case InUpcomingSessionSetzenTyp.WarmUpVisible:
+					aInUpcomingSessionSetzen.WarmUpVisible = aValue;
+					break;
+					
+				case InUpcomingSessionSetzenTyp.CooldownVisible:
+					aInUpcomingSessionSetzen.CooldownVisible = aValue;
+					break;
+					
+				case InUpcomingSessionSetzenTyp.IncludeWarmupWeight:
+					aInUpcomingSessionSetzen.IncludeWarmupWeight = aValue;
+					break;
+					
+				case InUpcomingSessionSetzenTyp.IncludeCoolDownWeight:
+					aInUpcomingSessionSetzen.IncludeCoolDownWeight = aValue;
+					break;
+					
+				case InUpcomingSessionSetzenTyp.MaxFailCount:
+					aInUpcomingSessionSetzen.MaxFailCount = aValue;
+					break;
+					
+				case InUpcomingSessionSetzenTyp.GewichtSteigerung:
+					aInUpcomingSessionSetzen.GewichtSteigerung = aValue;
+					break;
+					
+				case InUpcomingSessionSetzenTyp.GewichtReduzierung:
+					aInUpcomingSessionSetzen.GewichtReduzierung = aValue;
+					break;
+					
+				case InUpcomingSessionSetzenTyp.AufwaermArbeitsSatzPause:
+					aInUpcomingSessionSetzen.AufwaermArbeitsSatzPause = aValue;
+					break;
+					
+				case InUpcomingSessionSetzenTyp.ArbeitsSatzPause1:
+					aInUpcomingSessionSetzen.ArbeitsSatzPause1 = aValue;
+					break;
+					
+				case InUpcomingSessionSetzenTyp.ArbeitsSatzPause2:
+					aInUpcomingSessionSetzen.ArbeitsSatzPause2 = aValue;
+					break;
+					
+				case InUpcomingSessionSetzenTyp.NaechsteUebungPause:
+					aInUpcomingSessionSetzen.NaechsteUebungPause = aValue;
+					break;
+		}//switch
+	}
+
 	onChangeProgressSchema(aEvent: any) {
 		const mProgressPara: ProgressPara = new ProgressPara();
 		mProgressPara.DbModule = this.fDbModule;
@@ -71,6 +146,21 @@ export class ExerciseSettingsComponent {
 		mProgressPara.SatzDone = this.SessUeb.ArbeitsSatzListe.length > 0 ? this.SessUeb.ArbeitsSatzListe[0].Status === SatzStatus.Fertig : false;
 		mProgressPara.ProgressHasChanged = (this.SessUeb.FkProgress !== this.SessUeb.FkAltProgress) && (this.SessUeb.ArbeitsSatzListe[0].Status === SatzStatus.Fertig);
 		mProgressPara.ProgressListe = this.fDbModule.ProgressListe;
+
+		if (this.SessUeb.FkOrgProgress !== this.SessUeb.FkProgress)
+		{
+			const mDialogData = new DialogData();
+			mDialogData.textZeilen.push("Change in upcoming sessions as well?");
+			mDialogData.textZeilen.push('Effecting only after the current session is "Done"!');
+			mDialogData.OkFn = () => {
+				this.DoInUpcomingSession(
+					this.SessUeb.InUpcomingSessionSetzen,
+					InUpcomingSessionSetzenTyp.Progress,
+					true);
+			};
+			this.fDialogService.JaNein(mDialogData);
+		}
+
 		Progress.StaticDoProgress(mProgressPara);
 		this.EvalSofortSpeichern();
 	}

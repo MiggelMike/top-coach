@@ -262,20 +262,6 @@ export class SatzEditComponent implements OnInit {
                             }//if
                         }
 
-                        // that.programm.SessionListe.find((mSession) => {
-                        //     if (that.sess.ID === mSession.ID) {
-                        //         mSession.UebungsListe = that.sess.UebungsListe;
-                        //         mSession that.sess = 
-                        //     }
-                        // });
-
-                        // that.sess.UebungsListe.find((mUebung) => {
-                        //     if (mUebung.ListenIndex === that.sessUebung.ListenIndex)
-                        //        mUebung = that.sessUebung;
-                        // });
-
-                    
-
                         if (mDialogData.textZeilen.length > 0)
                             that.fDialogService.Hinweis(mDialogData);
                     } catch (error) {

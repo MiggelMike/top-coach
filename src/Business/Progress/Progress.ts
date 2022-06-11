@@ -631,7 +631,7 @@ export class Progress implements IProgress {
 	}
 
 
-	private static StaticProgressHasChanged(aProgressPara: ProgressPara): boolean{
+	public static StaticProgressHasChanged(aProgressPara: ProgressPara): boolean{
 		return (aProgressPara.ProgressID !== aProgressPara.AlteProgressID);
 	}
 

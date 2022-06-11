@@ -6,6 +6,7 @@ import { WeightProgress } from '../Progress/Progress';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
 
+
 export interface ISession extends ISessionDB {
     StarteDauerTimer(): void;
     SetSessionFertig();

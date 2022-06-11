@@ -1,6 +1,6 @@
 import { SessionCopyPara } from './../../Business/Session/Session';
 import { HypertrophicProgramm } from '../../Business/TrainingsProgramm/Hypertrophic';
-import { WdhVorgabeStatus } from './../../Business/Uebung/Uebung';
+import { InUpcomingSessionSetzen, WdhVorgabeStatus } from './../../Business/Uebung/Uebung';
 import { InitialWeight } from './../../Business/Uebung/InitialWeight';
 import { Progress, ProgressSet, ProgressTyp, WeightCalculation, WeightProgressTime, ProgressPara } from './../../Business/Progress/Progress';
 import { Hantelscheibe } from 'src/Business/Hantelscheibe/Hantelscheibe';
@@ -1065,6 +1065,11 @@ export class DexieSvcService extends Dexie {
 					if (aUebungParaDB.SaetzeBeachten) {
 						for (let index = 0; index < aUebungsliste.length; index++) {
 							const mPtrUebung = aUebungsliste[index];
+
+							if (mPtrUebung.InUpcomingSessionSetzen === undefined || mPtrUebung.InUpcomingSessionSetzen.init === undefined)
+								mPtrUebung.InUpcomingSessionSetzen = new InUpcomingSessionSetzen();
+							mPtrUebung.InUpcomingSessionSetzen.init();
+
 							await this.LadeUebungsSaetze(mPtrUebung.ID)
 								.then((aSatzListe) => {
 									mPtrUebung.SatzListe = aSatzListe;
@@ -1110,6 +1115,11 @@ export class DexieSvcService extends Dexie {
 					
 					for (let index = 0; index < aSession.UebungsListe.length; index++) {
 						const mPtrUebung = aSession.UebungsListe[index];
+
+						if (mPtrUebung.InUpcomingSessionSetzen === undefined)
+							mPtrUebung.InUpcomingSessionSetzen = new InUpcomingSessionSetzen();
+						mPtrUebung.InUpcomingSessionSetzen.init();
+							
 						if (
 							(aLadePara !== undefined)
 							&& (aLadePara.ExtraFn !== undefined)
@@ -1293,6 +1303,7 @@ export class DexieSvcService extends Dexie {
 	public async UebungSpeichern(aUebung: Uebung): Promise<number> {
 		aUebung.FkAltProgress = aUebung.FkProgress;
 		aUebung.AltWeightProgress = aUebung.WeightProgress;
+		aUebung.FkOrgProgress = aUebung.FkProgress;
 		
 		let mSatzListe: Array<Satz>;
 		if (aUebung.SatzListe !== undefined)
