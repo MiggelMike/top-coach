@@ -877,6 +877,7 @@ export class Progress implements IProgress {
 				return false;
 		});
 
+		const mDoneExercises: Array<Uebung> = [];
 		// Wenn die Todo-Liste leer ist, gibt es nichts zu tun.
 		for (let mTodoIndex = 0; mTodoIndex < mTodoListe.length; mTodoIndex++) {
 			const mPtrTodoUebung: Uebung = mTodoListe[mTodoIndex].Uebung;
@@ -995,6 +996,11 @@ export class Progress implements IProgress {
 					mZielUebung = aProgressPara.AusgangsUebung;
 				else
 					mZielUebung = mPtrArbeitUebung;
+				
+				if (mDoneExercises.indexOf(mZielUebung) > -1)
+					continue;
+				
+				mDoneExercises.push(mZielUebung);
 					
 				if (
 					(      (aProgressPara.SessionDone === true)

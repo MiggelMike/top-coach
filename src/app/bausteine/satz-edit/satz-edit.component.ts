@@ -214,9 +214,10 @@ export class SatzEditComponent implements OnInit {
                         aProgressPara.UserInfo = [];
 
                         that.sessUebung.WeightInitDate = MinDatum;
+
                         if (aProgressPara.Wp === WeightProgress.Same)
                             that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt);
-
+                        
                         if (
                             (aProgressPara.Progress.ProgressSet === ProgressSet.First)
                             && (aSatz.SatzListIndex === 0)
@@ -274,6 +275,7 @@ export class SatzEditComponent implements OnInit {
                         // });
 
                     
+
                         if (mDialogData.textZeilen.length > 0)
                             that.fDialogService.Hinweis(mDialogData);
                     } catch (error) {
