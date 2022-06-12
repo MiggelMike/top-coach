@@ -26,7 +26,7 @@ export interface ExerciseOverlayConfig {
 export const cExerciseOverlayData = new InjectionToken<ExerciseOverlayConfig>("Exercise_Settings_Overlay_Component");
 
 const DEFAULT_CONFIG: ExerciseOverlayConfig = {
-	hasBackdrop: true,
+	hasBackdrop: false,
 	height: 400,
 	width: 250,
 	backdropClass: "dark-backdrop",

@@ -84,17 +84,22 @@ export class AnstehendeSessionsComponent implements OnInit {
                         // that.Programm.SessionListe = that.fDbModule.AktuellesProgramm.SessionListe;
                         const mUebungParaDB: UebungParaDB = new UebungParaDB();
                         // mUebungParaDB.SaetzeBeachten = true;
-                        that.fDbModule.AktuellesProgramm.SessionListe.forEach(
+                        this.fProgramm.SessionListe.forEach(
+                        // that.fDbModule.AktuellesProgramm.SessionListe.forEach(
                             (aSession) => {
                                 if (aSession.UebungsListe === undefined || aSession.UebungsListe.length <= 0) {
                                     that.fDbModule.LadeSessionUebungen(aSession.ID, mUebungParaDB).then(
                                         (aUebungsListe) => {
-                                            if (aUebungsListe.length > 0) aSession.UebungsListe = aUebungsListe;
-                                            else that.fDbModule.CmpAktuellesProgramm = that.fDbModule.AktuellesProgramm.Copy();
+                                            if (aUebungsListe.length > 0)
+                                                aSession.UebungsListe = aUebungsListe;
                                         });
-                                }
+                                        
+                                    }
                             });//for
-                            this.fLoadingDialog.fDialog.closeAll();
+                        that.fDbModule.AktuellesProgramm.SessionListe = this.fProgramm.SessionListe;
+                        // this.fProgramm.SessionListe = that.fDbModule.AktuellesProgramm.SessionListe;
+                        // that.fDbModule.CmpAktuellesProgramm = that.fDbModule.AktuellesProgramm.Copy();
+                        this.fLoadingDialog.fDialog.closeAll();
                     } catch (error) {
                         this.fLoadingDialog.fDialog.closeAll();
                     }

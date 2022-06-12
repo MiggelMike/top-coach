@@ -1,11 +1,11 @@
 import { Uebung } from './../../Business/Uebung/Uebung';
 import { Hantelscheibe } from "./../../Business/Hantelscheibe/Hantelscheibe";
 import { PlateCalcOverlayRef, cPlateCalcOverlayData } from "./../services/plate-calc-svc.service";
-import { Component, Inject, OnInit } from "@angular/core";
+import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { repMask, floatMask } from "../app.module";
 import { PlateCalcOverlayConfig } from "../services/plate-calc-svc.service";
 import { DexieSvcService } from "../services/dexie-svc.service";
-import { Satz, SatzStatus, SatzTyp } from "src/Business/Satz/Satz";
+import { Satz, SatzTyp } from "src/Business/Satz/Satz";
 import { Hantel } from "src/Business/Hantel/Hantel";
 import { Observable, of } from "rxjs";
 

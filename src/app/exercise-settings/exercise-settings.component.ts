@@ -5,7 +5,7 @@ import { DexieSvcService } from "src/app/services/dexie-svc.service";
 import { floatMask, Int3DigitMask } from "./../app.module";
 import { cExerciseOverlayData } from "./../services/exercise-setting-svc.service";
 import { InUpcomingSessionSetzen, IUebung, Uebung } from "./../../Business/Uebung/Uebung";
-import { Component, Inject } from "@angular/core";
+import { Component, HostListener, Inject, OnDestroy } from "@angular/core";
 import { ExerciseOverlayConfig, ExerciseOverlayRef } from "../services/exercise-setting-svc.service";
 import { Progress, ProgressGroup } from "src/Business/Progress/Progress";
 import { SatzStatus } from 'src/Business/Satz/Satz';
@@ -49,10 +49,9 @@ export class ExerciseSettingsComponent {
 
 	public datemask = {
 		guide: true,
-		showMask : true,
-		mask: [/\d/, /\d/, '/', /\d/, /\d/, '/',/\d/, /\d/,/\d/, /\d/]
+		showMask: true,
+		mask: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]
 	};
-
 
 	constructor(
 		public overlayRef: ExerciseOverlayRef,
@@ -70,8 +69,8 @@ export class ExerciseSettingsComponent {
 		this.Session = fExerciseOverlayConfig.session;
 		this.Programm = fExerciseOverlayConfig.programm;
 		this.fConfig = fExerciseOverlayConfig;
-	}
-
+ 	}
+		 
 	SetProgressGroup(aEvent:any) {
 		this.SessUeb.ProgressGroup = aEvent.target.value;
 		if (this.SessUeb.ProgressGroup.length > 0) {
@@ -147,19 +146,7 @@ export class ExerciseSettingsComponent {
 		mProgressPara.ProgressHasChanged = (this.SessUeb.FkProgress !== this.SessUeb.FkAltProgress) && (this.SessUeb.ArbeitsSatzListe[0].Status === SatzStatus.Fertig);
 		mProgressPara.ProgressListe = this.fDbModule.ProgressListe;
 
-		if (this.SessUeb.FkOrgProgress !== this.SessUeb.FkProgress)
-		{
-			const mDialogData = new DialogData();
-			mDialogData.textZeilen.push("Change in upcoming sessions as well?");
-			mDialogData.textZeilen.push('Effecting only after the current session is "Done"!');
-			mDialogData.OkFn = () => {
-				this.DoInUpcomingSession(
-					this.SessUeb.InUpcomingSessionSetzen,
-					InUpcomingSessionSetzenTyp.Progress,
-					true);
-			};
-			this.fDialogService.JaNein(mDialogData);
-		}
+		
 
 		Progress.StaticDoProgress(mProgressPara);
 		this.EvalSofortSpeichern();
@@ -209,8 +196,31 @@ export class ExerciseSettingsComponent {
 	}		
 
 	close() {
-		if (this.overlayRef != null) this.overlayRef.close();
-		this.overlayRef = null;
+		if (this.SessUeb.FkOrgProgress !== this.SessUeb.FkProgress) {
+			const mDialogData = new DialogData();
+			mDialogData.textZeilen.push("Change in upcoming sessions as well?");
+			mDialogData.ShowAbbruch = true;
+			
+			mDialogData.OkFn = () => {
+				this.DoInUpcomingSession(
+					this.SessUeb.InUpcomingSessionSetzen,
+					InUpcomingSessionSetzenTyp.Progress,
+					true);
+				
+				if (this.overlayRef != null) this.overlayRef.close();
+				this.overlayRef = null;
+			};
+
+			mDialogData.CancelFn = () => {
+				if (this.overlayRef != null) this.overlayRef.close();
+				this.overlayRef = null;
+			};
+
+			this.fDialogService.JaNein(mDialogData);
+		} else {
+			if (this.overlayRef != null) this.overlayRef.close();
+			this.overlayRef = null;
+		}
 	}
 
 	SetGewichtSteigerung(aEvent: any) {
