@@ -18,13 +18,13 @@
                         <div class="align-right" fxLayout="column" fxFlex="60px"></div>
                     
                     </ng-container>
-                    <div class="center-item" fxLayout="column" fxFlex="40px">
+                    <div class="center-item" fxLayout="column" fxFlex="40px"  matTooltip="Reps">
                         RP.
                     </div>
-                    <div class="center-item" fxLayout="column" fxFlex="33px">
+                    <div class="center-item" fxLayout="column" fxFlex="33px"  matTooltip="As many reps as possible">
                         AR.
                     </div>
-                    <div class="center-item" fxLayout="column" fxFlex="22px">
+                    <div class="center-item" fxLayout="column" fxFlex="22px"  matTooltip="Bodyweight">
                         BW
                     </div>
                     <div class="center-item" fxLayout="column" fxFlex="30px">
@@ -40,10 +40,10 @@
                     <div class="center-item" fxLayout="column" fxFlex="45px">
                         Weight
                     </div>
-                    <div class="center-item" fxLayout="column" fxFlex="60px">
+                    <div class="center-item" fxLayout="column" fxFlex="60px" matTooltip="Reps">
                         RP.                    
                     </div>
-                    <div class="center-item" fxLayout="column" fxFlex="35px">
+                    <div class="center-item" fxLayout="column" fxFlex="35px"  matTooltip="As many reps as possible">
                         AR.
                     </div>
                 </ng-template>
@@ -73,7 +73,6 @@
                         <input  matInput [textMask]="{mask: floatMask, guide: false }"
                                 [ngModel]="(satz.GewichtAusgefuehrt | number: '1.2')" 
                                 (focusout)="SetWeightAusgefuehrt($event)"
-                                
                                 (mousedown)="MouseDown(satz,$event)"
                                 (mouseup)="MouseUp($event)"
                                 (touchstart)="MouseDown(satz,$event)"
@@ -107,11 +106,13 @@
                            (mouseup)="MouseUp($event)"
                            (touchstart)="MouseDown(satz,$event)"
                            (touchend)="MouseUp($event)"
+                        
                            type="text">
                 </mat-form-field>
                 <!-- AMRAP  -->
                 <div class="ml-10 center-item" layout-align="center center" fxFlex="30px">
-                    <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP"></mat-checkbox>
+                    <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP" 
+                    ></mat-checkbox>
                 </div>
                 <!-- Satz Include Bodyweight-Flag -->
                 <div class="ml-5 center-item" layout-align="center center" fxFlex="25px">

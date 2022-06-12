@@ -57,6 +57,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // import {
 //     MatAutocompleteModule,
@@ -217,7 +218,7 @@ export const floatMask = createNumberMask({
       MatRadioModule,
       MatTabsModule,
       MatProgressBarModule,
-        
+      MatTooltipModule, 
         MatSliderModule,  
         MatToolbarModule,
         MatExpansionModule,
