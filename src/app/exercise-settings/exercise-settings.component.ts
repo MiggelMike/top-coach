@@ -318,7 +318,7 @@ export class ExerciseSettingsComponent {
 					if (mSession.ID !== this.Session.ID) {
 	                    // Prüfe alle Übungen der Session
 						mSession.UebungsListe.forEach((mDestUebung) => {
-							// Prüfe, ob es sich um die gleiche Übung wie die Formular handelt. 
+							// Prüfe, ob es sich um die gleiche Übung wie die im Formular handelt. 
 							if (mDestUebung.ID !== this.SessUeb.ID &&
 								mDestUebung.FkUebung === this.SessUeb.FkUebung &&
 								mDestUebung.FkAltProgress === this.SessUeb.FkAltProgress &&
