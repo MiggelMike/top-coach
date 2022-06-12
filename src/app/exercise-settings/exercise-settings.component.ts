@@ -45,6 +45,7 @@ export class ExerciseSettingsComponent {
 	public Programm: ITrainingsProgramm;
 	public Session: ISession;
 	public SessUeb: IUebung;
+	public CmpSessUeb: IUebung;
 	
 
 	public datemask = {
@@ -66,6 +67,7 @@ export class ExerciseSettingsComponent {
 		this.fDbModule.LadeProgress(mProgressPara);
 		this.ProgressGroupListe = ProgressGroup;
 		this.SessUeb = fExerciseOverlayConfig.uebung;
+		this.CmpSessUeb = this.SessUeb.Copy();
 		this.Session = fExerciseOverlayConfig.session;
 		this.Programm = fExerciseOverlayConfig.programm;
 		this.fConfig = fExerciseOverlayConfig;
@@ -79,7 +81,7 @@ export class ExerciseSettingsComponent {
 		}
 	}
 
-	DoInUpcomingSession(aInUpcomingSessionSetzen: InUpcomingSessionSetzen, aInUpcomingSessionSetzenTyp: InUpcomingSessionSetzenTyp, aValue: boolean) {
+	PrepForUpcomingSession(aInUpcomingSessionSetzen: InUpcomingSessionSetzen, aInUpcomingSessionSetzenTyp: InUpcomingSessionSetzenTyp, aValue: boolean) {
 		switch (aInUpcomingSessionSetzenTyp) {
 			case InUpcomingSessionSetzenTyp.Progress:
 				aInUpcomingSessionSetzen.Progress = aValue;
@@ -146,8 +148,6 @@ export class ExerciseSettingsComponent {
 		mProgressPara.ProgressHasChanged = (this.SessUeb.FkProgress !== this.SessUeb.FkAltProgress) && (this.SessUeb.ArbeitsSatzListe[0].Status === SatzStatus.Fertig);
 		mProgressPara.ProgressListe = this.fDbModule.ProgressListe;
 
-		
-
 		Progress.StaticDoProgress(mProgressPara);
 		this.EvalSofortSpeichern();
 	}
@@ -196,17 +196,121 @@ export class ExerciseSettingsComponent {
 	}		
 
 	close() {
-		if (this.SessUeb.FkOrgProgress !== this.SessUeb.FkProgress) {
-			const mDialogData = new DialogData();
-			mDialogData.textZeilen.push("Change in upcoming sessions as well?");
-			mDialogData.ShowAbbruch = true;
+		let mGeaendert: boolean = false;
+		
+		const mDialogData = new DialogData();
+		mDialogData.ShowAbbruch = true;
+
+		
+		if (this.SessUeb.WarmUpVisible !== this.CmpSessUeb.WarmUpVisible) {
+			mGeaendert = true;
+			this.PrepForUpcomingSession(
+				this.SessUeb.InUpcomingSessionSetzen,
+				InUpcomingSessionSetzenTyp.WarmUpVisible,
+				true);
+		}
 			
-			mDialogData.OkFn = () => {
-				this.DoInUpcomingSession(
-					this.SessUeb.InUpcomingSessionSetzen,
-					InUpcomingSessionSetzenTyp.Progress,
-					true);
+		if (this.SessUeb.CooldownVisible !== this.CmpSessUeb.CooldownVisible) {
+			mGeaendert = true;
+			this.PrepForUpcomingSession(
+				this.SessUeb.InUpcomingSessionSetzen,
+				InUpcomingSessionSetzenTyp.CooldownVisible,
+				true);
+		}
 				
+		if (this.SessUeb.FkProgress !== this.CmpSessUeb.FkProgress) {
+			mGeaendert = true;
+			this.PrepForUpcomingSession(
+				this.SessUeb.InUpcomingSessionSetzen,
+				InUpcomingSessionSetzenTyp.Progress,
+				true);
+		}
+		
+		if (this.SessUeb.ProgressGroup !== this.CmpSessUeb.ProgressGroup) {
+			mGeaendert = true;
+			this.PrepForUpcomingSession(
+				this.SessUeb.InUpcomingSessionSetzen,
+				InUpcomingSessionSetzenTyp.ProgressGroup,
+				true);
+		}
+
+		if (this.SessUeb.AufwaermArbeitsSatzPause !== this.CmpSessUeb.AufwaermArbeitsSatzPause) {
+			mGeaendert = true;
+			this.PrepForUpcomingSession(
+				this.SessUeb.InUpcomingSessionSetzen,
+				InUpcomingSessionSetzenTyp.AufwaermArbeitsSatzPause,
+				true);
+		}
+
+		if (this.SessUeb.ArbeitsSatzPause1 !== this.CmpSessUeb.ArbeitsSatzPause1) {
+			mGeaendert = true;
+			this.PrepForUpcomingSession(
+				this.SessUeb.InUpcomingSessionSetzen,
+				InUpcomingSessionSetzenTyp.ArbeitsSatzPause1,
+				true);
+		}
+
+		if (this.SessUeb.ArbeitsSatzPause2 !== this.CmpSessUeb.ArbeitsSatzPause2) {
+			mGeaendert = true;
+			this.PrepForUpcomingSession(
+				this.SessUeb.InUpcomingSessionSetzen,
+				InUpcomingSessionSetzenTyp.ArbeitsSatzPause2,
+				true);
+		}
+
+		if (this.SessUeb.GewichtReduzierung !== this.CmpSessUeb.GewichtReduzierung) {
+			mGeaendert = true;
+			this.PrepForUpcomingSession(
+				this.SessUeb.InUpcomingSessionSetzen,
+				InUpcomingSessionSetzenTyp.GewichtReduzierung,
+				true);
+		}
+
+		if (this.SessUeb.IncludeCoolDownWeight !== this.CmpSessUeb.IncludeCoolDownWeight) {
+			mGeaendert = true;
+			this.PrepForUpcomingSession(
+				this.SessUeb.InUpcomingSessionSetzen,
+				InUpcomingSessionSetzenTyp.IncludeCoolDownWeight,
+				true);
+		}
+		
+		if (this.SessUeb.IncludeWarmupWeight !== this.CmpSessUeb.IncludeWarmupWeight) {
+			mGeaendert = true;
+			this.PrepForUpcomingSession(
+				this.SessUeb.InUpcomingSessionSetzen,
+				InUpcomingSessionSetzenTyp.IncludeWarmupWeight,
+				true);
+		}
+		
+		if (this.SessUeb.MaxFailCount !== this.CmpSessUeb.MaxFailCount) {
+			mGeaendert = true;
+			this.PrepForUpcomingSession(
+				this.SessUeb.InUpcomingSessionSetzen,
+				InUpcomingSessionSetzenTyp.MaxFailCount,
+				true);
+		}
+
+		if (this.SessUeb.GewichtSteigerung !== this.CmpSessUeb.GewichtSteigerung) {
+			mGeaendert = true;
+			this.PrepForUpcomingSession(
+				this.SessUeb.InUpcomingSessionSetzen,
+				InUpcomingSessionSetzenTyp.GewichtSteigerung,
+				true);
+		}
+
+		if (this.SessUeb.NaechsteUebungPause !== this.CmpSessUeb.NaechsteUebungPause ) {
+			mGeaendert = true;
+			this.PrepForUpcomingSession(
+				this.SessUeb.InUpcomingSessionSetzen,
+				InUpcomingSessionSetzenTyp.NaechsteUebungPause,
+				true);
+		};
+
+		if (mGeaendert) {
+			mDialogData.textZeilen.push("Changes detected!");
+			mDialogData.textZeilen.push("Use in upcoming sessions as well?");
+				
+			mDialogData.OkFn = () => {
 				if (this.overlayRef != null) this.overlayRef.close();
 				this.overlayRef = null;
 			};

@@ -8,7 +8,7 @@ import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProg
 import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, Output, EventEmitter, ChangeDetectionStrategy  } from "@angular/core";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
-import { of } from 'rxjs';
+import { of, throwIfEmpty } from 'rxjs';
 import { LOCALE_ID, Inject } from '@angular/core';
 import { floatMask } from 'src/app/app.module';
 import { ExerciseSettingsComponent } from 'src/app/exercise-settings/exercise-settings.component';

@@ -12,9 +12,11 @@
 
         <ng-container *ngIf="programmTyp ==='history'"> 
             <div fxLayout="column">
-                <mat-label class="ml-5">History --- </mat-label>
-                <div class="ml-10">
-                    <span> {{session.GestartedWann | date: 'mediumDate'}} {{session.GestartedWann | date:'shortTime'}}</span>
+                <div fxLayout="row">
+                    <mat-label class="ml-5">History --- </mat-label>
+                    <div class="ml-10">
+                        <span> {{session.GestartedWann | date: 'mediumDate'}} {{session.GestartedWann | date:'shortTime'}}</span>
+                    </div>
                 </div>
             </div>
         </ng-container> 

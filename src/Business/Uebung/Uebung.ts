@@ -205,7 +205,16 @@ export class Uebung implements IUebung {
     public ArbeitsSatzPause1: number = 0;
     public ArbeitsSatzPause2: number = 0;
     public AufwaermArbeitsSatzPause: number = 0;
-    public NaechsteUebungPause: number = 0;
+    
+    //#region NaechsteUebungPause
+    private fNaechsteUebungPause: number;
+    public set NaechsteUebungPause(aValue: number) {
+        this.fNaechsteUebungPause = Number(aValue);
+    }
+    public get NaechsteUebungPause(): number {
+        return Number(this.fNaechsteUebungPause);
+    }
+    //#endregion
     public Datum: Date;
     public WeightInitDate: Date = MinDatum;
 
