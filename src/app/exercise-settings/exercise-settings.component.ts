@@ -314,13 +314,12 @@ export class ExerciseSettingsComponent {
 			mDialogData.OkFn = () => {
 				// Durchlaufe alle Sessions des Programms.
 				this.Programm.SessionListe.forEach(async (mSession) => {
-					// Die Session aus dem Formular auslassen
+					// Die Session aus dem Formular ignorienn
 					if (mSession.ID !== this.Session.ID) {
 	                    // Prüfe alle Übungen der Session
 						mSession.UebungsListe.forEach((mDestUebung) => {
 							// Prüfe, ob es sich um die gleiche Übung wie die im Formular handelt. 
-							if (mDestUebung.ID !== this.SessUeb.ID &&
-								mDestUebung.FkUebung === this.SessUeb.FkUebung &&
+							if (mDestUebung.FkUebung === this.SessUeb.FkUebung &&
 								mDestUebung.FkAltProgress === this.SessUeb.FkAltProgress &&
 								mDestUebung.AltProgressGroup === this.SessUeb.AltProgressGroup) {
 								//

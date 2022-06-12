@@ -127,6 +127,9 @@ export class Programm03Component implements OnInit {
     }
 
     ngOnDestroy() {
+        if (this.fExerciseSettingsComponent !== undefined)
+            this.fExerciseSettingsComponent.close();
+        
         if (this.fGlobalService.Comp03PanelUebungObserver != null)
             this.fGlobalService.Comp03PanelUebungObserver = null;
         
