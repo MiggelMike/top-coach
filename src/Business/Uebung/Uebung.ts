@@ -132,6 +132,7 @@ export interface IUebung {
     getFirstWaitingWorkSet(aFromIndex: number): Satz;
     nummeriereSatzListe(aSatzListe: Array<Satz>);
     ProgressGroup: string;
+    AltProgressGroup: string;
     WeightProgress: WeightProgress;
     AltWeightProgress: WeightProgress;
     Datum: Date;
@@ -225,6 +226,7 @@ export class Uebung implements IUebung {
     public WeightProgress: WeightProgress = WeightProgress.Same;
     public AltWeightProgress: WeightProgress = WeightProgress.Same;
     public ProgressGroup: string = ProgressGroup[0];
+    public AltProgressGroup: string = ProgressGroup[0];
     public InUpcomingSessionSetzen: InUpcomingSessionSetzen = new InUpcomingSessionSetzen();
 
     constructor() {

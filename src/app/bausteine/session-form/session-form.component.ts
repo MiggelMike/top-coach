@@ -368,7 +368,10 @@ export class SessionFormComponent implements OnInit {
 									// Lade aus mSession alle Übungen die gleich mUebung sind
 									mSession.UebungsListe.forEach((mDestUebung) => {
 										const mDestSatzPtrListe: Array<Satz> = mDestUebung.ArbeitsSatzListe;
-										if (mDestUebung.FkUebung === mQuellUebung.FkUebung) {
+										if (mDestUebung.FkUebung === mQuellUebung.FkUebung &&
+											mDestUebung.FkProgress === mQuellUebung.FkProgress &&
+											mDestUebung.ProgressGroup === mQuellUebung.ProgressGroup) {
+											//
 											for (let index = 0; index < mDestSatzPtrListe.length; index++) {
 												const mDestSatzPtr: Satz = mDestSatzPtrListe[index];
 												let mQuellSatzPtr: Satz;

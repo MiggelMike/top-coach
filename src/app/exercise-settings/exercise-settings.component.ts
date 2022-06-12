@@ -12,6 +12,7 @@ import { SatzStatus } from 'src/Business/Satz/Satz';
 import { ISession } from 'src/Business/Session/Session';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
+import { throwMatDuplicatedDrawerError } from '@angular/material/sidenav';
 
 enum InUpcomingSessionSetzenTyp {
 	Progress,
@@ -311,6 +312,60 @@ export class ExerciseSettingsComponent {
 			mDialogData.textZeilen.push("Use in upcoming sessions as well?");
 				
 			mDialogData.OkFn = () => {
+				// Durchlaufe alle Sessions des Programms.
+				this.Programm.SessionListe.forEach(async (mSession) => {
+					// Die Session aus dem Formular auslassen
+					if (mSession.ID !== this.Session.ID) {
+	                    // Prüfe alle Übungen der Session
+						mSession.UebungsListe.forEach((mDestUebung) => {
+							// Prüfe, ob es sich um die gleiche Übung wie die Formular handelt. 
+							if (mDestUebung.ID !== this.SessUeb.ID &&
+								mDestUebung.FkUebung === this.SessUeb.FkUebung &&
+								mDestUebung.FkAltProgress === this.SessUeb.FkAltProgress &&
+								mDestUebung.AltProgressGroup === this.SessUeb.AltProgressGroup) {
+								//
+								if (this.SessUeb.InUpcomingSessionSetzen.WarmUpVisible === true)
+									mDestUebung.WarmUpVisible = this.SessUeb.WarmUpVisible;
+									
+								if (this.SessUeb.InUpcomingSessionSetzen.CooldownVisible === true)
+									mDestUebung.CooldownVisible = this.SessUeb.CooldownVisible;
+								
+								if (this.SessUeb.InUpcomingSessionSetzen.Progress === true)
+									mDestUebung.FkProgress = this.SessUeb.FkProgress;
+										
+								if (this.SessUeb.InUpcomingSessionSetzen.ProgressGroup === true)
+									mDestUebung.ProgressGroup = this.SessUeb.ProgressGroup;
+								
+								if (this.SessUeb.InUpcomingSessionSetzen.AufwaermArbeitsSatzPause === true)
+									mDestUebung.AufwaermArbeitsSatzPause = this.SessUeb.AufwaermArbeitsSatzPause;
+						
+								if (this.SessUeb.InUpcomingSessionSetzen.ArbeitsSatzPause1 === true)
+									mDestUebung.ArbeitsSatzPause1 = this.SessUeb.ArbeitsSatzPause1;
+								
+								if (this.SessUeb.InUpcomingSessionSetzen.ArbeitsSatzPause2 === true)
+									mDestUebung.ArbeitsSatzPause2 = this.SessUeb.ArbeitsSatzPause2;
+						
+								if (this.SessUeb.InUpcomingSessionSetzen.GewichtReduzierung === true)
+									mDestUebung.GewichtReduzierung = this.SessUeb.GewichtReduzierung;
+						
+								if (this.SessUeb.InUpcomingSessionSetzen.IncludeWarmupWeight === true)
+									mDestUebung.IncludeWarmupWeight = this.SessUeb.IncludeWarmupWeight;
+								
+								if (this.SessUeb.InUpcomingSessionSetzen.MaxFailCount === true)
+									mDestUebung.MaxFailCount = this.SessUeb.MaxFailCount;
+								
+								if (this.SessUeb.InUpcomingSessionSetzen.GewichtSteigerung === true)
+									mDestUebung.GewichtSteigerung = this.SessUeb.GewichtSteigerung;
+								
+								if (this.SessUeb.InUpcomingSessionSetzen.NaechsteUebungPause === true)
+									mDestUebung.NaechsteUebungPause = this.SessUeb.NaechsteUebungPause;
+
+								this.fDbModule.UebungSpeichern(mDestUebung);
+							}
+						});
+					}//if
+				});//foreach
+
 				if (this.overlayRef != null) this.overlayRef.close();
 				this.overlayRef = null;
 			};

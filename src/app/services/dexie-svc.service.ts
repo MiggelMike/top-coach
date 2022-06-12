@@ -1070,6 +1070,9 @@ export class DexieSvcService extends Dexie {
 								mPtrUebung.InUpcomingSessionSetzen = new InUpcomingSessionSetzen();
 							mPtrUebung.InUpcomingSessionSetzen.init();
 
+							if (mPtrUebung.AltProgressGroup === undefined)
+								mPtrUebung.AltProgressGroup = mPtrUebung.ProgressGroup;
+
 							await this.LadeUebungsSaetze(mPtrUebung.ID)
 								.then((aSatzListe) => {
 									mPtrUebung.SatzListe = aSatzListe;
@@ -1119,6 +1122,9 @@ export class DexieSvcService extends Dexie {
 						if (mPtrUebung.InUpcomingSessionSetzen === undefined)
 							mPtrUebung.InUpcomingSessionSetzen = new InUpcomingSessionSetzen();
 						mPtrUebung.InUpcomingSessionSetzen.init();
+
+						if (mPtrUebung.AltProgressGroup === undefined)
+							mPtrUebung.AltProgressGroup = mPtrUebung.ProgressGroup;						
 							
 						if (
 							(aLadePara !== undefined)
@@ -1304,6 +1310,7 @@ export class DexieSvcService extends Dexie {
 		aUebung.FkAltProgress = aUebung.FkProgress;
 		aUebung.AltWeightProgress = aUebung.WeightProgress;
 		aUebung.FkOrgProgress = aUebung.FkProgress;
+		aUebung.AltProgressGroup = aUebung.ProgressGroup;
 		
 		let mSatzListe: Array<Satz>;
 		if (aUebung.SatzListe !== undefined)
