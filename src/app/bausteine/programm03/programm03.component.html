@@ -1,29 +1,40 @@
 
 <ng-container *ngIf="session && session.UebungsListe && (session.UebungsListe.length > 0)">
     
-    <ng-container *ngIf="StatsButtonVisible">
-        <a [ngClass]="['link-button-font', 'HG-01', 'mr-5']" mat-flat-button (click)="DoStatsFn()">Stats</a>
-    </ng-container>
-
-    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
-
-    <!-- <span class="mg-5">{{session.Name}}</span> -->
-    <ng-container *ngIf='bearbeitbar'> 
-        <mat-form-field class="mg-5">
-            <input class="font-size-smaller font-bold" matInput [(ngModel)]="session.Name" maxlength="30" type="text">
-        </mat-form-field>
-    </ng-container> 
-
-    <ng-container *ngIf="programmTyp ==='history'"> 
-        <div class="font-14-data" fxLayout="row wrap">
-            <mat-label class="ml-5">History --- </mat-label>
-            <div class="ml-10">
-                <span> {{session.GestartedWann | date: 'mediumDate'}} {{session.GestartedWann | date:'shortTime'}}</span>
+    <div class="font-14-data mg-lr-30" fxLayout="row wrap" fxLayoutAlign="cente center" fxLayoutGap="2px" >        
+        <ng-container *ngIf='bearbeitbar'> 
+            <div fxLayout="column" fxFlex="20%">
+                <mat-form-field class="mg-5">
+                    <input class="font-size-smaller font-bold" matInput [(ngModel)]="session.Name" maxlength="30" type="text">
+                </mat-form-field>
             </div>
+        </ng-container> 
+
+        <ng-container *ngIf="programmTyp ==='history'"> 
+            <div fxLayout="column">
+                <mat-label class="ml-5">History --- </mat-label>
+                <div class="ml-10">
+                    <span> {{session.GestartedWann | date: 'mediumDate'}} {{session.GestartedWann | date:'shortTime'}}</span>
+                </div>
+            </div>
+        </ng-container> 
+
+        
+        <ng-container *ngIf="StatsButtonVisible">
+            <div fxLayout="column" fxFlex="auto">
+            </div>
+
+            <div fxLayout="column" fxFlex="70px">
+                <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DoStatsFn()">Info</a>
+            </div>
+        </ng-container>
+        
+        <div fxLayout="column" fxFlex="120px">
+            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
         </div>
-            
-    </ng-container> 
-    
+        
+        <!-- <span class="mg-5">{{session.Name}}</span> -->
+    </div>
 
     <!-- <div cdkDropList (cdkDropListDropped)="drop($event)">
         <div *ngFor="let sess of SortedSessionListe, index as i" cdkDrag cdkDragRootElement="accSession"> -->
