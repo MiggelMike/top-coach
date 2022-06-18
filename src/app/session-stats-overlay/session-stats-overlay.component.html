@@ -34,18 +34,22 @@
 
             <!-- Lifted-Weight -->
             <div fxLayout="row wrap" fxFlex="100%">
-                <mat-form-field class="align-left" fxFlex="100%">
-                    <mat-label class="font-14-label">Weight lifted</mat-label>
-                    <input  matInput type="text"  [disabled]="true" class="font-14-data" value="{{sess.LiftedWeight | number: '1.2'}} {{GewichtsEinheit}}">
-                </mat-form-field>
+                <div fxLayout="column" fxFlex="100%">
+                    <mat-form-field class="align-left" fxFlex="100%">
+                        <mat-label class="font-14-label">Weight lifted</mat-label>
+                        <input  matInput type="text"  [disabled]="true" class="font-14-data" value="{{sess.LiftedWeight | number: '1.2'}} {{GewichtsEinheit}}">
+                    </mat-form-field>
+                </div>
             </div>            
 
             <!-- Duration -->
             <div fxLayout="row wrap" fxFlex="100%">
-                <mat-form-field class="align-left" fxFlex="100%">
-                    <mat-label class="font-14-label">Duration</mat-label>
-                    <input  matInput type="text"  [disabled]="true" class="font-14-data" value="{{sess.DauerFormatted}}">
-                </mat-form-field>
+                <div fxLayout="column" fxFlex="100%">
+                    <mat-form-field class="align-left" fxFlex="100%">
+                        <mat-label class="font-14-label">Duration</mat-label>
+                        <input  matInput type="text"  [disabled]="true" class="font-14-data" value="{{sess.DauerFormatted}}">
+                    </mat-form-field>
+                </div>
             </div>            
 
             <div fxLayout="row wrap" fxLayoutAlign="center center">
