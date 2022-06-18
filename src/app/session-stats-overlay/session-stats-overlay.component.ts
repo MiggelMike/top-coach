@@ -35,7 +35,9 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 		public _ModalPositionService: ModalPositionService,
 		public fDexieService: DexieSvcService,
         @Inject(cSessionStatsOverlayData) public sess: ISession
-    ) {
+	) {
+		sess.PruefeGewichtsEinheit(this.fDexieService.AppRec.GewichtsEinheit);
+
         this.fAnchorPosition = {
 			left: 10,
 			top: 120
@@ -57,6 +59,14 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 		if (this.AppData === undefined)
 			return '';
 		return this.AppData.GewichtsEinheitText;
+	}
+
+	onFocusBodyweight(aEvent: any) {
+		aEvent.target.select();
+	}
+
+	SetBodyweight(aEvent: any) {
+		this.sess.BodyWeight =  Number(aEvent.target.value);
 	}
 
     public handleMousedown( event: MouseEvent ) : void {

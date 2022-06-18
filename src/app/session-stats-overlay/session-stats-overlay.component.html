@@ -7,7 +7,7 @@
             <!-- Session-Name -->
             <div fxLayout="row wrap" fxFlex="100%">
                 <mat-form-field class="align-left" fxFlex="100%">
-                    <mat-label class="font-14-label">Name</mat-label>
+                    <mat-label class="font-14-label">Session name</mat-label>
                     <input  class="font-14-data" #Name matInput [(ngModel)]="sess.Name" maxlength="30" type="text">
                 </mat-form-field>
             </div>
@@ -20,37 +20,37 @@
                 </mat-form-field>
             </div>
 
-            <!-- Bodyweight -->
-            <div fxLayout="row wrap">
-                <div fxLayout="column" fxFlex="100%">
-                    <mat-form-field>
-                        <mat-label class="font-14-label">Bodyweight</mat-label>
-                        <input matInput  [textMask]="{mask: floatMask, guide: false}" 
+            <div fxLayout="row wrap" fxLayoutGap="2px">
+                <!-- Bodyweight -->
+                <div fxLayout="column" fxFlex="33%" >
+                    <mat-form-field class="align-left">
+                        <mat-label class="font-14-label">Bodyweight ({{GewichtsEinheit}})</mat-label>
+                        <input matInput 
+                              [textMask]="{mask: floatMask, guide: false}" 
                               [ngModel]="sess.BodyWeight" 
+                              (focus)="onFocusBodyweight($event)"
+                              (focusout)="SetBodyweight($event)"
                                type="text">
                     </mat-form-field>
                 </div>
-            </div>
-
-            <!-- Lifted-Weight -->
-            <div fxLayout="row wrap" fxFlex="100%">
-                <div fxLayout="column" fxFlex="100%">
-                    <mat-form-field class="align-left" fxFlex="100%">
-                        <mat-label class="font-14-label">Weight lifted</mat-label>
+                <!-- Lifted-Weight -->
+                <div fxLayout="column" fxFlex="33%">
+                    <mat-form-field class="align-left">
+                        <mat-label class="font-14-label">Weight lifted ({{GewichtsEinheit}})</mat-label>
                         <input  matInput type="text"  [disabled]="true" class="font-14-data" value="{{sess.LiftedWeight | number: '1.2'}} {{GewichtsEinheit}}">
                     </mat-form-field>
                 </div>
-            </div>            
 
-            <!-- Duration -->
-            <div fxLayout="row wrap" fxFlex="100%">
-                <div fxLayout="column" fxFlex="100%">
-                    <mat-form-field class="align-left" fxFlex="100%">
+                <!-- Duration -->
+                <div fxLayout="column" fxFlex="32%">
+                    <mat-form-field class="align-left">
                         <mat-label class="font-14-label">Duration</mat-label>
                         <input  matInput type="text"  [disabled]="true" class="font-14-data" value="{{sess.DauerFormatted}}">
                     </mat-form-field>
                 </div>
-            </div>            
+            </div>
+
+
 
             <div fxLayout="row wrap" fxLayoutAlign="center center">
                 <a mat-button (click)="close()"><span class="tc-font-size-small">close</span></a>

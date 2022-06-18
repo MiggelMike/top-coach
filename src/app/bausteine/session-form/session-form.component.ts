@@ -5,8 +5,8 @@ import { SessionStatus } from "./../../../Business/SessionDB";
 import { SessionStatsOverlayComponent } from "./../../session-stats-overlay/session-stats-overlay.component";
 import { SessionOverlayServiceService, SessionOverlayConfig } from "./../../services/session-overlay-service.service";
 import { DialogeService } from "./../../services/dialoge.service";
-import { cUebungSelectLimit, DexieSvcService, ExtraFn, MinDatum, ProgrammParaDB, SessionParaDB, UebungParaDB } from "./../../services/dexie-svc.service";
-import { Component, OnInit, ViewChildren } from "@angular/core";
+import { DexieSvcService, MinDatum, UebungParaDB } from "./../../services/dexie-svc.service";
+import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { DialogData } from "src/app/dialoge/hinweis/hinweis.component";
 import { Location } from "@angular/common";
@@ -48,7 +48,11 @@ export class SessionFormComponent implements OnInit {
 	) {
 		const mNavigation = this.router.getCurrentNavigation();
 		const mState = mNavigation.extras.state as { programm: ITrainingsProgramm, sess: Session, programmTyp: string };
-		mState.sess.BodyWeightAtSessionStart = this.fDbModule.getBodyWeight();
+		if (mState.sess.Kategorie02 === SessionStatus.Wartet) {
+			mState.sess.BodyWeightAtSessionStart = this.fDbModule.getBodyWeight();
+		}
+		mState.sess.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
+		
 		this.programmTyp = mState.programmTyp;
 		this.Programm = mState.programm;
 		const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
@@ -57,23 +61,7 @@ export class SessionFormComponent implements OnInit {
 		mSessionCopyPara.CopyUebungID = true;
 		mSessionCopyPara.CopySatzID = true;
 		this.Session = mState.sess.Copy(mSessionCopyPara);
-		//
-		switch (this.Session.Kategorie02) {
-			case SessionStatus.Wartet:
-				this.Session.GestartedWann = new Date();
-				this.Session.Kategorie02 = SessionStatus.Laueft;
-				this.Session.Datum = new Date();
-				this.EvalStart();
-				break;
-				
-			case SessionStatus.Pause:
-			case SessionStatus.Laueft:
-				this.EvalStart();
-				break;
-		}//switch
 
-		this.cmpSession = this.Session.Copy(mSessionCopyPara);
-		
 		const mDialogData = new DialogData();
 		mDialogData.ShowAbbruch = false;
 		mDialogData.ShowOk = false;
@@ -85,24 +73,57 @@ export class SessionFormComponent implements OnInit {
 			mUebungParaDB.SaetzeBeachten = true;
 			this.fDbModule.LadeSessionUebungen(this.Session.ID, mUebungParaDB).then(
 				(aUebungsListe) => {
-					if (aUebungsListe.length > 0) this.Session.UebungsListe = aUebungsListe;
-					else this.fDbModule.CmpAktuellesProgramm = this.fDbModule.AktuellesProgramm.Copy();
-
-					if (this.cmpSession.UebungsListe === undefined || this.cmpSession.UebungsListe.length <= 0) {
-						this.cmpSession.UebungsListe = [];
-						this.Session.UebungsListe.forEach((mUebung) => this.cmpSession.UebungsListe.push(mUebung.Copy()));
-						this.BackButtonVisible = true;
-						// this.doStats();
-						this.ready = true;
-						this.fLoadingDialog.fDialog.closeAll();
-					} else {
-						this.BackButtonVisible = true;
+					try {
+						if (aUebungsListe.length > 0)
+							this.Session.UebungsListe = aUebungsListe;
+						else
+							this.fDbModule.CmpAktuellesProgramm = this.fDbModule.AktuellesProgramm.Copy();
+							
+						if (this.Session.UebungsListe !== undefined) {
+							this.Session.UebungsListe.forEach((mPtrUebung) => {
+								mPtrUebung.PruefeGewichtsEinheit(this.Session.GewichtsEinheit)
+								if (mPtrUebung.SatzListe !== undefined) {
+									mPtrUebung.SatzListe.forEach((mPtrSatz) => {
+										mPtrSatz.PruefeGewichtsEinheit(this.Session.GewichtsEinheit);
+									})
+								}
+							})
+						}
+		
+						//
+						switch (this.Session.Kategorie02) {
+							case SessionStatus.Wartet:
+								this.Session.GestartedWann = new Date();
+								this.Session.Kategorie02 = SessionStatus.Laueft;
+								this.Session.Datum = new Date();
+								this.EvalStart();
+								break;
+				
+							case SessionStatus.Pause:
+							case SessionStatus.Laueft:
+								this.EvalStart();
+								break;
+						}//switch
+							
+						this.cmpSession = this.Session.Copy(mSessionCopyPara);
+						if (this.cmpSession.UebungsListe === undefined || this.cmpSession.UebungsListe.length <= 0) {
+							this.cmpSession.UebungsListe = [];
+							this.Session.UebungsListe.forEach((mUebung) => this.cmpSession.UebungsListe.push(mUebung.Copy()));
+	
+							this.BackButtonVisible = true;
+							this.ready = true;
+						} else {
+							this.BackButtonVisible = true;
+						}
+					} finally {
 						this.fLoadingDialog.fDialog.closeAll();
 					}
 				});
 		} catch (error) {
 			this.fLoadingDialog.fDialog.closeAll();
 		}
+
+		
 	}
 
 	DoWorker() {
@@ -143,22 +164,10 @@ export class SessionFormComponent implements OnInit {
 		this.Session.StarteDauerTimer();				
 	}
 
-	doStats(aData: any) {
-		let mLeft = -1000;
-		// let mTop = -1000;
-		// let mWidth = 800;
-		
-		if (aData !== undefined) {
-			mLeft = aData.nativeElement.offsetLeft;
-
-		}
-			
+	doStats() {
 		if (this.fSessionStatsOverlayComponent === null || this.fSessionStatsOverlayComponent.overlayRef === null) {
 			this.fSessionOverlayConfig = {
 				session: this.Session,
-				// left: mLeft,
-				// top: mTop,
-				// width: 800,
 			} as SessionOverlayConfig;
 
 			this.fSessionStatsOverlayComponent = this.fSessionOverlayServiceService.open(this.fSessionOverlayConfig);

@@ -3,6 +3,8 @@ import { ISession } from 'src/Business/Session/Session';
 import { IUebung, Uebung } from '../Uebung/Uebung';
 import {formatNumber, NumberSymbol} from '@angular/common';
 import { isThisTypeNode } from 'typescript';
+import { AppData, GewichtsEinheit } from '../Coach/Coach';
+import { R3BoundTarget } from '@angular/compiler';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
 
@@ -79,6 +81,7 @@ export interface ISatz {
     getBodyWeightText(aPrefix?: string): string;
     FkHantel: number;
     Vorgabe: boolean;
+    GewichtsEinheit: GewichtsEinheit;
 
 }
 
@@ -87,11 +90,11 @@ export class GewichtDiff {
     private fGewicht: number = 0;
     get Gewicht(): number
     {
-        return Number(this.fGewicht);
+        return AppData.StaticRoundTo(this.fGewicht, 3);
     }
     set Gewicht(value:number)
     {
-        this.fGewicht = Number(value);
+        this.fGewicht = AppData.StaticRoundTo(value,3);
     }
 
     Uebung: Uebung;
@@ -109,10 +112,23 @@ export class Satz implements ISatz {
     public GewichtDiff: Array<GewichtDiff> = [];
     //#region GewichtNaechsteSession 
     private fGewichtNaechsteSession: number = 0;
+    public GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
 
-    // public isEqual(aCmpSatz: ISatz): boolean {
-    //     return isEqual(this,aCmpSatz);
-    // }
+    public static StaticCheckMembers(aSatz: ISatz) {
+        if (aSatz.GewichtsEinheit === undefined)
+            aSatz.GewichtsEinheit = GewichtsEinheit.KG;
+    }
+
+    public PruefeGewichtsEinheit(aGewichtsEinheit: GewichtsEinheit) {
+        Satz.StaticCheckMembers(this);
+        if (aGewichtsEinheit !== this.GewichtsEinheit) {
+            this.GewichtAusgefuehrt = AppData.StaticConvertWeight(this.GewichtAusgefuehrt, aGewichtsEinheit);
+            this.GewichtVorgabe = AppData.StaticConvertWeight(this.GewichtVorgabe, aGewichtsEinheit);
+            this.GewichtNaechsteSession = AppData.StaticConvertWeight(this.GewichtNaechsteSession, aGewichtsEinheit);
+            this.GewichtDiff.forEach((mPtrDiff) => mPtrDiff.Gewicht = AppData.StaticConvertWeight(mPtrDiff.Gewicht, aGewichtsEinheit));
+            this.GewichtsEinheit = aGewichtsEinheit;
+        }
+    }
 
     get GewichtNaechsteSession(): number{
         return Number(this.fGewichtNaechsteSession);
@@ -126,12 +142,12 @@ export class Satz implements ISatz {
     private fGewichtAusgefuehrt: number = 0;    
     get GewichtAusgefuehrt():number
     {
-        return Number(this.fGewichtAusgefuehrt);
+        return AppData.StaticRoundTo(this.fGewichtAusgefuehrt,3);
     }
 
     set GewichtAusgefuehrt(aValue: number)
     {
-        this.fGewichtAusgefuehrt = Number(aValue);
+        this.fGewichtAusgefuehrt = AppData.StaticRoundTo(aValue,3);
     }
     //#endregion
     //#region WdhAusgefuehrt
@@ -246,6 +262,7 @@ export class Satz implements ISatz {
         this.Status = aPara.Status ? aPara.Status : SatzStatus.Wartet;
         this.AMRAP = aPara.AMRAP ? aPara.AMRAP : false;
         this.BodyWeight = aPara.BodyWeight ? aPara.BodyWeight : 0;
+        Satz.StaticCheckMembers(this)
 
         // Nicht in Dexie-DB-Speichern -> enumerable: false        
         Object.defineProperty(this, "BodyWeight", { enumerable: false });

@@ -1,5 +1,6 @@
 import { Zeitraum, MaxZeitraum } from './../Business/Dauer';
 import { Uebung } from 'src/Business/Uebung/Uebung';
+import { AppData, GewichtsEinheit } from './Coach/Coach';
 
 
 export enum SessionStatus {
@@ -44,6 +45,8 @@ export interface ISessionDB {
     BodyWeightAtSessionStart: number;
     UebungsListe: Array<Uebung>;
     ProgressIsCalced: boolean;
+    GewichtsEinheit: GewichtsEinheit;
+    PruefeGewichtsEinheit(aGewichtsEinheit: GewichtsEinheit);
 }
 
 export class SessionDB implements ISessionDB {
@@ -67,13 +70,29 @@ export class SessionDB implements ISessionDB {
     public SessionDauer: Zeitraum;
     public DauerTimer: any;
     get BodyWeight(): number { return 0; };
-    public BodyWeightAtSessionStart: number;
+    public BodyWeightAtSessionStart: number = 0;
     public UebungsListe: Array<Uebung> = [];
     public PausenListe: Array<Pause> = [];
+    public GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
 
     constructor() {
-       Object.defineProperty(this, "UebungsListe", { enumerable: false });
+        Object.defineProperty(this, "UebungsListe", { enumerable: false });
+        SessionDB.StaticCheckMembers(this);
+    }
+    
+    public static StaticCheckMembers(aSessionDB: ISessionDB) {
+        if (aSessionDB.GewichtsEinheit === undefined)
+            aSessionDB.GewichtsEinheit = GewichtsEinheit.KG;
+    
+        if (aSessionDB.BodyWeightAtSessionStart === undefined)
+            aSessionDB.BodyWeightAtSessionStart = 0;
     }
 
+    public PruefeGewichtsEinheit(aGewichtsEinheit: GewichtsEinheit) {
+        if (aGewichtsEinheit !== this.GewichtsEinheit) {
+            this.BodyWeightAtSessionStart = AppData.StaticConvertWeight(this.BodyWeight, aGewichtsEinheit);
+            this.GewichtsEinheit = aGewichtsEinheit;
+        }
+    }
 
 }

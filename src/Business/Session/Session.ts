@@ -27,8 +27,7 @@ export interface ISession extends ISessionDB {
     SetNextWeight(aWp: WeightProgress, aUebung: Uebung);
     isEqual(aOtherSession: Session): boolean;
     SucheSatz(aSatz: Satz): Satz;
-    Reset();
-
+    Reset()
 }
 
 export class SessionCopyPara {
@@ -71,6 +70,7 @@ export class Session extends SessionDB implements ISession {
         // }
         return this.BodyWeightAtSessionStart;
     }
+
 
     public getFirstWaitingExercise(aFromIndex: number, aToIndex?: number): Uebung
     {
@@ -321,7 +321,10 @@ export class Session extends SessionDB implements ISession {
         const mJetzt = new Date();
         this.SessionDauer = new Zeitraum(mJetzt, mJetzt, new MaxZeitraum(99, 59, 59));
         Object.defineProperty(this, "UebungsListe", { enumerable: false });
+
+
     }
+   
 
     public addUebung(aUebung: Uebung) {
         Session.StaticAddUebung(aUebung, this.UebungsListe);

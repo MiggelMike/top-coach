@@ -12,12 +12,14 @@ import { ITrainingsProgramm, TrainingsProgramm, ProgrammTyp, ProgrammKategorie }
 import { DialogeService } from './dialoge.service';
 import { ISatz, Satz, SatzStatus, GewichtDiff } from './../../Business/Satz/Satz';
 import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
-import { AppData, IAppData } from './../../Business/Coach/Coach';
+import { AppData } from './../../Business/Coach/Coach';
 import { Dexie, PromiseExtended } from 'dexie';
 import { Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardUebung, ArbeitsSaetzeStatus } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
+import { threadId } from 'worker_threads';
+import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
 var cloneDeep = require('lodash.clonedeep');
 
 export const MinDatum = new Date(-8640000000000000);
@@ -917,6 +919,11 @@ export class DexieSvcService extends Dexie {
             .limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : cMaxLimnit) 
 			.sortBy("ListenIndex")
 			.then(async (aSessionListe) => {
+				aSessionListe.forEach((mPtrSession) => {
+					SessionDB.StaticCheckMembers(mPtrSession);
+					mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+				});
+
 				if (aSessionParaDB !== undefined) {
 					if (aSessionParaDB.UebungenBeachten) {
 						for (let index = 0; index < aSessionListe.length; index++) {
@@ -940,7 +947,11 @@ export class DexieSvcService extends Dexie {
             .limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : cMaxLimnit) 
 			.sortBy("ListenIndex")
 			.then(async (aSessionListe) => {
-				const x = 0;
+				aSessionListe.forEach((mPtrSession) => {
+					SessionDB.StaticCheckMembers(mPtrSession);
+					mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+				});
+
 				if (aSessionParaDB !== undefined) {
 					if (aSessionParaDB.UebungenBeachten) {
 						for (let index = 0; index < aSessionListe.length; index++) {
@@ -962,6 +973,11 @@ export class DexieSvcService extends Dexie {
 			.limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : cMaxLimnit)
 			.toArray()
 			.then(async (aSessionListe) => {
+				aSessionListe.forEach((mPtrSession) => {
+					SessionDB.StaticCheckMembers(mPtrSession);
+					mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+				});
+
 				if (aSessionParaDB !== undefined) {
 					if (aSessionParaDB.UebungenBeachten) {
 						for (let index = 0; index < aSessionListe.length; index++) {
@@ -986,6 +1002,11 @@ export class DexieSvcService extends Dexie {
             .limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : cMaxLimnit) 
 			.sortBy("ListenIndex")
 			.then(async (aSessionListe) => {
+				aSessionListe.forEach((mPtrSession) => {
+					SessionDB.StaticCheckMembers(mPtrSession);
+					mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+				});
+
 				if (aSessionParaDB !== undefined) {
 					if (aSessionParaDB.UebungenBeachten) {
 						for (let index = 0; index < aSessionListe.length; index++) {
@@ -1007,7 +1028,14 @@ export class DexieSvcService extends Dexie {
             .limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : cMaxLimnit) 
 			.reverse()
 			.sortBy("Datum")
-			.then((aSessionListe) => { return aSessionListe; });
+			.then((aSessionListe) => {
+				aSessionListe.forEach((mPtrSession) => {
+					SessionDB.StaticCheckMembers(mPtrSession);
+					mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+				});
+
+				return aSessionListe;
+			});
 	}
 
 	public async LadeProgrammSessionsEx(aLadePara: SessionParaDB): Promise<Array<Session>> {
@@ -1019,6 +1047,8 @@ export class DexieSvcService extends Dexie {
 			.limit(aLadePara === undefined || aLadePara.Limit === undefined ? cMaxLimnit : aLadePara.Limit)
 			.sortBy(aLadePara === undefined || aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
 			.then(async (aSessions: Array<Session>) => {
+				aSessions.forEach((mPtrSession) => SessionDB.StaticCheckMembers(mPtrSession));
+
 				const mLadePara: ParaDB = new ParaDB();
 				for (let index = 0; index < aSessions.length; index++) {
 					const mPtrSession = aSessions[index];
@@ -1340,7 +1370,6 @@ export class DexieSvcService extends Dexie {
 		return await this.transaction("rw", this.SessionTable, this.UebungTable, this.SatzTable, async () => {
 			const mUebungsListe: Array<Uebung> = [];
 			if (aSession.UebungsListe !== undefined) {
-				const x = 0;
 				for (let index = 0; index < aSession.UebungsListe.length; index++) {
 					const mPtrUebung = aSession.UebungsListe[index];
 					const mPtrCopyOfUebung = mPtrUebung.Copy();
@@ -1446,8 +1475,10 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
-	public AppDataSpeichern(aAppData: AppData) {
-		this.AppDataTable.put(aAppData);
+	public async AppDataSpeichern(aAppData: AppData) {
+		this.AppRec = aAppData;
+		await this.AppDataTable.put(aAppData); //.then( () =>  this.LadeAppData().then ((aAppRec) => this.AppRec = aAppRec ));
+		
 	}
 	//#endregion
 

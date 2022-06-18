@@ -1,3 +1,4 @@
+
 export enum GewichtsEinheit {
     KG,
     LBS
@@ -38,7 +39,19 @@ export class AppData {
             return 'KG'
         else
             return 'LBS';
-    } 
+    }
+    
+    public static StaticConvertWeight(aWeight: number, aConvertTo: GewichtsEinheit): number {
+        if (aConvertTo === GewichtsEinheit.KG)
+            return aWeight / 2.20462;
+        else
+            return aWeight * 2.20462;
+    }
+
+    public static StaticRoundTo(aNumber: number, aDigits: number): number {
+        return Number(parseFloat(aNumber.toString()).toFixed(aDigits));
+    }
+
     // public LetzteProgrammID: number = 0;
     // public LetzteSessionID: number = 0;
     // public LetzteSatzID: number = 0;

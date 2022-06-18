@@ -1,9 +1,11 @@
+import { SessionDB } from './../../Business/SessionDB';
 import { DexieSvcService, SessionParaDB, UebungParaDB } from './../services/dexie-svc.service';
 import {  ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
+import { AppData } from 'src/Business/Coach/Coach';
 
 
 
@@ -32,7 +34,11 @@ export class AnstehendeSessionsComponent implements OnInit {
         this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
             .then((aSessionListe) => {
                 this.fDbModule.AktuellesProgramm.SessionListe = aSessionListe;
-                aSessionListe.forEach((mSession) => this.fProgramm.SessionListe.push(mSession));
+                aSessionListe.forEach((mPtrSession) => {
+                    SessionDB.StaticCheckMembers(mPtrSession);
+                    mPtrSession.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
+                    this.fProgramm.SessionListe.push(mPtrSession);
+                });
                 this.fLoadingDialog.fDialog.closeAll();
                 // this.worker.postMessage('LadeUebungen');
             });

@@ -16,7 +16,7 @@
         [programmTyp]="programmTyp"
         [DeletedExerciseList]="DeletedExerciseList"
         [StatsButtonVisible]="true"
-        (DoStats)="doStats($event)"
+        (DoStats)="doStats()"
         [DeletedSatzList]="DeletedSatzList">
     </app-programm03>
     
@@ -53,7 +53,3 @@
             </ng-container>
         </div>
     </ng-container>
-
-    
-    <!-- <app-data-store-buttons [SaveClick]="SaveChanges" [CancelClick]="CancelChanges" [ClickData]="this">
-    </app-data-store-buttons> -->

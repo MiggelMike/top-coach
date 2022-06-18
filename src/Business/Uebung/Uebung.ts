@@ -1,3 +1,4 @@
+import { AppData, GewichtsEinheit } from 'src/Business/Coach/Coach';
 import { MinDatum } from './../../app/services/dexie-svc.service';
 import { ProgressGroup, WeightProgress } from 'src/Business/Progress/Progress';
 import { Zeitraum } from './../Dauer';
@@ -139,6 +140,7 @@ export interface IUebung {
     WeightInitDate: Date;
     FK_Programm: number;
     InUpcomingSessionSetzen: InUpcomingSessionSetzen;
+    GewichtsEinheit: GewichtsEinheit;
 }
 
 export enum StandardUebungsName {
@@ -228,6 +230,7 @@ export class Uebung implements IUebung {
     public ProgressGroup: string = ProgressGroup[0];
     public AltProgressGroup: string = ProgressGroup[0];
     public InUpcomingSessionSetzen: InUpcomingSessionSetzen = new InUpcomingSessionSetzen();
+    public GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
 
     constructor() {
         // Nicht in Dexie-DB-Speichern -> enumerable: false
@@ -237,18 +240,33 @@ export class Uebung implements IUebung {
         Object.defineProperty(this, 'Expanded', { enumerable: false });
         Object.defineProperty(this, 'StammUebung', { enumerable: false });
         Object.defineProperty(this, 'InUpcomingSessionSetzen', { enumerable: false });
+        Uebung.StaticCheckMembers(this);
         // Object.defineProperty(this, "AkuelleGewichtAenderung", { enumerable: false });
+    }
+
+    public static StaticCheckMembers(aUebung: IUebung) {
+        if (aUebung.GewichtsEinheit === undefined)
+            aUebung.GewichtsEinheit = GewichtsEinheit.KG;
+    };
+
+    public PruefeGewichtsEinheit(aGewichtsEinheit: GewichtsEinheit) {
+        Uebung.StaticCheckMembers(this);
+        if (aGewichtsEinheit !== this.GewichtsEinheit) {
+            this.GewichtReduzierung = AppData.StaticConvertWeight(this.GewichtReduzierung, aGewichtsEinheit);
+            this.GewichtSteigerung = AppData.StaticConvertWeight(this.GewichtSteigerung, aGewichtsEinheit);
+            this.GewichtsEinheit = aGewichtsEinheit;
+        }
     }
 
     //#region GewichtSteigerung
     private fGewichtSteigerung: number = 0;
 
     set GewichtSteigerung(aValue: number) {
-        this.fGewichtSteigerung = Number(aValue);
+        this.fGewichtSteigerung = AppData.StaticRoundTo(aValue,3);
     }
 
     get GewichtSteigerung(): number {
-        return Number(this.fGewichtSteigerung);
+        return AppData.StaticRoundTo(this.fGewichtSteigerung,3);
     }
     //#endregion
     //#region GewichtReduzierung 
