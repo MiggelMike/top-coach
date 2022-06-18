@@ -40,13 +40,14 @@ export class Programm03Component implements OnInit {
     @Input() SofortSpeichern: Boolean = false;
     @Input() programmTyp: string = "";
     @Input() StatsButtonVisible: boolean = false;
-
-    @Output() DoStats = new EventEmitter();
-    @Output() DoPanels = new EventEmitter();
+    
+    @Output() DoStats = new EventEmitter<any>();
     
     @ViewChildren("accUebung") accUebung: QueryList<MatAccordion>;
     @ViewChildren("panUebung") panUebung: QueryList<MatExpansionPanel>;
     @ViewChild(CdkOverlayOrigin) cdkOverlayOrigin: CdkOverlayOrigin;
+    @ViewChild("Info") Info: any;
+    
     private fExerciseOverlayConfig: ExerciseOverlayConfig;
     private fExerciseSettingsComponent: ExerciseSettingsComponent;
     public checkingSets: boolean = false;
@@ -79,6 +80,7 @@ export class Programm03Component implements OnInit {
         // if (this.fGlobalService.Comp03PanelUebungObserver === null)
         //     this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;
     }
+
             
     ngAfterViewInit() {
         if (this.session.UebungsListe !== undefined) {
@@ -105,16 +107,15 @@ export class Programm03Component implements OnInit {
                 // if(this.SessUeb !== undefined)
                 //     this.SessUeb.Expanded = false;
             }
+            setTimeout(() => {
+                this.DoStatsFn()
+            }, (500));
         }
     }
 
-    DoStatsFn() {
+    public DoStatsFn() {
         if (this.DoStats !== undefined)
-            this.DoStats.emit();
-    }
-
-    DoPanelsFn() {
-        const x = 0;
+            this.DoStats.emit(this.Info);
     }
 
     drop(event: CdkDragDrop<Uebung[]>) {
@@ -179,10 +180,10 @@ export class Programm03Component implements OnInit {
 
         if (this.panUebung === undefined)
             return;
-
             
         this.accCheckUebungPanels(aUebung);
     }
+
 
     private async LadeUebungsSaetze(aUebung: Uebung, aSatzParaDB?: SatzParaDB) : Promise<void> {
         await this.fDbModule.LadeUebungsSaetze(aUebung.ID, aSatzParaDB)

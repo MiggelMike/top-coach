@@ -44,7 +44,8 @@ import { SessionFormComponent } from './bausteine/session-form/session-form.comp
 import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.component';
 import { SatzEditComponent } from './bausteine/satz-edit/satz-edit.component';
 import { TextMaskModule } from 'angular2-text-mask';
-import  createNumberMask  from 'text-mask-addons/dist/createNumberMask';
+import createNumberMask from 'text-mask-addons/dist/createNumberMask';
+import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe'
 import { SatzComponent } from './bausteine/satz/satz.component';
 import { SessUebungComponent } from './bausteine/sess-uebung/sess-uebung.component';
 import { UebungWaehlenComponent } from './uebung-waehlen/uebung-waehlen.component';
@@ -102,6 +103,7 @@ import { InitialWeightComponent } from './initial-weight/initial-weight.componen
 import { PlateCalcComponent } from './plate-calc/plate-calc.component';
 import { StoppuhrComponent } from './stoppuhr/stoppuhr.component';
 import { HistoryComponent } from './history/history.component';
+
 //import { MatBadgeModule } from '@angular/material/m/MatBadgeModule';
 
 // import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
@@ -111,7 +113,7 @@ import { HistoryComponent } from './history/history.component';
 
 //export const Firstmask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
 export const Firstmask = [/[0-9,'.', [0-9, [0-9,'.']]] /];
-
+export const cAutoCorrectedDatePipe = createAutoCorrectedDatePipe('mm/dd/yyyy HH:MM');
 
 export interface IOkCallback {
   ():void;
@@ -120,6 +122,24 @@ export interface IOkCallback {
 export interface ICancelCallback {
   ():void;
 }
+
+// export const dateMask = createNumberMask({
+//   prefix: '',
+//   suffix: '', 
+//   includeThousandsSeparator: true, //  (boolean): whether or not to separate thousands. Defaults to to true.
+//   integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
+//   allowDecimal: true, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
+//   decimalLimit: 3,
+//   // requireDecimal: true,
+//   // allowLeadingZeroes: true
+// })
+
+// export class datemask {
+//   guide: true,
+//   showMask: true,
+//   mask: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]
+// };
+
 
 export const floatMask = createNumberMask({
     prefix: '',

@@ -7,7 +7,7 @@
         <mat-icon>pan_tool</mat-icon>
     </ng-container> 
 
-    <app-programm03 
+    <app-programm03 #appProgramm03
         [session]="Session" 
         [cmpSession]="cmpSession" 
         [bearbeitbar]="true" 
@@ -16,7 +16,7 @@
         [programmTyp]="programmTyp"
         [DeletedExerciseList]="DeletedExerciseList"
         [StatsButtonVisible]="true"
-        (DoStats)="doStats()"
+        (DoStats)="doStats($event)"
         [DeletedSatzList]="DeletedSatzList">
     </app-programm03>
     

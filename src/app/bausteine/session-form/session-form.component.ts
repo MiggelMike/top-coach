@@ -6,14 +6,14 @@ import { SessionStatsOverlayComponent } from "./../../session-stats-overlay/sess
 import { SessionOverlayServiceService, SessionOverlayConfig } from "./../../services/session-overlay-service.service";
 import { DialogeService } from "./../../services/dialoge.service";
 import { cUebungSelectLimit, DexieSvcService, ExtraFn, MinDatum, ProgrammParaDB, SessionParaDB, UebungParaDB } from "./../../services/dexie-svc.service";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChildren } from "@angular/core";
 import { Router } from "@angular/router";
 import { DialogData } from "src/app/dialoge/hinweis/hinweis.component";
 import { Location } from "@angular/common";
 import { GlobalService } from "src/app/services/global.service";
 import { Uebung, UebungsKategorie02 } from "src/Business/Uebung/Uebung";
 import { UebungWaehlenData } from "src/app/uebung-waehlen/uebung-waehlen.component";
-import { Progress, ProgressPara, ProgressSet } from 'src/Business/Progress/Progress';
+import { ProgressPara, ProgressSet } from 'src/Business/Progress/Progress';
 import { Satz, SatzStatus } from 'src/Business/Satz/Satz';
 
 @Component({
@@ -34,8 +34,6 @@ export class SessionFormComponent implements OnInit {
 	private fSessionOverlayConfig: SessionOverlayConfig;
 	public DeletedExerciseList: Array<Uebung> = [];
 	public DeletedSatzList: Array<Satz> = [];
-	
-	
 
 	constructor(
 		private router: Router,
@@ -94,7 +92,7 @@ export class SessionFormComponent implements OnInit {
 						this.cmpSession.UebungsListe = [];
 						this.Session.UebungsListe.forEach((mUebung) => this.cmpSession.UebungsListe.push(mUebung.Copy()));
 						this.BackButtonVisible = true;
-						this.doStats();
+						// this.doStats();
 						this.ready = true;
 						this.fLoadingDialog.fDialog.closeAll();
 					} else {
@@ -145,12 +143,22 @@ export class SessionFormComponent implements OnInit {
 		this.Session.StarteDauerTimer();				
 	}
 
-	doStats() {
+	doStats(aData: any) {
+		let mLeft = -1000;
+		// let mTop = -1000;
+		// let mWidth = 800;
+		
+		if (aData !== undefined) {
+			mLeft = aData.nativeElement.offsetLeft;
+
+		}
+			
 		if (this.fSessionStatsOverlayComponent === null || this.fSessionStatsOverlayComponent.overlayRef === null) {
 			this.fSessionOverlayConfig = {
 				session: this.Session,
-				left: -1000,
-				top: -1000,
+				// left: mLeft,
+				// top: mTop,
+				// width: 800,
 			} as SessionOverlayConfig;
 
 			this.fSessionStatsOverlayComponent = this.fSessionOverlayServiceService.open(this.fSessionOverlayConfig);

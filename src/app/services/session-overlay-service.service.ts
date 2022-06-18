@@ -1,9 +1,10 @@
 import { SessionStatsOverlayComponent } from './../session-stats-overlay/session-stats-overlay.component';
 import { BaseOverlayRef } from 'src/app/services/global.service';
-import { ISession, Session } from './../../Business/Session/Session';
-import { Injectable, InjectionToken, ComponentRef, Injector } from '@angular/core';
+import { Session } from './../../Business/Session/Session';
+import { Injectable, ElementRef, InjectionToken, ComponentRef, Injector } from '@angular/core';
 import { Overlay, OverlayConfig, OverlayRef  } from '@angular/cdk/overlay';
 import { ComponentPortal, PortalInjector } from '@angular/cdk/portal';
+
 
 export class SessionOverlayRef extends BaseOverlayRef {}
 
@@ -19,23 +20,11 @@ export interface SessionOverlayConfig {
     top?: number; 
 }
 
-export const cSessionStatsOverlayData = new InjectionToken<ISession>('Session_Stats_Overlay_Component');
+export const cSessionStatsOverlayData = new InjectionToken<SessionOverlayConfig>('Session_Stats_Overlay_Component');
 
 const DEFAULT_CONFIG: SessionOverlayConfig = {
     hasBackdrop: false,
-    backdropClass: 'dark-backdrop',
-    session: null
-  // panelClass: 'tm-file-preview-dialog-panel',
-      
-        
-    //   `div {
-    //     background-color: yellow;
-    //     min-width: '400px !important';
-    //     min-height: '400px !important';
-    //     border: blue;
-    //     border-width: thick;
-    //     border-style: solid;
-    // }`
+    session: null,
 }
 
 
@@ -46,7 +35,9 @@ export class SessionOverlayServiceService {
     public SessOverlayRef: OverlayRef = null;
     public SessionStatsOverlayComponent: SessionStatsOverlayComponent;
     
-    constructor(private overlay: Overlay, private injector: Injector
+    constructor(
+        private overlay: Overlay,
+        private injector: Injector
     ) { }
     
     private createInjector(aConfig: SessionOverlayConfig, aSessionRef: SessionOverlayRef): PortalInjector {
@@ -92,21 +83,22 @@ export class SessionOverlayServiceService {
     }
 
     private getOverlayConfig(aConfig: SessionOverlayConfig): OverlayConfig {
+        // const s = aConfig.left.toString() + 'px';
+        const s = (window.outerWidth - aConfig.left).toString()  + 'px';
         const positionStrategy = this.overlay
             .position()
             .global()
             .top("100px")
-        
-            // .left("150px")
-            // .right("150px");
-        // .centerHorizontally()
-        // .centerVertically();
+            // .left(s);
+             .centerHorizontally()
+            //  .centerVertically();
 
         const overlayConfig = new OverlayConfig({
             hasBackdrop: aConfig.hasBackdrop,
             backdropClass: aConfig.backdropClass,
             panelClass: aConfig.panelClass,
             scrollStrategy: this.overlay.scrollStrategies.reposition(),
+            width: aConfig.width,
             positionStrategy,
         });
 

@@ -5,14 +5,13 @@ import { DexieSvcService } from "src/app/services/dexie-svc.service";
 import { floatMask, Int3DigitMask } from "./../app.module";
 import { cExerciseOverlayData } from "./../services/exercise-setting-svc.service";
 import { InUpcomingSessionSetzen, IUebung, Uebung } from "./../../Business/Uebung/Uebung";
-import { Component, HostListener, Inject, OnDestroy } from "@angular/core";
+import { Component,  Inject } from "@angular/core";
 import { ExerciseOverlayConfig, ExerciseOverlayRef } from "../services/exercise-setting-svc.service";
 import { Progress, ProgressGroup } from "src/Business/Progress/Progress";
 import { SatzStatus } from 'src/Business/Satz/Satz';
 import { ISession } from 'src/Business/Session/Session';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
-import { throwMatDuplicatedDrawerError } from '@angular/material/sidenav';
 
 enum InUpcomingSessionSetzenTyp {
 	Progress,
@@ -49,11 +48,6 @@ export class ExerciseSettingsComponent {
 	public CmpSessUeb: IUebung;
 	
 
-	public datemask = {
-		guide: true,
-		showMask: true,
-		mask: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]
-	};
 
 	constructor(
 		public overlayRef: ExerciseOverlayRef,

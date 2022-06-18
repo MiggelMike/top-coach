@@ -1,3 +1,4 @@
+import { floatMask } from 'src/app/app.module';
 import { AppData } from './../../Business/Coach/Coach';
 import { SessionOverlayConfig } from './../services/session-overlay-service.service';
 import { ElementRef  } from '@angular/core';
@@ -6,6 +7,7 @@ import { ISession } from './../../Business/Session/Session';
 import { Component, OnInit, Inject, InjectionToken, AfterViewInit,ViewContainerRef, TemplateRef, ViewChild } from '@angular/core';
 import { cSessionStatsOverlayData, SessionOverlayRef } from '../services/session-overlay-service.service';
 import { DexieSvcService } from '../services/dexie-svc.service';
+
 
 
 @Component({
@@ -26,8 +28,8 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 	public fConfig: SessionOverlayConfig;
 	public showDuration: boolean = false;
 	public AppData: AppData;
-
-
+	public floatMask = floatMask;
+	
     constructor(
         public overlayRef: SessionOverlayRef,
 		public _ModalPositionService: ModalPositionService,
@@ -48,6 +50,7 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 		
 		this.fDexieService.LadeAppData()
 			.then((aAppData) => this.AppData = aAppData);
+		
 	}
 	
 	get GewichtsEinheit(): string {
@@ -73,7 +76,7 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
         this.fConfig.left = anchorRect.left; 
         this.fConfig.top = anchorRect.top; 
 		this.fPopupPosition.left = -1000;
-        this.fPopupPosition.top = -1000;
+		this.fPopupPosition.top = -1000;
 	}
 
     public handleMousemove = ( event: MouseEvent ): void => {

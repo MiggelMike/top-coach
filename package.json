@@ -4,7 +4,6 @@
   "version": "1.0.0",
   "description": "A sample Apache Cordova application that responds to the deviceready event.",
   "main": "index.js",
-
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -46,6 +45,7 @@
     "lodash.isnil": "^4.0.0",
     "ng": "^0.0.0",
     "ngx-bootstrap": "^7.1.0",
+    "ngx-mask": "^14.0.2",
     "rxjs": "~7.4.0",
     "text-mask-addons": "^3.8.0",
     "tslib": "^2.3.0",

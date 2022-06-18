@@ -1,9 +1,10 @@
-<div #anchorRef cdkDrag cdkDragRootElement=".cdk-overlay-pane" [style.top.px]="top" [style.left.px]="left"
+<div #anchorRef cdkDrag cdkDragRootElement=".cdk-overlay-pane"  class="overlay-shadow"
     (mousedown)="handleMousedown( $event )">
 
     <mat-card class="font-14-label overlay-width">
         <div fxLayout="column" fxFlex="100%">
 
+            <!-- Session-Name -->
             <div fxLayout="row wrap" fxFlex="100%">
                 <mat-form-field class="align-left" fxFlex="100%">
                     <mat-label class="font-14-label">Name</mat-label>
@@ -11,10 +12,41 @@
                 </mat-form-field>
             </div>
 
-            <p class="font-14-data"><span class="font-14-label">Start</span> {{sess.GestartedWann | date: 'mediumDate'}} {{sess.GestartedWann | date:'shortTime'}}</p>
-            <p class="font-14-data"><span class="font-14-label">Body weight at start</span> {{sess.BodyWeight | number: '1.2'}} {{GewichtsEinheit}}</p>
-            <p class="font-14-data"><span class="font-14-label">Weight lifted</span> {{sess.LiftedWeight | number: '1.2'}} {{GewichtsEinheit}}</p>
-            <p class="font-14-data"><span class="font-14-label">Duration</span> {{sess.DauerFormatted}}</p>
+            <!-- GestartedWann -->
+            <div fxLayout="row wrap" fxFlex="100%">
+                <mat-form-field class="align-left" fxFlex="100%">
+                    <mat-label class="font-14-label">Start</mat-label>
+                    <input  matInput maxlength="30" type="text"  [disabled]="true" class="font-14-data" value="{{sess.GestartedWann | date: 'mediumDate'}} {{sess.GestartedWann | date:'shortTime'}}">
+                </mat-form-field>
+            </div>
+
+            <!-- Bodyweight -->
+            <div fxLayout="row wrap">
+                <div fxLayout="column" fxFlex="100%">
+                    <mat-form-field>
+                        <mat-label class="font-14-label">Bodyweight</mat-label>
+                        <input matInput  [textMask]="{mask: floatMask, guide: false}" 
+                              [ngModel]="sess.BodyWeight" 
+                               type="text">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- Lifted-Weight -->
+            <div fxLayout="row wrap" fxFlex="100%">
+                <mat-form-field class="align-left" fxFlex="100%">
+                    <mat-label class="font-14-label">Weight lifted</mat-label>
+                    <input  matInput type="text"  [disabled]="true" class="font-14-data" value="{{sess.LiftedWeight | number: '1.2'}} {{GewichtsEinheit}}">
+                </mat-form-field>
+            </div>            
+
+            <!-- Duration -->
+            <div fxLayout="row wrap" fxFlex="100%">
+                <mat-form-field class="align-left" fxFlex="100%">
+                    <mat-label class="font-14-label">Duration</mat-label>
+                    <input  matInput type="text"  [disabled]="true" class="font-14-data" value="{{sess.DauerFormatted}}">
+                </mat-form-field>
+            </div>            
 
             <div fxLayout="row wrap" fxLayoutAlign="center center">
                 <a mat-button (click)="close()"><span class="tc-font-size-small">close</span></a>
