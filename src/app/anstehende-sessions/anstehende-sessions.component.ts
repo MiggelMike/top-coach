@@ -1,4 +1,4 @@
-import { SessionDB } from './../../Business/SessionDB';
+import { SessionDB, SessionStatus } from './../../Business/SessionDB';
 import { DexieSvcService, SessionParaDB, UebungParaDB } from './../services/dexie-svc.service';
 import {  ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Component, OnInit } from '@angular/core';
@@ -21,26 +21,39 @@ export class AnstehendeSessionsComponent implements OnInit {
     
     constructor(
         private fDbModule: DexieSvcService,
-		private fLoadingDialog: DialogeService
         ) {}
         
     public get Programm(): ITrainingsProgramm {
         return this.fProgramm;
     }
 
-    private async LadeSessions(): Promise<void> {
-        this.fProgramm.SessionListe = [];
+    private async LadeSessions(aOffSet: number = 0): Promise<void> {
         const mSessionParaDB: SessionParaDB = new SessionParaDB();
+        mSessionParaDB.Limit = 1;
+        mSessionParaDB.OffSet = aOffSet;
         this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
             .then((aSessionListe) => {
-                this.fDbModule.AktuellesProgramm.SessionListe = aSessionListe;
-                aSessionListe.forEach((mPtrSession) => {
-                    SessionDB.StaticCheckMembers(mPtrSession);
-                    mPtrSession.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
-                    this.fProgramm.SessionListe.push(mPtrSession);
-                });
-                this.fLoadingDialog.fDialog.closeAll();
-                // this.worker.postMessage('LadeUebungen');
+                if (aSessionListe.length > 0) {
+                    aSessionListe.forEach((mPtrSession) => {
+                        if (mPtrSession.Kategorie02 !== SessionStatus.Wartet) {                            
+                            const mUebungParaDB = new UebungParaDB();
+                            mUebungParaDB.SaetzeBeachten = true;
+                            this.fDbModule.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
+                                (aUebungsListe) => {
+                                    if (aUebungsListe.length > 0)
+                                        mPtrSession.UebungsListe = aUebungsListe;
+                                });
+                        }
+                        
+                        SessionDB.StaticCheckMembers(mPtrSession);
+                        mPtrSession.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
+                        this.fDbModule.AktuellesProgramm.SessionListe.push(mPtrSession);
+                        this.fProgramm.SessionListe.push(mPtrSession);
+                        this.LadeSessions(
+                            this.fProgramm.SessionListe.length);
+                    
+                    });
+                }
             });
     }
         
@@ -73,20 +86,14 @@ export class AnstehendeSessionsComponent implements OnInit {
                                 const mDialogData = new DialogData();
                                 mDialogData.ShowAbbruch = false;
                                 mDialogData.ShowOk = false;
-                                this.fLoadingDialog.Loading(mDialogData);
-                                try {
-                                    that.fDbModule.AktuellesProgramm.SessionListe = [];
-                                    this.fProgramm = that.fDbModule.AktuellesProgramm.Copy();
-                                    that.LadeSessions();
-                                } catch (error) {
-                                    this.fLoadingDialog.fDialog.closeAll();
-                                }
+                                mDialogData.hasBackDrop = false;
+                                that.fDbModule.AktuellesProgramm.SessionListe = [];
+                                this.fProgramm = that.fDbModule.AktuellesProgramm.Copy();
+                                that.LadeSessions();
                             }
-
                         });
                 } // if
                 else if (data.action === "LadeUebungen") {
-                    try {
                         // that.Programm.SessionListe = that.fDbModule.AktuellesProgramm.SessionListe;
                         const mUebungParaDB: UebungParaDB = new UebungParaDB();
                         // mUebungParaDB.SaetzeBeachten = true;
@@ -103,12 +110,6 @@ export class AnstehendeSessionsComponent implements OnInit {
                                     }
                             });//for
                         that.fDbModule.AktuellesProgramm.SessionListe = this.fProgramm.SessionListe;
-                        // this.fProgramm.SessionListe = that.fDbModule.AktuellesProgramm.SessionListe;
-                        // that.fDbModule.CmpAktuellesProgramm = that.fDbModule.AktuellesProgramm.Copy();
-                        this.fLoadingDialog.fDialog.closeAll();
-                    } catch (error) {
-                        this.fLoadingDialog.fDialog.closeAll();
-                    }
                 }//if
             });
 
