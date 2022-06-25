@@ -14,6 +14,7 @@ import { ISession } from 'src/Business/Session/Session';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { PromiseExtended } from 'dexie';
+import { SessionStatus } from 'src/Business/SessionDB';
 
 enum InUpcomingSessionSetzenTyp {
 	Progress,
@@ -190,7 +191,7 @@ export class ExerciseSettingsComponent {
 		return '00:00:00';//this.SessUeb.PauseTime2;
 	}		
 
-	close(aFormCloseFn?: onFormCloseFn ) {
+	close(aFormCloseFn?: onFormCloseFn) {
 		let mGeaendert: boolean = false;
 		
 		const mDialogData = new DialogData();
@@ -292,7 +293,7 @@ export class ExerciseSettingsComponent {
 				true);
 		}
 
-		if (this.SessUeb.NaechsteUebungPause !== this.CmpUebungSettings.NaechsteUebungPause ) {
+		if (this.SessUeb.NaechsteUebungPause !== this.CmpUebungSettings.NaechsteUebungPause) {
 			mGeaendert = true;
 			this.PrepForUpcomingSession(
 				this.SessUeb.InUpcomingSessionSetzen,
@@ -308,55 +309,32 @@ export class ExerciseSettingsComponent {
 				// Durchlaufe alle Sessions des Programms.
 				this.Programm.SessionListe.forEach(async (mSession) => {
 					// Die Session aus dem Formular ignorienn
-					if (mSession.ID !== this.Session.ID) {
+					if (mSession.ID !== this.Session.ID && mSession.Kategorie02 === SessionStatus.Wartet) {
 						// Prüfe alle Übungen der Session
 						mSession.UebungsListe.forEach((mDestUebung) => {
 							// Prüfe, ob es sich um die gleiche Übung wie die im Formular handelt. 
-							if (mDestUebung.FkUebung === this.SessUeb.FkUebung &&
-								mDestUebung.FkAltProgress === this.SessUeb.FkAltProgress &&
-								mDestUebung.AltProgressGroup === this.SessUeb.AltProgressGroup) {
-								//
-								if (this.SessUeb.InUpcomingSessionSetzen.WarmUpVisible === true)
-									mDestUebung.WarmUpVisible = this.SessUeb.WarmUpVisible;
-									
-								if (this.SessUeb.InUpcomingSessionSetzen.CooldownVisible === true)
-									mDestUebung.CooldownVisible = this.SessUeb.CooldownVisible;
-								
-								if (this.SessUeb.InUpcomingSessionSetzen.Progress === true)
-									mDestUebung.FkProgress = this.SessUeb.FkProgress;
-										
-								if (this.SessUeb.InUpcomingSessionSetzen.ProgressGroup === true)
-									mDestUebung.ProgressGroup = this.SessUeb.ProgressGroup;
-								
-								if (this.SessUeb.InUpcomingSessionSetzen.AufwaermArbeitsSatzPause === true)
-									mDestUebung.AufwaermArbeitsSatzPause = this.SessUeb.AufwaermArbeitsSatzPause;
-						
-								if (this.SessUeb.InUpcomingSessionSetzen.ArbeitsSatzPause1 === true)
-									mDestUebung.ArbeitsSatzPause1 = this.SessUeb.ArbeitsSatzPause1;
-								
-								if (this.SessUeb.InUpcomingSessionSetzen.ArbeitsSatzPause2 === true)
-									mDestUebung.ArbeitsSatzPause2 = this.SessUeb.ArbeitsSatzPause2;
-						
-								if (this.SessUeb.InUpcomingSessionSetzen.GewichtReduzierung === true)
-									mDestUebung.GewichtReduzierung = this.SessUeb.GewichtReduzierung;
-						
-								if (this.SessUeb.InUpcomingSessionSetzen.IncludeWarmupWeight === true)
-									mDestUebung.IncludeWarmupWeight = this.SessUeb.IncludeWarmupWeight;
-								
-								if (this.SessUeb.InUpcomingSessionSetzen.MaxFailCount === true)
-									mDestUebung.MaxFailCount = this.SessUeb.MaxFailCount;
-								
-								if (this.SessUeb.InUpcomingSessionSetzen.GewichtSteigerung === true)
-									mDestUebung.GewichtSteigerung = this.SessUeb.GewichtSteigerung;
-								
-								if (this.SessUeb.InUpcomingSessionSetzen.NaechsteUebungPause === true)
-									mDestUebung.NaechsteUebungPause = this.SessUeb.NaechsteUebungPause;
-
+							if (mDestUebung.FkUebung === this.CmpUebungSettings.FkUebung &&
+								mDestUebung.FkAltProgress === this.CmpUebungSettings.FkAltProgress &&
+								mDestUebung.AltProgressGroup === this.CmpUebungSettings.AltProgressGroup) {
+								mDestUebung.WarmUpVisible = this.CmpUebungSettings.WarmUpVisible;
+								mDestUebung.IncludeCoolDownWeight = this.CmpUebungSettings.IncludeCoolDownWeight;
+								mDestUebung.CooldownVisible = this.CmpUebungSettings.CooldownVisible;
+								mDestUebung.FkProgress = this.CmpUebungSettings.FkProgress;
+								mDestUebung.ProgressGroup = this.CmpUebungSettings.ProgressGroup;
+								mDestUebung.AufwaermArbeitsSatzPause = this.CmpUebungSettings.AufwaermArbeitsSatzPause;
+								mDestUebung.ArbeitsSatzPause1 = this.CmpUebungSettings.ArbeitsSatzPause1;
+								mDestUebung.ArbeitsSatzPause2 = this.CmpUebungSettings.ArbeitsSatzPause2;
+								mDestUebung.GewichtReduzierung = this.CmpUebungSettings.GewichtReduzierung;
+								mDestUebung.IncludeWarmupWeight = this.CmpUebungSettings.IncludeWarmupWeight;
+								mDestUebung.MaxFailCount = this.CmpUebungSettings.MaxFailCount;
+								mDestUebung.GewichtSteigerung = this.CmpUebungSettings.GewichtSteigerung;
+								mDestUebung.NaechsteUebungPause = this.CmpUebungSettings.NaechsteUebungPause;
 								this.fDbModule.UebungSpeichern(mDestUebung);
 							}
 						});
 					}//if
 				});//foreach
+
 
 				if (aFormCloseFn !== undefined)
 					aFormCloseFn(this);
@@ -375,12 +353,13 @@ export class ExerciseSettingsComponent {
 
 			this.fDialogService.JaNein(mDialogData);
 		} else {
+			
 			if (this.overlayRef != null)
-				this.overlayRef.close();
+			this.overlayRef.close();
 			this.overlayRef = null;
-
+			
 			if (aFormCloseFn !== undefined)
-				aFormCloseFn(this);
+			aFormCloseFn(this);
 		}
 
 		this.CmpUebungSettings.WarmUpVisible = this.SessUeb.WarmUpVisible;
