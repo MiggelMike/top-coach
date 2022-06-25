@@ -1,4 +1,4 @@
-import { cSatzSelectLimit, DexieSvcService, SatzParaDB } from './../../services/dexie-svc.service';
+import { cSatzSelectLimit, DexieSvcService, SatzParaDB, onFormCloseFn } from './../../services/dexie-svc.service';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { Uebung  } from './../../../Business/Uebung/Uebung';
 import { GlobalService } from 'src/app/services/global.service';
@@ -29,6 +29,7 @@ export class Programm03Component implements OnInit {
     @Input() programm: ITrainingsProgramm;
     @Input() session: ISession;
     @Input() cmpSession: ISession;
+    @Input() cmpSettingsSession: ISession;
     @Input() SessUeb: Uebung;
     @Input() rowNum: number = 0;
     @Input() bearbeitbar: Boolean;
@@ -42,6 +43,7 @@ export class Programm03Component implements OnInit {
     @Input() StatsButtonVisible: boolean = false;
     
     @Output() DoStats = new EventEmitter<any>();
+    @Output() DoCheckSettings = new EventEmitter<ExerciseSettingSvcService>();
     
     @ViewChildren("accUebung") accUebung: QueryList<MatAccordion>;
     @ViewChildren("panUebung") panUebung: QueryList<MatExpansionPanel>;
@@ -118,6 +120,11 @@ export class Programm03Component implements OnInit {
             this.DoStats.emit(this.Info);
     }
 
+    public DoCheckSettingsFn() {
+        if (this.DoCheckSettings !== undefined)
+            this.DoCheckSettings.emit(this.fExerciseSettingSvcService);
+    }
+
     drop(event: CdkDragDrop<Uebung[]>) {
         this.session.UebungsListe[event.previousIndex].ListenIndex = event.currentIndex;
         this.session.UebungsListe[event.currentIndex].ListenIndex = event.previousIndex;
@@ -128,8 +135,8 @@ export class Programm03Component implements OnInit {
     }
 
     ngOnDestroy() {
-        if (this.fExerciseSettingsComponent !== undefined)
-            this.fExerciseSettingsComponent.close();
+        // if (this.fExerciseSettingsComponent !== undefined)
+        //     this.fExerciseSettingsComponent.close();
         
         if (this.fGlobalService.Comp03PanelUebungObserver != null)
             this.fGlobalService.Comp03PanelUebungObserver = null;
@@ -290,8 +297,15 @@ export class Programm03Component implements OnInit {
     public DoSettings(aSessUeb: Uebung, aEvent: Event) {
         aEvent.stopPropagation();
 
+        const mCmpUebung: Uebung = this.cmpSettingsSession.UebungsListe.find((mUebung) => {
+            if (mUebung.ID === aSessUeb.ID || mUebung.ListenIndex === aSessUeb.ListenIndex && mUebung.FkUebung === aSessUeb.FkUebung)
+                return mUebung;
+            return undefined;
+        });
+
         this.fExerciseOverlayConfig = {
             uebung: aSessUeb,
+            cmpUebungSettings: mCmpUebung,
             programm: this.programm,
             session: this.session,
             left: (aEvent as PointerEvent).pageX - (aEvent as PointerEvent).offsetX,
@@ -302,6 +316,7 @@ export class Programm03Component implements OnInit {
         
             
         this.fExerciseSettingsComponent = this.fExerciseSettingSvcService.open(this.fExerciseOverlayConfig);
+        this.DoCheckSettingsFn();
     }
     
 }

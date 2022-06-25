@@ -10,6 +10,7 @@
     <app-programm03 #appProgramm03
         [session]="Session" 
         [cmpSession]="cmpSession" 
+        [cmpSettingsSession]="cmpSession" 
         [bearbeitbar]="true" 
         [ShowStats]="true" 
         [programm]="Programm" 
@@ -17,6 +18,7 @@
         [DeletedExerciseList]="DeletedExerciseList"
         [StatsButtonVisible]="true"
         (DoStats)="doStats()"
+        (DoCheckSettings)="doCheckSettings($event)"
         [DeletedSatzList]="DeletedSatzList">
     </app-programm03>
     

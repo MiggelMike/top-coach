@@ -163,11 +163,11 @@ export class Satz implements ISatz {
     //#region GewichtVorgabe 
     private fGewichtVorgabe: number = 0;
     get GewichtVorgabe(): number {
-        return Number(this.fGewichtVorgabe);
+        return Number(this.fGewichtVorgabe.toFixed(2));
     }
     
     set GewichtVorgabe(aValue: number) {
-        this.fGewichtVorgabe = Number(aValue);
+        this.fGewichtVorgabe =  Number(aValue.toFixed(2));
     }
     //#endregion
     //#region WdhVonVorgabe

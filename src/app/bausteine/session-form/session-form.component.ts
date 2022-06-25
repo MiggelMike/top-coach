@@ -15,6 +15,8 @@ import { Uebung, UebungsKategorie02 } from "src/Business/Uebung/Uebung";
 import { UebungWaehlenData } from "src/app/uebung-waehlen/uebung-waehlen.component";
 import { ProgressPara, ProgressSet } from 'src/Business/Progress/Progress';
 import { Satz, SatzStatus } from 'src/Business/Satz/Satz';
+import { ExerciseSettingSvcService } from 'src/app/services/exercise-setting-svc.service';
+import { ExerciseSettingsComponent } from 'src/app/exercise-settings/exercise-settings.component';
 
 @Component({
 	selector: "app-session-form",
@@ -29,11 +31,14 @@ export class SessionFormComponent implements OnInit {
 	public Programm: ITrainingsProgramm;
 	public programmTyp: string = '';
 	public cmpSession: Session;
+	public cmpSessionSettings: Session;
 	public BodyWeight: number = 0;
 	public fSessionStatsOverlayComponent: SessionStatsOverlayComponent = null;
 	private fSessionOverlayConfig: SessionOverlayConfig;
 	public DeletedExerciseList: Array<Uebung> = [];
 	public DeletedSatzList: Array<Satz> = [];
+	public fExerciseSettingSvcService: ExerciseSettingSvcService;
+	public fExerciseSettingsComponent: ExerciseSettingsComponent;
 
 	constructor(
 		private router: Router,
@@ -62,68 +67,71 @@ export class SessionFormComponent implements OnInit {
 		mSessionCopyPara.CopySatzID = true;
 		this.Session = mState.sess.Copy(mSessionCopyPara);
 
-		const mDialogData = new DialogData();
-		mDialogData.ShowAbbruch = false;
-		mDialogData.ShowOk = false;
-		mDialogData.textZeilen.push('Loading session');
-		this.fLoadingDialog.Loading(mDialogData);
-		try {
-			
-			const mUebungParaDB: UebungParaDB = new UebungParaDB();
-			mUebungParaDB.SaetzeBeachten = true;
-			this.fDbModule.LadeSessionUebungen(this.Session.ID, mUebungParaDB).then(
-				(aUebungsListe) => {
-					try {
-						if (aUebungsListe.length > 0)
-							this.Session.UebungsListe = aUebungsListe;
-						else
-							this.fDbModule.CmpAktuellesProgramm = this.fDbModule.AktuellesProgramm.Copy();
+		if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length <= 0) {
+			const mDialogData = new DialogData();
+			mDialogData.ShowAbbruch = false;
+			mDialogData.ShowOk = false;
+			mDialogData.textZeilen.push('Loading session');
+			this.fLoadingDialog.Loading(mDialogData);
+			try {
+				const mUebungParaDB: UebungParaDB = new UebungParaDB();
+				mUebungParaDB.SaetzeBeachten = true;
+				this.fDbModule.LadeSessionUebungen(this.Session.ID, mUebungParaDB).then(
+					(aUebungsListe) => {
+						try {
+							if (aUebungsListe.length > 0)
+								this.Session.UebungsListe = aUebungsListe;
+							else
+								this.fDbModule.CmpAktuellesProgramm = this.fDbModule.AktuellesProgramm.Copy();
 							
-						if (this.Session.UebungsListe !== undefined) {
-							this.Session.UebungsListe.forEach((mPtrUebung) => {
-								mPtrUebung.PruefeGewichtsEinheit(this.Session.GewichtsEinheit)
-								if (mPtrUebung.SatzListe !== undefined) {
-									mPtrUebung.SatzListe.forEach((mPtrSatz) => {
-										mPtrSatz.PruefeGewichtsEinheit(this.Session.GewichtsEinheit);
-									})
-								}
-							})
-						}
-		
-						//
-						switch (this.Session.Kategorie02) {
-							case SessionStatus.Wartet:
-								this.Session.GestartedWann = new Date();
-								this.Session.Kategorie02 = SessionStatus.Laueft;
-								this.Session.Datum = new Date();
-								this.EvalStart();
-								break;
-				
-							case SessionStatus.Pause:
-							case SessionStatus.Laueft:
-								this.EvalStart();
-								break;
-						}//switch
-							
-						this.cmpSession = this.Session.Copy(mSessionCopyPara);
-						if (this.cmpSession.UebungsListe === undefined || this.cmpSession.UebungsListe.length <= 0) {
-							this.cmpSession.UebungsListe = [];
-							this.Session.UebungsListe.forEach((mUebung) => this.cmpSession.UebungsListe.push(mUebung.Copy()));
-	
-							this.BackButtonVisible = true;
-							this.ready = true;
-						} else {
-							this.BackButtonVisible = true;
-						}
-					} finally {
-						this.fLoadingDialog.fDialog.closeAll();
-					}
-				});
-		} catch (error) {
-			this.fLoadingDialog.fDialog.closeAll();
-		}
+							if (this.Session.UebungsListe !== undefined) {
+								this.Session.UebungsListe.forEach((mPtrUebung) => {
+									mPtrUebung.PruefeGewichtsEinheit(this.Session.GewichtsEinheit)
+									if (mPtrUebung.SatzListe !== undefined) {
+										mPtrUebung.SatzListe.forEach((mPtrSatz) => {
+											mPtrSatz.PruefeGewichtsEinheit(this.Session.GewichtsEinheit);
+										})
+									}
+								})
+							}
 
+							this.InitSession();
 		
+						} finally {
+							this.fLoadingDialog.fDialog.closeAll();
+						}
+					});
+			} catch (error) {
+				this.fLoadingDialog.fDialog.closeAll();
+			}
+		} else this.InitSession();
+		}
+		
+	private InitSession() {
+		//
+		switch (this.Session.Kategorie02) {
+			case SessionStatus.Wartet:
+				this.Session.GestartedWann = new Date();
+				this.Session.Kategorie02 = SessionStatus.Laueft;
+				this.Session.Datum = new Date();
+				this.EvalStart();
+				break;
+				
+			case SessionStatus.Pause:
+			case SessionStatus.Laueft:
+				this.EvalStart();
+				break;
+		}//switch
+					
+		const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+		mSessionCopyPara.Komplett = true;
+		mSessionCopyPara.CopySessionID = true;
+		mSessionCopyPara.CopyUebungID = true;
+		mSessionCopyPara.CopySatzID = true;
+		this.cmpSession = this.Session.Copy(mSessionCopyPara);
+		this.cmpSessionSettings = this.Session.Copy(mSessionCopyPara);
+		this.BackButtonVisible = true;
+		this.ready = true;
 	}
 
 	DoWorker() {
@@ -164,6 +172,10 @@ export class SessionFormComponent implements OnInit {
 		this.Session.StarteDauerTimer();				
 	}
 
+	doCheckSettings(aExerciseSettingSvcService : ExerciseSettingSvcService){
+		this.fExerciseSettingSvcService = aExerciseSettingSvcService;
+	}
+
 	doStats() {
 		if (this.fSessionStatsOverlayComponent === null || this.fSessionStatsOverlayComponent.overlayRef === null) {
 			this.fSessionOverlayConfig = {
@@ -179,18 +191,33 @@ export class SessionFormComponent implements OnInit {
 		if (this.fSessionStatsOverlayComponent) this.fSessionStatsOverlayComponent.close();
 	}
 
+	private CloseExerciseSettings(): Promise<void> {
+		this.fExerciseSettingSvcService.close();
+		return null;
+	}
+
 	async back() {
+		if (this.fExerciseSettingSvcService) 
+			await this.fExerciseSettingSvcService.close(() =>
+				this.DoClose()
+			);
+
+		// if (this.Session.isEqual(this.cmpSession)) this.leave();
+		else this.DoClose();
+	}
+	
+	private DoClose() {
 		if (this.Session.isEqual(this.cmpSession)) this.leave();
 		else {
 			const mDialogData = new DialogData();
 			mDialogData.textZeilen.push("Save changes?");
 			mDialogData.ShowAbbruch = true;
-			
+		
 			mDialogData.OkFn = () => {
 				this.leave();
 				this.SaveChangesPrim();
 			}
-
+	
 			mDialogData.CancelFn = (): void => {
 				const mCancelDialogData = new DialogData();
 				mCancelDialogData.textZeilen.push("Changes will be lost!");
@@ -198,7 +225,7 @@ export class SessionFormComponent implements OnInit {
 				mCancelDialogData.OkFn = (): void => this.leave();
 				this.fDialogService.JaNein(mCancelDialogData);
 			}
-
+	
 			this.fDialogService.JaNein(mDialogData);
 		}
 	}
@@ -243,6 +270,7 @@ export class SessionFormComponent implements OnInit {
 
 	leave() {
 		if (this.fSessionStatsOverlayComponent !== undefined && this.fSessionStatsOverlayComponent !== null) this.fSessionStatsOverlayComponent.close();
+
 		this.location.back();
 	}
 

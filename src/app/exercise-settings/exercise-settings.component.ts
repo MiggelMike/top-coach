@@ -1,3 +1,4 @@
+import { onFormCloseFn } from './../services/dexie-svc.service';
 import { ProgressPara } from './../../Business/Progress/Progress';
 import { ITrainingsProgramm } from './../../Business/TrainingsProgramm/TrainingsProgramm';
 import { Hantel } from './../../Business/Hantel/Hantel';
@@ -5,13 +6,14 @@ import { DexieSvcService } from "src/app/services/dexie-svc.service";
 import { floatMask, Int3DigitMask } from "./../app.module";
 import { cExerciseOverlayData } from "./../services/exercise-setting-svc.service";
 import { InUpcomingSessionSetzen, IUebung, Uebung } from "./../../Business/Uebung/Uebung";
-import { Component,  Inject } from "@angular/core";
+import { Component,  EventEmitter,  Inject, Output } from "@angular/core";
 import { ExerciseOverlayConfig, ExerciseOverlayRef } from "../services/exercise-setting-svc.service";
 import { Progress, ProgressGroup } from "src/Business/Progress/Progress";
 import { SatzStatus } from 'src/Business/Satz/Satz';
 import { ISession } from 'src/Business/Session/Session';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
+import { PromiseExtended } from 'dexie';
 
 enum InUpcomingSessionSetzenTyp {
 	Progress,
@@ -45,9 +47,7 @@ export class ExerciseSettingsComponent {
 	public Programm: ITrainingsProgramm;
 	public Session: ISession;
 	public SessUeb: IUebung;
-	public CmpSessUeb: IUebung;
-	
-
+	public CmpUebungSettings: IUebung;
 
 	constructor(
 		public overlayRef: ExerciseOverlayRef,
@@ -62,7 +62,7 @@ export class ExerciseSettingsComponent {
 		this.fDbModule.LadeProgress(mProgressPara);
 		this.ProgressGroupListe = ProgressGroup;
 		this.SessUeb = fExerciseOverlayConfig.uebung;
-		this.CmpSessUeb = this.SessUeb.Copy();
+		this.CmpUebungSettings = fExerciseOverlayConfig.cmpUebungSettings.Copy();
 		this.Session = fExerciseOverlayConfig.session;
 		this.Programm = fExerciseOverlayConfig.programm;
 		this.fConfig = fExerciseOverlayConfig;
@@ -82,53 +82,53 @@ export class ExerciseSettingsComponent {
 				aInUpcomingSessionSetzen.Progress = aValue;
 				break;
 
-				case InUpcomingSessionSetzenTyp.ProgressGroup:
-					aInUpcomingSessionSetzen.ProgressGroup = aValue;
-					break;
+			case InUpcomingSessionSetzenTyp.ProgressGroup:
+				aInUpcomingSessionSetzen.ProgressGroup = aValue;
+				break;
 				
-				case InUpcomingSessionSetzenTyp.WarmUpVisible:
-					aInUpcomingSessionSetzen.WarmUpVisible = aValue;
-					break;
+			case InUpcomingSessionSetzenTyp.WarmUpVisible:
+				aInUpcomingSessionSetzen.WarmUpVisible = aValue;
+				break;
 					
-				case InUpcomingSessionSetzenTyp.CooldownVisible:
-					aInUpcomingSessionSetzen.CooldownVisible = aValue;
-					break;
+			case InUpcomingSessionSetzenTyp.CooldownVisible:
+				aInUpcomingSessionSetzen.CooldownVisible = aValue;
+				break;
 					
-				case InUpcomingSessionSetzenTyp.IncludeWarmupWeight:
-					aInUpcomingSessionSetzen.IncludeWarmupWeight = aValue;
-					break;
+			case InUpcomingSessionSetzenTyp.IncludeWarmupWeight:
+				aInUpcomingSessionSetzen.IncludeWarmupWeight = aValue;
+				break;
 					
-				case InUpcomingSessionSetzenTyp.IncludeCoolDownWeight:
-					aInUpcomingSessionSetzen.IncludeCoolDownWeight = aValue;
-					break;
+			case InUpcomingSessionSetzenTyp.IncludeCoolDownWeight:
+				aInUpcomingSessionSetzen.IncludeCoolDownWeight = aValue;
+				break;
 					
-				case InUpcomingSessionSetzenTyp.MaxFailCount:
-					aInUpcomingSessionSetzen.MaxFailCount = aValue;
-					break;
+			case InUpcomingSessionSetzenTyp.MaxFailCount:
+				aInUpcomingSessionSetzen.MaxFailCount = aValue;
+				break;
 					
-				case InUpcomingSessionSetzenTyp.GewichtSteigerung:
-					aInUpcomingSessionSetzen.GewichtSteigerung = aValue;
-					break;
+			case InUpcomingSessionSetzenTyp.GewichtSteigerung:
+				aInUpcomingSessionSetzen.GewichtSteigerung = aValue;
+				break;
 					
-				case InUpcomingSessionSetzenTyp.GewichtReduzierung:
-					aInUpcomingSessionSetzen.GewichtReduzierung = aValue;
-					break;
+			case InUpcomingSessionSetzenTyp.GewichtReduzierung:
+				aInUpcomingSessionSetzen.GewichtReduzierung = aValue;
+				break;
 					
-				case InUpcomingSessionSetzenTyp.AufwaermArbeitsSatzPause:
-					aInUpcomingSessionSetzen.AufwaermArbeitsSatzPause = aValue;
-					break;
+			case InUpcomingSessionSetzenTyp.AufwaermArbeitsSatzPause:
+				aInUpcomingSessionSetzen.AufwaermArbeitsSatzPause = aValue;
+				break;
 					
-				case InUpcomingSessionSetzenTyp.ArbeitsSatzPause1:
-					aInUpcomingSessionSetzen.ArbeitsSatzPause1 = aValue;
-					break;
+			case InUpcomingSessionSetzenTyp.ArbeitsSatzPause1:
+				aInUpcomingSessionSetzen.ArbeitsSatzPause1 = aValue;
+				break;
 					
-				case InUpcomingSessionSetzenTyp.ArbeitsSatzPause2:
-					aInUpcomingSessionSetzen.ArbeitsSatzPause2 = aValue;
-					break;
+			case InUpcomingSessionSetzenTyp.ArbeitsSatzPause2:
+				aInUpcomingSessionSetzen.ArbeitsSatzPause2 = aValue;
+				break;
 					
-				case InUpcomingSessionSetzenTyp.NaechsteUebungPause:
-					aInUpcomingSessionSetzen.NaechsteUebungPause = aValue;
-					break;
+			case InUpcomingSessionSetzenTyp.NaechsteUebungPause:
+				aInUpcomingSessionSetzen.NaechsteUebungPause = aValue;
+				break;
 		}//switch
 	}
 
@@ -190,22 +190,21 @@ export class ExerciseSettingsComponent {
 		return '00:00:00';//this.SessUeb.PauseTime2;
 	}		
 
-	close() {
+	close(aFormCloseFn?: onFormCloseFn ) {
 		let mGeaendert: boolean = false;
 		
 		const mDialogData = new DialogData();
 		mDialogData.ShowAbbruch = true;
-
 		
-		if (this.SessUeb.WarmUpVisible !== this.CmpSessUeb.WarmUpVisible) {
+		if (this.SessUeb.WarmUpVisible !== this.CmpUebungSettings.WarmUpVisible) {
 			mGeaendert = true;
 			this.PrepForUpcomingSession(
-				this.SessUeb.InUpcomingSessionSetzen,
+				this.CmpUebungSettings.InUpcomingSessionSetzen,
 				InUpcomingSessionSetzenTyp.WarmUpVisible,
 				true);
 		}
 			
-		if (this.SessUeb.CooldownVisible !== this.CmpSessUeb.CooldownVisible) {
+		if (this.SessUeb.CooldownVisible !== this.CmpUebungSettings.CooldownVisible) {
 			mGeaendert = true;
 			this.PrepForUpcomingSession(
 				this.SessUeb.InUpcomingSessionSetzen,
@@ -213,7 +212,7 @@ export class ExerciseSettingsComponent {
 				true);
 		}
 				
-		if (this.SessUeb.FkProgress !== this.CmpSessUeb.FkProgress) {
+		if (this.SessUeb.FkProgress !== this.CmpUebungSettings.FkProgress) {
 			mGeaendert = true;
 			this.PrepForUpcomingSession(
 				this.SessUeb.InUpcomingSessionSetzen,
@@ -221,7 +220,7 @@ export class ExerciseSettingsComponent {
 				true);
 		}
 		
-		if (this.SessUeb.ProgressGroup !== this.CmpSessUeb.ProgressGroup) {
+		if (this.SessUeb.ProgressGroup !== this.CmpUebungSettings.ProgressGroup) {
 			mGeaendert = true;
 			this.PrepForUpcomingSession(
 				this.SessUeb.InUpcomingSessionSetzen,
@@ -229,7 +228,7 @@ export class ExerciseSettingsComponent {
 				true);
 		}
 
-		if (this.SessUeb.AufwaermArbeitsSatzPause !== this.CmpSessUeb.AufwaermArbeitsSatzPause) {
+		if (this.SessUeb.AufwaermArbeitsSatzPause !== this.CmpUebungSettings.AufwaermArbeitsSatzPause) {
 			mGeaendert = true;
 			this.PrepForUpcomingSession(
 				this.SessUeb.InUpcomingSessionSetzen,
@@ -237,7 +236,7 @@ export class ExerciseSettingsComponent {
 				true);
 		}
 
-		if (this.SessUeb.ArbeitsSatzPause1 !== this.CmpSessUeb.ArbeitsSatzPause1) {
+		if (this.SessUeb.ArbeitsSatzPause1 !== this.CmpUebungSettings.ArbeitsSatzPause1) {
 			mGeaendert = true;
 			this.PrepForUpcomingSession(
 				this.SessUeb.InUpcomingSessionSetzen,
@@ -245,7 +244,7 @@ export class ExerciseSettingsComponent {
 				true);
 		}
 
-		if (this.SessUeb.ArbeitsSatzPause2 !== this.CmpSessUeb.ArbeitsSatzPause2) {
+		if (this.SessUeb.ArbeitsSatzPause2 !== this.CmpUebungSettings.ArbeitsSatzPause2) {
 			mGeaendert = true;
 			this.PrepForUpcomingSession(
 				this.SessUeb.InUpcomingSessionSetzen,
@@ -253,7 +252,7 @@ export class ExerciseSettingsComponent {
 				true);
 		}
 
-		if (this.SessUeb.GewichtReduzierung !== this.CmpSessUeb.GewichtReduzierung) {
+		if (this.SessUeb.GewichtReduzierung !== this.CmpUebungSettings.GewichtReduzierung) {
 			mGeaendert = true;
 			this.PrepForUpcomingSession(
 				this.SessUeb.InUpcomingSessionSetzen,
@@ -261,7 +260,7 @@ export class ExerciseSettingsComponent {
 				true);
 		}
 
-		if (this.SessUeb.IncludeCoolDownWeight !== this.CmpSessUeb.IncludeCoolDownWeight) {
+		if (this.SessUeb.IncludeCoolDownWeight !== this.CmpUebungSettings.IncludeCoolDownWeight) {
 			mGeaendert = true;
 			this.PrepForUpcomingSession(
 				this.SessUeb.InUpcomingSessionSetzen,
@@ -269,7 +268,7 @@ export class ExerciseSettingsComponent {
 				true);
 		}
 		
-		if (this.SessUeb.IncludeWarmupWeight !== this.CmpSessUeb.IncludeWarmupWeight) {
+		if (this.SessUeb.IncludeWarmupWeight !== this.CmpUebungSettings.IncludeWarmupWeight) {
 			mGeaendert = true;
 			this.PrepForUpcomingSession(
 				this.SessUeb.InUpcomingSessionSetzen,
@@ -277,7 +276,7 @@ export class ExerciseSettingsComponent {
 				true);
 		}
 		
-		if (this.SessUeb.MaxFailCount !== this.CmpSessUeb.MaxFailCount) {
+		if (this.SessUeb.MaxFailCount !== this.CmpUebungSettings.MaxFailCount) {
 			mGeaendert = true;
 			this.PrepForUpcomingSession(
 				this.SessUeb.InUpcomingSessionSetzen,
@@ -285,7 +284,7 @@ export class ExerciseSettingsComponent {
 				true);
 		}
 
-		if (this.SessUeb.GewichtSteigerung !== this.CmpSessUeb.GewichtSteigerung) {
+		if (this.SessUeb.GewichtSteigerung !== this.CmpUebungSettings.GewichtSteigerung) {
 			mGeaendert = true;
 			this.PrepForUpcomingSession(
 				this.SessUeb.InUpcomingSessionSetzen,
@@ -293,7 +292,7 @@ export class ExerciseSettingsComponent {
 				true);
 		}
 
-		if (this.SessUeb.NaechsteUebungPause !== this.CmpSessUeb.NaechsteUebungPause ) {
+		if (this.SessUeb.NaechsteUebungPause !== this.CmpUebungSettings.NaechsteUebungPause ) {
 			mGeaendert = true;
 			this.PrepForUpcomingSession(
 				this.SessUeb.InUpcomingSessionSetzen,
@@ -310,7 +309,7 @@ export class ExerciseSettingsComponent {
 				this.Programm.SessionListe.forEach(async (mSession) => {
 					// Die Session aus dem Formular ignorienn
 					if (mSession.ID !== this.Session.ID) {
-	                    // Prüfe alle Übungen der Session
+						// Prüfe alle Übungen der Session
 						mSession.UebungsListe.forEach((mDestUebung) => {
 							// Prüfe, ob es sich um die gleiche Übung wie die im Formular handelt. 
 							if (mDestUebung.FkUebung === this.SessUeb.FkUebung &&
@@ -359,6 +358,9 @@ export class ExerciseSettingsComponent {
 					}//if
 				});//foreach
 
+				if (aFormCloseFn !== undefined)
+					aFormCloseFn(this);
+
 				if (this.overlayRef != null) this.overlayRef.close();
 				this.overlayRef = null;
 			};
@@ -366,13 +368,34 @@ export class ExerciseSettingsComponent {
 			mDialogData.CancelFn = () => {
 				if (this.overlayRef != null) this.overlayRef.close();
 				this.overlayRef = null;
+				if (aFormCloseFn !== undefined)
+					aFormCloseFn(this);
+
 			};
 
 			this.fDialogService.JaNein(mDialogData);
 		} else {
-			if (this.overlayRef != null) this.overlayRef.close();
+			if (this.overlayRef != null)
+				this.overlayRef.close();
 			this.overlayRef = null;
+
+			if (aFormCloseFn !== undefined)
+				aFormCloseFn(this);
 		}
+
+		this.CmpUebungSettings.WarmUpVisible = this.SessUeb.WarmUpVisible;
+		this.CmpUebungSettings.CooldownVisible = this.SessUeb.CooldownVisible;
+		this.CmpUebungSettings.FkProgress = this.SessUeb.FkProgress;
+		this.CmpUebungSettings.ProgressGroup = this.SessUeb.ProgressGroup;
+		this.CmpUebungSettings.AufwaermArbeitsSatzPause = this.SessUeb.AufwaermArbeitsSatzPause
+		this.CmpUebungSettings.ArbeitsSatzPause1 = this.SessUeb.ArbeitsSatzPause1;
+		this.CmpUebungSettings.ArbeitsSatzPause2 = this.SessUeb.ArbeitsSatzPause2;
+		this.CmpUebungSettings.GewichtReduzierung = this.SessUeb.GewichtReduzierung;
+		this.CmpUebungSettings.IncludeCoolDownWeight = this.SessUeb.IncludeCoolDownWeight;
+		this.CmpUebungSettings.IncludeWarmupWeight = this.SessUeb.IncludeWarmupWeight;
+		this.CmpUebungSettings.MaxFailCount = this.SessUeb.MaxFailCount;
+		this.CmpUebungSettings.GewichtSteigerung = this.SessUeb.GewichtSteigerung;
+		this.CmpUebungSettings.NaechsteUebungPause = this.SessUeb.NaechsteUebungPause;
 	}
 
 	SetGewichtSteigerung(aEvent: any) {

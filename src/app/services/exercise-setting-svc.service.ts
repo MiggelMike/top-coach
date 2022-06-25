@@ -1,3 +1,4 @@
+import { onFormCloseFn } from './dexie-svc.service';
 import { Session } from './../../Business/Session/Session';
 import { ITrainingsProgramm } from './../../Business/TrainingsProgramm/TrainingsProgramm';
 import { BaseOverlayRef } from "src/app/services/global.service";
@@ -16,11 +17,13 @@ export interface ExerciseOverlayConfig {
 	width?: number;
 	height?: number;
 	uebung?: Uebung;
+	cmpUebungSettings?: Uebung;
 	programm?: ITrainingsProgramm;
 	session?: Session;
 	left?: number;
 	top?: number;
 	sofortSpeichern?: boolean;
+	FormCloseFn?: onFormCloseFn;
 }
 
 export const cExerciseOverlayData = new InjectionToken<ExerciseOverlayConfig>("Exercise_Settings_Overlay_Component");
@@ -32,7 +35,7 @@ const DEFAULT_CONFIG: ExerciseOverlayConfig = {
 	backdropClass: "dark-backdrop",
 	uebung: null,
 	programm: null,
-	sofortSpeichern: false
+	sofortSpeichern: false,
 	// panelClass: 'tm-file-preview-dialog-panel',
 
 	//   `div {
@@ -98,8 +101,8 @@ export class ExerciseSettingSvcService {
 		return this.ExerciseSettingsComponent;
 	}
 
-	close() {
-		this .ExerciseSettingsComponent.close();
+	async close(aFormCloseFn?: onFormCloseFn) {
+		this.ExerciseSettingsComponent.close(aFormCloseFn);
 	}
 
 	private getOverlayConfig(aConfig: ExerciseOverlayConfig): OverlayConfig {
