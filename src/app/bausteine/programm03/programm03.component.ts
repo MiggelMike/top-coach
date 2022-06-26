@@ -304,6 +304,7 @@ export class Programm03Component implements OnInit {
         });
 
         this.fExerciseOverlayConfig = {
+            hasBackdrop: true,
             uebung: aSessUeb,
             cmpUebungSettings: mCmpUebung,
             programm: this.programm,
