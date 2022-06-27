@@ -18,8 +18,6 @@ import { Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardUebung, ArbeitsSaetzeStatus } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
-import { threadId } from 'worker_threads';
-import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
 var cloneDeep = require('lodash.clonedeep');
 
 export const MinDatum = new Date(-8640000000000000);
@@ -186,6 +184,7 @@ export class DexieSvcService extends Dexie {
 	private HantelscheibenTable: Dexie.Table<Hantelscheibe, number>;
 	private EquipmentTable: Dexie.Table<Equipment, number>;
 	private ProgressTable: Dexie.Table<Progress, number>;
+	private worker: Worker;
 	public Programme: Array<ITrainingsProgramm> = [];
 	public StammUebungsListe: Array<Uebung> = [];
 	public MuskelGruppenListe: Array<MuscleGroup> = [];
@@ -195,6 +194,81 @@ export class DexieSvcService extends Dexie {
 	public ProgressListe: Array<Progress> = [];
 
 	private ProgramLadeStandardPara: ProgrammParaDB;
+
+	private async LadeSessionsInWorker(aOffSet: number = 0): Promise<void> {
+        const mSessionParaDB: SessionParaDB = new SessionParaDB();
+        mSessionParaDB.Limit = 1;
+        mSessionParaDB.OffSet = aOffSet;
+        this.LadeUpcomingSessions(this.AktuellesProgramm.id, mSessionParaDB)
+            .then((aSessionListe) => {
+                if (aSessionListe.length > 0) {
+                    aSessionListe.forEach((mPtrSession) => {
+                        // if (mPtrSession.Kategorie02 !== SessionStatus.Wartet) {                            
+                            const mUebungParaDB = new UebungParaDB();
+                            mUebungParaDB.SaetzeBeachten = true;
+                            this.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
+                                (aUebungsListe) => {
+                                    if (aUebungsListe.length > 0)
+                                        mPtrSession.UebungsListe = aUebungsListe;
+                                });
+                        // }
+                        
+                        SessionDB.StaticCheckMembers(mPtrSession);
+                        mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+                        this.AktuellesProgramm.SessionListe.push(mPtrSession);
+                        this.AktuellesProgramm.SessionListe.push(mPtrSession);
+                        this.LadeSessionsInWorker(this.AktuellesProgramm.SessionListe.length);
+                    
+                    });
+                }
+            });
+    }
+
+	public DoWorker() {
+		// const that: AnstehendeSessionsComponent = this;
+        if (typeof Worker !== 'undefined') {
+			this.worker = new Worker(new URL('./dexie-svc.worker', import.meta.url));
+            this.worker.addEventListener('message', ({ data }) => {
+                if (data.action === "LadeAktuellesProgramm") {
+                    this.LadeAktuellesProgramm()
+                        .then(async (aProgramm) => {
+                            if (aProgramm !== undefined) {
+                                const mDialogData = new DialogData();
+                                mDialogData.ShowAbbruch = false;
+                                mDialogData.ShowOk = false;
+                                mDialogData.hasBackDrop = false;
+                                this.AktuellesProgramm.SessionListe = [];
+                                this.LadeSessionsInWorker();
+                            }
+                        });
+                } // if
+                // else if (data.action === "LadeUebungen") {
+                //         // that.Programm.SessionListe = that.fDbModule.AktuellesProgramm.SessionListe;
+                //         const mUebungParaDB: UebungParaDB = new UebungParaDB();
+                //         // mUebungParaDB.SaetzeBeachten = true;
+                //         this.fProgramm.SessionListe.forEach(
+                //         // that.fDbModule.AktuellesProgramm.SessionListe.forEach(
+                //             (aSession) => {
+                //                 if (aSession.UebungsListe === undefined || aSession.UebungsListe.length <= 0) {
+                //                     that.fDbModule.LadeSessionUebungen(aSession.ID, mUebungParaDB).then(
+                //                         (aUebungsListe) => {
+                //                             if (aUebungsListe.length > 0)
+                //                                 aSession.UebungsListe = aUebungsListe;
+                //                         });
+                                        
+                //                     }
+                //             });//for
+                //         that.fDbModule.AktuellesProgramm.SessionListe = this.fProgramm.SessionListe;
+                // }//if
+            });
+
+                        
+            // that.worker.onmessage = ({ data }) => {
+            //     console.log(data);
+            // };
+            this.worker.postMessage('LadeAktuellesProgramm');
+        }	
+	}
 
 	public UpComingSessionList(): Array<Session> {
 		if ((this.AktuellesProgramm) && (this.AktuellesProgramm.SessionListe)) {
@@ -405,6 +479,7 @@ export class DexieSvcService extends Dexie {
 		this.PruefeStandardLanghanteln();
 		this.PruefeStandardEquipment();
 		this.PruefeStandardMuskelGruppen();
+		// this.DoWorker();
 		// this.LadeStammUebungen();
 	}
 
@@ -1662,3 +1737,14 @@ export class DexieSvcService extends Dexie {
 		}//if
 	}
 }
+// if (typeof Worker !== 'undefined') {
+//   // Create a new
+//   const worker = new Worker(new URL('./dexie-svc.worker', import.meta.url));
+//   worker.onmessage = ({ data }) => {
+//     console.log(`page got message: ${data}`);
+//   };
+//   worker.postMessage('hello');
+// } else {
+//   // Web Workers are not supported in this environment.
+//   // You should add a fallback so that your program still executes correctly.
+// }

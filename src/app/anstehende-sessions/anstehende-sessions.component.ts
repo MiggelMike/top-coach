@@ -35,22 +35,21 @@ export class AnstehendeSessionsComponent implements OnInit {
             .then((aSessionListe) => {
                 if (aSessionListe.length > 0) {
                     aSessionListe.forEach((mPtrSession) => {
-                        if (mPtrSession.Kategorie02 !== SessionStatus.Wartet) {                            
+                        // if (mPtrSession.Kategorie02 !== SessionStatus.Wartet) {                            
                             const mUebungParaDB = new UebungParaDB();
-                            mUebungParaDB.SaetzeBeachten = true;
-                            this.fDbModule.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
-                                (aUebungsListe) => {
-                                    if (aUebungsListe.length > 0)
-                                        mPtrSession.UebungsListe = aUebungsListe;
-                                });
-                        }
+                          //  mUebungParaDB.SaetzeBeachten = true;
+                            // this.fDbModule.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
+                            //     (aUebungsListe) => {
+                            //         if (aUebungsListe.length > 0)
+                            //             mPtrSession.UebungsListe = aUebungsListe;
+                            //     });
+                        // }
                         
                         SessionDB.StaticCheckMembers(mPtrSession);
                         mPtrSession.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
                         this.fDbModule.AktuellesProgramm.SessionListe.push(mPtrSession);
                         this.fProgramm.SessionListe.push(mPtrSession);
-                        this.LadeSessions(
-                            this.fProgramm.SessionListe.length);
+                        this.LadeSessions(this.fProgramm.SessionListe.length);
                     
                     });
                 }
