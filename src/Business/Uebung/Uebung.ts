@@ -141,6 +141,7 @@ export interface IUebung {
     FK_Programm: number;
     InUpcomingSessionSetzen: InUpcomingSessionSetzen;
     GewichtsEinheit: GewichtsEinheit;
+    isLetzterSatzInUebung(aSatz: Satz): boolean;
 }
 
 export enum StandardUebungsName {
@@ -360,6 +361,11 @@ export class Uebung implements IUebung {
         
         // return '00:00:00';
     }
+
+    public isLetzterSatzInUebung(aSatz: Satz): boolean {
+		return (aSatz.SatzListIndex >= this.SatzListe.length - 1);
+	}
+
 
 
     public hasChanged(aCmpUebung: IUebung): Boolean {

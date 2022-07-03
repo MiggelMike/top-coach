@@ -1,3 +1,4 @@
+import { Session } from './../../../Business/Session/Session';
 import { MinDatum, UebungParaDB } from './../../services/dexie-svc.service';
 import { NextProgress, Progress, ProgressPara, ProgressSet, ProgressTyp, VorgabeWeightLimit, WeightProgress } from './../../../Business/Progress/Progress';
 import { DexieSvcService } from 'src/app/services/dexie-svc.service';
@@ -198,11 +199,18 @@ export class SatzEditComponent implements OnInit {
         mProgressPara.ProgressListe = this.fDbModule.ProgressListe;
         // Routine zum Starten der Stoppuhr.
         mProgressPara.NextProgressFn = (aNextProgress: NextProgress) => {
-            if (aNextProgress !== undefined) {
-                this.DoStoppUhr(Number(aNextProgress.Satz.GewichtAusgefuehrt),
-                    `"${aNextProgress.Uebung.Name}" - set #${(aNextProgress.Satz.SatzListIndex + 1).toString()} - weight: ${(aNextProgress.Satz.GewichtVorgabeStr)}`
-                );
-            }
+            if (aNextProgress) {
+                // if (!this.sess.isLetzteUebungInSession(this.sessUebung) ) {
+
+                if ((this.sess.isLetzteUebungInSession(this.sessUebung) === false) || (this.sessUebung.isLetzterSatzInUebung(aSatz as Satz) === false)) {
+                    this.DoStoppUhr(
+                        this.sessUebung,
+                        Number(aNextProgress.Satz.GewichtAusgefuehrt),
+                        0, // NaechsteUebungPauseSec
+                        `"${aNextProgress.Uebung.Name}" - set #${(aNextProgress.Satz.SatzListIndex + 1).toString()} - weight: ${(aNextProgress.Satz.GewichtVorgabeStr)}`
+                    );
+                }
+             }
         }
 
         const mDialogData: DialogData = new DialogData();
@@ -262,6 +270,9 @@ export class SatzEditComponent implements OnInit {
                             }//if
                         }
 
+                        if (aSatz.Status === SatzStatus.Fertig && this.sess.isLetzteUebungInSession(this.sessUebung) && this.sessUebung.isLetzterSatzInUebung(aSatz as Satz))
+                            mDialogData.textZeilen.push('This was the last set!');
+
                         if (mDialogData.textZeilen.length > 0)
                             that.fDialogService.Hinweis(mDialogData);
                     } catch (error) {
@@ -272,13 +283,15 @@ export class SatzEditComponent implements OnInit {
     }
         
     
-    private DoStoppUhr(aNextTimeWeight: number, aHeaderText: string):void {
+    private DoStoppUhr(aUebung: Uebung, aNextTimeWeight: number, aNaechsteUebungPauseSec: number, aHeaderText: string):void {
         this.StoppUhrOverlayConfig = 
             {
                 satz: this.satz as Satz,
-                uebung: this.sessUebung,
+                uebung: aUebung,
+                session: this.sess,
                 satznr: this.rowNum + 1,
                 nextTimeWeight: Number(aNextTimeWeight),
+                NaechsteUebungPauseSec:aNaechsteUebungPauseSec,
                 headerText: aHeaderText,
             } as StoppUhrOverlayConfig;
     

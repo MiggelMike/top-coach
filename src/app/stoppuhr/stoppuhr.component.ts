@@ -1,3 +1,4 @@
+import { ISession } from './../../Business/Session/Session';
 import { Zeitraum } from './../../Business/Dauer';
 import { SatzTyp } from './../../Business/Satz/Satz';
 import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
@@ -13,6 +14,7 @@ import { cStoppUhrOverlayData, StoppUhrOverlayConfig, StoppUhrOverlayRef } from 
 })
 export class StoppuhrComponent implements OnInit {
 	public fConfig: StoppUhrOverlayConfig;
+	public Session: ISession;	
 	public Satz: Satz;
 	public Uebung: Uebung;
 	public SatzListenNr: number;
@@ -20,6 +22,8 @@ export class StoppuhrComponent implements OnInit {
 	private Gong = new Audio();
 	private SoundEasyPlayed: boolean = false;
 	private SoundHardPlayed: boolean = false;
+	private NaechsteUebungPause: boolean = false;
+	public NaechsteUebungPauseSec: number;
 	public NextSetText: string;
 	public showDuration: boolean = false;
 
@@ -29,9 +33,11 @@ export class StoppuhrComponent implements OnInit {
 	{
 		this.Satz = aStoppUhrOverlayConfig.satz;
 		this.Uebung = aStoppUhrOverlayConfig.uebung;
+		this.Session = aStoppUhrOverlayConfig.session;
 		this.SatzListenNr = aStoppUhrOverlayConfig.satznr;
 		this.StartZeitpunkt = new Date();
 		this.NextSetText = aStoppUhrOverlayConfig.headerText;
+		this.NaechsteUebungPauseSec = aStoppUhrOverlayConfig.NaechsteUebungPauseSec === undefined ? 0 :  aStoppUhrOverlayConfig.NaechsteUebungPauseSec;
 		// ../../../assets/audio/alarm.wav
 		this.Gong.src = "../../assets/sounds/Gong.mp3";
 		this.Gong.load();
@@ -62,30 +68,57 @@ export class StoppuhrComponent implements OnInit {
 		return this.Uebung.ArbeitsSatzPause2;
 	}
 
+	get ScheduledPauseBetweenExercises(): number {
+		return this.NaechsteUebungPauseSec;
+	}
+	
+	get ScheduledPauseTimerBetweenExercises(): string {
+		return Zeitraum.FormatDauer(this.NaechsteUebungPauseSec);
+	}
+		
 	
 	ngAfterViewChecked(){
 		this.cd.detectChanges();
 	  }
         
 
+	get isLetzteUebungInSession(): boolean {
+		return this.Session.isLetzteUebungInSession(this.Uebung); 
+	}
+
+	get isLetzterSatzInUebung(): boolean {
+		return this.Uebung.isLetzterSatzInUebung(this.Satz);
+	}
 
 	get PauseTime(): string {
+		// Letzter Satz in letzter Übung?
+		// if (this.isLetzterSatzInUebung)
+		// 	return Zeitraum.FormatDauer(0);
+
 		const mDauerSec: number = Zeitraum.CalcDauer(this.StartZeitpunkt, new Date());
 
-		if (   this.Uebung.ArbeitsSatzPause1 > 0
-			&& mDauerSec >= this.Uebung.ArbeitsSatzPause1
-			&& this.SoundEasyPlayed === false)
-		{
-			this.SoundEasyPlayed = true;
-			this.Gong.play();
-		}
+		// Letzter Satz, aber nicht letzte Übung?
+		if (this.isLetzterSatzInUebung && !this.isLetzteUebungInSession) {
+			if (this.NaechsteUebungPauseSec > 0
+				&& mDauerSec >= this.NaechsteUebungPauseSec
+				&& this.NaechsteUebungPause === false) {
+				this.NaechsteUebungPause = true;
+				this.Gong.play();
+			}
+		} else {
+			if (this.Uebung.ArbeitsSatzPause1 > 0
+				&& mDauerSec >= this.Uebung.ArbeitsSatzPause1
+				&& this.SoundEasyPlayed === false) {
+				this.SoundEasyPlayed = true;
+				this.Gong.play();
+			}
 
-		if (   this.Uebung.ArbeitsSatzPause2 > 0
-			&& mDauerSec >= this.Uebung.ArbeitsSatzPause2
-			&& this.SoundHardPlayed === false)
-		{
-			this.SoundHardPlayed = true;
-			this.Gong.play();
+			if (this.Uebung.ArbeitsSatzPause2 > 0
+				&& mDauerSec >= this.Uebung.ArbeitsSatzPause2
+				&& this.SoundHardPlayed === false) {
+				this.SoundHardPlayed = true;
+				this.Gong.play();
+			}
 		}
 	
 		return Zeitraum.FormatDauer(mDauerSec);

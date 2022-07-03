@@ -6,6 +6,8 @@ import { Satz } from "src/Business/Satz/Satz";
 import { Uebung } from "src/Business/Uebung/Uebung";
 import { StoppuhrComponent } from "../stoppuhr/stoppuhr.component";
 import { BaseOverlayRef } from "./global.service";
+import { ISession } from 'src/Business/Session/Session';
+
 
 export class StoppUhrOverlayRef extends BaseOverlayRef {}
 
@@ -17,11 +19,13 @@ export interface StoppUhrOverlayConfig {
 	height?: number;
 	satz?: Satz;
 	uebung?: Uebung;
+	session?: ISession,
 	left?: number;
 	satznr?: number;
 	nextTimeWeight?: number;
     top?: number;
-	headerText?: string
+	headerText?: string;
+	NaechsteUebungPauseSec?: number;
 	afterOpenFn?: onFormShowFn;
 	beforeCloseFn?: onFormCloseFn;
 }
@@ -109,7 +113,7 @@ export class StoppuhrSvcService {
 			hasBackdrop: aConfig.hasBackdrop,
 			backdropClass: aConfig.backdropClass,
 			panelClass: aConfig.panelClass,
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+			scrollStrategy: this.overlay.scrollStrategies.reposition(),
 			positionStrategy,
 		});
 

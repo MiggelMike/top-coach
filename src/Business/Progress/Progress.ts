@@ -6,6 +6,7 @@ import { ISession, Session, SessionCopyPara } from './../Session/Session';
 import { SessionStatus } from 'src/Business/SessionDB';
 import { ArbeitsSaetzeStatus, Uebung, WdhVorgabeStatus } from "../Uebung/Uebung";
 import { Satz, SatzStatus } from '../Satz/Satz';
+import { retry } from 'rxjs';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual')
 
@@ -383,7 +384,7 @@ export class Progress implements IProgress {
 		//#endregion
 	}
 
-	public static StaticDoSaetzeProgress(aWarteSatzListe: Array<Satz>, aUpComingSessionListe: Array<Session>, aAusgangsSatz: Satz, aUebung: Uebung, aAusgangsSession: Session, aProgressSet : ProgressSet,  aWeightProgress?: WeightProgress): NextProgress {
+	public static StaticDoSaetzeProgress(aWarteSatzListe: Array<Satz>, aUpComingSessionListe: Array<Session>, aAusgangsSatz: Satz, aUebung: Uebung, aAusgangsSession: Session, aProgressSet: ProgressSet, aMaxSessions: number, aWeightProgress?: WeightProgress): NextProgress {
 		const mResult: NextProgress = new NextProgress();
 		let mSatzListe: Array<Satz> = aWarteSatzListe.map( (sz) => sz);
 		aUebung.nummeriereSatzListe(aUebung.ArbeitsSatzListe);
@@ -476,7 +477,26 @@ export class Progress implements IProgress {
 
 				if (mWaitingExercise === undefined)
 					mWaitingExercise = aAusgangsSession.getFirstWaitingExercise(aUebung.ListenIndex);
-			
+				
+				if (mWaitingExercise === undefined				
+				&&  aAusgangsSession.isLetzteUebungInSession(aUebung) && aUebung.isLetzterSatzInUebung(aAusgangsSatz)) {
+					const mNextSession: Session = aUpComingSessionListe.find(
+						(mSession) => {
+							if (mSession.ID !== aAusgangsSession.ID) {
+								// Die Uebungen und die Progressgruppe müssen gleich sein.
+								const mUebung = mSession.UebungsListe.find((u) => u.FkUebung === aUebung.FkUebung && u.ProgressGroup === aUebung.ProgressGroup);
+								if (mUebung) {
+									return mSession;
+								}
+							}
+							return undefined;
+						});
+					
+					if (mNextSession) {
+						mWaitingExercise = mNextSession.getFirstWaitingExercise(aUebung.ListenIndex);
+					}//if
+				}//if
+					
 				if (mWaitingExercise) {
 					mResult.Uebung = mWaitingExercise;
 					if (mWaitingExercise.getFirstWaitingWorkSet()) {
@@ -521,7 +541,9 @@ export class Progress implements IProgress {
 					aProgressPara.AusgangsSatz as Satz,
 					aProgressPara.AusgangsUebung,
 					aProgressPara.AusgangsSession as Session,
-					aProgressPara.Progress.ProgressSet);                
+					aProgressPara.Progress.ProgressSet,
+					aProgressPara.Programm.SessionListe.length
+				  );
 			
 		if (aProgressPara.Progress) {
 			try {

@@ -1,19 +1,33 @@
 <mat-card class="tc-font-size-smaller">
     <div class="align-left" fxLayout="column" fxLayoutGap="10px">
-        <h5>{{Uebung.Name}} set #{{SatzListenNr}} done</h5>
-
+        <!-- <h5> {{Uebung.Name}} set #{{SatzListenNr}} done</h5> -->
+        <h5>{{NextSetText}}</h5>
         <!-- <div fxLayout="row" fxFlex="100%">
             <span>Next undone set is {{NextSetText}}</span> 
          </div>             -->
  
+       <ng-container *ngIf="isLetzteUebungInSession === false && isLetzterSatzInUebung === false">
+           <div fxLayout="row" fxFlex="100%">
+               <mat-label>Scheduled pause seconds if set was easy:  {{ScheduledPauseSecondsEasy}} ({{ScheduledPauseTimeEasy}})</mat-label> 
+            </div>            
+            
+            <div fxLayout="row" fxFlex="100%">
+                <mat-label>Scheduled pause seconds if set was hard: {{ScheduledPauseSecondsHard}} ({{ScheduledPauseTimeHard}})</mat-label> 
+            </div>            
+        </ng-container>
 
-        <div fxLayout="row" fxFlex="100%">
-           <mat-label>Scheduled pause seconds if set was easy:  {{ScheduledPauseSecondsEasy}} ({{ScheduledPauseTimeEasy}})</mat-label> 
-        </div>            
+        <ng-container *ngIf="isLetzteUebungInSession === false && isLetzterSatzInUebung === true">
+            <div fxLayout="row" fxFlex="100%">
+                <mat-label>Scheduled pause seconds between exercises:  {{ScheduledPauseBetweenExercises}} ({{ScheduledPauseTimerBetweenExercises}})</mat-label> 
+            </div>            
+        </ng-container>
 
-        <div fxLayout="row" fxFlex="100%">
-            <mat-label>Scheduled pause seconds if set was hard: {{ScheduledPauseSecondsHard}} ({{ScheduledPauseTimeHard}})</mat-label> 
-        </div>            
+        <ng-container *ngIf="isLetzteUebungInSession === true && isLetzterSatzInUebung === true">
+            <div fxLayout="row" fxFlex="100%">
+                <mat-label>Scheduled pause seconds if set was easy:  {{ScheduledPauseSecondsEasy}} ({{ScheduledPauseTimeEasy}})</mat-label> 
+            </div>            
+        </ng-container>
+
 
         <div fxLayout="row" fxFlex="100%">
             <h5> Pause time: {{PauseTime}}</h5> 

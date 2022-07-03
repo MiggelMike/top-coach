@@ -27,7 +27,9 @@ export interface ISession extends ISessionDB {
     SetNextWeight(aWp: WeightProgress, aUebung: Uebung);
     isEqual(aOtherSession: Session): boolean;
     SucheSatz(aSatz: Satz): Satz;
-    Reset()
+    Reset();
+    isLetzteUebungInSession(aUebung: Uebung): boolean;
+    NextExercise(aUebung: Uebung): Uebung;
 }
 
 export class SessionCopyPara {
@@ -278,6 +280,10 @@ export class Session extends SessionDB implements ISession {
         });
     }
 
+    public isLetzteUebungInSession(aUebung: Uebung): boolean {
+		return (aUebung.ListenIndex >= this.UebungsListe.length - 1);
+	}
+
     public Copy(aSessionCopyPara: SessionCopyPara): Session {
         // public Copy(aKomplett: boolean, aCopySessionID: boolean = false): Session {        
         // SessionCopyPara
@@ -334,6 +340,16 @@ export class Session extends SessionDB implements ISession {
         aUebung.Kategorie02 = UebungsKategorie02.Session;
         aUebungsListe.push(aUebung);
         Session.nummeriereUebungsListe(aUebungsListe);
+    }
+
+    public NextExercise(aUebung: Uebung): Uebung{
+        let mIndex = this.UebungsListe.indexOf(aUebung);
+        if (mIndex >= 0) {
+            mIndex++;
+            if (mIndex >= 0 && mIndex < this.UebungsListe.length)
+                return this.UebungsListe[mIndex];
+        }
+        return undefined;
     }
 
 

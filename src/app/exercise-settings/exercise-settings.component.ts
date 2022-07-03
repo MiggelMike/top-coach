@@ -133,6 +133,10 @@ export class ExerciseSettingsComponent {
 		}//switch
 	}
 
+	onFocusSelect(aEvent: any) {
+		aEvent.target.select();
+	}
+
 	onChangeProgressSchema(aEvent: any) {
 		const mProgressPara: ProgressPara = new ProgressPara();
 		mProgressPara.DbModule = this.fDbModule;

@@ -114,6 +114,7 @@
                             <input matInput
                                 [textMask]="{mask: Int3DigitMask, guide: false }"
                                 [ngModel]="(SessUeb.AufwaermArbeitsSatzPause | number: '1.0')"
+                                (focus)="onFocusSelect($event)"
                                 (focusout)="SetAufwaermArbeitsSatzPause($event)"
                                 type="text">
                         </mat-form-field>
@@ -124,7 +125,9 @@
                             <mat-label>Pause seconds between sets if last set was easy</mat-label>
                             <input matInput
                                 [textMask]="{mask: Int3DigitMask, guide: false }"
-                                [ngModel]="(SessUeb.ArbeitsSatzPause1 | number: '1.0')" (focusout)="SetArbeitsSatzPause1($event)"
+                                [ngModel]="(SessUeb.ArbeitsSatzPause1 | number: '1.0')" 
+                                (focus)="onFocusSelect($event)"
+                                (focusout)="SetArbeitsSatzPause1($event)"
                                 type="text">
                         </mat-form-field>
                     </div>    
@@ -134,7 +137,9 @@
                             <mat-label>Pause seconds between sets if last set was hard</mat-label>
                             <input matInput
                                 [textMask]="{mask: Int3DigitMask, guide: false }"
-                                [ngModel]="(SessUeb.ArbeitsSatzPause2 | number: '1.0')" (focusout)="SetArbeitsSatzPause2($event)"
+                                [ngModel]="(SessUeb.ArbeitsSatzPause2 | number: '1.0')" 
+                                (focus)="onFocusSelect($event)"
+                                (focusout)="SetArbeitsSatzPause2($event)"
                                 type="text">
                         </mat-form-field>
                     </div>    
@@ -144,7 +149,9 @@
                             <mat-label>Pause seconds between last excercise set and first set of next exercise</mat-label>
                             <input matInput
                                 [textMask]="{mask: Int3DigitMask, guide: false }"
-                                [ngModel]="(SessUeb.NaechsteUebungPause | number: '1.0')" (focusout)="SetNextExercisePause($event)"
+                                [ngModel]="(SessUeb.NaechsteUebungPause | number: '1.0')" 
+                                (focus)="onFocusSelect($event)"
+                                (focusout)="SetNextExercisePause($event)"
                                 type="text">
                         </mat-form-field>
                     </div>        
