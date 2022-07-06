@@ -208,13 +208,13 @@ export class SatzEditComponent implements OnInit {
             if ((this.sess.isLetzteUebungInSession(this.sessUebung) === true) && (this.sessUebung.isLetzterSatzInUebung(aSatz as Satz) === true)) {
                 // Letzte Übung 
                 // Letzter Satz
-                // Keine Stoppuhr
+                // Keine Stoppuhr öffnen
                 return;
             }
             // Nicht die letzte Übung in Session und letzter Satz der Übung?
             if ((this.sess.isLetzteUebungInSession(this.sessUebung) === false) && (this.sessUebung.isLetzterSatzInUebung(aSatz as Satz) === true)) {
                 // Nächste Übung der Session suchen.
-                mStopUhrUebung = this.sess.UebungsListe[this.sessUebung.ListenIndex + 1];//
+                mStopUhrUebung = this.sess.UebungsListe[this.sessUebung.ListenIndex + 1];
             }
 
             // Progress gefunden?
