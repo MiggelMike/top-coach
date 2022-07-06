@@ -219,7 +219,7 @@ export class SatzEditComponent implements OnInit {
 
             // Progress gefunden?
             if (aNextProgress) {
-                // if ((this.sess.isLetzteUebungInSession(this.sessUebung) === true) || (this.sessUebung.isLetzterSatzInUebung(aSatz as Satz) === true)) 
+                if ((this.sess.isLetzteUebungInSession(this.sessUebung) === true) || (this.sessUebung.isLetzterSatzInUebung(aSatz as Satz) === true)) 
                     mStopUhrUebung = aNextProgress.Uebung;
             }
             
@@ -228,14 +228,14 @@ export class SatzEditComponent implements OnInit {
                 if (mSatz !== mFirstWaitingSet)
                     mNextSetIndex = mFirstWaitingSet.SatzListIndex;
                 mSatz = mFirstWaitingSet;
-            }
 
-            this.DoStoppUhr(
-                mStopUhrUebung,
-                Number(mSatz.GewichtAusgefuehrt),
-                0, // NaechsteUebungPauseSec
-                `"${mStopUhrUebung.Name}" - set #${(mNextSetIndex + 1).toString()} - weight: ${(mSatz.GewichtVorgabeStr)}`
-            );
+                this.DoStoppUhr(
+                    mStopUhrUebung,
+                    Number(mSatz.GewichtAusgefuehrt),
+                    0, // NaechsteUebungPauseSec
+                    `"${mStopUhrUebung.Name}" - set #${(mNextSetIndex + 1).toString()} - weight: ${(mSatz.GewichtVorgabeStr)}`
+                );
+            }
         }
 
         const mDialogData: DialogData = new DialogData();
