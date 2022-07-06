@@ -1224,7 +1224,7 @@ export class DexieSvcService extends Dexie {
 					for (let index = 0; index < aSession.UebungsListe.length; index++) {
 						const mPtrUebung = aSession.UebungsListe[index];
 
-						if (mPtrUebung.InUpcomingSessionSetzen === undefined)
+						// if (mPtrUebung.InUpcomingSessionSetzen === undefined)
 							mPtrUebung.InUpcomingSessionSetzen = new InUpcomingSessionSetzen();
 						mPtrUebung.InUpcomingSessionSetzen.init();
 

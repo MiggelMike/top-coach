@@ -5,7 +5,7 @@ import { SessionStatus } from "./../../../Business/SessionDB";
 import { SessionStatsOverlayComponent } from "./../../session-stats-overlay/session-stats-overlay.component";
 import { SessionOverlayServiceService, SessionOverlayConfig } from "./../../services/session-overlay-service.service";
 import { DialogeService } from "./../../services/dialoge.service";
-import { DexieSvcService, MinDatum, UebungParaDB } from "./../../services/dexie-svc.service";
+import { DexieSvcService, MinDatum, ProgrammParaDB, SessionParaDB, UebungParaDB } from "./../../services/dexie-svc.service";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { DialogData } from "src/app/dialoge/hinweis/hinweis.component";
@@ -319,6 +319,7 @@ export class SessionFormComponent implements OnInit {
 
 		this.fDbModule.SessionSpeichern(this.Session)
 			.then((aSession: Session) => {
+				// this.fDbModule.DoWorker();
 				// const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
 				// mSessionCopyPara.Komplett = true;
 				// mSessionCopyPara.CopySessionID = true;
@@ -400,8 +401,8 @@ export class SessionFormComponent implements OnInit {
 					mNeueSession.FK_VorlageProgramm = aSessionForm.Session.FK_VorlageProgramm;
 					mNeueSession.Expanded = false;
 
-					for (let index = 0; index < this.Programm.SessionListe.length; index++) {
-						const mPtrSession  = this.Programm.SessionListe[index];
+					for (let index1 = 0; index1 < this.Programm.SessionListe.length; index1++) {
+						const mPtrSession = this.Programm.SessionListe[index1];
 						await this.fDbModule.CheckSessionSaetze(mPtrSession);
 					}
 
@@ -485,7 +486,14 @@ export class SessionFormComponent implements OnInit {
 						}//for
 					}//for
 
-					this.fDbModule.SessionSpeichern(mNeueSession);
+					const mProgrammExtraParaDB: ProgrammParaDB = new ProgrammParaDB();
+					mProgrammExtraParaDB.SessionBeachten = true;
+					mProgrammExtraParaDB.SessionParaDB = new SessionParaDB();
+					mProgrammExtraParaDB.SessionParaDB.UebungenBeachten = true;
+					mProgrammExtraParaDB.SessionParaDB.UebungParaDB = new UebungParaDB();
+					mProgrammExtraParaDB.SessionParaDB.UebungParaDB.SaetzeBeachten = true;
+					this.fDbModule.ProgrammSpeichern(this.Programm, mProgrammExtraParaDB);
+					// this.fDbModule.SessionSpeichern(mNeueSession);
 					this.DoAfterDone(this);
 				}
 			} finally {
