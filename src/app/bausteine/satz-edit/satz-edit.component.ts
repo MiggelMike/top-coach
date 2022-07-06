@@ -199,18 +199,43 @@ export class SatzEditComponent implements OnInit {
         mProgressPara.ProgressListe = this.fDbModule.ProgressListe;
         // Routine zum Starten der Stoppuhr.
         mProgressPara.NextProgressFn = (aNextProgress: NextProgress) => {
-            if (aNextProgress) {
-                // if (!this.sess.isLetzteUebungInSession(this.sessUebung) ) {
+            let mStopUhrUebung: Uebung = this.sessUebung;
+            let mSatz: Satz = aSatz as Satz;
+            let mFirstWaitingSet: Satz = aSatz as Satz;
+            let mNextSetIndex: number = mSatz.SatzListIndex + 1;
 
-                if ((this.sess.isLetzteUebungInSession(this.sessUebung) === false) || (this.sessUebung.isLetzterSatzInUebung(aSatz as Satz) === false)) {
-                    this.DoStoppUhr(
-                        this.sessUebung,
-                        Number(aNextProgress.Satz.GewichtAusgefuehrt),
-                        0, // NaechsteUebungPauseSec
-                        `"${aNextProgress.Uebung.Name}" - set #${(aNextProgress.Satz.SatzListIndex + 1).toString()} - weight: ${(aNextProgress.Satz.GewichtVorgabeStr)}`
-                    );
-                }
-             }
+            // Letzte Übung in Session und letzter Satz der Übung?
+            if ((this.sess.isLetzteUebungInSession(this.sessUebung) === true) && (this.sessUebung.isLetzterSatzInUebung(aSatz as Satz) === true)) {
+                // Letzte Übung 
+                // Letzter Satz
+                // Keine Stoppuhr
+                return;
+            }
+            // Nicht die letzte Übung in Session und letzter Satz der Übung?
+            if ((this.sess.isLetzteUebungInSession(this.sessUebung) === false) && (this.sessUebung.isLetzterSatzInUebung(aSatz as Satz) === true)) {
+                // Nächste Übung der Session suchen.
+                mStopUhrUebung = this.sess.UebungsListe[this.sessUebung.ListenIndex + 1];//
+            }
+
+            // Progress gefunden?
+            if (aNextProgress) {
+                // if ((this.sess.isLetzteUebungInSession(this.sessUebung) === true) || (this.sessUebung.isLetzterSatzInUebung(aSatz as Satz) === true)) 
+                    mStopUhrUebung = aNextProgress.Uebung;
+            }
+            
+            mFirstWaitingSet = mStopUhrUebung.getFirstWaitingWorkSet();
+            if (mFirstWaitingSet !== undefined) {
+                if (mSatz !== mFirstWaitingSet)
+                    mNextSetIndex = mFirstWaitingSet.SatzListIndex;
+                mSatz = mFirstWaitingSet;
+            }
+
+            this.DoStoppUhr(
+                mStopUhrUebung,
+                Number(mSatz.GewichtAusgefuehrt),
+                0, // NaechsteUebungPauseSec
+                `"${mStopUhrUebung.Name}" - set #${(mNextSetIndex + 1).toString()} - weight: ${(mSatz.GewichtVorgabeStr)}`
+            );
         }
 
         const mDialogData: DialogData = new DialogData();
