@@ -1,5 +1,5 @@
 import { AppData, GewichtsEinheit } from 'src/Business/Coach/Coach';
-import { MinDatum } from './../../app/services/dexie-svc.service';
+import { cWeightDigits, MinDatum } from './../../app/services/dexie-svc.service';
 import { ProgressGroup, WeightProgress } from 'src/Business/Progress/Progress';
 import { Zeitraum } from './../Dauer';
 import { MuscleGroupKategorie02 } from '../MuscleGroup/MuscleGroup';
@@ -263,11 +263,11 @@ export class Uebung implements IUebung {
     private fGewichtSteigerung: number = 0;
 
     set GewichtSteigerung(aValue: number) {
-        this.fGewichtSteigerung = AppData.StaticRoundTo(aValue,3);
+        this.fGewichtSteigerung = AppData.StaticRoundTo(aValue,cWeightDigits);
     }
 
     get GewichtSteigerung(): number {
-        return AppData.StaticRoundTo(this.fGewichtSteigerung,3);
+        return AppData.StaticRoundTo(this.fGewichtSteigerung,cWeightDigits);
     }
     //#endregion
     //#region GewichtReduzierung 

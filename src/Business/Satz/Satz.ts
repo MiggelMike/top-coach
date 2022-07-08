@@ -5,6 +5,7 @@ import {formatNumber, NumberSymbol} from '@angular/common';
 import { isThisTypeNode } from 'typescript';
 import { AppData, GewichtsEinheit } from '../Coach/Coach';
 import { R3BoundTarget } from '@angular/compiler';
+import { cWeightDigits } from 'src/app/services/dexie-svc.service';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
 
@@ -90,11 +91,11 @@ export class GewichtDiff {
     private fGewicht: number = 0;
     get Gewicht(): number
     {
-        return AppData.StaticRoundTo(this.fGewicht, 3);
+        return AppData.StaticRoundTo(this.fGewicht, cWeightDigits);
     }
     set Gewicht(value:number)
     {
-        this.fGewicht = AppData.StaticRoundTo(value,3);
+        this.fGewicht = AppData.StaticRoundTo(value,cWeightDigits);
     }
 
     Uebung: Uebung;
@@ -142,12 +143,12 @@ export class Satz implements ISatz {
     private fGewichtAusgefuehrt: number = 0;    
     get GewichtAusgefuehrt():number
     {
-        return AppData.StaticRoundTo(this.fGewichtAusgefuehrt,2);
+        return AppData.StaticRoundTo(this.fGewichtAusgefuehrt,cWeightDigits);
     }
 
     set GewichtAusgefuehrt(aValue: number)
     {
-        this.fGewichtAusgefuehrt = AppData.StaticRoundTo(aValue,2);
+        this.fGewichtAusgefuehrt = AppData.StaticRoundTo(aValue,cWeightDigits);
     }
     //#endregion
     //#region WdhAusgefuehrt
@@ -163,11 +164,11 @@ export class Satz implements ISatz {
     //#region GewichtVorgabe 
     private fGewichtVorgabe: number = 0;
     get GewichtVorgabe(): number {
-        return AppData.StaticRoundTo(this.fGewichtVorgabe,2); 
+        return AppData.StaticRoundTo(this.fGewichtVorgabe,cWeightDigits); 
     }
     
     set GewichtVorgabe(aValue: number) {
-        this.fGewichtVorgabe = AppData.StaticRoundTo(aValue,2); 
+        this.fGewichtVorgabe = AppData.StaticRoundTo(aValue,cWeightDigits); 
     }
     //#endregion
     //#region WdhVonVorgabe
