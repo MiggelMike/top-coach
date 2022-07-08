@@ -46,6 +46,10 @@ export class HistoryComponent implements OnInit {
             .then( (aSessionListe) => {
                 if (aSessionListe.length > 0 && this.SessionListe.length < this.LadeLimit) {
 					this.SessionListe = this.SessionListe.concat(aSessionListe);
+					this.SessionListe.sort((s1: ISession, s2: ISession) => {
+						return s2.Datum.valueOf() - s1.Datum.valueOf() 
+						
+					});
 					this.LadeSessions(this.SessionListe.length);
 				}
             });
