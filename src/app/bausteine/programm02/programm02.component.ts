@@ -244,6 +244,7 @@ export class Programm02Component implements OnInit {
 		mNewSession.FK_VorlageProgramm = 0;
 		mNewSession.FK_Programm = this.programm.id;
 		mNewSession.ListenIndex = this.SessionListe.length + 1;
+		this.SessionListe.push(mNewSession);
 		this.startSessionPrim(mNewSession);
 		// this.fDbModule.SessionSpeichern(mNewSession).then(
 		// 	() => this.fDbModule.LadeAktuellesProgramm()

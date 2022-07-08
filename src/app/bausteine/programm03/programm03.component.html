@@ -1,6 +1,7 @@
 
-<ng-container *ngIf="session && session.UebungsListe && (session.UebungsListe.length > 0)">
-    
+<ng-container *ngIf="session">
+    <!-- <ng-container *ngIf="session && session.UebungsListe && (session.UebungsListe.length > 0)"> -->
+
     <div class="font-14-data mg-lr-30" fxLayout="row wrap" fxLayoutAlign="cente center" fxLayoutGap="2px" >        
         <ng-container *ngIf='bearbeitbar'> 
             <div fxLayout="column" fxFlex="20%">
