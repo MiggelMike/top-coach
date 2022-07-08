@@ -1,8 +1,6 @@
-import { Gewicht } from './../Konfiguration/Gewicht';
 import { ISession } from 'src/Business/Session/Session';
 import { IUebung, Uebung } from '../Uebung/Uebung';
 import {formatNumber, NumberSymbol} from '@angular/common';
-import { isThisTypeNode } from 'typescript';
 import { AppData, GewichtsEinheit } from '../Coach/Coach';
 import { R3BoundTarget } from '@angular/compiler';
 import { cWeightDigits } from 'src/app/services/dexie-svc.service';
@@ -136,7 +134,7 @@ export class Satz implements ISatz {
     }
 
     set GewichtNaechsteSession(aGewicht: number) {
-        this.fGewichtNaechsteSession = Number(aGewicht);
+        this.fGewichtNaechsteSession = AppData.StaticRoundTo(aGewicht, cWeightDigits);
     }
     //#endregion
     //#region GewichtAusgefuehrt 
@@ -205,7 +203,7 @@ export class Satz implements ISatz {
     get BodyWeight(): number {
         if (Number.isNaN(this.fBodyWeight) === true)
             this.fBodyWeight = 0;
-        return Number(this.fBodyWeight);
+        return AppData.StaticRoundTo(this.fBodyWeight, cWeightDigits);
     }
     set BodyWeight(aValue: number) {
         if (Number.isNaN(aValue) === true)
@@ -223,13 +221,13 @@ export class Satz implements ISatz {
             let mResult: number = Number(this.WdhAusgefuehrt * this.GewichtAusgefuehrt);
             if (this.IncludeBodyweight) 
                 mResult += this.WdhAusgefuehrt * this.BodyWeight;
-            return mResult;
+            return AppData.StaticRoundTo(mResult, cWeightDigits);
         }
         return 0;
     }
 
     public get GewichtVorgabeStr(): string {
-        return Number(this.GewichtVorgabe).toFixed(2);
+        return AppData.StaticRoundTo(this.GewichtVorgabe, cWeightDigits).toFixed(2);
     }
 
     public getBodyWeightText(aPrefix?: string): string {

@@ -1,3 +1,4 @@
+import { cWeightDigits } from './../../app/services/dexie-svc.service';
 
 export enum GewichtsEinheit {
     KG,
