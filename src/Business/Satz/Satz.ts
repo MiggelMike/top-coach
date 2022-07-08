@@ -142,12 +142,12 @@ export class Satz implements ISatz {
     private fGewichtAusgefuehrt: number = 0;    
     get GewichtAusgefuehrt():number
     {
-        return AppData.StaticRoundTo(this.fGewichtAusgefuehrt,3);
+        return AppData.StaticRoundTo(this.fGewichtAusgefuehrt,2);
     }
 
     set GewichtAusgefuehrt(aValue: number)
     {
-        this.fGewichtAusgefuehrt = AppData.StaticRoundTo(aValue,3);
+        this.fGewichtAusgefuehrt = AppData.StaticRoundTo(aValue,2);
     }
     //#endregion
     //#region WdhAusgefuehrt
@@ -163,11 +163,12 @@ export class Satz implements ISatz {
     //#region GewichtVorgabe 
     private fGewichtVorgabe: number = 0;
     get GewichtVorgabe(): number {
-        return Number(this.fGewichtVorgabe.toFixed(2));
+        // return Number(this.fGewichtVorgabe); //.toFixed(2);
+        return AppData.StaticRoundTo(this.fGewichtVorgabe,2); 
     }
     
     set GewichtVorgabe(aValue: number) {
-        this.fGewichtVorgabe =  Number(aValue.toFixed(2));
+        this.fGewichtVorgabe = AppData.StaticRoundTo(aValue,2); //.toFixed(2));
     }
     //#endregion
     //#region WdhVonVorgabe
