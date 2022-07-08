@@ -243,8 +243,11 @@ export class Programm02Component implements OnInit {
 		mNewSession.Kategorie02 = SessionStatus.Wartet;
 		mNewSession.FK_VorlageProgramm = 0;
 		mNewSession.FK_Programm = this.programm.id;
-		mNewSession.ListenIndex = this.SessionListe.length;
+		mNewSession.ListenIndex = this.SessionListe.length + 1;
 		this.startSessionPrim(mNewSession);
+		// this.fDbModule.SessionSpeichern(mNewSession).then(
+		// 	() => this.fDbModule.LadeAktuellesProgramm()
+		// )
 	}
 
 	public toggleSessions(): void {
@@ -340,7 +343,7 @@ export class Programm02Component implements OnInit {
 		
 		if (this.OnLeaveFn !== undefined)
 			this.OnLeaveFn.emit();
-		
+
 		this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
 	}
 

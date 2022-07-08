@@ -76,31 +76,36 @@ export class SessionFormComponent implements OnInit {
 			try {
 				const mUebungParaDB: UebungParaDB = new UebungParaDB();
 				mUebungParaDB.SaetzeBeachten = true;
-				this.fDbModule.LadeSessionUebungen(this.Session.ID, mUebungParaDB).then(
-					(aUebungsListe) => {
-						try {
-							if (aUebungsListe.length > 0)
-								this.Session.UebungsListe = aUebungsListe;
-							else
-								this.fDbModule.CmpAktuellesProgramm = this.fDbModule.AktuellesProgramm.Copy();
+				if (this.Session.ID !== undefined) {
+					this.fDbModule.LadeSessionUebungen(this.Session.ID, mUebungParaDB).then(
+						(aUebungsListe) => {
+							try {
+								if (aUebungsListe.length > 0)
+									this.Session.UebungsListe = aUebungsListe;
+								else
+									this.fDbModule.CmpAktuellesProgramm = this.fDbModule.AktuellesProgramm.Copy();
 							
-							if (this.Session.UebungsListe !== undefined) {
-								this.Session.UebungsListe.forEach((mPtrUebung) => {
-									mPtrUebung.PruefeGewichtsEinheit(this.Session.GewichtsEinheit)
-									if (mPtrUebung.SatzListe !== undefined) {
-										mPtrUebung.SatzListe.forEach((mPtrSatz) => {
-											mPtrSatz.PruefeGewichtsEinheit(this.Session.GewichtsEinheit);
-										})
-									}
-								})
-							}
+								if (this.Session.UebungsListe !== undefined) {
+									this.Session.UebungsListe.forEach((mPtrUebung) => {
+										mPtrUebung.PruefeGewichtsEinheit(this.Session.GewichtsEinheit)
+										if (mPtrUebung.SatzListe !== undefined) {
+											mPtrUebung.SatzListe.forEach((mPtrSatz) => {
+												mPtrSatz.PruefeGewichtsEinheit(this.Session.GewichtsEinheit);
+											})
+										}
+									})
+								}
 
-							this.InitSession();
+								this.InitSession();
 		
-						} finally {
-							this.fLoadingDialog.fDialog.closeAll();
-						}
-					});
+							} finally {
+								this.fLoadingDialog.fDialog.closeAll();
+							}
+						});
+				} else {
+					this.InitSession()
+					this.fLoadingDialog.fDialog.closeAll();
+				}
 			} catch (error) {
 				this.fLoadingDialog.fDialog.closeAll();
 			}
@@ -408,36 +413,38 @@ export class SessionFormComponent implements OnInit {
 
 					mNeueSession.UebungsListe.forEach((mQuellUebung) => {
 						if (mQuellUebung.ArbeitsSatzListe && mQuellUebung.ArbeitsSatzListe.length > 0) {
-							const mSatzListe: Array<Satz> = [];
+							let mArbetisSatzListe: Array<Satz> = [];
 							this.Programm.SessionListe.forEach( async (mSession) => {
 								if (mSession.ID !== aSessionForm.Session.ID) {
 									// Lade aus mSession alle Übungen die gleich mUebung sind
 									mSession.UebungsListe.forEach((mDestUebung) => {
-										const mDestSatzPtrListe: Array<Satz> = mDestUebung.ArbeitsSatzListe;
+										const mDestArbeitsSatzPtrListe: Array<Satz> = mDestUebung.ArbeitsSatzListe;
 										if (mDestUebung.FkUebung === mQuellUebung.FkUebung &&
 											mDestUebung.FkProgress === mQuellUebung.FkProgress &&
 											mDestUebung.ProgressGroup === mQuellUebung.ProgressGroup) {
 											//
-											for (let index = 0; index < mDestSatzPtrListe.length; index++) {
-												const mDestSatzPtr: Satz = mDestSatzPtrListe[index];
+											for (let index = 0; index < mDestArbeitsSatzPtrListe.length; index++) {
+												const mDestAbeitsSatzPtr: Satz = mDestArbeitsSatzPtrListe[index];
 												let mQuellSatzPtr: Satz;
 									
-												if (mDestSatzPtr.SatzListIndex < mQuellUebung.ArbeitsSatzListe.length)
-													mQuellSatzPtr = mQuellUebung.ArbeitsSatzListe[mDestSatzPtr.SatzListIndex];
+												if (mDestAbeitsSatzPtr.SatzListIndex < mQuellUebung.ArbeitsSatzListe.length)
+													mQuellSatzPtr = mQuellUebung.ArbeitsSatzListe[mDestAbeitsSatzPtr.SatzListIndex];
 												else
 													mQuellSatzPtr = mQuellUebung.ArbeitsSatzListe[0];
 										
-												mDestSatzPtr.GewichtNaechsteSession = mQuellSatzPtr.GewichtNaechsteSession;
-												mDestSatzPtr.GewichtAusgefuehrt = mQuellSatzPtr.GewichtNaechsteSession;
-												mDestSatzPtr.GewichtVorgabe = mQuellSatzPtr.GewichtNaechsteSession;
-												mSatzListe.push(mDestSatzPtr);
+												mDestAbeitsSatzPtr.GewichtNaechsteSession = mQuellSatzPtr.GewichtNaechsteSession;
+												mDestAbeitsSatzPtr.GewichtAusgefuehrt = mQuellSatzPtr.GewichtNaechsteSession;
+												mDestAbeitsSatzPtr.GewichtVorgabe = mQuellSatzPtr.GewichtNaechsteSession;
+												mArbetisSatzListe.push(mDestAbeitsSatzPtr);
 											}//for
+										} else {
+											mArbetisSatzListe = mDestUebung.ArbeitsSatzListe;
 										}
-									});
+									});//foreach
 
-									if (mSatzListe.length > 0)
-										this.fDbModule.SaetzeSpeichern(mSatzListe);
-								}
+									if (mArbetisSatzListe.length > 0)
+										this.fDbModule.SaetzeSpeichern(mArbetisSatzListe);
+								}//if
 							});
 						}//if
 					});

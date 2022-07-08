@@ -298,7 +298,9 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public DeleteSession(aSession: Session) {
-		aSession.UebungsListe.forEach((mLoeschUebung) => this.DeleteUebung(mLoeschUebung));
+		if(aSession.UebungsListe !== undefined)
+			aSession.UebungsListe.forEach((mLoeschUebung) => this.DeleteUebung(mLoeschUebung));
+		
 		this.SessionTable.delete(aSession.ID);
 	}
 
