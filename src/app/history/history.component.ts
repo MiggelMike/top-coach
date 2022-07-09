@@ -44,11 +44,9 @@ export class HistoryComponent implements OnInit {
         mSessionParaDB.Limit = cSessionSelectLimit;
         this.fDbModul.LadeHistorySessions(mSessionParaDB)
             .then( (aSessionListe) => {
-                if (aSessionListe.length > 0 && this.SessionListe.length < this.LadeLimit) {
-					this.SessionListe = this.SessionListe.concat(aSessionListe);
-					this.SessionListe.sort((s1: ISession, s2: ISession) => {
-						return s2.Datum.valueOf() - s1.Datum.valueOf() 
-						
+				if (aSessionListe.length > 0 && this.SessionListe.length < this.LadeLimit) {
+					aSessionListe.forEach((mSession) => {
+						this.SessionListe.unshift(mSession);
 					});
 					this.LadeSessions(this.SessionListe.length);
 				}

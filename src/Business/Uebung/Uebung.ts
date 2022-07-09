@@ -33,7 +33,7 @@ export enum UebungsKategorie02 {
   Session,
 }
 
-export enum ArbeitsSaetzeStatus {
+export enum SaetzeStatus {
     KeinerVorhanden,
     NichtAlleFertig,
     AlleFertig
@@ -119,8 +119,8 @@ export interface IUebung {
     MaxFailCount: number;
     FailCount: number;
     Failed: boolean;
-    getArbeitsSaetzeStatus(): ArbeitsSaetzeStatus;
-    ArbeitsSaetzeStatus: ArbeitsSaetzeStatus;
+    getArbeitsSaetzeStatus(): SaetzeStatus;
+    ArbeitsSaetzeStatus: SaetzeStatus;
     Vorlage: boolean;
     ListenIndex: number;
     AufwaermArbeitsSatzPause: number;
@@ -320,7 +320,7 @@ export class Uebung implements IUebung {
         return '00:00:00';
     }    
 
-    public ArbeitsSaetzeStatus: ArbeitsSaetzeStatus = ArbeitsSaetzeStatus.KeinerVorhanden;
+    public ArbeitsSaetzeStatus: SaetzeStatus = SaetzeStatus.KeinerVorhanden;
 
     public getArbeitsSatzStatus(aSatzIndex: number): SatzStatus {
         if ((this.ArbeitsSatzListe.length <= 0) || (aSatzIndex >= this.ArbeitsSatzListe.length) || (aSatzIndex < 0))
@@ -329,11 +329,41 @@ export class Uebung implements IUebung {
         return this.ArbeitsSatzListe[aSatzIndex].Status;
     }
 
-    public getArbeitsSaetzeStatus(): ArbeitsSaetzeStatus
+    public getFindUndDoneSetAfter(aVonSatz: Satz): Satz {
+        for (let index = aVonSatz.SatzListIndex + 1; index < this.SatzListe.length; index++) {
+            const mPtrSatz: Satz = this.SatzListe[index];
+            if (mPtrSatz.Status === SatzStatus.Wartet)
+                return mPtrSatz;
+                
+        }
+        return undefined;
+    }
+
+
+    public getAlleSaetzeStatus(): SaetzeStatus {
+        if (this.SatzListe.length <= 0) {
+            return SaetzeStatus.KeinerVorhanden;
+        } else {
+            let mAnzFertig: number = 0;
+            this.SatzListe.forEach((s) => {
+                if (s.Status === SatzStatus.Fertig)
+                    mAnzFertig++;
+            });
+
+            if (mAnzFertig >= this.SatzListe.length) {
+                return SaetzeStatus.AlleFertig;;
+            }
+        }
+
+        this.ArbeitsSaetzeStatus = SaetzeStatus.NichtAlleFertig;
+        return SaetzeStatus.NichtAlleFertig;
+    }
+
+    public getArbeitsSaetzeStatus(): SaetzeStatus
     {
         if (this.ArbeitsSatzListe.length <= 0) {
-            this.ArbeitsSaetzeStatus = ArbeitsSaetzeStatus.KeinerVorhanden;
-            return ArbeitsSaetzeStatus.KeinerVorhanden;
+            this.ArbeitsSaetzeStatus = SaetzeStatus.KeinerVorhanden;
+            return SaetzeStatus.KeinerVorhanden;
         } else {
             let mAnzFertig: number = 0;
             this.ArbeitsSatzListe.forEach((s) => {
@@ -342,13 +372,13 @@ export class Uebung implements IUebung {
             });
 
             if (mAnzFertig >= this.ArbeitsSatzListe.length) {
-                this.ArbeitsSaetzeStatus = ArbeitsSaetzeStatus.AlleFertig;
-                return ArbeitsSaetzeStatus.AlleFertig;;
+                this.ArbeitsSaetzeStatus = SaetzeStatus.AlleFertig;
+                return SaetzeStatus.AlleFertig;;
             }
         }
 
-        this.ArbeitsSaetzeStatus = ArbeitsSaetzeStatus.NichtAlleFertig;
-        return ArbeitsSaetzeStatus.NichtAlleFertig;
+        this.ArbeitsSaetzeStatus = SaetzeStatus.NichtAlleFertig;
+        return SaetzeStatus.NichtAlleFertig;
     }
 
 

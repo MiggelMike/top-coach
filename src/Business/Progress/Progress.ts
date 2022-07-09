@@ -4,7 +4,7 @@ import { AfterLoadFn, DexieSvcService  } from 'src/app/services/dexie-svc.servic
 import { ITrainingsProgramm, TrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { ISession, Session, SessionCopyPara } from './../Session/Session';
 import { SessionStatus } from 'src/Business/SessionDB';
-import { ArbeitsSaetzeStatus, Uebung, WdhVorgabeStatus } from "../Uebung/Uebung";
+import { SaetzeStatus, Uebung, WdhVorgabeStatus } from "../Uebung/Uebung";
 import { Satz, SatzStatus } from '../Satz/Satz';
 import { retry } from 'rxjs';
 var cloneDeep = require('lodash.clonedeep');
@@ -145,13 +145,13 @@ export class Progress implements IProgress {
 
 	private EvalDecreaseType(aSession: Session, aUebung: Uebung, aDb: DexieSvcService): WeightProgress {
 		// this.EvalReduceDate(aSession.Kategorie02, aUebung, new Date(), aDb);
-		if (aUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig) return WeightProgress.DecreaseNextTime;
+		if (aUebung.getArbeitsSaetzeStatus() === SaetzeStatus.AlleFertig) return WeightProgress.DecreaseNextTime;
 		else return WeightProgress.Decrease;
 	}
 
 	public FailCheck(aDb: DexieSvcService, aSession: Session, aSessUebung: Uebung, aReduceUebung: Uebung, aSatzIndex: number): WeightProgress {
 		if (   this.ProgressSet === ProgressSet.First
-			&& (aSession.Kategorie02 === SessionStatus.Laueft || aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig)
+			&& (aSession.Kategorie02 === SessionStatus.Laueft || aSessUebung.getArbeitsSaetzeStatus() === SaetzeStatus.AlleFertig)
 			&& aSatzIndex === 0)
 		{
 			// Der erste Satz der Übung ist maßgebend.
@@ -168,7 +168,7 @@ export class Progress implements IProgress {
 			return this.EvalDecreaseType(aSession, aReduceUebung, aDb);
 		}
 
-		if (   aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
+		if (   aSessUebung.getArbeitsSaetzeStatus() === SaetzeStatus.AlleFertig
 			&& this.ProgressSet === ProgressSet.Last
 			&& aSatzIndex === aSessUebung.ArbeitsSatzListe.length - 1)
 		{
@@ -186,7 +186,7 @@ export class Progress implements IProgress {
 			return this.EvalDecreaseType(aSession, aReduceUebung, aDb);
 		}
 
-		if (   aSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
+		if (   aSessUebung.getArbeitsSaetzeStatus() === SaetzeStatus.AlleFertig
 			&& this.ProgressSet === ProgressSet.All)
 		{
 			// Alle Sätze der Übung.
@@ -247,7 +247,7 @@ export class Progress implements IProgress {
 				FkUebung: aSessUebung.FkUebung,
 				FkProgress: aSessUebung.FkProgress,
 				ProgressGroup: aSessUebung.ProgressGroup,
-				ArbeitsSaetzeStatus: ArbeitsSaetzeStatus.AlleFertig
+				ArbeitsSaetzeStatus: SaetzeStatus.AlleFertig
 			};
 
 			mLadePara.And = (mUebung: Uebung): boolean => {
@@ -318,7 +318,7 @@ export class Progress implements IProgress {
 							(aSession.Kategorie02 === SessionStatus.Laueft)
 						// Die Session läuft NICHT.
 						// Dann müssen ALLE Sätze abgeschlossen sein.
-						|| (mPtrSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig))
+						|| (mPtrSessUebung.getArbeitsSaetzeStatus() === SaetzeStatus.AlleFertig))
 					{
 						return WeightProgress.Increase;
 					}//if
@@ -339,7 +339,7 @@ export class Progress implements IProgress {
 			//#endregion
 			//#region ProgressSet.Last
 			// Der letzte Satz ist maßgebend.
-			if (   mPtrSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig
+			if (   mPtrSessUebung.getArbeitsSaetzeStatus() === SaetzeStatus.AlleFertig
 				// Der letzte Satz der Übung ist maßgebend.
 				&& mProgress.ProgressSet === ProgressSet.Last
 				&& aSatzIndex === mPtrSessUebung.ArbeitsSatzListe.length - 1)
@@ -361,7 +361,7 @@ export class Progress implements IProgress {
 			//#endregion
 			//#region ProgressSet.All   
 			if (	mProgress.ProgressSet === ProgressSet.All
-				&& 	mPtrSessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig )
+				&& 	mPtrSessUebung.getArbeitsSaetzeStatus() === SaetzeStatus.AlleFertig )
 			{
 				// Alle Sätze der Übung.
 				if (	(mProgress.ProgressTyp === ProgressTyp.BlockSet && this.EvalSaetze(mPtrSessUebung, VorgabeWeightLimit.LowerLimit) === false)

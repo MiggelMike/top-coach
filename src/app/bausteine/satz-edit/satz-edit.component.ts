@@ -4,7 +4,7 @@ import { NextProgress, Progress, ProgressPara, ProgressSet, ProgressTyp, Vorgabe
 import { DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { PlateCalcSvcService, PlateCalcOverlayConfig } from './../../services/plate-calc-svc.service';
 import { ISession } from 'src/Business/Session/Session';
-import { Uebung, ArbeitsSaetzeStatus } from './../../../Business/Uebung/Uebung';
+import { Uebung, SaetzeStatus } from './../../../Business/Uebung/Uebung';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { Satz, ISatz, SatzStatus } from "./../../../Business/Satz/Satz";
@@ -211,7 +211,7 @@ export class SatzEditComponent implements OnInit {
                 // Keine Stoppuhr öffnen
                 return;
             }
-            // Nicht die letzte Übung in Session und letzter Satz der Übung?
+            // Nicht die letzte Übung in Session, aber letzter Satz der Übung?
             if ((this.sess.isLetzteUebungInSession(this.sessUebung) === false) && (this.sessUebung.isLetzterSatzInUebung(aSatz as Satz) === true)) {
                 // Nächste Übung der Session suchen.
                 mStopUhrUebung = this.sess.UebungsListe[this.sessUebung.ListenIndex + 1];
@@ -219,11 +219,18 @@ export class SatzEditComponent implements OnInit {
 
             // Progress gefunden?
             if (aNextProgress) {
-                if ((this.sess.isLetzteUebungInSession(this.sessUebung) === true) || (this.sessUebung.isLetzterSatzInUebung(aSatz as Satz) === true)) 
+                // if ((this.sess.isLetzteUebungInSession(this.sessUebung) === true) || (this.sessUebung.isLetzterSatzInUebung(aSatz as Satz) === true)) 
+                mFirstWaitingSet = mStopUhrUebung.getFindUndDoneSetAfter(aSatz as Satz);
+                if (mFirstWaitingSet === undefined) {
                     mStopUhrUebung = aNextProgress.Uebung;
+                }
+            } else
+                mFirstWaitingSet = mStopUhrUebung.getFindUndDoneSetAfter(aSatz as Satz);
+                
+            if (mFirstWaitingSet === undefined) {
+                mFirstWaitingSet = mStopUhrUebung.getFirstWaitingWorkSet();
             }
-            
-            mFirstWaitingSet = mStopUhrUebung.getFirstWaitingWorkSet();
+
             if (mFirstWaitingSet !== undefined) {
                 if (mSatz !== mFirstWaitingSet)
                     mNextSetIndex = mFirstWaitingSet.SatzListIndex;
@@ -236,6 +243,8 @@ export class SatzEditComponent implements OnInit {
                     `"${mStopUhrUebung.Name}" - set #${(mNextSetIndex + 1).toString()} - weight: ${(mSatz.GewichtVorgabeStr)}`
                 );
             }
+
+
         }
 
         const mDialogData: DialogData = new DialogData();
@@ -263,7 +272,7 @@ export class SatzEditComponent implements OnInit {
                             that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung);
                         }
                         else {
-                            if (that.sessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig) {
+                            if (that.sessUebung.getArbeitsSaetzeStatus() === SaetzeStatus.AlleFertig) {
                                 if (aProgressPara.Progress.ProgressSet === ProgressSet.First
                                     && that.sessUebung.SatzWDH(0) >= that.sessUebung.SatzBisVorgabeWDH(0)
                                     || aProgressPara.Wp === WeightProgress.Increase
@@ -281,7 +290,7 @@ export class SatzEditComponent implements OnInit {
                                 }
                                 else if (
                                         (aProgressPara.Wp === WeightProgress.Decrease || aProgressPara.Wp === WeightProgress.DecreaseNextTime)
-                                    &&  that.sessUebung.getArbeitsSaetzeStatus() === ArbeitsSaetzeStatus.AlleFertig )
+                                    &&  that.sessUebung.getArbeitsSaetzeStatus() === SaetzeStatus.AlleFertig )
                                 {
                                     that.sessUebung.WeightInitDate = new Date();
                                     mDialogData.textZeilen.push(`You failed!`);

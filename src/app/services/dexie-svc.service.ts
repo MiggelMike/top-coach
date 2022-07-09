@@ -15,7 +15,7 @@ import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
 import { AppData } from './../../Business/Coach/Coach';
 import { Dexie, PromiseExtended } from 'dexie';
 import { Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
-import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardUebung, ArbeitsSaetzeStatus } from "../../Business/Uebung/Uebung";
+import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardUebung, SaetzeStatus } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
 var cloneDeep = require('lodash.clonedeep');
@@ -1584,7 +1584,7 @@ export class DexieSvcService extends Dexie {
 					const mPtrQuellSatz = mQuellUebung.SatzListe.find((sz) => sz.SatzListIndex > 0);
 					if (mPtrQuellSatz !== undefined) {
 						if (   aQuellSession.Kategorie02 === SessionStatus.Fertig
-							&& mQuellUebung.ArbeitsSaetzeStatus === ArbeitsSaetzeStatus.AlleFertig)
+							&& mQuellUebung.ArbeitsSaetzeStatus === SaetzeStatus.AlleFertig)
 						{
 							mGewicht = mPtrQuellSatz.GewichtAusgefuehrt;
 						}
