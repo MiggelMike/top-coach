@@ -222,9 +222,8 @@ export class SatzEditComponent implements OnInit {
             if ((aNextProgress) && (mFirstWaitingSet === undefined))
                 mStopUhrUebung = aNextProgress.Uebung;
                 
-            if (mFirstWaitingSet === undefined) {
+            if (mFirstWaitingSet === undefined) 
                 mFirstWaitingSet = mStopUhrUebung.getFirstWaitingWorkSet();
-            }
 
             if (mFirstWaitingSet !== undefined) {
                 if (mSatz !== mFirstWaitingSet)
