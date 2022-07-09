@@ -217,15 +217,10 @@ export class SatzEditComponent implements OnInit {
                 mStopUhrUebung = this.sess.UebungsListe[this.sessUebung.ListenIndex + 1];
             }
 
+            mFirstWaitingSet = mStopUhrUebung.getFindUndDoneSetAfter(aSatz as Satz);
             // Progress gefunden?
-            if (aNextProgress) {
-                // if ((this.sess.isLetzteUebungInSession(this.sessUebung) === true) || (this.sessUebung.isLetzterSatzInUebung(aSatz as Satz) === true)) 
-                mFirstWaitingSet = mStopUhrUebung.getFindUndDoneSetAfter(aSatz as Satz);
-                if (mFirstWaitingSet === undefined) {
-                    mStopUhrUebung = aNextProgress.Uebung;
-                }
-            } else
-                mFirstWaitingSet = mStopUhrUebung.getFindUndDoneSetAfter(aSatz as Satz);
+            if ((aNextProgress) && (mFirstWaitingSet === undefined))
+                mStopUhrUebung = aNextProgress.Uebung;
                 
             if (mFirstWaitingSet === undefined) {
                 mFirstWaitingSet = mStopUhrUebung.getFirstWaitingWorkSet();
