@@ -60,7 +60,7 @@ export class PlateCalcComponent implements OnInit {
 
 	public get JustTheBar(): boolean {
 		if (this.Hantel === undefined) return false;
-		return this.Hantel.Gewicht === this.GewichtAusgefuehrt;
+		return (this.GewichtAusgefuehrt > 0) && (this.Hantel.Gewicht === this.GewichtAusgefuehrt);
 	}
 
 	private SetsAreEqual(aSatz1: Satz, aSatz2: Satz): boolean {
