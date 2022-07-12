@@ -5,6 +5,7 @@ import { ISession } from 'src/Business/Session/Session';
 import { repMask } from './../../app/app.module';
 import { AppData } from 'src/Business/Coach/Coach';
 import { Chart, ChartConfiguration } from "chart.js";
+import { Diagramm } from '../bausteine/charts/charts.component';
 
 
 @Component({
@@ -19,7 +20,7 @@ export class HistoryComponent implements OnInit {
 	private ctx: any;
 	public repMask = repMask;
 	public AppData: AppData;
-	public Diagramme: Array<any> = [];
+	public Diagramme: Array<Diagramm> = [];
 	@ViewChild('LineChart') LineChart: any;
 
 	constructor(
@@ -31,37 +32,11 @@ export class HistoryComponent implements OnInit {
 				this.LadeLimit = mAppData.MaxHistorySessions;
 			});
 		
-		const mChartData: ChartConfiguration =
-		    {
-			type: 'line',
-			data: {
-				labels: ['x','y','z'],
-				datasets: [{
-					label: 'wwwww',
-					data: [1, 2, 3, 5, 6, 43],
-					backgroundColor: [
-						'rgba(255, 99, 132, 0.2)',
-						'rgba(54, 162, 235, 0.2)',
-						'rgba(255, 206, 86, 0.2)',
-						'rgba(75, 192, 192, 0.2)',
-						'rgba(153, 102, 255, 0.2)',
-						'rgba(255, 159, 64, 0.2)'
-					],
-					borderColor: [
-						'rgba(255, 99, 132, 1)',
-						'rgba(54, 162, 235, 1)',
-						'rgba(255, 206, 86, 1)',
-						'rgba(75, 192, 192, 1)',
-						'rgba(153, 102, 255, 1)',
-						'rgba(255, 159, 64, 1)'
-					],
-					borderWidth: 1
-				}]
-			}
-		};
-
-		this.Diagramme.push(mChartData);
+		const mData = [1,2,3,4];
+		const mDiagramm = Diagramm.StaticMakeDiagramm('line', mData, 'Titel', ['x', 'y', 'z']);
+		this.Diagramme.push(mDiagramm);
 	}
+
 
 	SetLadeLimit(aEvent: any) {
 		// aEvent.stopPropagation();

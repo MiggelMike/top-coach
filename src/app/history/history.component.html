@@ -29,15 +29,15 @@
         </mat-tab>
 
         <mat-tab  label="Charts">
+            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutGap="20px" fxLayoutAlign="center center" [style.margin-top]="'5px'">        
+                <mat-radio-group aria-label="Select a Diagram type">
+                    <mat-radio-button  value="1">Line</mat-radio-button>
+                    <mat-radio-button  class="mg-left-5" value="2">Bars</mat-radio-button>
+                </mat-radio-group>
+            </div>
+
             <ng-container *ngFor="let ChartData of Diagramme">
-                <app-charts id="t" #line
-                [ChartData] = ChartData
-                ></app-charts>  
-                <!-- <div class="container">
-                    <div style="width:100%;">
-                        <canvas id="LineChart" width="700" height="250" #LineChart></canvas>
-                    </div>
-                </div> -->
+                <app-charts #line [ChartData] = ChartData></app-charts>  
             </ng-container>
         </mat-tab> 
     </mat-tab-group>

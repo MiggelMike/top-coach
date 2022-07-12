@@ -1,6 +1,42 @@
 import { Input, ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { Chart, ChartConfiguration } from "chart.js";
+import { BubbleDataPoint, Chart, ChartConfiguration, ChartData, ChartType, ChartTypeRegistry, ScatterDataPoint } from "chart.js";
+
+export class Diagramm implements ChartConfiguration {
+  type: keyof ChartTypeRegistry;
+  data: ChartData<keyof ChartTypeRegistry, (number | ScatterDataPoint | BubbleDataPoint)[], unknown>;
+
+  public static StaticMakeDiagramm(aType: ChartType, aData: Array<any>, aTitel: string, aLables?: any  ): Diagramm {
+		const mDiagramm: Diagramm = new Diagramm();
+		mDiagramm.type = aType;
+		mDiagramm.data = {
+			labels: aLables ,
+			datasets: [{
+				label: aTitel,
+				data: aData,
+				backgroundColor: [
+					'rgba(255, 99, 132, 0.2)',
+					'rgba(54, 162, 235, 0.2)',
+					'rgba(255, 206, 86, 0.2)',
+					'rgba(75, 192, 192, 0.2)',
+					'rgba(153, 102, 255, 0.2)',
+					'rgba(255, 159, 64, 0.2)'
+				],
+				borderColor: [
+					'rgba(255, 99, 132, 1)',
+					'rgba(54, 162, 235, 1)',
+					'rgba(255, 206, 86, 1)',
+					'rgba(75, 192, 192, 1)',
+					'rgba(153, 102, 255, 1)',
+					'rgba(255, 159, 64, 1)'
+				],
+				borderWidth: 1
+			}]
+    }
+    return mDiagramm;
+	}
+
+}
 
 @Component({
   selector: 'app-charts',
