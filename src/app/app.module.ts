@@ -103,6 +103,9 @@ import { InitialWeightComponent } from './initial-weight/initial-weight.componen
 import { PlateCalcComponent } from './plate-calc/plate-calc.component';
 import { StoppuhrComponent } from './stoppuhr/stoppuhr.component';
 import { HistoryComponent } from './history/history.component';
+import { NgChartsModule } from 'ng2-charts';
+import { ChartsComponent } from './bausteine/charts/charts.component';
+
 
 //import { MatBadgeModule } from '@angular/material/m/MatBadgeModule';
 
@@ -221,7 +224,8 @@ export const floatMask = createNumberMask({
         InitialWeightComponent,
         PlateCalcComponent,
         StoppuhrComponent,
-        HistoryComponent
+        HistoryComponent,
+        ChartsComponent
     ],
     imports: [
         RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
@@ -256,7 +260,8 @@ export const floatMask = createNumberMask({
         OverlayModule,
         FormsModule,
       DexieSvcService,
-      MatSelectModule
+      MatSelectModule,
+      NgChartsModule
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA,

@@ -6,14 +6,13 @@ import { DexieSvcService } from "src/app/services/dexie-svc.service";
 import { floatMask, Int3DigitMask } from "./../app.module";
 import { cExerciseOverlayData } from "./../services/exercise-setting-svc.service";
 import { InUpcomingSessionSetzen, IUebung, Uebung } from "./../../Business/Uebung/Uebung";
-import { Component,  EventEmitter,  Inject, Output } from "@angular/core";
+import { Component,  Inject } from "@angular/core";
 import { ExerciseOverlayConfig, ExerciseOverlayRef } from "../services/exercise-setting-svc.service";
 import { Progress, ProgressGroup } from "src/Business/Progress/Progress";
 import { SatzStatus } from 'src/Business/Satz/Satz';
 import { ISession } from 'src/Business/Session/Session';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
-import { PromiseExtended } from 'dexie';
 import { SessionStatus } from 'src/Business/SessionDB';
 
 enum InUpcomingSessionSetzenTyp {
