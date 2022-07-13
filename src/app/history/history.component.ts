@@ -4,7 +4,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ISession } from 'src/Business/Session/Session';
 import { repMask } from './../../app/app.module';
 import { AppData } from 'src/Business/Coach/Coach';
-import { Chart, ChartConfiguration } from "chart.js";
+import { Chart, ChartConfiguration, ChartDataset } from "chart.js";
 import { Diagramm } from '../bausteine/charts/charts.component';
 
 
@@ -21,6 +21,7 @@ export class HistoryComponent implements OnInit {
 	public repMask = repMask;
 	public AppData: AppData;
 	public Diagramme: Array<Diagramm> = [];
+
 	@ViewChild('LineChart') LineChart: any;
 
 	constructor(
@@ -32,9 +33,69 @@ export class HistoryComponent implements OnInit {
 				this.LadeLimit = mAppData.MaxHistorySessions;
 			});
 		
-		const mData = [1,2,3,4];
-		const mDiagramm = Diagramm.StaticMakeDiagramm('line', mData, 'Titel', ['x', 'y', 'z']);
-		this.Diagramme.push(mDiagramm);
+		// const mDiagrammData: Array<any> = [];
+		// 	const mData: any = [1,2,3,4];
+		// 	const mData2: any = [40,30,20,10];
+			// mDiagrammData.push(mData);
+			// mDiagramm.data.datasets.push(mData2);
+//		const mDiagramm = Diagramm.StaticMakeDiagramm('line', mData, 'Titel', ['x', 'y', 'z']);
+		const mDiagramm: Diagramm = new Diagramm();
+		mDiagramm.type = 'line';
+		mDiagramm.data = {
+			labels: ['a','b','c','d','e',],
+			datasets:  [{
+				label: '# of Votes',
+				data: [12, 19, 3, 5, 2, 3],
+				backgroundColor: [
+					'rgba(255, 99, 132, 0.2)',
+					'rgba(54, 162, 235, 0.2)',
+					'rgba(255, 206, 86, 0.2)',
+					'rgba(75, 192, 192, 0.2)',
+					'rgba(153, 102, 255, 0.2)',
+					'rgba(255, 159, 64, 0.2)'
+				],
+				borderColor: [
+					'rgba(255, 99, 132, 1)',
+					'rgba(54, 162, 235, 1)',
+					'rgba(255, 206, 86, 1)',
+					'rgba(75, 192, 192, 1)',
+					'rgba(153, 102, 255, 1)',
+					'rgba(255, 159, 64, 1)'
+				],
+				borderWidth: 1
+			},
+			{
+				label: '# of 2',
+				data: [3, 2, 5, 19, 12, 15],
+				backgroundColor: [
+					'rgba(255, 99, 132, 0.2)',
+					'rgba(54, 162, 235, 0.2)',
+					'rgba(255, 206, 86, 0.2)',
+					'rgba(75, 192, 192, 0.2)',
+					'rgba(153, 102, 255, 0.2)',
+					'rgba(255, 159, 64, 0.2)'
+				],
+				borderColor: [
+					'rgba(255, 99, 132, 1)',
+					'rgba(54, 162, 235, 1)',
+					'rgba(255, 206, 86, 1)',
+					'rgba(75, 192, 192, 1)',
+					'rgba(153, 102, 255, 1)',
+					'rgba(255, 159, 64, 1)'
+				],
+				borderWidth: 1
+				}
+			]
+		}
+			
+		
+		
+			this.Diagramme.push(mDiagramm);
+
+			//<keyof ChartTypeRegistry, (number | ScatterDataPoint | BubbleDataPoint)[], unknown>;
+
+		//  const mDiagramm2 = Diagramm.StaticMakeDiagramm('line', mData2, 'Titel', ['x', 'y', 'z']);
+		//this.Diagramme.push(mDiagramm2);
 	}
 
 
@@ -113,3 +174,7 @@ export class HistoryComponent implements OnInit {
 		this.LadeSessions(0);
 	}
 }
+function ChartData<T, U, V>() {
+	throw new Error('Function not implemented.');
+}
+

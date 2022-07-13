@@ -9,7 +9,7 @@ export class Diagramm implements ChartConfiguration {
   public static StaticMakeDiagramm(aType: ChartType, aData: Array<any>, aTitel: string, aLables?: any  ): Diagramm {
 		const mDiagramm: Diagramm = new Diagramm();
 		mDiagramm.type = aType;
-		mDiagramm.data = {
+		mDiagramm.data =  {
 			labels: aLables ,
 			datasets: [{
 				label: aTitel,

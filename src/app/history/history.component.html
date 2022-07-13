@@ -36,8 +36,9 @@
                 </mat-radio-group>
             </div>
 
-            <ng-container *ngFor="let ChartData of Diagramme">
-                <app-charts #line [ChartData] = ChartData></app-charts>  
+            <ng-container *ngFor="let Dia of Diagramme" >
+
+                <app-charts #line [ChartData]="Dia"></app-charts>  
             </ng-container>
         </mat-tab> 
     </mat-tab-group>
