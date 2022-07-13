@@ -1,10 +1,17 @@
 import { Input, ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { BubbleDataPoint, Chart, ChartConfiguration, ChartData, ChartType, ChartTypeRegistry, ScatterDataPoint } from "chart.js";
+import { BubbleDataPoint, Chart, ChartConfiguration, ChartData, ChartDataset, ChartType, ChartTypeRegistry, ScatterDataPoint } from "chart.js";
 
 export class Diagramm implements ChartConfiguration {
   type: keyof ChartTypeRegistry;
-  data: ChartData<keyof ChartTypeRegistry, (number | ScatterDataPoint | BubbleDataPoint)[], unknown>;
+	data: ChartData<keyof ChartTypeRegistry, (number | ScatterDataPoint | BubbleDataPoint)[], unknown>;
+	
+	constructor() {
+		this.data =  {
+			labels: [],
+			datasets: []
+		};
+	}
 
   public static StaticMakeDiagramm(aType: ChartType, aData: Array<any>, aTitel: string, aLables?: any  ): Diagramm {
 		const mDiagramm: Diagramm = new Diagramm();
@@ -14,22 +21,6 @@ export class Diagramm implements ChartConfiguration {
 			datasets: [{
 				label: aTitel,
 				data: aData,
-				backgroundColor: [
-					'rgba(255, 99, 132, 0.2)',
-					'rgba(54, 162, 235, 0.2)',
-					'rgba(255, 206, 86, 0.2)',
-					'rgba(75, 192, 192, 0.2)',
-					'rgba(153, 102, 255, 0.2)',
-					'rgba(255, 159, 64, 0.2)'
-				],
-				borderColor: [
-					'rgba(255, 99, 132, 1)',
-					'rgba(54, 162, 235, 1)',
-					'rgba(255, 206, 86, 1)',
-					'rgba(75, 192, 192, 1)',
-					'rgba(153, 102, 255, 1)',
-					'rgba(255, 159, 64, 1)'
-				],
 				borderWidth: 1
 			}]
     }
@@ -37,6 +28,21 @@ export class Diagramm implements ChartConfiguration {
 	}
 
 }
+
+export class DiagramData implements ChartData {
+	labels?: unknown[];
+	datasets: ChartDataset<keyof ChartTypeRegistry, (number | ScatterDataPoint | BubbleDataPoint)[]>[];
+	// ChartTypeRegistry: ChartTypeRegistry;
+	// value: number | ScatterDataPoint | BubbleDataPoint;
+
+}
+
+// export class DiagramDataSet implements ChartDataset {
+	// ChartTypeRegistry: ChartTypeRegistry;
+	// value: number | ScatterDataPoint | BubbleDataPoint;
+
+// }
+
 
 @Component({
   selector: 'app-charts',

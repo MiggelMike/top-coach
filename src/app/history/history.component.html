@@ -31,14 +31,25 @@
         <mat-tab  label="Charts">
             <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutGap="20px" fxLayoutAlign="center center" [style.margin-top]="'5px'">        
                 <mat-radio-group aria-label="Select a Diagram type">
-                    <mat-radio-button  value="1">Line</mat-radio-button>
-                    <mat-radio-button  class="mg-left-5" value="2">Bars</mat-radio-button>
+                    <mat-radio-button 
+                        [(ngModel)]="DiaTyp" 
+                        checked="true"  
+                        value="Line"
+                        (change)="DiaTypChanged($event,'line')" 
+                        >Line</mat-radio-button>
+                    <mat-radio-button  
+                        class="mg-left-5" 
+                        [(ngModel)]="DiaTyp" 
+                        (change)="DiaTypChanged($event,'bar')"     
+                        value="Bars">Bars</mat-radio-button>
                 </mat-radio-group>
             </div>
 
             <ng-container *ngFor="let Dia of Diagramme" >
 
-                <app-charts #line [ChartData]="Dia"></app-charts>  
+                <app-charts #line [ChartData]="Dia">
+
+                </app-charts>  
             </ng-container>
         </mat-tab> 
     </mat-tab-group>

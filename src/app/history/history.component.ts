@@ -4,8 +4,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ISession } from 'src/Business/Session/Session';
 import { repMask } from './../../app/app.module';
 import { AppData } from 'src/Business/Coach/Coach';
-import { Chart, ChartConfiguration, ChartDataset } from "chart.js";
-import { Diagramm } from '../bausteine/charts/charts.component';
+import { BubbleDataPoint, Chart, ChartConfiguration, ChartDataset } from "chart.js";
+import { DiagramData, Diagramm } from '../bausteine/charts/charts.component';
 
 
 @Component({
@@ -21,6 +21,8 @@ export class HistoryComponent implements OnInit {
 	public repMask = repMask;
 	public AppData: AppData;
 	public Diagramme: Array<Diagramm> = [];
+	private DiagramData: DiagramData;
+	public DiaTyp: string = 'line';
 
 	@ViewChild('LineChart') LineChart: any;
 
@@ -33,69 +35,53 @@ export class HistoryComponent implements OnInit {
 				this.LadeLimit = mAppData.MaxHistorySessions;
 			});
 		
-		// const mDiagrammData: Array<any> = [];
-		// 	const mData: any = [1,2,3,4];
-		// 	const mData2: any = [40,30,20,10];
-			// mDiagrammData.push(mData);
-			// mDiagramm.data.datasets.push(mData2);
-//		const mDiagramm = Diagramm.StaticMakeDiagramm('line', mData, 'Titel', ['x', 'y', 'z']);
+		this.Draw(this.DiaTyp);
+		// backgroundColor: [
+		// 	'rgba(255, 99, 132, 0.2)',
+		// 	'rgba(54, 162, 235, 0.2)',
+		// 	'rgba(255, 206, 86, 0.2)',
+		// 	'rgba(75, 192, 192, 0.2)',
+		// 	'rgba(153, 102, 255, 0.2)',
+		// 	'rgba(255, 159, 64, 0.2)'
+		// ],
+		// borderColor: [
+		// 	'rgba(255, 99, 132, 1)',
+		// 	'rgba(54, 162, 235, 1)',
+		// 	'rgba(255, 206, 86, 1)',
+		// 	'rgba(75, 192, 192, 1)',
+		// 	'rgba(153, 102, 255, 1)',
+		// 	'rgba(255, 159, 64, 1)'
+		// ],
+		
+	}
+	
+	public Draw(aDiaTyp: any) {
+		this.Diagramme = [];
+		const mBorderWidth = 1;
+	
+		const mData: number[] = [12, 19, 3, 5, 2, 3];
+		const mData2: number[] = [120, 190, 30, 50, 20, 30];
+	
 		const mDiagramm: Diagramm = new Diagramm();
-		mDiagramm.type = 'line';
-		mDiagramm.data = {
-			labels: ['a','b','c','d','e',],
-			datasets:  [{
-				label: '# of Votes',
-				data: [12, 19, 3, 5, 2, 3],
-				backgroundColor: [
-					'rgba(255, 99, 132, 0.2)',
-					'rgba(54, 162, 235, 0.2)',
-					'rgba(255, 206, 86, 0.2)',
-					'rgba(75, 192, 192, 0.2)',
-					'rgba(153, 102, 255, 0.2)',
-					'rgba(255, 159, 64, 0.2)'
-				],
-				borderColor: [
-					'rgba(255, 99, 132, 1)',
-					'rgba(54, 162, 235, 1)',
-					'rgba(255, 206, 86, 1)',
-					'rgba(75, 192, 192, 1)',
-					'rgba(153, 102, 255, 1)',
-					'rgba(255, 159, 64, 1)'
-				],
-				borderWidth: 1
-			},
-			{
-				label: '# of 2',
-				data: [3, 2, 5, 19, 12, 15],
-				backgroundColor: [
-					'rgba(255, 99, 132, 0.2)',
-					'rgba(54, 162, 235, 0.2)',
-					'rgba(255, 206, 86, 0.2)',
-					'rgba(75, 192, 192, 0.2)',
-					'rgba(153, 102, 255, 0.2)',
-					'rgba(255, 159, 64, 0.2)'
-				],
-				borderColor: [
-					'rgba(255, 99, 132, 1)',
-					'rgba(54, 162, 235, 1)',
-					'rgba(255, 206, 86, 1)',
-					'rgba(75, 192, 192, 1)',
-					'rgba(153, 102, 255, 1)',
-					'rgba(255, 159, 64, 1)'
-				],
-				borderWidth: 1
-				}
-			]
+		mDiagramm.type = aDiaTyp;
+		mDiagramm.data.labels = ['a', 'b', 'c', 'd', 'e'];
+	
+		for (let index = 0; index < 2; index++) {
+			if (index === 0)
+				mDiagramm.data.datasets.push({
+					label: '# of Votes',
+					data: mData,
+					borderWidth: mBorderWidth
+				});
+			if (index === 1)
+				mDiagramm.data.datasets.push({
+					label: '# of Votes',
+					data: mData2,
+					borderWidth: mBorderWidth
+				});
 		}
-			
 		
-		
-			this.Diagramme.push(mDiagramm);
-
-			//<keyof ChartTypeRegistry, (number | ScatterDataPoint | BubbleDataPoint)[], unknown>;
-
-		//  const mDiagramm2 = Diagramm.StaticMakeDiagramm('line', mData2, 'Titel', ['x', 'y', 'z']);
-		//this.Diagramme.push(mDiagramm2);
+		this.Diagramme.push(mDiagramm);
 	}
 
 
@@ -112,43 +98,11 @@ export class HistoryComponent implements OnInit {
 	}
 
 	ngAfterViewInit() {
-		// this.canvas = this.LineChart.nativeElement;
-		// this.ctx = this.canvas.getContext("2d");
-		
-		// new Chart(this.ctx, {
-		// 	type: 'line',
-		// 	data: {
-		// 		labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-		// 		datasets: [{
-		// 			label: '# of Votes',
-		// 			data: [12, 19, 3, 5, 2, 3],
-		// 			backgroundColor: [
-		// 				'rgba(255, 99, 132, 0.2)',
-		// 				'rgba(54, 162, 235, 0.2)',
-		// 				'rgba(255, 206, 86, 0.2)',
-		// 				'rgba(75, 192, 192, 0.2)',
-		// 				'rgba(153, 102, 255, 0.2)',
-		// 				'rgba(255, 159, 64, 0.2)'
-		// 			],
-		// 			borderColor: [
-		// 				'rgba(255, 99, 132, 1)',
-		// 				'rgba(54, 162, 235, 1)',
-		// 				'rgba(255, 206, 86, 1)',
-		// 				'rgba(75, 192, 192, 1)',
-		// 				'rgba(153, 102, 255, 1)',
-		// 				'rgba(255, 159, 64, 1)'
-		// 			],
-		// 			borderWidth: 1
-		// 		}]
-		// 	},
-		// 	options: {
-		// 		scales: {
-		// 			y: {
-		// 				beginAtZero: true
-		// 			}
-		// 		}
-		// 	}
-		// });
+	}
+
+	DiaTypChanged(aEvent: any, aDiaTyp: string) {
+		if (aEvent.source.checked) 
+			this.Draw(aDiaTyp);
 	}
 
 	private LadeSessions (aOffSet: number) {
@@ -171,10 +125,8 @@ export class HistoryComponent implements OnInit {
     }
 	
 	ngOnInit(): void {
+		this.DiaTyp = 'line';
 		this.LadeSessions(0);
 	}
-}
-function ChartData<T, U, V>() {
-	throw new Error('Function not implemented.');
 }
 
