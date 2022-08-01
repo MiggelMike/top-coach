@@ -1,5 +1,5 @@
 import { Session } from './../../../Business/Session/Session';
-import { MinDatum, UebungParaDB } from './../../services/dexie-svc.service';
+import { cWeightDigits, MinDatum, UebungParaDB } from './../../services/dexie-svc.service';
 import { NextProgress, Progress, ProgressPara, ProgressSet, ProgressTyp, VorgabeWeightLimit, WeightProgress } from './../../../Business/Progress/Progress';
 import { DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { PlateCalcSvcService, PlateCalcOverlayConfig } from './../../services/plate-calc-svc.service';
@@ -15,6 +15,7 @@ import { floatMask, repMask } from './../../app.module';
 import { PlateCalcComponent } from 'src/app/plate-calc/plate-calc.component';
 import { StoppuhrComponent } from 'src/app/stoppuhr/stoppuhr.component';
 import { StoppUhrOverlayConfig, StoppuhrSvcService } from 'src/app/services/stoppuhr-svc.service';
+import { AppData } from 'src/Business/Coach/Coach';
 
 @Component({
     selector: "app-satz-edit",
@@ -259,7 +260,7 @@ export class SatzEditComponent implements OnInit {
                             && (aSatz.SatzListIndex === 0)
                             && (aProgressPara.Wp === WeightProgress.Increase)
                         ) {
-                            mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung} ${aAppData.GewichtsEinheitText} for the next sets`);
+                            mDialogData.textZeilen.push(`Lift ${ AppData.StaticRoundTo(aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung, cWeightDigits)} ${aAppData.GewichtsEinheitText} for the next sets`);
                             mDialogData.textZeilen.push(`of this exercise of the current workout`);
                             mDialogData.textZeilen.push(`and also in upcoming workouts.`);
                             that.sessUebung.WeightInitDate = new Date();
@@ -278,7 +279,7 @@ export class SatzEditComponent implements OnInit {
                                         that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt);
                                     }
                                     else {
-                                        mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung} ${aAppData.GewichtsEinheitText} next time.`);
+                                        mDialogData.textZeilen.push(`Lift ${ AppData.StaticRoundTo(aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung, cWeightDigits)} ${aAppData.GewichtsEinheitText} next time.`);
                                         that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung);
                                     }
                                 }
@@ -288,7 +289,7 @@ export class SatzEditComponent implements OnInit {
                                 {
                                     that.sessUebung.WeightInitDate = new Date();
                                     mDialogData.textZeilen.push(`You failed!`);
-                                    mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtAusgefuehrt - aProgressPara.AusgangsUebung.GewichtReduzierung} ${aAppData.GewichtsEinheitText} next time.`);
+                                    mDialogData.textZeilen.push(`Lift ${ AppData.StaticRoundTo(aProgressPara.AusgangsSatz.GewichtAusgefuehrt - aProgressPara.AusgangsUebung.GewichtReduzierung, cWeightDigits)} ${aAppData.GewichtsEinheitText} next time.`);
                                     that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt - aProgressPara.AusgangsUebung.GewichtReduzierung);
                                 } else if (aProgressPara.Wp === WeightProgress.Same) {
                                     mDialogData.textZeilen.push(`Lift same weight next time.`);

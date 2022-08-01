@@ -1,11 +1,11 @@
-import { cSessionSelectLimit } from './../services/dexie-svc.service';
+import { cSessionSelectLimit, UebungParaDB } from './../services/dexie-svc.service';
 import { DexieSvcService, SessionParaDB } from 'src/app/services/dexie-svc.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ISession } from 'src/Business/Session/Session';
 import { repMask } from './../../app/app.module';
 import { AppData } from 'src/Business/Coach/Coach';
-import { BubbleDataPoint, Chart, ChartConfiguration, ChartDataset } from "chart.js";
 import { DiagramData, Diagramm } from '../bausteine/charts/charts.component';
+import { DiaUebung } from 'src/Business/Diagramm/Diagramm';
 
 
 @Component({
@@ -23,6 +23,7 @@ export class HistoryComponent implements OnInit {
 	public Diagramme: Array<Diagramm> = [];
 	private DiagramData: DiagramData;
 	public DiaTyp: string = 'line';
+	private DiaUebungsListe: Array<DiaUebung> = [];
 
 	@ViewChild('LineChart') LineChart: any;
 
@@ -35,7 +36,6 @@ export class HistoryComponent implements OnInit {
 				this.LadeLimit = mAppData.MaxHistorySessions;
 			});
 		
-		this.Draw(this.DiaTyp);
 		// backgroundColor: [
 		// 	'rgba(255, 99, 132, 0.2)',
 		// 	'rgba(54, 162, 235, 0.2)',
@@ -54,6 +54,10 @@ export class HistoryComponent implements OnInit {
 		// ],
 		
 	}
+
+	private LadeDiaDaten(){
+		
+	}
 	
 	public Draw(aDiaTyp: any) {
 		this.Diagramme = [];
@@ -65,6 +69,7 @@ export class HistoryComponent implements OnInit {
 		const mDiagramm: Diagramm = new Diagramm();
 		mDiagramm.type = aDiaTyp;
 		mDiagramm.data.labels = ['a', 'b', 'c', 'd', 'e'];
+		// this.fDbModul.DiagrammDatenListe.length
 	
 		for (let index = 0; index < 2; index++) {
 			if (index === 0)
@@ -108,7 +113,7 @@ export class HistoryComponent implements OnInit {
 	private LadeSessions (aOffSet: number) {
         const mSessionParaDB: SessionParaDB = new SessionParaDB();
         mSessionParaDB.OffSet = aOffSet;
-        mSessionParaDB.Limit = cSessionSelectLimit;
+		mSessionParaDB.Limit = cSessionSelectLimit;
         this.fDbModul.LadeHistorySessions(mSessionParaDB)
             .then( (aSessionListe) => {
 				if (aSessionListe.length > 0 && this.SessionListe.length < this.LadeLimit) {
@@ -121,8 +126,10 @@ export class HistoryComponent implements OnInit {
 					});
 					this.LadeSessions(this.SessionListe.length);
 				}
-            });
-    }
+			});
+	}
+
+
 	
 	ngOnInit(): void {
 		this.DiaTyp = 'line';

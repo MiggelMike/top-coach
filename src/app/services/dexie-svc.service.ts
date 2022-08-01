@@ -18,6 +18,7 @@ import { Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardUebung, SaetzeStatus } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
+import { DiaDatum, DiaUebung } from 'src/Business/Diagramm/Diagramm';
 var cloneDeep = require('lodash.clonedeep');
 
 export const MinDatum = new Date(-8640000000000000);
@@ -28,6 +29,12 @@ export const cSatzSelectLimit = 1;
 //Number.MAX_SAFE_INTEGER
 export const cMaxLimnit = 1000000;
 export const cWeightDigits = 3;
+
+export enum WorkerAction {
+	LadeAktuellesProgramm,
+	LadeDiagrammDaten
+	
+};
 
 export enum SortOrder {
 	ascending,
@@ -141,7 +148,7 @@ export class UebungParaDB extends ParaDB {
 
 export class SessionParaDB extends ParaDB {
 	UebungParaDB?: UebungParaDB;
-	UebungenBeachten?: boolean;
+	UebungenBeachten?: boolean = false;
 	SessionListe?: Array<Session>;
 }
 
@@ -193,7 +200,8 @@ export class DexieSvcService extends Dexie {
 	public LangHantelListe: Array<Hantel> = [];
 	public HantelscheibenListe: Array<Hantelscheibe> = [];
 	public ProgressListe: Array<Progress> = [];
-
+	public DiagrammDatenListe: Array<DiaDatum> = [];
+	
 	private ProgramLadeStandardPara: ProgrammParaDB;
 
 	private async LadeSessionsInWorker(aOffSet: number = 0): Promise<void> {
@@ -223,51 +231,81 @@ export class DexieSvcService extends Dexie {
                     });
                 }
             });
-    }
-
-	public DoWorker() {
+	}
+	
+	public DoWorker(aAction: WorkerAction, aExtraPara?: any) {
 		// const that: AnstehendeSessionsComponent = this;
         if (typeof Worker !== 'undefined') {
 			this.worker = new Worker(new URL('./dexie-svc.worker', import.meta.url));
-            this.worker.addEventListener('message', ({ data }) => {
-                if (data.action === "LadeAktuellesProgramm") {
-                    this.LadeAktuellesProgramm()
-                        .then(async (aProgramm) => {
-                            if (aProgramm !== undefined) {
-                                const mDialogData = new DialogData();
-                                mDialogData.ShowAbbruch = false;
-                                mDialogData.ShowOk = false;
-                                mDialogData.hasBackDrop = false;
-                                this.AktuellesProgramm.SessionListe = [];
-                                this.LadeSessionsInWorker();
-                            }
-                        });
-                } // if
-                // else if (data.action === "LadeUebungen") {
-                //         // that.Programm.SessionListe = that.fDbModule.AktuellesProgramm.SessionListe;
-                //         const mUebungParaDB: UebungParaDB = new UebungParaDB();
-                //         // mUebungParaDB.SaetzeBeachten = true;
-                //         this.fProgramm.SessionListe.forEach(
-                //         // that.fDbModule.AktuellesProgramm.SessionListe.forEach(
-                //             (aSession) => {
-                //                 if (aSession.UebungsListe === undefined || aSession.UebungsListe.length <= 0) {
-                //                     that.fDbModule.LadeSessionUebungen(aSession.ID, mUebungParaDB).then(
-                //                         (aUebungsListe) => {
-                //                             if (aUebungsListe.length > 0)
-                //                                 aSession.UebungsListe = aUebungsListe;
-                //                         });
-                                        
-                //                     }
-                //             });//for
-                //         that.fDbModule.AktuellesProgramm.SessionListe = this.fProgramm.SessionListe;
-                // }//if
-            });
+			this.worker.addEventListener('message', ({ data }) => {
+				switch (aAction) {
+					case WorkerAction.LadeAktuellesProgramm:
+						this.LadeAktuellesProgramm()
+							.then(async (aProgramm) => {
+								if (aProgramm !== undefined) {
+									const mDialogData = new DialogData();
+									mDialogData.ShowAbbruch = false;
+									mDialogData.ShowOk = false;
+									mDialogData.hasBackDrop = false;
+									this.AktuellesProgramm.SessionListe = [];
+									this.LadeSessionsInWorker();
+								}
+							});// then
+						break;
+					
+					case WorkerAction.LadeDiagrammDaten:
+						const mSessionParaDB: SessionParaDB = new SessionParaDB();
+						mSessionParaDB.UebungenBeachten = true;
+						mSessionParaDB.UebungParaDB = new UebungParaDB();
+						mSessionParaDB.UebungParaDB.SaetzeBeachten = true;
+						this.LadeHistorySessions(mSessionParaDB)
+							.then((mSessionListe) => {
+								this.DiagrammDatenListe = [];
+								for (let index = 0; index < mSessionListe.length; index++) {
+									const mSession = mSessionListe[index];
+									let mAktuellesDiaDatum: DiaDatum;
+									if (mSession.UebungsListe !== undefined) {
+										mAktuellesDiaDatum = this.DiagrammDatenListe.find((mDiaDatum) => {
+											if (mDiaDatum.Datum.valueOf() === mSession.Datum.valueOf())
+												return mDiaDatum;
+											return undefined;
+										});// Find DiaDatum
 
-                        
-            // that.worker.onmessage = ({ data }) => {
-            //     console.log(data);
-            // };
-            this.worker.postMessage('LadeAktuellesProgramm');
+										if (mAktuellesDiaDatum === undefined) {
+											mAktuellesDiaDatum = new DiaDatum();
+											mAktuellesDiaDatum.Datum = mSession.Datum;
+										} // if
+
+										// 
+										mSession.UebungsListe.forEach((mUebung) => {
+											// Suche in der Diagramm-Uebungsliste nach der Session-Übung   
+											let mAktuelleDiaUebung: DiaUebung = mAktuellesDiaDatum.DiaUebungsListe.find((mDiaUebung) => {
+												if (mDiaUebung.UebungID !== mUebung.ID)
+												return mDiaUebung;
+												return undefined;
+											}); // Find DiaUebung 
+											
+											// Wurde die Session-Übung in der Diagramm-Uebungsliste gefunden?
+											if (mAktuelleDiaUebung === undefined) {
+												// Die Session-Übung wurde nicht in der Diagramm-Uebungsliste gefunden.
+												mAktuelleDiaUebung = new DiaUebung();
+												mAktuelleDiaUebung.UebungID = mUebung.ID;
+												mAktuelleDiaUebung.UebungName = mUebung.Name;
+												mAktuellesDiaDatum.DiaUebungsListe.push(mAktuelleDiaUebung);
+											}//if
+											
+											// Alle Arbeitssätze,die zu dem Zeitpunkt in "mDiaUebung.Datum" gemacht worden.
+											mAktuelleDiaUebung.ArbeitsSatzListe = mAktuelleDiaUebung.ArbeitsSatzListe.concat(mUebung.ArbeitsSatzListe);
+										}); //for Uebung
+										
+										this.DiagrammDatenListe.push(mAktuellesDiaDatum);
+									}// if
+								}//for
+							 });//then
+						break;
+				}//switch
+            });
+            this.worker.postMessage(aAction);
         }	
 	}
 
@@ -482,7 +520,7 @@ export class DexieSvcService extends Dexie {
 		this.PruefeStandardLanghanteln();
 		this.PruefeStandardEquipment();
 		this.PruefeStandardMuskelGruppen();
-		// this.DoWorker();
+		this.DoWorker(WorkerAction.LadeDiagrammDaten);
 		// this.LadeStammUebungen();
 	}
 
@@ -1102,16 +1140,25 @@ export class DexieSvcService extends Dexie {
 		return await this.SessionTable
 			.where("Kategorie02")
 			.anyOf([SessionStatus.Fertig, SessionStatus.FertigTimeOut])
-			.offset(aSessionParaDB !== undefined && aSessionParaDB.OffSet !== undefined ? aSessionParaDB.OffSet : 0) 
-            .limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : cMaxLimnit) 
+			.offset(aSessionParaDB !== undefined && aSessionParaDB.OffSet !== undefined ? aSessionParaDB.OffSet : 0)
+			.limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : cMaxLimnit)
 			.reverse()
 			.sortBy("Datum")
-			.then((aSessionListe) => {
-				aSessionListe.forEach((mPtrSession) => {
+			.then(async (aSessionListe) => {
+				for (let index = 0; index < aSessionListe.length; index++) {
+					const mPtrSession: Session = aSessionListe[index];
 					SessionDB.StaticCheckMembers(mPtrSession);
 					mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
-				});
-
+					if (aSessionParaDB.UebungenBeachten === true) {
+						for (let index = 0; index < aSessionListe.length; index++) {
+							const mPtrSession = aSessionListe[index];
+							await this.LadeSessionUebungen(mPtrSession.ID, aSessionParaDB.UebungParaDB)
+								.then((aUebungsListe) => {
+									mPtrSession.UebungsListe = aUebungsListe;
+								});
+						}//for
+					}//if
+				}// for
 				return aSessionListe;
 			});
 	}
