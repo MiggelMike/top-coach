@@ -10,7 +10,7 @@ import { SessionDB, SessionStatus } from './../../Business/SessionDB';
 import { Session, ISession } from 'src/Business/Session/Session';
 import { ITrainingsProgramm, TrainingsProgramm, ProgrammTyp, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { DialogeService } from './dialoge.service';
-import { ISatz, Satz, SatzStatus, GewichtDiff } from './../../Business/Satz/Satz';
+import { ISatz, Satz, SatzStatus, GewichtDiff, SatzTyp } from './../../Business/Satz/Satz';
 import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
 import { AppData } from './../../Business/Coach/Coach';
 import { Dexie, PromiseExtended } from 'dexie';
@@ -205,32 +205,120 @@ export class DexieSvcService extends Dexie {
 	private ProgramLadeStandardPara: ProgrammParaDB;
 
 	private async LadeSessionsInWorker(aOffSet: number = 0): Promise<void> {
-        const mSessionParaDB: SessionParaDB = new SessionParaDB();
-        mSessionParaDB.Limit = 1;
-        mSessionParaDB.OffSet = aOffSet;
-        this.LadeUpcomingSessions(this.AktuellesProgramm.id, mSessionParaDB)
-            .then((aSessionListe) => {
-                if (aSessionListe.length > 0) {
-                    aSessionListe.forEach((mPtrSession) => {
-                        // if (mPtrSession.Kategorie02 !== SessionStatus.Wartet) {                            
-                            const mUebungParaDB = new UebungParaDB();
-                            mUebungParaDB.SaetzeBeachten = true;
-                            this.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
-                                (aUebungsListe) => {
-                                    if (aUebungsListe.length > 0)
-                                        mPtrSession.UebungsListe = aUebungsListe;
-                                });
-                        // }
+		const mSessionParaDB: SessionParaDB = new SessionParaDB();
+		mSessionParaDB.Limit = 1;
+		mSessionParaDB.OffSet = aOffSet;
+		this.LadeUpcomingSessions(this.AktuellesProgramm.id, mSessionParaDB)
+			.then((aSessionListe) => {
+				if (aSessionListe.length > 0) {
+					aSessionListe.forEach((mPtrSession) => {
+						// if (mPtrSession.Kategorie02 !== SessionStatus.Wartet) {                            
+						const mUebungParaDB = new UebungParaDB();
+						mUebungParaDB.SaetzeBeachten = true;
+						this.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
+							(aUebungsListe) => {
+								if (aUebungsListe.length > 0)
+									mPtrSession.UebungsListe = aUebungsListe;
+							});
+						// }
                         
-                        SessionDB.StaticCheckMembers(mPtrSession);
-                        mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
-                        this.AktuellesProgramm.SessionListe.push(mPtrSession);
-                        this.AktuellesProgramm.SessionListe.push(mPtrSession);
-                        this.LadeSessionsInWorker(this.AktuellesProgramm.SessionListe.length);
+						SessionDB.StaticCheckMembers(mPtrSession);
+						mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+						this.AktuellesProgramm.SessionListe.push(mPtrSession);
+						this.AktuellesProgramm.SessionListe.push(mPtrSession);
+						this.LadeSessionsInWorker(this.AktuellesProgramm.SessionListe.length);
                     
-                    });
-                }
-            });
+					});
+				}
+			});
+	}
+
+	public LadeDiagrammData(aDiagrammDatenListe: Array<DiaDatum>) {
+		this.SessionTable
+			.where("Kategorie02")
+			.anyOf([SessionStatus.Fertig, SessionStatus.FertigTimeOut])
+			.sortBy("Datum")
+			.then(async (aSessionListe) => {
+				for (let index = 0; index < aSessionListe.length; index++) {
+					const mPtrSession = aSessionListe[index];
+					const mYear = mPtrSession.Datum.getUTCFullYear();
+					const mMonth = mPtrSession.Datum.getMonth() + 1;
+					const mDay = mPtrSession.Datum.getDate();
+
+					// var month = dateObj.getUTCMonth() + 1; //months from 1-12
+					// var day = dateObj.getUTCDate();
+					// var year = dateObj.getUTCFullYear();
+					
+
+					const mNurSessionDatum: Date =
+						new Date(
+							mPtrSession.Datum.getFullYear(),
+							mPtrSession.Datum.getMonth(),
+							mPtrSession.Datum.getDay());
+
+					SessionDB.StaticCheckMembers(mPtrSession);
+					mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+					// Session-Übungen laden
+					await this.UebungTable
+						.where("SessionID")
+						.equals(mPtrSession.ID)
+						.toArray()
+						.then(async (mUebungen) => {
+							for (let index1 = 0; index1 < mUebungen.length; index1++) {
+								const mPtrUebung = mUebungen[index1];
+								// Übungs-Sätze laden
+								await this.SatzTable
+									.where("UebungID")
+									.equals(mPtrUebung.ID)
+									.toArray()
+									.then((mSaetze: Array<Satz>) => {
+										for (let index2 = 0; index2 < mSaetze.length; index2++) {
+											const mPtrSatz = mSaetze[index2];
+											if (mPtrSatz.SatzTyp === SatzTyp.Training &&
+												mPtrSatz.Status === SatzStatus.Fertig) {
+												let mAktuellesDiaDatum: DiaDatum;
+
+												mAktuellesDiaDatum = this.DiagrammDatenListe.find((mDiaDatum) => {
+													if (mDiaDatum.Datum.valueOf() === mNurSessionDatum.valueOf())
+														return mDiaDatum;
+													return undefined;
+												});// Find DiaDatum
+						
+												if (mAktuellesDiaDatum === undefined) {
+													mAktuellesDiaDatum = new DiaDatum();
+													mAktuellesDiaDatum.Datum = mNurSessionDatum;
+													aDiagrammDatenListe.push(mAktuellesDiaDatum);
+												}
+
+												// Suche in der Diagramm-Uebungsliste nach der Session-Übung   
+												let mAktuelleDiaUebung: DiaUebung = mAktuellesDiaDatum.DiaUebungsListe.find((mDiaUebung) => {
+													if (mDiaUebung.UebungID === mPtrUebung.FkUebung)
+														return mDiaUebung;
+													return undefined;
+												}); // Find DiaUebung 
+												
+												// Wurde die Session-Übung in der Diagramm-Uebungsliste gefunden?
+												if (mAktuelleDiaUebung === undefined) {
+													// Die Session-Übung wurde nicht in der Diagramm-Uebungsliste gefunden.
+													mAktuelleDiaUebung = new DiaUebung();
+													mAktuelleDiaUebung.UebungID = mPtrUebung.FkUebung;
+													mAktuelleDiaUebung.UebungName = mPtrUebung.Name;
+													mAktuellesDiaDatum.DiaUebungsListe.push(mAktuelleDiaUebung);
+												}//if
+												
+												// Alle Arbeitssätze,die zu dem Zeitpunkt in "mDiaUebung.Datum" gemacht worden.
+												// mAktuelleDiaUebung.ArbeitsSatzListe.forEach((mSatz) => {
+												// 	mSatz.Datum = mSatz.Status === SatzStatus.Fertig ? mPtrUebung.Datum : undefined;
+												// });
+												// this.SaetzeSpeichern(mAktuelleDiaUebung.ArbeitsSatzListe);
+												mAktuelleDiaUebung.ArbeitsSatzListe.push(mPtrSatz);
+											} // if
+										} //for
+									});//then
+							}//for							
+						});//then
+					}//for							
+			});//then
 	}
 	
 	public DoWorker(aAction: WorkerAction, aExtraPara?: any) {
@@ -254,54 +342,61 @@ export class DexieSvcService extends Dexie {
 						break;
 					
 					case WorkerAction.LadeDiagrammDaten:
-						const mSessionParaDB: SessionParaDB = new SessionParaDB();
-						mSessionParaDB.UebungenBeachten = true;
-						mSessionParaDB.UebungParaDB = new UebungParaDB();
-						mSessionParaDB.UebungParaDB.SaetzeBeachten = true;
-						this.LadeHistorySessions(mSessionParaDB)
-							.then((mSessionListe) => {
-								this.DiagrammDatenListe = [];
-								for (let index = 0; index < mSessionListe.length; index++) {
-									const mSession = mSessionListe[index];
-									let mAktuellesDiaDatum: DiaDatum;
-									if (mSession.UebungsListe !== undefined) {
-										mAktuellesDiaDatum = this.DiagrammDatenListe.find((mDiaDatum) => {
-											if (mDiaDatum.Datum.valueOf() === mSession.Datum.valueOf())
-												return mDiaDatum;
-											return undefined;
-										});// Find DiaDatum
+						this.LadeDiagrammData(this.DiagrammDatenListe);
+						// const mSessionParaDB: SessionParaDB = new SessionParaDB();
+						// mSessionParaDB.UebungenBeachten = true;
+						// mSessionParaDB.UebungParaDB = new UebungParaDB();
+						// mSessionParaDB.UebungParaDB.SaetzeBeachten = true;
 
-										if (mAktuellesDiaDatum === undefined) {
-											mAktuellesDiaDatum = new DiaDatum();
-											mAktuellesDiaDatum.Datum = mSession.Datum;
-										} // if
 
-										// 
-										mSession.UebungsListe.forEach((mUebung) => {
-											// Suche in der Diagramm-Uebungsliste nach der Session-Übung   
-											let mAktuelleDiaUebung: DiaUebung = mAktuellesDiaDatum.DiaUebungsListe.find((mDiaUebung) => {
-												if (mDiaUebung.UebungID !== mUebung.ID)
-												return mDiaUebung;
-												return undefined;
-											}); // Find DiaUebung 
+						// this.LadeHistorySessions(mSessionParaDB)
+						// 	.then((mSessionListe) => {
+						// 		this.DiagrammDatenListe = [];
+						// 		for (let index = 0; index < mSessionListe.length; index++) {
+						// 			const mSession = mSessionListe[index];
+						// 			let mAktuellesDiaDatum: DiaDatum;
+						// 			if (mSession.UebungsListe !== undefined) {
+						// 				mAktuellesDiaDatum = this.DiagrammDatenListe.find((mDiaDatum) => {
+						// 					if (mDiaDatum.Datum.valueOf() === mSession.Datum.valueOf())
+						// 						return mDiaDatum;
+						// 					return undefined;
+						// 				});// Find DiaDatum
+
+						// 				if (mAktuellesDiaDatum === undefined) {
+						// 					mAktuellesDiaDatum = new DiaDatum();
+						// 					mAktuellesDiaDatum.Datum = mSession.Datum;
+						// 				} // if
+
+						// 				// 
+						// 				mSession.UebungsListe.forEach((mUebung) => {
+						// 					// Suche in der Diagramm-Uebungsliste nach der Session-Übung   
+						// 					let mAktuelleDiaUebung: DiaUebung = mAktuellesDiaDatum.DiaUebungsListe.find((mDiaUebung) => {
+						// 						if (mDiaUebung.UebungID !== mUebung.ID)
+						// 						return mDiaUebung;
+						// 						return undefined;
+						// 					}); // Find DiaUebung 
 											
-											// Wurde die Session-Übung in der Diagramm-Uebungsliste gefunden?
-											if (mAktuelleDiaUebung === undefined) {
-												// Die Session-Übung wurde nicht in der Diagramm-Uebungsliste gefunden.
-												mAktuelleDiaUebung = new DiaUebung();
-												mAktuelleDiaUebung.UebungID = mUebung.ID;
-												mAktuelleDiaUebung.UebungName = mUebung.Name;
-												mAktuellesDiaDatum.DiaUebungsListe.push(mAktuelleDiaUebung);
-											}//if
+						// 					// Wurde die Session-Übung in der Diagramm-Uebungsliste gefunden?
+						// 					if (mAktuelleDiaUebung === undefined) {
+						// 						// Die Session-Übung wurde nicht in der Diagramm-Uebungsliste gefunden.
+						// 						mAktuelleDiaUebung = new DiaUebung();
+						// 						mAktuelleDiaUebung.UebungID = mUebung.ID;
+						// 						mAktuelleDiaUebung.UebungName = mUebung.Name;
+						// 						mAktuellesDiaDatum.DiaUebungsListe.push(mAktuelleDiaUebung);
+						// 					}//if
 											
-											// Alle Arbeitssätze,die zu dem Zeitpunkt in "mDiaUebung.Datum" gemacht worden.
-											mAktuelleDiaUebung.ArbeitsSatzListe = mAktuelleDiaUebung.ArbeitsSatzListe.concat(mUebung.ArbeitsSatzListe);
-										}); //for Uebung
+						// 					// Alle Arbeitssätze,die zu dem Zeitpunkt in "mDiaUebung.Datum" gemacht worden.
+						// 					mAktuelleDiaUebung.ArbeitsSatzListe.forEach((mSatz) => {
+						// 						mSatz.Datum = mSatz.Status === SatzStatus.Fertig ? mUebung.Datum : undefined;
+						// 					});
+						// 					this.SaetzeSpeichern(mAktuelleDiaUebung.ArbeitsSatzListe);
+						// 					mAktuelleDiaUebung.ArbeitsSatzListe = mAktuelleDiaUebung.ArbeitsSatzListe.concat(mUebung.ArbeitsSatzListe);
+						// 				}); //for Uebung
 										
-										this.DiagrammDatenListe.push(mAktuellesDiaDatum);
-									}// if
-								}//for
-							 });//then
+						// 				this.DiagrammDatenListe.push(mAktuellesDiaDatum);
+						// 			}// if
+						// 		}//for
+						// 	 });//then
 						break;
 				}//switch
             });
@@ -499,14 +594,14 @@ export class DexieSvcService extends Dexie {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
 		}
 
-		//    Dexie.delete("ConceptCoach");
+		    // Dexie.delete("ConceptCoach");
 
-		this.version(18).stores({
+		this.version(1).stores({
 			AppData: "++id",
 			Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
 			SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02],[FK_Programm+Kategorie02],ListenIndex",
-			Satz: "++ID,UebungID",
+			Satz: "++ID,UebungID,Datum",
 			MuskelGruppe: "++ID,Name,MuscleGroupKategorie01",
 			Equipment: "++ID,Name",
 			Hantel: "++ID,Typ,Name",
@@ -1144,7 +1239,7 @@ export class DexieSvcService extends Dexie {
 			.limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : cMaxLimnit)
 			.reverse()
 			.sortBy("Datum")
-			.then(async (aSessionListe) => {
+			.then((aSessionListe) => {
 				for (let index = 0; index < aSessionListe.length; index++) {
 					const mPtrSession: Session = aSessionListe[index];
 					SessionDB.StaticCheckMembers(mPtrSession);
@@ -1152,7 +1247,7 @@ export class DexieSvcService extends Dexie {
 					if (aSessionParaDB.UebungenBeachten === true) {
 						for (let index = 0; index < aSessionListe.length; index++) {
 							const mPtrSession = aSessionListe[index];
-							await this.LadeSessionUebungen(mPtrSession.ID, aSessionParaDB.UebungParaDB)
+							this.LadeSessionUebungen(mPtrSession.ID, aSessionParaDB.UebungParaDB)
 								.then((aUebungsListe) => {
 									mPtrSession.UebungsListe = aUebungsListe;
 								});
@@ -1481,6 +1576,7 @@ export class DexieSvcService extends Dexie {
 				mSatz.SessionID = aUebung.SessionID;
 				const mGewichtDiff = cloneDeep(mSatz.GewichtDiff);
 				mSatz.GewichtDiff = [];
+				mSatz.Datum = mSatz.Status === SatzStatus.Fertig ? aUebung.Datum : undefined;
 				this.SatzSpeichern(mSatz);
 				mSatz.GewichtDiff = mGewichtDiff;
 			}

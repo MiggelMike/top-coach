@@ -66,7 +66,8 @@ export class ChartsComponent implements OnInit {
 		this.canvas = this.Chart.nativeElement;
 		this.ctx = this.canvas.getContext("2d");
 		
-    new Chart(this.ctx, this.ChartData);
+	  new Chart(this.ctx,
+		        this.ChartData);
 		// 	data: {
 		// 		labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
 		// 		datasets: [{

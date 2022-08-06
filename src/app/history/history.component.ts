@@ -5,7 +5,7 @@ import { ISession } from 'src/Business/Session/Session';
 import { repMask } from './../../app/app.module';
 import { AppData } from 'src/Business/Coach/Coach';
 import { DiagramData, Diagramm } from '../bausteine/charts/charts.component';
-import { DiaUebung } from 'src/Business/Diagramm/Diagramm';
+import { DiaUebung, DiaDatum } from 'src/Business/Diagramm/Diagramm';
 
 
 @Component({
@@ -62,29 +62,89 @@ export class HistoryComponent implements OnInit {
 	public Draw(aDiaTyp: any) {
 		this.Diagramme = [];
 		const mBorderWidth = 1;
-	
-		const mData: number[] = [12, 19, 3, 5, 2, 3];
-		const mData2: number[] = [120, 190, 30, 50, 20, 30];
-	
+		let mData: number[] = [];
 		const mDiagramm: Diagramm = new Diagramm();
 		mDiagramm.type = aDiaTyp;
-		mDiagramm.data.labels = ['a', 'b', 'c', 'd', 'e'];
-		// this.fDbModul.DiagrammDatenListe.length
-	
-		for (let index = 0; index < 2; index++) {
-			if (index === 0)
+		mDiagramm.data.labels = [];
+		
+		let mUebungsNamen = [];
+		for (let index = 0; index < this.fDbModul.DiagrammDatenListe.length; index++) {
+			const mPtrDiaDatum: DiaDatum = this.fDbModul.DiagrammDatenListe[index];
+			mDiagramm.data.labels.push(mPtrDiaDatum.Datum.toDateString());
+			mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDiaUebung) => {
+				if (mUebungsNamen.indexOf(mPtrDiaUebung.UebungName) === -1)
+					mUebungsNamen.push(mPtrDiaUebung.UebungName);
+			});
+		} // for
+
+		// if (this.fDbModul.DiagrammDatenListe.length > 0) {
+			// let mPtrDiaDatum: DiaDatum = this.fDbModul.DiagrammDatenListe[0];
+			// let mNurSessionDatum: Date =
+			// 	new Date(
+			// 		mPtrDiaDatum.Datum.getFullYear(),
+			// 		mPtrDiaDatum.Datum.getMonth(),
+			// 		mPtrDiaDatum.Datum.getDay());
+			
+			// mNurSessionDatum.setDate(mNurSessionDatum.getDate() - 1);
+			// mPtrDiaDatum = new DiaDatum();
+			// mPtrDiaDatum.Datum = mNurSessionDatum;
+			// this.fDbModul.DiagrammDatenListe.unshift(mPtrDiaDatum);
+			
+			// mPtrDiaDatum = this.fDbModul.DiagrammDatenListe[this.fDbModul.DiagrammDatenListe.length-1];
+			// mNurSessionDatum =
+			// 	new Date(
+			// 		mPtrDiaDatum.Datum.getFullYear(),
+			// 		mPtrDiaDatum.Datum.getMonth(),
+			// 		mPtrDiaDatum.Datum.getDay());
+			
+			// mNurSessionDatum.setDate(mNurSessionDatum.getDate() + 1);
+			// mPtrDiaDatum = new DiaDatum();
+			// mPtrDiaDatum.Datum = mNurSessionDatum;
+			// this.fDbModul.DiagrammDatenListe.push(mPtrDiaDatum);
+		// } //if
+
+		// Jede Übung prüfen 
+		mUebungsNamen.forEach((mPtrUebungName) => {
+			let mMaxWeight: number = 0;
+			mData = [];
+			// Jedes Datum aus der Liste prüfen
+			this.fDbModul.DiagrammDatenListe.forEach((mPtrDiaDatum) => {
+				mData.push(0);
+                // In der Übungsliste des Datums nach der Übung suchen 
+				mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDatumUebung) => {
+					// Ist die Übung gleich der zu prüfenden Übung und ist MaxWeight größer als das bisher ermittelte mMaxWeight? 
+					// if (mPtrDatumUebung.UebungName === mPtrUebungName && mPtrDatumUebung.MaxWeight > mMaxWeight) {
+					// 	mMaxWeight = mPtrDatumUebung.MaxWeight;
+					// 	mData.push(mMaxWeight);
+					// }
+					if (mPtrDatumUebung.UebungName === mPtrUebungName){
+						if (mPtrDatumUebung.MaxWeight > mMaxWeight) {
+							mMaxWeight = mPtrDatumUebung.MaxWeight;
+							mData[mData.length-1] = mMaxWeight;
+						}
+						// else mData.push(0);
+					}
+				});
+					
+			}); // forEach -> Datum
+
+			if (mData.length > 0) {
 				mDiagramm.data.datasets.push({
-					label: '# of Votes',
+					label: mPtrUebungName,
 					data: mData,
-					borderWidth: mBorderWidth
+					borderWidth: mBorderWidth,
 				});
-			if (index === 1)
-				mDiagramm.data.datasets.push({
-					label: '# of Votes',
-					data: mData2,
-					borderWidth: mBorderWidth
-				});
-		}
+			}
+
+		});
+	
+		// for (let index = 0; index < mUebungsNamen.length; index++) {
+		// 		mDiagramm.data.datasets.push({
+		// 			label: mUebungsNamen[index],
+		// 			data: mData,
+		// 			borderWidth: mBorderWidth
+		// 		});
+		// }
 		
 		this.Diagramme.push(mDiagramm);
 	}
@@ -103,6 +163,7 @@ export class HistoryComponent implements OnInit {
 	}
 
 	ngAfterViewInit() {
+		this.Draw('line');
 	}
 
 	DiaTypChanged(aEvent: any, aDiaTyp: string) {

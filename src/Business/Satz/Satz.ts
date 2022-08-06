@@ -81,7 +81,7 @@ export interface ISatz {
     FkHantel: number;
     Vorgabe: boolean;
     GewichtsEinheit: GewichtsEinheit;
-
+    Datum: Date;
 }
 
 
@@ -112,6 +112,8 @@ export class Satz implements ISatz {
     //#region GewichtNaechsteSession 
     private fGewichtNaechsteSession: number = 0;
     public GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
+    public Datum: Date;
+
 
     public static StaticCheckMembers(aSatz: ISatz) {
         if (aSatz.GewichtsEinheit === undefined)
