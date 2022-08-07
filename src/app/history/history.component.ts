@@ -1,4 +1,4 @@
-import { cSessionSelectLimit, UebungParaDB } from './../services/dexie-svc.service';
+import { cSessionSelectLimit, UebungParaDB, WorkerAction } from './../services/dexie-svc.service';
 import { DexieSvcService, SessionParaDB } from 'src/app/services/dexie-svc.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ISession } from 'src/Business/Session/Session';
@@ -35,24 +35,6 @@ export class HistoryComponent implements OnInit {
 				this.AppData = mAppData;
 				this.LadeLimit = mAppData.MaxHistorySessions;
 			});
-		
-		// backgroundColor: [
-		// 	'rgba(255, 99, 132, 0.2)',
-		// 	'rgba(54, 162, 235, 0.2)',
-		// 	'rgba(255, 206, 86, 0.2)',
-		// 	'rgba(75, 192, 192, 0.2)',
-		// 	'rgba(153, 102, 255, 0.2)',
-		// 	'rgba(255, 159, 64, 0.2)'
-		// ],
-		// borderColor: [
-		// 	'rgba(255, 99, 132, 1)',
-		// 	'rgba(54, 162, 235, 1)',
-		// 	'rgba(255, 206, 86, 1)',
-		// 	'rgba(75, 192, 192, 1)',
-		// 	'rgba(153, 102, 255, 1)',
-		// 	'rgba(255, 159, 64, 1)'
-		// ],
-		
 	}
 
 	private LadeDiaDaten(){
@@ -62,7 +44,7 @@ export class HistoryComponent implements OnInit {
 	public Draw(aDiaTyp: any) {
 		this.Diagramme = [];
 		const mBorderWidth = 1;
-		let mData: number[] = [];
+		let mData = [];
 		const mDiagramm: Diagramm = new Diagramm();
 		mDiagramm.type = aDiaTyp;
 		mDiagramm.data.labels = [];
@@ -77,38 +59,6 @@ export class HistoryComponent implements OnInit {
 			});
 		} // for
 
-		// if (this.fDbModul.DiagrammDatenListe.length > 0) {
-			// let mPtrDiaDatum: DiaDatum = this.fDbModul.DiagrammDatenListe[0];
-			// let mNurSessionDatum: Date =
-			// 	new Date(
-			// 		mPtrDiaDatum.Datum.getFullYear(),
-			// 		mPtrDiaDatum.Datum.getMonth(),
-			// 		mPtrDiaDatum.Datum.getDay());
-			
-			// mNurSessionDatum.setDate(mNurSessionDatum.getDate() - 1);
-			// mPtrDiaDatum = new DiaDatum();
-			// mPtrDiaDatum.Datum = mNurSessionDatum;
-			// this.fDbModul.DiagrammDatenListe.unshift(mPtrDiaDatum);
-			
-			// mPtrDiaDatum = this.fDbModul.DiagrammDatenListe[this.fDbModul.DiagrammDatenListe.length-1];
-			// mNurSessionDatum =
-			// 	new Date(
-			// 		mPtrDiaDatum.Datum.getFullYear(),
-			// 		mPtrDiaDatum.Datum.getMonth(),
-			// 		mPtrDiaDatum.Datum.getDay());
-			
-			// mNurSessionDatum.setDate(mNurSessionDatum.getDate() + 1);
-			// mPtrDiaDatum = new DiaDatum();
-			// mPtrDiaDatum.Datum = mNurSessionDatum;
-			// this.fDbModul.DiagrammDatenListe.push(mPtrDiaDatum);
-		// } //if
-
-		// data: {
-		// 	datasets: [{
-		// 	  data: [{x:'2016-12-25', y:20}, {x:'2016-12-26', y:10}]
-		// 	}]
-		//   }
-
 		// Jede Übung prüfen 
 		mUebungsNamen.forEach((mPtrUebungName) => {
 			mData = [];
@@ -119,16 +69,9 @@ export class HistoryComponent implements OnInit {
                 // In der Übungsliste des Datums nach der Übung suchen 
 				mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDatumUebung) => {
 					// Ist die Übung gleich der zu prüfenden Übung und ist MaxWeight größer als das bisher ermittelte mMaxWeight? 
-					// if (mPtrDatumUebung.UebungName === mPtrUebungName && mPtrDatumUebung.MaxWeight > mMaxWeight) {
-					// 	mMaxWeight = mPtrDatumUebung.MaxWeight;
-					// 	mData.push(mMaxWeight);
-					// }
-					if (mPtrDatumUebung.UebungName === mPtrUebungName){
-						if (mPtrDatumUebung.MaxWeight > mMaxWeight) {
-							mMaxWeight = mPtrDatumUebung.MaxWeight;
-							mData.push(mMaxWeight);
-							// mData[mData.length-1] = mMaxWeight;
-						}
+					if (mPtrDatumUebung.UebungName === mPtrUebungName && mPtrDatumUebung.MaxWeight > mMaxWeight) {
+						mMaxWeight = mPtrDatumUebung.MaxWeight;
+						mData.push({ x: mPtrDiaDatum.Datum.toDateString(), y: mMaxWeight });
 					}
 				});
 					
@@ -144,14 +87,6 @@ export class HistoryComponent implements OnInit {
 
 		});
 	
-		// for (let index = 0; index < mUebungsNamen.length; index++) {
-		// 		mDiagramm.data.datasets.push({
-		// 			label: mUebungsNamen[index],
-		// 			data: mData,
-		// 			borderWidth: mBorderWidth
-		// 		});
-		// }
-		
 		this.Diagramme.push(mDiagramm);
 	}
 
@@ -199,6 +134,7 @@ export class HistoryComponent implements OnInit {
 
 	
 	ngOnInit(): void {
+		this.fDbModul.DoWorker(WorkerAction.LadeDiagrammDaten);
 		this.DiaTyp = 'line';
 		this.LadeSessions(0);
 	}
