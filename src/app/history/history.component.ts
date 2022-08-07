@@ -41,7 +41,7 @@ export class HistoryComponent implements OnInit {
 		
 	}
 	
-	public Draw(aDiaTyp: any) {
+	public Draw(aDiaTyp: any):void {
 		this.Diagramme = [];
 		const mBorderWidth = 1;
 		let mData = [];
@@ -104,7 +104,7 @@ export class HistoryComponent implements OnInit {
 	}
 
 	ngAfterViewInit() {
-		this.Draw('line');
+		this.Draw(this.DiaTyp);
 	}
 
 	DiaTypChanged(aEvent: any, aDiaTyp: string) {
@@ -134,8 +134,8 @@ export class HistoryComponent implements OnInit {
 
 	
 	ngOnInit(): void {
-		this.fDbModul.DoWorker(WorkerAction.LadeDiagrammDaten);
 		this.DiaTyp = 'line';
+		this.fDbModul.DoWorker(WorkerAction.LadeDiagrammDaten,  () => this.Draw(this.DiaTyp) );
 		this.LadeSessions(0);
 	}
 }

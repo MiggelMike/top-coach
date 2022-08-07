@@ -233,7 +233,7 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
-	public LadeDiagrammData(aDiagrammDatenListe: Array<DiaDatum>) {
+	public LadeDiagrammData(aDiagrammDatenListe: Array<DiaDatum>, aExtraFn?: ExtraFn) {
 		this.SessionTable
 			.where("Kategorie02")
 			.anyOf([SessionStatus.Fertig, SessionStatus.FertigTimeOut])
@@ -303,11 +303,14 @@ export class DexieSvcService extends Dexie {
 									});//then
 							}//for							
 						});//then
-					}//for							
+				}//for	
+
+				if (aExtraFn !== undefined)
+					aExtraFn();
 			});//then
 	}
 	
-	public DoWorker(aAction: WorkerAction, aExtraPara?: any) {
+	public DoWorker(aAction: WorkerAction, aExtraFn?: ExtraFn) {
 		// const that: AnstehendeSessionsComponent = this;
         if (typeof Worker !== 'undefined') {
 			this.worker = new Worker(new URL('./dexie-svc.worker', import.meta.url));
@@ -328,61 +331,7 @@ export class DexieSvcService extends Dexie {
 						break;
 					
 					case WorkerAction.LadeDiagrammDaten:
-						this.LadeDiagrammData(this.DiagrammDatenListe);
-						// const mSessionParaDB: SessionParaDB = new SessionParaDB();
-						// mSessionParaDB.UebungenBeachten = true;
-						// mSessionParaDB.UebungParaDB = new UebungParaDB();
-						// mSessionParaDB.UebungParaDB.SaetzeBeachten = true;
-
-
-						// this.LadeHistorySessions(mSessionParaDB)
-						// 	.then((mSessionListe) => {
-						// 		this.DiagrammDatenListe = [];
-						// 		for (let index = 0; index < mSessionListe.length; index++) {
-						// 			const mSession = mSessionListe[index];
-						// 			let mAktuellesDiaDatum: DiaDatum;
-						// 			if (mSession.UebungsListe !== undefined) {
-						// 				mAktuellesDiaDatum = this.DiagrammDatenListe.find((mDiaDatum) => {
-						// 					if (mDiaDatum.Datum.valueOf() === mSession.Datum.valueOf())
-						// 						return mDiaDatum;
-						// 					return undefined;
-						// 				});// Find DiaDatum
-
-						// 				if (mAktuellesDiaDatum === undefined) {
-						// 					mAktuellesDiaDatum = new DiaDatum();
-						// 					mAktuellesDiaDatum.Datum = mSession.Datum;
-						// 				} // if
-
-						// 				// 
-						// 				mSession.UebungsListe.forEach((mUebung) => {
-						// 					// Suche in der Diagramm-Uebungsliste nach der Session-Übung   
-						// 					let mAktuelleDiaUebung: DiaUebung = mAktuellesDiaDatum.DiaUebungsListe.find((mDiaUebung) => {
-						// 						if (mDiaUebung.UebungID !== mUebung.ID)
-						// 						return mDiaUebung;
-						// 						return undefined;
-						// 					}); // Find DiaUebung 
-											
-						// 					// Wurde die Session-Übung in der Diagramm-Uebungsliste gefunden?
-						// 					if (mAktuelleDiaUebung === undefined) {
-						// 						// Die Session-Übung wurde nicht in der Diagramm-Uebungsliste gefunden.
-						// 						mAktuelleDiaUebung = new DiaUebung();
-						// 						mAktuelleDiaUebung.UebungID = mUebung.ID;
-						// 						mAktuelleDiaUebung.UebungName = mUebung.Name;
-						// 						mAktuellesDiaDatum.DiaUebungsListe.push(mAktuelleDiaUebung);
-						// 					}//if
-											
-						// 					// Alle Arbeitssätze,die zu dem Zeitpunkt in "mDiaUebung.Datum" gemacht worden.
-						// 					mAktuelleDiaUebung.ArbeitsSatzListe.forEach((mSatz) => {
-						// 						mSatz.Datum = mSatz.Status === SatzStatus.Fertig ? mUebung.Datum : undefined;
-						// 					});
-						// 					this.SaetzeSpeichern(mAktuelleDiaUebung.ArbeitsSatzListe);
-						// 					mAktuelleDiaUebung.ArbeitsSatzListe = mAktuelleDiaUebung.ArbeitsSatzListe.concat(mUebung.ArbeitsSatzListe);
-						// 				}); //for Uebung
-										
-						// 				this.DiagrammDatenListe.push(mAktuellesDiaDatum);
-						// 			}// if
-						// 		}//for
-						// 	 });//then
+						this.LadeDiagrammData(this.DiagrammDatenListe, aExtraFn);
 						break;
 				}//switch
             });
