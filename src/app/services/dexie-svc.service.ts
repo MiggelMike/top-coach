@@ -241,21 +241,7 @@ export class DexieSvcService extends Dexie {
 			.then(async (aSessionListe) => {
 				for (let index = 0; index < aSessionListe.length; index++) {
 					const mPtrSession = aSessionListe[index];
-					const mYear = mPtrSession.Datum.getUTCFullYear();
-					const mMonth = mPtrSession.Datum.getMonth() + 1;
-					const mDay = mPtrSession.Datum.getDate();
-
-					// var month = dateObj.getUTCMonth() + 1; //months from 1-12
-					// var day = dateObj.getUTCDate();
-					// var year = dateObj.getUTCFullYear();
-					
-
-					const mNurSessionDatum: Date =
-						new Date(
-							mPtrSession.Datum.getFullYear(),
-							mPtrSession.Datum.getMonth(),
-							mPtrSession.Datum.getDay());
-
+					const mNurSessionDatum = new Date(mPtrSession.Datum.toDateString());
 					SessionDB.StaticCheckMembers(mPtrSession);
 					mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
 					// Session-Übungen laden

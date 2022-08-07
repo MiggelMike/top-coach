@@ -103,13 +103,19 @@ export class HistoryComponent implements OnInit {
 			// this.fDbModul.DiagrammDatenListe.push(mPtrDiaDatum);
 		// } //if
 
+		// data: {
+		// 	datasets: [{
+		// 	  data: [{x:'2016-12-25', y:20}, {x:'2016-12-26', y:10}]
+		// 	}]
+		//   }
+
 		// Jede Übung prüfen 
 		mUebungsNamen.forEach((mPtrUebungName) => {
-			let mMaxWeight: number = 0;
 			mData = [];
 			// Jedes Datum aus der Liste prüfen
 			this.fDbModul.DiagrammDatenListe.forEach((mPtrDiaDatum) => {
-				mData.push(0);
+				let mMaxWeight: number = 0;
+				// mData.push(0);
                 // In der Übungsliste des Datums nach der Übung suchen 
 				mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDatumUebung) => {
 					// Ist die Übung gleich der zu prüfenden Übung und ist MaxWeight größer als das bisher ermittelte mMaxWeight? 
@@ -120,9 +126,9 @@ export class HistoryComponent implements OnInit {
 					if (mPtrDatumUebung.UebungName === mPtrUebungName){
 						if (mPtrDatumUebung.MaxWeight > mMaxWeight) {
 							mMaxWeight = mPtrDatumUebung.MaxWeight;
-							mData[mData.length-1] = mMaxWeight;
+							mData.push(mMaxWeight);
+							// mData[mData.length-1] = mMaxWeight;
 						}
-						// else mData.push(0);
 					}
 				});
 					
@@ -132,7 +138,7 @@ export class HistoryComponent implements OnInit {
 				mDiagramm.data.datasets.push({
 					label: mPtrUebungName,
 					data: mData,
-					borderWidth: mBorderWidth,
+					borderWidth: mBorderWidth
 				});
 			}
 

@@ -11,10 +11,10 @@ export class DiaUebung {
 			return 0;
 
 		this.ArbeitsSatzListe.sort((s1, s2) => {
-			return s2.LiftedWeight - s1.LiftedWeight;
+			return s2.GewichtAusgefuehrt - s1.GewichtAusgefuehrt;
 		});
 
-		return this.ArbeitsSatzListe[0].LiftedWeight;
+		return this.ArbeitsSatzListe[0].GewichtAusgefuehrt;
 	}
 }
 
