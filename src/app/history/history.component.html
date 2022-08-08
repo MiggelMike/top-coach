@@ -45,10 +45,34 @@
                 </mat-radio-group>
             </div>
 
+            <mat-accordion #accSession="matAccordion" multi="true">
+                <mat-expansion-panel class="HG-01">
+                    <mat-expansion-panel-header>
+                        <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="flex-start center">
+                                <div class="ml-10" fxLayout="column" fxFlex="155px" >
+                                    <span>Exercises in chart</span>
+                                </div>
+                        </div>
+                    </mat-expansion-panel-header>
+
+                    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="flex-start center">
+                        <ng-container *ngFor="let DiaUebung of DiaUebungsListe">
+                            <div fxLayout="column" fxLayoutGap="2px" fxFlex="auto">
+                                <ng-container *ngIf="DiaUebung.Relevant" >
+                                    <mat-checkbox 
+                                        [(ngModel)]="DiaUebung.Visible"
+                                        (change)="onClickDiaUebung(DiaUebung, $event.checked)"
+                                        >{{DiaUebung.UebungName}}</mat-checkbox>
+                                </ng-container>
+                                
+                            </div>
+                        </ng-container>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+
             <ng-container *ngFor="let Dia of Diagramme" >
-
                 <app-charts #line [ChartData]="Dia">
-
                 </app-charts>  
             </ng-container>
         </mat-tab> 

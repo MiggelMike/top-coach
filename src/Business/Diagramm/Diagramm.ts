@@ -4,7 +4,8 @@ export class DiaUebung {
 	UebungID: number = 0;
     UebungName: string = '';
 	ArbeitsSatzListe: Array<Satz> = [];
-	Visible: Boolean = true;
+	Visible: boolean = true;
+	Relevant: boolean = true;
 
 	get MaxWeight(): number {
 		if (this.ArbeitsSatzListe.length === 0)

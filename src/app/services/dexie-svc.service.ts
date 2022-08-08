@@ -289,6 +289,7 @@ export class DexieSvcService extends Dexie {
 													mAktuelleDiaUebung = new DiaUebung();
 													mAktuelleDiaUebung.UebungID = mPtrUebung.FkUebung;
 													mAktuelleDiaUebung.UebungName = mPtrUebung.Name;
+													mAktuelleDiaUebung.Visible = true;
 													mAktuellesDiaDatum.DiaUebungsListe.push(mAktuelleDiaUebung);
 												}//if
 												
