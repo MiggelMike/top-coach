@@ -101,6 +101,9 @@ export class HistoryComponent implements OnInit {
 		this.Diagramme.push(mDiagramm);
 	}
 
+	Save() {
+		
+	}
 
 	SetLadeLimit(aEvent: any) {
 		// aEvent.stopPropagation();

@@ -303,6 +303,13 @@ export class DexieSvcService extends Dexie {
 										} //for
 									});//then
 							}//for							
+
+							this.DiagrammDatenListe.sort((d1, d2) => {
+								if (d1.Datum.valueOf() < d2.Datum.valueOf())
+									return 1;
+								return 0;
+							});
+
 						});//then
 				}//for	
 

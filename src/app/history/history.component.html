@@ -57,7 +57,7 @@
 
                     <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="flex-start center">
                         <ng-container *ngFor="let DiaUebung of DiaUebungsListe">
-                            <div fxLayout="column" fxLayoutGap="2px" fxFlex="auto">
+                            <div fxLayout="column" fxLayoutGap="2px" fxFlex="25">
                                 <ng-container *ngIf="DiaUebung.Relevant" >
                                     <mat-checkbox 
                                         [(ngModel)]="DiaUebung.Visible"
@@ -67,6 +67,13 @@
                                 
                             </div>
                         </ng-container>
+                    </div>
+
+                    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="center center">
+                        
+                        <div class="center-item" layout-align="center center">
+                            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="Save()">Save</a>
+                        </div>
                     </div>
                 </mat-expansion-panel>
             </mat-accordion>
