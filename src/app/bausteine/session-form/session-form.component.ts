@@ -5,7 +5,7 @@ import { SessionStatus } from "./../../../Business/SessionDB";
 import { SessionStatsOverlayComponent } from "./../../session-stats-overlay/session-stats-overlay.component";
 import { SessionOverlayServiceService, SessionOverlayConfig } from "./../../services/session-overlay-service.service";
 import { DialogeService } from "./../../services/dialoge.service";
-import { DexieSvcService, MinDatum, ProgrammParaDB, SessionParaDB, UebungParaDB } from "./../../services/dexie-svc.service";
+import { DexieSvcService, MinDatum, ProgrammParaDB, SessionParaDB, UebungParaDB, WorkerAction } from "./../../services/dexie-svc.service";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { DialogData } from "src/app/dialoge/hinweis/hinweis.component";
@@ -364,6 +364,8 @@ export class SessionFormComponent implements OnInit {
 		aSessionForm.fDbModule.AktuellesProgramm.SessionListe = this.Programm.SessionListe;
 		aSessionForm.fDbModule.AktuellesProgramm.NummeriereSessions();
 		this.SaveChangesPrim().then(() => this.router.navigate(['/']));
+		this.fDbModule.DoWorker(WorkerAction.LadeDiagrammDaten);
+	
 		// this.SaveChangesPrim();
 	}
 
