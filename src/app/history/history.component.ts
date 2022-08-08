@@ -1,3 +1,4 @@
+import { DiaUebungSettings } from './../../Business/Diagramm/Diagramm';
 import { Uebung } from './../../Business/Uebung/Uebung';
 import { cSessionSelectLimit, UebungParaDB, WorkerAction } from './../services/dexie-svc.service';
 import { DexieSvcService, SessionParaDB } from 'src/app/services/dexie-svc.service';
@@ -25,6 +26,7 @@ export class HistoryComponent implements OnInit {
 	private DiagramData: DiagramData;
 	public DiaTyp: string = 'line';
 	public DiaUebungsListe: Array<DiaUebung> = [];
+	public DiaUebungSettingsListe: Array<DiaUebungSettings> = [];
 
 	@ViewChild('LineChart') LineChart: any;
 
@@ -40,6 +42,14 @@ export class HistoryComponent implements OnInit {
 
 	onClickDiaUebung(aDiaUebung: DiaUebung, aChecked: boolean) {
 		aDiaUebung.Visible = aChecked;
+		const mDiaUebungSetting = (this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
+			if (mPtrDiaUebungSetting.UebungID === aDiaUebung.UebungID)
+				return true;
+			return false;
+		}));
+
+		if (mDiaUebungSetting !== undefined)
+			mDiaUebungSetting.Visible = aChecked;
 		this.Draw(this.DiaTyp);
 	}
 	
@@ -60,13 +70,34 @@ export class HistoryComponent implements OnInit {
 				if (mUebungsNamen.indexOf(mPtrDiaUebung.UebungName) === -1) {
 					mUebungsNamen.push(mPtrDiaUebung.UebungName);
 					this.DiaUebungsListe.push(mPtrDiaUebung);
+
+					const mDiaUebungSetting = (this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
+						if (mPtrDiaUebungSetting.UebungID === mPtrDiaUebung.UebungID)
+							return true;
+						return false;
+					}));
+					if (mDiaUebungSetting !== undefined)
+						mPtrDiaUebung.Visible = mDiaUebungSetting.Visible;
 				}
 			});
 		} // for
 
 		// Jede Übung prüfen 
 		this.DiaUebungsListe.forEach((mPtrDiaUebung) => {
-		// mUebungsNamen.forEach((mPtrUebungName) => {
+			const mDiaUebungSetting = (this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
+				if (mPtrDiaUebungSetting.UebungID === mPtrDiaUebung.UebungID)
+					return true;
+				return false;
+			}));
+
+			if (mDiaUebungSetting === undefined) {
+				if(mPtrDiaUebung.ID === undefined)
+					this.fDbModul.InsertEineDiaUebung(mPtrDiaUebung)
+						.then((aID) => mPtrDiaUebung.ID = aID);
+				
+				this.DiaUebungSettingsListe.push(mPtrDiaUebung);
+			}
+
 			if (mPtrDiaUebung.Visible === true) {
 				mData = [];
 				mPtrDiaUebung.Relevant = false;
@@ -102,7 +133,10 @@ export class HistoryComponent implements OnInit {
 	}
 
 	Save() {
-		
+		this.fDbModul.InsertDiaUebungen(this.DiaUebungSettingsListe);
+		this.fDbModul.LadeDiaUebungen().then((mDiaUebungen => {
+			this.DiaUebungSettingsListe = mDiaUebungen;
+		}));
 	}
 
 	SetLadeLimit(aEvent: any) {
@@ -147,8 +181,12 @@ export class HistoryComponent implements OnInit {
 	}
 	
 	ngOnInit(): void {
+
 		this.DiaTyp = 'line';
-		this.Draw(this.DiaTyp);
+		this.fDbModul.LadeDiaUebungen().then((mDiaUebungen => {
+			this.DiaUebungSettingsListe = mDiaUebungen;
+			this.Draw(this.DiaTyp);
+		}));
 		this.LadeSessions(0);
 	}
 }

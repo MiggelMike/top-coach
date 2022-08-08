@@ -18,7 +18,7 @@ import { Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardUebung, SaetzeStatus } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
-import { DiaDatum, DiaUebung } from 'src/Business/Diagramm/Diagramm';
+import { DiaDatum, DiaUebung, DiaUebungSettings } from 'src/Business/Diagramm/Diagramm';
 var cloneDeep = require('lodash.clonedeep');
 
 export const MinDatum = new Date(-8640000000000000);
@@ -176,6 +176,7 @@ export class DexieSvcService extends Dexie {
 	readonly cHantel: string = "Hantel";
 	readonly cHantelscheibe: string = "Hantelscheibe";
 	readonly cProgress: string = "Progress";
+	readonly cDiaUebungSettings: string = "DiaUebungSettings";
 
 	AktuellerProgrammTyp: ProgrammTyp;
 	AktuellesProgramm: ITrainingsProgramm;
@@ -192,6 +193,7 @@ export class DexieSvcService extends Dexie {
 	private HantelscheibenTable: Dexie.Table<Hantelscheibe, number>;
 	private EquipmentTable: Dexie.Table<Equipment, number>;
 	private ProgressTable: Dexie.Table<Progress, number>;
+	private DiaUebungSettingsTable: Dexie.Table<DiaUebungSettings, number>;
 	private worker: Worker;
 	public Programme: Array<ITrainingsProgramm> = [];
 	public StammUebungsListe: Array<Uebung> = [];
@@ -539,7 +541,7 @@ export class DexieSvcService extends Dexie {
 
 		    // Dexie.delete("ConceptCoach");
 
-		this.version(1).stores({
+		this.version(5).stores({
 			AppData: "++id",
 			Uebung: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
@@ -550,6 +552,7 @@ export class DexieSvcService extends Dexie {
 			Hantel: "++ID,Typ,Name",
 			Hantelscheibe: "++ID,&[Durchmesser+Gewicht]",
 			Progress: "++ID,&Name",
+			DiaUebungSettings: "++ID,&UebungID"
 		});
 
 		this.InitAll();
@@ -628,6 +631,7 @@ export class DexieSvcService extends Dexie {
 		this.InitSession();
 		this.InitMuskelGruppe();
 		this.InitSatz();
+		this.InitDiaUebung();
 	}
 
 	private InitProgress() {
@@ -670,6 +674,11 @@ export class DexieSvcService extends Dexie {
 		this.SatzTable.mapToClass(Satz);
 	}
 
+	private InitDiaUebung() {
+		this.DiaUebungSettingsTable = this.table(this.cDiaUebungSettings);
+		this.DiaUebungSettingsTable.mapToClass(DiaUebungSettings);
+	}
+
 	private NeueUebung(aName: string, aKategorie02: UebungsKategorie02, aTyp: UebungsTyp): Uebung {
 		const mGzclpKategorieen01 = Uebung.ErzeugeGzclpKategorieen01();
 		const mKategorieen01 = [].concat(mGzclpKategorieen01);
@@ -708,6 +717,28 @@ export class DexieSvcService extends Dexie {
 
 	public InsertUebungen(aUebungsListe: Array<Uebung>): PromiseExtended {
 		return this.UebungTable.bulkPut(aUebungsListe);
+	}
+
+	public InsertDiaUebungen(aDiaUebungsListe: Array<DiaUebungSettings>): PromiseExtended {
+		return this.DiaUebungSettingsTable.bulkPut(aDiaUebungsListe);
+	}
+
+	public InsertEineDiaUebung(aDiaUebung: DiaUebungSettings): PromiseExtended {
+		return this.DiaUebungSettingsTable.put(aDiaUebung);
+	}
+
+
+	public LadeDiaUebungen(): PromiseExtended<Array<DiaUebungSettings>> {
+		return this.table(this.cDiaUebungSettings)
+			.toArray()
+			.then((mDiaUebungSettings) => {
+				return mDiaUebungSettings;
+			});
+	}
+
+
+	public DeleteDiaUebung(aDiaUebung: DiaUebung): PromiseExtended {
+		return this.DiaUebungSettingsTable.delete(aDiaUebung.ID);
 	}
 
 	public DeletetUebung(aUebungID: number): PromiseExtended {

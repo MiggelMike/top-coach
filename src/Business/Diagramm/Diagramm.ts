@@ -1,11 +1,15 @@
 import { Satz } from "../Satz/Satz";
 
-export class DiaUebung {
-	UebungID: number = 0;
-    UebungName: string = '';
+export class DiaUebungSettings{
+	public ID: number;
+	public UebungID: number = 0;
+    public UebungName: string = '';
+	public Visible: boolean = true;
+	public Relevant: boolean = true;
+}
+
+export class DiaUebung extends DiaUebungSettings {
 	ArbeitsSatzListe: Array<Satz> = [];
-	Visible: boolean = true;
-	Relevant: boolean = true;
 
 	get MaxWeight(): number {
 		if (this.ArbeitsSatzListe.length === 0)
