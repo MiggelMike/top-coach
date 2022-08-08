@@ -365,8 +365,6 @@ export class SessionFormComponent implements OnInit {
 		aSessionForm.fDbModule.AktuellesProgramm.NummeriereSessions();
 		this.SaveChangesPrim().then(() => this.router.navigate(['/']));
 		this.fDbModule.DoWorker(WorkerAction.LadeDiagrammDaten);
-	
-		// this.SaveChangesPrim();
 	}
 
 	public async SetDone(): Promise<void> {
