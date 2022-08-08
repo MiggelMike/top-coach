@@ -76,7 +76,7 @@ export class HistoryComponent implements OnInit {
 					// In der Übungsliste des Datums nach der Übung suchen 
 					mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDatumUebung) => {
 						// Ist die Übung gleich der zu prüfenden Übung und ist MaxWeight größer als das bisher ermittelte mMaxWeight? 
-						if (mPtrDatumUebung.Visible === true && mPtrDatumUebung.UebungName === mPtrDiaUebung.UebungName && mPtrDatumUebung.MaxWeight > mMaxWeight) {
+						if (mPtrDatumUebung.Visible === true && mPtrDatumUebung.UebungID === mPtrDiaUebung.UebungID && mPtrDatumUebung.MaxWeight > mMaxWeight) {
 							mMaxWeight = mPtrDatumUebung.MaxWeight;
 							mData.push({ x: mPtrDiaDatum.Datum.toDateString(), y: mMaxWeight });
 							if (mMaxWeight > 0) {
