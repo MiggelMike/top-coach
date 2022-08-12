@@ -13,7 +13,7 @@
         </mat-form-field>
     </div>
 
-    <mat-tab-group>
+    <mat-tab-group  style="width:100%;height:100%">
         <mat-tab  label="Sessions">
             <app-programm02 
                 [showButtons]="false"
@@ -77,6 +77,7 @@
                     </div>
                 </mat-expansion-panel>
             </mat-accordion>
+
 
             <ng-container *ngFor="let Dia of Diagramme" >
                 <app-charts #line [ChartData]="Dia">
