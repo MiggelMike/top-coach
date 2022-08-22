@@ -17,7 +17,6 @@ export interface ISession extends ISessionDB {
     hasChanged(aCmpSession: ISessionDB): Boolean;
     resetSession(aQuellSession: ISessionDB): void;
     init(): void;
-    Copy(aSessionCopyPara: SessionCopyPara);
     ExtractUebungen(aUebungen: Array<Uebung>);
     getFirstWaitingExercise(aFromIndex: number): Uebung;
     IstAusVorgabe: boolean;
@@ -116,8 +115,8 @@ export class Session extends SessionDB implements ISession {
 		mSessionCopyPara.CopyUebungID = true;
 		mSessionCopyPara.CopySatzID = true;
         
-        const mSession = this.Copy(mSessionCopyPara);
-        const mCmpSession = aOtherSession.Copy(mSessionCopyPara);
+        const mSession = Session.StaticCopy(this,mSessionCopyPara);
+        const mCmpSession = Session.StaticCopy(aOtherSession,mSessionCopyPara);
 		mCmpSession.DauerInSek = mSession.DauerInSek;
         mCmpSession.DauerFormatted = mSession.DauerFormatted;
 
@@ -127,9 +126,9 @@ export class Session extends SessionDB implements ISession {
         for (let index = 0; index < mSession.UebungsListe.length; index++) {
             const mPtrUebung = mSession.UebungsListe[index];
             const mPtrCmpUebung = mCmpSession.UebungsListe[index];
-            mPtrUebung.ArbeitsSaetzeStatus = mPtrUebung.getArbeitsSaetzeStatus();
+            mPtrUebung.ArbeitsSaetzeStatus = Uebung.StaticArbeitsSaetzeStatus(mPtrUebung);
             mPtrUebung.Expanded = false;
-            mPtrCmpUebung.ArbeitsSaetzeStatus = mPtrCmpUebung.getArbeitsSaetzeStatus();
+            mPtrCmpUebung.ArbeitsSaetzeStatus = Uebung.StaticArbeitsSaetzeStatus(mPtrCmpUebung);
             mPtrCmpUebung.Expanded = false;
 
             if (mPtrUebung.SatzListe.length !== mPtrCmpUebung.SatzListe.length)
@@ -284,10 +283,10 @@ export class Session extends SessionDB implements ISession {
 		return (aUebung.ListenIndex >= this.UebungsListe.length - 1);
 	}
 
-    public Copy(aSessionCopyPara: SessionCopyPara): Session {
+    public static StaticCopy(aSession: Session, aSessionCopyPara: SessionCopyPara): Session {
         // public Copy(aKomplett: boolean, aCopySessionID: boolean = false): Session {        
         // SessionCopyPara
-        const mNeueSession: Session = cloneDeep(this);
+        const mNeueSession: Session = cloneDeep(aSession);
         if(mNeueSession.UebungsListe === undefined)
             mNeueSession.UebungsListe = [];
         
@@ -298,9 +297,9 @@ export class Session extends SessionDB implements ISession {
         {
             mNeueSession.UebungsListe = [];
             
-            if (this.UebungsListe !== undefined) {
-                for (let index1 = 0; index1 < this.UebungsListe.length; index1++) {
-                    const mPrtUebung = this.UebungsListe[index1];
+            if (aSession.UebungsListe !== undefined) {
+                for (let index1 = 0; index1 < aSession.UebungsListe.length; index1++) {
+                    const mPrtUebung = aSession.UebungsListe[index1];
                     const mNeueUebung = mPrtUebung.Copy();
                     mNeueUebung.SatzListe = [];
                     if(aSessionCopyPara.CopyUebungID === false)
@@ -326,7 +325,7 @@ export class Session extends SessionDB implements ISession {
         super();
         const mJetzt = new Date();
         this.SessionDauer = new Zeitraum(mJetzt, mJetzt, new MaxZeitraum(99, 59, 59));
-        Object.defineProperty(this, "UebungsListe", { enumerable: false });
+        // Object.defineProperty(this, "UebungsListe", { enumerable: false });
 
 
     }

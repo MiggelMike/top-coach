@@ -1,6 +1,6 @@
 import { cSatzSelectLimit, DexieSvcService, SatzParaDB, onFormCloseFn } from './../../services/dexie-svc.service';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
-import { Uebung  } from './../../../Business/Uebung/Uebung';
+import { Uebung, SaetzeStatus } from './../../../Business/Uebung/Uebung';
 import { GlobalService } from 'src/app/services/global.service';
 import { MatAccordion, MatExpansionPanel } from '@angular/material/expansion';
 import { ISession } from './../../../Business/Session/Session';
@@ -132,6 +132,10 @@ export class Programm03Component implements OnInit {
     
     public get UebungsListe(): Array<Uebung>{
         return Uebung.StaticUebungsListeSortByListenIndex(this.session.UebungsListe);
+    }
+
+    getArbeitsSaetzeStatus(aSessUeb: Uebung): SaetzeStatus{
+        return Uebung.StaticAlleSaetzeStatus(aSessUeb);
     }
 
     ngOnDestroy() {

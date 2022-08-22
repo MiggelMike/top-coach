@@ -1,4 +1,4 @@
-import { ISession, SessionCopyPara } from 'src/Business/Session/Session';
+import { ISession, Session, SessionCopyPara } from 'src/Business/Session/Session';
 import { DexieSvcService } from './../../app/services/dexie-svc.service';
 import { Satz } from '../Satz/Satz';
 var cloneDeep = require('lodash.clonedeep');
@@ -57,7 +57,7 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
         this.ProgrammKategorie = aProgrammKategorie;
         this.ProgrammTyp = aProgrammTyp;
         Object.defineProperty(this, "pDbModule", { enumerable: false });
-        Object.defineProperty(this, "SessionListe", { enumerable: false });
+        // Object.defineProperty(this, "SessionListe", { enumerable: false });
     }
 
     NummeriereSessions() {
@@ -108,7 +108,7 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
 		mSessionCopyPara.CopyUebungID = true;
 		mSessionCopyPara.CopySatzID = true;
         for (let index = 0; index < this.SessionListe.length; index++) 
-            mCopyofProgram.SessionListe.push(this.SessionListe[index].Copy(mSessionCopyPara));
+            mCopyofProgram.SessionListe.push(Session.StaticCopy(this.SessionListe[index],mSessionCopyPara));
         return mCopyofProgram;
     }
 

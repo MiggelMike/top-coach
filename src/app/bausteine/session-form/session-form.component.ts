@@ -65,7 +65,7 @@ export class SessionFormComponent implements OnInit {
 		mSessionCopyPara.CopySessionID = true;
 		mSessionCopyPara.CopyUebungID = true;
 		mSessionCopyPara.CopySatzID = true;
-		this.Session = mState.sess.Copy(mSessionCopyPara);
+		this.Session = Session.StaticCopy(mState.sess,mSessionCopyPara);
 
 		if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length <= 0) {
 			const mDialogData = new DialogData();
@@ -133,8 +133,8 @@ export class SessionFormComponent implements OnInit {
 		mSessionCopyPara.CopySessionID = true;
 		mSessionCopyPara.CopyUebungID = true;
 		mSessionCopyPara.CopySatzID = true;
-		this.cmpSession = this.Session.Copy(mSessionCopyPara);
-		this.cmpSessionSettings = this.Session.Copy(mSessionCopyPara);
+		this.cmpSession = Session.StaticCopy(this.Session,mSessionCopyPara);
+		this.cmpSessionSettings = Session.StaticCopy(this.Session,mSessionCopyPara);
 		this.BackButtonVisible = true;
 		this.ready = true;
 	}
@@ -319,7 +319,7 @@ export class SessionFormComponent implements OnInit {
 
 		for (let index = 0; index < this.Session.UebungsListe.length; index++) {
 			const mPtrUebung = this.Session.UebungsListe[index];
-			mPtrUebung.ArbeitsSaetzeStatus = mPtrUebung.getArbeitsSaetzeStatus();
+			mPtrUebung.ArbeitsSaetzeStatus = Uebung.StaticArbeitsSaetzeStatus(mPtrUebung);
 		}
 
 		this.fDbModule.SessionSpeichern(this.Session)
@@ -384,7 +384,7 @@ export class SessionFormComponent implements OnInit {
 					const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
 					mSessionCopyPara.CopyUebungID = false;
 					mSessionCopyPara.CopySatzID = false;
-					const mNeueSession: Session = aSessionForm.Session.Copy(mSessionCopyPara);
+					const mNeueSession: Session = Session.StaticCopy(aSessionForm.Session,mSessionCopyPara);
 					mNeueSession.init();
 					this.fDbModule.InitSessionSaetze(aSessionForm.Session, mNeueSession as Session);
 					if (mNeueSession.UebungsListe !== undefined){

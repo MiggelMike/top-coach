@@ -76,7 +76,7 @@ export class SessionDB implements ISessionDB {
     public GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
 
     constructor() {
-        Object.defineProperty(this, "UebungsListe", { enumerable: false });
+        // Object.defineProperty(this, "UebungsListe", { enumerable: false });
         SessionDB.StaticCheckMembers(this);
     }
     

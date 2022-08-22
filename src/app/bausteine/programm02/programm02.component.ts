@@ -313,7 +313,7 @@ export class Programm02Component implements OnInit {
 		mSessionCopyPara.CopySessionID = false;
 		mSessionCopyPara.CopyUebungID = false;
 		mSessionCopyPara.CopySatzID = false;
-		const mSession: ISessionDB = this.fGlobalService.SessionKopie.Copy(mSessionCopyPara);
+		const mSession: ISessionDB = Session.StaticCopy(this.fGlobalService.SessionKopie,mSessionCopyPara);
 		//mSession.FK_Programm = this.programmID;
 		this.SessionListe.push(mSession as Session);
 	}

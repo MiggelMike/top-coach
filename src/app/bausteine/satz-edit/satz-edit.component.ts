@@ -267,7 +267,7 @@ export class SatzEditComponent implements OnInit {
                             that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung);
                         }
                         else {
-                            if (that.sessUebung.getArbeitsSaetzeStatus() === SaetzeStatus.AlleFertig) {
+                            if (Uebung.StaticArbeitsSaetzeStatus(that.sessUebung) === SaetzeStatus.AlleFertig) {
                                 if (aProgressPara.Progress.ProgressSet === ProgressSet.First
                                     && that.sessUebung.SatzWDH(0) >= that.sessUebung.SatzBisVorgabeWDH(0)
                                     || aProgressPara.Wp === WeightProgress.Increase
@@ -285,7 +285,7 @@ export class SatzEditComponent implements OnInit {
                                 }
                                 else if (
                                         (aProgressPara.Wp === WeightProgress.Decrease || aProgressPara.Wp === WeightProgress.DecreaseNextTime)
-                                    &&  that.sessUebung.getArbeitsSaetzeStatus() === SaetzeStatus.AlleFertig )
+                                    &&  Uebung.StaticArbeitsSaetzeStatus(that.sessUebung) === SaetzeStatus.AlleFertig )
                                 {
                                     that.sessUebung.WeightInitDate = new Date();
                                     mDialogData.textZeilen.push(`You failed!`);

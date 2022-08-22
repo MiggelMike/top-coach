@@ -72,7 +72,7 @@
                                 (click)="DeleteExercise(i+1,SessUeb,$event)">Delete Exercise</a>
                             </ng-container>
 
-                            <ng-container *ngIf="SessUeb.getArbeitsSaetzeStatus() === 2">
+                            <ng-container *ngIf="getArbeitsSaetzeStatus(SessUeb) === 2">
                                 <div fxLayout="column" class="height-10">
                                     <img class="mg-top-5 ml-10" src="./../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/Apply.png" />
                                 </div>

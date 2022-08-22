@@ -76,8 +76,7 @@ export class InUpcomingSessionSetzen {
     }
 }
 
-  
-export interface IUebung {
+export interface IUebungDB {
     ID: number;
     // Bei Session-Uebungen ist FkUebung der Schluessel zur Stamm-Uebung
     FkUebung: number;
@@ -108,8 +107,6 @@ export interface IUebung {
     Expanded: boolean;
     InfoLink: string;
     Beschreibung: string;
-    Copy(): Uebung;
-    hasChanged(aCmpUebung: IUebung): Boolean;
     FkProgress: number;
     FkAltProgress: number
     FkOrgProgress: number
@@ -119,7 +116,6 @@ export interface IUebung {
     MaxFailCount: number;
     FailCount: number;
     Failed: boolean;
-    getArbeitsSaetzeStatus(): SaetzeStatus;
     ArbeitsSaetzeStatus: SaetzeStatus;
     Vorlage: boolean;
     ListenIndex: number;
@@ -127,11 +123,6 @@ export interface IUebung {
     NaechsteUebungPause: number;
     ArbeitsSatzPause1: number;
     ArbeitsSatzPause2: number;
-    PauseTime1(aSatz:Satz): string;
-    PauseTime2(aSatz: Satz): string;
-    getPauseText(aSatzTyp: string): string;
-    getFirstWaitingWorkSet(aFromIndex: number): Satz;
-    nummeriereSatzListe(aSatzListe: Array<Satz>);
     ProgressGroup: string;
     AltProgressGroup: string;
     WeightProgress: WeightProgress;
@@ -141,6 +132,17 @@ export interface IUebung {
     FK_Programm: number;
     InUpcomingSessionSetzen: InUpcomingSessionSetzen;
     GewichtsEinheit: GewichtsEinheit;
+}
+
+  
+export interface IUebung extends IUebungDB {
+    Copy(): Uebung;
+    hasChanged(aCmpUebung: IUebung): Boolean;
+    PauseTime1(aSatz:Satz): string;
+    PauseTime2(aSatz: Satz): string;
+    getPauseText(aSatzTyp: string): string;
+    getFirstWaitingWorkSet(aFromIndex: number): Satz;
+    nummeriereSatzListe(aSatzListe: Array<Satz>);
     isLetzterSatzInUebung(aSatz: Satz): boolean;
 }
 
@@ -235,12 +237,12 @@ export class Uebung implements IUebung {
 
     constructor() {
         // Nicht in Dexie-DB-Speichern -> enumerable: false
-        Object.defineProperty(this, "SatzListe", { enumerable: false });
-        Object.defineProperty(this, 'pDb', { enumerable: false });
-        Object.defineProperty(this, 'Selected', { enumerable: false });
-        Object.defineProperty(this, 'Expanded', { enumerable: false });
-        Object.defineProperty(this, 'StammUebung', { enumerable: false });
-        Object.defineProperty(this, 'InUpcomingSessionSetzen', { enumerable: false });
+        // Object.defineProperty(this, "SatzListe", { enumerable: false });
+        // Object.defineProperty(this, 'pDb', { enumerable: false });
+        // Object.defineProperty(this, 'Selected', { enumerable: false });
+        // Object.defineProperty(this, 'Expanded', { enumerable: false });
+        // Object.defineProperty(this, 'StammUebung', { enumerable: false });
+        // Object.defineProperty(this, 'InUpcomingSessionSetzen', { enumerable: false });
         Uebung.StaticCheckMembers(this);
         // Object.defineProperty(this, "AkuelleGewichtAenderung", { enumerable: false });
     }
@@ -248,6 +250,10 @@ export class Uebung implements IUebung {
     public static StaticCheckMembers(aUebung: IUebung) {
         if (aUebung.GewichtsEinheit === undefined)
             aUebung.GewichtsEinheit = GewichtsEinheit.KG;
+
+        // if (aUebung.getArbeitsSaetzeStatus === undefined)
+        //     aUebung.getArbeitsSaetzeStatus = Uebung.getArbeitsSaetzeStatus;
+        
     };
 
     public PruefeGewichtsEinheit(aGewichtsEinheit: GewichtsEinheit) {
@@ -322,11 +328,11 @@ export class Uebung implements IUebung {
 
     public ArbeitsSaetzeStatus: SaetzeStatus = SaetzeStatus.KeinerVorhanden;
 
-    public getArbeitsSatzStatus(aSatzIndex: number): SatzStatus {
-        if ((this.ArbeitsSatzListe.length <= 0) || (aSatzIndex >= this.ArbeitsSatzListe.length) || (aSatzIndex < 0))
+    public static StaticGetArbeitsSatzStatus(aUebung: Uebung, aSatzIndex: number): SatzStatus {
+        if ((aUebung.ArbeitsSatzListe.length <= 0) || (aSatzIndex >= aUebung.ArbeitsSatzListe.length) || (aSatzIndex < 0))
             return undefined;
         
-        return this.ArbeitsSatzListe[aSatzIndex].Status;
+        return aUebung.ArbeitsSatzListe[aSatzIndex].Status;
     }
 
     public getFindUndDoneSetAfter(aVonSatz: Satz): Satz {
@@ -339,45 +345,45 @@ export class Uebung implements IUebung {
         return undefined;
     }
 
-
-    public getAlleSaetzeStatus(): SaetzeStatus {
-        if (this.SatzListe.length <= 0) {
+    public static StaticAlleSaetzeStatus(aUebung: Uebung): SaetzeStatus {
+        if (aUebung.SatzListe.length <= 0) {
             return SaetzeStatus.KeinerVorhanden;
         } else {
             let mAnzFertig: number = 0;
-            this.SatzListe.forEach((s) => {
+            aUebung.SatzListe.forEach((s) => {
                 if (s.Status === SatzStatus.Fertig)
                     mAnzFertig++;
             });
 
-            if (mAnzFertig >= this.SatzListe.length) {
+            if (mAnzFertig >= aUebung.SatzListe.length) {
                 return SaetzeStatus.AlleFertig;;
             }
         }
 
-        this.ArbeitsSaetzeStatus = SaetzeStatus.NichtAlleFertig;
+        aUebung.ArbeitsSaetzeStatus = SaetzeStatus.NichtAlleFertig;
         return SaetzeStatus.NichtAlleFertig;
+        
     }
 
-    public getArbeitsSaetzeStatus(): SaetzeStatus
+    public static StaticArbeitsSaetzeStatus(aUebung: Uebung): SaetzeStatus
     {
-        if (this.ArbeitsSatzListe.length <= 0) {
-            this.ArbeitsSaetzeStatus = SaetzeStatus.KeinerVorhanden;
+        if (aUebung.ArbeitsSatzListe.length <= 0) {
+            aUebung.ArbeitsSaetzeStatus = SaetzeStatus.KeinerVorhanden;
             return SaetzeStatus.KeinerVorhanden;
         } else {
             let mAnzFertig: number = 0;
-            this.ArbeitsSatzListe.forEach((s) => {
+            aUebung.ArbeitsSatzListe.forEach((s) => {
                 if (s.Status === SatzStatus.Fertig)
                     mAnzFertig++;
             });
 
-            if (mAnzFertig >= this.ArbeitsSatzListe.length) {
-                this.ArbeitsSaetzeStatus = SaetzeStatus.AlleFertig;
+            if (mAnzFertig >= aUebung.ArbeitsSatzListe.length) {
+                aUebung.ArbeitsSaetzeStatus = SaetzeStatus.AlleFertig;
                 return SaetzeStatus.AlleFertig;;
             }
         }
 
-        this.ArbeitsSaetzeStatus = SaetzeStatus.NichtAlleFertig;
+        aUebung.ArbeitsSaetzeStatus = SaetzeStatus.NichtAlleFertig;
         return SaetzeStatus.NichtAlleFertig;
     }
 
