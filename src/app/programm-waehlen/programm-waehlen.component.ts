@@ -31,20 +31,24 @@ export class ProgrammWaehlenComponent implements OnInit {
         
         this.ProgrammListeObserver.subscribe(
             () => {
-                const mDialogData = new DialogData();
-                mDialogData.ShowAbbruch = false;
-                mDialogData.ShowOk = false;
-                this.fLoadingDialog.Loading(mDialogData);
-                try {
-                    this.fDbModule.LadeStandardProgramme()
-                        .then((aProgrammListe) => {
-                            this.fLoadingDialog.fDialog.closeAll();
-                            this.ProgrammListe = aProgrammListe;
-                        });
-                }
-                catch {
-                    this.fLoadingDialog.fDialog.closeAll();
-                }
+                this.fDbModule.LadeStandardProgramme()
+                .then((aProgrammListe) => {
+                    this.ProgrammListe = aProgrammListe;
+                });
+                // const mDialogData = new DialogData();
+                // mDialogData.ShowAbbruch = false;
+                // mDialogData.ShowOk = false;
+                // this.fLoadingDialog.Loading(mDialogData);
+                // try {
+                //     this.fDbModule.LadeStandardProgramme()
+                //         .then((aProgrammListe) => {
+                //             this.fLoadingDialog.fDialog.closeAll();
+                //             this.ProgrammListe = aProgrammListe;
+                //         });
+                // }
+                // catch {
+                //     this.fLoadingDialog.fDialog.closeAll();
+                // }
             });
     }
 

@@ -1,6 +1,6 @@
 import { SessionCopyPara } from './../../Business/Session/Session';
 import { HypertrophicProgramm } from '../../Business/TrainingsProgramm/Hypertrophic';
-import { InUpcomingSessionSetzen, WdhVorgabeStatus } from './../../Business/Uebung/Uebung';
+import { InUpcomingSessionSetzen, UebungDB, WdhVorgabeStatus } from './../../Business/Uebung/Uebung';
 import { InitialWeight } from './../../Business/Uebung/InitialWeight';
 import { Progress, ProgressSet, ProgressTyp, WeightCalculation, WeightProgressTime, ProgressPara } from './../../Business/Progress/Progress';
 import { Hantelscheibe } from 'src/Business/Hantelscheibe/Hantelscheibe';
@@ -635,7 +635,7 @@ export class DexieSvcService extends Dexie {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
 		}
 
-		  Dexie.delete("ConceptCoach");
+		//   Dexie.delete("ConceptCoach");
 
 		this.version(50).stores({
 			AppData: "++id",
@@ -741,6 +741,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	private InitHantelscheibe() {
+
 		this.HantelscheibenTable = this.table(this.cHantelscheibe);
 		this.HantelscheibenTable.mapToClass(Hantelscheibe);
 	}
@@ -762,7 +763,7 @@ export class DexieSvcService extends Dexie {
 
 	private InitUebung() {
 		this.UebungTable = this.table(this.cUebung);
-		this.UebungTable.mapToClass(Uebung);
+		this.UebungTable.mapToClass(UebungDB);
 	}
 
 	private InitSatz() {
@@ -1663,17 +1664,11 @@ export class DexieSvcService extends Dexie {
 	// }
 
 	public async LadeStandardProgramme(): Promise<Array<ITrainingsProgramm>> {
-		const mProgrammPara: ProgrammParaDB = new ProgrammParaDB;
-
-		mProgrammPara.WhereClause = {
-			ProgrammKategorie: ProgrammKategorie.Vorlage
-		}
-
-		mProgrammPara.SortBy = "Name"
-
-		return this.LadeProgrammeEx(mProgrammPara).then(
-			(mProgramme) => {
-				return mProgramme;
+		return await this.ProgrammTable
+			.where({ ProgrammKategorie: ProgrammKategorie.Vorlage })
+			.toArray()
+			.then((aProgramme: Array<ITrainingsProgramm>) => {
+				return aProgramme;
 			});
 	}
 
