@@ -14,7 +14,6 @@ import {
 import { ISession, Session } from '../Session/Session';
 
 import {
-    ISatz,
     Satz,
     SatzTyp,
     SatzStatus,

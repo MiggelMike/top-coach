@@ -2,7 +2,6 @@ import { ISession } from 'src/Business/Session/Session';
 import { IUebung, Uebung } from '../Uebung/Uebung';
 import {formatNumber, NumberSymbol} from '@angular/common';
 import { AppData, GewichtsEinheit } from '../Coach/Coach';
-import { R3BoundTarget } from '@angular/compiler';
 import { cWeightDigits } from 'src/app/services/dexie-svc.service';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
@@ -50,38 +49,7 @@ export interface INeuerSatz {
         aSession: ISession,
         aUebung: IUebung,
         aAmrap: boolean
-    ): ISatz
-}
-
-export interface ISatz {
-    ID: number;
-    SessionID: number;
-    UebungID: number;
-    SatzTyp: SatzTyp;
-    SatzGruppenNr: number;
-    SatzListIndex: number;
-    Prozent: number;
-    GewichtDiff: Array<GewichtDiff>;
-    GewichtAusgefuehrt: number;
-    WdhAusgefuehrt: number;
-    GewichtVorgabe: number;
-    WdhVonVorgabe: number;
-    WdhBisVorgabe: number;
-    PausenMinZeit: number;
-    PausenMaxZeit: number;
-    Status: SatzStatus;
-    LiftTyp: LiftTyp;
-    AMRAP: boolean;
-    IncludeBodyweight: boolean;
-    BodyWeight: number;
-    Copy(): Satz;
-    // isEqual(aCmpSatz: ISatz): boolean;
-    isEqual(aCmpSatz: ISatz): Boolean;
-    getBodyWeightText(aPrefix?: string): string;
-    FkHantel: number;
-    Vorgabe: boolean;
-    GewichtsEinheit: GewichtsEinheit;
-    Datum: Date;
+    ): Satz
 }
 
 
@@ -102,7 +70,58 @@ export class GewichtDiff {
 }
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
-export class Satz implements ISatz {
+export class SatzDB {
+    public ID: number;
+    public SessionID: number = 0;
+    public UebungID: number = 0;
+    public SatzTyp: SatzTyp = SatzTyp.Training;
+    public Prozent: number = 0;
+    public GewichtNaechsteSession: number = 0;
+    public GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
+    public Datum: Date;
+    public GewichtAusgefuehrt: number = 0;    
+    public WdhAusgefuehrt: number = 0;
+    public GewichtVorgabe: number = 0;
+    public WdhVonVorgabe: number = 0;
+    public WdhBisVorgabe: number = 0;
+    public PausenMinZeit: number = 0;
+    public PausenMaxZeit: number = 0;
+    public Status: SatzStatus = SatzStatus.Wartet;
+    public LiftTyp: LiftTyp = LiftTyp.Custom;
+    public AMRAP: boolean = false;
+    public SatzGruppenNr: number = 0;
+    public SatzListIndex: number = 0;
+    public IncludeBodyweight: boolean = false;
+    public FkHantel: number = 0;
+    public Vorgabe: boolean = false;
+
+    constructor(aPara: Satz = {} as Satz) {
+        this.SessionID = aPara.SessionID ? aPara.SessionID : 0;
+        this.UebungID = aPara.UebungID ? aPara.UebungID : 0;
+        this.SatzTyp = aPara.SatzTyp ? aPara.SatzTyp : SatzTyp.Aufwaermen;
+        this.Prozent = aPara.Prozent ? aPara.Prozent : 0;
+        this.WdhVonVorgabe = aPara.WdhVonVorgabe ? aPara.WdhVonVorgabe : 0;
+        this.WdhAusgefuehrt = aPara.WdhAusgefuehrt ? aPara.WdhAusgefuehrt : 0;
+        this.GewichtVorgabe = aPara.GewichtVorgabe ? aPara.GewichtVorgabe : 0;
+        this.GewichtNaechsteSession = this.GewichtVorgabe;
+        this.GewichtAusgefuehrt = aPara.GewichtAusgefuehrt
+            ? aPara.GewichtAusgefuehrt
+            : 0;
+        this.PausenMinZeit = aPara.PausenMinZeit
+            ? aPara.PausenMinZeit
+            : SatzPausen.Standard_Min;
+        this.PausenMaxZeit = aPara.PausenMaxZeit
+            ? aPara.PausenMaxZeit
+            : SatzPausen.Standard_Max;
+        this.Status = aPara.Status ? aPara.Status : SatzStatus.Wartet;
+        this.AMRAP = aPara.AMRAP ? aPara.AMRAP : false;
+    }
+}
+
+
+// Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
+export class Satz {
+    public SatzDB: SatzDB = new SatzDB();
     public ID: number;
     public SessionID: number = 0;
     public UebungID: number = 0;
@@ -115,7 +134,7 @@ export class Satz implements ISatz {
     public Datum: Date;
 
 
-    public static StaticCheckMembers(aSatz: ISatz) {
+    public static StaticCheckMembers(aSatz: Satz) {
         if (aSatz.GewichtsEinheit === undefined)
             aSatz.GewichtsEinheit = GewichtsEinheit.KG;
     }
@@ -270,7 +289,7 @@ export class Satz implements ISatz {
         Object.defineProperty(this, "GewichtDiff", { enumerable: false });
     }
 
-    public isEqual(aCmpSatz: ISatz): boolean{
+    public isEqual(aCmpSatz: Satz): boolean{
         return isEqual(this, aCmpSatz);
         // if (this.ID != aCmpSatz.ID) return true;
         // if (this.LiftTyp != aCmpSatz.LiftTyp) return true;

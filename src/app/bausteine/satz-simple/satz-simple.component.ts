@@ -1,4 +1,4 @@
-import { ISatz } from './../../../Business/Satz/Satz';
+import { Satz } from './../../../Business/Satz/Satz';
 import { Component, OnInit, Input } from "@angular/core";
 
 @Component({
@@ -16,7 +16,7 @@ import { Component, OnInit, Input } from "@angular/core";
 })
     
 export class SatzSimpleComponent implements OnInit {
-    @Input() satz: ISatz;
+    @Input() satz: Satz;
     constructor() {}
 
     ngOnInit(): void {}

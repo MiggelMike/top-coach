@@ -5,7 +5,7 @@ import { Component, OnInit, Input, ViewChildren, QueryList, ElementRef, ViewChil
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
-import { ISatz, Satz, SatzTyp, LiftTyp } from "./../../../Business/Satz/Satz";
+import { Satz, SatzTyp, LiftTyp } from "./../../../Business/Satz/Satz";
 import { repMask, floatMask } from "./../../app.module";
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { SatzEditComponent } from '../satz-edit/satz-edit.component';

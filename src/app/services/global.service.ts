@@ -1,6 +1,5 @@
 import { DexieSvcService } from './dexie-svc.service';
 import { MyObserver } from './../../Observers/MyObservers';
-import { ISatz } from './../../Business/Satz/Satz';
 import { ITrainingsProgramm, ProgrammTyp, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Injectable } from '@angular/core';
 import { Sportler, ISportler } from '../../Business/Sportler/Sportler';
@@ -8,6 +7,7 @@ import { ISession } from '../../Business/Session/Session';
 import { Uebung } from '../../Business/Uebung/Uebung';
 import { Subscriber } from 'rxjs';
 import { OverlayRef } from '@angular/cdk/overlay';
+import { Satz } from 'src/Business/Satz/Satz';
 
 
 export enum SpeicherOrtTyp {
@@ -57,7 +57,7 @@ export class GlobalService {
     public Daten: AppDataMap = new AppDataMap();
     public WorkoutCopy: ITrainingsProgramm = null;
     public SessionKopie: ISession = null;
-    public SatzKopie: ISatz = null;
+    public SatzKopie: Satz = null;
     public SessUebungKopie: Uebung = null;
     public Observers: Array<any> = new Array<any>();
     public Comp03PanelUebungObserver: MyObserver = null;

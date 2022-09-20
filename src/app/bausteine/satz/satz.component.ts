@@ -1,7 +1,6 @@
 import { ISession } from './../../../Business/Session/Session';
-import { ITrainingsProgramm } from './../../../Business/TrainingsProgramm/TrainingsProgramm';
 import { floatMask, repMask } from './../../app.module';
-import { ISatz } from './../../../Business/Satz/Satz';
+import { Satz } from './../../../Business/Satz/Satz';
 import { Component, OnInit, Input } from "@angular/core";
 
 @Component({
@@ -13,9 +12,9 @@ export class SatzComponent implements OnInit {
     public floatMask = floatMask;
     public repMask = repMask;
     @Input() satzTypText: string = '';
-    @Input() satz: ISatz = null;
+    @Input() satz: Satz = null;
     @Input() session: ISession = null;
-    @Input() satzListe: Array<ISatz>;
+    @Input() satzListe: Array<Satz>;
     
     constructor() {}
 

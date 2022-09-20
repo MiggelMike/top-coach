@@ -10,7 +10,7 @@ import { SessionDB, SessionStatus } from './../../Business/SessionDB';
 import { Session, ISession } from 'src/Business/Session/Session';
 import { ITrainingsProgramm, TrainingsProgramm, ProgrammTyp, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { DialogeService } from './dialoge.service';
-import { ISatz, Satz, SatzStatus, GewichtDiff, SatzTyp } from './../../Business/Satz/Satz';
+import { Satz, SatzStatus, GewichtDiff, SatzTyp, SatzDB } from './../../Business/Satz/Satz';
 import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
 import { AppData } from './../../Business/Coach/Coach';
 import { Dexie, PromiseExtended } from 'dexie';
@@ -20,6 +20,8 @@ import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
 import { DiaDatum, DiaUebung, DiaUebungSettings } from 'src/Business/Diagramm/Diagramm';
 var cloneDeep = require('lodash.clonedeep');
+
+
 
 export const MinDatum = new Date(-8640000000000000);
 export const MaxDatum = new Date(8640000000000000);
@@ -167,7 +169,7 @@ export class ProgrammParaDB extends ParaDB {
 })
 export class DexieSvcService extends Dexie {
 	readonly cUebung: string = "Uebung";
-	readonly cSatz: string = "Satz";
+	readonly cSatz: string = "SatzDB";
 	readonly cProgramm: string = "Programm";
 	readonly cAppData: string = "AppData";
 	readonly cSession: string = "SessionDB";
@@ -185,7 +187,7 @@ export class DexieSvcService extends Dexie {
 	AppRec: AppData;
 	AppDataTable: Dexie.Table<AppData, number>;
 	private UebungTable: Dexie.Table<Uebung, number>;
-	private SatzTable: Dexie.Table<Satz, number>;
+	private SatzTable: Dexie.Table<SatzDB, number>;
 	private ProgrammTable: Dexie.Table<ITrainingsProgramm, number>;
 	private SessionTable: Dexie.Table<Session, number>;
 	private MuskelGruppeTable: Dexie.Table<MuscleGroup, number>;
@@ -635,7 +637,7 @@ export class DexieSvcService extends Dexie {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
 		}
 
-		//   Dexie.delete("ConceptCoach");
+		   Dexie.delete("ConceptCoach");
 
 		this.version(50).stores({
 			AppData: "++id",
@@ -648,7 +650,8 @@ export class DexieSvcService extends Dexie {
 			Hantel: "++ID,Typ,Name",
 			Hantelscheibe: "++ID,&[Durchmesser+Gewicht]",
 			Progress: "++ID,&Name",
-			DiaUebungSettings: "++ID,&UebungID"
+			DiaUebungSettings: "++ID,&UebungID",
+
 		});
 
 		this.InitAll();
@@ -728,6 +731,36 @@ export class DexieSvcService extends Dexie {
 		this.InitMuskelGruppe();
 		this.InitSatz();
 		this.InitDiaUebung();
+		// this.InitDataDB();
+		// const mDataClient: DataClient = new DataClient();
+		// mDataClient.Name = 'otto';
+
+		// mDataClient.Alter = 20;
+
+		// 	this.table(this.cDataDB).put(mDataClient.DataDB)
+		// 	.then((d) => {
+				
+		// 		let mDataRead: Array<DataClient> = [];
+		// 			// mDataRead.push(mDataClient);
+					
+		// 			this.table(this.cDataDB)
+		// 			.toArray()
+		// 			.then((d) => {
+		// 				try {
+		// 					d.map((r) => {
+		// 						const mDataClient: DataClient = new DataClient();
+		// 						mDataClient.DataDB = r;
+		// 						mDataRead.push(mDataClient);
+
+		// 					})
+		// 					const s = mDataRead[0].Name;
+		// 					mDataRead[0].fn();
+		// 				} catch (error) {
+		// 					console.error(error);
+		// 				}
+		// 			});
+		// 		});
+
 	}
 
 	private InitProgress() {
@@ -768,7 +801,7 @@ export class DexieSvcService extends Dexie {
 
 	private InitSatz() {
 		this.SatzTable = this.table(this.cSatz);
-		this.SatzTable.mapToClass(Satz);
+		this.SatzTable.mapToClass(SatzDB);
 	}
 
 	private InitDiaUebung() {
@@ -1563,8 +1596,14 @@ export class DexieSvcService extends Dexie {
 			.offset(aLadePara !== undefined && aLadePara.OffSet !== undefined ? aLadePara.OffSet : 0)
 			.limit(aLadePara === undefined || aLadePara.Limit === undefined ? cMaxLimnit : aLadePara.Limit)
 			.sortBy(aLadePara === undefined || aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
-			.then((aSaetze: Array<Satz>) => {
-				return aSaetze;
+			.then((aSaetze: Array<SatzDB>) => {
+				const mResult: Array<Satz> = [];
+				aSaetze.map((mSatzDB) => {
+					const mSatz: Satz = new Satz();
+					mSatz.SatzDB = mSatzDB;
+					mResult.push(mSatz);
+				});
+				return mResult;
 			});
 	}
 
@@ -1573,18 +1612,25 @@ export class DexieSvcService extends Dexie {
 
 		return this.SatzTable
 			.where(aLadePara === undefined || aLadePara.WhereClause === undefined ? { UebungID: aUebung.ID } : aLadePara.WhereClause)
-			.and((aLadePara === undefined || aLadePara.And === undefined ? () => { return 1 === 1 } : (satz: Satz) => aLadePara.And(satz)))
+			.and((aLadePara === undefined || aLadePara.And === undefined ? () => { return 1 === 1 } : (satz: SatzDB) => aLadePara.And(satz)))
 			.offset(aLadePara !== undefined && aLadePara.OffSet !== undefined ? aLadePara.OffSet : 0)
 			.limit(aLadePara === undefined || aLadePara.Limit === undefined ? cMaxLimnit : aLadePara.Limit)
 			.sortBy(aLadePara === undefined || aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
-			.then((aSaetze: Array<Satz>) => {
+			.then((aSaetze: Array<SatzDB>) => {
+				const mResult: Array<Satz> = [];
+				aSaetze.map((mSatzDB) => {
+					const mSatz: Satz = new Satz();
+					mSatz.SatzDB = mSatzDB;
+					mResult.push(mSatz);
+				});
+
 				if (aSaetze.length > 0) {
-					aUebung.SatzListe = aSaetze;
+					aUebung.SatzListe = mResult;
 					aUebung.SatzListe.forEach((s) => {
 						if (aLadePara !== undefined && aLadePara.OnSatzAfterLoadFn !== undefined) aLadePara.OnSatzAfterLoadFn(aLadePara);
 					});
 				} else if (aLadePara !== undefined && aLadePara.OnSatzNoRecordFn !== undefined) aLadePara.OnSatzNoRecordFn(aLadePara);
-				return aSaetze;
+				return mResult;
 			});
 	}
 
@@ -1702,12 +1748,16 @@ export class DexieSvcService extends Dexie {
 			} : (aProgramme: Array<ITrainingsProgramm>) => aProgrammPara.Then(aProgramme)));
 	}
 
-	public async SatzSpeichern(aSatz: ISatz): Promise<number> {
-		return await this.SatzTable.put(aSatz as Satz);
+	public async SatzSpeichern(aSatz: Satz): Promise<number> {
+		return await this.SatzTable.put(aSatz.SatzDB);
 	}
 
-	public async SaetzeSpeichern(aSaetze: Array<ISatz>) {
-		return this.SatzTable.bulkPut(aSaetze as Array<Satz>);
+	public async SaetzeSpeichern(aSaetze: Array<Satz>) {
+		let mSaetzeDB: Array<SatzDB> = [];
+		aSaetze.forEach((mSatz) => {
+			mSaetzeDB.push(mSatz.SatzDB);
+		});
+		return this.SatzTable.bulkPut(mSaetzeDB);
 	}
 
 	public async UebungSpeichern(aUebung: Uebung): Promise<number> {

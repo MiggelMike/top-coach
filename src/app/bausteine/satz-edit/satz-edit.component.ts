@@ -1,4 +1,3 @@
-import { Session } from './../../../Business/Session/Session';
 import { cWeightDigits, MinDatum, UebungParaDB } from './../../services/dexie-svc.service';
 import { NextProgress, Progress, ProgressPara, ProgressSet, ProgressTyp, VorgabeWeightLimit, WeightProgress } from './../../../Business/Progress/Progress';
 import { DexieSvcService } from 'src/app/services/dexie-svc.service';
@@ -7,7 +6,7 @@ import { ISession } from 'src/Business/Session/Session';
 import { Uebung, SaetzeStatus } from './../../../Business/Uebung/Uebung';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { Satz, ISatz, SatzStatus } from "./../../../Business/Satz/Satz";
+import { Satz, SatzStatus } from "./../../../Business/Satz/Satz";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
@@ -27,7 +26,7 @@ export class SatzEditComponent implements OnInit {
     @Input() programmTyp: string = '';
     @Input() sess: ISession;
     @Input() sessUebung: Uebung;
-    @Input() satz: ISatz;
+    @Input() satz: Satz;
     @Input() rowNum: number;
     @Input() satzTyp: string;
     @Input() DeletedSatzList: Array<Satz> = [];
@@ -136,7 +135,7 @@ export class SatzEditComponent implements OnInit {
        
     }
 
-    public MouseDown(aSatz: ISatz, aEvent: any) {
+    public MouseDown(aSatz: Satz, aEvent: any) {
         aEvent.stopPropagation();
         if (this.Disabled(aSatz))
             return;
@@ -170,11 +169,11 @@ export class SatzEditComponent implements OnInit {
         aEvent.target.select();
     }
 
-    public Disabled(aSatz:ISatz): boolean{
+    public Disabled(aSatz:Satz): boolean{
         return aSatz.Status === SatzStatus.Fertig;
     }
 
-    async onClickSatzFertig(aSatz: ISatz, aChecked: boolean) {
+    async onClickSatzFertig(aSatz: Satz, aChecked: boolean) {
         if (this.programmTyp === 'history')
             return;
 
