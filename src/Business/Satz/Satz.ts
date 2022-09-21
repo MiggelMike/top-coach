@@ -69,8 +69,35 @@ export class GewichtDiff {
 
 }
 
+export interface ISatz{
+    ID: number;
+    SessionID: number;
+    UebungID: number;
+    SatzTyp: SatzTyp;
+    Prozent: number;
+    GewichtNaechsteSession: number;
+    GewichtsEinheit: GewichtsEinheit;
+    Datum: Date;
+    GewichtAusgefuehrt: number;    
+    WdhAusgefuehrt: number;
+    GewichtVorgabe: number;
+    WdhVonVorgabe: number;
+    WdhBisVorgabe: number;
+    PausenMinZeit: number;
+    PausenMaxZeit: number;
+    Status: SatzStatus;
+    LiftTyp: LiftTyp;
+    AMRAP: boolean;
+    SatzGruppenNr: number;
+    SatzListIndex: number;
+    IncludeBodyweight: boolean;
+    FkHantel: number;
+    Vorgabe: boolean;
+    BodyWeight: number;
+}
+
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
-export class SatzDB {
+export class SatzDB implements ISatz {
     public ID: number;
     public SessionID: number = 0;
     public UebungID: number = 0;
@@ -94,6 +121,7 @@ export class SatzDB {
     public IncludeBodyweight: boolean = false;
     public FkHantel: number = 0;
     public Vorgabe: boolean = false;
+    public BodyWeight: number = 0;
 
     constructor(aPara: Satz = {} as Satz) {
         this.SessionID = aPara.SessionID ? aPara.SessionID : 0;
@@ -115,127 +143,237 @@ export class SatzDB {
             : SatzPausen.Standard_Max;
         this.Status = aPara.Status ? aPara.Status : SatzStatus.Wartet;
         this.AMRAP = aPara.AMRAP ? aPara.AMRAP : false;
+        Satz.StaticCheckMembers(this);
     }
 }
 
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
-export class Satz {
+export class Satz implements ISatz {
     public SatzDB: SatzDB = new SatzDB();
-    public ID: number;
-    public SessionID: number = 0;
-    public UebungID: number = 0;
-    public SatzTyp: SatzTyp = SatzTyp.Training;
-    public Prozent: number = 0;
-    public GewichtDiff: Array<GewichtDiff> = [];
+    //#region ID
+    get ID(): number {
+        return this.SatzDB.ID;
+    }
+
+    set ID(aValue: number) {
+        this.SatzDB.ID = aValue;
+    }
+    //#endregion
+    //#region SessionID 
+    get SessionID(): number{
+        return this.SatzDB.SessionID;
+    }
+    
+    set SessionID(aValue: number) {
+        this.SatzDB.SessionID = aValue;
+    }
+    //#endregion
+    //#region UebungID 
+    get UebungID(): number{
+        return this.SatzDB.UebungID;
+    }
+    
+    set UebungID(aValue: number) {
+        this.SatzDB.UebungID = aValue;
+    }
+    //#endregion    
+    //#region SatzTyp 
+    get SatzTyp(): SatzTyp{
+        return this.SatzDB.SatzTyp;
+    }
+    
+    set SatzTyp(aValue: SatzTyp) {
+        this.SatzDB.SatzTyp = aValue;
+    }
+    //#endregion     
+    //#region Prozent 
+    get Prozent(): number{
+        return this.SatzDB.Prozent;
+    }
+    
+    set Prozent(aValue: number) {
+        this.SatzDB.Prozent = aValue;
+    }
+    //#endregion     
+    //#region GewichtsEinheit
+    get GewichtsEinheit(): GewichtsEinheit {
+        return this.SatzDB.GewichtsEinheit;
+    }
+
+    set GewichtsEinheit(aValue: GewichtsEinheit) {
+        this.SatzDB.GewichtsEinheit = aValue;
+    }
+    //#endregion GewichtsEinheit
     //#region GewichtNaechsteSession 
-    private fGewichtNaechsteSession: number = 0;
-    public GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
-    public Datum: Date;
-
-
-    public static StaticCheckMembers(aSatz: Satz) {
-        if (aSatz.GewichtsEinheit === undefined)
-            aSatz.GewichtsEinheit = GewichtsEinheit.KG;
-    }
-
-    public PruefeGewichtsEinheit(aGewichtsEinheit: GewichtsEinheit) {
-        Satz.StaticCheckMembers(this);
-        if (aGewichtsEinheit !== this.GewichtsEinheit) {
-            this.GewichtAusgefuehrt = AppData.StaticConvertWeight(this.GewichtAusgefuehrt, aGewichtsEinheit);
-            this.GewichtVorgabe = AppData.StaticConvertWeight(this.GewichtVorgabe, aGewichtsEinheit);
-            this.GewichtNaechsteSession = AppData.StaticConvertWeight(this.GewichtNaechsteSession, aGewichtsEinheit);
-            this.GewichtDiff.forEach((mPtrDiff) => mPtrDiff.Gewicht = AppData.StaticConvertWeight(mPtrDiff.Gewicht, aGewichtsEinheit));
-            this.GewichtsEinheit = aGewichtsEinheit;
-        }
-    }
-
-    get GewichtNaechsteSession(): number{
-        return Number(this.fGewichtNaechsteSession);
+    get GewichtNaechsteSession(): number {
+        return this.SatzDB.GewichtNaechsteSession;
     }
 
     set GewichtNaechsteSession(aGewicht: number) {
-        this.fGewichtNaechsteSession = AppData.StaticRoundTo(aGewicht, cWeightDigits);
+        this.SatzDB.GewichtNaechsteSession = AppData.StaticRoundTo(aGewicht, cWeightDigits);
+    }
+    //#endregion
+    //#region Datum 
+    get Datum(): Date {
+        return this.SatzDB.Datum;
+    }
+
+    set Datum(aValue: Date) {
+        this.SatzDB.Datum = aValue;
     }
     //#endregion
     //#region GewichtAusgefuehrt 
-    private fGewichtAusgefuehrt: number = 0;    
     get GewichtAusgefuehrt():number
     {
-        return AppData.StaticRoundTo(this.fGewichtAusgefuehrt,cWeightDigits);
+        return AppData.StaticRoundTo(this.SatzDB.GewichtAusgefuehrt,cWeightDigits);
     }
 
     set GewichtAusgefuehrt(aValue: number)
     {
-        this.fGewichtAusgefuehrt = AppData.StaticRoundTo(aValue,cWeightDigits);
+        this.SatzDB.GewichtAusgefuehrt = AppData.StaticRoundTo(aValue,cWeightDigits);
     }
     //#endregion
     //#region WdhAusgefuehrt
-    private fWdhAusgefuehrt: number = 0;
     get WdhAusgefuehrt(): number{
-        return Number(this.fWdhAusgefuehrt);
+        return Number(this.SatzDB.WdhAusgefuehrt);
     }
 
     set WdhAusgefuehrt(aValue: number){
-        this.fWdhAusgefuehrt = Number(aValue);
+        this.SatzDB.WdhAusgefuehrt = Number(aValue);
     }
     //#endregion
     //#region GewichtVorgabe 
-    private fGewichtVorgabe: number = 0;
     get GewichtVorgabe(): number {
-        return AppData.StaticRoundTo(this.fGewichtVorgabe,cWeightDigits); 
+        return AppData.StaticRoundTo(this.SatzDB.GewichtVorgabe,cWeightDigits); 
     }
     
     set GewichtVorgabe(aValue: number) {
-        this.fGewichtVorgabe = AppData.StaticRoundTo(aValue,cWeightDigits); 
+        this.SatzDB.GewichtVorgabe = AppData.StaticRoundTo(aValue,cWeightDigits); 
     }
     //#endregion
     //#region WdhVonVorgabe
-    private fWdhVonVorgabe: number = 0;
     get WdhVonVorgabe(): number {
-        return Number(this.fWdhVonVorgabe);
+        return Number(this.SatzDB.WdhVonVorgabe);
     }
 
     set WdhVonVorgabe( aValue: number) {
-        this.fWdhVonVorgabe = Number(aValue);
+        this.SatzDB.WdhVonVorgabe = Number(aValue);
     }
     //#endregion
-    //#region  WdhBisVorgabe
-    private fWdhBisVorgabe: number = 0;
+    //#region WdhBisVorgabe
     get WdhBisVorgabe(): number {
-        return Number(this.fWdhBisVorgabe);
+        return Number(this.WdhBisVorgabe);
     };
 
     set WdhBisVorgabe( aValue: number) { 
-        this.fWdhBisVorgabe = Number(aValue);
+        this.WdhBisVorgabe = Number(aValue);
     };
     //#endregion
+    //#region PausenMinZeit
+    get PausenMinZeit(): number {
+        return this.SatzDB.PausenMinZeit;
+    }
 
-    public PausenMinZeit: number = 0;
-    public PausenMaxZeit: number = 0;
-    public Status: SatzStatus = SatzStatus.Wartet;
-    public LiftTyp: LiftTyp = LiftTyp.Custom;
-    public AMRAP: boolean = false;
-    public SatzGruppenNr: number = 0;
-    public SatzListIndex: number = 0;
-    public IncludeBodyweight: boolean = false;
+    set PausenMinZeit( aValue: number) {
+        this.SatzDB.PausenMinZeit = aValue;
+    }
+    //#endregion
+    //#region PausenMaxZeit
+    get PausenMaxZeit(): number{
+        return this.SatzDB.PausenMaxZeit;
+    }
+
+    set PausenMaxZeit(aValue: number){
+        this.SatzDB.PausenMaxZeit = aValue;
+    }
+    //#endregion
+    //#region Status
+    get Status(): SatzStatus {
+        return this.SatzDB.Status;
+    }
+
+    set Status( aValue: SatzStatus) {
+        this.SatzDB.Status = aValue;
+    }
+    //#endregion
+    //#region LiftTyp
+    get LiftTyp(): LiftTyp{
+        return this.SatzDB.LiftTyp;
+    }
+
+    set LiftTyp(aValue: LiftTyp) {
+        this.SatzDB.LiftTyp = aValue;
+    }
+    //#endregion
+    //#region AMRAP
+    get AMRAP():boolean {
+        return this.SatzDB.AMRAP
+    };
+
+    set AMRAP(aValue: boolean) {
+        this.SatzDB.AMRAP = aValue;
+    };
+    //#endregion
+    //#region SatzGruppenNr   
+    get SatzGruppenNr(): number {
+        return this.SatzDB.SatzGruppenNr;
+    }
+
+    set SatzGruppenNr(aValue: number) {
+        this.SatzDB.SatzGruppenNr = aValue;
+    }
+    //#endregion
+    //#region SatzListIndex
+    get SatzListIndex(): number{
+        return this.SatzDB.SatzListIndex;
+    }
+
+    set SatzListIndex(aValue: number) {
+        this.SatzDB.SatzListIndex = aValue;
+    }
+    //#endregion
+    //#region IncludeBodyweight 
+    get IncludeBodyweight(): boolean{
+        return this.SatzDB.IncludeBodyweight;
+    }
+
+    set IncludeBodyweight(aValue: boolean){
+        this.SatzDB.IncludeBodyweight = aValue;
+    }
+    //#endregion
     //#region BodyWeight
-    private fBodyWeight: number = 0;
     get BodyWeight(): number {
-        if (Number.isNaN(this.fBodyWeight) === true)
-            this.fBodyWeight = 0;
-        return AppData.StaticRoundTo(this.fBodyWeight, cWeightDigits);
+        if (Number.isNaN(this.SatzDB.BodyWeight) === true)
+            this.SatzDB.BodyWeight = 0;
+        return AppData.StaticRoundTo(this.SatzDB.BodyWeight, cWeightDigits);
     }
     set BodyWeight(aValue: number) {
         if (Number.isNaN(aValue) === true)
-            this.fBodyWeight = 0;
+            this.SatzDB.BodyWeight = 0;
         else
-            this.fBodyWeight = Number(aValue);
+            this.SatzDB.BodyWeight = Number(aValue);
+    }
+    //#endregion
+    //#region FkHantel
+    get FkHantel(): number {
+        return this.SatzDB.FkHantel;
+    }
+
+    set FkHantel(aValue: number) {
+        this.SatzDB.FkHantel = aValue;
+    }
+    //#endregion
+    //#region Vorgabe
+    get Vorgabe(): boolean{
+        return this.SatzDB.Vorgabe;
+    }
+
+    set Vorgabe(aValue: boolean) {
+        this.SatzDB.Vorgabe = aValue;
     }
     //#endregion
 
-    public FkHantel: number = 0;
-    public Vorgabe: boolean = false;
 
     public get LiftedWeight(): number {
         if (this.Status === SatzStatus.Fertig) {
@@ -261,6 +399,24 @@ export class Satz {
         return mResult;
     }
 
+    public GewichtDiff: Array<GewichtDiff> = [];
+
+    public static StaticCheckMembers(aSatz: SatzDB) {
+        if (aSatz.GewichtsEinheit === undefined)
+            aSatz.GewichtsEinheit = GewichtsEinheit.KG;
+    }
+
+    public PruefeGewichtsEinheit(aGewichtsEinheit: GewichtsEinheit) {
+        Satz.StaticCheckMembers(this.SatzDB);
+        if (aGewichtsEinheit !== this.GewichtsEinheit) {
+            this.GewichtAusgefuehrt = AppData.StaticConvertWeight(this.GewichtAusgefuehrt, aGewichtsEinheit);
+            this.GewichtVorgabe = AppData.StaticConvertWeight(this.GewichtVorgabe, aGewichtsEinheit);
+            this.GewichtNaechsteSession = AppData.StaticConvertWeight(this.GewichtNaechsteSession, aGewichtsEinheit);
+            this.GewichtDiff.forEach((mPtrDiff) => mPtrDiff.Gewicht = AppData.StaticConvertWeight(mPtrDiff.Gewicht, aGewichtsEinheit));
+            this.GewichtsEinheit = aGewichtsEinheit;
+        }
+    }
+
     constructor(aPara: Satz = {} as Satz) {
         this.SessionID = aPara.SessionID ? aPara.SessionID : 0;
         this.UebungID = aPara.UebungID ? aPara.UebungID : 0;
@@ -282,11 +438,6 @@ export class Satz {
         this.Status = aPara.Status ? aPara.Status : SatzStatus.Wartet;
         this.AMRAP = aPara.AMRAP ? aPara.AMRAP : false;
         this.BodyWeight = aPara.BodyWeight ? aPara.BodyWeight : 0;
-        Satz.StaticCheckMembers(this)
-
-        // Nicht in Dexie-DB-Speichern -> enumerable: false        
-        Object.defineProperty(this, "BodyWeight", { enumerable: false });
-        Object.defineProperty(this, "GewichtDiff", { enumerable: false });
     }
 
     public isEqual(aCmpSatz: Satz): boolean{
