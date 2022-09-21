@@ -96,7 +96,6 @@ export interface ISatz{
     BodyWeight: number;
 }
 
-// Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
 export class SatzDB implements ISatz {
     public ID: number;
     public SessionID: number = 0;
@@ -441,23 +440,7 @@ export class Satz implements ISatz {
     }
 
     public isEqual(aCmpSatz: Satz): boolean{
-        return isEqual(this, aCmpSatz);
-        // if (this.ID != aCmpSatz.ID) return true;
-        // if (this.LiftTyp != aCmpSatz.LiftTyp) return true;
-        // if (this.PausenMaxZeit != aCmpSatz.PausenMaxZeit) return true;
-        // if (this.PausenMinZeit != aCmpSatz.PausenMinZeit) return true;
-        // if (this.Prozent != aCmpSatz.Prozent) return true;
-        // if (this.SatzGruppenNr != aCmpSatz.SatzGruppenNr) return true;
-        // if (this.SatzTyp != aCmpSatz.SatzTyp) return true;
-        // if (this.SessionID != aCmpSatz.SessionID) return true;
-        // if (this.Status != aCmpSatz.Status) return true;
-        // if (this.UebungID != aCmpSatz.UebungID) return true;
-        // if (this.WdhAusgefuehrt != aCmpSatz.WdhAusgefuehrt) return true;
-        // if (this.WdhVonVorgabe != aCmpSatz.WdhVonVorgabe) return true;
-        // if (this.GewichtVorgabe != aCmpSatz.GewichtVorgabe) return true;
-        // if (this.GewichtAusgefuehrt != aCmpSatz.GewichtAusgefuehrt) return true;
-        // if (this.AMRAP != aCmpSatz.AMRAP) return true;
-        // return false;
+        return isEqual(this.SatzDB, aCmpSatz.SatzDB);
     }
 
     public Copy(): Satz {
