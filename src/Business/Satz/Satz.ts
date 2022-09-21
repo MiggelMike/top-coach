@@ -262,11 +262,11 @@ export class Satz implements ISatz {
     //#endregion
     //#region WdhBisVorgabe
     get WdhBisVorgabe(): number {
-        return Number(this.WdhBisVorgabe);
+        return Number(this.SatzDB.WdhBisVorgabe);
     };
 
     set WdhBisVorgabe( aValue: number) { 
-        this.WdhBisVorgabe = Number(aValue);
+        this.SatzDB.WdhBisVorgabe = Number(aValue);
     };
     //#endregion
     //#region PausenMinZeit
