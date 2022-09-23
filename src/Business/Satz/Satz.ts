@@ -1,5 +1,5 @@
 import { ISession } from 'src/Business/Session/Session';
-import { IUebung, Uebung } from '../Uebung/Uebung';
+import { Uebung } from '../Uebung/Uebung';
 import {formatNumber, NumberSymbol} from '@angular/common';
 import { AppData, GewichtsEinheit } from '../Coach/Coach';
 import { cWeightDigits } from 'src/app/services/dexie-svc.service';
@@ -47,7 +47,7 @@ export interface INeuerSatz {
         aWdhVorgabe: number,
         aProzent: number,
         aSession: ISession,
-        aUebung: IUebung,
+        aUebung: Uebung,
         aAmrap: boolean
     ): Satz
 }

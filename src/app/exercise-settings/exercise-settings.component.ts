@@ -5,7 +5,7 @@ import { Hantel } from './../../Business/Hantel/Hantel';
 import { DexieSvcService } from "src/app/services/dexie-svc.service";
 import { floatMask, Int3DigitMask } from "./../app.module";
 import { cExerciseOverlayData } from "./../services/exercise-setting-svc.service";
-import { InUpcomingSessionSetzen, IUebung, Uebung } from "./../../Business/Uebung/Uebung";
+import { InUpcomingSessionSetzen, Uebung } from "./../../Business/Uebung/Uebung";
 import { Component,  Inject } from "@angular/core";
 import { ExerciseOverlayConfig, ExerciseOverlayRef } from "../services/exercise-setting-svc.service";
 import { Progress, ProgressGroup } from "src/Business/Progress/Progress";
@@ -46,8 +46,8 @@ export class ExerciseSettingsComponent {
 	public ProgressGroupListe: Array<string>;
 	public Programm: ITrainingsProgramm;
 	public Session: ISession;
-	public SessUeb: IUebung;
-	public CmpUebungSettings: IUebung;
+	public SessUeb: Uebung;
+	public CmpUebungSettings: Uebung;
 
 	constructor(
 		public overlayRef: ExerciseOverlayRef,

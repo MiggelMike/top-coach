@@ -1,5 +1,5 @@
 import { ITrainingsProgramm } from './../../../Business/TrainingsProgramm/TrainingsProgramm';
-import { Uebung, IUebung } from 'src/Business/Uebung/Uebung';
+import { Uebung } from 'src/Business/Uebung/Uebung';
 import { ISession, Session } from './../../../Business/Session/Session';
 import { Component, OnInit, Input, ViewChildren, QueryList, ElementRef, ViewChild } from "@angular/core";
 import { DialogeService } from "./../../services/dialoge.service";
