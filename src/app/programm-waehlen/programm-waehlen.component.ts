@@ -19,22 +19,28 @@ export class ProgrammWaehlenComponent implements OnInit {
         public fDbModule: DexieSvcService,
 		private fLoadingDialog: DialogeService
 
-    ) {}
-
-    ngOnInit() {
+    ) {
+        
         this.ProgrammListeObserver = of(this.ProgrammListe);
         this.LadeTrainingsProgramme();
     }
+
+    ngOnInit() {
+    }
     
     public LadeTrainingsProgramme(): void {
-        this.ProgrammListe = [];
+        
+        //  this.fDbModule.LadeStandardProgramme()
+        //             .then((aProgrammListe) => {
+        //                 this.ProgrammListe = aProgrammListe;
+        //             });
         
         this.ProgrammListeObserver.subscribe(
             () => {
                 this.fDbModule.LadeStandardProgramme()
-                .then((aProgrammListe) => {
-                    this.ProgrammListe = aProgrammListe;
-                });
+                    .then((aProgrammListe) => {
+                        this.ProgrammListe = aProgrammListe;
+                    });
                 // const mDialogData = new DialogData();
                 // mDialogData.ShowAbbruch = false;
                 // mDialogData.ShowOk = false;

@@ -18,14 +18,16 @@ export class Programm01Component implements OnInit {
     @Input() showButtons: boolean | false;
     @Input() showSaveButtons: boolean | false;
     @Input() programmtext: { value: null };
-    
+
+    SessionPanelOpened: boolean = false;
     SelectBtnDisabled: boolean = false;
 
     constructor(
         private fDbModul: DexieSvcService,
         public fDialogService: DialogeService,
         private router: Router
-    ) {}
+    ) {
+    }
 
     ngOnInit() {
      }
@@ -49,6 +51,7 @@ export class Programm01Component implements OnInit {
 
     panelOpened() {
         this.fDbModul.CheckSessions(this.programm);
+        this.SessionPanelOpened = true;
     }
     
     SelectThisWorkoutClick(aSelectedProgram: ITrainingsProgramm, $event: any): void {

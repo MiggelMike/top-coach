@@ -28,12 +28,14 @@
                 </mat-expansion-panel-header>
                 <div class="card-body">
                     <!-- Daten an Sub-Komponente durchreichen -->
-                    <ng-container *ngIf="programm && programm.SessionListe">
-                        <app-programm02 [programm]="programm" 
-                                        [SessionListe]="programm.SessionListe" 
-                                        [bearbeitbar]="false" 
-                                        [StartButtonVisible] ="false"
-                                        [showSaveButtons] ="showSaveButtons"></app-programm02>
+                    <ng-container *ngIf="SessionPanelOpened === true" >
+                        <ng-container *ngIf="programm && programm.SessionListe">
+                            <app-programm02 [programm]="programm" 
+                                            [SessionListe]="programm.SessionListe" 
+                                            [bearbeitbar]="false" 
+                                            [StartButtonVisible] ="false"
+                                            [showSaveButtons] ="showSaveButtons"></app-programm02>
+                        </ng-container>
                     </ng-container>
                 </div>
             </mat-expansion-panel>

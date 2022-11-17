@@ -232,7 +232,7 @@ export enum StandardUebungsName {
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
 export class Uebung  {
     public UebungDB: UebungDB = new UebungDB();
-    public StammUebung: Uebung = new Uebung();
+    public StammUebung: Uebung;
     public SatzListe: Array<Satz> = [];
     //#region ID
     get ID(): number {

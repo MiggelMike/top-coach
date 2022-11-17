@@ -51,16 +51,18 @@
                         <div [id]="'collapseSession' + i" aria-labelledby="headingOne" attr.data-parent="#accordionSession">
                             <div class="card-body">
                                 <!-- session an Sub-Komponente durchreichen -->
-                                <app-programm03 
-                                    [session]="sess" 
-                                    [cmpSession]="sess" 
-                                    [programm]="programm"
-                                    [cmpSettingsSession]="sess" 
-                                    [programmTyp]="programmTyp"
-                                    [bearbeitbar]="bearbeitbar" 
-                                    [SofortSpeichern]="SofortSpeichern"
-                                    [DeletedSatzList]="DeletedSatzList">
-                                </app-programm03>
+                                <ng-container *ngIf="DayOpened === true">
+                                    <app-programm03 
+                                        [session]="sess" 
+                                        [cmpSession]="sess" 
+                                        [programm]="programm"
+                                        [cmpSettingsSession]="sess" 
+                                        [programmTyp]="programmTyp"
+                                        [bearbeitbar]="bearbeitbar" 
+                                        [SofortSpeichern]="SofortSpeichern"
+                                        [DeletedSatzList]="DeletedSatzList">
+                                    </app-programm03>
+                                </ng-container>
                             </div>
                         </div>
 

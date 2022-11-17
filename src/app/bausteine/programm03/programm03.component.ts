@@ -58,6 +58,7 @@ export class Programm03Component implements OnInit {
     private isExpanded: Boolean = true;
     public ToggleButtonText = "Close all excercises";
     public LocaleID: string;
+    ExerciseOpened: boolean = false;
     // private UebungPanelsObserver = {
     //     next: (x: MatExpansionPanel) => {
     //         this.accCheckUebungPanels(this.SessUeb);
@@ -167,6 +168,7 @@ export class Programm03Component implements OnInit {
     }
 
     async PanelUebungOpened(aUebung: Uebung) {
+        this.ExerciseOpened = true;
         try {
             this.checkingSets = true;
 
