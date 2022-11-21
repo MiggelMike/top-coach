@@ -28,6 +28,7 @@ export class SessUebungComponent implements OnInit {
     @Input() panUebung1: MatExpansionPanel;
     @Input() bearbeitbar: Boolean;
     @Input() DeletedSatzList: Array<Satz> = [];
+    // satzListe: Array<Satz> = [];
     @ViewChildren("AppSatzEdit") SatzEditList: QueryList<SatzEditComponent>;
     @ViewChild("ExpansionPanel") ExpansionPanel:MatExpansionPanel;
     
@@ -36,9 +37,14 @@ export class SessUebungComponent implements OnInit {
         private fDialogService: DialogeService,
         private fGlobalService: GlobalService
     ) {
+        const x = 0;
     }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        const x = 0;
+        // this.satzListe = this.sessUebung.SatzListe;
+
+    }
     
     ngOnDestroy() {
         this.SatzEditList.forEach(

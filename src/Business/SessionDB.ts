@@ -43,7 +43,6 @@ export interface ISessionDB {
     DauerTimer: any;
     BodyWeight: number;
     BodyWeightAtSessionStart: number;
-    UebungsListe: Array<Uebung>;
     ProgressIsCalced: boolean;
     GewichtsEinheit: GewichtsEinheit;
     PruefeGewichtsEinheit(aGewichtsEinheit: GewichtsEinheit);
@@ -71,7 +70,6 @@ export class SessionDB implements ISessionDB {
     public DauerTimer: any;
     get BodyWeight(): number { return 0; };
     public BodyWeightAtSessionStart: number = 0;
-    public UebungsListe: Array<Uebung> = [];
     public PausenListe: Array<Pause> = [];
     public GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
 

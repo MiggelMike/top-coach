@@ -29,6 +29,7 @@ export interface ISession extends ISessionDB {
     Reset();
     isLetzteUebungInSession(aUebung: Uebung): boolean;
     NextExercise(aUebung: Uebung): Uebung;
+    UebungsListe: Array<Uebung>;
 }
 
 export class SessionCopyPara {
@@ -40,6 +41,8 @@ export class SessionCopyPara {
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
 export class Session extends SessionDB implements ISession {
+    UebungsListe: Array<Uebung> = [];
+
     public static nummeriereUebungsListe(aUebungsListe: Array<Uebung>) {
         for (let index = 0; index < aUebungsListe.length; index++)
             aUebungsListe[index].ListenIndex = index;
@@ -352,7 +355,7 @@ export class Session extends SessionDB implements ISession {
     }
 
 
-    public hasChanged(aCmpSession: ISessionDB): Boolean {
+    public hasChanged(aCmpSession: ISession): Boolean {
         if (aCmpSession.ID != this.ID) return true;
         if (aCmpSession.Datum != this.Datum) return true;
         if (aCmpSession.DauerInSek != this.DauerInSek) return true;
@@ -380,7 +383,7 @@ export class Session extends SessionDB implements ISession {
         return false;
     }
 
-    public resetSession(aQuellSession: ISessionDB):void {
+    public resetSession(aQuellSession: ISession):void {
         const mUebungsListe: Array<Uebung> = new Array<Uebung>();
         this.UebungsListe.forEach(u => mUebungsListe .push(u.Copy()));
         this.UebungsListe = [];

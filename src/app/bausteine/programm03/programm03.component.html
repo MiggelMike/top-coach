@@ -43,7 +43,7 @@
         <div *ngFor="let sess of SortedSessionListe, index as i" cdkDrag cdkDragRootElement="accSession"> -->
 
     <div cdkDropList  (cdkDropListDropped)="drop($event)">
-        <ng-container *ngFor="let SessUeb of UebungsListe, index as i; let isOdd=odd">
+        <ng-container *ngFor="let SessUeb of  session.UebungsListe, index as i; let isOdd=odd">
             <!-- <ng-container [SessUeb]="SessUeb"></ng-container> -->
             <div class="mg-lr-30" layout-align="center center" cdkDrag [cdkDragDisabled]="programmTyp === 'history'">
                 <mat-accordion  #accUebung='matAccordion' multi="true">
@@ -89,7 +89,7 @@
                                             [panUebung1]="panUebung"
                                             [rowNum]="i" 
                                             [satzTypText]="'Warm up sets'"
-                                            [satzListe]="SessUeb.AufwaermSatzListe" 
+                                            [satzListe]="SessUeb.AufwaermSatzListe"
                                             [session]="session"
                                             [DeletedSatzList]="DeletedSatzList"
                                             [programm]="programm"
@@ -104,7 +104,7 @@
                                             [panUebung1]="panUebung" 
                                             [rowNum]="i" 
                                             [satzTypText]="'Work sets'"
-                                            [satzListe]="SessUeb.ArbeitsSatzListe" 
+                                            [satzListe]="SessUeb.ArbeitsSatzListe"
                                             [session]="session"
                                             [programm]="programm"
                                             [DeletedSatzList]="DeletedSatzList"
