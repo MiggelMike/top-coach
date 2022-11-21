@@ -497,13 +497,15 @@ export class DexieSvcService extends Dexie {
 	private LadeSessions(aProgramm: ITrainingsProgramm, aSessionLadePara?: SessionParaDB): Promise<void> {
 		return this.LadeProgrammSessions(aProgramm.id, aSessionLadePara)
 			.then((aSessionListe) => {
-				if (aSessionListe.length > 0) {
-					aProgramm.SessionListe = aProgramm.SessionListe.concat(aSessionListe);
-					const mSessionLadePara: SessionParaDB = new SessionParaDB();
-					mSessionLadePara.Limit = cSessionSelectLimit;
-					mSessionLadePara.OffSet = aSessionListe.length;
-					this.LadeSessions(aProgramm, mSessionLadePara);
-				}
+				aSessionListe.forEach((mSession) => {
+					mSession.UebungsListe = [];
+				});
+					aProgramm.SessionListe = aSessionListe;
+					//aProgramm.SessionListe = aProgramm.SessionListe.concat(aSessionListe);
+					//const mSessionLadePara: SessionParaDB = new SessionParaDB();
+					// mSessionLadePara.Limit = cSessionSelectLimit;
+					// mSessionLadePara.OffSet = aSessionListe.length;
+					//this.LadeSessions(aProgramm, mSessionLadePara);
 			});
 	}
 
@@ -637,9 +639,9 @@ export class DexieSvcService extends Dexie {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
 		}
 
-		    //Dexie.delete("ConceptCoach");
+		     //Dexie.delete("ConceptCoach");
 
-		this.version(1).stores({
+		this.version(3).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
@@ -1732,15 +1734,8 @@ export class DexieSvcService extends Dexie {
 
 	public async LadeStandardProgramme(): Promise<Array<ITrainingsProgramm>> {
 		const mProgrammPara: ProgrammParaDB = new ProgrammParaDB();
-		mProgrammPara.SessionBeachten = true;
 		mProgrammPara.WhereClause = { ProgrammKategorie: ProgrammKategorie.Vorlage.toString() };
 		return this.LadeProgrammeEx(mProgrammPara);
-		// return await this.ProgrammTable
-		// 	.where({ ProgrammKategorie: ProgrammKategorie.Vorlage })
-		// 	.toArray()
-		// 	.then((aProgramme: Array<ITrainingsProgramm>) => {
-		// 		return aProgramme;
-		// 	});
 	}
 
 

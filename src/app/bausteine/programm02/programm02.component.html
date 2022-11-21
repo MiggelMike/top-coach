@@ -10,6 +10,7 @@
                 <mat-accordion #accSession="matAccordion" multi="true">
                     <mat-expansion-panel 
                         (opened) = "panelOpened(sess)"
+                        (closed) = "panelClosed(sess)"
                         #panSession='matExpansionPanel' 
                         class="HG-01">
                         <mat-expansion-panel-header>
@@ -51,7 +52,7 @@
                         <div [id]="'collapseSession' + i" aria-labelledby="headingOne" attr.data-parent="#accordionSession">
                             <div class="card-body">
                                 <!-- session an Sub-Komponente durchreichen -->
-                                <ng-container *ngIf="DayOpened === true">
+                                <ng-container *ngIf="sess.Expanded === true">
                                     <app-programm03 
                                         [session]="sess" 
                                         [cmpSession]="sess" 

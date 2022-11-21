@@ -2,9 +2,10 @@
 <div  *ngIf="programm" fxLayoutAlign="center" id="accordionProgramme">
     <div fxLayout="column" fxFlex="100%">
         <mat-accordion #accordion="matAccordion" multi="true">
-            <mat-expansion-panel  #panProgramm='matExpansionPanel'
+            <mat-expansion-panel  #panProgramm='matExpansionPanel' [expanded]="false" 
                 class="HG-01"
-                (opened) = "panelOpened()">
+                (opened) = "panelOpened()"
+                (closed) = "panelClosed()">
                 <mat-expansion-panel-header (click)="$event.stopPropagation()">
                     <div fxLayout="row wrap" fxLayoutGap="2px" fxLayoutAlign="center center">
 
@@ -28,13 +29,14 @@
                 </mat-expansion-panel-header>
                 <div class="card-body">
                     <!-- Daten an Sub-Komponente durchreichen -->
-                    <ng-container *ngIf="SessionPanelOpened === true" >
+                    <ng-container *ngIf="programm.Expanded === true" >
                         <ng-container *ngIf="programm && programm.SessionListe">
                             <app-programm02 [programm]="programm" 
                                             [SessionListe]="programm.SessionListe" 
                                             [bearbeitbar]="false" 
                                             [StartButtonVisible] ="false"
-                                            [showSaveButtons] ="showSaveButtons"></app-programm02>
+                                            [showSaveButtons] ="showSaveButtons">
+                            </app-programm02>
                         </ng-container>
                     </ng-container>
                 </div>

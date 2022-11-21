@@ -26,6 +26,7 @@ export interface ITrainingsProgramm {
     SessionListe: Array<ISession>;
     Bearbeitbar: Boolean;
     Zyklen: number;
+    Expanded: boolean;
     Init(aSessions: Array<ISession>): void;
     Copy(): ITrainingsProgramm;
     ErstelleSessionsAusVorlage(aProgrammKategorie: ProgrammKategorie): ITrainingsProgramm;
@@ -48,6 +49,7 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
     public Bearbeitbar: Boolean = true;
     public SessionListe: Array<ISession> = [];
     public Zyklen: number = 1;
+    public Expanded: boolean = false;;
 
     constructor(
         aProgrammTyp: ProgrammTyp,

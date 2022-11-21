@@ -47,7 +47,6 @@ export class Programm02Component implements OnInit {
 	public ToggleButtonText: string;
 	public ClickData: Programm02Component;
 	private SessionListObserver: Observable<Array<ISession>>;
-	DayOpened: boolean = false;
 	
 
 	drop(event: CdkDragDrop<ISession[]>) {
@@ -109,12 +108,16 @@ export class Programm02Component implements OnInit {
 		
 	
 	panelOpened(aSess: ISession) {
-		this.DayOpened = true;
+		aSess.Expanded = true;
 		if (aSess.UebungsListe === undefined || aSess.UebungsListe.length <= 0) {
 			aSess.UebungsListe = [];
 			const mUebungPara: UebungParaDB = new UebungParaDB();
 			this.LadeUebungen(aSess, mUebungPara);
 		}
+	}
+
+	panelClosed(aSess: ISession) {
+		aSess.Expanded = false;
 	}
 
 	ngAfterViewInit() {

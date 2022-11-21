@@ -39,6 +39,9 @@ export class ProgrammWaehlenComponent implements OnInit {
             () => {
                 this.fDbModule.LadeStandardProgramme()
                     .then((aProgrammListe) => {
+                        aProgrammListe.forEach((mProgram) => {
+                            mProgram.SessionListe = [];
+                        });
                         this.ProgrammListe = aProgrammListe;
                     });
                 // const mDialogData = new DialogData();

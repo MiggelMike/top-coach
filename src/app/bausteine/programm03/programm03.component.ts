@@ -15,6 +15,7 @@ import { ExerciseSettingsComponent } from 'src/app/exercise-settings/exercise-se
 import { ExerciseOverlayConfig, ExerciseSettingSvcService } from 'src/app/services/exercise-setting-svc.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Satz } from 'src/Business/Satz/Satz';
+import { ReturnStatement } from '@angular/compiler';
 
 
 @Component({
@@ -218,10 +219,7 @@ export class Programm03Component implements OnInit {
     private async CheckUebungSatzliste(aUebung: Uebung): Promise<any> {
         if (aUebung.SatzListe === undefined || aUebung.SatzListe.length <= 0) {
             aUebung.SatzListe = [];
-            const mSatzParaDB: SatzParaDB = new SatzParaDB();
-            mSatzParaDB.Limit = cSatzSelectLimit;
-            mSatzParaDB.OffSet = 0;
-            await this.LadeUebungsSaetze(aUebung, mSatzParaDB);
+            await this.LadeUebungsSaetze(aUebung);
         }
     }
 

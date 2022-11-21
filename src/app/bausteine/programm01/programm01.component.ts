@@ -19,7 +19,6 @@ export class Programm01Component implements OnInit {
     @Input() showSaveButtons: boolean | false;
     @Input() programmtext: { value: null };
 
-    SessionPanelOpened: boolean = false;
     SelectBtnDisabled: boolean = false;
 
     constructor(
@@ -50,8 +49,12 @@ export class Programm01Component implements OnInit {
     }
 
     panelOpened() {
+        this.programm.Expanded = true;
         this.fDbModul.CheckSessions(this.programm);
-        this.SessionPanelOpened = true;
+    }
+
+    panelClosed() {
+        this.programm.Expanded = false;
     }
     
     SelectThisWorkoutClick(aSelectedProgram: ITrainingsProgramm, $event: any): void {
