@@ -29,11 +29,13 @@ export class AnstehendeSessionsComponent implements OnInit {
 
     private async LadeSessions(aOffSet: number = 0): Promise<void> {
         const mSessionParaDB: SessionParaDB = new SessionParaDB();
-        // mSessionParaDB.Limit = 1;
+        mSessionParaDB.UebungenBeachten = false;
         // mSessionParaDB.OffSet = aOffSet;
         this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
             .then((aSessionListe) => {
                 if (aSessionListe.length > 0) {
+                    this.Programm.SessionListe = [];
+                    this.fDbModule.AktuellesProgramm.SessionListe = [];
                     aSessionListe.forEach((mPtrSession) => {
                         // if (mPtrSession.Kategorie02 !== SessionStatus.Wartet) {                            
                             // const mUebungParaDB = new UebungParaDB();
@@ -47,12 +49,10 @@ export class AnstehendeSessionsComponent implements OnInit {
                         
                         SessionDB.StaticCheckMembers(mPtrSession);
                         mPtrSession.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
-                        this.fDbModule.AktuellesProgramm.SessionListe.push(mPtrSession);
-                        // this.LadeSessions(this.fProgramm.SessionListe.length);
-                    
                     });
-                    this.fProgramm.SessionListe = aSessionListe;
                 }
+                this.fDbModule.AktuellesProgramm.SessionListe = aSessionListe;
+                this.fProgramm.SessionListe =  aSessionListe;
             });
     }
         

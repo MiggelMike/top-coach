@@ -163,20 +163,21 @@ export class HistoryComponent implements OnInit {
 
 	private LadeSessions (aOffSet: number) {
         const mSessionParaDB: SessionParaDB = new SessionParaDB();
-        mSessionParaDB.OffSet = aOffSet;
-		mSessionParaDB.Limit = cSessionSelectLimit;
+        mSessionParaDB.UebungenBeachten = false;
+		mSessionParaDB.Limit = this.LadeLimit;
         this.fDbModul.LadeHistorySessions(mSessionParaDB)
-            .then( (aSessionListe) => {
-				if (aSessionListe.length > 0 && this.SessionListe.length < this.LadeLimit) {
-					aSessionListe.forEach((mSession) => {
-						this.SessionListe.push(mSession);
-						this.SessionListe.sort((s1, s2) => {
-							return s2.Datum.valueOf() - s1.Datum.valueOf();
-						});
+			.then((aSessionListe) => {
+				this.SessionListe = aSessionListe;
+				// if (aSessionListe.length > 0 && this.SessionListe.length < this.LadeLimit) {
+				// 	aSessionListe.forEach((mSession) => {
+				// 		this.SessionListe.push(mSession);
+				// 		this.SessionListe.sort((s1, s2) => {
+				// 			return s2.Datum.valueOf() - s1.Datum.valueOf();
+				// 		});
 
-					});
-					this.LadeSessions(this.SessionListe.length);
-				}
+				// 	});
+				// 	this.LadeSessions(this.SessionListe.length);
+				// }
 			});
 	}
 

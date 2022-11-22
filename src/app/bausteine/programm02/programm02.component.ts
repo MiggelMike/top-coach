@@ -87,23 +87,29 @@ export class Programm02Component implements OnInit {
 		private fGlobalService: GlobalService,
 		private fUebungService: UebungService,
 		public fDbModule: DexieSvcService,
+		private fLoadingDialog: DialogeService,
 		private router: Router) {
 	}
 
-	private async LadeUebungen(aSess: ISession, aUebungPara: UebungParaDB):Promise<void>  {
-		 this.fDbModule.LadeSessionUebungen(aSess.ID,aUebungPara)
-			.then( (aUebungsliste) => {
-				if (aUebungsliste.length > 0) {
-					// aUebungsliste.forEach((aUebung) => {
-					// 	if (aSess.UebungsListe.find((aSessUebung) => {
-					// 		if (aSessUebung.ID === aUebung.ID) return aUebung; else return undefined;  }) === undefined) aSess.UebungsListe.push(aUebung);
-					// });
-					//aSess.UebungsListe = aSess.UebungsListe.concat(aUebungsliste);
-					aSess.UebungsListe = aUebungsliste;
-//					aUebungPara.OffSet = aSess.UebungsListe.length;
-					// await this.LadeUebungen(aSess, aUebungPara);
-				}
-			});
+	private async LadeUebungen(aSess: ISession, aUebungPara: UebungParaDB): Promise<void>  {
+		const mDialogData = new DialogData();
+        mDialogData.ShowAbbruch = false;
+        mDialogData.ShowOk = false;
+        mDialogData.textZeilen.push('Loading exercises');
+		this.fLoadingDialog.Loading(mDialogData);
+		try {
+
+
+			this.fDbModule.LadeSessionUebungen(aSess.ID, aUebungPara)
+				.then((aUebungsliste) => {
+					if (aUebungsliste.length > 0) {
+						aSess.UebungsListe = aUebungsliste;
+						this.fLoadingDialog.fDialog.closeAll();
+					}
+				});
+		} catch(err) {
+			this.fLoadingDialog.fDialog.closeAll();
+		}
 	}
 		
 	

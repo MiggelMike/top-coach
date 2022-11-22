@@ -1040,8 +1040,9 @@ export class DexieSvcService extends Dexie {
 	private async PruefeStandardProgress() {
 		await this.ProgressTable.orderBy("Name")
 			.toArray()
-			.then((mProgress) => {
-				if (mProgress === undefined || mProgress.length === 0) {
+			.then((mProgressListe) => {
+				this.ProgressListe = mProgressListe;
+				if (mProgressListe === undefined || mProgressListe.length === 0) {
 					const mNeuProgress = new Progress();
 					mNeuProgress.AdditionalReps = 0;
 					mNeuProgress.ProgressSet = ProgressSet.All;
@@ -1454,6 +1455,8 @@ export class DexieSvcService extends Dexie {
 					const mPtrSession: Session = aSessionListe[index];
 					SessionDB.StaticCheckMembers(mPtrSession);
 					mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+					mPtrSession.UebungsListe = [];
+
 					if (aSessionParaDB.UebungenBeachten === true) {
 						for (let index = 0; index < aSessionListe.length; index++) {
 							const mPtrSession = aSessionListe[index];
