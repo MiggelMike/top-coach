@@ -29,14 +29,14 @@ export class AnstehendeSessionsComponent implements OnInit {
 
     private async LadeSessions(aOffSet: number = 0): Promise<void> {
         const mSessionParaDB: SessionParaDB = new SessionParaDB();
-        mSessionParaDB.Limit = 1;
-        mSessionParaDB.OffSet = aOffSet;
+        // mSessionParaDB.Limit = 1;
+        // mSessionParaDB.OffSet = aOffSet;
         this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
             .then((aSessionListe) => {
                 if (aSessionListe.length > 0) {
                     aSessionListe.forEach((mPtrSession) => {
                         // if (mPtrSession.Kategorie02 !== SessionStatus.Wartet) {                            
-                            const mUebungParaDB = new UebungParaDB();
+                            // const mUebungParaDB = new UebungParaDB();
                           //  mUebungParaDB.SaetzeBeachten = true;
                             // this.fDbModule.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
                             //     (aUebungsListe) => {
@@ -48,10 +48,10 @@ export class AnstehendeSessionsComponent implements OnInit {
                         SessionDB.StaticCheckMembers(mPtrSession);
                         mPtrSession.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
                         this.fDbModule.AktuellesProgramm.SessionListe.push(mPtrSession);
-                        this.fProgramm.SessionListe.push(mPtrSession);
-                        this.LadeSessions(this.fProgramm.SessionListe.length);
+                        // this.LadeSessions(this.fProgramm.SessionListe.length);
                     
                     });
+                    this.fProgramm.SessionListe = aSessionListe;
                 }
             });
     }

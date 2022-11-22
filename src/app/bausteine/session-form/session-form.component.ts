@@ -147,7 +147,7 @@ export class SessionFormComponent implements OnInit {
 					const mUebungParaDB: UebungParaDB = new UebungParaDB();
 					// mUebungParaDB.Limit = cUebungSelectLimit;
 					// mUebungParaDB.OffSet = 0;
-					mUebungParaDB.SaetzeBeachten = true;
+					mUebungParaDB.SaetzeBeachten = false;
 					this.Programm.SessionListe.forEach(
 						(aSession) => {
 							if (this.Session.ID !== aSession.ID) {
@@ -363,8 +363,10 @@ export class SessionFormComponent implements OnInit {
 		
 		aSessionForm.fDbModule.AktuellesProgramm.SessionListe = this.Programm.SessionListe;
 		aSessionForm.fDbModule.AktuellesProgramm.NummeriereSessions();
-		this.SaveChangesPrim().then(() => this.router.navigate(['/']));
-		this.fDbModule.DoWorker(WorkerAction.LadeDiagrammDaten);
+		this.SaveChangesPrim().then(() => {
+			this.router.navigate(['/']);
+			this.fDbModule.DoWorker(WorkerAction.LadeDiagrammDaten);
+		});
 	}
 
 	public async SetDone(): Promise<void> {
@@ -380,6 +382,7 @@ export class SessionFormComponent implements OnInit {
 			try {
 				this.fSavingDialog.Loading(mSaveDialogData);
 				aSessionForm.Session.SetSessionFertig();
+				// await this.fDbModule.SessionSpeichern(aSessionForm.Session);	
 				if (aSessionForm.Session.UebungsListe.length > 0) {
 					const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
 					mSessionCopyPara.CopyUebungID = false;
@@ -413,37 +416,42 @@ export class SessionFormComponent implements OnInit {
 
 					mNeueSession.UebungsListe.forEach((mQuellUebung) => {
 						if (mQuellUebung.ArbeitsSatzListe && mQuellUebung.ArbeitsSatzListe.length > 0) {
-							let mArbetisSatzListe: Array<Satz> = [];
 							this.Programm.SessionListe.forEach( async (mSession) => {
+								let mArbeitsSatzListe: Array<Satz> = [];
 								if (mSession.ID !== aSessionForm.Session.ID) {
-									// Lade aus mSession alle Übungen die gleich mUebung sind
-									mSession.UebungsListe.forEach((mDestUebung) => {
-										const mDestArbeitsSatzPtrListe: Array<Satz> = mDestUebung.ArbeitsSatzListe;
+									// Hole aus mSession alle Übungen die gleich mUebung sind
+									for (let index2 = 0; index2 < mSession.UebungsListe.length; index2++) {
+										const mDestUebung = mSession.UebungsListe[index2];
 										if (mDestUebung.FkUebung === mQuellUebung.FkUebung &&
 											mDestUebung.FkProgress === mQuellUebung.FkProgress &&
 											mDestUebung.ProgressGroup === mQuellUebung.ProgressGroup) {
-											//
-											for (let index = 0; index < mDestArbeitsSatzPtrListe.length; index++) {
-												const mDestAbeitsSatzPtr: Satz = mDestArbeitsSatzPtrListe[index];
-												let mQuellSatzPtr: Satz;
-									
-												if (mDestAbeitsSatzPtr.SatzListIndex < mQuellUebung.ArbeitsSatzListe.length)
-													mQuellSatzPtr = mQuellUebung.ArbeitsSatzListe[mDestAbeitsSatzPtr.SatzListIndex];
-												else
-													mQuellSatzPtr = mQuellUebung.ArbeitsSatzListe[0];
-										
-												mDestAbeitsSatzPtr.GewichtNaechsteSession = mQuellSatzPtr.GewichtNaechsteSession;
-												mDestAbeitsSatzPtr.GewichtAusgefuehrt = mQuellSatzPtr.GewichtNaechsteSession;
-												mDestAbeitsSatzPtr.GewichtVorgabe = mQuellSatzPtr.GewichtNaechsteSession;
-												mArbetisSatzListe.push(mDestAbeitsSatzPtr);
-											}//for
-										} else {
-											mArbetisSatzListe = mDestUebung.ArbeitsSatzListe;
+											this.fDbModule.LadeUebungsSaetze(mDestUebung.ID)
+												.then((mUebungsSaetzte) => {
+													mDestUebung.SatzListe = mUebungsSaetzte;
+													const mDestArbeitsSatzPtrListe: Array<Satz> = mDestUebung.ArbeitsSatzListe;
+													
+													for (let index = 0; index < mDestArbeitsSatzPtrListe.length; index++) {
+														const mDestAbeitsSatzPtr: Satz = mDestArbeitsSatzPtrListe[index];
+														let mQuellSatzPtr: Satz;
+														
+														if (mDestAbeitsSatzPtr.SatzListIndex < mQuellUebung.ArbeitsSatzListe.length)
+															mQuellSatzPtr = mQuellUebung.ArbeitsSatzListe[mDestAbeitsSatzPtr.SatzListIndex];
+														else
+															mQuellSatzPtr = mQuellUebung.ArbeitsSatzListe[0];
+														
+														mDestAbeitsSatzPtr.GewichtNaechsteSession = mQuellSatzPtr.GewichtNaechsteSession;
+														mDestAbeitsSatzPtr.GewichtAusgefuehrt = mQuellSatzPtr.GewichtNaechsteSession;
+														mDestAbeitsSatzPtr.GewichtVorgabe = mQuellSatzPtr.GewichtNaechsteSession;
+														mArbeitsSatzListe.push(mDestAbeitsSatzPtr);
+													} //for
+												})
+											} else {
+												mArbeitsSatzListe = mDestUebung.ArbeitsSatzListe;
 										}
-									});//foreach
+									}//for
 
-									if (mArbetisSatzListe.length > 0)
-										this.fDbModule.SaetzeSpeichern(mArbetisSatzListe);
+									if (mArbeitsSatzListe.length > 0)
+										this.fDbModule.SaetzeSpeichern(mArbeitsSatzListe);
 								}//if
 							});
 						}//if
@@ -452,7 +460,7 @@ export class SessionFormComponent implements OnInit {
 					this.Programm.SessionListe.push(mNeueSession);
 					this.Programm.NummeriereSessions();
 			
-					// this.fDbModule.SessionSpeichern(aSessionForm.Session);				
+					this.fDbModule.SessionSpeichern(aSessionForm.Session);				
 
 					const mSessions: Array<Session> = [mNeueSession];
 					for (let mSessionIndex = 0; mSessionIndex < mSessions.length; mSessionIndex++) {
@@ -493,14 +501,20 @@ export class SessionFormComponent implements OnInit {
 						}//for
 					}//for
 
+					await this.fDbModule.SessionSpeichern(mNeueSession);
+
 					const mProgrammExtraParaDB: ProgrammParaDB = new ProgrammParaDB();
 					mProgrammExtraParaDB.SessionBeachten = true;
 					mProgrammExtraParaDB.SessionParaDB = new SessionParaDB();
 					mProgrammExtraParaDB.SessionParaDB.UebungenBeachten = true;
 					mProgrammExtraParaDB.SessionParaDB.UebungParaDB = new UebungParaDB();
 					mProgrammExtraParaDB.SessionParaDB.UebungParaDB.SaetzeBeachten = true;
-					this.fDbModule.ProgrammSpeichern(this.Programm, mProgrammExtraParaDB);
-					// this.fDbModule.SessionSpeichern(mNeueSession);
+					await this.fDbModule.ProgrammSpeichern(this.Programm, mProgrammExtraParaDB)
+						.then((mPtrProgramm) => {
+							this.Programm = mPtrProgramm;
+						});
+
+					this.fDbModule.AktuellesProgramm = this.Programm;
 					this.DoAfterDone(this);
 				}
 			} finally {

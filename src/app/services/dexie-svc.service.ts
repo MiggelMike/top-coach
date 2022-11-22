@@ -639,7 +639,7 @@ export class DexieSvcService extends Dexie {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
 		}
 
-		     //Dexie.delete("ConceptCoach");
+		    //  Dexie.delete("ConceptCoach");
 
 		this.version(3).stores({
 			AppData: "++id",
@@ -1243,89 +1243,92 @@ export class DexieSvcService extends Dexie {
 	public async LadeUpcomingSessions(aProgrammID: number, aSessionParaDB?: SessionParaDB): Promise<Array<Session>> {
 		// .anyOf([[aProgrammID, SessionStatus.Laueft], [aProgrammID, SessionStatus.Pause], [aProgrammID, SessionStatus.Wartet]])
 
-		await Promise.all([{ FK_Programm: aProgrammID, Kategorie02: SessionStatus.Fertig },
-		                   { FK_Programm: aProgrammID, Kategorie02: SessionStatus.FertigTimeOut }].map(
-				mSuchStatus => this.SessionTable.where({
-					FK_Programm: mSuchStatus.FK_Programm,
-					Kategorie02: mSuchStatus.Kategorie02
-			})
-				.toArray()
-				.then(async (aSessionListe) => {
-					// Jetzt für jede Session die Übungen laden
-					for (let index = 0; index < aSessionListe.length; index++) {
-						const mPtrSession: Session = aSessionListe[index];
-						const mNurSessionDatum = new Date(mPtrSession.Datum.toDateString());
-						SessionDB.StaticCheckMembers(mPtrSession);
-						mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+		// return await Promise.all([{ FK_Programm: aProgrammID, Kategorie02: SessionStatus.Fertig },
+		//                    { FK_Programm: aProgrammID, Kategorie02: SessionStatus.FertigTimeOut }].map(
+		// 		mSuchStatus => this.SessionTable.where({
+		// 			FK_Programm: mSuchStatus.FK_Programm,
+		// 			Kategorie02: mSuchStatus.Kategorie02
+		// 	})
+		// 		.toArray()
+		// 		.then(async (aSessionListe) => {
+		// 			// Jetzt für jede Session die Übungen laden
+		// 			aSessionListe.forEach((mPtrSession) => mPtrSession.UebungsListe = []);
+		// 			return aSessionListe[0];
+					
+		// 			for (let index = 0; index < aSessionListe.length; index++) {
+		// 				const mPtrSession: Session = aSessionListe[index];
+		// 				const mNurSessionDatum = new Date(mPtrSession.Datum.toDateString());
+		// 				SessionDB.StaticCheckMembers(mPtrSession);
+		// 				mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
 						
-						// await Promise.all([mPtrSession.ID].map(
-						// 	mSuchSessionID => this.UebungTable
-						// 		.where({ SessionID: mSuchSessionID })
-						// 		.toArray()
-						// 		.then( async (mUebungsListe) => {
-						// 			// Jetzt für jede Übung die Sätze laden
-						// 			for (let index1 = 0; index1 < mUebungsListe.length; index1++) {
-						// 				const mPtrUebung = mUebungsListe[index1];
-						// 				await Promise.all([mPtrUebung.ID].map(
-						// 					mSuchUebungID => this.SatzTable
-						// 						.where({ UebungID: mSuchUebungID })
-						// 						.toArray()
-						// 						.then((mSaetze) => {
-						// 							for (let index2 = 0; index2 < mSaetze.length; index2++) {
-						// 								const mPtrSatz = mSaetze[index2];
-						// 								if (mPtrSatz.SatzTyp === SatzTyp.Training &&
-						// 									mPtrSatz.Status === SatzStatus.Fertig)
-						// 								{
-						// 									let mAktuellesDiaDatum: DiaDatum;
+		// 				// await Promise.all([mPtrSession.ID].map(
+		// 				// 	mSuchSessionID => this.UebungTable
+		// 				// 		.where({ SessionID: mSuchSessionID })
+		// 				// 		.toArray()
+		// 				// 		.then( async (mUebungsListe) => {
+		// 				// 			// Jetzt für jede Übung die Sätze laden
+		// 				// 			for (let index1 = 0; index1 < mUebungsListe.length; index1++) {
+		// 				// 				const mPtrUebung = mUebungsListe[index1];
+		// 				// 				await Promise.all([mPtrUebung.ID].map(
+		// 				// 					mSuchUebungID => this.SatzTable
+		// 				// 						.where({ UebungID: mSuchUebungID })
+		// 				// 						.toArray()
+		// 				// 						.then((mSaetze) => {
+		// 				// 							for (let index2 = 0; index2 < mSaetze.length; index2++) {
+		// 				// 								const mPtrSatz = mSaetze[index2];
+		// 				// 								if (mPtrSatz.SatzTyp === SatzTyp.Training &&
+		// 				// 									mPtrSatz.Status === SatzStatus.Fertig)
+		// 				// 								{
+		// 				// 									let mAktuellesDiaDatum: DiaDatum;
 
-						// 									mAktuellesDiaDatum = this.DiagrammDatenListe.find((mDiaDatum) => {
-						// 										if (mDiaDatum.Datum.valueOf() === mNurSessionDatum.valueOf())
-						// 											return mDiaDatum;
-						// 										return undefined;
-						// 									});// Find DiaDatum
+		// 				// 									mAktuellesDiaDatum = this.DiagrammDatenListe.find((mDiaDatum) => {
+		// 				// 										if (mDiaDatum.Datum.valueOf() === mNurSessionDatum.valueOf())
+		// 				// 											return mDiaDatum;
+		// 				// 										return undefined;
+		// 				// 									});// Find DiaDatum
 						
-						// 									if (mAktuellesDiaDatum === undefined) {
-						// 										mAktuellesDiaDatum = new DiaDatum();
-						// 										mAktuellesDiaDatum.Datum = mNurSessionDatum;
-						// 										aDiagrammDatenListe.push(mAktuellesDiaDatum);
-						// 									}
+		// 				// 									if (mAktuellesDiaDatum === undefined) {
+		// 				// 										mAktuellesDiaDatum = new DiaDatum();
+		// 				// 										mAktuellesDiaDatum.Datum = mNurSessionDatum;
+		// 				// 										aDiagrammDatenListe.push(mAktuellesDiaDatum);
+		// 				// 									}
 
-						// 									// Suche in der Diagramm-Uebungsliste nach der Session-Übung   
-						// 									let mAktuelleDiaUebung: DiaUebung = mAktuellesDiaDatum.DiaUebungsListe.find((mDiaUebung) => {
-						// 										if (mDiaUebung.UebungID === mPtrUebung.FkUebung)
-						// 											return mDiaUebung;
-						// 										return undefined;
-						// 									}); // Find DiaUebung 
+		// 				// 									// Suche in der Diagramm-Uebungsliste nach der Session-Übung   
+		// 				// 									let mAktuelleDiaUebung: DiaUebung = mAktuellesDiaDatum.DiaUebungsListe.find((mDiaUebung) => {
+		// 				// 										if (mDiaUebung.UebungID === mPtrUebung.FkUebung)
+		// 				// 											return mDiaUebung;
+		// 				// 										return undefined;
+		// 				// 									}); // Find DiaUebung 
 												
-						// 									// Wurde die Session-Übung in der Diagramm-Uebungsliste gefunden?
-						// 									if (mAktuelleDiaUebung === undefined) {
-						// 										// Die Session-Übung wurde nicht in der Diagramm-Uebungsliste gefunden.
-						// 										mAktuelleDiaUebung = new DiaUebung();
-						// 										mAktuelleDiaUebung.UebungID = mPtrUebung.FkUebung;
-						// 										mAktuelleDiaUebung.UebungName = mPtrUebung.Name;
-						// 										mAktuelleDiaUebung.Visible = true;
-						// 										mAktuellesDiaDatum.DiaUebungsListe.push(mAktuelleDiaUebung);
-						// 									}//if
+		// 				// 									// Wurde die Session-Übung in der Diagramm-Uebungsliste gefunden?
+		// 				// 									if (mAktuelleDiaUebung === undefined) {
+		// 				// 										// Die Session-Übung wurde nicht in der Diagramm-Uebungsliste gefunden.
+		// 				// 										mAktuelleDiaUebung = new DiaUebung();
+		// 				// 										mAktuelleDiaUebung.UebungID = mPtrUebung.FkUebung;
+		// 				// 										mAktuelleDiaUebung.UebungName = mPtrUebung.Name;
+		// 				// 										mAktuelleDiaUebung.Visible = true;
+		// 				// 										mAktuellesDiaDatum.DiaUebungsListe.push(mAktuelleDiaUebung);
+		// 				// 									}//if
 												
-						// 									// Alle Arbeitssätze,die zu dem Zeitpunkt in "mDiaUebung.Datum" gemacht worden.
-						// 									// mAktuelleDiaUebung.ArbeitsSatzListe.forEach((mSatz) => {
-						// 									// 	mSatz.Datum = mSatz.Status === SatzStatus.Fertig ? mPtrUebung.Datum : undefined;
-						// 									// });
-						// 									// this.SaetzeSpeichern(mAktuelleDiaUebung.ArbeitsSatzListe);
-						// 									mAktuelleDiaUebung.ArbeitsSatzListe.push(mPtrSatz);
-						// 								} // if
-						// 							} //for
-						// 							mPtrUebung.SatzListe = mSaetze;
-						// 						})//then
-						// 				));//map
-						// 			}//for
-						// 			mPtrSession.UebungsListe = mUebungsListe;
-						// 		})//then
-						// )) // all - map
-					}	//for
+		// 				// 									// Alle Arbeitssätze,die zu dem Zeitpunkt in "mDiaUebung.Datum" gemacht worden.
+		// 				// 									// mAktuelleDiaUebung.ArbeitsSatzListe.forEach((mSatz) => {
+		// 				// 									// 	mSatz.Datum = mSatz.Status === SatzStatus.Fertig ? mPtrUebung.Datum : undefined;
+		// 				// 									// });
+		// 				// 									// this.SaetzeSpeichern(mAktuelleDiaUebung.ArbeitsSatzListe);
+		// 				// 									mAktuelleDiaUebung.ArbeitsSatzListe.push(mPtrSatz);
+		// 				// 								} // if
+		// 				// 							} //for
+		// 				// 							mPtrUebung.SatzListe = mSaetze;
+		// 				// 						})//then
+		// 				// 				));//map
+		// 				// 			}//for
+		// 				// 			mPtrSession.UebungsListe = mUebungsListe;
+		// 				// 		})//then
+		// 				// )) // all - map
+		// 			}	//for
 
-				})//then
-		).flat());
+		// 		})//then
+		// ).flat());
 		
 		return await this.SessionTable
 			.where("[FK_Programm+Kategorie02]")
@@ -1335,6 +1338,7 @@ export class DexieSvcService extends Dexie {
 			.sortBy("ListenIndex")
 			.then(async (aSessionListe) => {
 				aSessionListe.forEach((mPtrSession) => {
+					mPtrSession.UebungsListe = [];
 					SessionDB.StaticCheckMembers(mPtrSession);
 					mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
 				});
@@ -1828,11 +1832,12 @@ export class DexieSvcService extends Dexie {
 			.then( async (mID) => {
 				aTrainingsProgramm.id = mID;
 				const mSessionListe: Array<Session> = aTrainingsProgramm.SessionListe;
-				aTrainingsProgramm.SessionListe = [];
+				
 				 mSessionListe.forEach( async (mSession) => {
 					mSession.FK_Programm = mID;
 					await this.SessionSpeichern(mSession);
-				});
+				 });
+				//  aTrainingsProgramm.SessionListe = [];
 
 				// this.ProgrammTable.where({ id: mid })
 				// 	.toArray()
