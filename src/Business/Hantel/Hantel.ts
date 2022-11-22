@@ -1,3 +1,4 @@
+import { Gewicht } from './../Konfiguration/Gewicht';
 import { ErstellStatus } from "src/app/services/dexie-svc.service";
 
 var cloneDeep = require('lodash.clonedeep');
@@ -25,8 +26,27 @@ export class Hantel implements IHantel {
     ID: number; 
     Name: string = "";
     Typ: HantelTyp = HantelTyp.Barbell;
-    Durchmesser: number = 0;
-    Gewicht: number = 0;
+    
+    //#region Durchmesser
+    private fDurchmesser: number = 0; 
+    get Durchmesser():number {
+        return Number(this.fDurchmesser)
+    }
+
+    set Durchmesser(aValue: number) {
+        this.fDurchmesser = Number( aValue);
+    }
+    //#endregion
+    //#region Gewicht
+    private fGewicht: number = 0;
+    get Gewicht(): number {
+        return Number(this.fGewicht);
+    }
+    set Gewicht(aValue: number) {
+        this.fGewicht = Number(aValue);
+    }
+    //#endregion
+
     HantelStatus: ErstellStatus = ErstellStatus.VomAnwenderErstellt; 
 
     public static StaticNeueHantel(

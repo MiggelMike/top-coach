@@ -24,7 +24,18 @@ export class PlateCalcComponent implements OnInit {
 	public Satz: Satz;
 	public Uebung: Uebung;
 	public PlateListObserver: Observable<Array<Hantelscheibe>>;
-	public GewichtAusgefuehrt: number = 0;
+
+	//#region GewichtAusgefuehrt
+	private fGewichtAusgefuehrt: number = 0;
+	get GewichtAusgefuehrt(): number{
+		return Number(this.fGewichtAusgefuehrt);
+	}
+	set GewichtAusgefuehrt(aValue: number) {
+		this.fGewichtAusgefuehrt = Number(aValue);
+	}
+	//#endregion
+
+
 	public SetForAllSets: boolean;
 	public HantelForAllSets: boolean;
 	public RepRangeForAllSets: boolean;
