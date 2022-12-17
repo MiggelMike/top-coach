@@ -392,159 +392,168 @@ export class SessionFormComponent implements OnInit {
 				// Session speichern
 				// await this.fDbModule.SessionSpeichern(aSessionForm.Session)
 				// .then((mSavedSession: Session) {
-					// Session ist gespeichert
-					if (aSessionForm.Session.UebungsListe.length > 0) {
-						const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
-						mSessionCopyPara.CopyUebungID = false;
-						mSessionCopyPara.CopySatzID = false;
-						// Mit den Daten der gespeicherten Session eine neue erstellen
-						const mNeueSession: Session = Session.StaticCopy(aSessionForm.Session, mSessionCopyPara);
-						aSessionForm.Session.ListenIndex = -aSessionForm.Session.ListenIndex;
-						// Einige Daten der neuen Session müssen initialisiert werden
-						mNeueSession.init();
-						// Die neue Session gehört zum gleichen Programm wie die Alte
-						mNeueSession.FK_Programm = aSessionForm.Session.FK_Programm;
-						// Die Neue Session hat das gleiche Vorlage-Programm wie die Alte.
-						mNeueSession.FK_VorlageProgramm = aSessionForm.Session.FK_VorlageProgramm;
-						mNeueSession.Expanded = false;
+				// Session ist gespeichert
+				if (aSessionForm.Session.UebungsListe.length > 0) {
+					const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+					mSessionCopyPara.CopyUebungID = false;
+					mSessionCopyPara.CopySatzID = false;
+					// Mit den Daten der gespeicherten Session eine neue erstellen
+					const mNeueSession: Session = Session.StaticCopy(aSessionForm.Session, mSessionCopyPara);
+					aSessionForm.Session.ListenIndex = -aSessionForm.Session.ListenIndex;
+					// Neue Session  initialisieren
+					mNeueSession.init();
+					// Die neue Session gehört zum gleichen Programm wie die Alte
+					mNeueSession.FK_Programm = aSessionForm.Session.FK_Programm;
+					// Die Neue Session hat das gleiche Vorlage-Programm wie die Alte.
+					mNeueSession.FK_VorlageProgramm = aSessionForm.Session.FK_VorlageProgramm;
+					mNeueSession.Expanded = false;
 
-							// Sätze der neuen Session initialisieren
-							this.fDbModule.InitSessionSaetze(aSessionForm.Session, mNeueSession as Session);
-							if (mNeueSession.UebungsListe !== undefined) {
-								// Übungen der neuen Session initialisieren
-								for (let index = 0; index < mNeueSession.UebungsListe.length; index++) {
-									const mPtrNeueUebung: Uebung = mNeueSession.UebungsListe[index];
-									mPtrNeueUebung.WeightInitDate = cMinDatum;
-									// Nochmals Daten der Sätze der neuen Session initialisieren
-									if (mPtrNeueUebung.ArbeitsSatzListe !== undefined) {
-										mPtrNeueUebung.ArbeitsSatzListe.forEach((sz) => {
-											sz.GewichtAusgefuehrt = sz.GewichtNaechsteSession;
-											sz.GewichtVorgabe = sz.GewichtNaechsteSession;
-										});
-									}//if						
-								}//for
-							}//if
+					// Sätze der neuen Session initialisieren
+					this.fDbModule.InitSessionSaetze(aSessionForm.Session, mNeueSession as Session);
+					// if (mNeueSession.UebungsListe !== undefined) {
+					// 	// Übungen der neuen Session initialisieren
+					// 	for (let index = 0; index < mNeueSession.UebungsListe.length; index++) {
+					// 		const mPtrNeueUebung: Uebung = mNeueSession.UebungsListe[index];
+					// 		mPtrNeueUebung.WeightInitDate = cMinDatum;
+					// 		// Nochmals Daten der Sätze der neuen Session initialisieren
+					// 		if (mPtrNeueUebung.ArbeitsSatzListe !== undefined) {
+					// 			mPtrNeueUebung.ArbeitsSatzListe.forEach((sz) => {
+					// 				sz.GewichtAusgefuehrt = sz.GewichtNaechsteSession;
+					// 				sz.GewichtVorgabe = sz.GewichtNaechsteSession;
+					// 			});
+					// 		}//if						
+					// 	}//for
+					// }//if
 
 
-							// for (let index1 = 0; index1 < this.Programm.SessionListe.length; index1++) {
-							// 	const mPtrSession = this.Programm.SessionListe[index1];
-							// 	await this.fDbModule.CheckSessionSaetze(mPtrSession);
-							// }
+					for (let index1 = 0; index1 < this.Programm.SessionListe.length; index1++) {
+						const mPtrSession = this.Programm.SessionListe[index1];
+						// Eventuell müssen dies Sätze der Session-Übungen geladen werden
+						await this.fDbModule.CheckSessionSaetze(mPtrSession);
+					}
 
-							mNeueSession.UebungsListe.forEach((mAktuelleUebung) => {
-								if (mAktuelleUebung.ArbeitsSatzListe && mAktuelleUebung.ArbeitsSatzListe.length > 0) {
-									this.Programm.SessionListe.forEach(async (mAktuelleSession) => {
-										// let mArbeitsSatzListe: Array<Satz> = [];
-										// Ist die aktuelle Session ungleich der Gesicherten?
-										if (mAktuelleSession.ID !== aSessionForm.Session.ID) {
-											// Prüfe alle Übungen der aktuellen Session
-											for (let index2 = 0; index2 < mAktuelleSession.UebungsListe.length; index2++) {
-												const mPtrDestUebung = mAktuelleSession.UebungsListe[index2];
-												// Ist mPtrDestUebung gleich der aktuellen Übung?
-												if (mPtrDestUebung.FkUebung === mAktuelleUebung.FkUebung &&
-													mPtrDestUebung.FkProgress === mAktuelleUebung.FkProgress &&
-													mPtrDestUebung.ProgressGroup === mAktuelleUebung.ProgressGroup)
-												{
-													await this.fDbModule.LadeUebungsSaetze(mPtrDestUebung.ID)
-														.then((mUebungsSaetzte) => {
-															mPtrDestUebung.SatzListe = mUebungsSaetzte;
+					mNeueSession.UebungsListe.forEach((mNeueUebung) => {
+						mNeueUebung.WeightInitDate = cMinDatum;
+						mNeueUebung.FailDatum = cMinDatum;
+
+						if ((mNeueUebung.ArbeitsSatzListe !== undefined) && (mNeueUebung.ArbeitsSatzListe.length > 0)) {
+							this.Programm.SessionListe.forEach(async (mProgrammSession) => {
+								const xx = 0;
+								// if (mProgrammSession.UebungsListe.length === 0)
+									// await this.fDbModule.LadeSessionUebungen(mProgrammSession.ID)
+									// 	.then((mUebungsListe) => {
+									// 		mProgrammSession.UebungsListe = mUebungsListe;
+									// 	});
+								// let mArbeitsSatzListe: Array<Satz> = [];
+								// Ist die aktuelle Session ungleich der Gesicherten?
+								if (mProgrammSession.ID !== aSessionForm.Session.ID) {
+									// Prüfe alle Übungen der aktuellen Programm-Session
+									for (let index2 = 0; index2 < mProgrammSession.UebungsListe.length; index2++) {
+										const mProgrammSessionUebung = mProgrammSession.UebungsListe[index2];
+										// Ist mPtrDestUebung gleich der aktuellen Übung?
+										if (mProgrammSessionUebung.FkUebung === mNeueUebung.FkUebung &&
+											mProgrammSessionUebung.FkProgress === mNeueUebung.FkProgress &&
+											mProgrammSessionUebung.ProgressGroup === mNeueUebung.ProgressGroup) {
+											// await this.fDbModule.LadeUebungsSaetze(mProgrammSessionUebung.ID)
+											// 	.then((mUebungsSaetzte) => {
+											// 		mProgrammSessionUebung.SatzListe = mUebungsSaetzte;
 													
-															for (let index = 0; index < mPtrDestUebung.ArbeitsSatzListe.length; index++) {
-																const mDestArbeitsSatzPtr: Satz = mPtrDestUebung.ArbeitsSatzListe[index];
-																let mQuellSatzPtr: Satz;
+											for (let index = 0; index < mProgrammSessionUebung.ArbeitsSatzListe.length; index++) {
+												const mDestArbeitsSatzPtr: Satz = mProgrammSessionUebung.ArbeitsSatzListe[index];
+												let mQuellSatzPtr: Satz;
 														
-																if (mDestArbeitsSatzPtr.SatzListIndex < mAktuelleUebung.ArbeitsSatzListe.length)
-																	mQuellSatzPtr = mAktuelleUebung.ArbeitsSatzListe[mDestArbeitsSatzPtr.SatzListIndex];
-																else
-																	mQuellSatzPtr = mAktuelleUebung.ArbeitsSatzListe[0];
+												if (mDestArbeitsSatzPtr.SatzListIndex < mNeueUebung.ArbeitsSatzListe.length)
+													mQuellSatzPtr = mNeueUebung.ArbeitsSatzListe[mDestArbeitsSatzPtr.SatzListIndex];
+												else
+													mQuellSatzPtr = mNeueUebung.ArbeitsSatzListe[0];
 														
-																mDestArbeitsSatzPtr.GewichtNaechsteSession = mQuellSatzPtr.GewichtNaechsteSession;
-																mDestArbeitsSatzPtr.GewichtAusgefuehrt = mQuellSatzPtr.GewichtNaechsteSession;
-																mDestArbeitsSatzPtr.GewichtVorgabe = mQuellSatzPtr.GewichtNaechsteSession;
-																// mArbeitsSatzListe.push(mDestArbeitsSatzPtr);
-															} //for
-															// await this.fDbModule.SaetzeSpeichern(mArbeitsSatzListe);			
-														})
-												} else {
-													// mArbeitsSatzListe = mPtrDestUebung.ArbeitsSatzListe;
-												}
-											}//for
-
-											// if (mArbeitsSatzListe.length > 0)
-											// 	this.fDbModule.SaetzeSpeichern(mArbeitsSatzListe);
-										}//if
-									});
-								}//if
-							}); // <= mNeueSession.UebungsListe.forEach((mAktuelleUebung)
-
-							this.Programm.SessionListe.push(mNeueSession);
-							this.Programm.NummeriereSessions();
-							this.fDbModule.SessionSpeichern(aSessionForm.Session);
-
-							const mSessions: Array<Session> = [mNeueSession];
-							try {
-						
-								for (let mSessionIndex = 0; mSessionIndex < mSessions.length; mSessionIndex++) {
-									const mPtrSession: Session = mSessions[mSessionIndex];
-									for (let mUebungIndex = 0; mUebungIndex < mPtrSession.UebungsListe.length; mUebungIndex++) {
-										const mPtrUebung = mPtrSession.UebungsListe[mUebungIndex];
-										if (mPtrUebung.ArbeitsSatzListe.length > 0
-											&& mPtrUebung.FkProgress !== undefined) {
-											const mProgressPara: ProgressPara = new ProgressPara();
-											mProgressPara.SessionDone = true;
-											mProgressPara.DbModule = this.fDbModule;
-											mProgressPara.Programm = this.Programm;
-											mProgressPara.AusgangsSession = mPtrSession;
-											mProgressPara.AlleSaetze = true;
-											mProgressPara.ProgressHasChanged = false;
-											mProgressPara.AusgangsUebung = mPtrUebung;
-							
-											mProgressPara.FailUebung = aSessionForm.Session.UebungsListe.find((u) => {
-												if (u.FkUebung === mPtrUebung.FkUebung && u.ListenIndex === mPtrUebung.ListenIndex)
-													return u;
-												return undefined;
-											});
-
-											mProgressPara.ProgressID = mPtrUebung.FkProgress;
-											mProgressPara.AlteProgressID = mPtrUebung.FkProgress;
-											mProgressPara.ProgressListe = this.fDbModule.ProgressListe;
-											mProgressPara.Progress = this.fDbModule.ProgressListe.find((p) => p.ID === mProgressPara.AusgangsUebung.FkProgress);
-
-											if ((mProgressPara.Progress !== undefined)
-												&& ((mProgressPara.Progress.ProgressSet !== undefined))
-												&& (mProgressPara.Progress.ProgressSet === ProgressSet.Last)) {
-												mProgressPara.SatzDone = mPtrUebung.ArbeitsSatzListe[mPtrUebung.ArbeitsSatzListe.length - 1].Status === SatzStatus.Fertig;
-												mProgressPara.AusgangsSatz = mPtrUebung.ArbeitsSatzListe[mPtrUebung.ArbeitsSatzListe.length - 1];
-											} else {
-												mProgressPara.SatzDone = mPtrUebung.ArbeitsSatzListe[0].Status === SatzStatus.Fertig;
-												mProgressPara.AusgangsSatz = mPtrUebung.ArbeitsSatzListe[0];
-											}
-										}//if
+												mDestArbeitsSatzPtr.GewichtNaechsteSession = mQuellSatzPtr.GewichtNaechsteSession;
+												mDestArbeitsSatzPtr.GewichtAusgefuehrt = mQuellSatzPtr.GewichtNaechsteSession;
+												mDestArbeitsSatzPtr.GewichtVorgabe = mQuellSatzPtr.GewichtNaechsteSession;
+												// mArbeitsSatzListe.push(mDestArbeitsSatzPtr);
+											} //for
+											// await this.fDbModule.SaetzeSpeichern(mArbeitsSatzListe);			
+											// })
+										} else {
+											// mArbeitsSatzListe = mPtrDestUebung.ArbeitsSatzListe;
+										}
 									}//for
-								}//for
-							} catch (error) {
-								console.error(error);
-							}
 
-							const x = 0;
-							await this.fDbModule.SessionSpeichern(mNeueSession).then(
-								async (mPtrSession) => {
-									const mProgrammExtraParaDB: ProgrammParaDB = new ProgrammParaDB();
-									mProgrammExtraParaDB.SessionBeachten = true;
-									mProgrammExtraParaDB.SessionParaDB = new SessionParaDB();
-									mProgrammExtraParaDB.SessionParaDB.UebungenBeachten = true;
-									mProgrammExtraParaDB.SessionParaDB.UebungParaDB = new UebungParaDB();
-									mProgrammExtraParaDB.SessionParaDB.UebungParaDB.SaetzeBeachten = true;
-									await this.fDbModule.ProgrammSpeichern(this.Programm, mProgrammExtraParaDB)
-										.then((mPtrProgramm) => {
-											this.Programm = mPtrProgramm;
-											this.fDbModule.AktuellesProgramm = this.Programm;
-											this.DoAfterDone(this);
-										});
+									// if (mArbeitsSatzListe.length > 0)
+									// 	this.fDbModule.SaetzeSpeichern(mArbeitsSatzListe);
+								}//if
+							});
+						}//if
+					}); // <= mNeueSession.UebungsListe.forEach((mAktuelleUebung)
+
+					this.Programm.SessionListe.push(mNeueSession);
+					this.Programm.NummeriereSessions();
+					this.fDbModule.SessionSpeichern(aSessionForm.Session);
+
+					const mSessions: Array<Session> = [mNeueSession];
+					try {
+						
+						for (let mSessionIndex = 0; mSessionIndex < mSessions.length; mSessionIndex++) {
+							const mPtrSession: Session = mSessions[mSessionIndex];
+							for (let mUebungIndex = 0; mUebungIndex < mPtrSession.UebungsListe.length; mUebungIndex++) {
+								const mPtrUebung = mPtrSession.UebungsListe[mUebungIndex];
+								if (mPtrUebung.ArbeitsSatzListe.length > 0
+									&& mPtrUebung.FkProgress !== undefined) {
+									const mProgressPara: ProgressPara = new ProgressPara();
+									mProgressPara.SessionDone = true;
+									mProgressPara.DbModule = this.fDbModule;
+									mProgressPara.Programm = this.Programm;
+									mProgressPara.AusgangsSession = mPtrSession;
+									mProgressPara.AlleSaetze = true;
+									mProgressPara.ProgressHasChanged = false;
+									mProgressPara.AusgangsUebung = mPtrUebung;
+							
+									mProgressPara.FailUebung = aSessionForm.Session.UebungsListe.find((u) => {
+										if (u.FkUebung === mPtrUebung.FkUebung && u.ListenIndex === mPtrUebung.ListenIndex)
+											return u;
+										return undefined;
+									});
+
+									mProgressPara.ProgressID = mPtrUebung.FkProgress;
+									mProgressPara.AlteProgressID = mPtrUebung.FkProgress;
+									mProgressPara.ProgressListe = this.fDbModule.ProgressListe;
+									mProgressPara.Progress = this.fDbModule.ProgressListe.find((p) => p.ID === mProgressPara.AusgangsUebung.FkProgress);
+
+									if ((mProgressPara.Progress !== undefined)
+										&& ((mProgressPara.Progress.ProgressSet !== undefined))
+										&& (mProgressPara.Progress.ProgressSet === ProgressSet.Last)) {
+										mProgressPara.SatzDone = mPtrUebung.ArbeitsSatzListe[mPtrUebung.ArbeitsSatzListe.length - 1].Status === SatzStatus.Fertig;
+										mProgressPara.AusgangsSatz = mPtrUebung.ArbeitsSatzListe[mPtrUebung.ArbeitsSatzListe.length - 1];
+									} else {
+										mProgressPara.SatzDone = mPtrUebung.ArbeitsSatzListe[0].Status === SatzStatus.Fertig;
+										mProgressPara.AusgangsSatz = mPtrUebung.ArbeitsSatzListe[0];
+									}
+								}//if
+							}//for
+						}//for
+					} catch (error) {
+						console.error(error);
+					}
+
+					const x = 0;
+					await this.fDbModule.SessionSpeichern(mNeueSession).then(
+						async (mPtrSession) => {
+							const mProgrammExtraParaDB: ProgrammParaDB = new ProgrammParaDB();
+							mProgrammExtraParaDB.SessionBeachten = true;
+							mProgrammExtraParaDB.SessionParaDB = new SessionParaDB();
+							mProgrammExtraParaDB.SessionParaDB.UebungenBeachten = true;
+							mProgrammExtraParaDB.SessionParaDB.UebungParaDB = new UebungParaDB();
+							mProgrammExtraParaDB.SessionParaDB.UebungParaDB.SaetzeBeachten = true;
+							await this.fDbModule.ProgrammSpeichern(this.Programm, mProgrammExtraParaDB)
+								.then((mPtrProgramm) => {
+									this.Programm = mPtrProgramm;
+									this.fDbModule.AktuellesProgramm = this.Programm;
+									this.DoAfterDone(this);
 								});
+						});
 	
-						} // <= mSavedSession.UebungsListe.length > 0
-					// }); // <= SessionSpeichern
+				} // <= mSavedSession.UebungsListe.length > 0
+				// }); // <= SessionSpeichern
 			} finally {
 				this.fSavingDialog.fDialog.closeAll();
 			}
