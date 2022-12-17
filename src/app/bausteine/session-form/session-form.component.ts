@@ -389,10 +389,6 @@ export class SessionFormComponent implements OnInit {
 				this.fSavingDialog.Loading(mSaveDialogData);
 				// Session-Status auf fertig setzen
 				aSessionForm.Session.SetSessionFertig();
-				// Session speichern
-				// await this.fDbModule.SessionSpeichern(aSessionForm.Session)
-				// .then((mSavedSession: Session) {
-				// Session ist gespeichert
 				if (aSessionForm.Session.UebungsListe.length > 0) {
 					const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
 					mSessionCopyPara.CopyUebungID = false;
@@ -410,21 +406,6 @@ export class SessionFormComponent implements OnInit {
 
 					// Sätze der neuen Session initialisieren
 					this.fDbModule.InitSessionSaetze(aSessionForm.Session, mNeueSession as Session);
-					// if (mNeueSession.UebungsListe !== undefined) {
-					// 	// Übungen der neuen Session initialisieren
-					// 	for (let index = 0; index < mNeueSession.UebungsListe.length; index++) {
-					// 		const mPtrNeueUebung: Uebung = mNeueSession.UebungsListe[index];
-					// 		mPtrNeueUebung.WeightInitDate = cMinDatum;
-					// 		// Nochmals Daten der Sätze der neuen Session initialisieren
-					// 		if (mPtrNeueUebung.ArbeitsSatzListe !== undefined) {
-					// 			mPtrNeueUebung.ArbeitsSatzListe.forEach((sz) => {
-					// 				sz.GewichtAusgefuehrt = sz.GewichtNaechsteSession;
-					// 				sz.GewichtVorgabe = sz.GewichtNaechsteSession;
-					// 			});
-					// 		}//if						
-					// 	}//for
-					// }//if
-
 
 					for (let index1 = 0; index1 < this.Programm.SessionListe.length; index1++) {
 						const mPtrSession = this.Programm.SessionListe[index1];
@@ -438,13 +419,6 @@ export class SessionFormComponent implements OnInit {
 
 						if ((mNeueUebung.ArbeitsSatzListe !== undefined) && (mNeueUebung.ArbeitsSatzListe.length > 0)) {
 							this.Programm.SessionListe.forEach(async (mProgrammSession) => {
-								const xx = 0;
-								// if (mProgrammSession.UebungsListe.length === 0)
-									// await this.fDbModule.LadeSessionUebungen(mProgrammSession.ID)
-									// 	.then((mUebungsListe) => {
-									// 		mProgrammSession.UebungsListe = mUebungsListe;
-									// 	});
-								// let mArbeitsSatzListe: Array<Satz> = [];
 								// Ist die aktuelle Session ungleich der Gesicherten?
 								if (mProgrammSession.ID !== aSessionForm.Session.ID) {
 									// Prüfe alle Übungen der aktuellen Programm-Session
@@ -454,9 +428,6 @@ export class SessionFormComponent implements OnInit {
 										if (mProgrammSessionUebung.FkUebung === mNeueUebung.FkUebung &&
 											mProgrammSessionUebung.FkProgress === mNeueUebung.FkProgress &&
 											mProgrammSessionUebung.ProgressGroup === mNeueUebung.ProgressGroup) {
-											// await this.fDbModule.LadeUebungsSaetze(mProgrammSessionUebung.ID)
-											// 	.then((mUebungsSaetzte) => {
-											// 		mProgrammSessionUebung.SatzListe = mUebungsSaetzte;
 													
 											for (let index = 0; index < mProgrammSessionUebung.ArbeitsSatzListe.length; index++) {
 												const mDestArbeitsSatzPtr: Satz = mProgrammSessionUebung.ArbeitsSatzListe[index];
@@ -470,17 +441,9 @@ export class SessionFormComponent implements OnInit {
 												mDestArbeitsSatzPtr.GewichtNaechsteSession = mQuellSatzPtr.GewichtNaechsteSession;
 												mDestArbeitsSatzPtr.GewichtAusgefuehrt = mQuellSatzPtr.GewichtNaechsteSession;
 												mDestArbeitsSatzPtr.GewichtVorgabe = mQuellSatzPtr.GewichtNaechsteSession;
-												// mArbeitsSatzListe.push(mDestArbeitsSatzPtr);
 											} //for
-											// await this.fDbModule.SaetzeSpeichern(mArbeitsSatzListe);			
-											// })
-										} else {
-											// mArbeitsSatzListe = mPtrDestUebung.ArbeitsSatzListe;
 										}
 									}//for
-
-									// if (mArbeitsSatzListe.length > 0)
-									// 	this.fDbModule.SaetzeSpeichern(mArbeitsSatzListe);
 								}//if
 							});
 						}//if
@@ -535,7 +498,6 @@ export class SessionFormComponent implements OnInit {
 						console.error(error);
 					}
 
-					const x = 0;
 					await this.fDbModule.SessionSpeichern(mNeueSession).then(
 						async (mPtrSession) => {
 							const mProgrammExtraParaDB: ProgrammParaDB = new ProgrammParaDB();
