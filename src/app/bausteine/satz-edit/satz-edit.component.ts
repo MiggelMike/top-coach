@@ -1,4 +1,4 @@
-import { cWeightDigits, MinDatum, UebungParaDB } from './../../services/dexie-svc.service';
+import { cWeightDigits, cMinDatum, UebungParaDB } from './../../services/dexie-svc.service';
 import { NextProgress, Progress, ProgressPara, ProgressSet, ProgressTyp, VorgabeWeightLimit, WeightProgress } from './../../../Business/Progress/Progress';
 import { DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { PlateCalcSvcService, PlateCalcOverlayConfig } from './../../services/plate-calc-svc.service';
@@ -39,10 +39,11 @@ export class SatzEditComponent implements OnInit {
     private Progress: Progress;
     private interval: any;
     private readonly cDelayMilliSeconds: number = 500;
+    private AppData: AppData;
 
     constructor(
         private fDialogService: DialogeService,
-        public  fStoppUhrService: StoppuhrSvcService,
+        public fStoppUhrService: StoppuhrSvcService,
         private fGlobalService: GlobalService,
         private fPlateCalcSvcService: PlateCalcSvcService,
         private fDbModule: DexieSvcService
@@ -55,6 +56,10 @@ export class SatzEditComponent implements OnInit {
             };
 
         this.fDbModule.LadeProgress(mProgressPara);
+        this.fDbModule.LadeAppData()
+            .then((mAppData) => {
+                this.AppData = mAppData;
+            });
     }
     
     
@@ -188,10 +193,14 @@ export class SatzEditComponent implements OnInit {
             mHeader = '';
         }
 
+        aSatz.Datum = aChecked === true ? new Date() : undefined;
         const mProgressPara: ProgressPara = new ProgressPara();
         mProgressPara.AusgangsSatz = aSatz as Satz;
         mProgressPara.AusgangsSession = this.sess;
         mProgressPara.AusgangsUebung = this.sessUebung;
+        mProgressPara.AusgangsUebung.FailDatum = cMinDatum;
+        mProgressPara.AusgangsUebung.WeightInitDate = cMinDatum;
+        //        this.sessUebung.WeightInitDate = Uebung.StaticArbeitsSaetzeStatus(this.sessUebung) === SaetzeStatus.AlleFertig ? new Date : cMinDatum;
         mProgressPara.Programm = this.programm;
         mProgressPara.DbModule = this.fDbModule;
         mProgressPara.SatzDone = aChecked;
@@ -222,7 +231,7 @@ export class SatzEditComponent implements OnInit {
             if ((aNextProgress) && (mFirstWaitingSet === undefined))
                 mStopUhrUebung = aNextProgress.Uebung;
                 
-            if (mFirstWaitingSet === undefined) 
+            if (mFirstWaitingSet === undefined)
                 mFirstWaitingSet = mStopUhrUebung.getFirstWaitingWorkSet();
 
             if (mFirstWaitingSet !== undefined) {
@@ -237,76 +246,71 @@ export class SatzEditComponent implements OnInit {
                     `"${mStopUhrUebung.Name}" - set #${(mNextSetIndex + 1).toString()} - weight: ${(mSatz.GewichtVorgabeStr)}`
                 );
             }
-
-
         }
 
         const mDialogData: DialogData = new DialogData();
         const that = this;
-        Progress.StaticDoProgress(mProgressPara).then( (aProgressPara: ProgressPara) => {
-            aProgressPara.DbModule.LadeAppData()
-                .then((aAppData) => {
-                    try {
-                        aProgressPara.UserInfo = [];
+        Progress.StaticDoProgress(mProgressPara).then((aProgressPara: ProgressPara) => {
+            try {
+                aProgressPara.UserInfo = [];
+                that.sessUebung.WeightInitDate = cMinDatum;
 
-                        that.sessUebung.WeightInitDate = MinDatum;
-
-                        if (aProgressPara.Wp === WeightProgress.Same)
-                            that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt);
+                if (aProgressPara.Wp === WeightProgress.Same)
+                    that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt);
                         
-                        if (
-                            (aProgressPara.Progress.ProgressSet === ProgressSet.First)
-                            && (aSatz.SatzListIndex === 0)
-                            && (aProgressPara.Wp === WeightProgress.Increase)
+                if (
+                    (aProgressPara.Progress.ProgressSet === ProgressSet.First)
+                    && (aSatz.SatzListIndex === 0)
+                    && (aProgressPara.Wp === WeightProgress.Increase)
+                ) {
+                    mDialogData.textZeilen.push(`Lift ${AppData.StaticRoundTo(aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung, cWeightDigits)} ${that.AppData.GewichtsEinheitText} for the next sets`);
+                    mDialogData.textZeilen.push(`of this exercise of the current workout`);
+                    mDialogData.textZeilen.push(`and also in upcoming workouts.`);
+                    that.sessUebung.WeightInitDate = new Date();
+                    that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung);
+                }
+                else {
+                    if (Uebung.StaticArbeitsSaetzeStatus(that.sessUebung) === SaetzeStatus.AlleFertig) {
+                        if (aProgressPara.Progress.ProgressSet === ProgressSet.First
+                            && that.sessUebung.SatzWDH(0) >= that.sessUebung.SatzBisVorgabeWDH(0)
+                            || aProgressPara.Wp === WeightProgress.Increase
                         ) {
-                            mDialogData.textZeilen.push(`Lift ${ AppData.StaticRoundTo(aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung, cWeightDigits)} ${aAppData.GewichtsEinheitText} for the next sets`);
-                            mDialogData.textZeilen.push(`of this exercise of the current workout`);
-                            mDialogData.textZeilen.push(`and also in upcoming workouts.`);
                             that.sessUebung.WeightInitDate = new Date();
-                            that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung);
+                            mDialogData.textZeilen.push(`Well done!`);
+                            if (aProgressPara.Progress.ProgressSet === ProgressSet.First) {
+                                mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtAusgefuehrt} ${this.AppData.GewichtsEinheitText} next time.`);
+                                that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt);
+                            }
+                            else {
+                                mDialogData.textZeilen.push(`Lift ${AppData.StaticRoundTo(aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung, cWeightDigits)} ${that.AppData.GewichtsEinheitText} next time.`);
+                                that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung);
+                            }
                         }
-                        else {
-                            if (Uebung.StaticArbeitsSaetzeStatus(that.sessUebung) === SaetzeStatus.AlleFertig) {
-                                if (aProgressPara.Progress.ProgressSet === ProgressSet.First
-                                    && that.sessUebung.SatzWDH(0) >= that.sessUebung.SatzBisVorgabeWDH(0)
-                                    || aProgressPara.Wp === WeightProgress.Increase
-                                ) {
-                                    that.sessUebung.WeightInitDate = new Date();
-                                    mDialogData.textZeilen.push(`Well done!`);
-                                    if (aProgressPara.Progress.ProgressSet === ProgressSet.First) {
-                                        mDialogData.textZeilen.push(`Lift ${aProgressPara.AusgangsSatz.GewichtAusgefuehrt} ${aAppData.GewichtsEinheitText} next time.`);
-                                        that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt);
-                                    }
-                                    else {
-                                        mDialogData.textZeilen.push(`Lift ${ AppData.StaticRoundTo(aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung, cWeightDigits)} ${aAppData.GewichtsEinheitText} next time.`);
-                                        that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung);
-                                    }
-                                }
-                                else if (
-                                        (aProgressPara.Wp === WeightProgress.Decrease || aProgressPara.Wp === WeightProgress.DecreaseNextTime)
-                                    &&  Uebung.StaticArbeitsSaetzeStatus(that.sessUebung) === SaetzeStatus.AlleFertig )
-                                {
-                                    that.sessUebung.WeightInitDate = new Date();
-                                    mDialogData.textZeilen.push(`You failed!`);
-                                    mDialogData.textZeilen.push(`Lift ${ AppData.StaticRoundTo(aProgressPara.AusgangsSatz.GewichtAusgefuehrt - aProgressPara.AusgangsUebung.GewichtReduzierung, cWeightDigits)} ${aAppData.GewichtsEinheitText} next time.`);
-                                    that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt - aProgressPara.AusgangsUebung.GewichtReduzierung);
-                                } else if (aProgressPara.Wp === WeightProgress.Same) {
-                                    mDialogData.textZeilen.push(`Lift same weight next time.`);
-                                    mDialogData.textZeilen.push(`${aProgressPara.AusgangsSatz.GewichtAusgefuehrt} ${aAppData.GewichtsEinheitText}`);
-                                    that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt);
-                                }
-                            }//if
+                        else if (
+                            (aProgressPara.Wp === WeightProgress.Decrease || aProgressPara.Wp === WeightProgress.DecreaseNextTime)
+                            && Uebung.StaticArbeitsSaetzeStatus(that.sessUebung) === SaetzeStatus.AlleFertig) {
+                            that.sessUebung.WeightInitDate = new Date();
+                            that.sessUebung.FailDatum = new Date();
+                            mDialogData.textZeilen.push(`You failed!`);
+                            mDialogData.textZeilen.push(`Lift ${AppData.StaticRoundTo(aProgressPara.AusgangsSatz.GewichtAusgefuehrt - aProgressPara.AusgangsUebung.GewichtReduzierung, cWeightDigits)} ${that.AppData.GewichtsEinheitText} next time.`);
+                            that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt - aProgressPara.AusgangsUebung.GewichtReduzierung);
+                        } else if (aProgressPara.Wp === WeightProgress.Same) {
+                            that.sessUebung.WeightInitDate = new Date();
+                            mDialogData.textZeilen.push(`Lift same weight next time.`);
+                            mDialogData.textZeilen.push(`${aProgressPara.AusgangsSatz.GewichtAusgefuehrt} ${that.AppData.GewichtsEinheitText}`);
+                            that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt);
                         }
+                    }//if
+                }
 
-                        if (aSatz.Status === SatzStatus.Fertig && this.sess.isLetzteUebungInSession(this.sessUebung) && this.sessUebung.isLetzterSatzInUebung(aSatz as Satz))
-                            mDialogData.textZeilen.push('This was the last set!');
+                if (aSatz.Status === SatzStatus.Fertig && this.sess.isLetzteUebungInSession(this.sessUebung) && this.sessUebung.isLetzterSatzInUebung(aSatz as Satz))
+                    mDialogData.textZeilen.push('This was the last set!');
 
-                        if (mDialogData.textZeilen.length > 0)
-                            that.fDialogService.Hinweis(mDialogData);
-                    } catch (error) {
-                        console.log(error);
-                    }
-                });
+                if (mDialogData.textZeilen.length > 0)
+                    that.fDialogService.Hinweis(mDialogData);
+            } catch (error) {
+                console.log(error);
+            }
         });
     }
         

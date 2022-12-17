@@ -355,7 +355,13 @@ export class Programm02Component implements OnInit {
 		if (this.OnLeaveFn !== undefined)
 			this.OnLeaveFn.emit();
 
-		this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
+		const mLadePara: UebungParaDB = new UebungParaDB();
+		mLadePara.SaetzeBeachten = true;
+		this.fDbModule.LadeSessionUebungen(aSession.ID, mLadePara).then
+			((aUebungsListe) => {
+				aSession.UebungsListe = aUebungsListe;
+				this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
+			})
 	}
 
 

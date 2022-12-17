@@ -1,7 +1,7 @@
 import { EquipmentTyp } from 'src/Business/Equipment/Equipment';
 import { EquipmentOrigin } from './../Equipment/Equipment';
 import { AppData, GewichtsEinheit } from 'src/Business/Coach/Coach';
-import { cWeightDigits, MinDatum } from './../../app/services/dexie-svc.service';
+import { cWeightDigits, cMinDatum } from './../../app/services/dexie-svc.service';
 import { ProgressGroup, WeightProgress } from 'src/Business/Progress/Progress';
 import { Zeitraum } from './../Dauer';
 import { MuscleGroupKategorie02 } from '../MuscleGroup/MuscleGroup';
@@ -114,7 +114,7 @@ export interface IUebungDB {
     EquipmentTyp: string;
     MaxFailCount: number;
     FailCount: number;
-    Failed: boolean;
+    FailDatum: Date;
     ArbeitsSaetzeStatus: SaetzeStatus;
     Vorlage: boolean;
     ListenIndex: number;
@@ -141,7 +141,17 @@ export class UebungDB implements IUebungDB {
     public ArbeitsSaetzeStatus: SaetzeStatus = SaetzeStatus.KeinerVorhanden;;
     public NaechsteUebungPause: number = 0;
     // Bei Session-Uebungen ist FkUebung der Schluessel zur Stamm-Uebung
+    //#region FK_Programm
+    // private fFK_Programm: number = 0;
     public FK_Programm: number = 0;
+    // get FK_Programm(): number {
+    //     return Number(this.fFK_Programm);
+    // }
+    // set FK_Programm(aValue: number) {
+    //     this.fFK_Programm = Number(aValue);
+    // }
+    //#endregion
+
     public FkUebung: number = 0;
     public FkHantel: number = 0;
     public ListenIndex: number = 0;
@@ -150,7 +160,7 @@ export class UebungDB implements IUebungDB {
     public Typ: UebungsTyp = UebungsTyp.Undefined;
     public MaxFailCount: number = 3;
     public FailCount: number = 0;
-    public Failed: boolean = false;
+    public FailDatum: Date = cMinDatum;
     public Kategorieen01: Array<UebungsKategorie01> = [];
     public Kategorie02: UebungsKategorie02 = UebungsKategorie02.Stamm;
     public SessionID: number = 0;
@@ -175,7 +185,7 @@ export class UebungDB implements IUebungDB {
     public AufwaermArbeitsSatzPause: number = 0;
     
     public Datum: Date;
-    public WeightInitDate: Date = MinDatum;
+    public WeightInitDate: Date = cMinDatum;
 
     public Vorlage: boolean = false;
     public FkProgress: number = -1;
@@ -324,13 +334,13 @@ export class Uebung  {
         this.UebungDB.FailCount = aValue
     }
     //#endregion
-    //#region Failed
-    get Failed(): boolean {
-        return this.UebungDB.Failed;
+    //#region FailDatum
+    get FailDatum(): Date {
+        return this.UebungDB.FailDatum;
     }
 
-    set Failed( aValue: boolean) {
-         this.UebungDB.Failed = aValue;
+    set FailDatum( aValue: Date) {
+         this.UebungDB.FailDatum = aValue;
     }
     //#endregion
     //#region NaechsteUebungPause
@@ -590,10 +600,10 @@ export class Uebung  {
     //#endregion
     //#region FkAltProgress
     get FkAltProgress(): number{
-        return this.UebungDB.FkProgress;
+        return this.UebungDB.FkAltProgress;
     }
     set FkAltProgress( aValue: number){
-        this.UebungDB.FkProgress = aValue;
+        this.UebungDB.FkAltProgress = aValue;
     }
     //#endregion
     //#region FkOrgProgress
@@ -900,12 +910,13 @@ export class Uebung  {
         return this.ArbeitsSatzListe[aSatzIndex].WdhBisVorgabe;
     }
 
-    public Copy(): Uebung {
+    public Copy(aFailDatum: Date = cMinDatum): Uebung {
         const mTmpSatzListe: Array<Satz> = [];
         if(this.SatzListe !== undefined)
             this.SatzListe.forEach((sz) => mTmpSatzListe.push(sz.Copy()));
         const mUebung: Uebung = cloneDeep(this);
         mUebung.SatzListe = mTmpSatzListe;
+        mUebung.FailDatum = aFailDatum;
         return mUebung;
 
     }

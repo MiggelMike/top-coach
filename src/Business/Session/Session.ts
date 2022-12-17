@@ -1,3 +1,4 @@
+import { cMinDatum } from './../../app/services/dexie-svc.service';
 import { SessionDB, Pause, ISessionDB, SessionStatus } from './../SessionDB';
 import { Zeitraum, MaxZeitraum } from './../Dauer';
 import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
@@ -98,6 +99,8 @@ export class Session extends SessionDB implements ISession {
         for (let index = 0; index < this.UebungsListe.length; index++) {
             const mPtrUebung = this.UebungsListe[index];
             mPtrUebung.SessionID = this.ID;
+            mPtrUebung.FailDatum = cMinDatum;
+            mPtrUebung.WeightInitDate = cMinDatum;
             mPtrUebung.SatzListe.forEach(s => {
                 s.GewichtAusgefuehrt = 0;
                 s.WdhAusgefuehrt = 0;
@@ -385,7 +388,7 @@ export class Session extends SessionDB implements ISession {
 
     public resetSession(aQuellSession: ISession):void {
         const mUebungsListe: Array<Uebung> = new Array<Uebung>();
-        this.UebungsListe.forEach(u => mUebungsListe .push(u.Copy()));
+        this.UebungsListe.forEach(u => mUebungsListe.push(u.Copy()));
         this.UebungsListe = [];
 
         this.Datum = aQuellSession.Datum;

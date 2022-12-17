@@ -1,4 +1,4 @@
-import { ParaDB, MinDatum, SortOrder } from './../../app/services/dexie-svc.service';
+import { ParaDB, cMinDatum, SortOrder } from './../../app/services/dexie-svc.service';
 import { GewichtDiff } from './../Satz/Satz';
 import { AfterLoadFn, DexieSvcService  } from 'src/app/services/dexie-svc.service';
 import { ITrainingsProgramm, TrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
@@ -228,66 +228,69 @@ export class Progress implements IProgress {
 		// if (mWeightProgressParaUebung === WeightProgress.Decrease || mWeightProgressParaUebung === WeightProgress.DecreaseNextTime)
 		// 	aSessUebung.Failed = true;
 		
-		// Wenn aFailCount === 0 ist, brauchen die Sessions nicht geprüft werden.
+		// Wenn aFailCount === 0 ist, brauchen die fertigen Sessions nicht geprüft werden.
 		if (mFailCount === 0)
 			return mWeightProgressParaUebung;
 
-		let mUebungsliste: Array<Uebung> = [aSessUebung];
+		let mUebungsliste: Array<Uebung> = [];
 
-		// Die Übungen nur laden, wenn die Anzahl der Fehlversuche größer 0 und abgeschlossen ist
+		// Die Übungen nur laden, wenn die Anzahl der Fehlversuche größer 0 ist
 		if (mFailCount > 0)
 		{
-			const mLadePara: ParaDB = new ParaDB();
-			
-			mLadePara.SortOrder = SortOrder.descending;
+			try {
+				await aDb.LoadLastFailDate(aSession, aSessUebung)
+					.then(async (mLastFailDate) => {
+							// mLastFailDate ist vorhanden. 
+							const mLadePara: ParaDB = new ParaDB();
+							mLadePara.WhereClause = {
+								FK_Programm: aSession.FK_Programm,
+								FkUebung: aSessUebung.FkUebung,
+								FkProgress: aSessUebung.FkProgress,
+								ProgressGroup: aSessUebung.ProgressGroup,
+								ArbeitsSaetzeStatus: SaetzeStatus.AlleFertig
+							};
 
-			// FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus
-			mLadePara.WhereClause = {
-				FK_Programm: aSession.FK_Programm,
-				FkUebung: aSessUebung.FkUebung,
-				FkProgress: aSessUebung.FkProgress,
-				ProgressGroup: aSessUebung.ProgressGroup,
-				ArbeitsSaetzeStatus: SaetzeStatus.AlleFertig
-			};
+							mLadePara.And = (mUebung: Uebung): boolean => {
+								return (
+									((mLastFailDate.valueOf() === cMinDatum.valueOf()) 
+									||
+									((mUebung.WeightInitDate.valueOf() > mLastFailDate.valueOf()) && (mLastFailDate.valueOf() > cMinDatum.valueOf()))) &&
+									
+									// (mUebung.WeightInitDate.valueOf() > cMinDatum.valueOf()) &&
+									(mUebung.Datum.valueOf() <= aSession.Datum.valueOf()) 
+								);
+							};
 
-			mLadePara.And = (mUebung: Uebung): boolean => {
-				return (
-					mUebung.WeightInitDate.valueOf() > MinDatum.valueOf()
-				);
-			};
+							mLadePara.OnUebungAfterLoadFn = (mUebungen: Array<Uebung>) => {
+								const mAktuelleUebung = mUebungen.find((u) => u.ID === aSessUebung.ID);
+								if (mAktuelleUebung !== undefined) {
+									const mSpliceIndex = mUebungen.indexOf(mAktuelleUebung);
+									mUebungen.splice(mSpliceIndex, 1);
+								}
+								return mUebungen;
+							}
 
-			mLadePara.Limit = 1;
-			mLadePara.SortBy = "WeightInitDate";
-			const mLastFailDate = await aDb.LoadLastFailDate(mLadePara);
+							mLadePara.Limit = mFailCount;
+							mLadePara.SortBy = "Datum";
+							mLadePara.SortOrder = SortOrder.descending;
 
-			mLadePara.And = (mUebung: Uebung): boolean => {
-				return (
-					mUebung.Datum.valueOf() <= aSession.Datum.valueOf() &&
-					mUebung.Datum.valueOf() > mLastFailDate.valueOf()
-				);
-			};
-
-			mLadePara.OnUebungAfterLoadFn = (mUebungen: Array<Uebung>) => {
-				const mAktuelleUebung = mUebungen.find((u) => u.ID === aSessUebung.ID);
-				if (mAktuelleUebung !== undefined) {
-					const mSpliceIndex = mUebungen.indexOf(mAktuelleUebung);
-					mUebungen.splice(mSpliceIndex,1);
-				}
-				return mUebungen;
+							const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+							mSessionCopyPara.Komplett = true;
+							mSessionCopyPara.CopySessionID = false;
+							mSessionCopyPara.CopyUebungID = false;
+							mSessionCopyPara.CopySatzID = false;
+							// Warten, bis Übungen geladen sind.
+							try {
+								await aDb.LadeSessionUebungenEx(Session.StaticCopy(aSession, mSessionCopyPara), mLadePara)
+									.then((mLadeUebungsListe) => mUebungsliste = mLadeUebungsListe);
+							} catch (err) {
+								console.error(err);
+							}
+							mUebungsliste.unshift(aSessUebung);
+					});
+			} catch (err) {
+				console.error(err);
 			}
-
-			mLadePara.Limit = mFailCount + 1;
-			mLadePara.SortBy = "Datum";
-
-			// Warten, bis Übungen geladen sind.
-
-			const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
-			mSessionCopyPara.Komplett = true;
-			mSessionCopyPara.CopySessionID = false;
-			mSessionCopyPara.CopyUebungID = false;
-			mSessionCopyPara.CopySatzID = false;
-			mUebungsliste = await aDb.LadeSessionUebungenEx(Session.StaticCopy(aSession,mSessionCopyPara), mLadePara);
-			mUebungsliste.push(aSessUebung);
 		} // if
 
 		if ((mUebungsliste === undefined)|| (mUebungsliste.length < mFailCount)) 
@@ -548,7 +551,7 @@ export class Progress implements IProgress {
 		if (aProgressPara.Progress) {
 			try {
 				
-				aProgressPara.Wp =
+				aProgressPara.Wp = 
 					await aProgressPara.Progress.DetermineNextProgress(
 						aProgressPara.DbModule,
 						aProgressPara.AusgangsSatz.SatzListIndex,
@@ -996,7 +999,7 @@ export class Progress implements IProgress {
 					(Progress.StaticEqualUebung(mPtrArbeitUebung, aProgressPara.AusgangsUebung) === true)
 					// Der Prozess der Übung wirkt sich nicht auf  laufende Sessions aus 
 					&& (Progress.StaticProgressEffectsRunningSession(mPtrArbeitUebung.FkProgress, aProgressPara) === false)
-					&& (mPtrArbeitUebung.FkProgress === aProgressPara.AusgangsUebung .FkProgress)
+					&& (mPtrArbeitUebung.FkProgress === aProgressPara.AusgangsUebung.FkProgress)
 					&& (mPtrArbeitUebung.ProgressGroup === aProgressPara.AusgangsUebung.ProgressGroup)
 					// Ausgangs-Session läuft nicht
 					&& (Progress.StaticSessionLaeuft(aProgressPara.AusgangsSession) === false)

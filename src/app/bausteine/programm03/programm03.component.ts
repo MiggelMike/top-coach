@@ -169,7 +169,6 @@ export class Programm03Component implements OnInit {
     }
 
     async PanelUebungOpened(aUebung: Uebung) {
-        this.ExerciseOpened = true;
         try {
             this.checkingSets = true;
 
@@ -180,8 +179,12 @@ export class Programm03Component implements OnInit {
             if (this.panUebung === undefined)
                 return;
                 
-                
-            this.CheckUebungSatzliste(aUebung);
+            if (this.ExerciseOpened === false) {
+                // aUebung.SatzListe = [];
+                this.CheckUebungSatzliste(aUebung);
+            }
+            
+            this.ExerciseOpened = true;
             // this.accCheckUebungPanels(aUebung);
         } finally {
             this.checkingSets = false;
@@ -199,8 +202,8 @@ export class Programm03Component implements OnInit {
     }
 
 
-    private async LadeUebungsSaetze(aUebung: Uebung, aSatzParaDB?: SatzParaDB) : Promise<void> {
-        await this.fDbModule.LadeUebungsSaetze(aUebung.ID, aSatzParaDB)
+    private async LadeUebungsSaetze(aUebung: Uebung, aSatzParaDB?: SatzParaDB) : Promise<Array<Satz>> {
+        return await this.fDbModule.LadeUebungsSaetze(aUebung.ID, aSatzParaDB)
             .then( async (aSatzliste) => {
                 if (aSatzliste.length > 0) {
                     // aUebung.SatzListe = aSatzliste;
@@ -208,19 +211,19 @@ export class Programm03Component implements OnInit {
                         if (aUebung.SatzListe.find((aCmpSatz) => aSatz.ID === aCmpSatz.ID) === undefined)
                             aUebung.SatzListe.push(aSatz);
                     });
-                    const mSatzParaDB: SatzParaDB = new SatzParaDB();
-                    mSatzParaDB.Limit = cSatzSelectLimit;
-                    mSatzParaDB.OffSet = aUebung.SatzListe.length;
-                    await this.LadeUebungsSaetze(aUebung, mSatzParaDB);
+                    return aUebung.SatzListe;
+                    // return await this.LadeUebungsSaetze(aUebung, mSatzParaDB);
                 }
+                return [];
             });
     }
 
-    private async CheckUebungSatzliste(aUebung: Uebung): Promise<any> {
+    private async CheckUebungSatzliste(aUebung: Uebung): Promise<Uebung> {
         if (aUebung.SatzListe === undefined || aUebung.SatzListe.length <= 0) {
             aUebung.SatzListe = [];
             await this.LadeUebungsSaetze(aUebung);
         }
+        return aUebung;
     }
 
         

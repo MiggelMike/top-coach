@@ -1,6 +1,7 @@
 import { ISession, Session, SessionCopyPara } from 'src/Business/Session/Session';
 import { DexieSvcService } from './../../app/services/dexie-svc.service';
 import { Satz } from '../Satz/Satz';
+import { SessionStatus } from '../SessionDB';
 var cloneDeep = require('lodash.clonedeep');
 
 export enum ProgrammTyp {
@@ -63,11 +64,16 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
     }
 
     NummeriereSessions() {
-        if(this.SessionListe !== undefined){
+        if (this.SessionListe !== undefined) {
+            let mNr: number = 0;
             for (let index = 0; index < this.SessionListe.length; index++) {
-                this.SessionListe[index].ListenIndex = index;;
+                if (this.SessionListe[index].Kategorie02 === SessionStatus.Fertig)
+                    continue;
+                
+                this.SessionListe[index].ListenIndex = mNr++;
             }
         }
+
     }
 
     resetProgram(aQuellProgram: ITrainingsProgramm): void{
