@@ -238,56 +238,62 @@ export class Progress implements IProgress {
 		if (mFailCount > 0)
 		{
 			try {
-				await aDb.LoadLastFailDate(aSession, aSessUebung)
-					.then(async (mLastFailDate) => {
-							// mLastFailDate ist vorhanden. 
-							const mLadePara: ParaDB = new ParaDB();
-							mLadePara.WhereClause = {
-								FK_Programm: aSession.FK_Programm,
-								FkUebung: aSessUebung.FkUebung,
-								FkProgress: aSessUebung.FkProgress,
-								ProgressGroup: aSessUebung.ProgressGroup,
-								ArbeitsSaetzeStatus: SaetzeStatus.AlleFertig
-							};
-
-							mLadePara.And = (mUebung: Uebung): boolean => {
-								return (
-									((mLastFailDate.valueOf() === cMinDatum.valueOf()) 
-									||
-									((mUebung.WeightInitDate.valueOf() > mLastFailDate.valueOf()) && (mLastFailDate.valueOf() > cMinDatum.valueOf()))) &&
-									
-									// (mUebung.WeightInitDate.valueOf() > cMinDatum.valueOf()) &&
-									(mUebung.Datum.valueOf() <= aSession.Datum.valueOf()) 
-								);
-							};
-
-							mLadePara.OnUebungAfterLoadFn = (mUebungen: Array<Uebung>) => {
-								const mAktuelleUebung = mUebungen.find((u) => u.ID === aSessUebung.ID);
-								if (mAktuelleUebung !== undefined) {
-									const mSpliceIndex = mUebungen.indexOf(mAktuelleUebung);
-									mUebungen.splice(mSpliceIndex, 1);
-								}
-								return mUebungen;
-							}
-
-							mLadePara.Limit = mFailCount;
-							mLadePara.SortBy = "Datum";
-							mLadePara.SortOrder = SortOrder.descending;
-
-							const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
-							mSessionCopyPara.Komplett = true;
-							mSessionCopyPara.CopySessionID = false;
-							mSessionCopyPara.CopyUebungID = false;
-							mSessionCopyPara.CopySatzID = false;
-							// Warten, bis Übungen geladen sind.
-							try {
-								await aDb.LadeSessionUebungenEx(Session.StaticCopy(aSession, mSessionCopyPara), mLadePara)
-									.then((mLadeUebungsListe) => mUebungsliste = mLadeUebungsListe);
-							} catch (err) {
-								console.error(err);
-							}
-							mUebungsliste.unshift(aSessUebung);
+				await aDb.LoadLastFailDateEx(aSession, aSessUebung, mFailCount)
+					.then((mUebungen) => {
+						mUebungsliste = mUebungen;
+						mUebungsliste.unshift(aSessUebung);
 					});
+				
+				// await aDb.LoadLastFailDate(aSession, aSessUebung, mFailCount)
+				// 	.then(async (mLastFailDate) => {
+				// 			// mLastFailDate ist vorhanden. 
+				// 			const mLadePara: ParaDB = new ParaDB();
+				// 			mLadePara.WhereClause = {
+				// 				FK_Programm: aSession.FK_Programm,
+				// 				FkUebung: aSessUebung.FkUebung,
+				// 				FkProgress: aSessUebung.FkProgress,
+				// 				ProgressGroup: aSessUebung.ProgressGroup,
+				// 				ArbeitsSaetzeStatus: SaetzeStatus.AlleFertig
+				// 			};
+
+				// 			mLadePara.And = (mUebung: Uebung): boolean => {
+				// 				return (
+				// 					((mLastFailDate.valueOf() === cMinDatum.valueOf()) 
+				// 					||
+				// 					((mUebung.WeightInitDate.valueOf() >= mLastFailDate.valueOf()) && (mLastFailDate.valueOf() > cMinDatum.valueOf()))) &&
+									
+				// 					(mUebung.WeightInitDate.valueOf() > cMinDatum.valueOf()) &&
+				// 					(mUebung.Datum.valueOf() <= aSession.Datum.valueOf()) 
+				// 				);
+				// 			};
+
+				// 			mLadePara.OnUebungAfterLoadFn = (mUebungen: Array<Uebung>) => {
+				// 				const mAktuelleUebung = mUebungen.find((u) => u.ID === aSessUebung.ID);
+				// 				if (mAktuelleUebung !== undefined) {
+				// 					const mSpliceIndex = mUebungen.indexOf(mAktuelleUebung);
+				// 					mUebungen.splice(mSpliceIndex, 1);
+				// 				}
+				// 				return mUebungen;
+				// 			}
+
+				// 			mLadePara.Limit = mFailCount;
+				// 			mLadePara.SortBy = "Datum";
+				// 			mLadePara.SortOrder = SortOrder.descending;
+
+				// 			const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+				// 			mSessionCopyPara.Komplett = true;
+				// 			mSessionCopyPara.CopySessionID = false;
+				// 			mSessionCopyPara.CopyUebungID = false;
+				// 			mSessionCopyPara.CopySatzID = false;
+				// 			// Warten, bis Übungen geladen sind.
+				// 			try {
+				// 				await aDb.LadeSessionUebungenEx(Session.StaticCopy(aSession, mSessionCopyPara), mLadePara)
+				// 					.then((mLadeUebungsListe) => mUebungsliste = mLadeUebungsListe);
+				// 			} catch (err) {
+				// 				console.error(err);
+				// 			}
+				// 			mUebungsliste.unshift(aSessUebung);
+				// 	});
 			} catch (err) {
 				console.error(err);
 			}

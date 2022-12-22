@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DexieSvcService } from '../services/dexie-svc.service';
 import { GewichtsTyp } from 'src/Business/Konfiguration/Gewicht';
+import { DialogeService } from '../services/dialoge.service';
+import { DialogData } from '../dialoge/hinweis/hinweis.component';
 
 @Component({
     selector: "app-settings",
@@ -14,10 +16,12 @@ export class SettingsComponent implements OnInit {
 
     constructor(
         private fDbModule: DexieSvcService,
-        private router: Router) {
+        private fDialogService: DialogeService,
+        private router: Router)
+    {
         this.fDbModule.LadeAppData()
             .then((aAppData: AppData) => this.AppData = aAppData);
-         }
+    }
 
     ngOnInit(): void { }
 
@@ -50,6 +54,19 @@ export class SettingsComponent implements OnInit {
 
     }
     //#endregion    
+
+    ResetDatabase() {
+        const mDialogData = new DialogData();
+        mDialogData.textZeilen.push("This will delete all data of the database!");
+        mDialogData.textZeilen.push("Do you really want to do that?");
+        // mDialogData.ShowAbbruch = true;
+    
+        mDialogData.OkFn = () => {
+            this.fDbModule.ResetDatenbank();
+        }
+
+        this.fDialogService.JaNein(mDialogData);
+    }
 
 
     NavExercise(): void {

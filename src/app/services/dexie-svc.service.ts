@@ -639,8 +639,7 @@ export class DexieSvcService extends Dexie {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
 		}
 
-		        //   Dexie.delete("ConceptCoach");
-
+		    //  Dexie.delete("ConceptCoach");
 		this.version(9).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
@@ -653,9 +652,12 @@ export class DexieSvcService extends Dexie {
 			Hantelscheibe: "++ID,&[Durchmesser+Gewicht]",
 			Progress: "++ID,&Name",
 			DiaUebungSettings: "++ID,&UebungID",
-
+			
 		});
-
+		this.InitDatenbank();
+	}
+			
+	InitDatenbank() {
 		this.InitAll();
 		//  this.HantelTable.clear();
 		this.PruefeStandardProgress();
@@ -664,6 +666,22 @@ export class DexieSvcService extends Dexie {
 		this.PruefeStandardMuskelGruppen();
 		// this.DoWorker(WorkerAction.LadeDiagrammDaten);
 		// this.LadeStammUebungen();
+	}
+
+	ResetDatenbank() {
+		this.ProgrammTable.clear()
+			.then(() => {
+				this.SessionTable.clear()
+				.then(() => {
+					this.UebungTable.clear()
+						.then(() => {
+							this.SatzTable.clear()
+								.then(() => {
+									this.InitDatenbank();
+							});
+					});
+				});
+			});
 	}
 
 	get UebungListeSortedByName(): Array<Uebung> {
@@ -1560,7 +1578,42 @@ export class DexieSvcService extends Dexie {
 		// 	});
 	}
 
-	public async LoadLastFailDate(aSession: Session, aUebung: Uebung): Promise<Date> {
+	public async LoadLastFailDateEx(aSession: Session, aUebung: Uebung, aFailCount: number): Promise<Array<Uebung>> {
+		const mUebungParaDB: UebungParaDB = new UebungParaDB();
+		mUebungParaDB.WhereClause = {
+			FK_Programm: aSession.FK_Programm,
+			FkUebung: aUebung.FkUebung,
+			// FkProgress: aUebung.FkProgress,
+			// ProgressGroup: aUebung.ProgressGroup,
+			ArbeitsSaetzeStatus: SaetzeStatus.AlleFertig
+		};
+
+		mUebungParaDB.And = (mUebung: Uebung): boolean => {
+			return (
+				mUebung.WeightInitDate.valueOf() >= mUebung.FailDatum.valueOf() &&
+				mUebung.WeightInitDate.valueOf() > cMinDatum.valueOf() &&
+				mUebung.SessionID !== aSession.ID
+			);
+		};
+		
+		mUebungParaDB.Limit = aFailCount-1;
+		mUebungParaDB.SortBy = "WeightInitDate";
+		mUebungParaDB.SortOrder = SortOrder.descending;
+
+		return await this.LadeSessionUebungenEx(new Session(), // Dummy
+			                                    mUebungParaDB)
+			.then((mUebungen) => {
+				let mResult: Array<Uebung> = [];
+				for (let index = 0; index < mUebungen.length; index++) {
+					if (mUebungen[index].FailDatum.valueOf() > cMinDatum.valueOf())
+						break;
+					mResult.push(mUebungen[index]);
+				}
+				return mResult;
+			});
+	}
+
+	public async LoadLastFailDate(aSession: Session, aUebung: Uebung, aFailCount: number): Promise<Date> {
 		const mUebungParaDB: UebungParaDB = new UebungParaDB();
 		mUebungParaDB.WhereClause = {
 			FK_Programm: aSession.FK_Programm,
@@ -1572,21 +1625,23 @@ export class DexieSvcService extends Dexie {
 
 		mUebungParaDB.And = (mUebung: Uebung): boolean => {
 			return (
-				mUebung.FailDatum.valueOf() > cMinDatum.valueOf()
+				mUebung.WeightInitDate.valueOf() >= mUebung.FailDatum.valueOf() &&
+				mUebung.WeightInitDate.valueOf() > cMinDatum.valueOf()
 			);
 		};
-				
-		mUebungParaDB.Limit = 1;
-		mUebungParaDB.SortBy = "FailDatum";
+		
+		mUebungParaDB.Limit = aFailCount;
+		mUebungParaDB.SortBy = "WeightInitDate";
 		mUebungParaDB.SortOrder = SortOrder.descending;
 
-		return await this.LadeSessionUebungenEx(new Session(), // <= Dummy
+		return await this.LadeSessionUebungenEx(new Session(), // Dummy
 			                                    mUebungParaDB)
 			.then((mUebungen) => {
-				if (mUebungen.length > 0)
-					return mUebungen[0].FailDatum;
-				else
-					return cMinDatum;
+				for (let index = 0; index < mUebungen.length; index++) {
+					if (mUebungen[index].FailDatum.valueOf() > cMinDatum.valueOf())
+						return mUebungen[index].FailDatum;
+				}
+				return cMinDatum;
 			});
 	}
 

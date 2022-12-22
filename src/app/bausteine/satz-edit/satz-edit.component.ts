@@ -254,6 +254,7 @@ export class SatzEditComponent implements OnInit {
             try {
                 aProgressPara.UserInfo = [];
                 that.sessUebung.WeightInitDate = cMinDatum;
+                that.sessUebung.WeightInitDate = new Date();
 
                 if (aProgressPara.Wp === WeightProgress.Same)
                     that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt);
