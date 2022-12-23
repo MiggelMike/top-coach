@@ -317,29 +317,12 @@ export class Progress implements IProgress {
 			    && Uebung.StaticGetArbeitsSatzStatus(mPtrSessUebung,0) === SatzStatus.Fertig)
 			{
 				// Der erste Satz der Übung ist maßgebend.
-				if (mPtrSessUebung.SatzWDH(0) >= mPtrSessUebung.SatzBisVorgabeWDH(0))
-				{
-					// Die vorgegebenen Wiederholungen für den ersten Satz konnten erreicht werden.
-					// Der erste Satz ist also Ok.
-					if (
-						// Die Session läuft.
-						// Dann reicht es, wenn der erste Satz abgeschlossen und OK ist.
-							(aSession.Kategorie02 === SessionStatus.Laueft)
-						// Die Session läuft NICHT.
-						// Dann müssen ALLE Sätze abgeschlossen sein.
-						|| (Uebung.StaticArbeitsSaetzeStatus(mPtrSessUebung) === SaetzeStatus.AlleFertig))
-					{
-						return WeightProgress.Increase;
-					}//if
-
-				}
-				else {
+				if (mPtrSessUebung.SatzWDH(0) < mPtrSessUebung.SatzBisVorgabeWDH(0)) {
 					// Die vorgegebenen Wiederholungen für den ersten Satz konnten NICHT erreicht werden.
 					// Wenn der Prozesstyp nicht Blockset ist, muss 
 					if ((mProgress.ProgressTyp === ProgressTyp.BlockSet) ||
 						// er RepRange sein. Daher das untere Limit prüfen.
-						(mPtrSessUebung.SatzWDH(0) < mPtrSessUebung.SatzVonVorgabeWDH(0)))
-					{
+						(mPtrSessUebung.SatzWDH(0) < mPtrSessUebung.SatzVonVorgabeWDH(0))) {
 						mFailCount++
 						continue;
 					}

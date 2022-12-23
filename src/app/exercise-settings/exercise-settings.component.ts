@@ -314,6 +314,9 @@ export class ExerciseSettingsComponent {
 					// Die Session aus dem Formular ignorienn
 					if (mSession.ID !== this.Session.ID && mSession.Kategorie02 === SessionStatus.Wartet) {
 						// Prüfe alle Übungen der Session
+						if (mSession.UebungsListe.length === 0)
+							mSession.UebungsListe = await this.fDbModule.LadeSessionUebungen(mSession.ID);
+							
 						mSession.UebungsListe.forEach((mDestUebung) => {
 							// Prüfe, ob es sich um die gleiche Übung wie die im Formular handelt. 
 							if (mDestUebung.FkUebung === this.CmpUebungSettings.FkUebung &&

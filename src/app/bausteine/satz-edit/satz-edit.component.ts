@@ -290,6 +290,7 @@ export class SatzEditComponent implements OnInit {
                     mDialogData.textZeilen.push(`of this exercise of the current workout`);
                     mDialogData.textZeilen.push(`and also in upcoming workouts.`);
                     that.sessUebung.WeightInitDate = new Date();
+                    that.sessUebung.FailDatum = new Date();
                     that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung);
                 }
                 else {
