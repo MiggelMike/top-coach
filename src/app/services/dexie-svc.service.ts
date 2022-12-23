@@ -1579,18 +1579,22 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async LoadLastFailDateEx(aSession: Session, aUebung: Uebung, aFailCount: number): Promise<Array<Uebung>> {
+		if (aFailCount === 1)
+			return [aUebung];
+		
 		const mUebungParaDB: UebungParaDB = new UebungParaDB();
 		mUebungParaDB.WhereClause = {
 			FK_Programm: aSession.FK_Programm,
 			FkUebung: aUebung.FkUebung,
-			// FkProgress: aUebung.FkProgress,
-			// ProgressGroup: aUebung.ProgressGroup,
+			FkProgress: aUebung.FkProgress,
+			ProgressGroup: aUebung.ProgressGroup,
 			ArbeitsSaetzeStatus: SaetzeStatus.AlleFertig
 		};
 
 		mUebungParaDB.And = (mUebung: Uebung): boolean => {
 			return (
 				mUebung.WeightInitDate.valueOf() >= mUebung.FailDatum.valueOf() &&
+
 				mUebung.WeightInitDate.valueOf() > cMinDatum.valueOf() &&
 				mUebung.SessionID !== aSession.ID
 			);
@@ -1605,8 +1609,15 @@ export class DexieSvcService extends Dexie {
 			.then((mUebungen) => {
 				let mResult: Array<Uebung> = [];
 				for (let index = 0; index < mUebungen.length; index++) {
-					if (mUebungen[index].FailDatum.valueOf() > cMinDatum.valueOf())
+					const mPtrUebung: Uebung = mUebungen[index];
+					if (mPtrUebung.FailDatum.valueOf() > cMinDatum.valueOf())
 						break;
+					
+					// if ((mPtrUebung.FkProgress !== aUebung.FkProgress) ||
+					// 	(mPtrUebung.ProgressGroup !== aUebung.ProgressGroup)
+					// )
+					// 	continue;
+					
 					mResult.push(mUebungen[index]);
 				}
 				return mResult;
