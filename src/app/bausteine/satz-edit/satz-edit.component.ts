@@ -1,3 +1,4 @@
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { cWeightDigits, cMinDatum, UebungParaDB } from './../../services/dexie-svc.service';
 import { NextProgress, Progress, ProgressPara, ProgressSet, ProgressTyp, VorgabeWeightLimit, WeightProgress } from './../../../Business/Progress/Progress';
 import { DexieSvcService } from 'src/app/services/dexie-svc.service';
@@ -360,6 +361,7 @@ export class SatzEditComponent implements OnInit {
     }    
 
     public SetWdhAusgefuehrt(aEvent: any) {
+        aEvent.stopPropagation();
         this.satz.WdhAusgefuehrt = Number(aEvent.target.value);
     }
     

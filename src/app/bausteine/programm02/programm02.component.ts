@@ -356,7 +356,7 @@ export class Programm02Component implements OnInit {
 			this.OnLeaveFn.emit();
 
 		const mLadePara: UebungParaDB = new UebungParaDB();
-		mLadePara.SaetzeBeachten = true;
+		// mLadePara.SaetzeBeachten = true;
 		this.fDbModule.LadeSessionUebungen(aSession.ID, mLadePara).then
 			((aUebungsListe) => {
 				aSession.UebungsListe = aUebungsListe;

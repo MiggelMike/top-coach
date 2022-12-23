@@ -18,8 +18,9 @@
                 </div>
             </mat-expansion-panel-header>
             
-            <ng-container *ngIf='bearbeitbar; then  BearbeitbarBlock else NurLesenBlock'>
-            </ng-container>
+            <ng-container *ngIf="satzListe.length > 0" >
+                <ng-container *ngIf='bearbeitbar; then  BearbeitbarBlock else NurLesenBlock'>
+                </ng-container>
                 <!-- Nur Lesen -->
                 <ng-template #NurLesenBlock>
                     <div fxLayout="row" fxLayout.lt-sm="row" fxLayoutAlign="flex-start">
@@ -28,23 +29,24 @@
                         </ng-container>
                     </div>
                 </ng-template>
-            <!-- Bearbeitbar -->
-            <ng-template #BearbeitbarBlock>
-                <div fxLayout="column" fxLayout.lt-sm="column" fxLayoutAlign="flex-start">
-                    <ng-container *ngFor="let satz of satzListe, index as i">
-                        <app-satz-edit #AppSatzEdit 
-                            [rowNum]="i" 
-                            [programm]="programm" 
-                            [programmTyp]="programmTyp"
-                            [sessUebung]="sessUebung" 
-                            [satz]="satz" 
-                            [sess]="session" 
-                            [satzTyp]="satzTypText"
-                            [DeletedSatzList]="DeletedSatzList" >
-                        </app-satz-edit>
-                    </ng-container>
-                </div>
-            </ng-template>
+                <!-- Bearbeitbar -->
+                <ng-template #BearbeitbarBlock>
+                        <div fxLayout="column" fxLayout.lt-sm="column" fxLayoutAlign="flex-start">
+                            <ng-container *ngFor="let satz of satzListe, index as i">
+                                <app-satz-edit #AppSatzEdit 
+                                    [rowNum]="i" 
+                                    [programm]="programm" 
+                                    [programmTyp]="programmTyp"
+                                    [sessUebung]="sessUebung" 
+                                    [satz]="satz" 
+                                    [sess]="session" 
+                                    [satzTyp]="satzTypText"
+                                    [DeletedSatzList]="DeletedSatzList" >
+                                </app-satz-edit>
+                            </ng-container>
+                        </div>
+                </ng-template>
+           </ng-container>
         </mat-expansion-panel>
     </mat-accordion>
 </ng-container>
