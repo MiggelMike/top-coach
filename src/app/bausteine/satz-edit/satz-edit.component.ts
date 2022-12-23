@@ -270,6 +270,28 @@ export class SatzEditComponent implements OnInit {
                     that.sessUebung.WeightInitDate = new Date();
                     that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung);
                 }
+                else if (
+                    (aProgressPara.Progress.ProgressSet === ProgressSet.First)
+                    && (aSatz.SatzListIndex === 0)
+                    && (aProgressPara.Wp === WeightProgress.Decrease)
+                ) {
+                    let mSubWeight = 0;
+                    // Der Progressmodus ist "ProgressSet.First"
+                    // Der Anwender hatte diesen Satz nicht mit der vollständigen Anzahl der Wiederholungen beendet.
+                    // Er hatte den Haken "erledigt" gesetzt,
+                    // Jetzt hat er diesen Haken wieder zurückgesetzt.
+                    // Falls für die Übung mehr als ein Satz vorgesehen ist und er im zweiten Satz das Array "GewichtDiff" Einträge hat,
+                    // wird aus diesem Ehreder Wert für das Gewicht geholt.
+                    if ((aProgressPara.AusgangsUebung.SatzListe.length > 1) && (aProgressPara.AusgangsUebung.SatzListe[1].GewichtDiff.length > 0))
+                        // Wert wird negiert
+                        mSubWeight = -aProgressPara.AusgangsUebung.SatzListe[1].GewichtDiff[0].Gewicht;
+                    // mSubWeight für die Meldung an den Anwender verwenden
+                    mDialogData.textZeilen.push(`Lift ${AppData.StaticRoundTo(aProgressPara.AusgangsSatz.GewichtAusgefuehrt - mSubWeight, cWeightDigits)} ${that.AppData.GewichtsEinheitText} for the next sets`);
+                    mDialogData.textZeilen.push(`of this exercise of the current workout`);
+                    mDialogData.textZeilen.push(`and also in upcoming workouts.`);
+                    that.sessUebung.WeightInitDate = new Date();
+                    that.sessUebung.SetzeArbeitsSaetzeGewichtNaechsteSession(aProgressPara.AusgangsSatz.GewichtAusgefuehrt + aProgressPara.AusgangsUebung.GewichtSteigerung);
+                }
                 else {
                     if (Uebung.StaticArbeitsSaetzeStatus(that.sessUebung) === SaetzeStatus.AlleFertig) {
                         if (aProgressPara.Progress.ProgressSet === ProgressSet.First

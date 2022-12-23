@@ -713,18 +713,23 @@ export class Progress implements IProgress {
 		return (aSession.Kategorie02 === SessionStatus.Laueft);
 	}
 
-	private static StaticSetWeight(aGewichtDiff: GewichtDiff, aSatz: Satz, aArithmetik: Arithmetik): void {
+	private static StaticSetWeight(aGewichtDiff: GewichtDiff, aSatz: Satz, aArithmetik: Arithmetik, aRemoveGewichtDiff: boolean): void {
 		if (aSatz.Status === SatzStatus.Wartet) {
 			if (aArithmetik === Arithmetik.Add) {
 				aSatz.AddToDoneWeight(aGewichtDiff.Gewicht);
 				aSatz.GewichtDiff.push(aGewichtDiff);
 			}
 		    else {
-				aSatz.AddToDoneWeight(-aGewichtDiff.Gewicht);
+				aSatz.AddToDoneWeight(aGewichtDiff.Gewicht);
 				const mIndex = aSatz.GewichtDiff.indexOf(aGewichtDiff);
-				if (mIndex > -1)
-					aSatz.GewichtDiff.splice(mIndex, 1);
-			}
+				if (aRemoveGewichtDiff === true) {
+					if (mIndex > -1)
+						aSatz.GewichtDiff.splice(mIndex, 1);
+				} else {
+					if (mIndex < 0)
+						aSatz.GewichtDiff.push(aGewichtDiff);
+				}
+	}
 		
 			aSatz.SetPresetWeight(aSatz.GewichtAusgefuehrt);
 		}
@@ -740,22 +745,25 @@ export class Progress implements IProgress {
 						mGewichtDiff.Gewicht = aWeight;
 						mGewichtDiff.FromSet = aAusgangsSatz;
 						mGewichtDiff.Uebung = aAusgangsUebung;
-						Progress.StaticSetWeight(mGewichtDiff, sz, aArithmetik);
+						Progress.StaticSetWeight(mGewichtDiff, sz, aArithmetik, false);
 					}
 					else {
 						let mGewichtDiff: GewichtDiff;
-						if (sz.GewichtDiff.length > 0) 
+						let mRemoveGewichtrDiff: boolean = true;
+						if (sz.GewichtDiff.length > 0) {
 							mGewichtDiff = sz.GewichtDiff.find((gdiff) => { return Progress.StaticEqualSet(gdiff.FromSet, aAusgangsSatz); })
-						else if (aWeight !== this.cIgnoreWeight)
+							mGewichtDiff.Gewicht = -mGewichtDiff.Gewicht;
+						}else if (aWeight !== this.cIgnoreWeight)
 						{
 							mGewichtDiff = new GewichtDiff();
 							mGewichtDiff.FromSet = aAusgangsSatz;
 							mGewichtDiff.Uebung = aUebung;
-							mGewichtDiff.Gewicht = aWeight;
+							mGewichtDiff.Gewicht = -aWeight;
+							mRemoveGewichtrDiff = false;
 						}
 						if (mGewichtDiff !== undefined)
 						{
-							Progress.StaticSetWeight(mGewichtDiff, sz, aArithmetik);
+							Progress.StaticSetWeight(mGewichtDiff, sz, aArithmetik, mRemoveGewichtrDiff);
 						}
 					} // if
 				}
@@ -796,7 +804,7 @@ export class Progress implements IProgress {
 					});
 				
 				if(mGewichtDiff !== undefined)
-					Progress.StaticSetWeight(mGewichtDiff, sz, Arithmetik.Sub);
+					Progress.StaticSetWeight(mGewichtDiff,sz, Arithmetik.Sub, false);
 			}
 
 

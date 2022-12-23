@@ -1581,20 +1581,25 @@ export class DexieSvcService extends Dexie {
 	public async LoadLastFailDateEx(aSession: Session, aUebung: Uebung, aFailCount: number): Promise<Array<Uebung>> {
 		if (aFailCount === 1)
 			return [aUebung];
+
 		
 		const mUebungParaDB: UebungParaDB = new UebungParaDB();
 		mUebungParaDB.WhereClause = {
+			// Nur übungen des aktuellen programms laden
 			FK_Programm: aSession.FK_Programm,
+			// Aus den Programm nur die übung laden, die der Stammdaten-Übung entsprechen
 			FkUebung: aUebung.FkUebung,
+			// Die Progress-Methodik muss gleich sein
 			FkProgress: aUebung.FkProgress,
+			// Die Progress-Gruppe muss gleich sein
 			ProgressGroup: aUebung.ProgressGroup,
+			// Alle sätze der übungen müssen fertig sein
 			ArbeitsSaetzeStatus: SaetzeStatus.AlleFertig
 		};
 
 		mUebungParaDB.And = (mUebung: Uebung): boolean => {
 			return (
 				mUebung.WeightInitDate.valueOf() >= mUebung.FailDatum.valueOf() &&
-
 				mUebung.WeightInitDate.valueOf() > cMinDatum.valueOf() &&
 				mUebung.SessionID !== aSession.ID
 			);
