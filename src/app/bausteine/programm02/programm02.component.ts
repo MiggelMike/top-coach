@@ -357,11 +357,22 @@ export class Programm02Component implements OnInit {
 
 		const mLadePara: UebungParaDB = new UebungParaDB();
 		// mLadePara.SaetzeBeachten = true;
-		this.fDbModule.LadeSessionUebungen(aSession.ID, mLadePara).then
-			((aUebungsListe) => {
-				aSession.UebungsListe = aUebungsListe;
-				this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
-			})
+
+		const mDialogData = new DialogData();
+        mDialogData.ShowAbbruch = false;
+        mDialogData.ShowOk = false;
+        mDialogData.textZeilen.push('Loading');
+		this.fLoadingDialog.Loading(mDialogData);
+		try {
+			this.fDbModule.LadeSessionUebungen(aSession.ID, mLadePara).then
+				((aUebungsListe) => {
+					this.fLoadingDialog.fDialog.closeAll();
+					aSession.UebungsListe = aUebungsListe;
+					this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
+				})
+		} catch(err) {
+			this.fLoadingDialog.fDialog.closeAll();
+		}		
 	}
 
 
