@@ -1,6 +1,8 @@
 import { DialogTyp } from './../../services/dialoge.service';
 import { Component, Inject } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+export const cLoadingDefaultHeight = '150px';
 
 interface IOkCallback {
     (aPara?: any):void;

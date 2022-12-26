@@ -639,7 +639,7 @@ export class DexieSvcService extends Dexie {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
 		}
 
-		    //  Dexie.delete("ConceptCoach");
+		      // Dexie.delete("ConceptCoach");
 		this.version(9).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
@@ -1671,7 +1671,7 @@ export class DexieSvcService extends Dexie {
 		return mResultUebungsListe;
 	}
 
-	public async LadeSessionUebungenEx(aSession: ISession, aLadePara?: ParaDB): Promise<Array<Uebung>> {
+	public async LadeSessionUebungenEx(aSession: ISession, aLadePara?: UebungParaDB): Promise<Array<Uebung>> {
 		if (aLadePara !== undefined && aLadePara.OnUebungBeforeLoadFn !== undefined)
 			aLadePara.OnUebungBeforeLoadFn(aLadePara);
 
@@ -1708,7 +1708,8 @@ export class DexieSvcService extends Dexie {
 							aLadePara.ExtraFn(mExtraFnPara);
 						}
 						
-						await this.LadeUebungsSaetzeEx(mPtrUebung);
+						if(aLadePara !== undefined && aLadePara.SaetzeBeachten === true)
+							await this.LadeUebungsSaetzeEx(mPtrUebung);
 					};
 
 					if (aLadePara !== undefined && aLadePara.OnUebungAfterLoadFn !== undefined) mResultUebungsListe = aLadePara.OnUebungAfterLoadFn(mResultUebungsListe);
@@ -2086,7 +2087,7 @@ export class DexieSvcService extends Dexie {
 		return mResultSession;
 	}
 
-	public async CheckSessionSaetze(aSession: Session) {
+	public async CheckSessionUebungen(aSession: Session) {
 		if (aSession.UebungsListe.length === 0) {
 			const mUebungParaDB: UebungParaDB = new UebungParaDB();
 			mUebungParaDB.SaetzeBeachten = true;

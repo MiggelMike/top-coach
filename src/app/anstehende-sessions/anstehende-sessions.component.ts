@@ -29,7 +29,7 @@ export class AnstehendeSessionsComponent implements OnInit {
 
     private async LadeSessions(aOffSet: number = 0): Promise<void> {
         const mSessionParaDB: SessionParaDB = new SessionParaDB();
-        mSessionParaDB.UebungenBeachten = false;
+        mSessionParaDB.UebungenBeachten = true;
         // mSessionParaDB.OffSet = aOffSet;
         this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
             .then((aSessionListe) => {
@@ -37,15 +37,15 @@ export class AnstehendeSessionsComponent implements OnInit {
                     this.Programm.SessionListe = [];
                     this.fDbModule.AktuellesProgramm.SessionListe = [];
                     aSessionListe.forEach((mPtrSession) => {
-                        // if (mPtrSession.Kategorie02 !== SessionStatus.Wartet) {                            
-                            // const mUebungParaDB = new UebungParaDB();
-                          //  mUebungParaDB.SaetzeBeachten = true;
-                            // this.fDbModule.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
-                            //     (aUebungsListe) => {
-                            //         if (aUebungsListe.length > 0)
-                            //             mPtrSession.UebungsListe = aUebungsListe;
-                            //     });
-                        // }
+                        if (mPtrSession.Kategorie02 === SessionStatus.Wartet) {
+                            const mUebungParaDB = new UebungParaDB();
+                            mUebungParaDB.SaetzeBeachten = true;
+                            this.fDbModule.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
+                                (aUebungsListe) => {
+                                    if (aUebungsListe.length > 0)
+                                        mPtrSession.UebungsListe = aUebungsListe;
+                                });
+                        }
                         
                         SessionDB.StaticCheckMembers(mPtrSession);
                         mPtrSession.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);

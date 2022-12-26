@@ -8,7 +8,7 @@ import { DialogeService } from "./../../services/dialoge.service";
 import { DexieSvcService, cMinDatum, ProgrammParaDB, SessionParaDB, UebungParaDB, WorkerAction } from "./../../services/dexie-svc.service";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { DialogData } from "src/app/dialoge/hinweis/hinweis.component";
+import { cLoadingDefaultHeight, DialogData } from "src/app/dialoge/hinweis/hinweis.component";
 import { Location } from "@angular/common";
 import { GlobalService } from "src/app/services/global.service";
 import { Uebung, UebungsKategorie02 } from "src/Business/Uebung/Uebung";
@@ -72,6 +72,7 @@ export class SessionFormComponent implements OnInit {
 
 		if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length <= 0) {
 			const mDialogData = new DialogData();
+			mDialogData.height = cLoadingDefaultHeight;
 			mDialogData.ShowAbbruch = false;
 			mDialogData.ShowOk = false;
 			mDialogData.textZeilen.push('Loading session');
@@ -225,6 +226,7 @@ export class SessionFormComponent implements OnInit {
 			mDialogData.OkFn = () => {
 				this.leave();
 				this.SaveChangesPrim();
+				this.router.navigate(['/']);
 			}
 	
 			mDialogData.CancelFn = (): void => {
@@ -287,7 +289,6 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		// this.DoWorker();
 		this.BodyWeight = this.fDbModule.getBodyWeight();
 	}
 	
@@ -297,6 +298,7 @@ export class SessionFormComponent implements OnInit {
 
 	public SaveChanges(aPara: any) {
 		(aPara as SessionFormComponent).SaveChangesPrim();
+		this.router.navigate(['/']);
 	}
 
 	public async SaveChangesPrim(): Promise<void> {
@@ -368,8 +370,8 @@ export class SessionFormComponent implements OnInit {
 		aSessionForm.fDbModule.AktuellesProgramm.SessionListe = this.Programm.SessionListe;
 		aSessionForm.fDbModule.AktuellesProgramm.NummeriereSessions();
 		this.SaveChangesPrim().then(() => {
-			this.router.navigate(['/']);
-			this.fDbModule.DoWorker(WorkerAction.LadeDiagrammDaten);
+		this.router.navigate(['/']);
+			// this.fDbModule.DoWorker(WorkerAction.LadeDiagrammDaten);
 		});
 	}
 
@@ -381,6 +383,7 @@ export class SessionFormComponent implements OnInit {
 		// Der Benutzer will speichern und schließen.
 		mDialogData.OkFn = async (aSessionForm: SessionFormComponent) => {
 			const mSaveDialogData = new DialogData();
+			mSaveDialogData.height = '175px';
 			mSaveDialogData.ShowAbbruch = false;
 			mSaveDialogData.ShowOk = false;
 			mSaveDialogData.textZeilen.push('Saving');
@@ -395,6 +398,7 @@ export class SessionFormComponent implements OnInit {
 					mSessionCopyPara.CopySatzID = false;
 					// Mit den Daten der gespeicherten Session eine neue erstellen
 					const mNeueSession: Session = Session.StaticCopy(aSessionForm.Session, mSessionCopyPara);
+					mSaveDialogData.textZeilen.push('Create new Session');
 					aSessionForm.Session.ListenIndex = -aSessionForm.Session.ListenIndex;
 					// Neue Session  initialisieren
 					mNeueSession.init();
@@ -405,13 +409,15 @@ export class SessionFormComponent implements OnInit {
 					mNeueSession.Expanded = false;
 
 					// Sätze der neuen Session initialisieren
+					mSaveDialogData.textZeilen[1] = 'Initializing new Session';
 					this.fDbModule.InitSessionSaetze(aSessionForm.Session, mNeueSession as Session);
-
-					for (let index1 = 0; index1 < this.Programm.SessionListe.length; index1++) {
-						const mPtrSession = this.Programm.SessionListe[index1];
-						// Eventuell müssen dies Sätze der Session-Übungen geladen werden
-						await this.fDbModule.CheckSessionSaetze(mPtrSession);
-					}
+					
+					// for (let index1 = 0; index1 < this.Programm.SessionListe.length; index1++) {
+					// 	const mPtrSession = this.Programm.SessionListe[index1];
+					// 	mSaveDialogData.textZeilen[1] = `Checking upcoming Session "${mPtrSession.Name}"`;
+					// 	// Eventuell müssen die Sätze der Session-Übungen geladen werden
+					// 	await this.fDbModule.CheckSessionUebungen(mPtrSession);
+					// }
 
 					mNeueSession.UebungsListe.forEach((mNeueUebung) => {
 						mNeueUebung.WeightInitDate = cMinDatum;
@@ -497,8 +503,7 @@ export class SessionFormComponent implements OnInit {
 					} catch (error) {
 						console.error(error);
 					}
-
-					await this.fDbModule.SessionSpeichern(mNeueSession).then(
+					this.fDbModule.SessionSpeichern(mNeueSession).then(
 						async (mPtrSession) => {
 							const mProgrammExtraParaDB: ProgrammParaDB = new ProgrammParaDB();
 							mProgrammExtraParaDB.SessionBeachten = true;
@@ -506,7 +511,7 @@ export class SessionFormComponent implements OnInit {
 							mProgrammExtraParaDB.SessionParaDB.UebungenBeachten = true;
 							mProgrammExtraParaDB.SessionParaDB.UebungParaDB = new UebungParaDB();
 							mProgrammExtraParaDB.SessionParaDB.UebungParaDB.SaetzeBeachten = true;
-							await this.fDbModule.ProgrammSpeichern(this.Programm, mProgrammExtraParaDB)
+							this.fDbModule.ProgrammSpeichern(this.Programm, mProgrammExtraParaDB)
 								.then((mPtrProgramm) => {
 									this.Programm = mPtrProgramm;
 									this.fDbModule.AktuellesProgramm = this.Programm;
@@ -515,9 +520,11 @@ export class SessionFormComponent implements OnInit {
 						});
 	
 				} // <= mSavedSession.UebungsListe.length > 0
-				// }); // <= SessionSpeichern
-			} finally {
 				this.fSavingDialog.fDialog.closeAll();
+				// }); // <= SessionSpeichern
+			} catch(err) {
+				this.fSavingDialog.fDialog.closeAll();
+				console.error(err);
 			}
 
 		} // <= mDialogData.OkFn

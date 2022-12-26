@@ -9,7 +9,7 @@ import { DialogeService } from "../services/dialoge.service";
 import { Location } from "@angular/common";
 import { Uebung } from "src/Business/Uebung/Uebung";
 import { floatMask } from "../app.module";
-import { DialogData } from "src/app/dialoge/hinweis/hinweis.component";
+import { cLoadingDefaultHeight, DialogData } from "src/app/dialoge/hinweis/hinweis.component";
 
 @Component({
 	selector: "app-initial-weight",
@@ -73,6 +73,7 @@ export class InitialWeightComponent implements OnInit {
 
 	OkClick() {
 		const mDialogData = new DialogData();
+		mDialogData.height = cLoadingDefaultHeight;
 		mDialogData.ShowAbbruch = false;
 		mDialogData.ShowOk = false;
 		mDialogData.textZeilen.push('Preparing program');

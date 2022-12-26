@@ -9,7 +9,7 @@ import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProg
 import { Output, EventEmitter, Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";
 import { MatAccordion, MatExpansionPanel } from "@angular/material/expansion";
 import { DialogeService } from "./../../services/dialoge.service";
-import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
+import { cLoadingDefaultHeight, DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
 import { Observable, of } from "rxjs";
 import { Uebung } from "src/Business/Uebung/Uebung";
@@ -93,6 +93,7 @@ export class Programm02Component implements OnInit {
 
 	private async LadeUebungen(aSess: ISession, aUebungPara: UebungParaDB): Promise<void>  {
 		const mDialogData = new DialogData();
+		mDialogData.height = cLoadingDefaultHeight;
         mDialogData.ShowAbbruch = false;
         mDialogData.ShowOk = false;
         mDialogData.textZeilen.push('Loading exercises');
@@ -355,24 +356,35 @@ export class Programm02Component implements OnInit {
 		if (this.OnLeaveFn !== undefined)
 			this.OnLeaveFn.emit();
 
-		const mLadePara: UebungParaDB = new UebungParaDB();
-		// mLadePara.SaetzeBeachten = true;
-
+			
 		const mDialogData = new DialogData();
-        mDialogData.ShowAbbruch = false;
-        mDialogData.ShowOk = false;
-        mDialogData.textZeilen.push('Loading');
+		mDialogData.height = cLoadingDefaultHeight;
+		mDialogData.ShowAbbruch = false;
+		mDialogData.ShowOk = false;
+		
+		mDialogData.textZeilen.push('Loading');
+		const mLadePara: UebungParaDB = new UebungParaDB();
+		mLadePara.SaetzeBeachten = false;
 		this.fLoadingDialog.Loading(mDialogData);
 		try {
-			this.fDbModule.LadeSessionUebungen(aSession.ID, mLadePara).then
-				((aUebungsListe) => {
-					this.fLoadingDialog.fDialog.closeAll();
-					aSession.UebungsListe = aUebungsListe;
-					this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
-				})
-		} catch(err) {
+			aSession.UebungsListe.forEach( async(mUebung) => {
+				if (mUebung.SatzListe.length === 0)
+					mUebung.SatzListe = await this.fDbModule.LadeUebungsSaetze(mUebung.ID);
+				mUebung.Expanded = false;
+				
+			});
 			this.fLoadingDialog.fDialog.closeAll();
-		}		
+			this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
+			// this.fDbModule.LadeSessionUebungen(aSession.ID, mLadePara).then
+			// 	((aUebungsListe) => {
+			// 		this.fLoadingDialog.fDialog.closeAll();
+			// 		aSession.UebungsListe = aUebungsListe;
+			// 		aUebungsListe.forEach((mUebung) => mUebung.Expanded = false);
+			// 		this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
+			// 	})
+		} catch (err) {
+			this.fLoadingDialog.fDialog.closeAll();
+		}
 	}
 
 

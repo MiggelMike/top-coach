@@ -43,7 +43,7 @@ export class DialogeService {
         if(aDialogData.textZeilen.length <= 0)
             aDialogData.textZeilen.push('Loading');
         
-        if (aDialogData.height.trim() !== '')
+        if (aDialogData.height.length === 0)
             aDialogData.height = '150px';
             
         aDialogData.typ = DialogTyp.Loading;
