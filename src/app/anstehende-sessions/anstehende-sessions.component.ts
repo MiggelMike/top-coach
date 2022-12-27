@@ -33,14 +33,16 @@ export class AnstehendeSessionsComponent implements OnInit {
         // mSessionParaDB.OffSet = aOffSet;
         this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
             .then((aSessionListe) => {
+                // this.fProgramm.SessionListe =  aSessionListe;
+                // this.fDbModule.AktuellesProgramm.SessionListe = aSessionListe;
                 if (aSessionListe.length > 0) {
                     this.Programm.SessionListe = [];
                     this.fDbModule.AktuellesProgramm.SessionListe = [];
-                    aSessionListe.forEach((mPtrSession) => {
+                    aSessionListe.forEach(async(mPtrSession) => {
                         if (mPtrSession.Kategorie02 === SessionStatus.Wartet) {
                             const mUebungParaDB = new UebungParaDB();
                             mUebungParaDB.SaetzeBeachten = true;
-                            this.fDbModule.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
+                            await this.fDbModule.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
                                 (aUebungsListe) => {
                                     if (aUebungsListe.length > 0)
                                         mPtrSession.UebungsListe = aUebungsListe;
@@ -50,9 +52,9 @@ export class AnstehendeSessionsComponent implements OnInit {
                         SessionDB.StaticCheckMembers(mPtrSession);
                         mPtrSession.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
                     });
+                    this.fProgramm.SessionListe =  aSessionListe;
+                    this.fDbModule.AktuellesProgramm.SessionListe = aSessionListe;
                 }
-                this.fDbModule.AktuellesProgramm.SessionListe = aSessionListe;
-                this.fProgramm.SessionListe =  aSessionListe;
             });
     }
         
@@ -76,28 +78,31 @@ export class AnstehendeSessionsComponent implements OnInit {
     DoWorker() {
         const that: AnstehendeSessionsComponent = this;
         if (typeof Worker !== 'undefined') {
-            that.worker = new Worker(new URL('./anstehende-sessions.worker', import.meta.url));
-            that.worker.addEventListener('message', ({ data }) => {
-                if (data.action === "LadeAktuellesProgramm") {
-                    that.fDbModule.LadeAktuellesProgramm()
-                        .then(async (aProgramm) => {
-                            if (aProgramm !== undefined) {
-                                const mDialogData = new DialogData();
-                                mDialogData.ShowAbbruch = false;
-                                mDialogData.ShowOk = false;
-                                mDialogData.hasBackDrop = false;
-                                that.fDbModule.AktuellesProgramm.SessionListe = [];
-                                this.fProgramm = that.fDbModule.AktuellesProgramm.Copy();
-                                that.LadeSessions();
-                            }
-                        });
-                } // if
-                else if (data.action === "LadeUebungen") {
+            if (this.fDbModule.AktuellesProgramm === undefined) {
+                that.worker = new Worker(new URL('./anstehende-sessions.worker', import.meta.url));
+                that.worker.addEventListener('message', ({ data }) => {
+                    if (data.action === "LadeAktuellesProgramm") {
+                        that.fDbModule.LadeAktuellesProgramm()
+                            .then(async (aProgramm) => {
+                                that.fDbModule.AktuellesProgramm = aProgramm;
+                                this.fProgramm = aProgramm;
+                                if (aProgramm !== undefined) {
+                                    const mDialogData = new DialogData();
+                                    mDialogData.ShowAbbruch = false;
+                                    mDialogData.ShowOk = false;
+                                    mDialogData.hasBackDrop = false;
+                                    that.fDbModule.AktuellesProgramm.SessionListe = [];
+                                    this.fProgramm = that.fDbModule.AktuellesProgramm.Copy();
+                                    that.LadeSessions();
+                                }
+                            });
+                    } // if
+                    else if (data.action === "LadeUebungen") {
                         // that.Programm.SessionListe = that.fDbModule.AktuellesProgramm.SessionListe;
                         const mUebungParaDB: UebungParaDB = new UebungParaDB();
                         // mUebungParaDB.SaetzeBeachten = true;
                         this.fProgramm.SessionListe.forEach(
-                        // that.fDbModule.AktuellesProgramm.SessionListe.forEach(
+                            // that.fDbModule.AktuellesProgramm.SessionListe.forEach(
                             (aSession) => {
                                 if (aSession.UebungsListe === undefined || aSession.UebungsListe.length <= 0) {
                                     that.fDbModule.LadeSessionUebungen(aSession.ID, mUebungParaDB).then(
@@ -106,11 +111,12 @@ export class AnstehendeSessionsComponent implements OnInit {
                                                 aSession.UebungsListe = aUebungsListe;
                                         });
                                         
-                                    }
+                                }
                             });//for
                         that.fDbModule.AktuellesProgramm.SessionListe = this.fProgramm.SessionListe;
-                }//if
-            });
+                    }//if
+                });
+            } else this.fProgramm = this.fDbModule.AktuellesProgramm;;
 
                         
             // that.worker.onmessage = ({ data }) => {

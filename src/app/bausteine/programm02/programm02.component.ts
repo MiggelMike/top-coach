@@ -362,26 +362,28 @@ export class Programm02Component implements OnInit {
 		mDialogData.ShowAbbruch = false;
 		mDialogData.ShowOk = false;
 		
-		mDialogData.textZeilen.push('Loading');
+		mDialogData.textZeilen.push('Preparing session');
 		const mLadePara: UebungParaDB = new UebungParaDB();
 		mLadePara.SaetzeBeachten = false;
 		this.fLoadingDialog.Loading(mDialogData);
 		try {
-			aSession.UebungsListe.forEach( async(mUebung) => {
-				if (mUebung.SatzListe.length === 0)
-					mUebung.SatzListe = await this.fDbModule.LadeUebungsSaetze(mUebung.ID);
-				mUebung.Expanded = false;
+			// aSession.UebungsListe.forEach( async(mUebung) => {
+			// 	if (mUebung.SatzListe.length === 0)
+			// 		mUebung.SatzListe = await this.fDbModule.LadeUebungsSaetze(mUebung.ID);
+			// 	mUebung.Expanded = false;
 				
-			});
-			this.fLoadingDialog.fDialog.closeAll();
-			this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
-			// this.fDbModule.LadeSessionUebungen(aSession.ID, mLadePara).then
-			// 	((aUebungsListe) => {
-			// 		this.fLoadingDialog.fDialog.closeAll();
-			// 		aSession.UebungsListe = aUebungsListe;
-			// 		aUebungsListe.forEach((mUebung) => mUebung.Expanded = false);
-			// 		this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
-			// 	})
+			// });
+			// this.fLoadingDialog.fDialog.closeAll();
+			// this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
+
+			aSession.UebungsListe = [];
+			this.fDbModule.LadeSessionUebungen(aSession.ID, mLadePara).then
+			((aUebungsListe) => {
+				this.fLoadingDialog.fDialog.closeAll();
+				aSession.UebungsListe = aUebungsListe;
+				aUebungsListe.forEach((mUebung) => mUebung.Expanded = false);
+				this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
+			})
 		} catch (err) {
 			this.fLoadingDialog.fDialog.closeAll();
 		}

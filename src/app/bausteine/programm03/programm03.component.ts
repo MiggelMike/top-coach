@@ -1,4 +1,4 @@
-import { cSatzSelectLimit, DexieSvcService, SatzParaDB, onFormCloseFn } from './../../services/dexie-svc.service';
+import { DexieSvcService, SatzParaDB, onFormCloseFn } from './../../services/dexie-svc.service';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { Uebung, SaetzeStatus } from './../../../Business/Uebung/Uebung';
 import { GlobalService } from 'src/app/services/global.service';
@@ -15,7 +15,6 @@ import { ExerciseSettingsComponent } from 'src/app/exercise-settings/exercise-se
 import { ExerciseOverlayConfig, ExerciseSettingSvcService } from 'src/app/services/exercise-setting-svc.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Satz } from 'src/Business/Satz/Satz';
-import { ReturnStatement } from '@angular/compiler';
 
 
 @Component({
@@ -54,12 +53,11 @@ export class Programm03Component implements OnInit {
     private fExerciseOverlayConfig: ExerciseOverlayConfig;
     private fExerciseSettingsComponent: ExerciseSettingsComponent;
     public checkingSets: boolean = false;
-
+    private worker: Worker;
     public floatMask = floatMask;
     private isExpanded: Boolean = true;
     public ToggleButtonText = "Close all excercises";
     public LocaleID: string;
-    ExerciseOpened: boolean = false;
     // private UebungPanelsObserver = {
     //     next: (x: MatExpansionPanel) => {
     //         this.accCheckUebungPanels(this.SessUeb);
@@ -85,8 +83,23 @@ export class Programm03Component implements OnInit {
         //     this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;
     }
 
+    DoWorker() {
+        const that = this;
+        if (typeof Worker !== 'undefined') {
+            if (that.session.UebungsListe !== undefined) {
+                that.worker = new Worker(new URL('./programm03.worker', import.meta.url));
+                that.UebungsListe.forEach((mUebung) => {
+                    if (mUebung.SatzListe.length === 0)
+                        that.CheckUebungSatzliste(mUebung);
+                });
+            }//if
+            that.worker.postMessage('LadeSaetze');
+        }//if
+    }
             
     ngAfterViewInit() {
+        this.DoWorker();
+
         if (this.session.UebungsListe !== undefined) {
             // if(this.session.UebungsListe.length <= 0) {
             //     this.fDbModule.LadeSessionUebungen(this.session.ID)
@@ -168,7 +181,7 @@ export class Programm03Component implements OnInit {
         }
     }
 
-    async PanelUebungOpened(aUebung: Uebung) {
+    async PanelUebungOpened(aMatExpansionPanelIndex: number, aUebung: Uebung) {
         try {
             this.checkingSets = true;
 
@@ -179,13 +192,9 @@ export class Programm03Component implements OnInit {
             if (this.panUebung === undefined)
                 return;
                 
-            if (this.ExerciseOpened === false) {
-                // aUebung.SatzListe = [];
+            const mPanUebungListe = this.panUebung.toArray();
+            if ((mPanUebungListe[aMatExpansionPanelIndex].expanded === true)&&(aUebung.SatzListe.length === 0)) 
                 this.CheckUebungSatzliste(aUebung);
-            }
-            
-            this.ExerciseOpened = true;
-            // this.accCheckUebungPanels(aUebung);
         } finally {
             this.checkingSets = false;
         }
@@ -328,3 +337,15 @@ export class Programm03Component implements OnInit {
     }
     
 }
+
+// if (typeof Worker !== 'undefined') {
+//   // Create a new
+//   const worker = new Worker(new URL('./programm03.worker', import.meta.url));
+//   worker.onmessage = ({ data }) => {
+//     console.log(`page got message: ${data}`);
+//   };
+//   worker.postMessage('hello');
+// } else {
+//   // Web Workers are not supported in this environment.
+//   // You should add a fallback so that your program still executes correctly.
+// }
