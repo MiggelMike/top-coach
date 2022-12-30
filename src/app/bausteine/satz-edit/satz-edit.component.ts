@@ -243,7 +243,7 @@ export class SatzEditComponent implements OnInit {
                 this.DoStoppUhr(
                     mStopUhrUebung,
                     Number(mSatz.GewichtAusgefuehrt),
-                    0, // NaechsteUebungPauseSec
+                    this.sessUebung.NaechsteUebungPause, 
                     `"${mStopUhrUebung.Name}" - set #${(mNextSetIndex + 1).toString()} - weight: ${(mSatz.GewichtVorgabeStr)}`
                 );
             }

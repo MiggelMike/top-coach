@@ -23,7 +23,7 @@ export class StoppuhrComponent implements OnInit {
 	private SoundEasyPlayed: boolean = false;
 	private SoundHardPlayed: boolean = false;
 	private NaechsteUebungPause: boolean = false;
-	public NaechsteUebungPauseSec: number;
+	public NaechsteUebungPauseSec: number  = 0;
 	public NextSetText: string;
 	public showDuration: boolean = false;
 
@@ -94,7 +94,6 @@ export class StoppuhrComponent implements OnInit {
 		// Letzter Satz in letzter Übung?
 		// if (this.isLetzterSatzInUebung)
 		// 	return Zeitraum.FormatDauer(0);
-
 		const mDauerSec: number = Zeitraum.CalcDauer(this.StartZeitpunkt, new Date());
 
 		// Letzter Satz, aber nicht letzte Übung?

@@ -544,10 +544,10 @@ export class Uebung  {
     //#endregion
     //#region ArbeitsSatzPause1
     get ArbeitsSatzPause1(): number{
-        return this.UebungDB.ArbeitsSatzPause1;
+        return Number(this.UebungDB.ArbeitsSatzPause1);
     }
     set ArbeitsSatzPause1(aValue: number) {
-        this.UebungDB.ArbeitsSatzPause1 = aValue;
+        this.UebungDB.ArbeitsSatzPause1 = Number(aValue);
     }
     //#endregion
     //#region ArbeitsSatzPause2
