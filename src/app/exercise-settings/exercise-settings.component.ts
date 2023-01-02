@@ -305,6 +305,7 @@ export class ExerciseSettingsComponent {
 		};
 
 		if (mGeaendert) {
+			mGeaendert = false;
 			mDialogData.textZeilen.push("Changes detected!");
 			mDialogData.textZeilen.push("Use in upcoming sessions as well?");
 				

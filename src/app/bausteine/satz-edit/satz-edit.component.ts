@@ -243,7 +243,8 @@ export class SatzEditComponent implements OnInit {
                 this.DoStoppUhr(
                     mStopUhrUebung,
                     Number(mSatz.GewichtAusgefuehrt),
-                    this.sessUebung.NaechsteUebungPause, 
+                    this.sessUebung.NaechsteUebungPause,
+                    this.sessUebung.AufwaermArbeitsSatzPause, 
                     `"${mStopUhrUebung.Name}" - set #${(mNextSetIndex + 1).toString()} - weight: ${(mSatz.GewichtVorgabeStr)}`
                 );
             }
@@ -340,7 +341,7 @@ export class SatzEditComponent implements OnInit {
     }
         
     
-    private DoStoppUhr(aUebung: Uebung, aNextTimeWeight: number, aNaechsteUebungPauseSec: number, aHeaderText: string):void {
+    private DoStoppUhr(aUebung: Uebung, aNextTimeWeight: number, aNaechsteUebungPauseSec: number, aAufwaermArbeitsSatzPauseSec: number, aHeaderText: string):void {
         this.StoppUhrOverlayConfig = 
             {
                 satz: this.satz as Satz,
@@ -348,7 +349,8 @@ export class SatzEditComponent implements OnInit {
                 session: this.sess,
                 satznr: this.rowNum + 1,
                 nextTimeWeight: Number(aNextTimeWeight),
-                NaechsteUebungPauseSec:aNaechsteUebungPauseSec,
+                NaechsteUebungPauseSec: aNaechsteUebungPauseSec,
+                AufwaermArbeitsSatzPauseSec: aAufwaermArbeitsSatzPauseSec,
                 headerText: aHeaderText,
             } as StoppUhrOverlayConfig;
     

@@ -560,10 +560,10 @@ export class Uebung  {
     //#endregion
     //#region AufwaermArbeitsSatzPause
     get AufwaermArbeitsSatzPause(): number {
-        return this.UebungDB.AufwaermArbeitsSatzPause;
+        return Number(this.UebungDB.AufwaermArbeitsSatzPause);
     }
     set AufwaermArbeitsSatzPause(aValue: number) {
-        this.UebungDB.AufwaermArbeitsSatzPause = aValue;
+        this.UebungDB.AufwaermArbeitsSatzPause = Number(aValue);
     }
     //#endregion
     //#region Datum

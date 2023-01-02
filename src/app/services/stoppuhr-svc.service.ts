@@ -26,6 +26,7 @@ export interface StoppUhrOverlayConfig {
     top?: number;
 	headerText?: string;
 	NaechsteUebungPauseSec?: number;
+	AufwaermArbeitsSatzPauseSec?: number;
 	afterOpenFn?: onFormShowFn;
 	beforeCloseFn?: onFormCloseFn;
 }

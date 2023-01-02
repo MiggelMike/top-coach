@@ -23,7 +23,8 @@ export class StoppuhrComponent implements OnInit {
 	private SoundEasyPlayed: boolean = false;
 	private SoundHardPlayed: boolean = false;
 	private NaechsteUebungPause: boolean = false;
-	public NaechsteUebungPauseSec: number  = 0;
+	public NaechsteUebungPauseSec: number = 0;
+	public AufwaermArbeitsSatzPauseSec: number = 0;
 	public NextSetText: string;
 	public showDuration: boolean = false;
 
@@ -37,7 +38,8 @@ export class StoppuhrComponent implements OnInit {
 		this.SatzListenNr = aStoppUhrOverlayConfig.satznr;
 		this.StartZeitpunkt = new Date();
 		this.NextSetText = aStoppUhrOverlayConfig.headerText;
-		this.NaechsteUebungPauseSec = aStoppUhrOverlayConfig.NaechsteUebungPauseSec === undefined ? 0 :  aStoppUhrOverlayConfig.NaechsteUebungPauseSec;
+		this.NaechsteUebungPauseSec = aStoppUhrOverlayConfig.NaechsteUebungPauseSec === undefined ? 0 : aStoppUhrOverlayConfig.NaechsteUebungPauseSec;
+		this.AufwaermArbeitsSatzPauseSec = aStoppUhrOverlayConfig.AufwaermArbeitsSatzPauseSec === undefined ? 0 : aStoppUhrOverlayConfig.AufwaermArbeitsSatzPauseSec;
 		// ../../../assets/audio/alarm.wav
 		this.Gong.src = "../../assets/sounds/Gong.mp3";
 		this.Gong.load();
@@ -75,7 +77,6 @@ export class StoppuhrComponent implements OnInit {
 	get ScheduledPauseTimerBetweenExercises(): string {
 		return Zeitraum.FormatDauer(this.NaechsteUebungPauseSec);
 	}
-		
 	
 	ngAfterViewChecked(){
 		this.cd.detectChanges();
@@ -98,8 +99,23 @@ export class StoppuhrComponent implements OnInit {
 
 		// Letzter Satz, aber nicht letzte Übung?
 		if (this.isLetzterSatzInUebung && !this.isLetzteUebungInSession) {
-			if (this.NaechsteUebungPauseSec > 0
+
+			// export enum SatzTyp {
+			// 	Aufwaermen = 'Aufwaermen',
+			// 	Training = 'Training',
+			// 	Abwaermen = 'Abwaermen',
+			// }
+
+			if (this.Satz.SatzTyp === SatzTyp.Training &&
+				this.NaechsteUebungPauseSec > 0
 				&& mDauerSec >= this.NaechsteUebungPauseSec
+				&& this.NaechsteUebungPause === false) {
+				this.NaechsteUebungPause = true;
+				this.Gong.play();
+			}
+			else if (this.Satz.SatzTyp === SatzTyp.Aufwaermen &&
+				this.AufwaermArbeitsSatzPauseSec > 0
+				&& mDauerSec >= this.AufwaermArbeitsSatzPauseSec
 				&& this.NaechsteUebungPause === false) {
 				this.NaechsteUebungPause = true;
 				this.Gong.play();
