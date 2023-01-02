@@ -99,13 +99,7 @@ export class StoppuhrComponent implements OnInit {
 
 		// Letzter Satz, aber nicht letzte Übung?
 		if (this.isLetzterSatzInUebung && !this.isLetzteUebungInSession) {
-
-			// export enum SatzTyp {
-			// 	Aufwaermen = 'Aufwaermen',
-			// 	Training = 'Training',
-			// 	Abwaermen = 'Abwaermen',
-			// }
-
+			//#region SatzTyp.Training
 			if (this.Satz.SatzTyp === SatzTyp.Training &&
 				this.NaechsteUebungPauseSec > 0
 				&& mDauerSec >= this.NaechsteUebungPauseSec
@@ -113,6 +107,8 @@ export class StoppuhrComponent implements OnInit {
 				this.NaechsteUebungPause = true;
 				this.Gong.play();
 			}
+			//#endregion
+			//#region SatzTyp.Aufwaermen
 			else if (this.Satz.SatzTyp === SatzTyp.Aufwaermen &&
 				this.AufwaermArbeitsSatzPauseSec > 0
 				&& mDauerSec >= this.AufwaermArbeitsSatzPauseSec
@@ -120,6 +116,7 @@ export class StoppuhrComponent implements OnInit {
 				this.NaechsteUebungPause = true;
 				this.Gong.play();
 			}
+			//#endregion
 		} else {
 			if (this.Uebung.ArbeitsSatzPause1 > 0
 				&& mDauerSec >= this.Uebung.ArbeitsSatzPause1
