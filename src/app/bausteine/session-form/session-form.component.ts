@@ -375,6 +375,22 @@ export class SessionFormComponent implements OnInit {
 		});
 	}
 
+	private SaetzePruefen(aNeueSatzListe: Array<Satz>, aWarteSatzListe: Array<Satz>) {
+		// Prüfe nur soviel Sätze wie in aWarteSatzListe vorhanden sind 
+		for (let index = 0; index < aWarteSatzListe.length; index++) {
+			// Prüfe nur soviel Sätze wie in aNeuSatzListe vorhanden sind 
+			if (index >= aNeueSatzListe.length)
+				return;
+			
+			const mWarteSatzPtr: Satz = aWarteSatzListe[index];
+			const mNeuSatzPtr: Satz = aNeueSatzListe[index];
+					
+			mWarteSatzPtr.GewichtNaechsteSession = mNeuSatzPtr.GewichtNaechsteSession;
+			mWarteSatzPtr.GewichtAusgefuehrt = mNeuSatzPtr.GewichtNaechsteSession;
+			mWarteSatzPtr.GewichtVorgabe = mNeuSatzPtr.GewichtNaechsteSession;
+		} //for
+	}
+
 	public async SetDone(): Promise<void> {
 		const mDialogData = new DialogData();
 		mDialogData.textZeilen.push("Workout will be saved and closed.");
@@ -411,43 +427,46 @@ export class SessionFormComponent implements OnInit {
 					// Sätze der neuen Session initialisieren
 					mSaveDialogData.textZeilen[1] = 'Initializing new Session';
 					this.fDbModule.InitSessionSaetze(aSessionForm.Session, mNeueSession as Session);
+
+					// Satzvorgaben für Sätze der neuen Übung setzen
+					mNeueSession.UebungsListe.forEach((mNeueUebung) => {
+						mNeueUebung.SatzListe.forEach((mNeuerSatz) => {
+							mNeuerSatz.GewichtVorgabe = mNeuerSatz.GewichtNaechsteSession;
+							mNeuerSatz.GewichtAusgefuehrt = mNeuerSatz.GewichtNaechsteSession;
+						});
+					});
 					
-					// for (let index1 = 0; index1 < this.Programm.SessionListe.length; index1++) {
-					// 	const mPtrSession = this.Programm.SessionListe[index1];
-					// 	mSaveDialogData.textZeilen[1] = `Checking upcoming Session "${mPtrSession.Name}"`;
-					// 	// Eventuell müssen die Sätze der Session-Übungen geladen werden
-					// 	await this.fDbModule.CheckSessionUebungen(mPtrSession);
-					// }
+					for (let index1 = 0; index1 < this.Programm.SessionListe.length; index1++) {
+						const mPtrSession = this.Programm.SessionListe[index1];
+						mSaveDialogData.textZeilen[1] = `Checking upcoming Session "${mPtrSession.Name}"`;
+						// Eventuell müssen die Sätze der Session-Übungen geladen werden
+						await this.fDbModule.CheckSessionUebungen(mPtrSession);
+					}
 
 					mNeueSession.UebungsListe.forEach((mNeueUebung) => {
 						mNeueUebung.WeightInitDate = cMinDatum;
 						mNeueUebung.FailDatum = cMinDatum;
 
-						if ((mNeueUebung.ArbeitsSatzListe !== undefined) && (mNeueUebung.ArbeitsSatzListe.length > 0)) {
+						if ((mNeueUebung.SatzListe !== undefined) && (mNeueUebung.SatzListe.length > 0)) {
+							mNeueUebung.nummeriereSatzListe(mNeueUebung.SatzListe);
+							// if ((mNeueUebung.ArbeitsSatzListe !== undefined) && (mNeueUebung.ArbeitsSatzListe.length > 0)) {
 							this.Programm.SessionListe.forEach(async (mProgrammSession) => {
 								// Ist die aktuelle Session ungleich der Gesicherten?
 								if (mProgrammSession.ID !== aSessionForm.Session.ID) {
+									let mUebungVorhanden: boolean = false;
 									// Prüfe alle Übungen der aktuellen Programm-Session
 									for (let index2 = 0; index2 < mProgrammSession.UebungsListe.length; index2++) {
 										const mProgrammSessionUebung = mProgrammSession.UebungsListe[index2];
-										// Ist mPtrDestUebung gleich der aktuellen Übung?
+										await this.fDbModule.CheckUebungSaetze(mProgrammSessionUebung);
+										mProgrammSessionUebung.nummeriereSatzListe(mProgrammSessionUebung.SatzListe);
+										// Ist mNeueUebung gleich mProgrammSessionUebung?
 										if (mProgrammSessionUebung.FkUebung === mNeueUebung.FkUebung &&
 											mProgrammSessionUebung.FkProgress === mNeueUebung.FkProgress &&
 											mProgrammSessionUebung.ProgressGroup === mNeueUebung.ProgressGroup) {
-													
-											for (let index = 0; index < mProgrammSessionUebung.ArbeitsSatzListe.length; index++) {
-												const mDestArbeitsSatzPtr: Satz = mProgrammSessionUebung.ArbeitsSatzListe[index];
-												let mQuellSatzPtr: Satz;
-														
-												if (mDestArbeitsSatzPtr.SatzListIndex < mNeueUebung.ArbeitsSatzListe.length)
-													mQuellSatzPtr = mNeueUebung.ArbeitsSatzListe[mDestArbeitsSatzPtr.SatzListIndex];
-												else
-													mQuellSatzPtr = mNeueUebung.ArbeitsSatzListe[0];
-														
-												mDestArbeitsSatzPtr.GewichtNaechsteSession = mQuellSatzPtr.GewichtNaechsteSession;
-												mDestArbeitsSatzPtr.GewichtAusgefuehrt = mQuellSatzPtr.GewichtNaechsteSession;
-												mDestArbeitsSatzPtr.GewichtVorgabe = mQuellSatzPtr.GewichtNaechsteSession;
-											} //for
+											mUebungVorhanden = true;
+											this.SaetzePruefen(mNeueUebung.AufwaermSatzListe, mProgrammSessionUebung.AufwaermSatzListe);
+											this.SaetzePruefen(mNeueUebung.ArbeitsSatzListe, mProgrammSessionUebung.ArbeitsSatzListe);
+											this.SaetzePruefen(mNeueUebung.AbwaermSatzListe, mProgrammSessionUebung.AbwaermSatzListe);
 										}
 									}//for
 								}//if

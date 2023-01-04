@@ -2147,6 +2147,14 @@ export class DexieSvcService extends Dexie {
 		}
 	}
 
+	public async CheckUebungSaetze(aUebung: Uebung) {
+		if (aUebung.SatzListe.length === 0) {
+			await this.LadeUebungsSaetze(aUebung.ID)
+				.then((mSaetze) => aUebung.SatzListe = mSaetze )
+		}
+	}
+
+
 	public async EvalAktuelleSessionListe(aSession: Session, aPara?: any): Promise<void> {
 		if (this.AktuellesProgramm && this.AktuellesProgramm.SessionListe) {
 			const mSess: ISession = this.AktuellesProgramm.SessionListe.find((s) => s.ID === aSession.ID);
