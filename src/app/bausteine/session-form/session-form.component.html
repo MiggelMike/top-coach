@@ -15,8 +15,8 @@
         [ShowStats]="true" 
         [programm]="Programm" 
         [programmTyp]="programmTyp"
-        [DeletedExerciseList]="DeletedExerciseList"
         [StatsButtonVisible]="true"
+        (AddDeletedExercise)="AddDeletedExercise($event)"
         (DoStats)="doStats()"
         (DoCheckSettings)="doCheckSettings($event)"
         [DeletedSatzList]="DeletedSatzList">

@@ -197,6 +197,10 @@ export class SessionFormComponent implements OnInit {
 		else this.fSessionStatsOverlayComponent.close();
 	}
 
+	AddDeletedExercise(aUebung: any) {
+		this.DeletedExerciseList.push(aUebung);
+	}
+
 	ngOnDestroy() {
 		if (this.fSessionStatsOverlayComponent) this.fSessionStatsOverlayComponent.close();
 	}
@@ -303,25 +307,31 @@ export class SessionFormComponent implements OnInit {
 
 	public async SaveChangesPrim(): Promise<void> {
 		// In der Session gelöschte Übungen auch aus der DB löschen.
-		for (let index = 0; index < this.cmpSession.UebungsListe.length; index++) {
-			const mUebung = this.cmpSession.UebungsListe[index];
-			const mSuchUebung = this.Session.UebungsListe.find((u) => u.ID === mUebung.ID);
-			if (mSuchUebung === undefined)
-				this.fDbModule.DeleteUebung(mUebung);
+		for (let index = 0; index < this.DeletedExerciseList.length; index++) {
+			const mDelUebung = this.DeletedExerciseList[index];
+			mDelUebung.SatzListe.forEach((mDelSatz) => this.fDbModule.DeleteSatz(mDelSatz));
+			await this.fDbModule.DeleteUebung(mDelUebung);
 		}
 
-		// In der Session gelöschte Sätze auch aus der DB löschen.
-		for (let index = 0; index < this.cmpSession.UebungsListe.length; index++) {
-			const mCmpUebung = this.cmpSession.UebungsListe[index];
-			const mSuchUebung = this.Session.UebungsListe.find((u) => u.ID === mCmpUebung.ID);
-			if (mSuchUebung !== undefined) {
-				for (let mSatzIndex = 0; mSatzIndex < mCmpUebung.SatzListe.length; mSatzIndex++) {
-					const mCmpSatz = mCmpUebung.SatzListe[mSatzIndex];
-					if (mSuchUebung.SatzListe.find((mSuchSatz) => mSuchSatz.ID === mCmpSatz.ID) === undefined)
-					this.fDbModule.DeleteSatz(mCmpSatz);
-				}
-			}
-		}
+		// for (let index = 0; index < this.cmpSession.UebungsListe.length; index++) {
+		// 	const mUebung = this.cmpSession.UebungsListe[index];
+		// 	const mSuchUebung = this.Session.UebungsListe.find((u) => u.ID === mUebung.ID);
+		// 	if (mSuchUebung === undefined)
+		// 		this.fDbModule.DeleteUebung(mUebung);
+		// }
+
+		// // In der Session gelöschte Sätze auch aus der DB löschen.
+		// for (let index = 0; index < this.cmpSession.UebungsListe.length; index++) {
+		// 	const mCmpUebung = this.cmpSession.UebungsListe[index];
+		// 	const mSuchUebung = this.Session.UebungsListe.find((u) => u.ID === mCmpUebung.ID);
+		// 	if (mSuchUebung !== undefined) {
+		// 		for (let mSatzIndex = 0; mSatzIndex < mCmpUebung.SatzListe.length; mSatzIndex++) {
+		// 			const mCmpSatz = mCmpUebung.SatzListe[mSatzIndex];
+		// 			if (mSuchUebung.SatzListe.find((mSuchSatz) => mSuchSatz.ID === mCmpSatz.ID) === undefined)
+		// 			this.fDbModule.DeleteSatz(mCmpSatz);
+		// 		}
+		// 	}
+		// }
 
 		for (let index = 0; index < this.Session.UebungsListe.length; index++) {
 			const mPtrUebung = this.Session.UebungsListe[index];
@@ -370,9 +380,9 @@ export class SessionFormComponent implements OnInit {
 		aSessionForm.fDbModule.AktuellesProgramm.SessionListe = this.Programm.SessionListe;
 		aSessionForm.fDbModule.AktuellesProgramm.NummeriereSessions();
 		this.SaveChangesPrim().then(() => {
-		this.router.navigate(['/']);
 			this.fDbModule.DoWorker(WorkerAction.LadeDiagrammDaten);
-		});
+			this.router.navigate(['/']);
+		})
 	}
 
 	private SaetzePruefen(aNeueSatzListe: Array<Satz>, aWarteSatzListe: Array<Satz>) {
@@ -404,30 +414,48 @@ export class SessionFormComponent implements OnInit {
 			mSaveDialogData.ShowOk = false;
 			mSaveDialogData.textZeilen.push('Saving');
 			try {
+				this.Programm.SessionListe.splice(aSessionForm.Session.ListenIndex, 1);
 				// Dem Benutzer zeigen, dass gespeichert wird.
 				this.fSavingDialog.Loading(mSaveDialogData);
 				// Session-Status auf fertig setzen
 				aSessionForm.Session.SetSessionFertig();
+				const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+				mSessionCopyPara.CopyUebungID = false;
+				mSessionCopyPara.CopySatzID = false;
+				// Mit den Daten der gespeicherten Session eine neue erstellen
+				const mNeueSession: Session = Session.StaticCopy(aSessionForm.Session, mSessionCopyPara);
+				
+				mSaveDialogData.textZeilen.push('Create new Session');
+				aSessionForm.Session.ListenIndex = -aSessionForm.Session.ListenIndex;
+				// Neue Session initialisieren
+				mNeueSession.init();
+				// Die neue Session gehört zum gleichen Programm wie die Alte
+				mNeueSession.FK_Programm = aSessionForm.Session.FK_Programm;
+				// Die Neue Session hat das gleiche Vorlage-Programm wie die Alte.
+				mNeueSession.FK_VorlageProgramm = aSessionForm.Session.FK_VorlageProgramm;
+				mNeueSession.Expanded = false;
+				// Sätze der neuen Session initialisieren
+				mSaveDialogData.textZeilen[1] = 'Initializing new Session';
+				
 				if (aSessionForm.Session.UebungsListe.length > 0) {
-					const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
-					mSessionCopyPara.CopyUebungID = false;
-					mSessionCopyPara.CopySatzID = false;
-					// Mit den Daten der gespeicherten Session eine neue erstellen
-					const mNeueSession: Session = Session.StaticCopy(aSessionForm.Session, mSessionCopyPara);
-					mSaveDialogData.textZeilen.push('Create new Session');
-					aSessionForm.Session.ListenIndex = -aSessionForm.Session.ListenIndex;
-					// Neue Session  initialisieren
-					mNeueSession.init();
-					// Die neue Session gehört zum gleichen Programm wie die Alte
-					mNeueSession.FK_Programm = aSessionForm.Session.FK_Programm;
-					// Die Neue Session hat das gleiche Vorlage-Programm wie die Alte.
-					mNeueSession.FK_VorlageProgramm = aSessionForm.Session.FK_VorlageProgramm;
-					mNeueSession.Expanded = false;
+					this.DeletedExerciseList.forEach((mDelUebung) => {
+						const mVorderesSegment: Array<Uebung> = mNeueSession.UebungsListe.slice(0, mDelUebung.ListenIndex);
+						mVorderesSegment.push(mDelUebung);
+						const mHinteresSegment: Array<Uebung> = mNeueSession.UebungsListe.slice(mDelUebung.ListenIndex);
+						mNeueSession.UebungsListe = [];
+						const mNeueUebungsListe: Array<Uebung> = mNeueSession.UebungsListe.concat(mVorderesSegment, mHinteresSegment);
+						mNeueUebungsListe.forEach((mUebung) => {
+							const mNeueUebung = Uebung.StaticKopiere(mUebung, UebungsKategorie02.Session);
+							mNeueUebung.ID = undefined;
+							mNeueUebung.SessionID = mNeueSession.ID;
+						});
+						mNeueSession.UebungsListe = mNeueUebungsListe;
+					});
 
-					// Sätze der neuen Session initialisieren
-					mSaveDialogData.textZeilen[1] = 'Initializing new Session';
-					this.fDbModule.InitSessionSaetze(aSessionForm.Session, mNeueSession as Session);
+					Session.nummeriereUebungsListe(mNeueSession.UebungsListe);
+					const mSessionFormSession: Session = Session.StaticCopy(mNeueSession, mSessionCopyPara);
 
+					this.fDbModule.InitSessionSaetze(mSessionFormSession, mNeueSession as Session);
 					// Satzvorgaben für Sätze der neuen Übung setzen
 					mNeueSession.UebungsListe.forEach((mNeueUebung) => {
 						mNeueUebung.SatzListe.forEach((mNeuerSatz) => {
@@ -449,10 +477,9 @@ export class SessionFormComponent implements OnInit {
 
 						if ((mNeueUebung.SatzListe !== undefined) && (mNeueUebung.SatzListe.length > 0)) {
 							mNeueUebung.nummeriereSatzListe(mNeueUebung.SatzListe);
-							// if ((mNeueUebung.ArbeitsSatzListe !== undefined) && (mNeueUebung.ArbeitsSatzListe.length > 0)) {
 							this.Programm.SessionListe.forEach(async (mProgrammSession) => {
 								// Ist die aktuelle Session ungleich der Gesicherten?
-								if (mProgrammSession.ID !== aSessionForm.Session.ID) {
+								if (mProgrammSession.ID !== mSessionFormSession.ID) {
 									let mUebungVorhanden: boolean = false;
 									// Prüfe alle Übungen der aktuellen Programm-Session
 									for (let index2 = 0; index2 < mProgrammSession.UebungsListe.length; index2++) {
@@ -476,7 +503,7 @@ export class SessionFormComponent implements OnInit {
 
 					this.Programm.SessionListe.push(mNeueSession);
 					this.Programm.NummeriereSessions();
-					this.fDbModule.SessionSpeichern(aSessionForm.Session);
+					// this.fDbModule.SessionSpeichern(aSessionForm.Session);
 
 					const mSessions: Array<Session> = [mNeueSession];
 					try {
@@ -496,7 +523,7 @@ export class SessionFormComponent implements OnInit {
 									mProgressPara.ProgressHasChanged = false;
 									mProgressPara.AusgangsUebung = mPtrUebung;
 							
-									mProgressPara.FailUebung = aSessionForm.Session.UebungsListe.find((u) => {
+									mProgressPara.FailUebung = mSessionFormSession.UebungsListe.find((u) => {
 										if (u.FkUebung === mPtrUebung.FkUebung && u.ListenIndex === mPtrUebung.ListenIndex)
 											return u;
 										return undefined;
@@ -522,23 +549,24 @@ export class SessionFormComponent implements OnInit {
 					} catch (error) {
 						console.error(error);
 					}
-					this.fDbModule.SessionSpeichern(mNeueSession).then(
-						async (mPtrSession) => {
-							const mProgrammExtraParaDB: ProgrammParaDB = new ProgrammParaDB();
-							mProgrammExtraParaDB.SessionBeachten = true;
-							mProgrammExtraParaDB.SessionParaDB = new SessionParaDB();
-							mProgrammExtraParaDB.SessionParaDB.UebungenBeachten = true;
-							mProgrammExtraParaDB.SessionParaDB.UebungParaDB = new UebungParaDB();
-							mProgrammExtraParaDB.SessionParaDB.UebungParaDB.SaetzeBeachten = true;
-							this.fDbModule.ProgrammSpeichern(this.Programm, mProgrammExtraParaDB)
-								.then((mPtrProgramm) => {
-									this.Programm = mPtrProgramm;
-									this.fDbModule.AktuellesProgramm = this.Programm;
-									this.DoAfterDone(this);
-								});
-						});
-	
 				} // <= mSavedSession.UebungsListe.length > 0
+
+				await this.fDbModule.SessionSpeichern(mNeueSession).then(
+					async (mPtrSession) => {
+						const mProgrammExtraParaDB: ProgrammParaDB = new ProgrammParaDB();
+						mProgrammExtraParaDB.SessionBeachten = true;
+						mProgrammExtraParaDB.SessionParaDB = new SessionParaDB();
+						mProgrammExtraParaDB.SessionParaDB.UebungenBeachten = true;
+						mProgrammExtraParaDB.SessionParaDB.UebungParaDB = new UebungParaDB();
+						mProgrammExtraParaDB.SessionParaDB.UebungParaDB.SaetzeBeachten = true;
+
+					  	await this.fDbModule.ProgrammSpeichern(this.Programm, mProgrammExtraParaDB)
+							.then((mPtrProgramm) => {
+								this.Programm = mPtrProgramm;
+								this.fDbModule.AktuellesProgramm = this.Programm;
+								this.DoAfterDone(this);
+							});
+					});
 				this.fSavingDialog.fDialog.closeAll();
 				// }); // <= SessionSpeichern
 			} catch(err) {

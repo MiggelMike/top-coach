@@ -532,7 +532,7 @@ export class DexieSvcService extends Dexie {
 		this.SessionTable.delete(aSession.ID);
 	}
 
-	public DeleteUebung(aUebung: Uebung) {
+	public async DeleteUebung(aUebung: Uebung) {
 		aUebung.SatzListe.forEach((mLoeschSatz) => {
 			if (mLoeschSatz.ID === undefined)
 				this.DeleteSatz(mLoeschSatz);
@@ -1464,9 +1464,10 @@ export class DexieSvcService extends Dexie {
 			.limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : cMaxLimnit)
 			.toArray()
 			.then(async (aSessionListe) => {
-				aSessionListe.forEach((mPtrSession) => {
-					SessionDB.StaticCheckMembers(mPtrSession);
-					mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+				aSessionListe.forEach((mPtrSessionDB) => {
+					SessionDB.StaticCheckMembers(mPtrSessionDB);
+					mPtrSessionDB.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+					const mSession: Session = new Session();
 				});
 
 				// if (aSessionParaDB !== undefined) {

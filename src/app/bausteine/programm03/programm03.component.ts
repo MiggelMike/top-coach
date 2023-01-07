@@ -3,7 +3,7 @@ import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { Uebung, SaetzeStatus } from './../../../Business/Uebung/Uebung';
 import { GlobalService } from 'src/app/services/global.service';
 import { MatAccordion, MatExpansionPanel } from '@angular/material/expansion';
-import { ISession } from './../../../Business/Session/Session';
+import { ISession, Session } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, Output, EventEmitter, ChangeDetectionStrategy  } from "@angular/core";
 import { DialogeService } from "./../../services/dialoge.service";
@@ -36,7 +36,6 @@ export class Programm03Component implements OnInit {
     @Input() panUebung1: MatExpansionPanel;
     @Input() ShowStats: Boolean = false;
     @Input() StatsVisible: Boolean = false;
-    @Input() DeletedExerciseList: Array<Uebung> = [];
     @Input() DeletedSatzList: Array<Satz> = [];
     @Input() SofortSpeichern: Boolean = false;
     @Input() programmTyp: string = "";
@@ -44,6 +43,8 @@ export class Programm03Component implements OnInit {
     
     @Output() DoStats = new EventEmitter<any>();
     @Output() DoCheckSettings = new EventEmitter<ExerciseSettingSvcService>();
+    @Output() AddDeletedExercise = new EventEmitter<Uebung>();
+
     
     @ViewChildren("accUebung") accUebung: QueryList<MatAccordion>;
     @ViewChildren("panUebung") panUebung: QueryList<MatExpansionPanel>;
@@ -287,11 +288,12 @@ export class Programm03Component implements OnInit {
             // SessUeb-Index gefunden?
             if (index !== -1) {
                 // SessUeb-Index gefunden
-                if (aUebung.ID > 0) {
-                    this.DeletedExerciseList.push(aUebung);
-                }
+                if (aUebung.ID > 0) 
+                    this.AddDeletedExercise.emit(aUebung);
+                
                 // SessUeb aus Liste entfernen.
                 this.session.UebungsListe.splice(index, 1);
+                Session.nummeriereUebungsListe(this.session.UebungsListe);
             }
 
             if (this.fGlobalService.Comp03PanelUebungObserver != null) {
