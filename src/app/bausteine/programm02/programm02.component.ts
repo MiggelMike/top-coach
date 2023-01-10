@@ -362,7 +362,8 @@ export class Programm02Component implements OnInit {
 		mDialogData.ShowAbbruch = false;
 		mDialogData.ShowOk = false;
 		
-		mDialogData.textZeilen.push('Preparing session');
+		if (this.programmTyp === "history")mDialogData.textZeilen.push('Preparing history');
+		else mDialogData.textZeilen.push('Preparing session');
 		const mLadePara: UebungParaDB = new UebungParaDB();
 		mLadePara.SaetzeBeachten = true;
 		this.fLoadingDialog.Loading(mDialogData);
