@@ -364,7 +364,7 @@ export class Programm02Component implements OnInit {
 		
 		mDialogData.textZeilen.push('Preparing session');
 		const mLadePara: UebungParaDB = new UebungParaDB();
-		mLadePara.SaetzeBeachten = false;
+		mLadePara.SaetzeBeachten = true;
 		this.fLoadingDialog.Loading(mDialogData);
 		try {
 			// aSession.UebungsListe.forEach( async(mUebung) => {

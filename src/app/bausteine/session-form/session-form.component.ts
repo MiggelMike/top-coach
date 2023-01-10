@@ -503,8 +503,6 @@ export class SessionFormComponent implements OnInit {
 
 					this.Programm.SessionListe.push(mNeueSession);
 					this.Programm.NummeriereSessions();
-					// this.fDbModule.SessionSpeichern(aSessionForm.Session);
-
 					const mSessions: Array<Session> = [mNeueSession];
 					try {
 						
