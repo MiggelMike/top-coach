@@ -182,6 +182,8 @@ export class DexieSvcService extends Dexie {
 
 	AktuellerProgrammTyp: ProgrammTyp;
 	AktuellesProgramm: ITrainingsProgramm;
+	RefreshAktuellesProgramm: boolean = false;
+	// Siehe Anstehende-Sessions
 	CmpAktuellesProgramm: ITrainingsProgramm;
 	VorlageProgramme: Array<TrainingsProgramm> = [];
 	AppRec: AppData;

@@ -32,6 +32,7 @@ export class Programm01Component implements OnInit {
      }
 
     private SelectWorkout(aSelectedProgram: ITrainingsProgramm) {
+        this.fDbModul.RefreshAktuellesProgramm = true;
         this.router.navigate(["/app-initial-weight"], { state: { Program: aSelectedProgram } });
     }
 

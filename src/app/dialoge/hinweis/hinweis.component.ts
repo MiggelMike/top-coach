@@ -38,7 +38,6 @@ export class DialogComponent {
         public dialogRef: MatDialogRef<DialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: DialogData
     ) {
-        const x = data;
     }
 
     onOkClick(): void {

@@ -1,7 +1,7 @@
 import { Session, SessionCopyPara } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from './../../../Business/TrainingsProgramm/TrainingsProgramm';
 import { UebungService } from "./../../services/uebung.service";
-import { SessionStatus } from "./../../../Business/SessionDB";
+import { SessionDB, SessionStatus } from "./../../../Business/SessionDB";
 import { SessionStatsOverlayComponent } from "./../../session-stats-overlay/session-stats-overlay.component";
 import { SessionOverlayServiceService, SessionOverlayConfig } from "./../../services/session-overlay-service.service";
 import { DialogeService } from "./../../services/dialoge.service";
@@ -352,6 +352,42 @@ export class SessionFormComponent implements OnInit {
 
 		this.fDbModule.SessionSpeichern(this.Session)
 			.then((aSession: Session) => {
+
+
+
+				// const mSessionParaDB: SessionParaDB = new SessionParaDB();
+				// mSessionParaDB.UebungenBeachten = true;
+				// this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
+				// 	.then((aSessionListe) => {
+				// 		if (aSessionListe.length > 0) {
+				// 			this.Programm.SessionListe = [];
+				// 			this.fDbModule.AktuellesProgramm.SessionListe = [];
+				// 			aSessionListe.forEach(async(mPtrSession) => {
+				// 				if (mPtrSession.Kategorie02 === SessionStatus.Wartet) {
+				// 					const mUebungParaDB = new UebungParaDB();
+				// 					mUebungParaDB.SaetzeBeachten = true;
+				// 					await this.fDbModule.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
+				// 						(aUebungsListe) => {
+				// 							if (aUebungsListe.length > 0)
+				// 								mPtrSession.UebungsListe = aUebungsListe;
+				// 						});
+				// 				}
+								
+				// 				SessionDB.StaticCheckMembers(mPtrSession);
+				// 				mPtrSession.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
+				// 			});
+				// 			this.fDbModule.AktuellesProgramm.SessionListe = aSessionListe;
+				// 		}
+				// 	});
+
+
+
+
+
+
+
+
+
 				// this.fDbModule.DoWorker();
 				// const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
 				// mSessionCopyPara.Komplett = true;

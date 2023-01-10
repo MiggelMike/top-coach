@@ -21,6 +21,7 @@ export class AnstehendeSessionsComponent implements OnInit {
     
     constructor(
         private fDbModule: DexieSvcService,
+        private fLoadingDialog: DialogeService,
         ) {}
         
     public get Programm(): ITrainingsProgramm {
@@ -28,34 +29,49 @@ export class AnstehendeSessionsComponent implements OnInit {
     }
 
     private async LadeSessions(aOffSet: number = 0): Promise<void> {
-        const mSessionParaDB: SessionParaDB = new SessionParaDB();
-        mSessionParaDB.UebungenBeachten = true;
-        // mSessionParaDB.OffSet = aOffSet;
-        this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
-            .then((aSessionListe) => {
-                // this.fProgramm.SessionListe =  aSessionListe;
-                // this.fDbModule.AktuellesProgramm.SessionListe = aSessionListe;
-                if (aSessionListe.length > 0) {
-                    this.Programm.SessionListe = [];
-                    this.fDbModule.AktuellesProgramm.SessionListe = [];
-                    aSessionListe.forEach(async(mPtrSession) => {
-                        if (mPtrSession.Kategorie02 === SessionStatus.Wartet) {
-                            const mUebungParaDB = new UebungParaDB();
-                            mUebungParaDB.SaetzeBeachten = true;
-                            await this.fDbModule.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
-                                (aUebungsListe) => {
-                                    if (aUebungsListe.length > 0)
-                                        mPtrSession.UebungsListe = aUebungsListe;
-                                });
-                        }
+        const mDialogData = new DialogData();
+        mDialogData.ShowAbbruch = false;
+        mDialogData.ShowOk = false;
+        mDialogData.hasBackDrop = false;
+        mDialogData.height = '150px';
+        this.fLoadingDialog.Loading(mDialogData);
+        try {
+            const mSessionParaDB: SessionParaDB = new SessionParaDB();
+            mSessionParaDB.UebungenBeachten = true;
+            // mSessionParaDB.OffSet = aOffSet;
+            this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
+                .then((aSessionListe) => {
+                    // this.fProgramm.SessionListe =  aSessionListe;
+                    // this.fDbModule.AktuellesProgramm.SessionListe = aSessionListe;
+                    if (aSessionListe.length > 0) {
+                        this.Programm.SessionListe = [];
+                        this.fDbModule.AktuellesProgramm.SessionListe = [];
+                        aSessionListe.forEach(async (mPtrSession) => {
+                            if (mPtrSession.Kategorie02 === SessionStatus.Wartet) {
+                                const mUebungParaDB = new UebungParaDB();
+                                mUebungParaDB.SaetzeBeachten = true;
+                                await this.fDbModule.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
+                                    (aUebungsListe) => {
+                                        if (aUebungsListe.length > 0)
+                                            mPtrSession.UebungsListe = aUebungsListe;
+                                    });
+                            }
                         
-                        SessionDB.StaticCheckMembers(mPtrSession);
-                        mPtrSession.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
-                    });
-                    this.fProgramm.SessionListe =  aSessionListe;
-                    this.fDbModule.AktuellesProgramm.SessionListe = aSessionListe;
-                }
-            });
+                            SessionDB.StaticCheckMembers(mPtrSession);
+                            mPtrSession.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
+                        });
+                        this.fProgramm.SessionListe = aSessionListe;
+                        this.fDbModule.AktuellesProgramm.SessionListe = aSessionListe;
+                    }
+                    this.fLoadingDialog.fDialog.closeAll();
+                });
+        }
+        catch (err) {
+            this.fLoadingDialog.fDialog.closeAll();
+            console.error(err);
+        }
+    
+
     }
         
         
@@ -78,19 +94,17 @@ export class AnstehendeSessionsComponent implements OnInit {
     DoWorker() {
         const that: AnstehendeSessionsComponent = this;
         if (typeof Worker !== 'undefined') {
-            if (this.fDbModule.AktuellesProgramm === undefined) {
+            if (this.fDbModule.AktuellesProgramm === undefined || this.fDbModule.RefreshAktuellesProgramm === true) {
+                this.fDbModule.RefreshAktuellesProgramm = false;
                 that.worker = new Worker(new URL('./anstehende-sessions.worker', import.meta.url));
                 that.worker.addEventListener('message', ({ data }) => {
                     if (data.action === "LadeAktuellesProgramm") {
                         that.fDbModule.LadeAktuellesProgramm()
                             .then(async (aProgramm) => {
                                 that.fDbModule.AktuellesProgramm = aProgramm;
+                                that.fDbModule.CmpAktuellesProgramm = aProgramm;
                                 this.fProgramm = aProgramm;
                                 if (aProgramm !== undefined) {
-                                    const mDialogData = new DialogData();
-                                    mDialogData.ShowAbbruch = false;
-                                    mDialogData.ShowOk = false;
-                                    mDialogData.hasBackDrop = false;
                                     that.fDbModule.AktuellesProgramm.SessionListe = [];
                                     this.fProgramm = that.fDbModule.AktuellesProgramm.Copy();
                                     that.LadeSessions();
