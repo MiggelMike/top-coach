@@ -67,8 +67,7 @@ export class SessionFormComponent implements OnInit {
 		mSessionCopyPara.CopySessionID = true;
 		mSessionCopyPara.CopyUebungID = true;
 		mSessionCopyPara.CopySatzID = true;
-		this.Session = Session.StaticCopy(mState.sess,mSessionCopyPara);
-		// this.Session = mState.sess;
+		this.Session = Session.StaticCopy(mState.sess, mSessionCopyPara);
 
 		if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length <= 0) {
 			const mDialogData = new DialogData();
@@ -179,7 +178,21 @@ export class SessionFormComponent implements OnInit {
 	private EvalStart() {
 		// if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length < 1) this.Session.AddPause();
 		// else this.Session.StarteDauerTimer();				
-		this.Session.StarteDauerTimer();				
+		this.Session.StarteDauerTimer();
+		this.Programm.SessionListe.find((mFindSession) => {
+			if (mFindSession.ID === this.Session.ID) {
+				mFindSession.Kategorie02 = this.Session.Kategorie02;
+				return true;
+			}
+			return false;
+				
+		});
+
+		// if (mFindSession !== undefined) {
+		// 	const mIndex = this.Programm.SessionListe.indexOf(mFindSession);
+		// 	if (mIndex > -1) {
+		// 	}
+		// }
 	}
 
 	doCheckSettings(aExerciseSettingSvcService : ExerciseSettingSvcService){
@@ -228,9 +241,9 @@ export class SessionFormComponent implements OnInit {
 			mDialogData.ShowAbbruch = true;
 		
 			mDialogData.OkFn = () => {
-				this.leave();
 				this.SaveChangesPrim();
-				this.router.navigate(['/']);
+				this.leave();
+//				this.router.navigate(['/']);
 			}
 	
 			mDialogData.CancelFn = (): void => {
@@ -285,7 +298,6 @@ export class SessionFormComponent implements OnInit {
 
 	leave() {
 		if (this.fSessionStatsOverlayComponent !== undefined && this.fSessionStatsOverlayComponent !== null) this.fSessionStatsOverlayComponent.close();
-
 		this.location.back();
 	}
 
