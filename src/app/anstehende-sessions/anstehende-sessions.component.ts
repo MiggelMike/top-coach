@@ -38,11 +38,8 @@ export class AnstehendeSessionsComponent implements OnInit {
         try {
             const mSessionParaDB: SessionParaDB = new SessionParaDB();
             mSessionParaDB.UebungenBeachten = true;
-            // mSessionParaDB.OffSet = aOffSet;
             this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
                 .then((aSessionListe) => {
-                    // this.fProgramm.SessionListe =  aSessionListe;
-                    // this.fDbModule.AktuellesProgramm.SessionListe = aSessionListe;
                     if (aSessionListe.length > 0) {
                         this.Programm.SessionListe = [];
                         this.fDbModule.AktuellesProgramm.SessionListe = [];
