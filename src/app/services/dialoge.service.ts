@@ -18,7 +18,7 @@ export class DialogeService {
     constructor(public fDialog: MatDialog) {
      }
 
-    private DialogBasis(aDialogData: DialogData): void {
+    private DialogBasis(aDialogData: DialogData):MatDialogRef<DialogComponent> {
         const mDialogConfig = new MatDialogConfig();
         mDialogConfig.width = 'auto';
         mDialogConfig.height = aDialogData.height;
@@ -26,20 +26,20 @@ export class DialogeService {
         mDialogConfig.autoFocus = true;
         mDialogConfig.data = aDialogData;
         mDialogConfig.hasBackdrop = aDialogData.hasBackDrop;
-        this.fDialog.open(DialogComponent, mDialogConfig );
+        return this.fDialog.open(DialogComponent, mDialogConfig);
     }
 
-    public Hinweis(aDialogData: DialogData): void {
+    public Hinweis(aDialogData: DialogData): MatDialogRef<DialogComponent> {
         aDialogData.typ = DialogTyp.Hinweis;
-        this.DialogBasis(aDialogData);
+        return this.DialogBasis(aDialogData);
     }
 
-    public JaNein(aDialogData: DialogData): void {
+    public JaNein(aDialogData: DialogData): MatDialogRef<DialogComponent> {
         aDialogData.typ = DialogTyp.Frage;
-        this.DialogBasis(aDialogData);
+        return this.DialogBasis(aDialogData);
     }
 
-    public Loading(aDialogData: DialogData): void {
+    public Loading(aDialogData: DialogData): MatDialogRef<DialogComponent> {
         if(aDialogData.textZeilen.length <= 0)
             aDialogData.textZeilen.push('Loading');
         
@@ -47,6 +47,6 @@ export class DialogeService {
             aDialogData.height = '150px';
             
         aDialogData.typ = DialogTyp.Loading;
-        this.DialogBasis(aDialogData);
+        return this.DialogBasis(aDialogData);
     }
 }

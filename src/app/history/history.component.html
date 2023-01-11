@@ -56,7 +56,7 @@
 
                     <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="flex-start center">
                         <ng-container *ngFor="let DiaUebung of DiaUebungsListe">
-                            <div fxLayout="column" fxLayoutGap="2px" fxFlex="25">
+                            <div fxLayout="column" fxLayoutGap="2px" fxFlex="50">
                                 <ng-container *ngIf="DiaUebung.Relevant" >
                                     <mat-checkbox 
                                         [(ngModel)]="DiaUebung.Visible"

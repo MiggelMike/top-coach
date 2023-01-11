@@ -1,13 +1,13 @@
 import { DiaUebungSettings } from './../../Business/Diagramm/Diagramm';
-import { Uebung } from './../../Business/Uebung/Uebung';
-import { cSessionSelectLimit, UebungParaDB, WorkerAction } from './../services/dexie-svc.service';
 import { DexieSvcService, SessionParaDB } from 'src/app/services/dexie-svc.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ISession } from 'src/Business/Session/Session';
 import { repMask } from './../../app/app.module';
 import { AppData } from 'src/Business/Coach/Coach';
-import { DiagramData, Diagramm } from '../bausteine/charts/charts.component';
+import { Diagramm } from '../bausteine/charts/charts.component';
 import { DiaUebung, DiaDatum } from 'src/Business/Diagramm/Diagramm';
+import { DialogeService } from '../services/dialoge.service';
+import { DialogData } from '../dialoge/hinweis/hinweis.component';
 
 
 @Component({
@@ -18,12 +18,9 @@ import { DiaUebung, DiaDatum } from 'src/Business/Diagramm/Diagramm';
 export class HistoryComponent implements OnInit {
 	SessionListe: Array<ISession> = [];
 	LadeLimit: number = 10;
-	private canvas: any;
-	private ctx: any;
 	public repMask = repMask;
 	public AppData: AppData;
 	public Diagramme: Array<Diagramm> = [];
-	private DiagramData: DiagramData;
 	public DiaTyp: string = 'line';
 	public DiaUebungsListe: Array<DiaUebung> = [];
 	public DiaUebungSettingsListe: Array<DiaUebungSettings> = [];
@@ -32,11 +29,13 @@ export class HistoryComponent implements OnInit {
 
 	constructor(
 		private fDbModul: DexieSvcService,
+		private fLoadingDialog: DialogeService
 	) {
 		this.fDbModul.LadeAppData()
 			.then((mAppData) => {
 				this.AppData = mAppData;
 				this.LadeLimit = mAppData.MaxHistorySessions;
+				this.LadeSessions(0);
 			});
 	}
 
@@ -53,8 +52,9 @@ export class HistoryComponent implements OnInit {
 		this.Draw(this.DiaTyp);
 	}
 	
-	public Draw(aDiaTyp: any):void {
+	public Draw(aDiaTyp: any): void {
 		this.Diagramme = [];
+		let mDiagramme = [];
 		const mBorderWidth = 1;
 		let mData = [];
 		const mDiagramm: Diagramm = new Diagramm();
@@ -109,14 +109,13 @@ export class HistoryComponent implements OnInit {
 						// Ist die Übung gleich der zu prüfenden Übung und ist MaxWeight größer als das bisher ermittelte mMaxWeight? 
 						if (mPtrDatumUebung.Visible === true && mPtrDatumUebung.UebungID === mPtrDiaUebung.UebungID && mPtrDatumUebung.MaxWeight > mMaxWeight) {
 							mMaxWeight = mPtrDatumUebung.MaxWeight;
+							// Koordinaten-Daten für einen Diagramm-Punkt
 							mData.push({ x: mPtrDiaDatum.Datum.toDateString(), y: mMaxWeight });
 							if (mMaxWeight > 0) {
 								mPtrDiaUebung.Relevant = true;
 							} // if
 						}
 					});
-			
-					
 				}); // forEach -> Datum
 
 				if (mData.length > 0) {
@@ -161,32 +160,43 @@ export class HistoryComponent implements OnInit {
 		}
 	}
 
-	private LadeSessions (aOffSet: number) {
-        const mSessionParaDB: SessionParaDB = new SessionParaDB();
-        mSessionParaDB.UebungenBeachten = false;
-		mSessionParaDB.Limit = this.LadeLimit;
-        this.fDbModul.LadeHistorySessions(mSessionParaDB)
-			.then((aSessionListe) => {
-				this.SessionListe = aSessionListe;
-				// if (aSessionListe.length > 0 && this.SessionListe.length < this.LadeLimit) {
-				// 	aSessionListe.forEach((mSession) => {
-				// 		this.SessionListe.push(mSession);
-				// 		this.SessionListe.sort((s1, s2) => {
-				// 			return s2.Datum.valueOf() - s1.Datum.valueOf();
-				// 		});
-
-				// 	});
-				// 	this.LadeSessions(this.SessionListe.length);
-				// }
-			});
+	private LadeSessions(aOffSet: number) {
+        const mDialogData = new DialogData();
+        mDialogData.ShowAbbruch = false;
+        mDialogData.ShowOk = false;
+        mDialogData.hasBackDrop = false;
+		mDialogData.height = '150px';
+		mDialogData.textZeilen[0] = 'Making history';
+		this.fLoadingDialog.Loading(mDialogData);
+		try {
+			const mSessionParaDB: SessionParaDB = new SessionParaDB();
+			mSessionParaDB.UebungenBeachten = false;
+			mSessionParaDB.Limit = this.LadeLimit;
+			this.fDbModul.LadeHistorySessions(mSessionParaDB)
+				.then((aSessionListe) => {
+					this.SessionListe = aSessionListe;
+					this.fLoadingDialog.fDialog.closeAll();
+				});
+		} catch (err) {
+			this.fLoadingDialog.fDialog.closeAll();
+		}
 	}
 
-	DoDia() {
+	async DoDia() {
+		if (this.fDbModul.MustLoadDiagramData === true)
+			await this.fDbModul.LadeDiagrammData(this.fDbModul.DiagrammDatenListe);
+	
+			// .then(() => {
+		// 	this.fDbModul.LadeDiaUebungen().then((mDiaUebungen => {
+		// 		this.DiaUebungSettingsListe = mDiaUebungen;
+		// 		this.Draw(this.DiaTyp);
+		// 	}));
+		// })
+
 		this.fDbModul.LadeDiaUebungen().then((mDiaUebungen => {
 			this.DiaUebungSettingsListe = mDiaUebungen;
 			this.Draw(this.DiaTyp);
 		}));
-		
 	}
 	
 	ngOnInit(): void {
@@ -199,7 +209,6 @@ export class HistoryComponent implements OnInit {
 		// 	this.fDbModul.DoWorker(WorkerAction.LadeDiagrammDaten, () => { this.DoDia() });
 		// } else this.DoDia();
 
-		this.LadeSessions(0);
 	}
 }
 
