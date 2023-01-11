@@ -298,9 +298,9 @@ export class Programm03Component implements OnInit {
 
             if (this.fGlobalService.Comp03PanelUebungObserver != null) {
                 this.panUebung1.expanded = false;
-                of(this.panUebung1).subscribe(
-                    this.fGlobalService.Comp03PanelUebungObserver
-                );
+                // of(this.panUebung1).subscribe(
+                //     this.fGlobalService.Comp03PanelUebungObserver
+                // );
             }
         };
 

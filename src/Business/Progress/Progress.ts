@@ -718,7 +718,7 @@ export class Progress implements IProgress {
 		}
 	}
 
-	private static StaticSetAllWeights(aUebung: Uebung, aAusgangsUebung: Uebung, aAusgangsSatz: Satz, aArithmetik: Arithmetik, aAlleSaetze: boolean, aWeight: number = this.cIgnoreWeight): void {
+	private static StaticSetAllWeights(aUebung: Uebung, aAusgangsUebung: Uebung, aAusgangsSatz: Satz, aArithmetik: Arithmetik, aAlleSaetze: boolean, aProgressSet: ProgressSet,  aWeight: number = this.cIgnoreWeight): void {
 		
 		aUebung.ArbeitsSatzListe.forEach(
 			(sz) => {
@@ -1019,9 +1019,26 @@ export class Progress implements IProgress {
 				else
 					mZielUebung = mPtrArbeitUebung;
 				
-				if (mDoneExercises.indexOf(mZielUebung) > -1)
+				// Jede Übung nur einmal prüfen
+				let mSkipExercise: boolean = false;
+				for (let index = 0; index < mDoneExercises.length; index++) {
+					const mPtrDoneExercise = mDoneExercises[index];
+					// Ist die Übung schon in der Liste?
+					if (Progress.StaticEqualUebung(mPtrDoneExercise, mZielUebung)) {
+						// Die Übung ist schon in der Liste
+						// Damit ist sie schon geprüft worden und kann übersprungen WebGL2RenderingContext.
+						mSkipExercise = true;
+						break;
+					}
+				}
+
+                // Wurde die Übung schon geprüft?
+				if (mSkipExercise === true)
+					// Die Übung wurde schon geprüft
+					// Sofort mit der nächsten weitermachen
 					continue;
 				
+				// Übung in Liste aufnehmen
 				mDoneExercises.push(mZielUebung);
 					
 				if (
@@ -1044,6 +1061,7 @@ export class Progress implements IProgress {
 								aProgressPara.AusgangsSatz,
 								Arithmetik.Add,
 								aProgressPara.AlleSaetze,
+								aProgressPara.Progress.ProgressSet,
 								aProgressPara.AusgangsUebung.GewichtSteigerung);
 							
 							// if (aProgressPara.FailUebung !== undefined) 
@@ -1058,6 +1076,7 @@ export class Progress implements IProgress {
 								aProgressPara.AusgangsSatz,
 								Arithmetik.Sub,
 								aProgressPara.AlleSaetze,
+								aProgressPara.Progress.ProgressSet,
 								aProgressPara.AusgangsUebung.GewichtReduzierung);
 							
 							if (aProgressPara.FailUebung) {
@@ -1082,7 +1101,9 @@ export class Progress implements IProgress {
 						aProgressPara.AusgangsUebung,
 						aProgressPara.AusgangsSatz,
 						Arithmetik.Sub,
-						aProgressPara.AlleSaetze);
+						aProgressPara.AlleSaetze,
+						aProgressPara.Progress.ProgressSet
+						);
 				}
 			}
 			// aProgressPara.AusgangsUebung.SatzListe = mPtrArbeitUebung.SatzListe;

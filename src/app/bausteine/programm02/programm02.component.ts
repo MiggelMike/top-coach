@@ -176,14 +176,16 @@ export class Programm02Component implements OnInit {
 				
 				this.fDbModule.DeleteSession(aSession as Session);
 
-				this.SessionListObserver.subscribe(() => {
-					this.fDbModule.LadeAktuellesProgramm();//this.SortedSessionListe;
-				 })
+				// this.SessionListObserver.subscribe(() => {
+				// 	this.fDbModule.LadeAktuellesProgramm();//this.SortedSessionListe;
+					
+				// });
+
 				
-				if (this.fGlobalService.Comp03PanelUebungObserver != null) {
-					//this.panUebung.expanded = false;
-					of(this.panUebung).subscribe(this.fGlobalService.Comp03PanelUebungObserver);
-				}
+				// if (this.fGlobalService.Comp03PanelUebungObserver != null) {
+				// 	//this.panUebung.expanded = false;
+				// 	of(this.panUebung).subscribe(this.fGlobalService.Comp03PanelUebungObserver);
+				// }
 			}
 		);
 	}
