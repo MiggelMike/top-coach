@@ -313,6 +313,9 @@ export class DexieSvcService extends Dexie {
 			
 									return 0;
 								});
+
+								if (aExtraFn != undefined)
+									aExtraFn();
 							});
 						
 						// await Promise.all([mPtrSession.ID].map(

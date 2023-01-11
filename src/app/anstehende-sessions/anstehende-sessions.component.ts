@@ -1,5 +1,5 @@
 import { SessionDB, SessionStatus } from './../../Business/SessionDB';
-import { DexieSvcService, SessionParaDB, UebungParaDB } from './../services/dexie-svc.service';
+import { DexieSvcService, SessionParaDB, UebungParaDB, WorkerAction } from './../services/dexie-svc.service';
 import {  ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
@@ -74,6 +74,7 @@ export class AnstehendeSessionsComponent implements OnInit {
         
     ngOnInit() {
         this.DoWorker();
+        this.fDbModule.DoWorker(WorkerAction.LadeDiagrammDaten);
     }
 
     public get AktuellesProgramm(): ITrainingsProgramm {

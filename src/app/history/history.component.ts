@@ -192,7 +192,8 @@ export class HistoryComponent implements OnInit {
 	ngOnInit(): void {
 
 		this.DiaTyp = 'line';
-		this.fDbModul.DoWorker(WorkerAction.LadeDiagrammDaten, () => { this.DoDia() });
+		this.DoDia();
+		// this.fDbModul.DoWorker(WorkerAction.LadeDiagrammDaten, () => { this.DoDia() });
 
 		// if (this.fDbModul.DiagrammDatenListe.length === 0) {
 		// 	this.fDbModul.DoWorker(WorkerAction.LadeDiagrammDaten, () => { this.DoDia() });
