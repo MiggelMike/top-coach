@@ -159,7 +159,7 @@ export class HistoryComponent implements OnInit {
         mDialogData.ShowOk = false;
         mDialogData.hasBackDrop = false;
 		mDialogData.height = '150px';
-		mDialogData.textZeilen[0] = 'Making history';
+		mDialogData.textZeilen[0] = 'Loading history';
 		this.fLoadingDialog.Loading(mDialogData);
 		try {
 			const mSessionParaDB: SessionParaDB = new SessionParaDB();
@@ -177,7 +177,7 @@ export class HistoryComponent implements OnInit {
 
 	async DoDia() {
 		if (this.fDbModul.MustLoadDiagramData === true)
-			await this.fDbModul.LadeDiagrammData(this.fDbModul.DiagrammDatenListe);
+			await this.fDbModul.LadeDiagrammData(this.fDbModul.DiagrammDatenListe, this.AppData.MaxHistorySessions);
 	
 			// .then(() => {
 		// 	this.fDbModul.LadeDiaUebungen().then((mDiaUebungen => {

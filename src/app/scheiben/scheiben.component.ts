@@ -42,19 +42,23 @@ export class ScheibenComponent implements OnInit {
 	}
 
 	NeueScheibe() {
-		this.HantelscheibenListe.push(new Hantelscheibe());
+		const mNeueScheibe: Hantelscheibe = new Hantelscheibe();
+		if (this.HantelscheibenListe.length > 0)
+			mNeueScheibe.Durchmesser = this.HantelscheibenListe[this.HantelscheibenListe.length - 1].Durchmesser;
+		
+		this.HantelscheibenListe.push(mNeueScheibe);
 	}
 
 	public SetWeight(aScheibe: Hantelscheibe, aEvent: any) {
-		aScheibe.Gewicht = aEvent.target.value;
+		aScheibe.Gewicht = Number(aEvent.target.value);
 	}
 
 	public SetAnzahl(aScheibe: Hantelscheibe, aEvent: any) {
-		aScheibe.Anzahl = aEvent.target.value;
+		aScheibe.Anzahl = Number(aEvent.target.value);
 	}
 
 	public SetDiameter(aScheibe: Hantelscheibe, aEvent: any) {
-		aScheibe.Durchmesser = aEvent.target.value;
+		aScheibe.Durchmesser = Number(aEvent.target.value);
 	}
 
 	Delete(aScheibe: Hantelscheibe) {

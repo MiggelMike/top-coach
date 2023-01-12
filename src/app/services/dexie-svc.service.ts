@@ -241,7 +241,7 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
-	public async LadeDiagrammData(aDiagrammDatenListe: Array<DiaDatum>, aExtraFn?: ExtraFn) {
+	public async LadeDiagrammData(aDiagrammDatenListe: Array<DiaDatum>, aLimit:number, aExtraFn?: ExtraFn) {
 		if (this.MustLoadDiagramData === true) {
 			this.MustLoadDiagramData = false;
 			try {
@@ -251,9 +251,9 @@ export class DexieSvcService extends Dexie {
 					mSuchStatus => this.SessionTable.where({
 						Kategorie02: mSuchStatus
 					})
+						.limit(aLimit)
 						.toArray()
 						.then(async (aSessionListe) => {
-							// Jetzt für jede Session die Übungen laden
 							for (let mSessionIndex = 0; mSessionIndex < aSessionListe.length; mSessionIndex++) {
 								const mPtrSession: Session = aSessionListe[mSessionIndex];
 								if ((mPtrSession.GestartedWann === null) || (mPtrSession.GestartedWann === undefined))
@@ -261,6 +261,7 @@ export class DexieSvcService extends Dexie {
 								const mNurSessionDatum = new Date(mPtrSession.GestartedWann.toDateString());
 								SessionDB.StaticCheckMembers(mPtrSession);
 								mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+								// Jetzt für mPtrSession die Übungen laden
 								await this.LadeSessionUebungen(mPtrSession.ID, mUebungLadePara)
 									.then((mUebungsListe) => {
 										for (let index2 = 0; index2 < mUebungsListe.length; index2++) {
@@ -440,8 +441,12 @@ export class DexieSvcService extends Dexie {
 						break;
 					
 					case WorkerAction.LadeDiagrammDaten:
-						if (this.MustLoadDiagramData === true)
-							this.LadeDiagrammData(this.DiagrammDatenListe, aExtraFn);
+						if (this.MustLoadDiagramData === true) {
+							this.LadeAppData().then((aAppRec) => {
+								this.AppRec = aAppRec;
+								this.LadeDiagrammData(this.DiagrammDatenListe, aAppRec.MaxHistorySessions, aExtraFn);
+							});
+						}
 						break;
 				}//switch
 			});
@@ -642,7 +647,7 @@ export class DexieSvcService extends Dexie {
 		}
 
 		    //    Dexie.delete("ConceptCoach");
-		this.version(9).stores({
+		this.version(11).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
