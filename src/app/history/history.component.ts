@@ -20,15 +20,38 @@ export class HistoryComponent implements OnInit {
 	LadeLimit: number = 10;
 	public repMask = repMask;
 	public AppData: AppData;
-	public Diagramme: Array<Diagramm> = [];
 	public DiaTyp: string = 'line';
-	public DiaUebungsListe: Array<DiaUebung> = [];
-	public DiaUebungSettingsListe: Array<DiaUebungSettings> = [];
+	//#region DiaUebungsListe
+	get DiaUebungsListe(): Array<DiaUebung> {
+		return this.fDbModul.DiaUebungsListe;
+	}
+
+	set DiaUebungsListe( aValue: Array<DiaUebung>) {
+		this.fDbModul.DiaUebungsListe = aValue;
+	}
+	//#endregion
+	//#region Diagramme
+	get Diagramme(): Array<Diagramm> {
+		return this.fDbModul.Diagramme;
+	}
+	set Diagramme( aValue: Array<Diagramm>) {
+		this.fDbModul.Diagramme = aValue;
+	}
+	//#endregion
+	//#region DiaUebungSettingsListe 
+	get DiaUebungSettingsListe(): Array<DiaUebungSettings>{
+		return this.fDbModul.DiaUebungSettingsListe;
+	}
+	
+	set DiaUebungSettingsListe( aValue: Array<DiaUebungSettings>){
+		this.fDbModul.DiaUebungSettingsListe = aValue;
+	}
+	//#endregion
 
 	@ViewChild('LineChart') LineChart: any;
 
 	constructor(
-		private fDbModul: DexieSvcService,
+		public fDbModul: DexieSvcService,
 		private fLoadingDialog: DialogeService
 	) {
 		this.fDbModul.LadeAppData()
@@ -53,81 +76,86 @@ export class HistoryComponent implements OnInit {
 	}
 	
 	public Draw(aDiaTyp: any): void {
-		this.Diagramme = [];
-		const mBorderWidth = 1;
-		let mData = [];
-		const mDiagramm: Diagramm = new Diagramm();
-		mDiagramm.type = aDiaTyp;
-		mDiagramm.data.labels = [];
-		
-		this.DiaUebungsListe = [];
-		let mUebungsNamen = [];
-		for (let index = 0; index < this.fDbModul.DiagrammDatenListe.length; index++) {
-			const mPtrDiaDatum: DiaDatum = this.fDbModul.DiagrammDatenListe[index];
-			mDiagramm.data.labels.push(mPtrDiaDatum.Datum.toDateString());
-			mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDiaUebung) => {
-				if (mUebungsNamen.indexOf(mPtrDiaUebung.UebungName) === -1) {
-					mUebungsNamen.push(mPtrDiaUebung.UebungName);
-					this.DiaUebungsListe.push(mPtrDiaUebung);
-
-					const mDiaUebungSetting = (this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
-						if (mPtrDiaUebungSetting.UebungID === mPtrDiaUebung.UebungID)
-							return true;
-						return false;
-					}));
-					if (mDiaUebungSetting !== undefined)
-						mPtrDiaUebung.Visible = mDiaUebungSetting.Visible;
-				}
-			});
-		} // for
-
-		// Jede Übung prüfen 
-		this.DiaUebungsListe.forEach((mPtrDiaUebung) => {
-			const mDiaUebungSetting = (this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
-				if (mPtrDiaUebungSetting.UebungID === mPtrDiaUebung.UebungID)
-					return true;
-				return false;
-			}));
-
-			if (mDiaUebungSetting === undefined) {
-				if(mPtrDiaUebung.ID === undefined)
-					this.fDbModul.InsertEineDiaUebung(mPtrDiaUebung)
-						.then((aID) => mPtrDiaUebung.ID = aID);
-				
-				this.DiaUebungSettingsListe.push(mPtrDiaUebung);
-			}
-
-			if (mPtrDiaUebung.Visible === true) {
-				mData = [];
-				mPtrDiaUebung.Relevant = false;
-				// Jedes Datum aus der Liste prüfen
-				this.fDbModul.DiagrammDatenListe.forEach((mPtrDiaDatum) => {
-					let mMaxWeight: number = 0;
-					// In der Übungsliste des Datums nach der Übung suchen 
-					mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDatumUebung) => {
-						// Ist die Übung gleich der zu prüfenden Übung und ist MaxWeight größer als das bisher ermittelte mMaxWeight? 
-						if (mPtrDatumUebung.Visible === true && mPtrDatumUebung.UebungID === mPtrDiaUebung.UebungID && mPtrDatumUebung.MaxWeight > mMaxWeight) {
-							mMaxWeight = mPtrDatumUebung.MaxWeight;
-							// Koordinaten-Daten für einen Diagramm-Punkt
-							mData.push({ x: mPtrDiaDatum.Datum.toDateString(), y: mMaxWeight });
-							if (mMaxWeight > 0) {
-								mPtrDiaUebung.Relevant = true;
-							} // if
-						}
-					});
-				}); // forEach -> Datum
-
-				if (mData.length > 0) {
-					mDiagramm.data.datasets.push({
-						label: mPtrDiaUebung.UebungName,
-						data: mData,
-						borderWidth: mBorderWidth
-					});
-				}
-			}
+		this.Diagramme = this.fDbModul.Diagramme;
+		this.Diagramme.forEach((mDia) => {
+			mDia.visible = (mDia.type === aDiaTyp);
 		});
+		// this.fDbModul.DrawDiagramm(aDiaTyp);
+		// this.Diagramme = [];
+		// const mBorderWidth = 1;
+		// let mData = [];
+		// const mDiagramm: Diagramm = new Diagramm();
+		// mDiagramm.type = aDiaTyp;
+		// mDiagramm.data.labels = [];
+		
+		// this.DiaUebungsListe = [];
+		// let mUebungsNamen = [];
+		// for (let index = 0; index < this.fDbModul.DiagrammDatenListe.length; index++) {
+		// 	const mPtrDiaDatum: DiaDatum = this.fDbModul.DiagrammDatenListe[index];
+		// 	mDiagramm.data.labels.push(mPtrDiaDatum.Datum.toDateString());
+		// 	mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDiaUebung) => {
+		// 		if (mUebungsNamen.indexOf(mPtrDiaUebung.UebungName) === -1) {
+		// 			mUebungsNamen.push(mPtrDiaUebung.UebungName);
+		// 			this.DiaUebungsListe.push(mPtrDiaUebung);
+
+		// 			const mDiaUebungSetting = (this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
+		// 				if (mPtrDiaUebungSetting.UebungID === mPtrDiaUebung.UebungID)
+		// 					return true;
+		// 				return false;
+		// 			}));
+		// 			if (mDiaUebungSetting !== undefined)
+		// 				mPtrDiaUebung.Visible = mDiaUebungSetting.Visible;
+		// 		}
+		// 	});
+		// } // for
+
+		// // Jede Übung prüfen 
+		// this.DiaUebungsListe.forEach((mPtrDiaUebung) => {
+		// 	const mDiaUebungSetting = (this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
+		// 		if (mPtrDiaUebungSetting.UebungID === mPtrDiaUebung.UebungID)
+		// 			return true;
+		// 		return false;
+		// 	}));
+
+		// 	if (mDiaUebungSetting === undefined) {
+		// 		if(mPtrDiaUebung.ID === undefined)
+		// 			this.fDbModul.InsertEineDiaUebung(mPtrDiaUebung)
+		// 				.then((aID) => mPtrDiaUebung.ID = aID);
+				
+		// 		this.DiaUebungSettingsListe.push(mPtrDiaUebung);
+		// 	}
+
+		// 	if (mPtrDiaUebung.Visible === true) {
+		// 		mData = [];
+		// 		mPtrDiaUebung.Relevant = false;
+		// 		// Jedes Datum aus der Liste prüfen
+		// 		this.fDbModul.DiagrammDatenListe.forEach((mPtrDiaDatum) => {
+		// 			let mMaxWeight: number = 0;
+		// 			// In der Übungsliste des Datums nach der Übung suchen 
+		// 			mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDatumUebung) => {
+		// 				// Ist die Übung gleich der zu prüfenden Übung und ist MaxWeight größer als das bisher ermittelte mMaxWeight? 
+		// 				if (mPtrDatumUebung.Visible === true && mPtrDatumUebung.UebungID === mPtrDiaUebung.UebungID && mPtrDatumUebung.MaxWeight > mMaxWeight) {
+		// 					mMaxWeight = mPtrDatumUebung.MaxWeight;
+		// 					// Koordinaten-Daten für einen Diagramm-Punkt
+		// 					mData.push({ x: mPtrDiaDatum.Datum.toDateString(), y: mMaxWeight });
+		// 					if (mMaxWeight > 0) {
+		// 						mPtrDiaUebung.Relevant = true;
+		// 					} // if
+		// 				}
+		// 			});
+		// 		}); // forEach -> Datum
+
+		// 		if (mData.length > 0) {
+		// 			mDiagramm.data.datasets.push({
+		// 				label: mPtrDiaUebung.UebungName,
+		// 				data: mData,
+		// 				borderWidth: mBorderWidth
+		// 			});
+		// 		}
+		// 	}
+		// });
 	
-		this.Diagramme.push(mDiagramm);
+		// this.Diagramme.push(mDiagramm);
 	}
 
 	Save() {
@@ -175,33 +203,9 @@ export class HistoryComponent implements OnInit {
 		}
 	}
 
-	async DoDia() {
-		if (this.fDbModul.MustLoadDiagramData === true)
-			await this.fDbModul.LadeDiagrammData(this.fDbModul.DiagrammDatenListe, this.AppData.MaxHistorySessions);
-	
-			// .then(() => {
-		// 	this.fDbModul.LadeDiaUebungen().then((mDiaUebungen => {
-		// 		this.DiaUebungSettingsListe = mDiaUebungen;
-		// 		this.Draw(this.DiaTyp);
-		// 	}));
-		// })
-
-		this.fDbModul.LadeDiaUebungen().then((mDiaUebungen => {
-			this.DiaUebungSettingsListe = mDiaUebungen;
-			this.Draw(this.DiaTyp);
-		}));
-	}
-	
 	ngOnInit(): void {
-
 		this.DiaTyp = 'line';
-		this.DoDia();
-		// this.fDbModul.DoWorker(WorkerAction.LadeDiagrammDaten, () => { this.DoDia() });
-
-		// if (this.fDbModul.DiagrammDatenListe.length === 0) {
-		// 	this.fDbModul.DoWorker(WorkerAction.LadeDiagrammDaten, () => { this.DoDia() });
-		// } else this.DoDia();
-
+		this.Draw(this.DiaTyp);
 	}
 }
 

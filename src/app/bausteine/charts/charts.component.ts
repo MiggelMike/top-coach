@@ -3,30 +3,31 @@ import { Component, OnInit } from '@angular/core';
 import { BubbleDataPoint, Chart, ChartConfiguration, ChartData, ChartDataset, ChartType, ChartTypeRegistry, ScatterDataPoint } from "chart.js";
 
 export class Diagramm implements ChartConfiguration {
-  type: keyof ChartTypeRegistry;
+	visible: boolean = true;
+
+	type: keyof ChartTypeRegistry;
 	data: ChartData<keyof ChartTypeRegistry, (number | ScatterDataPoint | BubbleDataPoint)[], unknown>;
 	
 	constructor() {
-		this.data =  {
+		this.data = {
 			labels: [],
 			datasets: []
 		};
 	}
 
-  public static StaticMakeDiagramm(aType: ChartType, aData: Array<any>, aTitel: string, aLables?: any  ): Diagramm {
+	public static StaticMakeDiagramm(aType: ChartType, aData: Array<any>, aTitel: string, aLables?: any): Diagramm {
 		const mDiagramm: Diagramm = new Diagramm();
 		mDiagramm.type = aType;
-		mDiagramm.data =  {
-			labels: aLables ,
+		mDiagramm.data = {
+			labels: aLables,
 			datasets: [{
 				label: aTitel,
 				data: aData,
 				borderWidth: 1
 			}]
-    }
-    return mDiagramm;
+		}
+		return mDiagramm;
 	}
-
 }
 
 export class DiagramData implements ChartData {
