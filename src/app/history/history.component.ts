@@ -1,3 +1,4 @@
+import { MatExpansionPanel } from '@angular/material/expansion';
 import { DiaUebungSettings } from './../../Business/Diagramm/Diagramm';
 import { DexieSvcService, SessionParaDB } from 'src/app/services/dexie-svc.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -24,8 +25,15 @@ export class HistoryComponent implements OnInit {
 	public DiaTyp: string = 'line';
 	public DiaUebungsListe: Array<DiaUebung> = [];
 	public DiaUebungSettingsListe: Array<DiaUebungSettings> = [];
+	chartWidth: number = 0;
+	chartHeight: number = 0;
+	LineData: LineData = new LineData();
 
 	@ViewChild('LineChart') LineChart: any;
+	@ViewChild('ExercisesInChart') ExercisesInChart: any;
+	@ViewChild('matGroup') matGroup: any;
+	@ViewChild('matTabChart') matTabChart: any;
+	@ViewChild('ChartContainer') ChartContainer: any;
 
 	constructor(
 		private fDbModul: DexieSvcService,
@@ -51,6 +59,42 @@ export class HistoryComponent implements OnInit {
 			mDiaUebungSetting.Visible = aChecked;
 		this.Draw(this.DiaTyp);
 	}
+
+	// saleData = [
+	// 	{ name: "Mobiles", value: 105000 },
+	// 	{ name: "Laptop", value: 55000 },
+	// 	{ name: "AC", value: 15000 },
+	// 	{ name: "Headset", value: 150000 },
+	// 	{ name: "Fridge", value: 20000 }
+	// ];
+	
+	saleData = [
+		{
+			"name": "Hungary",
+			"series": [
+				{
+					"value": 5826,
+					"name": "2016-09-14T23:32:06.871Z"
+				},
+				{
+					"value": 2112,
+					"name": "2016-09-22T23:51:13.683Z"
+				},
+				{
+					"value": 3427,
+					"name": "2016-09-23T05:08:53.422Z"
+				},
+				{
+					"value": 2545,
+					"name": "2016-09-15T12:05:13.499Z"
+				},
+				{
+					"value": 4956,
+					"name": "2016-09-22T17:58:59.478Z"
+				}
+			]
+		}
+	];
 	
 	public Draw(aDiaTyp: any): void {
 		this.Diagramme = [];
@@ -109,21 +153,84 @@ export class HistoryComponent implements OnInit {
 						if (mPtrDatumUebung.Visible === true && mPtrDatumUebung.UebungID === mPtrDiaUebung.UebungID && mPtrDatumUebung.MaxWeight > mMaxWeight) {
 							mMaxWeight = mPtrDatumUebung.MaxWeight;
 							// Koordinaten-Daten für einen Diagramm-Punkt
-							mData.push({ x: mPtrDiaDatum.Datum.toDateString(), y: mMaxWeight });
+							//mData.push({ x: mPtrDiaDatum.Datum.toDateString(), y: mMaxWeight });
+							//mData.push({ namex: mPtrDiaDatum.Datum.toDateString(), y: mMaxWeight });
 							if (mMaxWeight > 0) {
 								mPtrDiaUebung.Relevant = true;
+								let mDataPoint: DataPoint;
+								let mLineData: LineData;
+								// Die verschiedenen Chart-Typen prüfen.
+								switch (aDiaTyp) {
+									case 'line': {
+										mLineData = mData.find((mData) => {
+											return (mData.name === mPtrDiaUebung.UebungName);
+										});
+
+										if (mLineData === undefined) {
+											mLineData = new LineData();
+											mLineData.name = mPtrDiaUebung.UebungName;
+											mData.push(mLineData);
+										}
+
+										mDataPoint = mLineData.series.find((mDataPoint) => {
+											return (mDataPoint.name === mPtrDiaDatum.Datum.toDateString()) 
+										});
+                                  
+										if (mDataPoint === undefined) {
+											mDataPoint = new DataPoint();
+											mDataPoint.name = mPtrDiaDatum.Datum.toDateString();
+											mLineData.series.push(mDataPoint);
+										}
+
+										mDataPoint.value = mMaxWeight;
+									}
+								}//switch
+
+								const x = 0;
+
+								// switch (aDiaTyp) {
+								// 	case 'line':
+								// 		mData.push(
+								// 			{
+								// 				"name": mPtrDiaUebung.UebungName,
+								// 				"series": [
+								// 					{
+								// 						"value": 6775,
+								// 						"name": mPtrDiaDatum.Datum.toDateString()
+								// 					},
+								// 					{
+								// 						"value": 3242,
+								// 						"name": "2016-09-13T00:36:38.306Z"
+								// 					},
+								// 					{
+								// 						"value": 2220,
+								// 						"name": "2016-09-23T04:07:43.932Z"
+								// 					},
+								// 					{
+								// 						"value": 3545,
+								// 						"name": "2016-09-19T13:41:51.273Z"
+								// 					},
+								// 					{
+								// 						"value": 6761,
+								// 						"name": "2016-09-16T11:35:24.811Z"
+								// 					}
+								// 				]
+								// 			});
+			
+								// }//switch
+	
 							} // if
 						}
 					});
 				}); // forEach -> Datum
 
-				if (mData.length > 0) {
-					mDiagramm.data.datasets.push({
-						label: mPtrDiaUebung.UebungName,
-						data: mData,
-						borderWidth: mBorderWidth
-					});
-				}
+				// if (mData.length > 0) {
+				// 	mDiagramm.data.datasets.push({
+				// 		label: mPtrDiaUebung.UebungName,
+				// 		data: mData,
+				// 		borderWidth: mBorderWidth
+				// 	});
+				// }
 			}
 		});
 	
@@ -191,11 +298,27 @@ export class HistoryComponent implements OnInit {
 			this.Draw(this.DiaTyp);
 		}));
 	}
-	
-	ngOnInit(): void {
 
+	onTabChanged(event) {
+		this.CalcChartSize();
+	}
+	
+	onResize(event) {
+		this.CalcChartSize();
+	}
+	
+	CalcChartSize() {
+		if (this.ChartContainer.nativeElement.clientWidth != undefined)
+			this.chartWidth = this. ChartContainer.nativeElement.clientWidth;
+	}
+
+	ngOnInit(): void {
+			//this.chartWidth = this.ExercisesInChart.accordion.
+	
+	
 		this.DiaTyp = 'line';
 		this.DoDia();
+	//	setTimeout( () => this.CalcChartSize(), 1000);
 		// this.fDbModul.DoWorker(WorkerAction.LadeDiagrammDaten, () => { this.DoDia() });
 
 		// if (this.fDbModul.DiagrammDatenListe.length === 0) {
@@ -203,5 +326,39 @@ export class HistoryComponent implements OnInit {
 		// } else this.DoDia();
 
 	}
+}
+
+class DataPoint {
+	value: any;
+	name: string;
+	extra?: any;
+
+}
+
+class LineData {
+	name: string;
+	series: Array<DataPoint> = [];
+		// "series": [
+		//   {
+		// 	"value": 6775,
+		// 	"name": "2016-09-24T03:06:49.428Z"
+		//   },
+		//   {
+		// 	"value": 3242,
+		// 	"name": "2016-09-13T00:36:38.306Z"
+		//   },
+		//   {
+		// 	"value": 2220,
+		// 	"name": "2016-09-23T04:07:43.932Z"
+		//   },
+		//   {
+		// 	"value": 3545,
+		// 	"name": "2016-09-19T13:41:51.273Z"
+		//   },
+		//   {
+		// 	"value": 6761,
+		// 	"name": "2016-09-16T11:35:24.811Z"
+		//   }
+		// ]
 }
 

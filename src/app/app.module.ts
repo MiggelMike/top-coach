@@ -105,6 +105,8 @@ import { StoppuhrComponent } from './stoppuhr/stoppuhr.component';
 import { HistoryComponent } from './history/history.component';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartsComponent } from './bausteine/charts/charts.component';
+import { NgxChartsModule }from '@swimlane/ngx-charts';
+
 
 
 //import { MatBadgeModule } from '@angular/material/m/MatBadgeModule';
@@ -261,7 +263,8 @@ export const floatMask = createNumberMask({
         FormsModule,
       DexieSvcService,
       MatSelectModule,
-      NgChartsModule
+      NgChartsModule,
+      NgxChartsModule
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA,

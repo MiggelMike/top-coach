@@ -13,7 +13,7 @@
         </mat-form-field>
     </div>
 
-    <mat-tab-group  style="width:100%;height:100%">
+    <mat-tab-group #matGroup style="width:100%;height:100%" (selectedTabChange)="onTabChanged($event)">
         <mat-tab  label="Sessions">
             <app-programm02 
                 [showButtons]="false"
@@ -27,7 +27,7 @@
             </app-programm02>
         </mat-tab>
 
-        <mat-tab  label="Charts">
+        <mat-tab #matTabChart label="Charts">
             <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutGap="20px" fxLayoutAlign="center center" [style.margin-top]="'5px'">        
                 <mat-radio-group aria-label="Select a Diagram type">
                         <mat-radio-button 
@@ -45,7 +45,7 @@
             </div>
 
             <mat-accordion #accSession="matAccordion" multi="true">
-                <mat-expansion-panel class="HG-01">
+                <mat-expansion-panel #ExercisesInChart class="HG-01">
                     <mat-expansion-panel-header>
                         <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="flex-start center">
                                 <div class="ml-10" fxLayout="column" fxFlex="155px" >
@@ -77,11 +77,31 @@
                 </mat-expansion-panel>
             </mat-accordion>
 
+            <after-content>
+            <div #ChartContainer style="width:100%;">
 
-            <ng-container *ngFor="let Dia of Diagramme" >
+                <ngx-charts-line-chart
+                (window:resize)="onResize($event)"
+                [view]="[chartWidth,chartHeight]"
+                [results]="saleData"
+                [xAxisLabel]="'Products'"
+                [legendTitle]="'Product Sale Chart'"
+                [yAxisLabel]="'Sale'"
+                [legend]="false"
+                [showXAxisLabel]="false"
+                [showYAxisLabel]="false"
+                [xAxis]="true"
+                [yAxis]="true"
+                [gradient]="true">
+            </ngx-charts-line-chart>
+           </div>
+        </after-content>
+
+
+            <!-- <ng-container *ngFor="let Dia of Diagramme" >
                 <app-charts #line [ChartData]="Dia">
                 </app-charts>  
-            </ng-container>
+            </ng-container> -->
         </mat-tab> 
     </mat-tab-group>
 
