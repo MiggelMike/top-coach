@@ -77,31 +77,44 @@
                 </mat-expansion-panel>
             </mat-accordion>
 
-            <after-content>
             <div #ChartContainer style="width:100%;">
+                <!-- <ng-container *ngIf="(sess.Kategorie02 === 3 || sess.Kategorie02 === 4 || sess.Kategorie02 === 5); then TitelNoShowPlan else TitelShowPlan"></ng-container> -->
+                <ng-container *ngIf="(DiaTyp === 'line'); then LineChart else BarChart"></ng-container>
+                <ng-template #LineChart> 
+                    <ngx-charts-line-chart
+                    (window:resize)="onResize($event)"
+                    [view]="[chartWidth,chartHeight]"
+                    [results]="ChartData"
+                    [xAxisLabel]="'Products'"
+                    [legendTitle]="'Product Sale Chart'"
+                    [yAxisLabel]="'Sale'"
+                    [legend]="false"
+                    [showXAxisLabel]="false"
+                    [showYAxisLabel]="false"
+                    [xAxis]="true"
+                    [yAxis]="true"
+                    [gradient]="true">
+                </ngx-charts-line-chart>
+                </ng-template>
 
-                <ngx-charts-line-chart
-                (window:resize)="onResize($event)"
-                [view]="[chartWidth,chartHeight]"
-                [results]="ChartData"
-                [xAxisLabel]="'Products'"
-                [legendTitle]="'Product Sale Chart'"
-                [yAxisLabel]="'Sale'"
-                [legend]="false"
-                [showXAxisLabel]="false"
-                [showYAxisLabel]="false"
-                [xAxis]="true"
-                [yAxis]="true"
-                [gradient]="true">
-            </ngx-charts-line-chart>
-           </div>
-        </after-content>
-
-
-            <!-- <ng-container *ngFor="let Dia of Diagramme" >
-                <app-charts #line [ChartData]="Dia">
-                </app-charts>  
-            </ng-container> -->
+                <ng-template #BarChart> 
+                    <ngx-charts-bar-vertical 
+                    (window:resize)="onResize($event)"
+                    [view]="[chartWidth,chartHeight]"
+                    [results]="ChartData"
+                    [xAxisLabel]="'Products'"
+                    [legendTitle]="'Product Sale Chart'"
+                    [yAxisLabel]="'Sale'"
+                    [legend]="false"
+                    [showXAxisLabel]="false"
+                    [showYAxisLabel]="false"
+                    [xAxis]="true"
+                    [yAxis]="true"
+                    [gradient]="true">
+                </ngx-charts-bar-vertical>
+        
+                </ng-template>
+            </div>
         </mat-tab> 
     </mat-tab-group>
 
