@@ -27,7 +27,7 @@ export class HistoryComponent implements OnInit {
 	public DiaUebungSettingsListe: Array<DiaUebungSettings> = [];
 	chartWidth: number = 0;
 	chartHeight: number = 0;
-	LineData: LineData = new LineData();
+	ChartData: Array<Object> = [];
 
 	@ViewChild('LineChart') LineChart: any;
 	@ViewChild('ExercisesInChart') ExercisesInChart: any;
@@ -98,6 +98,7 @@ export class HistoryComponent implements OnInit {
 	
 	public Draw(aDiaTyp: any): void {
 		this.Diagramme = [];
+		this.ChartData = [];
 		const mBorderWidth = 1;
 		let mData = [];
 		const mDiagramm: Diagramm = new Diagramm();
@@ -157,8 +158,8 @@ export class HistoryComponent implements OnInit {
 							//mData.push({ namex: mPtrDiaDatum.Datum.toDateString(), y: mMaxWeight });
 							if (mMaxWeight > 0) {
 								mPtrDiaUebung.Relevant = true;
-								let mDataPoint: DataPoint;
-								let mLineData: LineData;
+								let mDataPoint: any;
+								let mLineData;
 								// Die verschiedenen Chart-Typen prüfen.
 								switch (aDiaTyp) {
 									case 'line': {
@@ -167,8 +168,7 @@ export class HistoryComponent implements OnInit {
 										});
 
 										if (mLineData === undefined) {
-											mLineData = new LineData();
-											mLineData.name = mPtrDiaUebung.UebungName;
+											mLineData = { name: mPtrDiaUebung.UebungName, series: [] };
 											mData.push(mLineData);
 										}
 
@@ -177,13 +177,13 @@ export class HistoryComponent implements OnInit {
 										});
                                   
 										if (mDataPoint === undefined) {
-											mDataPoint = new DataPoint();
-											mDataPoint.name = mPtrDiaDatum.Datum.toDateString();
+											mDataPoint = { name: mPtrDiaDatum.Datum.toDateString(), value: 0 };
 											mLineData.series.push(mDataPoint);
 										}
 
 										mDataPoint.value = mMaxWeight;
-									}
+										this.ChartData.push(mLineData);
+									} // case line
 								}//switch
 
 								const x = 0;
@@ -328,37 +328,37 @@ export class HistoryComponent implements OnInit {
 	}
 }
 
-class DataPoint {
-	value: any;
-	name: string;
-	extra?: any;
+// class DataPoint {
+// 	value: any;
+// 	name: string;
+// 	extra?: any;
 
-}
+// }
 
-class LineData {
-	name: string;
-	series: Array<DataPoint> = [];
-		// "series": [
-		//   {
-		// 	"value": 6775,
-		// 	"name": "2016-09-24T03:06:49.428Z"
-		//   },
-		//   {
-		// 	"value": 3242,
-		// 	"name": "2016-09-13T00:36:38.306Z"
-		//   },
-		//   {
-		// 	"value": 2220,
-		// 	"name": "2016-09-23T04:07:43.932Z"
-		//   },
-		//   {
-		// 	"value": 3545,
-		// 	"name": "2016-09-19T13:41:51.273Z"
-		//   },
-		//   {
-		// 	"value": 6761,
-		// 	"name": "2016-09-16T11:35:24.811Z"
-		//   }
-		// ]
-}
+// class LineData {
+// 	name: string;
+// 	series: Array<DataPoint> = [];
+// 		// "series": [
+// 		//   {
+// 		// 	"value": 6775,
+// 		// 	"name": "2016-09-24T03:06:49.428Z"
+// 		//   },
+// 		//   {
+// 		// 	"value": 3242,
+// 		// 	"name": "2016-09-13T00:36:38.306Z"
+// 		//   },
+// 		//   {
+// 		// 	"value": 2220,
+// 		// 	"name": "2016-09-23T04:07:43.932Z"
+// 		//   },
+// 		//   {
+// 		// 	"value": 3545,
+// 		// 	"name": "2016-09-19T13:41:51.273Z"
+// 		//   },
+// 		//   {
+// 		// 	"value": 6761,
+// 		// 	"name": "2016-09-16T11:35:24.811Z"
+// 		//   }
+// 		// ]
+// }
 
