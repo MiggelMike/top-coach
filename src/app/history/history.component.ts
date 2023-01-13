@@ -117,9 +117,6 @@ export class HistoryComponent implements OnInit {
 						// Ist die Übung gleich der zu prüfenden Übung und ist MaxWeight größer als das bisher ermittelte mMaxWeight? 
 						if (mPtrDatumUebung.Visible === true && mPtrDatumUebung.UebungID === mPtrDiaUebung.UebungID && mPtrDatumUebung.MaxWeight > mMaxWeight) {
 							mMaxWeight = mPtrDatumUebung.MaxWeight;
-							// Koordinaten-Daten für einen Diagramm-Punkt
-							//mData.push({ x: mPtrDiaDatum.Datum.toDateString(), y: mMaxWeight });
-							//mData.push({ namex: mPtrDiaDatum.Datum.toDateString(), y: mMaxWeight });
 							if (mMaxWeight > 0) {
 								mPtrDiaUebung.Relevant = true;
 								let mDataPoint: any;
@@ -222,13 +219,6 @@ export class HistoryComponent implements OnInit {
 		if (this.fDbModul.MustLoadDiagramData === true)
 			await this.fDbModul.LadeDiagrammData(this.fDbModul.DiagrammDatenListe, this.AppData.MaxHistorySessions);
 	
-			// .then(() => {
-		// 	this.fDbModul.LadeDiaUebungen().then((mDiaUebungen => {
-		// 		this.DiaUebungSettingsListe = mDiaUebungen;
-		// 		this.Draw(this.DiaTyp);
-		// 	}));
-		// })
-
 		this.fDbModul.LadeDiaUebungen().then((mDiaUebungen => {
 			this.DiaUebungSettingsListe = mDiaUebungen;
 			this.Draw(this.DiaTyp);
@@ -249,17 +239,7 @@ export class HistoryComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-			//this.chartWidth = this.ExercisesInChart.accordion.
-	
-	
 		this.DiaTyp = 'line';
-		
 		setTimeout( () => this.DoDia(), 1000);
-		// this.fDbModul.DoWorker(WorkerAction.LadeDiagrammDaten, () => { this.DoDia() });
-
-		// if (this.fDbModul.DiagrammDatenListe.length === 0) {
-		// 	this.fDbModul.DoWorker(WorkerAction.LadeDiagrammDaten, () => { this.DoDia() });
-		// } else this.DoDia();
-
 	}
 }
