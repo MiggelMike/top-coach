@@ -1363,23 +1363,27 @@ export class DexieSvcService extends Dexie {
 			.limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : cMaxLimnit)
 			.sortBy("ListenIndex")
 			.then(async (aSessionListe) => {
-				aSessionListe.forEach((mPtrSession) => {
-					mPtrSession.UebungsListe = [];
-					SessionDB.StaticCheckMembers(mPtrSession);
-					mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
-				});
-
-				if (aSessionParaDB !== undefined) {
-					if (aSessionParaDB.UebungenBeachten) {
-						for (let index = 0; index < aSessionListe.length; index++) {
-							const mPtrSession = aSessionListe[index];
-							await this.LadeSessionUebungen(mPtrSession.ID, aSessionParaDB.UebungParaDB)
-								.then((aUebungsListe) => {
-									mPtrSession.UebungsListe = aUebungsListe;
-								});
-						}//for
+				try {
+					aSessionListe.forEach((mPtrSession) => {
+						mPtrSession.UebungsListe = [];
+						SessionDB.StaticCheckMembers(mPtrSession);
+						mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+					});
+	
+					if (aSessionParaDB !== undefined) {
+						if (aSessionParaDB.UebungenBeachten) {
+							for (let mSessionIndex = 0; mSessionIndex < aSessionListe.length; mSessionIndex++) {
+								const mPtrSession = aSessionListe[mSessionIndex];
+								await this.LadeSessionUebungen(mPtrSession.ID, aSessionParaDB.UebungParaDB)
+									.then((aUebungsListe) => {
+										mPtrSession.UebungsListe = aUebungsListe;
+									});
+							}//for
+						}//if
 					}//if
-				}//if
+				} catch (error) {
+					console.error(error);
+				}
 				return aSessionListe;
 			});
 	}	
