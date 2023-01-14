@@ -61,6 +61,7 @@ export class HistoryComponent implements OnInit {
 	}
 
 	public Draw(aDiaTyp: any): void {
+		const that = this;
 		this.Diagramme = [];
 		this.ChartData = [];
 		const mBorderWidth = 1;
@@ -107,7 +108,6 @@ export class HistoryComponent implements OnInit {
 			}
 
 			if (mPtrDiaUebung.Visible === true) {
-				mData = [];
 				mPtrDiaUebung.Relevant = false;
 				// Jedes Datum aus der Liste prüfen
 				this.fDbModul.DiagrammDatenListe.forEach((mPtrDiaDatum) => {
@@ -124,25 +124,37 @@ export class HistoryComponent implements OnInit {
 								switch (aDiaTyp) {
 									case 'line': {
 										let mLineData = mData.find((mData) => {
-											return (mData.name === mPtrDiaUebung.UebungName);
+											return (mData.name === mPtrDiaDatum.Datum.toDateString());
 										});
 
 										if (mLineData === undefined) {
-											mLineData = { name: mPtrDiaUebung.UebungName, series: [] };
+											mLineData = { name: mPtrDiaDatum.Datum.toDateString(), series: [] };
 											mData.push(mLineData);
+											this.ChartData.push(mLineData);
 										}
 
-										mDataPoint = mLineData.series.find((mDataPoint) => {
-											return (mDataPoint.name === mPtrDiaDatum.Datum.toDateString())
+										mDataPoint = mLineData.series.find((mSuchPoint) => {
+											return (mSuchPoint.name === mPtrDiaUebung.UebungName)
 										});
                                   
 										if (mDataPoint === undefined) {
-											mDataPoint = { name: mPtrDiaDatum.Datum.toDateString(), value: 0 };
+											mDataPoint = { name: mPtrDiaUebung.UebungName, value: 0 };
 											mLineData.series.push(mDataPoint);
 										}
 
-										mDataPoint.value = mMaxWeight;
-										this.ChartData.push(mLineData);
+										if (mLineData.series.find((mSuch) => { 
+											return (mSuch.value > mMaxWeight && mSuch.name === mPtrDiaUebung.UebungName);
+										}) === undefined) {
+											mDataPoint.value = mMaxWeight;
+										}
+
+
+										// if (mLineData.series.find((mSuch) => { 
+										// 	return (mSuch.value > mMaxWeight && mSuch.name === mPtrDiaUebung.UebungName);
+										// }) === undefined) {
+										// 	mDataPoint.value = mMaxWeight;
+										// 	this.ChartData.push(mLineData);
+										// }
 										break;
 									} // case line
 									case 'bar': {
@@ -151,7 +163,7 @@ export class HistoryComponent implements OnInit {
 										});
 
 										if (mBarData === undefined) {
-											mBarData = { name: mPtrDiaUebung.UebungName, value: 0 };
+											mBarData = { name: mPtrDiaUebung.UebungName, value: 0  };
 											mData.push(mBarData);
 										}
 
