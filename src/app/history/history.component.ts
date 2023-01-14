@@ -124,26 +124,26 @@ export class HistoryComponent implements OnInit {
 								switch (aDiaTyp) {
 									case 'line': {
 										let mLineData = mData.find((mData) => {
-											return (mData.name === mPtrDiaDatum.Datum.toDateString());
+											return (mData.name === mPtrDiaUebung.UebungName);
 										});
 
 										if (mLineData === undefined) {
-											mLineData = { name: mPtrDiaDatum.Datum.toDateString(), series: [] };
+											mLineData = { name: mPtrDiaUebung.UebungName, series: [] };
 											mData.push(mLineData);
-											this.ChartData.push(mLineData);
+											that.ChartData.push(mLineData);
 										}
 
 										mDataPoint = mLineData.series.find((mSuchPoint) => {
-											return (mSuchPoint.name === mPtrDiaUebung.UebungName)
+											return (mSuchPoint.name === mPtrDiaDatum.Datum.toDateString())
 										});
                                   
 										if (mDataPoint === undefined) {
-											mDataPoint = { name: mPtrDiaUebung.UebungName, value: 0 };
+											mDataPoint = { name: mPtrDiaDatum.Datum.toDateString(), value: 0 };
 											mLineData.series.push(mDataPoint);
 										}
 
 										if (mLineData.series.find((mSuch) => { 
-											return (mSuch.value > mMaxWeight && mSuch.name === mPtrDiaUebung.UebungName);
+											return (mSuch.value > mMaxWeight && mSuch.name === mPtrDiaDatum.Datum.toDateString());
 										}) === undefined) {
 											mDataPoint.value = mMaxWeight;
 										}
