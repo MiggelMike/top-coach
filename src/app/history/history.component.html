@@ -98,22 +98,22 @@
                 </ng-template>
 
                 <ng-template #BarChart> 
-                    <ngx-charts-bar-vertical 
+                    <ngx-charts-bar-vertical-2d 
                     (window:resize)="onResize($event)"
                     [view]="[chartWidth,chartHeight]"
                     [results]="ChartData"
                     [xAxisLabel]="'Products'"
                     [legendTitle]="'Product Sale Chart'"
                     [yAxisLabel]="'Sale'"
-                    [legend]="false"
+                    [legend]="true"
                     [showXAxisLabel]="false"
                     [showYAxisLabel]="false"
                     [xAxis]="true"
                     [yAxis]="true"
                     [gradient]="true">
-                </ngx-charts-bar-vertical>
-        
-                </ng-template>
+                </ngx-charts-bar-vertical-2d>
+
+               </ng-template>
             </div>
         </mat-tab> 
     </mat-tab-group>

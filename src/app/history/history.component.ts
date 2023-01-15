@@ -60,6 +60,8 @@ export class HistoryComponent implements OnInit {
 		this.Draw(this.DiaTyp);
 	}
 
+	legendData = ['a','b'];
+
 	public Draw(aDiaTyp: any): void {
 		const that = this;
 		this.Diagramme = [];
@@ -119,7 +121,7 @@ export class HistoryComponent implements OnInit {
 							mMaxWeight = mPtrDatumUebung.MaxWeight;
 							if (mMaxWeight > 0) {
 								mPtrDiaUebung.Relevant = true;
-								let mDataPoint: any;
+								let mSeriesPoint: any;
 								// Die verschiedenen Chart-Typen prüfen.
 								switch (aDiaTyp) {
 									case 'line': {
@@ -133,42 +135,53 @@ export class HistoryComponent implements OnInit {
 											that.ChartData.push(mLineData);
 										}
 
-										mDataPoint = mLineData.series.find((mSuchPoint) => {
+										mSeriesPoint = mLineData.series.find((mSuchPoint) => {
 											return (mSuchPoint.name === mPtrDiaDatum.Datum.toDateString())
 										});
                                   
-										if (mDataPoint === undefined) {
-											mDataPoint = { name: mPtrDiaDatum.Datum.toDateString(), value: 0 };
-											mLineData.series.push(mDataPoint);
+										if (mSeriesPoint === undefined) {
+											mSeriesPoint = { name: mPtrDiaDatum.Datum.toDateString(), value: 0 };
+											mLineData.series.push(mSeriesPoint);
 										}
 
 										if (mLineData.series.find((mSuch) => { 
 											return (mSuch.value > mMaxWeight && mSuch.name === mPtrDiaDatum.Datum.toDateString());
 										}) === undefined) {
-											mDataPoint.value = mMaxWeight;
+											mSeriesPoint.value = mMaxWeight;
 										}
-
-
-										// if (mLineData.series.find((mSuch) => { 
-										// 	return (mSuch.value > mMaxWeight && mSuch.name === mPtrDiaUebung.UebungName);
-										// }) === undefined) {
-										// 	mDataPoint.value = mMaxWeight;
-										// 	this.ChartData.push(mLineData);
-										// }
 										break;
-									} // case line
+									} // <-- case line
 									case 'bar': {
+	// 									"name": "Germany",
+    // "series": [
+    //   {
+    //     "name": "2010",
+    //     "value": 40632,
+    //     "extra": {
+    //       "code": "de"
+    //     }
+    //   }
 										let mBarData = mData.find((mData) => {
-											return (mData.name === mPtrDiaUebung.UebungName);
+											return (mData.name === mPtrDiaDatum.Datum.toDateString());
 										});
 
 										if (mBarData === undefined) {
-											mBarData = { name: mPtrDiaUebung.UebungName, value: 0  };
+											mBarData = { "name": mPtrDiaDatum.Datum.toDateString(), "series": [] };
 											mData.push(mBarData);
+											this.ChartData.push(mBarData);
 										}
 
-										mBarData.value = mMaxWeight;
-										this.ChartData.push(mBarData);
+										if (mSeriesPoint === undefined) {
+											mSeriesPoint = { name: mPtrDiaUebung.UebungName, value: 0, "extra": { "code":  mPtrDiaDatum.Datum.toDateString()}};
+											mBarData.series.push(mSeriesPoint);
+										}
+
+										if (mBarData.series.find((mSuch) => { 
+											return (mSuch.value > mMaxWeight && mSuch.name === mPtrDiaUebung.UebungName);
+										}) === undefined) {
+											mSeriesPoint.value = mMaxWeight;
+										}
+
 										break;
 									} // bar
 								}//switch
