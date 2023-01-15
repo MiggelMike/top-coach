@@ -87,7 +87,7 @@
                     [results]="ChartData"
                     [xAxisLabel]="'Date'"
                     [legendTitle]="'Exercises'"
-                    [yAxisLabel]="'Sale'"
+                    [yAxisLabel]="'Weight'"
                     [legend]="true"
                     [showXAxisLabel]="false"
                     [showYAxisLabel]="false"
@@ -98,21 +98,22 @@
                 </ng-template>
 
                 <ng-template #BarChart> 
-                    <ngx-charts-bar-vertical-2d 
-                    (window:resize)="onResize($event)"
-                    [view]="[chartWidth,chartHeight]"
-                    [results]="ChartData"
-                    [xAxisLabel]="'Products'"
-                    [legendTitle]="'Product Sale Chart'"
-                    [yAxisLabel]="'Sale'"
-                    [legend]="true"
-                    [showXAxisLabel]="false"
-                    [showYAxisLabel]="false"
-                    [xAxis]="true"
-                    [yAxis]="true"
-                    [gradient]="true">
-                </ngx-charts-bar-vertical-2d>
-
+                    <ng-container *ngFor="let Dia of Diagramme">
+                        <ngx-charts-bar-vertical-2d 
+                            (window:resize)="onResize($event)"
+                            [view]="[chartWidth,chartHeight]"
+                            [results]="Dia.ChartData"
+                            [xAxisLabel]="'Products'"
+                            [legendTitle]="Dia.UebungName"
+                            [yAxisLabel]="'Weight'"
+                            [legend]="true"
+                            [showXAxisLabel]="false"
+                            [showYAxisLabel]="false"
+                            [xAxis]="true"
+                            [yAxis]="true"
+                            [gradient]="true">
+                        </ngx-charts-bar-vertical-2d>
+                    </ng-container>
                </ng-template>
             </div>
         </mat-tab> 

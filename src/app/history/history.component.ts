@@ -1,4 +1,3 @@
-import { MatExpansionPanel } from '@angular/material/expansion';
 import { DiaUebungSettings } from './../../Business/Diagramm/Diagramm';
 import { DexieSvcService, SessionParaDB } from 'src/app/services/dexie-svc.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -21,10 +20,10 @@ export class HistoryComponent implements OnInit {
 	LadeLimit: number = 10;
 	public repMask = repMask;
 	public AppData: AppData;
-	public Diagramme: Array<Diagramm> = [];
 	public DiaTyp: string = 'line';
 	public DiaUebungsListe: Array<DiaUebung> = [];
 	public DiaUebungSettingsListe: Array<DiaUebungSettings> = [];
+	public Diagramme: Array<Chart> = [];
 	chartWidth: number = 0;
 	chartHeight: number = 0;
 	ChartData: Array<Object> = [];
@@ -68,15 +67,12 @@ export class HistoryComponent implements OnInit {
 		this.ChartData = [];
 		const mBorderWidth = 1;
 		let mData = [];
-		const mDiagramm: Diagramm = new Diagramm();
-		mDiagramm.type = aDiaTyp;
-		mDiagramm.data.labels = [];
+		const mDiagramm: Array<object> = [];
 		
 		this.DiaUebungsListe = [];
 		let mUebungsNamen = [];
 		for (let index = 0; index < this.fDbModul.DiagrammDatenListe.length; index++) {
 			const mPtrDiaDatum: DiaDatum = this.fDbModul.DiagrammDatenListe[index];
-			mDiagramm.data.labels.push(mPtrDiaDatum.Datum.toDateString());
 			mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDiaUebung) => {
 				if (mUebungsNamen.indexOf(mPtrDiaUebung.UebungName) === -1) {
 					mUebungsNamen.push(mPtrDiaUebung.UebungName);
@@ -152,15 +148,6 @@ export class HistoryComponent implements OnInit {
 										break;
 									} // <-- case line
 									case 'bar': {
-	// 									"name": "Germany",
-    // "series": [
-    //   {
-    //     "name": "2010",
-    //     "value": 40632,
-    //     "extra": {
-    //       "code": "de"
-    //     }
-    //   }
 										let mBarData = mData.find((mData) => {
 											return (mData.name === mPtrDiaDatum.Datum.toDateString());
 										});
@@ -180,6 +167,19 @@ export class HistoryComponent implements OnInit {
 											return (mSuch.value > mMaxWeight && mSuch.name === mPtrDiaUebung.UebungName);
 										}) === undefined) {
 											mSeriesPoint.value = mMaxWeight;
+
+											let mChart: Chart = this.Diagramme.find((mSuchChart) => {
+												return (mSuchChart.UebungName === mPtrDiaUebung.UebungName);
+
+											});
+
+											if (mChart === undefined) {
+												mChart = new Chart();
+												mChart.UebungName = mPtrDiaUebung.UebungName;
+												this.Diagramme.push(mChart);
+											}
+
+											mChart.ChartData.push(mBarData);
 										}
 
 										break;
@@ -191,8 +191,6 @@ export class HistoryComponent implements OnInit {
 				}); // forEach -> Datum
 			}
 		});
-	
-		this.Diagramme.push(mDiagramm);
 	}
 
 	Save() {
@@ -267,4 +265,9 @@ export class HistoryComponent implements OnInit {
 		this.DiaTyp = 'line';
 		setTimeout( () => this.DoDia(), 1000);
 	}
+}
+
+class Chart {
+	UebungName: string = '';
+	ChartData: Array<Object> = [];
 }
