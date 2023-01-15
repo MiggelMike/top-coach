@@ -191,6 +191,7 @@ export class HistoryComponent implements OnInit {
 				}); // forEach -> Datum
 			}
 		});
+		const x = 0;
 	}
 
 	Save() {
