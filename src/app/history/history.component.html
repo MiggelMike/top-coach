@@ -103,7 +103,7 @@
                             (window:resize)="onResize($event)"
                             [view]="[chartWidth,chartHeight]"
                             [results]="Dia.ChartData"
-                            [xAxisLabel]="'Products'"
+                            [xAxisLabel]="Dia.UebungName"
                             [legendTitle]="Dia.UebungName"
                             [yAxisLabel]="'Weight'"
                             [legend]="true"
@@ -111,7 +111,7 @@
                             [showYAxisLabel]="false"
                             [xAxis]="true"
                             [yAxis]="true"
-                            [gradient]="true">
+                            [gradient]="false">
                         </ngx-charts-bar-vertical-2d>
                     </ng-container>
                </ng-template>

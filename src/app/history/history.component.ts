@@ -159,7 +159,7 @@ export class HistoryComponent implements OnInit {
 										}
 
 										if (mSeriesPoint === undefined) {
-											mSeriesPoint = { name: mPtrDiaUebung.UebungName, value: 0, "extra": { "code":  mPtrDiaDatum.Datum.toDateString()}};
+											mSeriesPoint = { name: mPtrDiaDatum.Datum.toDateString(), value: 0, "extra": { "code":  mPtrDiaUebung.UebungName}};
 											mBarData.series.push(mSeriesPoint);
 										}
 
