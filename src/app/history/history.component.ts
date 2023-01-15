@@ -193,7 +193,6 @@ export class HistoryComponent implements OnInit {
 
 											mChart.ChartData.push(mBarData);
 										}
-
 										break;
 									} // bar
 								}//switch
