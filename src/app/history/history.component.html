@@ -123,6 +123,9 @@
                                     [xAxis]="true"
                                     [yAxis]="true"
                                     [gradient]="false">
+                                    <ng-template #tooltipTemplate let-model="model">
+                                        {{ToolTip(Dia,model)}}
+                                      </ng-template>
                                 </ngx-charts-bar-vertical-2d>
                             </mat-expansion-panel>
                         </mat-accordion>

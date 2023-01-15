@@ -1,13 +1,13 @@
 import { DiaUebungSettings } from './../../Business/Diagramm/Diagramm';
 import { DexieSvcService, SessionParaDB } from 'src/app/services/dexie-svc.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ContentChild, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ISession } from 'src/Business/Session/Session';
 import { repMask } from './../../app/app.module';
 import { AppData } from 'src/Business/Coach/Coach';
-import { Diagramm } from '../bausteine/charts/charts.component';
 import { DiaUebung, DiaDatum } from 'src/Business/Diagramm/Diagramm';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
+
 
 
 @Component({
@@ -26,7 +26,9 @@ export class HistoryComponent implements OnInit {
 	public Diagramme: Array<Chart> = [];
 	chartWidth: number = 0;
 	chartHeight: number = 0;
-	ChartData: Array<Object> = [];
+	ChartData: Array<ChartHelper> = [];
+	@ContentChild('legendEntryTemplate') legendEntryTemplate: TemplateRef<any>;
+
 
 	@ViewChild('LineChart') LineChart: any;
 	@ViewChild('ExercisesInChart') ExercisesInChart: any;
@@ -59,7 +61,11 @@ export class HistoryComponent implements OnInit {
 		this.Draw(this.DiaTyp);
 	}
 
-	legendData = ['a','b'];
+	ToolTip(aDia: any, aBarPoint: BarPoint ):string {
+		const x = aDia;
+		return aDia.UebungName  + ' | ' + aBarPoint.name + ' | ' + aBarPoint.value;
+		// return aModel.code + ' ' ;
+	}
 
 	public Draw(aDiaTyp: any): void {
 		const that = this;
@@ -148,25 +154,31 @@ export class HistoryComponent implements OnInit {
 										break;
 									} // <-- case line
 									case 'bar': {
-										let mBarData = mData.find((mData) => {
+										let mBarPoint: BarPoint;
+										let mBarData: ChartHelper = mData.find((mData) => {
 											return (mData.name === mPtrDiaDatum.Datum.toDateString());
-										});
+										}) as ChartHelper;
 
 										if (mBarData === undefined) {
-											mBarData = { "name": mPtrDiaDatum.Datum.toDateString(), "series": [] };
+											mBarData = new ChartHelper();
+											mBarData.name = mPtrDiaDatum.Datum.toDateString();
 											mData.push(mBarData);
 											this.ChartData.push(mBarData);
 										}
 
-										if (mSeriesPoint === undefined) {
-											mSeriesPoint = { name: mPtrDiaDatum.Datum.toDateString(), value: 0, "extra": { "code":  mPtrDiaUebung.UebungName}};
-											mBarData.series.push(mSeriesPoint);
+										if (mBarData.series.length === 0) {
+												mBarPoint = new BarPoint();
+												mBarPoint.name = mPtrDiaDatum.Datum.toDateString();
+												mBarPoint.value = 0;
+												mBarPoint.extra = { code: mPtrDiaUebung.UebungName };
+												mBarData.series.push(mBarPoint)
 										}
+										mBarPoint = mBarData.series[0];
 
 										if (mBarData.series.find((mSuch) => { 
 											return (mSuch.value > mMaxWeight && mSuch.name === mPtrDiaUebung.UebungName);
 										}) === undefined) {
-											mSeriesPoint.value = mMaxWeight;
+											mBarPoint.value = mMaxWeight;
 
 											let mChart: Chart = this.Diagramme.find((mSuchChart) => {
 												return (mSuchChart.UebungName === mPtrDiaUebung.UebungName);
@@ -191,7 +203,6 @@ export class HistoryComponent implements OnInit {
 				}); // forEach -> Datum
 			}
 		});
-		const x = 0;
 	}
 
 	Save() {
@@ -271,4 +282,15 @@ export class HistoryComponent implements OnInit {
 class Chart {
 	UebungName: string = '';
 	ChartData: Array<Object> = [];
+}
+
+class BarPoint {
+	name: string;
+	value: any;
+	extra: { code: any } = null;
+}
+
+class ChartHelper {
+	name: string;
+	series: Array<any> = [];
 }
