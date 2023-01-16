@@ -99,34 +99,35 @@
                 </ng-template>
 
                 <ng-template #BarChart> 
-                    <ng-container *ngFor="let Dia of Diagramme">
+                    <ng-container *ngFor="let Dia of ChartData; index as i">
                         <mat-accordion #accSession="matAccordion" multi="true">
                             <mat-expansion-panel #ExercisesInChart class="HG-01">
                                 <mat-expansion-panel-header>
                                     <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="flex-start center">
                                             <div class="ml-10" fxLayout="column" fxFlex="155px" >
-                                                <span>{{Dia.UebungName}}</span>
+                                                <span>{{Dia.name}}</span>
                                             </div>
                                     </div>
                                 </mat-expansion-panel-header>
                                 
-                                <ngx-charts-bar-vertical-2d 
+                                <ngx-charts-bar-vertical 
                                     (window:resize)="onResize($event)"
                                     [view]="[chartWidth,chartHeight]"
-                                    [results]="Dia.ChartData"
-                                    [xAxisLabel]="Dia.UebungName"
-                                    [legendTitle]="Dia.UebungName"
+                                    [results]="Dia.series"
+                                    [xAxisLabel]="" 
+                                    [legendTitle]=""
                                     [yAxisLabel]="'Weight'"
                                     [legend]="false"
                                     [showXAxisLabel]="false"
                                     [showYAxisLabel]="false"
                                     [xAxis]="true"
                                     [yAxis]="true"
-                                    [gradient]="false">
+                                    [customColors]="Dia.colors"
+                                    [gradient]="true">
                                     <ng-template #tooltipTemplate let-model="model">
                                         {{ToolTip(Dia,model)}}
                                       </ng-template>
-                                </ngx-charts-bar-vertical-2d>
+                                </ngx-charts-bar-vertical>
                             </mat-expansion-panel>
                         </mat-accordion>
 
