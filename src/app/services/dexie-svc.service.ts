@@ -241,96 +241,110 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
-	public async LadeDiagrammData(aDiagrammDatenListe: Array<DiaDatum>, aLimit:number, aExtraFn?: ExtraFn) {
-		if (this.MustLoadDiagramData === true) {
-			this.MustLoadDiagramData = false;
-			try {
-				const mUebungLadePara: UebungParaDB = new UebungParaDB();
-				mUebungLadePara.SaetzeBeachten = true;
-				await Promise.all([SessionStatus.Fertig, SessionStatus.FertigTimeOut].map(
-					mSuchStatus => this.SessionTable.where({
-						Kategorie02: mSuchStatus
-					})
-						.limit(aLimit)
-						.toArray()
-						.then(async (aSessionListe) => {
-							for (let mSessionIndex = 0; mSessionIndex < aSessionListe.length; mSessionIndex++) {
-								const mPtrSession: Session = aSessionListe[mSessionIndex];
-								if ((mPtrSession.GestartedWann === null) || (mPtrSession.GestartedWann === undefined))
-									continue;
-								const mNurSessionDatum = new Date(mPtrSession.GestartedWann.toDateString());
-								SessionDB.StaticCheckMembers(mPtrSession);
-								mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
-								// Jetzt für mPtrSession die Übungen laden
-								await this.LadeSessionUebungen(mPtrSession.ID, mUebungLadePara)
-									.then((mUebungsListe) => {
-										for (let index2 = 0; index2 < mUebungsListe.length; index2++) {
-											const mPtrUebung: Uebung = mUebungsListe[index2];
-											for (let index2 = 0; index2 < mPtrUebung.SatzListe.length; index2++) {
-												const mPtrSatz = mPtrUebung.SatzListe[index2];
-												if (mPtrSatz.SatzTyp === SatzTyp.Training &&
-													mPtrSatz.Status === SatzStatus.Fertig) {
-													let mAktuellesDiaDatum: DiaDatum;
+	public async LadeDiagrammData(aDiagrammDatenListe: Array<DiaDatum>, aVonDatum: Date, aBisDatum: Date, aLimit: number, aExtraFn?: ExtraFn) {
+		let mBisDatum: Date = aBisDatum;
+		if (aBisDatum < cMaxDatum)
+			mBisDatum.setDate(aBisDatum.getDate() + 1);
+		else
+			mBisDatum = cMinDatum;
+		
+		aBisDatum.setHours(0, 0, 0, 0);
+		aVonDatum.setHours(0, 0, 0, 0);
+		
+		try {
+			const mUebungLadePara: UebungParaDB = new UebungParaDB();
+			mUebungLadePara.SaetzeBeachten = true;
+			await Promise.all([SessionStatus.Fertig, SessionStatus.FertigTimeOut].map(
+				mSuchStatus => this.SessionTable.where({
+					Kategorie02: mSuchStatus
+				})
+					// .and((mSession) => {
+					// 	return ((mSession.Datum.valueOf() >= aVonDatum.valueOf()) && (mSession.Datum.valueOf() < mBisDatum.valueOf()));
+					// })
+					.limit(aLimit)
+					.toArray()
+					.then(async (aSessionListe) => {
+						for (let mSessionIndex = 0; mSessionIndex < aSessionListe.length; mSessionIndex++) {
+							const mPtrSession: Session = aSessionListe[mSessionIndex];
+							const t = 0;
+							if ((mPtrSession.GestartedWann === null) || (mPtrSession.GestartedWann === undefined))
+								continue;
+							
+							// if (!((mPtrSession.Datum.valueOf() >= aVonDatum.valueOf()) && (mPtrSession.Datum.valueOf() < mBisDatum.valueOf())))
+							// 	continue;
+								
+							
+							const mNurSessionDatum = new Date(mPtrSession.GestartedWann.toDateString());
+							SessionDB.StaticCheckMembers(mPtrSession);
+							mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+							// Jetzt für mPtrSession die Übungen laden
+							await this.LadeSessionUebungen(mPtrSession.ID, mUebungLadePara)
+								.then((mUebungsListe) => {
+									for (let index2 = 0; index2 < mUebungsListe.length; index2++) {
+										const mPtrUebung: Uebung = mUebungsListe[index2];
+										for (let index2 = 0; index2 < mPtrUebung.SatzListe.length; index2++) {
+											const mPtrSatz = mPtrUebung.SatzListe[index2];
+											if (mPtrSatz.SatzTyp === SatzTyp.Training &&
+												mPtrSatz.Status === SatzStatus.Fertig) {
+												let mAktuellesDiaDatum: DiaDatum;
 
-													mAktuellesDiaDatum = this.DiagrammDatenListe.find((mDiaDatum) => {
-														if (mDiaDatum.Datum.valueOf() === mNurSessionDatum.valueOf())
-															return mDiaDatum;
-														return undefined;
-													});// Find DiaDatum
+												mAktuellesDiaDatum = this.DiagrammDatenListe.find((mDiaDatum) => {
+													if (mDiaDatum.Datum.valueOf() === mNurSessionDatum.valueOf())
+														return mDiaDatum;
+													return undefined;
+												});// Find DiaDatum
 						
-													if (mAktuellesDiaDatum === undefined) {
-														mAktuellesDiaDatum = new DiaDatum();
-														mAktuellesDiaDatum.Datum = mNurSessionDatum;
-														aDiagrammDatenListe.push(mAktuellesDiaDatum);
-													}
+												if (mAktuellesDiaDatum === undefined) {
+													mAktuellesDiaDatum = new DiaDatum();
+													mAktuellesDiaDatum.Datum = mNurSessionDatum;
+													aDiagrammDatenListe.push(mAktuellesDiaDatum);
+												}
 
-													// Suche in der Diagramm-Uebungsliste nach der Session-Übung   
-													let mAktuelleDiaUebung: DiaUebung = mAktuellesDiaDatum.DiaUebungsListe.find((mDiaUebung) => {
-														if (mDiaUebung.UebungID === mPtrUebung.FkUebung)
-															return mDiaUebung;
-														return undefined;
-													}); // Find DiaUebung 
+												// Suche in der Diagramm-Uebungsliste nach der Session-Übung   
+												let mAktuelleDiaUebung: DiaUebung = mAktuellesDiaDatum.DiaUebungsListe.find((mDiaUebung) => {
+													if (mDiaUebung.UebungID === mPtrUebung.FkUebung)
+														return mDiaUebung;
+													return undefined;
+												}); // Find DiaUebung 
 												
-													// Wurde die Session-Übung in der Diagramm-Uebungsliste gefunden?
-													if (mAktuelleDiaUebung === undefined) {
-														// Die Session-Übung wurde nicht in der Diagramm-Uebungsliste gefunden.
-														mAktuelleDiaUebung = new DiaUebung();
-														mAktuelleDiaUebung.UebungID = mPtrUebung.FkUebung;
-														mAktuelleDiaUebung.UebungName = mPtrUebung.Name;
-														mAktuelleDiaUebung.Visible = true;
-														mAktuellesDiaDatum.DiaUebungsListe.push(mAktuelleDiaUebung);
-													}//if
+												// Wurde die Session-Übung in der Diagramm-Uebungsliste gefunden?
+												if (mAktuelleDiaUebung === undefined) {
+													// Die Session-Übung wurde nicht in der Diagramm-Uebungsliste gefunden.
+													mAktuelleDiaUebung = new DiaUebung();
+													mAktuelleDiaUebung.UebungID = mPtrUebung.FkUebung;
+													mAktuelleDiaUebung.UebungName = mPtrUebung.Name;
+													mAktuelleDiaUebung.Visible = true;
+													mAktuellesDiaDatum.DiaUebungsListe.push(mAktuelleDiaUebung);
+												}//if
 												
-													// Alle Arbeitssätze,die zu dem Zeitpunkt in "mDiaUebung.Datum" gemacht worden.
-													// mAktuelleDiaUebung.ArbeitsSatzListe.forEach((mSatz) => {
-													// 	mSatz.Datum = mSatz.Status === SatzStatus.Fertig ? mPtrUebung.Datum : undefined;
-													// });
-													// this.SaetzeSpeichern(mAktuelleDiaUebung.ArbeitsSatzListe);
-													mAktuelleDiaUebung.ArbeitsSatzListe.push(mPtrSatz);
-												} // if
-											} //for
-										}
+												// Alle Arbeitssätze,die zu dem Zeitpunkt in "mDiaUebung.Datum" gemacht worden.
+												// mAktuelleDiaUebung.ArbeitsSatzListe.forEach((mSatz) => {
+												// 	mSatz.Datum = mSatz.Status === SatzStatus.Fertig ? mPtrUebung.Datum : undefined;
+												// });
+												// this.SaetzeSpeichern(mAktuelleDiaUebung.ArbeitsSatzListe);
+												mAktuelleDiaUebung.ArbeitsSatzListe.push(mPtrSatz);
+											} // if
+										} //for
+									}
 										
-										aDiagrammDatenListe.sort((d1, d2) => {
-											if (d1.Datum.valueOf() < d2.Datum.valueOf())
-												return -1;
+									aDiagrammDatenListe.sort((d1, d2) => {
+										if (d1.Datum.valueOf() < d2.Datum.valueOf())
+											return -1;
 			
-											if (d1.Datum.valueOf() > d2.Datum.valueOf())
-												return 1;
+										if (d1.Datum.valueOf() > d2.Datum.valueOf())
+											return 1;
 			
-											return 0;
-										});
-
-										// if (aExtraFn != undefined)
-										// 	aExtraFn();
+										return 0;
 									});
-							}
-						})//then
-					).flat());
-			} catch (err) {
-				this.MustLoadDiagramData = true;
-				console.error(err);
-			}
+
+									// if (aExtraFn != undefined)
+									// 	aExtraFn();
+								});
+						}
+					})//then
+			).flat());
+		} catch (err) {
+			console.error(err);
 		}
 		
 		if (aExtraFn !== undefined)
@@ -418,7 +432,7 @@ export class DexieSvcService extends Dexie {
 		// 		if (aExtraFn !== undefined)
 		// 			aExtraFn();
 		// 	});//then
-	}
+	}s
 	
 	public DoWorker(aAction: WorkerAction, aExtraFn?: ExtraFn) {
 		// const that: AnstehendeSessionsComponent = this;
@@ -441,12 +455,12 @@ export class DexieSvcService extends Dexie {
 						break;
 					
 					case WorkerAction.LadeDiagrammDaten:
-						if (this.MustLoadDiagramData === true) {
-							this.LadeAppData().then((aAppRec) => {
-								this.AppRec = aAppRec;
-								this.LadeDiagrammData(this.DiagrammDatenListe, aAppRec.MaxHistorySessions, aExtraFn);
-							});
-						}
+						// if (this.MustLoadDiagramData === true) {
+						// 	this.LadeAppData().then((aAppRec) => {
+						// 		this.AppRec = aAppRec;
+						// 		this.LadeDiagrammData(this.DiagrammDatenListe, aAppRec.MaxHistorySessions, aExtraFn);
+						// 	});
+						// }
 						break;
 				}//switch
 			});
@@ -647,11 +661,11 @@ export class DexieSvcService extends Dexie {
 		}
 
 		    //    Dexie.delete("ConceptCoach");
-		this.version(11).stores({
+		this.version(12).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
-			SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02],[FK_Programm+Kategorie02],ListenIndex",
+			SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02],[FK_Programm+Kategorie02],ListenIndex,GestartedWann",
 			SatzDB: "++ID,UebungID,Datum",
 			MuskelGruppe: "++ID,Name,MuscleGroupKategorie01",
 			Equipment: "++ID,Name",

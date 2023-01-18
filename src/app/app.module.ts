@@ -105,8 +105,9 @@ import { StoppuhrComponent } from './stoppuhr/stoppuhr.component';
 import { HistoryComponent } from './history/history.component';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartsComponent } from './bausteine/charts/charts.component';
-import { NgxChartsModule }from '@swimlane/ngx-charts';
-
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
 
 
 //import { MatBadgeModule } from '@angular/material/m/MatBadgeModule';
@@ -244,7 +245,8 @@ export const floatMask = createNumberMask({
       MatRadioModule,
       MatTabsModule,
       MatProgressBarModule,
-      MatTooltipModule, 
+      MatTooltipModule,
+      MatDatepickerModule,MatInputModule,MatNativeDateModule,
         MatSliderModule,  
         MatToolbarModule,
         MatExpansionModule,
@@ -289,7 +291,9 @@ export const floatMask = createNumberMask({
         MatRippleModule,
         MatSidenavModule,
         MatSliderModule,
-        MatAutocompleteModule,
+    MatAutocompleteModule,
+
+
         // MatBadgeModule,
         // MatBottomSheetModule,
         MatButtonModule,
