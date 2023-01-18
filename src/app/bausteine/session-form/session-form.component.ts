@@ -434,19 +434,16 @@ export class SessionFormComponent implements OnInit {
 		})
 	}
 
-	private SaetzePruefen(aNeueSatzListe: Array<Satz>, aWarteSatzListe: Array<Satz>) {
-		// Prüfe nur soviel Sätze wie in aWarteSatzListe vorhanden sind 
-		for (let index = 0; index < aWarteSatzListe.length; index++) {
-			// Prüfe nur soviel Sätze wie in aNeuSatzListe vorhanden sind 
-			if (index >= aNeueSatzListe.length)
-				return;
-			
-			const mWarteSatzPtr: Satz = aWarteSatzListe[index];
-			const mNeuSatzPtr: Satz = aNeueSatzListe[index];
+	private SaetzePruefen(aQuellSatzListe: Array<Satz>, aZielSatzListe: Array<Satz>) {
+		// Prüfe nur soviel Sätze wie in aZielSatzListe vorhanden sind 
+		for (let index = 0; index < aZielSatzListe.length; index++) {
+			// Falls aZielSatzListe länger ist als aQuellSatzListe, nimm den letzten Satz der Quell-Satzliste als Vorgabe
+			const mQuellSatzPtr: Satz = (index < aQuellSatzListe.length) ? aQuellSatzListe[index] : aQuellSatzListe[aQuellSatzListe.length-1];
+			const mZielSatzPtr: Satz = aZielSatzListe[index];
 					
-			mWarteSatzPtr.GewichtNaechsteSession = mNeuSatzPtr.GewichtNaechsteSession;
-			mWarteSatzPtr.GewichtAusgefuehrt = mNeuSatzPtr.GewichtNaechsteSession;
-			mWarteSatzPtr.GewichtVorgabe = mNeuSatzPtr.GewichtNaechsteSession;
+			mZielSatzPtr.GewichtNaechsteSession = mQuellSatzPtr.GewichtNaechsteSession;
+			mZielSatzPtr.GewichtAusgefuehrt = mQuellSatzPtr.GewichtNaechsteSession;
+			mZielSatzPtr.GewichtVorgabe = mQuellSatzPtr.GewichtNaechsteSession;
 		} //for
 	}
 
@@ -529,7 +526,6 @@ export class SessionFormComponent implements OnInit {
 							this.Programm.SessionListe.forEach(async (mProgrammSession) => {
 								// Ist die aktuelle Session ungleich der Gesicherten?
 								if (mProgrammSession.ID !== mSessionFormSession.ID) {
-									let mUebungVorhanden: boolean = false;
 									// Prüfe alle Übungen der aktuellen Programm-Session
 									for (let index2 = 0; index2 < mProgrammSession.UebungsListe.length; index2++) {
 										const mProgrammSessionUebung = mProgrammSession.UebungsListe[index2];
@@ -539,7 +535,6 @@ export class SessionFormComponent implements OnInit {
 										if (mProgrammSessionUebung.FkUebung === mNeueUebung.FkUebung &&
 											mProgrammSessionUebung.FkProgress === mNeueUebung.FkProgress &&
 											mProgrammSessionUebung.ProgressGroup === mNeueUebung.ProgressGroup) {
-											mUebungVorhanden = true;
 											this.SaetzePruefen(mNeueUebung.AufwaermSatzListe, mProgrammSessionUebung.AufwaermSatzListe);
 											this.SaetzePruefen(mNeueUebung.ArbeitsSatzListe, mProgrammSessionUebung.ArbeitsSatzListe);
 											this.SaetzePruefen(mNeueUebung.AbwaermSatzListe, mProgrammSessionUebung.AbwaermSatzListe);
