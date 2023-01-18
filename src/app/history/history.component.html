@@ -1,75 +1,61 @@
 <app-toolbar></app-toolbar>
 <div class="container">
-    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutGap="20px" fxLayoutAlign="flex-start center" [style.margin-top]="'5px'">
-
-        <p class="font-bold">History</p>
-
-        <mat-form-field class="align-right"  fxFlex="100px">
-            <mat-label>Max sessions</mat-label>
-            <input matInput [textMask]="{mask: repMask, guide: false}" 
-                   [ngModel]="LadeLimit" 
-                   (focusout)="SetLadeLimit($event)" 
-                   type="text">
+    <p class="font-bold">History</p>
+    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutGap="5px" fxLayoutAlign="flex-start center" [style.margin-top]="'5px'">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-form-field>
+            <mat-label>Tip on calendar symbol</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input matStartDate placeholder="Start date" [(ngModel)]="fromDate" readonly>
+              <input matEndDate placeholder="End date" [(ngModel)]="toDate" readonly>
+            </mat-date-range-input>
+            <mat-date-range-picker #picker></mat-date-range-picker>
         </mat-form-field>
     </div>
 
-    <mat-tab-group  style="width:100%;height:100%">
-        <mat-tab  label="Sessions">
-            <app-programm02 
-                [showButtons]="false"
-                [showSaveButtons] = "false" 
-                [programmTyp] = "'history'"
-                [SessionListe] = "SessionListe"
-                [bearbeitbar]="false"
-                [StartButtonVisible]= "true"
-                [SofortSpeichern]= "true"
-                >
+    <mat-tab-group #matGroup style="width:100%;height:100%" (selectedTabChange)="onTabChanged($event)">
+        <mat-tab label="Sessions">
+            <app-programm02 [showButtons]="false" [showSaveButtons]="false" [programmTyp]="'history'"
+                [SessionListe]="SessionListe" [bearbeitbar]="false" [StartButtonVisible]="true"
+                [SofortSpeichern]="true">
             </app-programm02>
         </mat-tab>
 
-        <mat-tab  label="Charts">
-            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutGap="20px" fxLayoutAlign="center center" [style.margin-top]="'5px'">        
+        <mat-tab #matTabChart label="Charts">
+            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutGap="20px" fxLayoutAlign="center center"
+                [style.margin-top]="'5px'">
                 <mat-radio-group aria-label="Select a Diagram type">
-                        <mat-radio-button 
-                        [(ngModel)]="DiaTyp" 
-                        checked="true"  
-                        value="Line"
-                        (change)="DiaTypChanged($event,'line')" 
-                        >Line</mat-radio-button>
-                    <mat-radio-button  
-                    class="mg-left-5" 
-                    [(ngModel)]="DiaTyp" 
-                    (change)="DiaTypChanged($event,'bar')"     
-                    value="Bars">Bars</mat-radio-button>
+                    <mat-radio-button [(ngModel)]="DiaTyp" checked="true" value="Line"
+                        (change)="DiaTypChanged($event,'line')">Line</mat-radio-button>
+                    <mat-radio-button class="mg-left-5" [(ngModel)]="DiaTyp" (change)="DiaTypChanged($event,'bar')"
+                        value="Bars">Bars</mat-radio-button>
                 </mat-radio-group>
             </div>
 
             <mat-accordion #accSession="matAccordion" multi="true">
-                <mat-expansion-panel class="HG-01">
+                <mat-expansion-panel #ExercisesInChart class="HG-01">
                     <mat-expansion-panel-header>
-                        <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="flex-start center">
-                                <div class="ml-10" fxLayout="column" fxFlex="155px" >
-                                    <span>Exercises in chart</span>
-                                </div>
+                        <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start center">
+                            <div class="ml-10" fxLayout="column" fxFlex="155px">
+                                <span>Chart settings</span>
+                            </div>
                         </div>
                     </mat-expansion-panel-header>
 
-                    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="flex-start center">
+                    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start center">
                         <ng-container *ngFor="let DiaUebung of DiaUebungsListe">
                             <div fxLayout="column" fxLayoutGap="2px" fxFlex="50">
-                                <ng-container *ngIf="DiaUebung.Relevant" >
-                                    <mat-checkbox 
-                                        [(ngModel)]="DiaUebung.Visible"
-                                        (change)="onClickDiaUebung(DiaUebung, $event.checked)"
-                                        >{{DiaUebung.UebungName}}</mat-checkbox>
+                                <ng-container *ngIf="DiaUebung.Relevant">
+                                    <mat-checkbox [(ngModel)]="DiaUebung.Visible"
+                                        (change)="onClickDiaUebung(DiaUebung, $event.checked)">{{DiaUebung.UebungName}}</mat-checkbox>
                                 </ng-container>
-                                
+
                             </div>
                         </ng-container>
                     </div>
 
-                    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="center center">
-                        
+                    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center center">
+
                         <div class="center-item" layout-align="center center">
                             <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="Save()">Save</a>
                         </div>
@@ -77,14 +63,52 @@
                 </mat-expansion-panel>
             </mat-accordion>
 
+            <div #ChartContainer style="width:100%;">
+                <!-- <ng-container *ngIf="(sess.Kategorie02 === 3 || sess.Kategorie02 === 4 || sess.Kategorie02 === 5); then TitelNoShowPlan else TitelShowPlan"></ng-container> -->
+                
+                <ng-container *ngIf="ChartData.length > 0">
+                    <ng-container *ngIf="(DiaTyp === 'line'); then LineChart else BarChart"></ng-container>
+                    
+                    <ng-template #LineChart>
+                        <ngx-charts-line-chart (window:resize)="onResize($event)" [view]="[chartWidth,chartHeight]"
+                            [results]="ChartData" [xAxisLabel]="'Date'" [legendTitle]="'Exercises'" [yAxisLabel]="'Weight'"
+                            [legend]="true" [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
+                            [gradient]="false">
+                        </ngx-charts-line-chart>
+                    </ng-template>
 
-            <ng-container *ngFor="let Dia of Diagramme" >
-                <ng-container *ngIf="Dia.visible">
-                    <app-charts #line [ChartData]="Dia">
-                    </app-charts>  
+                    
+                    <ng-template #BarChart>
+                        <ng-container *ngFor="let Dia of ChartData; index as i">
+                            <div class="mg-top-2">
+                                <mat-accordion #accSession="matAccordion" multi="true">
+                                    <mat-expansion-panel #ExercisesInChart class="HG-01">
+                                        <mat-expansion-panel-header>
+                                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"
+                                                fxLayoutAlign="flex-start center">
+                                                <div class="ml-10" fxLayout="column" fxFlex="155px">
+                                                    <span>{{Dia.name}}</span>
+                                                </div>
+                                            </div>
+                                        </mat-expansion-panel-header>
+
+                                        <ngx-charts-bar-vertical (window:resize)="onResize($event)"
+                                            [view]="[chartWidth,chartHeight]" [results]="Dia.series" [xAxisLabel]=""
+                                            [legendTitle]="" [yAxisLabel]="'Weight'" [legend]="false"
+                                            [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
+                                            [customColors]="Dia.colors" [gradient]="true">
+                                            <ng-template #tooltipTemplate let-model="model">
+                                                {{ToolTip(Dia,model)}}
+                                            </ng-template>
+                                        </ngx-charts-bar-vertical>
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+                            </div>
+                        </ng-container>
+                    </ng-template>
                 </ng-container>
-            </ng-container>
-        </mat-tab> 
+            </div>
+        </mat-tab>
     </mat-tab-group>
 
 </div>
