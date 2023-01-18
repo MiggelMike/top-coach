@@ -20,8 +20,6 @@ import { DialogComponent, DialogData } from '../dialoge/hinweis/hinweis.componen
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
 import { DiaDatum, DiaUebung, DiaUebungSettings } from 'src/Business/Diagramm/Diagramm';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Diagramm } from '../bausteine/charts/charts.component';
-import { ChartTypeRegistry } from 'chart.js';
 var cloneDeep = require('lodash.clonedeep');
 
 
@@ -209,179 +207,7 @@ export class DexieSvcService extends Dexie {
 	public LangHantelListe: Array<Hantel> = [];
 	public HantelscheibenListe: Array<Hantelscheibe> = [];
 	public ProgressListe: Array<Progress> = [];
-	//#region Diagramme
 	public DiagrammDatenListe: Array<DiaDatum> = [];
-	public Diagramme: Array<Diagramm> = [];
-	public DiaUebungSettingsListe: Array<DiaUebungSettings> = [];
-	public DiaUebungsListe: Array<DiaUebung> = [];
-	public Charts: Array<Diagramm> = [];
-	public DrawOneChart(aChart: Diagramm, aDiaTyp: any): void {
-		const mBorderWidth = 1;
-		let mData = [];
-		aChart.type = aDiaTyp;
-		aChart.data.datasets = [];
-		aChart.data.labels = [];
-		this.DiaUebungsListe = [];
-		let mUebungsNamen = [];
-		for (let index = 0; index < this.DiagrammDatenListe.length; index++) {
-			const mPtrDiaDatum: DiaDatum = this.DiagrammDatenListe[index];
-			aChart.data.labels.push(mPtrDiaDatum.Datum.toDateString());
-			mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDiaUebung) => {
-				if (mUebungsNamen.indexOf(mPtrDiaUebung.UebungName) === -1) {
-					mUebungsNamen.push(mPtrDiaUebung.UebungName);
-					this.DiaUebungsListe.push(mPtrDiaUebung);
-
-					const mDiaUebungSetting = (this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
-						if (mPtrDiaUebungSetting.UebungID === mPtrDiaUebung.UebungID)
-							return true;
-						return false;
-					}));
-					if (mDiaUebungSetting !== undefined)
-						mPtrDiaUebung.Visible = mDiaUebungSetting.Visible;
-				}
-			});
-		} // for
-
-		// Jede Übung prüfen 
-		this.DiaUebungsListe.forEach((mPtrDiaUebung) => {
-			const mDiaUebungSetting = (this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
-				if (mPtrDiaUebungSetting.UebungID === mPtrDiaUebung.UebungID)
-					return true;
-				return false;
-			}));
-
-			if (mDiaUebungSetting === undefined) {
-				if (mPtrDiaUebung.ID === undefined)
-					this.InsertEineDiaUebung(mPtrDiaUebung)
-						.then((aID) => mPtrDiaUebung.ID = aID);
-	
-				this.DiaUebungSettingsListe.push(mPtrDiaUebung);
-			}
-
-			if (mPtrDiaUebung.Visible === true) {
-				mData = [];
-				mPtrDiaUebung.Relevant = false;
-				// Jedes Datum aus der Liste prüfen
-				this.DiagrammDatenListe.forEach((mPtrDiaDatum) => {
-					let mMaxWeight: number = 0;
-					// In der Übungsliste des Datums nach der Übung suchen 
-					mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDatumUebung) => {
-						// Ist die Übung gleich der zu prüfenden Übung und ist MaxWeight größer als das bisher ermittelte mMaxWeight? 
-						if (mPtrDatumUebung.Visible === true && mPtrDatumUebung.UebungID === mPtrDiaUebung.UebungID && mPtrDatumUebung.MaxWeight > mMaxWeight) {
-							mMaxWeight = mPtrDatumUebung.MaxWeight;
-							// Koordinaten-Daten für einen Diagramm-Punkt
-							mData.push({ x: mPtrDiaDatum.Datum.toDateString(), y: mMaxWeight });
-							if (mMaxWeight > 0) {
-								mPtrDiaUebung.Relevant = true;
-							} // if
-						}
-					});
-				}); // forEach -> Datum
-
-				if (mData.length > 0) {
-					aChart.data.datasets.push({
-						label: mPtrDiaUebung.UebungName,
-						data: mData,
-						borderWidth: mBorderWidth
-					});
-				}
-			}
-		});
-	}
-	public DrawDiagramm(aDiaTyp: any): void {
-		// const that = this;
-		// this.LadeDiaUebungen().then((mDiaUebungen) => {
-		// 	this.DiaUebungSettingsListe = mDiaUebungen;
-		// 	this.LadeAppData().then((aAppRec) => {
-		// 		this.AppRec = aAppRec;
-		// 		this.LadeDiagrammData(this.DiagrammDatenListe, aAppRec.MaxHistorySessions).then(() => {
-		// 			this.Diagramme = [];
-					// const mBorderWidth = 1;
-					// let mData = [];
-					// const mDiaTypen: any = ['line', 'bar'];
-					// for (let mDiaTypIndex = 0; mDiaTypIndex < mDiaTypen.length; mDiaTypIndex++) {
-					// 	const mDiaTyp: any = mDiaTypen[mDiaTypIndex];
-						
-					// 	this.Charts[mDiaTypIndex].type = mDiaTyp;
-					// 	this.Charts[mDiaTypIndex].data.datasets = [];
-					// 	this.Charts[mDiaTypIndex].data.labels = [];
-					// 	this.DiaUebungsListe = [];
-					// 	let mUebungsNamen = [];
-					// 	for (let index = 0; index < this.DiagrammDatenListe.length; index++) {
-					// 		const mPtrDiaDatum: DiaDatum = this.DiagrammDatenListe[index];
-					// 		this.Charts[mDiaTypIndex].data.labels.push(mPtrDiaDatum.Datum.toDateString());
-					// 		mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDiaUebung) => {
-					// 			if (mUebungsNamen.indexOf(mPtrDiaUebung.UebungName) === -1) {
-					// 				mUebungsNamen.push(mPtrDiaUebung.UebungName);
-					// 				this.DiaUebungsListe.push(mPtrDiaUebung);
-
-					// 				const mDiaUebungSetting = (this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
-					// 					if (mPtrDiaUebungSetting.UebungID === mPtrDiaUebung.UebungID)
-					// 						return true;
-					// 					return false;
-					// 				}));
-					// 				if (mDiaUebungSetting !== undefined)
-					// 					mPtrDiaUebung.Visible = mDiaUebungSetting.Visible;
-					// 			}
-					// 		});
-					// 	} // for
-
-					// 	// Jede Übung prüfen 
-					// 	this.DiaUebungsListe.forEach((mPtrDiaUebung) => {
-					// 		const mDiaUebungSetting = (this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
-					// 			if (mPtrDiaUebungSetting.UebungID === mPtrDiaUebung.UebungID)
-					// 				return true;
-					// 			return false;
-					// 		}));
-
-					// 		if (mDiaUebungSetting === undefined) {
-					// 			if (mPtrDiaUebung.ID === undefined)
-					// 				this.InsertEineDiaUebung(mPtrDiaUebung)
-					// 					.then((aID) => mPtrDiaUebung.ID = aID);
-				
-					// 			this.DiaUebungSettingsListe.push(mPtrDiaUebung);
-					// 		}
-
-					// 		if (mPtrDiaUebung.Visible === true) {
-					// 			mData = [];
-					// 			mPtrDiaUebung.Relevant = false;
-					// 			// Jedes Datum aus der Liste prüfen
-					// 			this.DiagrammDatenListe.forEach((mPtrDiaDatum) => {
-					// 				let mMaxWeight: number = 0;
-					// 				// In der Übungsliste des Datums nach der Übung suchen 
-					// 				mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDatumUebung) => {
-					// 					// Ist die Übung gleich der zu prüfenden Übung und ist MaxWeight größer als das bisher ermittelte mMaxWeight? 
-					// 					if (mPtrDatumUebung.Visible === true && mPtrDatumUebung.UebungID === mPtrDiaUebung.UebungID && mPtrDatumUebung.MaxWeight > mMaxWeight) {
-					// 						mMaxWeight = mPtrDatumUebung.MaxWeight;
-					// 						// Koordinaten-Daten für einen Diagramm-Punkt
-					// 						mData.push({ x: mPtrDiaDatum.Datum.toDateString(), y: mMaxWeight });
-					// 						if (mMaxWeight > 0) {
-					// 							mPtrDiaUebung.Relevant = true;
-					// 						} // if
-					// 					}
-					// 				});
-					// 			}); // forEach -> Datum
-
-					// 			if (mData.length > 0) {
-					// 				this.Charts[mDiaTypIndex].data.datasets.push({
-					// 					label: mPtrDiaUebung.UebungName,
-					// 					data: mData,
-					// 					borderWidth: mBorderWidth
-					// 				});
-					// 			}
-					// 		}
-					// 	});
-		// 			this.DrawOneChart(that.Charts[0], 'line');
-		// 			this.Diagramme.push(that.Charts[0]);
-		// 			that.Charts[1].data = that.Charts[0].data;
-		// 			that.Charts[1].type = 'bar';
-		// 			this.Diagramme.push(that.Charts[1]);
-		// 			// }//for
-		// 		});//then
-		// 	});
-		// });
-	}
-	//#endregion
 	public MustLoadDiagramData: boolean = true;
 	
 	private ProgramLadeStandardPara: ProgrammParaDB;
@@ -834,8 +660,6 @@ export class DexieSvcService extends Dexie {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
 		}
 
-		this.Charts[0] = new Diagramm();
-		this.Charts[1] = new Diagramm();
 		    //    Dexie.delete("ConceptCoach");
 		this.version(12).stores({
 			AppData: "++id",
@@ -852,8 +676,7 @@ export class DexieSvcService extends Dexie {
 			
 		});
 		this.InitDatenbank();
-		this.DrawDiagramm('line');
-}
+	}
 			
 	InitDatenbank() {
 		this.InitAll();
