@@ -30,6 +30,7 @@ export class HistoryComponent implements OnInit {
 	toDate: Date = new Date();
 	chartWidth: number = 0;
 	chartHeight: number = 400;
+//	LineChartData: Array<ChartHelper> = [];
 	ChartData: Array<ChartHelper> = [];
 	@ContentChild('legendEntryTemplate') legendEntryTemplate: TemplateRef<any>;
 
@@ -78,6 +79,7 @@ export class HistoryComponent implements OnInit {
 		const that = this;
 		this.Diagramme = [];
 		this.ChartData = [];
+		const mWorkChartData = [];
 		let mData = [];
 		
 		this.DiaUebungsListe = [];
@@ -92,6 +94,7 @@ export class HistoryComponent implements OnInit {
 		mDialogData.textZeilen[0] = 'Creating charts';
 		if (aDialogOn)
 			this.fLoadingDialog.Loading(mDialogData);
+		
 		try {
 			this.fDbModul.LadeDiagrammData(this.fDbModul.DiagrammDatenListe, mVonDatum, mBisDatum, 20).then(() => {
 				for (let index = 0; index < that.fDbModul.DiagrammDatenListe.length; index++) {
@@ -152,7 +155,7 @@ export class HistoryComponent implements OnInit {
 													// mLineData = { name: mPtrDiaUebung.UebungName, series: [] };
 													mLineData = { "name": mPtrDiaUebung.UebungName, "series": [] };
 													mData.push(mLineData);
-													that.ChartData.push(mLineData);
+													mWorkChartData.push(mLineData);
 												}
 
 												mSeriesPoint = mLineData.series.find((mSuchPoint) => {
@@ -181,7 +184,7 @@ export class HistoryComponent implements OnInit {
 													mBarData = new ChartHelper();
 													mBarData.name = mPtrDiaUebung.UebungName;
 													mData.push(mBarData);
-													this.ChartData.push(mBarData);
+													mWorkChartData.push(mBarData);
 												}
 
 												mBarPoint = mBarData.series.find((mSeriesPoint) => {
@@ -210,6 +213,7 @@ export class HistoryComponent implements OnInit {
 						}); // forEach -> Datum
 					}
 				});
+				this.ChartData = mWorkChartData;
 				this.fLoadingDialog.fDialog.closeAll();
 			});
 		} catch (error) {
@@ -220,9 +224,9 @@ export class HistoryComponent implements OnInit {
 	
 	Save() {
 		this.fDbModul.InsertDiaUebungen(this.DiaUebungSettingsListe);
-		this.fDbModul.LadeDiaUebungen().then((mDiaUebungen => {
-			this.DiaUebungSettingsListe = mDiaUebungen;
-		}));
+		// this.fDbModul.LadeDiaUebungen().then((mDiaUebungen => {
+		// 	this.DiaUebungSettingsListe = mDiaUebungen;
+		// }));
 	}
 
 	SetLadeLimit(aEvent: any) {
@@ -269,7 +273,7 @@ export class HistoryComponent implements OnInit {
 	
 		this.fDbModul.LadeDiaUebungen().then((mDiaUebungen => {
 			this.DiaUebungSettingsListe = mDiaUebungen;
-			this.Draw(this.DiaTyp, true);
+			this.Draw(this.DiaTyp, false);
 		}));
 	}
 
