@@ -241,7 +241,7 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
-	public async LadeDiagrammData(aDiagrammDatenListe: Array<DiaDatum>, aVonDatum: Date, aBisDatum: Date, aLimit: number, aExtraFn?: ExtraFn) {
+	public async LadeDiagrammData(aDiagrammDatenListe: Array<DiaDatum>, aVonDatum: Date, aBisDatum: Date, aLimit: number, aExtraFn?: ExtraFn): Promise<Array<DiaDatum>> {
 		let mBisDatum: Date = aBisDatum;
 		if (aBisDatum < cMaxDatum)
 			mBisDatum.setDate(aBisDatum.getDate() + 1);
@@ -250,7 +250,7 @@ export class DexieSvcService extends Dexie {
 		
 		aBisDatum.setHours(0, 0, 0, 0);
 		aVonDatum.setHours(0, 0, 0, 0);
-		
+		aDiagrammDatenListe = [];
 		try {
 			const mUebungLadePara: UebungParaDB = new UebungParaDB();
 			mUebungLadePara.SaetzeBeachten = true;
@@ -258,9 +258,9 @@ export class DexieSvcService extends Dexie {
 				mSuchStatus => this.SessionTable.where({
 					Kategorie02: mSuchStatus
 				})
-					// .and((mSession) => {
-					// 	return ((mSession.Datum.valueOf() >= aVonDatum.valueOf()) && (mSession.Datum.valueOf() < mBisDatum.valueOf()));
-					// })
+					.and((mSession) => {
+						return ((mSession.Datum.valueOf() >= aVonDatum.valueOf()) && (mSession.Datum.valueOf() < mBisDatum.valueOf()));
+					})
 					.limit(aLimit)
 					.toArray()
 					.then(async (aSessionListe) => {
@@ -341,8 +341,13 @@ export class DexieSvcService extends Dexie {
 									// 	aExtraFn();
 								});
 						}
+						return aDiagrammDatenListe;
 					})//then
-			).flat());
+			).flat()).then((mDiaGrammListe) => {
+				if (mDiaGrammListe.length > 0)
+					return mDiaGrammListe[0];
+				return [];
+			})
 		} catch (err) {
 			console.error(err);
 		}
@@ -432,7 +437,7 @@ export class DexieSvcService extends Dexie {
 		// 		if (aExtraFn !== undefined)
 		// 			aExtraFn();
 		// 	});//then
-	}s
+	}
 	
 	public DoWorker(aAction: WorkerAction, aExtraFn?: ExtraFn) {
 		// const that: AnstehendeSessionsComponent = this;

@@ -12,6 +12,10 @@
             <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
             <mat-date-range-picker #picker></mat-date-range-picker>
         </mat-form-field>
+
+        <div class="center-item" layout-align="center center">
+            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="Draw(true)">Recreate charts</a>
+        </div>
     </div>
 
     <mat-tab-group #matGroup style="width:100%;height:100%" (selectedTabChange)="onTabChanged($event)">

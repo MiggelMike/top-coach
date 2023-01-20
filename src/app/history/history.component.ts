@@ -341,7 +341,6 @@ export class HistoryComponent implements OnInit {
 		mDialogData.ShowOk = true;
 		mDialogData.hasBackDrop = false;
 		mDialogData.OkFn = () => {this.fLoadingDialog.fDialog.closeAll() }
-		// mDialogData.height = '150px';
 
 		let s: string = aEvent.target.value;
 		const mSplittedDateText: Array<string>  = s.split('/');
@@ -386,26 +385,7 @@ export class HistoryComponent implements OnInit {
 		}
 	}
 
-	DateIsValid = (d: Date | null): boolean => {
-		// if (s === null)
-		// 	return false;
-		
-		// var timestamp = Date.parse(d);
-
-		// if (isNaN(timestamp) === false) {
-		// 	var d = new Date(timestamp);
-		// }
-
-		const day = (d || new Date()).getDay();
-		// Prevent Saturday and Sunday from being selected.
-		return day !== 0 && day !== 6;
-	  };
-
-
 	async DoDia() {
-		// if (this.fDbModul.MustLoadDiagramData === true)
-		// 	await this.fDbModul.LadeDiagrammData(this.fDbModul.DiagrammDatenListe, this.AppData.MaxHistorySessions);
-	
 		this.fDbModul.LadeDiaUebungen().then((mDiaUebungen => {
 			this.DiaUebungSettingsListe = mDiaUebungen;
 			this.Draw(false);
