@@ -327,6 +327,81 @@ export class HistoryComponent implements OnInit {
 		}
 	}
 
+	
+
+	isLeapYear(year:number):boolean {
+		return new Date(year, 1, 29).getDate() === 29;
+	  }
+
+
+
+	CheckDatum(aEvent: any) {
+		const mDialogData = new DialogData();
+		mDialogData.ShowAbbruch = false;
+		mDialogData.ShowOk = true;
+		mDialogData.hasBackDrop = false;
+		mDialogData.OkFn = () => {this.fLoadingDialog.fDialog.closeAll() }
+		// mDialogData.height = '150px';
+
+		let s: string = aEvent.target.value;
+		const mSplittedDateText: Array<string>  = s.split('/');
+		if (mSplittedDateText.length !== 3) {
+			mDialogData.textZeilen[0] = aEvent.target.value + ' is no valid date';
+			this.fLoadingDialog.Hinweis(mDialogData);
+			return;
+		}
+
+		const mYear = Number(mSplittedDateText[2]);
+		if (isNaN(mYear)||(mYear > 2100)||(mYear < 2000)) {
+			mDialogData.textZeilen[0] = mSplittedDateText[2] + ' is no valid year';
+			this.fLoadingDialog.Hinweis(mDialogData);
+			return;
+		}
+
+		const mMonth = Number(mSplittedDateText[0]);
+		if (isNaN(mMonth)||(mMonth > 12)||(mMonth < 1) ) {
+			mDialogData.textZeilen[0] = mSplittedDateText[0] + ' is no valid month';
+			this.fLoadingDialog.Hinweis(mDialogData);
+			return;
+		}
+
+		let mDayInMonth = 30;
+		switch (mMonth) {
+			case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+				mDayInMonth = 31;
+				break;
+			case 2: {
+				if (this.isLeapYear(mYear))
+					mDayInMonth = 29;
+				else
+					mDayInMonth = 28;
+				break;
+			}
+		}//switch
+
+		const mDay = Number(mSplittedDateText[1]);
+		if (isNaN(mDay)||(mDay < 1)||(mDay > mDayInMonth)) {
+			mDialogData.textZeilen[0] = mSplittedDateText[1] + ' is no valid day';
+			this.fLoadingDialog.Hinweis(mDialogData);
+		}
+	}
+
+	DateIsValid = (d: Date | null): boolean => {
+		// if (s === null)
+		// 	return false;
+		
+		// var timestamp = Date.parse(d);
+
+		// if (isNaN(timestamp) === false) {
+		// 	var d = new Date(timestamp);
+		// }
+
+		const day = (d || new Date()).getDay();
+		// Prevent Saturday and Sunday from being selected.
+		return day !== 0 && day !== 6;
+	  };
+
+
 	async DoDia() {
 		// if (this.fDbModul.MustLoadDiagramData === true)
 		// 	await this.fDbModul.LadeDiagrammData(this.fDbModul.DiagrammDatenListe, this.AppData.MaxHistorySessions);

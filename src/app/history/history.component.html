@@ -4,11 +4,12 @@
     <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutGap="5px" fxLayoutAlign="flex-start center" [style.margin-top]="'5px'">
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-form-field>
-            <mat-label>Tip on calendar symbol</mat-label>
+            <mat-label>Enter a date range</mat-label>
             <mat-date-range-input [rangePicker]="picker">
-              <input matStartDate placeholder="Start date" [(ngModel)]="fromDate" readonly>
-              <input matEndDate placeholder="End date" [(ngModel)]="toDate" readonly>
+              <input matStartDate placeholder="Start date" [(ngModel)]="fromDate" (focusout)="CheckDatum($event)">
+              <input matEndDate placeholder="End date" [(ngModel)]="toDate"  (focusout)="CheckDatum($event)">
             </mat-date-range-input>
+            <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
             <mat-date-range-picker #picker></mat-date-range-picker>
         </mat-form-field>
     </div>
