@@ -79,7 +79,7 @@ export class HistoryComponent implements OnInit {
 
 		if (mDiaUebungSetting !== undefined)
 			mDiaUebungSetting.Visible = aChecked;
-		this.Draw(true);
+		// this.Draw(true);
 	}
 
 	ToolTip(aDia: any, aBarPoint: BarPoint): string {
