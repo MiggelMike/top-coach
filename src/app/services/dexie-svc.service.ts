@@ -16,12 +16,10 @@ import { AppData } from './../../Business/Coach/Coach';
 import { Dexie, PromiseExtended } from 'dexie';
 import { Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardUebung, SaetzeStatus } from "../../Business/Uebung/Uebung";
-import { DialogComponent, DialogData } from '../dialoge/hinweis/hinweis.component';
+import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
 import { DiaDatum, DiaUebung, DiaUebungSettings } from 'src/Business/Diagramm/Diagramm';
-import { MatDialogRef } from '@angular/material/dialog';
 var cloneDeep = require('lodash.clonedeep');
-
 
 
 export const cMinDatum = new Date(-8640000000000000);
@@ -207,7 +205,7 @@ export class DexieSvcService extends Dexie {
 	public LangHantelListe: Array<Hantel> = [];
 	public HantelscheibenListe: Array<Hantelscheibe> = [];
 	public ProgressListe: Array<Progress> = [];
-	public DiagrammDatenListe: Array<DiaDatum> = [];
+	// public DiagrammDatenListe: Array<DiaDatum> = [];
 	public MustLoadDiagramData: boolean = true;
 	
 	private ProgramLadeStandardPara: ProgrammParaDB;
@@ -241,7 +239,7 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
-	public async LadeDiagrammData(aDiagrammDatenListe: Array<DiaDatum>, aVonDatum: Date, aBisDatum: Date, aLimit: number, aExtraFn?: ExtraFn): Promise<Array<DiaDatum>> {
+	public async LadeDiagrammData(aVonDatum: Date, aBisDatum: Date, aLimit: number, aExtraFn?: ExtraFn): Promise<Array<DiaDatum>> {
 		let mBisDatum: Date = aBisDatum;
 		if (aBisDatum < cMaxDatum)
 			mBisDatum.setDate(aBisDatum.getDate() + 1);
@@ -250,110 +248,104 @@ export class DexieSvcService extends Dexie {
 		
 		aBisDatum.setHours(0, 0, 0, 0);
 		aVonDatum.setHours(0, 0, 0, 0);
-		aDiagrammDatenListe = [];
+		const mDiagrammDatenListe: Array<DiaDatum> = [];
 		try {
 			const mUebungLadePara: UebungParaDB = new UebungParaDB();
 			mUebungLadePara.SaetzeBeachten = true;
-			await Promise.all([SessionStatus.Fertig, SessionStatus.FertigTimeOut].map(
-				mSuchStatus => this.SessionTable.where({
-					Kategorie02: mSuchStatus
+			return await this.SessionTable
+				.where("Kategorie02")
+				.anyOf([SessionStatus.Fertig, SessionStatus.FertigTimeOut])
+				.and((mSession) => {
+					return ((mSession.Datum.valueOf() >= aVonDatum.valueOf()) && (mSession.Datum.valueOf() < mBisDatum.valueOf()));
 				})
-					.and((mSession) => {
-						return ((mSession.Datum.valueOf() >= aVonDatum.valueOf()) && (mSession.Datum.valueOf() < mBisDatum.valueOf()));
-					})
-					.limit(aLimit)
-					.toArray()
-					.then(async (aSessionListe) => {
-						for (let mSessionIndex = 0; mSessionIndex < aSessionListe.length; mSessionIndex++) {
-							const mPtrSession: Session = aSessionListe[mSessionIndex];
-							const t = 0;
-							if ((mPtrSession.GestartedWann === null) || (mPtrSession.GestartedWann === undefined))
-								continue;
+				.sortBy("Datum")
+				.then(async (aSessionListe) => {
+					for (let mSessionIndex = 0; mSessionIndex < aSessionListe.length; mSessionIndex++) {
+						const mPtrSession: Session = aSessionListe[mSessionIndex];
+						const t = 0;
+						if ((mPtrSession.GestartedWann === null) || (mPtrSession.GestartedWann === undefined))
+							continue;
 							
-							// if (!((mPtrSession.Datum.valueOf() >= aVonDatum.valueOf()) && (mPtrSession.Datum.valueOf() < mBisDatum.valueOf())))
-							// 	continue;
+						// if (!((mPtrSession.Datum.valueOf() >= aVonDatum.valueOf()) && (mPtrSession.Datum.valueOf() < mBisDatum.valueOf())))
+						// 	continue;
 								
 							
-							const mNurSessionDatum = new Date(mPtrSession.GestartedWann.toDateString());
-							SessionDB.StaticCheckMembers(mPtrSession);
-							mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
-							// Jetzt für mPtrSession die Übungen laden
-							await this.LadeSessionUebungen(mPtrSession.ID, mUebungLadePara)
-								.then((mUebungsListe) => {
-									for (let index2 = 0; index2 < mUebungsListe.length; index2++) {
-										const mPtrUebung: Uebung = mUebungsListe[index2];
-										for (let index2 = 0; index2 < mPtrUebung.SatzListe.length; index2++) {
-											const mPtrSatz = mPtrUebung.SatzListe[index2];
-											if (mPtrSatz.SatzTyp === SatzTyp.Training &&
-												mPtrSatz.Status === SatzStatus.Fertig) {
-												let mAktuellesDiaDatum: DiaDatum;
+						const mNurSessionDatum = new Date(mPtrSession.GestartedWann.toDateString());
+						SessionDB.StaticCheckMembers(mPtrSession);
+						mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+						// Jetzt für mPtrSession die Übungen laden
+						await this.LadeSessionUebungen(mPtrSession.ID, mUebungLadePara)
+							.then((mUebungsListe) => {
+								for (let index2 = 0; index2 < mUebungsListe.length; index2++) {
+									const mPtrUebung: Uebung = mUebungsListe[index2];
+									for (let index2 = 0; index2 < mPtrUebung.SatzListe.length; index2++) {
+										const mPtrSatz = mPtrUebung.SatzListe[index2];
+										if (mPtrSatz.SatzTyp === SatzTyp.Training &&
+											mPtrSatz.Status === SatzStatus.Fertig) {
+											let mAktuellesDiaDatum: DiaDatum;
 
-												mAktuellesDiaDatum = this.DiagrammDatenListe.find((mDiaDatum) => {
-													if (mDiaDatum.Datum.valueOf() === mNurSessionDatum.valueOf())
-														return mDiaDatum;
-													return undefined;
-												});// Find DiaDatum
+											mAktuellesDiaDatum = mDiagrammDatenListe.find((mDiaDatum) => {
+												if (mDiaDatum.Datum.valueOf() === mNurSessionDatum.valueOf())
+													return mDiaDatum;
+												return undefined;
+											});// Find DiaDatum
 						
-												if (mAktuellesDiaDatum === undefined) {
-													mAktuellesDiaDatum = new DiaDatum();
-													mAktuellesDiaDatum.Datum = mNurSessionDatum;
-													aDiagrammDatenListe.push(mAktuellesDiaDatum);
-												}
+											if (mAktuellesDiaDatum === undefined) {
+												mAktuellesDiaDatum = new DiaDatum();
+												mAktuellesDiaDatum.Datum = mNurSessionDatum;
+												mDiagrammDatenListe.push(mAktuellesDiaDatum);
+											}
 
-												// Suche in der Diagramm-Uebungsliste nach der Session-Übung   
-												let mAktuelleDiaUebung: DiaUebung = mAktuellesDiaDatum.DiaUebungsListe.find((mDiaUebung) => {
-													if (mDiaUebung.UebungID === mPtrUebung.FkUebung)
-														return mDiaUebung;
-													return undefined;
-												}); // Find DiaUebung 
+											// Suche in der Diagramm-Uebungsliste nach der Session-Übung   
+											let mAktuelleDiaUebung: DiaUebung = mAktuellesDiaDatum.DiaUebungsListe.find((mDiaUebung) => {
+												if (mDiaUebung.UebungID === mPtrUebung.FkUebung)
+													return mDiaUebung;
+												return undefined;
+											}); // Find DiaUebung 
 												
-												// Wurde die Session-Übung in der Diagramm-Uebungsliste gefunden?
-												if (mAktuelleDiaUebung === undefined) {
-													// Die Session-Übung wurde nicht in der Diagramm-Uebungsliste gefunden.
-													mAktuelleDiaUebung = new DiaUebung();
-													mAktuelleDiaUebung.UebungID = mPtrUebung.FkUebung;
-													mAktuelleDiaUebung.UebungName = mPtrUebung.Name;
-													mAktuelleDiaUebung.Visible = true;
-													mAktuellesDiaDatum.DiaUebungsListe.push(mAktuelleDiaUebung);
-												}//if
+											// Wurde die Session-Übung in der Diagramm-Uebungsliste gefunden?
+											if (mAktuelleDiaUebung === undefined) {
+												// Die Session-Übung wurde nicht in der Diagramm-Uebungsliste gefunden.
+												mAktuelleDiaUebung = new DiaUebung();
+												mAktuelleDiaUebung.UebungID = mPtrUebung.FkUebung;
+												mAktuelleDiaUebung.UebungName = mPtrUebung.Name;
+												mAktuelleDiaUebung.Visible = true;
+												mAktuellesDiaDatum.DiaUebungsListe.push(mAktuelleDiaUebung);
+											}//if
 												
-												// Alle Arbeitssätze,die zu dem Zeitpunkt in "mDiaUebung.Datum" gemacht worden.
-												// mAktuelleDiaUebung.ArbeitsSatzListe.forEach((mSatz) => {
-												// 	mSatz.Datum = mSatz.Status === SatzStatus.Fertig ? mPtrUebung.Datum : undefined;
-												// });
-												// this.SaetzeSpeichern(mAktuelleDiaUebung.ArbeitsSatzListe);
-												mAktuelleDiaUebung.ArbeitsSatzListe.push(mPtrSatz);
-											} // if
-										} //for
-									}
+											// Alle Arbeitssätze,die zu dem Zeitpunkt in "mDiaUebung.Datum" gemacht worden.
+											// mAktuelleDiaUebung.ArbeitsSatzListe.forEach((mSatz) => {
+											// 	mSatz.Datum = mSatz.Status === SatzStatus.Fertig ? mPtrUebung.Datum : undefined;
+											// });
+											// this.SaetzeSpeichern(mAktuelleDiaUebung.ArbeitsSatzListe);
+											mAktuelleDiaUebung.ArbeitsSatzListe.push(mPtrSatz);
+										} // if
+									} //for
+								}
 										
-									aDiagrammDatenListe.sort((d1, d2) => {
-										if (d1.Datum.valueOf() < d2.Datum.valueOf())
-											return -1;
+								mDiagrammDatenListe.sort((d1, d2) => {
+									if (d1.Datum.valueOf() < d2.Datum.valueOf())
+										return -1;
 			
-										if (d1.Datum.valueOf() > d2.Datum.valueOf())
-											return 1;
+									if (d1.Datum.valueOf() > d2.Datum.valueOf())
+										return 1;
 			
-										return 0;
-									});
-
-									// if (aExtraFn != undefined)
-									// 	aExtraFn();
+									return 0;
 								});
-						}
-						return aDiagrammDatenListe;
-					})//then
-			).flat()).then((mDiaGrammListe) => {
-				if (mDiaGrammListe.length > 0)
-					return mDiaGrammListe[0];
-				return [];
-			})
+
+								// if (aExtraFn != undefined)
+								// 	aExtraFn();
+							});
+					}
+					if (aExtraFn !== undefined)
+						aExtraFn();
+					return mDiagrammDatenListe;
+			});
 		} catch (err) {
 			console.error(err);
+			return null;
 		}
 		
-		if (aExtraFn !== undefined)
-			aExtraFn();
 
 		// this.SessionTable
 		// 	.where("Kategorie02")

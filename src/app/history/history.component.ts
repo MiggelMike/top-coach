@@ -98,9 +98,9 @@ export class HistoryComponent implements OnInit {
 			this.fLoadingDialog.Loading(this.CreatingChartsDialogData);
 		
 		try {
-			this.fDbModul.LadeDiagrammData(this.fDbModul.DiagrammDatenListe, mVonDatum, mBisDatum, 20).then(() => {
-				for (let index = 0; index < that.fDbModul.DiagrammDatenListe.length; index++) {
-					const mPtrDiaDatum: DiaDatum = this.fDbModul.DiagrammDatenListe[index];
+			this.fDbModul.LadeDiagrammData(mVonDatum, mBisDatum, 20).then((aDiagrammData:Array<DiaDatum>) => {
+				for (let index = 0; index < aDiagrammData.length; index++) {
+					const mPtrDiaDatum: DiaDatum = aDiagrammData[index];
 					mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDiaUebung) => {
 						if (mUebungsNamen.indexOf(mPtrDiaUebung.UebungName) === -1) {
 							mUebungsNamen.push(mPtrDiaUebung.UebungName);
@@ -144,7 +144,7 @@ export class HistoryComponent implements OnInit {
 							mPtrDiaUebung.Relevant = false;
 							// Ist die Übung gleich der zu prüfenden Übung und ist MaxWeight größer als das bisher ermittelte mMaxWeight? 
 							// Jedes Datum aus der Liste prüfen
-							this.fDbModul.DiagrammDatenListe.forEach((mPtrDiaDatum) => {
+							aDiagrammData.forEach((mPtrDiaDatum) => {
 								let mMaxWeight: number = 0;
 								// In der Übungsliste des Datums nach der Übung suchen 
 								mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDatumUebung) => {
