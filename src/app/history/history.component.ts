@@ -9,7 +9,7 @@ import { DiaUebung, DiaDatum } from 'src/Business/Diagramm/Diagramm';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { LineChartComponent } from '@swimlane/ngx-charts';
-
+var cloneDeep = require('lodash.clonedeep');
 
 
 
@@ -230,10 +230,10 @@ export class HistoryComponent implements OnInit {
 					else {
 						this.BarChartData = mWorkChartData;
 						this.BarChartData.forEach((mBarChart) => {
-							if (this.BarChartDataHelperList.find((mBarChartHelper) => {
+							if (that.BarChartDataHelperList.find((mBarChartHelper) => {
 								return (mBarChartHelper.name === mBarChart.name);
 							}) === undefined)
-								this.BarChartDataHelperList.push(mBarChart);
+								that.BarChartDataHelperList.push(mBarChart.Copy());
 						});
 					}
 				}//for
@@ -249,26 +249,30 @@ export class HistoryComponent implements OnInit {
 	}
 
 	OnBarChartExpanded(aChartHelper: ChartHelper) {
-		const mSuchChartHelper: ChartHelper = this.BarChartDataHelperList.find((mBarChartHelper) => {
+		let mSuchChartHelper: ChartHelper = this.BarChartDataHelperList.find((mBarChartHelper) => {
 			return (mBarChartHelper.name === aChartHelper.name);
 		});
 
-		if (mSuchChartHelper === undefined)
-			this.BarChartDataHelperList.push(aChartHelper);
+		if (mSuchChartHelper === undefined) {
+			mSuchChartHelper = aChartHelper.Copy();
+			this.BarChartDataHelperList.push(mSuchChartHelper);
+		}
 		 	
-		aChartHelper.expanded = true;
+		mSuchChartHelper.expanded = true;
 	}
 
 	
 	OnBarChartClosed(aChartHelper: ChartHelper) {
-		const mSuchChartHelper: ChartHelper = this.BarChartDataHelperList.find((mBarChartHelper) => {
+		let mSuchChartHelper: ChartHelper = this.BarChartDataHelperList.find((mBarChartHelper) => {
 			return (mBarChartHelper.name === aChartHelper.name);
 		});
 
-		if (mSuchChartHelper === undefined)
-			this.BarChartDataHelperList.push(aChartHelper);
+		if (mSuchChartHelper === undefined) {
+			mSuchChartHelper = aChartHelper.Copy();
+			this.BarChartDataHelperList.push(mSuchChartHelper);
+		}
 		 	
-		aChartHelper.expanded = false;
+		mSuchChartHelper.expanded = false;
 	}
 
 
@@ -449,4 +453,7 @@ class ChartHelper {
 	series: Array<BarPoint> = [];
 	colors: Array<object> = [];
 	expanded: boolean = true;
+	Copy(): ChartHelper{
+		return cloneDeep(this); 
+	}
 }
