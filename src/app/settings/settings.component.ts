@@ -27,7 +27,9 @@ export class SettingsComponent implements OnInit {
 
     //#region KG
     get KG(): boolean {
-        return this.AppData.GewichtsEinheit === GewichtsEinheit.KG;
+        if((this.AppData !== undefined)&&(this.AppData.GewichtsEinheit !== undefined))
+            return this.AppData.GewichtsEinheit === GewichtsEinheit.KG;
+        return false;
     }
     
     set KG(aValue: boolean) {

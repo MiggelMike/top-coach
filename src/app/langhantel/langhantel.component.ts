@@ -27,7 +27,10 @@ export class LanghantelComponent implements OnInit {
         public fDialogService: DialogeService,
         private location: Location
     ) {
-        this.fDexieSvcService.LadeLanghanteln().then(() => this.CopyHantelList());
+        this.fDexieSvcService.LadeLanghanteln().then((mLanghantelListe: Array<Hantel>) =>
+        {
+            this.CopyHantelList();
+        });
     }
 
     private CopyHantelList() {
@@ -49,6 +52,20 @@ export class LanghantelComponent implements OnInit {
     NeueHantel() {
         this.HantelListe.push(new Hantel());
     }
+
+    LoescheAlleHanteln() {
+        const mCancelDialogData = new DialogData();
+        if (this.HantelListe.length > 0) {
+            mCancelDialogData.textZeilen.push("Delete all barbells?");
+            mCancelDialogData.OkFn = (): void => this.fDexieSvcService.DeleteHantelListe(this.HantelListe);
+            this.fDialogService.JaNein(mCancelDialogData);
+        }
+        else {
+            mCancelDialogData.textZeilen.push("There are no barbells!");
+            this.fDialogService.Hinweis(mCancelDialogData);
+        }
+    }
+
 
     private ChangesExist(): Boolean {
         if (this.HantelListe.length !== this.CmpHantelListe.length)

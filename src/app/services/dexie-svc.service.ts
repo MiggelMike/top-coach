@@ -658,7 +658,7 @@ export class DexieSvcService extends Dexie {
 		}
 
 		    //    Dexie.delete("ConceptCoach");
-		this.version(12).stores({
+		this.version(15).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
@@ -666,7 +666,7 @@ export class DexieSvcService extends Dexie {
 			SatzDB: "++ID,UebungID,Datum",
 			MuskelGruppe: "++ID,Name,MuscleGroupKategorie01",
 			Equipment: "++ID,Name",
-			Hantel: "++ID,Typ,Name",
+			Hantel: "++ID,Name,Typ,fDurchmesser",
 			Hantelscheibe: "++ID,&[Durchmesser+Gewicht]",
 			Progress: "++ID,&Name",
 			DiaUebungSettings: "++ID,&UebungID",
@@ -876,7 +876,10 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public HantelSpeichern(aHantel: Hantel) {
-		return this.HantelTable.put(aHantel);
+		return this.HantelTable.put(aHantel).then(
+			(aID) => {
+				aHantel.ID = aID;
+			});
 	}
 
 	public InsertHanteln(aHantelListe: Array<Hantel>): PromiseExtended {
@@ -974,7 +977,7 @@ export class DexieSvcService extends Dexie {
 		return this.HantelscheibenTable.bulkPut(aHantelscheibenListe);
 	}
 
-	public DeleteHantelscheibe(aHantelscheibeID: number) {
+	public DeleteHantelscheibe(aHantelscheibeID: number): PromiseExtended<void> {
 		return this.HantelscheibenTable.delete(aHantelscheibeID);
 	}
 
@@ -1035,28 +1038,40 @@ export class DexieSvcService extends Dexie {
 		this.HantelTable.delete(aHantel.ID);
 	}
 
+	public DeleteHantelListe(aHantelListe: Array<Hantel>) {
+		const mKeys = [];
+		aHantelListe.forEach((mHantel) => mKeys.push(mHantel.ID));
+		this.HantelTable.bulkDelete(mKeys);
+	}
 
-	public LadeLanghanteln(aAfterLoadFn?: AfterLoadFn): PromiseExtended<void> {
+
+
+	public LadeLanghanteln(): PromiseExtended<Array<Hantel>> {
 		this.LangHantelListe = [];
 		return this.table(this.cHantel)
 			.where({ Typ: HantelTyp.Barbell })
 			.sortBy("Name")
 			.then((mHantelListe) => {
 				this.LangHantelListe = mHantelListe;
-
-				if (aAfterLoadFn !== undefined) aAfterLoadFn();
+				return mHantelListe;
 			});
 	}
 
 	private PruefeStandardLanghanteln() {
-		const mAnlegen: Array<Hantel> = new Array<Hantel>();
+		const mAnlegen: Array<Hantel> = [];
 		this.table(this.cHantel)
-			.filter((mHantel: Hantel) => mHantel.Typ === HantelTyp.Barbell && (mHantel.Durchmesser === 50 || mHantel.Durchmesser === 30 || mHantel.Durchmesser === 25))
+			// Hantel: "++ID,Typ,Name",
+			.where("Typ")
+			.equals(HantelTyp.Barbell)
+			.and((mHantel) => ((mHantel.fDurchmesser === 50) || (mHantel.fDurchmesser === 30) || (mHantel.fDurchmesser === 25)))
 			.toArray()
-			.then((mHantelListe) => {
+			.then(async (mHantelListe) => {
+				// this.DeleteHantelListe(mHantelListe);
+
 				const mDurchmesser: number[] = [50, 30, 25];
 				for (const mTyp in HantelTyp) {
-					if (mTyp === HantelTyp.Dumbbel) continue;
+					if (mTyp === HantelTyp.Dumbbel)
+						continue;
 
 					for (let index = 0; index < mDurchmesser.length; index++) {
 						let mHantel = mHantelListe.find((h: Hantel) => h.Typ === mTyp && h.Durchmesser === mDurchmesser[index]);
@@ -1068,7 +1083,13 @@ export class DexieSvcService extends Dexie {
 					}
 				}
 
-				if (mAnlegen.length > 0) this.InsertHanteln(mAnlegen).then(() => this.PruefeStandardLanghanteln());
+				if (mAnlegen.length > 0) {
+					for (let index = 0; index < mAnlegen.length; index++) {
+						const mHantel = mAnlegen[index];
+						await this.HantelSpeichern(mHantel);
+					}
+					this.PruefeStandardLanghanteln();
+				}
 				else this.LadeLanghanteln();
 			});
 	}

@@ -40,8 +40,13 @@
         </div>
     </ng-container>
     
-    <div class="center-item" layout-align="center center">
+    <!-- <div class="center-item" layout-align="center center">
         <a class='link-button-font' mat-flat-button (click)="NeueHantel()" >New Barbell</a>
+    </div> -->
+
+    <div fxLayout="row wrap" fxLayoutAlign="center center">
+        <a class='link-button-font' mat-flat-button (click)="NeueHantel()" >New barbell</a>
+        <!-- <a class='link-button-font' mat-flat-button (click)="LoescheAlleHanteln()" >Delete all barbells</a> -->
     </div>
     <!-- <app-data-store-buttons [SaveClick]="SaveChanges" [CancelClick]="CancelChanges" [ClickData]="this"></app-data-store-buttons> -->
 
