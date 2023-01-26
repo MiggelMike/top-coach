@@ -27,16 +27,6 @@
         </mat-tab>
 
         <mat-tab #matTabChart label="Charts">
-            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutGap="20px" fxLayoutAlign="center center"
-                [style.margin-top]="'5px'">
-                <mat-radio-group aria-label="Select a Diagram type">
-                    <mat-radio-button [(ngModel)]="DiaTyp" checked="true" value="Line"
-                        (change)="DiaTypChanged($event,'line')">Line</mat-radio-button>
-                    <mat-radio-button class="mg-left-5" [(ngModel)]="DiaTyp" (change)="DiaTypChanged($event,'bar')"
-                        value="Bars">Bars</mat-radio-button>
-                </mat-radio-group>
-            </div>
-
             <mat-accordion #accSession="matAccordion" multi="true">
                 <mat-expansion-panel #ExercisesInChart class="HG-01">
                     <mat-expansion-panel-header>
@@ -72,15 +62,7 @@
             </mat-accordion>
 
             <div #ChartContainer style="width:100%;">
-                <ng-container *ngIf="(LineChartData.length !== undefined &&  LineChartData.length > 0)&&(DiaTyp === 'line') ">
-                    <ngx-charts-line-chart #LineChart (window:resize)="onResize($event)" [view]="[chartWidth,chartHeight]"
-                        [results]="LineChartData" [xAxisLabel]="'Date'" [legendTitle]="'Exercises'" [yAxisLabel]="'Weight'"
-                        [legend]="true" [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
-                        [gradient]="false">
-                    </ngx-charts-line-chart>
-                </ng-container>
-
-                <ng-container *ngIf="(BarChartData.length !== undefined && BarChartData.length > 0)&&(DiaTyp === 'bar')">
+                <ng-container *ngIf="(BarChartData.length !== undefined && BarChartData.length > 0)">
                     <ng-container *ngFor="let Dia of BarChartData; index as i">
                         <div class="mg-top-2">
                             <mat-accordion #accSession="matAccordion" multi="true">
@@ -98,15 +80,30 @@
                                         </div>
                                     </mat-expansion-panel-header>
 
-                                    <ngx-charts-bar-vertical #BarChart (window:resize)="onResize($event)"
-                                        [view]="[chartWidth,chartHeight]" [results]="Dia.series" [xAxisLabel]=""
-                                        [legendTitle]="" [yAxisLabel]="'Weight'" [legend]="false"
-                                        [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
-                                        [customColors]="Dia.colors" [gradient]="true">
-                                        <ng-template #tooltipTemplate let-model="model">
-                                            {{ToolTip(Dia,model)}}
-                                        </ng-template>
-                                    </ngx-charts-bar-vertical>
+                                    <mat-tab-group style="width:100%;height:100%">
+                                        <mat-tab label="Line">
+                                            <ng-container *ngIf="(LineChartData.length !== undefined &&  LineChartData.length > 0)&&(DiaTyp === 'line') ">
+                                                <ngx-charts-line-chart #LineChart (window:resize)="onResize($event)" [view]="[chartWidth,chartHeight]"
+                                                    [results]="LineChartData" [xAxisLabel]="'Date'" [legendTitle]="'Exercises'" [yAxisLabel]="'Weight'"
+                                                    [legend]="true" [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
+                                                    [gradient]="false">
+                                                </ngx-charts-line-chart>
+                                            </ng-container>
+                                        </mat-tab>
+
+                                        <mat-tab label="Bar">
+                                            <ngx-charts-bar-vertical #BarChart (window:resize)="onResize($event)"
+                                            [view]="[chartWidth,chartHeight]" [results]="Dia.series" [xAxisLabel]=""
+                                            [legendTitle]="" [yAxisLabel]="'Weight'" [legend]="false"
+                                            [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
+                                            [customColors]="Dia.colors" [gradient]="true">
+                                            <ng-template #tooltipTemplate let-model="model">
+                                                {{ToolTip(Dia,model)}}
+                                            </ng-template>
+                                        </ngx-charts-bar-vertical>
+    
+                                        </mat-tab>
+                                    </mat-tab-group>
                                 </mat-expansion-panel>
                             </mat-accordion>
                         </div>

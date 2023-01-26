@@ -98,9 +98,18 @@ export class HistoryComponent implements OnInit {
 			this.fLoadingDialog.Loading(this.CreatingChartsDialogData);
 		
 		try {
-			this.fDbModul.LadeDiagrammData(mVonDatum, mBisDatum, 20).then((aDiagrammData:Array<DiaDatum>) => {
+			let mMinDatum: Date = cMaxDatum;
+			let mMaxDatum: Date = cMinDatum;
+			this.fDbModul.LadeDiagrammData(mVonDatum, mBisDatum, 20).then((aDiagrammData: Array<DiaDatum>) => {
 				for (let index = 0; index < aDiagrammData.length; index++) {
 					const mPtrDiaDatum: DiaDatum = aDiagrammData[index];
+					
+					if (mPtrDiaDatum.Datum.valueOf() < mMinDatum.valueOf())
+						mMinDatum = mPtrDiaDatum.Datum;
+					
+					if (mPtrDiaDatum.Datum.valueOf() > mMaxDatum.valueOf())
+						mMaxDatum = mPtrDiaDatum.Datum;
+					
 					mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDiaUebung) => {
 						if (mUebungsNamen.indexOf(mPtrDiaUebung.UebungName) === -1) {
 							mUebungsNamen.push(mPtrDiaUebung.UebungName);
@@ -225,8 +234,42 @@ export class HistoryComponent implements OnInit {
 							}); // forEach -> Datum
 						}
 					});
-					if (mDiaTyp === 'line')
+
+					if (mDiaTyp === 'line') {
+						// let x = 0;
+						// mMinDatum.setHours(0, 0, 0);
+						// mMaxDatum.setHours(0, 0, 0);
+						// const mDatumsListe: Array<string> = [];
+						// for (let index = 0; index < mWorkChartData.length; index++) {
+						// 	const mChartData = mWorkChartData[index];
+						// 	mChartData.series.forEach((aSeriesEntry) => {
+						// 		if (mDatumsListe.indexOf(aSeriesEntry.name) === -1)
+						// 			mDatumsListe.push(aSeriesEntry.name);
+						// 	});
+						// } //for
+
+						// for (let index = 0; index < mWorkChartData.length; index++) {
+						// 	const mChartData = mWorkChartData[index];
+						// 	for (let mIndexDatumListe = 0; mIndexDatumListe < mDatumsListe.length; mIndexDatumListe++) {
+						// 		if (mChartData.series.find((aValue) => {
+						// 			return (aValue.name === mDatumsListe[mIndexDatumListe]);
+						// 		}) === undefined
+						// 		) {
+						// 			mChartData.series.push({ name: mDatumsListe[mIndexDatumListe], value: null });
+						// 		}
+						// 	}//for
+						// 	mChartData.series.sort((a, b) => {
+						// 		const mDatum1: Date = new Date(a.name);
+						// 		const mDatum2: Date = new Date(b.name);
+						// 		if (mDatum1.valueOf() > mDatum2.valueOf())
+						// 			return 1
+						// 		if (mDatum1.valueOf() < mDatum2.valueOf())
+						// 			return -1
+						// 		return 0;
+						// 	});
+						// }//for
 						this.LineChartData = mWorkChartData;
+					}
 					else {
 						this.BarChartData = mWorkChartData;
 						this.BarChartData.forEach((mBarChart) => {
