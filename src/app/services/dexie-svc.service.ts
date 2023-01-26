@@ -256,13 +256,23 @@ export class DexieSvcService extends Dexie {
 				.where("Kategorie02")
 				.anyOf([SessionStatus.Fertig, SessionStatus.FertigTimeOut])
 				.and((mSession) => {
-					return ((mSession.Datum.valueOf() >= aVonDatum.valueOf()) && (mSession.Datum.valueOf() < mBisDatum.valueOf()));
+					try {
+						return (
+							(mSession.Datum !== undefined)
+							&& (mSession.Datum !== null)
+							&& (mSession.Datum.valueOf() >= aVonDatum.valueOf())
+							&& (mSession.Datum.valueOf() < mBisDatum.valueOf()));
+						
+					} catch (error) {
+						console.error(error);
+						return false;
+					}
 				})
 				.sortBy("Datum")
 				.then(async (aSessionListe) => {
+					const t = 0;
 					for (let mSessionIndex = 0; mSessionIndex < aSessionListe.length; mSessionIndex++) {
 						const mPtrSession: Session = aSessionListe[mSessionIndex];
-						const t = 0;
 						if ((mPtrSession.GestartedWann === null) || (mPtrSession.GestartedWann === undefined))
 							continue;
 							
@@ -1972,6 +1982,9 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async SessionSpeichern(aSession: Session, aSessionExtraParaDB?: SessionParaDB): Promise<Session> {
+		if (aSession.Datum === undefined || aSession.Datum === null)
+			aSession.Datum = new Date;
+		
 		return await this.SessionTable.put(aSession).then( (mID) => {
 			aSession.ID = mID;
 			aSession.UebungsListe.forEach(async (mUebung: Uebung) => {

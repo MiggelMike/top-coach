@@ -72,7 +72,7 @@
             </mat-accordion>
 
             <div #ChartContainer style="width:100%;">
-                <ng-container *ngIf="(LineChartData.length > 0)&&(DiaTyp === 'line') ">
+                <ng-container *ngIf="(LineChartData.length !== undefined &&  LineChartData.length > 0)&&(DiaTyp === 'line') ">
                     <ngx-charts-line-chart #LineChart (window:resize)="onResize($event)" [view]="[chartWidth,chartHeight]"
                         [results]="LineChartData" [xAxisLabel]="'Date'" [legendTitle]="'Exercises'" [yAxisLabel]="'Weight'"
                         [legend]="true" [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
@@ -80,7 +80,7 @@
                     </ngx-charts-line-chart>
                 </ng-container>
 
-                <ng-container *ngIf="(BarChartData.length > 0)&&(DiaTyp === 'bar')">
+                <ng-container *ngIf="(BarChartData.length !== undefined && BarChartData.length > 0)&&(DiaTyp === 'bar')">
                     <ng-container *ngFor="let Dia of BarChartData; index as i">
                         <div class="mg-top-2">
                             <mat-accordion #accSession="matAccordion" multi="true">
