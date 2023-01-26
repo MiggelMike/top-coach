@@ -428,9 +428,36 @@ export class SessionFormComponent implements OnInit {
 		aSessionForm.fDbModule.AktuellesProgramm.SessionListe = this.Programm.SessionListe;
 		aSessionForm.fDbModule.AktuellesProgramm.NummeriereSessions();
 		this.SaveChangesPrim().then(() => {
-			this.fDbModule.MustLoadDiagramData = true;
-			this.fDbModule.DoWorker(WorkerAction.LadeDiagrammDaten);
-			this.router.navigate(['/']);
+			this.fDbModule.LadeAktuellesProgramm()
+				.then(async (aProgramm) => {
+					this.router.navigate(['/']);
+
+					this.fDbModule.AktuellesProgramm = aProgramm;
+					this.fDbModule.CmpAktuellesProgramm = aProgramm;
+
+					const mSessionParaDB: SessionParaDB = new SessionParaDB();
+					mSessionParaDB.UebungenBeachten = true;
+					this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
+						.then((aSessionListe) => {
+							if (aSessionListe.length > 0) {
+								this.fDbModule.AktuellesProgramm.SessionListe = aSessionListe;
+								aSessionListe.forEach(async (mPtrSession) => {
+									if (mPtrSession.Kategorie02 === SessionStatus.Wartet) {
+										const mUebungParaDB = new UebungParaDB();
+										mUebungParaDB.SaetzeBeachten = true;
+										await this.fDbModule.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
+											(aUebungsListe) => {
+												if (aUebungsListe.length > 0)
+													mPtrSession.UebungsListe = aUebungsListe;
+											});
+									}
+								
+									SessionDB.StaticCheckMembers(mPtrSession);
+									mPtrSession.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
+								});
+							}
+						});
+				});
 		})
 	}
 
@@ -452,6 +479,7 @@ export class SessionFormComponent implements OnInit {
 		mDialogData.textZeilen.push("Workout will be saved and closed.");
 		mDialogData.textZeilen.push("Do you want to proceed?");
 		mDialogData.OkData = this;
+		const that = this;
 		// Der Benutzer will speichern und schließen.
 		mDialogData.OkFn = async (aSessionForm: SessionFormComponent) => {
 			const mSaveDialogData = new DialogData();
@@ -517,7 +545,8 @@ export class SessionFormComponent implements OnInit {
 						await this.fDbModule.CheckSessionUebungen(mPtrSession);
 					}
 
-					mNeueSession.UebungsListe.forEach((mNeueUebung) => {
+					for (let index = 0; index < mNeueSession.UebungsListe.length; index++) {
+						const mNeueUebung:Uebung = mNeueSession.UebungsListe[index];
 						mNeueUebung.WeightInitDate = cMinDatum;
 						mNeueUebung.FailDatum = cMinDatum;
 
@@ -543,9 +572,9 @@ export class SessionFormComponent implements OnInit {
 								}//if
 							});
 						}//if
-					}); // <= mNeueSession.UebungsListe.forEach((mAktuelleUebung)
+					} // for
 
-					this.Programm.SessionListe.push(mNeueSession);
+					that.Programm.SessionListe.push(mNeueSession);
 					this.Programm.NummeriereSessions();
 					const mSessions: Array<Session> = [mNeueSession];
 					try {
