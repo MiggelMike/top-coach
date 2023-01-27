@@ -34,10 +34,6 @@ export class HistoryComponent implements OnInit {
 	toDate: Date = new Date();
 	chartWidth: number = 0;
 	chartHeight: number = 400;
-	LineChartData: Array<ChartHelper> = [];
-	BarChartData: Array<ChartHelper> = [];
-	BarChartDataHelperList: Array<ChartHelper> = [];
-	// ChartData: Array<ChartHelper> = [];
 	ChartData: Array<ChartData> = [];
 	@ContentChild('legendEntryTemplate') legendEntryTemplate: TemplateRef<any>;
 	@ViewChild('LineChart') LineChart: LineChartComponent;
@@ -83,17 +79,13 @@ export class HistoryComponent implements OnInit {
 	}
 
 	ToolTip(aDia: any, aBarPoint: BarPoint): string {
-		return aDia.name + ' | ' + aBarPoint.name + ' | ' + aBarPoint.value;
+		return aDia.UebungName + ' | ' + aBarPoint.name + ' | ' + aBarPoint.value;
 	}
 
 	public Draw(aDialogOn: boolean): void {
 		const that = this;
 		this.Diagramme = [];
 		const mWorkChartListe: Array<ChartData> = [];
-
-		// this.ChartData = [];
-		// this.Charts = [];
-		//const mWorkCharts: Array<ChartData> = [];
 		this.DiaUebungsListe = [];
 		let mUebungsNamen = [];
 		const mVonDatum: Date = this.fromDate === null ? cMinDatum : this.fromDate;
@@ -122,7 +114,6 @@ export class HistoryComponent implements OnInit {
 					});
 				} // for
 
-				// let mWorkChartData = [];
 				const mVisibleDiaUebungListe: Array<DiaUebung> = this.DiaUebungsListe.filter((mFilterDiaUebung) => {
 					return ( mFilterDiaUebung.Visible === true);
 				});
@@ -130,8 +121,6 @@ export class HistoryComponent implements OnInit {
 				const mCharTypes = ['line', 'bar'];
 				for (let index = 0; index < mCharTypes.length; index++) {
 					const mDiaTyp: any = mCharTypes[index];
-					// mWorkChartData = [];
-					// let mData = [];
 					// Jede sichtbare Übung prüfen 
 					for (let mIindexDiaUebung = 0; mIindexDiaUebung < mVisibleDiaUebungListe.length; mIindexDiaUebung++) {
 						const mPtrDiaUebung = mVisibleDiaUebungListe[mIindexDiaUebung];
@@ -175,7 +164,6 @@ export class HistoryComponent implements OnInit {
 							if (mWorkChartData === undefined) {
 								mWorkChartData = new ChartData();
 								mWorkChartData.UebungName = mPtrDiaUebung.UebungName;
-								mWorkChartData.colors.push({ "name": mPtrDiaUebung.UebungName, "value": "#63B8FF" });
 								mWorkChartListe.push(mWorkChartData);
 							}
 							mPtrDiaUebung.Relevant = true;
@@ -191,6 +179,7 @@ export class HistoryComponent implements OnInit {
 										mLineChartData = new LineChartData();
 										mLineChartData.name = mPtrDiaUebung.UebungName;
 										mWorkChartData.LineChartListe.push(mLineChartData);
+										mWorkChartData.colors.push({ "name": mPtrDiaUebung.UebungName, "value": "#63B8FF" });
 									}
 
 									mSeriesPoint = mLineChartData.series.find((mSuchPoint) => {
@@ -211,10 +200,6 @@ export class HistoryComponent implements OnInit {
 									break;
 								} // <-- case line
 								case 'bar': {
-									// const mBarChartData: BarPoint = mWorkChartData.LineChartListe.find((mSuchChartData) => {
-									// 	return (mSuchChartData.name === mPtrDiaUebung.UebungName)
-									// });
-
 									let mBarPoint: BarPoint = mWorkChartData.BarChartListe.find((mBarPoint) => {
 										return (mBarPoint.name === mPtrDiaDatum.Datum.toDateString());
 									});
@@ -223,6 +208,7 @@ export class HistoryComponent implements OnInit {
 										mBarPoint = new BarPoint();
 										mBarPoint.name = mPtrDiaDatum.Datum.toDateString();
 										mBarPoint.value = 0;
+										mWorkChartData.colors.push({ "name": mPtrDiaDatum.Datum.toDateString(), "value": "#63B8FF" });
 										mWorkChartData.BarChartListe.push(mBarPoint);
 									}
 
@@ -234,22 +220,11 @@ export class HistoryComponent implements OnInit {
 									break;
 								} // bar
 							}//switch
-							const xy = 0;
 						} // for
 					}
 				}//for
 				
-				//this.ChartData.LineChartListe = mWorkChartListe.LineChartListe;
 				this.ChartData = mWorkChartListe;
-				// this.BarChartData.forEach((mBarChart) => {
-				// 	if (that.BarChartDataHelperList.find((mBarChartHelper) => {
-				// 		return (mBarChartHelper.name === mBarChart.name);
-				// 	}) === undefined)
-				// 		that.BarChartDataHelperList.push(mBarChart.Copy());
-				// });
-
-				// this.BarChartExpandedList
-				const xy = 0;
 				this.fLoadingDialog.fDialog.closeAll();
 			});
 		} catch (error) {
@@ -313,11 +288,13 @@ export class HistoryComponent implements OnInit {
 		this.LadeSessions(0);
 	}
 
-	DiaTypChanged(aEvent: any, aDiaTyp: string) {
-		if (aEvent.source.checked) {
-			this.DiaTyp = aDiaTyp;
-		}
+	DiaTypChanged(aEvent: any) {
+		if (aEvent.index === 0)
+			this.DiaTyp = 'line';
+		else
+			this.DiaTyp = 'bar';
 	}
+
 
 	private LadeSessions(aOffSet: number) {
 		const mDialogData = new DialogData();
@@ -470,14 +447,4 @@ class BarPoint {
 	name: string = '';
 	value: any;
 	extra?: { code: any };
-}
-
-class ChartHelper {
-	name: string;
-	series: Array<BarPoint> = [];
-	colors: Array<Object> = [];
-	expanded: boolean = true;
-	Copy(): ChartHelper{
-		return cloneDeep(this); 
-	}
 }
