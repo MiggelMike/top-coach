@@ -66,6 +66,12 @@ export class HistoryComponent implements OnInit {
 			});
 	}
 
+	drop(aEvent: any) {
+		const mChartData: ChartData = this.ChartData[aEvent.currentIndex];
+		this.ChartData[aEvent.currentIndex] = this.ChartData[aEvent.previousIndex];
+		this.ChartData[aEvent.previousIndex] = mChartData;
+	}
+
 	onClickDiaUebung(aDiaUebung: DiaUebung, aChecked: boolean) {
 		aDiaUebung.Visible = aChecked;
 		const mDiaUebungSetting = (this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
