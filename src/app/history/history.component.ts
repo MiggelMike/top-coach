@@ -37,9 +37,9 @@ export class HistoryComponent implements OnInit {
 	LineChartData: Array<ChartHelper> = [];
 	BarChartData: Array<ChartHelper> = [];
 	BarChartDataHelperList: Array<ChartHelper> = [];
-	ChartData: Array<ChartHelper> = [];
+	// ChartData: Array<ChartHelper> = [];
+	ChartData: Array<ChartData> = [];
 	@ContentChild('legendEntryTemplate') legendEntryTemplate: TemplateRef<any>;
-
 	@ViewChild('LineChart') LineChart: LineChartComponent;
 	@ViewChild('BarChart') BarChart: any;
 	@ViewChild('ExercisesInChart') ExercisesInChart: any;
@@ -89,7 +89,11 @@ export class HistoryComponent implements OnInit {
 	public Draw(aDialogOn: boolean): void {
 		const that = this;
 		this.Diagramme = [];
-		this.ChartData = [];
+		const mWorkChartListe: Array<ChartData> = [];
+
+		// this.ChartData = [];
+		// this.Charts = [];
+		//const mWorkCharts: Array<ChartData> = [];
 		this.DiaUebungsListe = [];
 		let mUebungsNamen = [];
 		const mVonDatum: Date = this.fromDate === null ? cMinDatum : this.fromDate;
@@ -98,17 +102,9 @@ export class HistoryComponent implements OnInit {
 			this.fLoadingDialog.Loading(this.CreatingChartsDialogData);
 		
 		try {
-			let mMinDatum: Date = cMaxDatum;
-			let mMaxDatum: Date = cMinDatum;
 			this.fDbModul.LadeDiagrammData(mVonDatum, mBisDatum, 20).then((aDiagrammData: Array<DiaDatum>) => {
 				for (let index = 0; index < aDiagrammData.length; index++) {
 					const mPtrDiaDatum: DiaDatum = aDiagrammData[index];
-					
-					if (mPtrDiaDatum.Datum.valueOf() < mMinDatum.valueOf())
-						mMinDatum = mPtrDiaDatum.Datum;
-					
-					if (mPtrDiaDatum.Datum.valueOf() > mMaxDatum.valueOf())
-						mMaxDatum = mPtrDiaDatum.Datum;
 					
 					mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDiaUebung) => {
 						if (mUebungsNamen.indexOf(mPtrDiaUebung.UebungName) === -1) {
@@ -126,15 +122,19 @@ export class HistoryComponent implements OnInit {
 					});
 				} // for
 
-				let mWorkChartData = [];
+				// let mWorkChartData = [];
+				const mVisibleDiaUebungListe: Array<DiaUebung> = this.DiaUebungsListe.filter((mFilterDiaUebung) => {
+					return ( mFilterDiaUebung.Visible === true);
+				});
+
 				const mCharTypes = ['line', 'bar'];
 				for (let index = 0; index < mCharTypes.length; index++) {
 					const mDiaTyp: any = mCharTypes[index];
-					mWorkChartData = [];
-					let mData = [];
-					// Jede Übung prüfen 
-					this.DiaUebungsListe.forEach((mPtrDiaUebung) => {
-
+					// mWorkChartData = [];
+					// let mData = [];
+					// Jede sichtbare Übung prüfen 
+					for (let mIindexDiaUebung = 0; mIindexDiaUebung < mVisibleDiaUebungListe.length; mIindexDiaUebung++) {
+						const mPtrDiaUebung = mVisibleDiaUebungListe[mIindexDiaUebung];
 						const mDiaUebungSetting = (this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
 							if (mPtrDiaUebungSetting.UebungID === mPtrDiaUebung.UebungID)
 								return true;
@@ -149,140 +149,107 @@ export class HistoryComponent implements OnInit {
 							this.DiaUebungSettingsListe.push(mPtrDiaUebung);
 						}
 
-						if (mPtrDiaUebung.Visible === true) {
-							mPtrDiaUebung.Relevant = false;
+						mPtrDiaUebung.Relevant = false;
+						// Jedes Datum aus der Liste prüfen
+						for (let mIndexDiagrammData = 0; mIndexDiagrammData < aDiagrammData.length; mIndexDiagrammData++) {
+							const mPtrDiaDatum: DiaDatum = aDiagrammData[mIndexDiagrammData];
+							let mMaxWeight: number = 0;
+							// In der Übungsliste des Datums nach der Übung suchen 
 							// Ist die Übung gleich der zu prüfenden Übung und ist MaxWeight größer als das bisher ermittelte mMaxWeight? 
-							// Jedes Datum aus der Liste prüfen
-							aDiagrammData.forEach((mPtrDiaDatum) => {
-								let mMaxWeight: number = 0;
-								// In der Übungsliste des Datums nach der Übung suchen 
-								mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDatumUebung) => {
-									if (mPtrDatumUebung.Visible === true && mPtrDatumUebung.UebungID === mPtrDiaUebung.UebungID && mPtrDatumUebung.MaxWeight > mMaxWeight) {
-										mMaxWeight = mPtrDatumUebung.MaxWeight;
-										if (mMaxWeight > 0) {
+							const mPtrDatumUebung: DiaUebung = mPtrDiaDatum.DiaUebungsListe.find((mSuchDatumUebung) => {
+								return (
+									mSuchDatumUebung.Visible === true
+									&& mSuchDatumUebung.UebungID === mPtrDiaUebung.UebungID
+									&& mSuchDatumUebung.MaxWeight > mMaxWeight
+								);
+							});
+
+							if (mPtrDatumUebung === undefined)
+								continue;
+
+							mMaxWeight = mPtrDatumUebung.MaxWeight;
+							let mWorkChartData: ChartData = mWorkChartListe.find((mChartData) => {
+								return (mChartData.UebungName === mPtrDiaUebung.UebungName);
+							});
 											
-											mPtrDiaUebung.Relevant = true;
-											let mSeriesPoint: any;
-											// Die verschiedenen Chart-Typen prüfen.
-											switch (mDiaTyp) {
-												case 'line': {
-													let mLineData = mData.find((mData) => {
-														return (mData.name === mPtrDiaUebung.UebungName);
-													});
+							if (mWorkChartData === undefined) {
+								mWorkChartData = new ChartData();
+								mWorkChartData.UebungName = mPtrDiaUebung.UebungName;
+								mWorkChartData.colors.push({ "name": mPtrDiaUebung.UebungName, "value": "#63B8FF" });
+								mWorkChartListe.push(mWorkChartData);
+							}
+							mPtrDiaUebung.Relevant = true;
+							let mSeriesPoint: any;
+							// Die verschiedenen Chart-Typen prüfen.
+							switch (mDiaTyp) {
+								case 'line': {
+									let mLineChartData: LineChartData = mWorkChartData.LineChartListe.find((mSuchChartData) => {
+										return (mSuchChartData.name === mPtrDiaUebung.UebungName)
+									});
 
-													if (mLineData === undefined) {
-														// mLineData = { name: mPtrDiaUebung.UebungName, series: [] };
-														mLineData = { "name": mPtrDiaUebung.UebungName, "series": [] };
-														mData.push(mLineData);
-														mWorkChartData.push(mLineData);
-													}
+									if (mLineChartData === undefined) {
+										mLineChartData = new LineChartData();
+										mLineChartData.name = mPtrDiaUebung.UebungName;
+										mWorkChartData.LineChartListe.push(mLineChartData);
+									}
 
-													mSeriesPoint = mLineData.series.find((mSuchPoint) => {
-														return (mSuchPoint.name === mPtrDiaDatum.Datum.toDateString())
-													});
+									mSeriesPoint = mLineChartData.series.find((mSuchPoint) => {
+										return (mSuchPoint.name === mPtrDiaDatum.Datum.toDateString())
+									});
 									
-													if (mSeriesPoint === undefined) {
-														mSeriesPoint = { name: mPtrDiaDatum.Datum.toDateString(), value: 0 };
-														mLineData.series.push(mSeriesPoint);
-													}
+									if (mSeriesPoint === undefined) {
+										mSeriesPoint = { name: mPtrDiaDatum.Datum.toDateString(), value: 0 };
+										mLineChartData.series.push(mSeriesPoint);
+									}
 
-													if (mLineData.series.find((mSuch) => {
-														return (mSuch.value > mMaxWeight && mSuch.name === mPtrDiaDatum.Datum.toDateString());
-													}) === undefined) {
-														mSeriesPoint.value = mMaxWeight;
-													}
-													break;
-												} // <-- case line
-												case 'bar': {
-													let mBarPoint: BarPoint;
-													let mBarData: ChartHelper = mData.find((mData) => {
-														return (mData.name === mPtrDiaUebung.UebungName);
-													}) as ChartHelper;
+									if (mLineChartData.series.find((mSuch) => {
+										return (mSuch.value > mMaxWeight && mSuch.name === mPtrDiaDatum.Datum.toDateString());
+									}) === undefined) {
+										mSeriesPoint.value = mMaxWeight;
+									}
 
-													if (mBarData === undefined) {
-														mBarData = new ChartHelper();
-														mBarData.name = mPtrDiaUebung.UebungName;
-														mData.push(mBarData);
-														mWorkChartData.push(mBarData);
-													}
+									break;
+								} // <-- case line
+								case 'bar': {
+									// const mBarChartData: BarPoint = mWorkChartData.LineChartListe.find((mSuchChartData) => {
+									// 	return (mSuchChartData.name === mPtrDiaUebung.UebungName)
+									// });
 
-													mBarPoint = mBarData.series.find((mSeriesPoint) => {
-														return (mSeriesPoint.name === mPtrDiaDatum.Datum.toDateString())
-													});
-											
-													if (mBarPoint === undefined) {
-														mBarPoint = new BarPoint();
-														mBarPoint.name = mPtrDiaDatum.Datum.toDateString();
-														mBarPoint.value = 0;
-														mBarData.series.push(mBarPoint);
-														mBarData.colors.push({ "name": mBarPoint.name, "value": "#63B8FF" });
-													}
+									let mBarPoint: BarPoint = mWorkChartData.BarChartListe.find((mBarPoint) => {
+										return (mBarPoint.name === mPtrDiaDatum.Datum.toDateString());
+									});
 
-													if (mBarData.series.find((mSuch) => {
-														return (mSuch.value > mMaxWeight && mSuch.name === mPtrDiaDatum.Datum.toDateString());
-													}) === undefined) {
-														mBarPoint.value = mMaxWeight;
-													}
-													break;
-												} // bar
-											}//switch
-											
-										} // if
-									}//
-										
-								});
-							}); // forEach -> Datum
-						}
-					});
+									if (mBarPoint === undefined) {
+										mBarPoint = new BarPoint();
+										mBarPoint.name = mPtrDiaDatum.Datum.toDateString();
+										mBarPoint.value = 0;
+										mWorkChartData.BarChartListe.push(mBarPoint);
+									}
 
-					if (mDiaTyp === 'line') {
-						// let x = 0;
-						// mMinDatum.setHours(0, 0, 0);
-						// mMaxDatum.setHours(0, 0, 0);
-						// const mDatumsListe: Array<string> = [];
-						// for (let index = 0; index < mWorkChartData.length; index++) {
-						// 	const mChartData = mWorkChartData[index];
-						// 	mChartData.series.forEach((aSeriesEntry) => {
-						// 		if (mDatumsListe.indexOf(aSeriesEntry.name) === -1)
-						// 			mDatumsListe.push(aSeriesEntry.name);
-						// 	});
-						// } //for
-
-						// for (let index = 0; index < mWorkChartData.length; index++) {
-						// 	const mChartData = mWorkChartData[index];
-						// 	for (let mIndexDatumListe = 0; mIndexDatumListe < mDatumsListe.length; mIndexDatumListe++) {
-						// 		if (mChartData.series.find((aValue) => {
-						// 			return (aValue.name === mDatumsListe[mIndexDatumListe]);
-						// 		}) === undefined
-						// 		) {
-						// 			mChartData.series.push({ name: mDatumsListe[mIndexDatumListe], value: null });
-						// 		}
-						// 	}//for
-						// 	mChartData.series.sort((a, b) => {
-						// 		const mDatum1: Date = new Date(a.name);
-						// 		const mDatum2: Date = new Date(b.name);
-						// 		if (mDatum1.valueOf() > mDatum2.valueOf())
-						// 			return 1
-						// 		if (mDatum1.valueOf() < mDatum2.valueOf())
-						// 			return -1
-						// 		return 0;
-						// 	});
-						// }//for
-						this.LineChartData = mWorkChartData;
-					}
-					else {
-						this.BarChartData = mWorkChartData;
-						this.BarChartData.forEach((mBarChart) => {
-							if (that.BarChartDataHelperList.find((mBarChartHelper) => {
-								return (mBarChartHelper.name === mBarChart.name);
-							}) === undefined)
-								that.BarChartDataHelperList.push(mBarChart.Copy());
-						});
+									if (mWorkChartData.BarChartListe.find((mBarPoint) => {
+										return (mBarPoint.value > mMaxWeight && mBarPoint.name === mPtrDiaDatum.Datum.toDateString());
+									}) === undefined) {
+										mBarPoint.value = mMaxWeight;
+									}
+									break;
+								} // bar
+							}//switch
+							const xy = 0;
+						} // for
 					}
 				}//for
 				
+				//this.ChartData.LineChartListe = mWorkChartListe.LineChartListe;
+				this.ChartData = mWorkChartListe;
+				// this.BarChartData.forEach((mBarChart) => {
+				// 	if (that.BarChartDataHelperList.find((mBarChartHelper) => {
+				// 		return (mBarChartHelper.name === mBarChart.name);
+				// 	}) === undefined)
+				// 		that.BarChartDataHelperList.push(mBarChart.Copy());
+				// });
 
 				// this.BarChartExpandedList
+				const xy = 0;
 				this.fLoadingDialog.fDialog.closeAll();
 			});
 		} catch (error) {
@@ -291,41 +258,41 @@ export class HistoryComponent implements OnInit {
 		}
 	}
 
-	OnBarChartExpanded(aChartHelper: ChartHelper) {
-		let mSuchChartHelper: ChartHelper = this.BarChartDataHelperList.find((mBarChartHelper) => {
-			return (mBarChartHelper.name === aChartHelper.name);
-		});
+	OnBarChartExpanded(aChartHelper: ChartData) {
+		// let mSuchChartHelper: ChartHelper = this.BarChartDataHelperList.find((mBarChartHelper) => {
+		// 	return (mBarChartHelper.name === aChartHelper.name);
+		// });
 
-		if (mSuchChartHelper === undefined) {
-			mSuchChartHelper = aChartHelper.Copy();
-			this.BarChartDataHelperList.push(mSuchChartHelper);
-		}
+		// if (mSuchChartHelper === undefined) {
+		// 	mSuchChartHelper = aChartHelper.Copy();
+		// 	this.BarChartDataHelperList.push(mSuchChartHelper);
+		// }
 		 	
-		mSuchChartHelper.expanded = true;
+		// mSuchChartHelper.expanded = true;
 	}
 
 	
-	OnBarChartClosed(aChartHelper: ChartHelper) {
-		let mSuchChartHelper: ChartHelper = this.BarChartDataHelperList.find((mBarChartHelper) => {
-			return (mBarChartHelper.name === aChartHelper.name);
-		});
+	OnBarChartClosed(aChartHelper: ChartData) {
+		// let mSuchChartHelper: ChartHelper = this.BarChartDataHelperList.find((mBarChartHelper) => {
+		// 	return (mBarChartHelper.name === aChartHelper.name);
+		// });
 
-		if (mSuchChartHelper === undefined) {
-			mSuchChartHelper = aChartHelper.Copy();
-			this.BarChartDataHelperList.push(mSuchChartHelper);
-		}
+		// if (mSuchChartHelper === undefined) {
+		// 	mSuchChartHelper = aChartHelper.Copy();
+		// 	this.BarChartDataHelperList.push(mSuchChartHelper);
+		// }
 		 	
-		mSuchChartHelper.expanded = false;
+		// mSuchChartHelper.expanded = false;
 	}
 
 
-	BarChartExpanded(aChartHelper: ChartHelper): boolean{
-		const mSuchChartHelper: ChartHelper = this.BarChartDataHelperList.find((mBarChartHelper) => {
-			return (mBarChartHelper.name === aChartHelper.name);
-		});
+	BarChartExpanded(aChartHelper: ChartData): boolean{
+		// const mSuchChartHelper: ChartHelper = this.BarChartDataHelperList.find((mBarChartHelper) => {
+		// 	return (mBarChartHelper.name === aChartHelper.name);
+		// });
 
-		if (mSuchChartHelper !== undefined)
-			return (mSuchChartHelper.expanded);
+		// if (mSuchChartHelper !== undefined)
+		// 	return (mSuchChartHelper.expanded);
 
 		return true;
 	}
@@ -480,21 +447,35 @@ export class HistoryComponent implements OnInit {
 	}
 }
 
+class LineChartData {
+	name: string = '';
+	series: Array<any> = [];
+}
+
+
 class Chart {
 	// UebungName: string = '';
 	ChartData: Array<Object> = [];
 }
 
+class ChartData {
+	UebungName: string = '';
+	colors: Array<Object> = [];
+	expanded: boolean = true;
+	LineChartListe: Array<LineChartData> = [];
+	BarChartListe: Array<BarPoint> = [];
+}
+
 class BarPoint {
-	name: string;
+	name: string = '';
 	value: any;
-	// extra: { code: any } = null;
+	extra?: { code: any };
 }
 
 class ChartHelper {
 	name: string;
 	series: Array<BarPoint> = [];
-	colors: Array<object> = [];
+	colors: Array<Object> = [];
 	expanded: boolean = true;
 	Copy(): ChartHelper{
 		return cloneDeep(this); 

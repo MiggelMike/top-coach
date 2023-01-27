@@ -62,43 +62,44 @@
             </mat-accordion>
 
             <div #ChartContainer style="width:100%;">
-                <ng-container *ngIf="(BarChartData.length !== undefined && BarChartData.length > 0)">
-                    <ng-container *ngFor="let Dia of BarChartData; index as i">
+                <ng-container *ngIf="(ChartData.length !== undefined && ChartData.length > 0)">
+                    <ng-container *ngFor="let mChartData of ChartData; index as i">
                         <div class="mg-top-2">
                             <mat-accordion #accSession="matAccordion" multi="true">
                                 <mat-expansion-panel 
                                        #ExercisesInChart class="HG-01" 
-                                       (opened)="OnBarChartExpanded(Dia)"
-                                       (closed)="OnBarChartClosed(Dia)"
-                                       [expanded]="BarChartExpanded(Dia)">
+                                       (opened)="OnBarChartExpanded(mChartData)"
+                                       (closed)="OnBarChartClosed(mChartData)"
+                                       [expanded]="BarChartExpanded(mChartData)"
+                                       >
                                     <mat-expansion-panel-header>
                                         <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"
                                             fxLayoutAlign="flex-start center">
                                             <div class="ml-10" fxLayout="column" fxFlex="155px">
-                                                <span>{{Dia.name}}</span>
+                                                <span>{{mChartData.UebungName}}</span>
                                             </div>
                                         </div>
                                     </mat-expansion-panel-header>
 
                                     <mat-tab-group style="width:100%;height:100%">
                                         <mat-tab label="Line">
-                                            <ng-container *ngIf="(LineChartData.length !== undefined &&  LineChartData.length > 0)&&(DiaTyp === 'line') ">
                                                 <ngx-charts-line-chart #LineChart (window:resize)="onResize($event)" [view]="[chartWidth,chartHeight]"
-                                                    [results]="LineChartData" [xAxisLabel]="'Date'" [legendTitle]="'Exercises'" [yAxisLabel]="'Weight'"
+                                                    [results]="mChartData.LineChartListe" [xAxisLabel]="'Date'" [legendTitle]="'Exercises'" [yAxisLabel]="'Weight'"
                                                     [legend]="true" [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
+                                                    [customColors]="mChartData.colors"
                                                     [gradient]="false">
-                                                </ngx-charts-line-chart>
-                                            </ng-container>
+                                                </ngx-charts-line-chart> 
                                         </mat-tab>
 
                                         <mat-tab label="Bar">
                                             <ngx-charts-bar-vertical #BarChart (window:resize)="onResize($event)"
-                                            [view]="[chartWidth,chartHeight]" [results]="Dia.series" [xAxisLabel]=""
-                                            [legendTitle]="" [yAxisLabel]="'Weight'" [legend]="false"
-                                            [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
-                                            [customColors]="Dia.colors" [gradient]="true">
+                                                [view]="[chartWidth,chartHeight]" [results]="mChartData.BarChartListe" [xAxisLabel]=""
+                                                [legendTitle]="" [yAxisLabel]="'Weight'" [legend]="false"
+                                                [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
+                                                [customColors]="mChartData.colors" [gradient]="true">
                                             <ng-template #tooltipTemplate let-model="model">
-                                                {{ToolTip(Dia,model)}}
+                                                'xxx'
+                                                <!-- {{ToolTip(Dia,model)}} -->
                                             </ng-template>
                                         </ngx-charts-bar-vertical>
     
