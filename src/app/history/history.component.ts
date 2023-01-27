@@ -288,11 +288,11 @@ export class HistoryComponent implements OnInit {
 		this.LadeSessions(0);
 	}
 
-	DiaTypChanged(aEvent: any) {
+	DiaTypChanged(aChartData:ChartData, aEvent: any) {
 		if (aEvent.index === 0)
-			this.DiaTyp = 'line';
+			aChartData.ActiveDiaType = 'line';
 		else
-			this.DiaTyp = 'bar';
+		    aChartData.ActiveDiaType = 'bar';
 	}
 
 
@@ -436,6 +436,7 @@ class Chart {
 }
 
 class ChartData {
+	ActiveDiaType: string = 'line';
 	UebungName: string = '';
 	colors: Array<Object> = [];
 	expanded: boolean = true;
