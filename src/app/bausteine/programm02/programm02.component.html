@@ -13,7 +13,7 @@
                         (closed) = "panelClosed(sess)"
                         #panSession='matExpansionPanel' 
                         class="HG-01">
-                        <mat-expansion-panel-header>
+                        <mat-expansion-panel-header [matTooltipDisabled]="programmTyp === 'history'" mat-tooltip-panel-below  matTooltip="Tip and hold to drag">
                             <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="flex-start center">
                                 <mat-form-field class="align-left" fxFlex="auto">
                                     <input matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">

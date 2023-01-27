@@ -52,7 +52,7 @@
                                 [disabled]="checkingSets"
                                 (closed)="PanelUebungClosed(SessUeb)" 
                                 (opened)="PanelUebungOpened(i,SessUeb)">
-                                <mat-expansion-panel-header>
+                                <mat-expansion-panel-header [matTooltipDisabled]="programmTyp === 'history'" mat-tooltip-panel-below  matTooltip="Tip and hold to drag" >
                                     <div fxLayout="row wrap" fxLayoutGap="2px" fxLayout.lt-sm="row wrap" fxFlex="auto">
                                         <div layout-align="start center" fxFlex="0 0 35%">
                                             <span class="tc-font-size-smaller font-bold">#{{i+1}} {{SessUeb.Name}}</span>
