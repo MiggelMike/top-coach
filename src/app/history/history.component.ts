@@ -23,7 +23,7 @@ export class HistoryComponent implements OnInit {
 	LadeLimit: number = 10;
 	public repMask = repMask;
 	public AppData: AppData;
-	public DiaTyp: string = 'line';
+	// public DiaTyp: string = 'line';
 	public DiaUebungsListe: Array<DiaUebung> = [];
 	public DiaUebungSettingsListe: Array<DiaUebungSettings> = [];
 	public Diagramme: Array<Chart> = [];
@@ -35,6 +35,7 @@ export class HistoryComponent implements OnInit {
 	chartWidth: number = 0;
 	chartHeight: number = 400;
 	ChartData: Array<ChartData> = [];
+	BarChartDataHelperList: Array<ChartData> = [];
 	@ContentChild('legendEntryTemplate') legendEntryTemplate: TemplateRef<any>;
 	@ViewChild('LineChart') LineChart: LineChartComponent;
 	@ViewChild('BarChart') BarChart: any;
@@ -234,40 +235,40 @@ export class HistoryComponent implements OnInit {
 	}
 
 	OnBarChartExpanded(aChartHelper: ChartData) {
-		// let mSuchChartHelper: ChartHelper = this.BarChartDataHelperList.find((mBarChartHelper) => {
-		// 	return (mBarChartHelper.name === aChartHelper.name);
-		// });
+		let mSuchChartHelper: ChartData = this.BarChartDataHelperList.find((mBarChartHelper) => {
+			return (mBarChartHelper.UebungName === aChartHelper.UebungName);
+		});
 
-		// if (mSuchChartHelper === undefined) {
-		// 	mSuchChartHelper = aChartHelper.Copy();
-		// 	this.BarChartDataHelperList.push(mSuchChartHelper);
-		// }
+		if (mSuchChartHelper === undefined) {
+			mSuchChartHelper = aChartHelper.Copy();
+			this.BarChartDataHelperList.push(mSuchChartHelper);
+		}
 		 	
-		// mSuchChartHelper.expanded = true;
+		mSuchChartHelper.expanded = true;
 	}
 
 	
 	OnBarChartClosed(aChartHelper: ChartData) {
-		// let mSuchChartHelper: ChartHelper = this.BarChartDataHelperList.find((mBarChartHelper) => {
-		// 	return (mBarChartHelper.name === aChartHelper.name);
-		// });
+		let mSuchChartHelper: ChartData = this.BarChartDataHelperList.find((mBarChartHelper) => {
+			return (mBarChartHelper.UebungName === aChartHelper.UebungName);
+		});
 
-		// if (mSuchChartHelper === undefined) {
-		// 	mSuchChartHelper = aChartHelper.Copy();
-		// 	this.BarChartDataHelperList.push(mSuchChartHelper);
-		// }
+		if (mSuchChartHelper === undefined) {
+			mSuchChartHelper = aChartHelper.Copy();
+			this.BarChartDataHelperList.push(mSuchChartHelper);
+		}
 		 	
-		// mSuchChartHelper.expanded = false;
+		mSuchChartHelper.expanded = false;
 	}
 
 
 	BarChartExpanded(aChartHelper: ChartData): boolean{
-		// const mSuchChartHelper: ChartHelper = this.BarChartDataHelperList.find((mBarChartHelper) => {
-		// 	return (mBarChartHelper.name === aChartHelper.name);
-		// });
+		const mSuchChartHelper: ChartData = this.BarChartDataHelperList.find((mBarChartHelper) => {
+			return (mBarChartHelper.UebungName === aChartHelper.UebungName);
+		});
 
-		// if (mSuchChartHelper !== undefined)
-		// 	return (mSuchChartHelper.expanded);
+		if (mSuchChartHelper !== undefined)
+			return (mSuchChartHelper.expanded);
 
 		return true;
 	}
@@ -390,12 +391,7 @@ export class HistoryComponent implements OnInit {
 				this.Interval = undefined;
 			}
 
-			if (
-				// Ist Line-Chart ausgewählt und noch nicht gerendert. 
-				   ((this.DiaTyp === 'line') && (this.LineChart === undefined))
-				// oder Bar-Chart ausgewählt und noch nicht gerendert. 
-				|| ((this.DiaTyp === 'bar') && (this.BarChart === undefined))
-			   ) {
+			if ((this.LineChart === undefined) && (this.BarChart === undefined)) {
 				this.fLoadingDialog.Loading(this.CreatingChartsDialogData);
 				this.Interval = setInterval(() => {
 					if ((this.LineChart !== undefined) || (this.BarChart !== undefined)) {
@@ -403,9 +399,9 @@ export class HistoryComponent implements OnInit {
 						this.Interval = undefined;
 						this.fLoadingDialog.fDialog.closeAll();
 					}
-				}, 50);
-			}
-		}
+				}, 10);
+			}//if
+		}//if
 		this.CalcChartSize();
 	}
 	
@@ -419,7 +415,7 @@ export class HistoryComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.DiaTyp = 'line';
+		// this.DiaTyp = 'line';
 		setTimeout(() => this.DoDia(), 1000);
 	}
 }
@@ -442,6 +438,9 @@ class ChartData {
 	expanded: boolean = true;
 	LineChartListe: Array<LineChartData> = [];
 	BarChartListe: Array<BarPoint> = [];
+	Copy():ChartData {
+		return cloneDeep(this);
+	}
 }
 
 class BarPoint {
