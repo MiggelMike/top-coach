@@ -315,11 +315,18 @@ export class Programm03Component implements OnInit {
     public DoSettings(aSessUeb: Uebung, aEvent: Event) {
         aEvent.stopPropagation();
 
-        const mCmpUebung: Uebung = this.cmpSettingsSession.UebungsListe.find((mUebung) => {
+        // const mCmpUebung: Uebung = this.cmpSettingsSession.UebungsListe.find((mUebung) => {
+        //     if (mUebung.ID === aSessUeb.ID || mUebung.ListenIndex === aSessUeb.ListenIndex && mUebung.FkUebung === aSessUeb.FkUebung)
+        //         return mUebung;
+        //     return undefined;
+        // });
+
+        const mCmpUebung: Uebung = this.session.UebungsListe.find((mUebung) => {
             if (mUebung.ID === aSessUeb.ID || mUebung.ListenIndex === aSessUeb.ListenIndex && mUebung.FkUebung === aSessUeb.FkUebung)
                 return mUebung;
             return undefined;
         });
+
 
         this.fExerciseOverlayConfig = {
             hasBackdrop: true,

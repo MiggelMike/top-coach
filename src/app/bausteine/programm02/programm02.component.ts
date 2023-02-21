@@ -258,7 +258,7 @@ export class Programm02Component implements OnInit {
 		mNewSession.FK_Programm = this.programm.id;
 		mNewSession.ListenIndex = this.SessionListe.length + 1;
 		this.SessionListe.push(mNewSession);
-		this.startSessionPrim(mNewSession);
+		this.startSessionPrim(mNewSession, false);
 		// this.fDbModule.SessionSpeichern(mNewSession).then(
 		// 	() => this.fDbModule.LadeAktuellesProgramm()
 		// )
@@ -331,7 +331,7 @@ export class Programm02Component implements OnInit {
 		this.SessionListe.push(mSession as Session);
 	}
 
-	private startSessionPrim(aSession: ISession) {
+	private startSessionPrim(aSession: ISession, aRegularSession: boolean) {
 
 		// if (aSession.Kategorie02 === SessionStatus.Fertig || aSession.Kategorie02 === SessionStatus.FertigTimeOut) return;
 
@@ -358,44 +358,45 @@ export class Programm02Component implements OnInit {
 		if (this.OnLeaveFn !== undefined)
 			this.OnLeaveFn.emit();
 
-			
-		const mDialogData = new DialogData();
-		mDialogData.height = cLoadingDefaultHeight;
-		mDialogData.ShowAbbruch = false;
-		mDialogData.ShowOk = false;
+		if (aRegularSession) {
+			const mDialogData = new DialogData();
+			mDialogData.height = cLoadingDefaultHeight;
+			mDialogData.ShowAbbruch = false;
+			mDialogData.ShowOk = false;
 		
-		if (this.programmTyp === "history")mDialogData.textZeilen.push('Preparing history');
-		else mDialogData.textZeilen.push('Preparing session');
-		const mLadePara: UebungParaDB = new UebungParaDB();
-		mLadePara.SaetzeBeachten = true;
-		this.fLoadingDialog.Loading(mDialogData);
-		try {
-			// aSession.UebungsListe.forEach( async(mUebung) => {
-			// 	if (mUebung.SatzListe.length === 0)
-			// 		mUebung.SatzListe = await this.fDbModule.LadeUebungsSaetze(mUebung.ID);
-			// 	mUebung.Expanded = false;
+			if (this.programmTyp === "history") mDialogData.textZeilen.push('Preparing history');
+			else mDialogData.textZeilen.push('Preparing session');
+			const mLadePara: UebungParaDB = new UebungParaDB();
+			mLadePara.SaetzeBeachten = true;
+			this.fLoadingDialog.Loading(mDialogData);
+			try {
+				// aSession.UebungsListe.forEach( async(mUebung) => {
+				// 	if (mUebung.SatzListe.length === 0)
+				// 		mUebung.SatzListe = await this.fDbModule.LadeUebungsSaetze(mUebung.ID);
+				// 	mUebung.Expanded = false;
 				
-			// });
-			// this.fLoadingDialog.fDialog.closeAll();
-			// this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
+				// });
+				// this.fLoadingDialog.fDialog.closeAll();
+				// this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
 
-			aSession.UebungsListe = [];
-			this.fDbModule.LadeSessionUebungen(aSession.ID, mLadePara).then
-			((aUebungsListe) => {
+				aSession.UebungsListe = [];
+				this.fDbModule.LadeSessionUebungen(aSession.ID, mLadePara).then
+					((aUebungsListe) => {
+						this.fLoadingDialog.fDialog.closeAll();
+						aSession.UebungsListe = aUebungsListe;
+						aUebungsListe.forEach((mUebung) => mUebung.Expanded = false);
+						this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
+					})
+			} catch (err) {
 				this.fLoadingDialog.fDialog.closeAll();
-				aSession.UebungsListe = aUebungsListe;
-				aUebungsListe.forEach((mUebung) => mUebung.Expanded = false);
-				this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
-			})
-		} catch (err) {
-			this.fLoadingDialog.fDialog.closeAll();
-		}
+			}
+		}else this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
 	}
 
 
 	public startSession(aEvent: Event, aSession: ISession) {
 		aEvent.stopPropagation();
-		this.startSessionPrim(aSession);
+		this.startSessionPrim(aSession, true);
 	}
 
 	public resetSession(aEvent: Event,aSession: ISession, aRowNum: number) {

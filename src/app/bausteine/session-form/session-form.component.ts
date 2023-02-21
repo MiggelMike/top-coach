@@ -493,12 +493,12 @@ export class SessionFormComponent implements OnInit {
 				this.fSavingDialog.Loading(mSaveDialogData);
 				// Session-Status auf fertig setzen
 				aSessionForm.Session.SetSessionFertig();
+
 				const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
 				mSessionCopyPara.CopyUebungID = false;
 				mSessionCopyPara.CopySatzID = false;
 				// Mit den Daten der gespeicherten Session eine neue erstellen
 				const mNeueSession: Session = Session.StaticCopy(aSessionForm.Session, mSessionCopyPara);
-				
 				mSaveDialogData.textZeilen.push('Create new Session');
 				aSessionForm.Session.ListenIndex = -aSessionForm.Session.ListenIndex;
 				// Neue Session initialisieren
@@ -537,12 +537,16 @@ export class SessionFormComponent implements OnInit {
 							mNeuerSatz.GewichtAusgefuehrt = mNeuerSatz.GewichtNaechsteSession;
 						});
 					});
-					
-					for (let index1 = 0; index1 < this.Programm.SessionListe.length; index1++) {
-						const mPtrSession = this.Programm.SessionListe[index1];
-						mSaveDialogData.textZeilen[1] = `Checking upcoming Session "${mPtrSession.Name}"`;
-						// Eventuell müssen die Sätze der Session-Übungen geladen werden
-						await this.fDbModule.CheckSessionUebungen(mPtrSession);
+
+					try {
+						for (let index1 = 0; index1 < that.Programm.SessionListe.length; index1++) {
+							const mPtrSession = that.Programm.SessionListe[index1];
+							mSaveDialogData.textZeilen[1] = `Checking upcoming Session "${mPtrSession.Name}"`;
+							// Eventuell müssen die Sätze der Session-Übungen geladen werden
+							await that.fDbModule.CheckSessionUebungen(mPtrSession);
+						}
+					} catch (err) {
+						console.error(err);
 					}
 
 					for (let index = 0; index < mNeueSession.UebungsListe.length; index++) {
@@ -578,7 +582,6 @@ export class SessionFormComponent implements OnInit {
 					this.Programm.NummeriereSessions();
 					const mSessions: Array<Session> = [mNeueSession];
 					try {
-						
 						for (let mSessionIndex = 0; mSessionIndex < mSessions.length; mSessionIndex++) {
 							const mPtrSession: Session = mSessions[mSessionIndex];
 							for (let mUebungIndex = 0; mUebungIndex < mPtrSession.UebungsListe.length; mUebungIndex++) {

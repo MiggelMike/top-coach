@@ -1,5 +1,4 @@
 import { Zeitraum, MaxZeitraum } from './../Business/Dauer';
-import { Uebung } from 'src/Business/Uebung/Uebung';
 import { AppData, GewichtsEinheit } from './Coach/Coach';
 
 
