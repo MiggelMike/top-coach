@@ -1,46 +1,48 @@
 <!-- "programm" wird in Eltern-Komponente gesetzt. -->
-<div  *ngIf="programm" fxLayoutAlign="center" id="accordionProgramme">
-    <div fxLayout="column" fxFlex="100%">
-        <mat-accordion #accordion="matAccordion" multi="true">
-            <mat-expansion-panel  #panProgramm='matExpansionPanel' [expanded]="false" 
-                class="HG-01"
-                (opened) = "panelOpened()"
-                (closed) = "panelClosed()">
-                <mat-expansion-panel-header (click)="$event.stopPropagation()">
-                    <div fxLayout="row wrap" fxLayoutGap="2px" fxLayoutAlign="center center">
+<ng-container *ngIf="programm" >
+    <div fxLayoutAlign="center" id="accordionProgramme">
+        <div fxLayout="column" fxFlex="100%">
+            <mat-accordion #accordion="matAccordion" multi="true">
+                <mat-expansion-panel  #panProgramm='matExpansionPanel' [expanded]="false" 
+                    class="HG-01"
+                    (opened) = "panelOpened()"
+                    (closed) = "panelClosed()">
+                    <mat-expansion-panel-header (click)="$event.stopPropagation()">
+                        <div fxLayout="row wrap" fxLayoutGap="2x" fxLayoutAlign="center center">
 
-                        <div fxLayout="column" fxFlex="200px">{{programm.Name}}</div>
-                        <!-- Soll ein Work-Out gewaehlt werden? -->
-                        <ng-container *ngIf="programmLadeContext; then AuswahlBlock"></ng-container>
+                            <div fxLayout="column" fxFlex="200px">{{programm.Name}}</div>
+                            <!-- Soll ein Work-Out gewaehlt werden? -->
+                            <ng-container *ngIf="programmLadeContext; then AuswahlBlock"></ng-container>
 
-                        <ng-template #AuswahlBlock>
-                            <div fxLayout="column" fxFlex="100px">
-                                <a [ngClass]="['link-button-font', 'HG-01']" 
-                                   [disabled] = "SelectBtnDisabled"
-                                   mat-button (click)="SelectThisWorkoutClick(programm,$event)"><span class="tc-font-size-small">Select</span></a>
-                            </div>
-                                <!-- { path: 'programmedit', component: WorkoutFormComponent }, -->
-                            <div fxLayout="column" fxFlex="auto">                            
-                                <a [ngClass]="['link-button-font', 'HG-01']" mat-button (click)="EditThisWorkoutClick($event)"><span class="tc-font-size-small">Edit</span></a>
-                            </div>
-                        </ng-template>
+                            <ng-template #AuswahlBlock>
+                                <div fxLayout="column" fxFlex="100px">
+                                    <a [ngClass]="['link-button-font', 'HG-01']" 
+                                    [disabled] = "SelectBtnDisabled"
+                                    mat-button (click)="SelectThisWorkoutClick(programm,$event)"><span class="tc-font-size-small">Select</span></a>
+                                </div>
+                                    <!-- { path: 'programmedit', component: WorkoutFormComponent }, -->
+                                <div fxLayout="column" fxFlex="auto">                            
+                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-button (click)="EditThisWorkoutClick($event)"><span class="tc-font-size-small">Edit</span></a>
+                                </div>
+                            </ng-template>
 
-                    </div>
-                </mat-expansion-panel-header>
-                <div class="card-body">
-                    <!-- Daten an Sub-Komponente durchreichen -->
-                    <ng-container *ngIf="programm.Expanded === true" >
-                        <ng-container *ngIf="programm && programm.SessionListe">
-                            <app-programm02 [programm]="programm" 
-                                            [SessionListe]="programm.SessionListe" 
-                                            [bearbeitbar]="false" 
-                                            [StartButtonVisible] ="false"
-                                            [showSaveButtons] ="showSaveButtons">
-                            </app-programm02>
+                        </div>
+                    </mat-expansion-panel-header>
+                    <div class="card-body">
+                        <!-- Daten an Sub-Komponente durchreichen -->
+                        <ng-container *ngIf="programm.Expanded === true" >
+                            <ng-container *ngIf="programm && programm.SessionListe">
+                                <app-programm02 [programm]="programm" 
+                                                [SessionListe]="programm.SessionListe" 
+                                                [bearbeitbar]="false" 
+                                                [StartButtonVisible] ="false"
+                                                [showSaveButtons] ="showSaveButtons">
+                                </app-programm02>
+                            </ng-container>
                         </ng-container>
-                    </ng-container>
-                </div>
-            </mat-expansion-panel>
-        </mat-accordion>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
     </div>
-</div>
+</ng-container>

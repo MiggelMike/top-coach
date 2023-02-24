@@ -10,12 +10,14 @@
     <div class="container">
         <p class="font-bold">Choose workout</p>
             <ng-container *ngFor="let programm of ProgrammListe">
-                <app-programm01
-                    [programmLadeContext]="true"  
-                    [programm]="programm" 
-                    [showButtons]="false" 
-                    [showSaveButtons]="false">
-                </app-programm01>
+                <div  class="mg-top-1">
+                    <app-programm01
+                        [programmLadeContext]="true"  
+                        [programm]="programm" 
+                        [showButtons]="false" 
+                        [showSaveButtons]="false">
+                    </app-programm01>
+                </div>
          </ng-container>
     </div>
     
