@@ -14,7 +14,7 @@
         </mat-form-field>
 
         <div class="center-item" layout-align="center center">
-            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="Draw(true)">Recreate charts</a>
+            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="Draw(true)">Create charts</a>
         </div>
     </div>
 
@@ -52,7 +52,7 @@
                     <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center center">
 
                         <div class="center-item" layout-align="center center">
-                            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="Draw(true)">Recreate charts</a>
+                            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="Draw(true)">Create charts</a>
                         </div>
                         <div class="center-item" layout-align="center center">
                             <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="Save()">Save</a>
@@ -73,7 +73,7 @@
                                         (closed)="OnBarChartClosed(mChartData)"
                                         [expanded]="BarChartExpanded(mChartData)"
                                         >
-                                        <mat-expansion-panel-header mat-tooltip-panel-below  matTooltip="Hold to drag">
+                                        <mat-expansion-panel-header mat-tooltip-panel-below  matTooltip="Hold and drag">
                                             <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"
                                                 fxLayoutAlign="flex-start center">
                                                 <div class="ml-10" fxLayout="column" fxFlex="155px">
