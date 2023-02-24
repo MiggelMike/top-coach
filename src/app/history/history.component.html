@@ -87,7 +87,7 @@
                                                 <ng-container *ngIf="mChartData.ActiveDiaType === 'line'">
                                                     <ngx-charts-line-chart #LineChart (window:resize)="onResize($event)" [view]="[chartWidth,chartHeight]"
                                                         [results]="mChartData.LineChartListe" [xAxisLabel]="'Date'" [legendTitle]="'Exercises'" [yAxisLabel]="'Weight'"
-                                                        [legend]="true" [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
+                                                        [legend]="false" [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
                                                         [customColors]="mChartData.colors"
                                                         [gradient]="false">
                                                     </ngx-charts-line-chart> 
