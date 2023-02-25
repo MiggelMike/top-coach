@@ -1,0 +1,38 @@
+<app-toolbar></app-toolbar>
+
+    <div fxLayout="row wrap" fxLayoutAlign="center center">
+        <h4>Bodyweight</h4>
+    </div>
+    
+    
+    <div fxLayout="row wrap" fxLayoutAlign="center center">
+        <a class='link-button-font HG-01' mat-flat-button (click)="NewBodyweight()">New bodyweight</a>
+    </div>
+
+    <ng-container *ngIf="BodyweightList">
+        <div class="mg-top-2" fxLayout="row wrap" fxLayoutAlign="center center">
+            <div fxLayout="column" fxFlex="500px" fxLayoutAlign="center center">
+                <ng-container *ngFor="let bw of BodyweightList, index as i">
+                    <!-- Zeilen-Hintergrundfarbe -> [ngClass]="{'HG-01': i % 2 === 0}" -->
+                    <div fxLayout="row wrap" fxLayoutGap="2px" [ngClass]="{'HG-01': i % 2 === 0}" fxLayoutAlign="center center">
+                        <div fxLayout="column" fxFlex="175px" fxLayoutAlign="center start">
+                            <mat-form-field class="width-75 pd-l-5">
+                                <input class="width-75 pd-l-5" 
+                                       matInput [textMask]="{mask: floatMask, guide: false }" 
+                                       (focusout)="SetBodyweight($event, bw)" 
+                                       [ngModel]="(bw.Weight | number: '1.2')" 
+                                       type="text">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="column" fxFlex="200px" fxLayoutAlign="center start">
+                            <a>{{bw.Datum | date: 'mediumDate'}} {{bw.Datum | date:'shortTime'}}</a> 
+                        </div>
+                        <div fxLayout="column"  fxLayoutAlign="center end">
+                            <a class="ref-button" mat-button (click)="DeleteBodyweight(bw)">Delete</a>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </ng-container>
+

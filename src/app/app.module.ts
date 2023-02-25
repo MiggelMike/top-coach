@@ -108,6 +108,7 @@ import { ChartsComponent } from './bausteine/charts/charts.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
+import { BodyweightComponent } from './bodyweight/bodyweight.component';
 
 
 //import { MatBadgeModule } from '@angular/material/m/MatBadgeModule';
@@ -228,7 +229,8 @@ export const floatMask = createNumberMask({
         PlateCalcComponent,
         StoppuhrComponent,
         HistoryComponent,
-        ChartsComponent
+        ChartsComponent,
+        BodyweightComponent
     ],
     imports: [
         RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),

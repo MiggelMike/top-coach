@@ -1,3 +1,4 @@
+import { BodyweightComponent } from './bodyweight/bodyweight.component';
 import { TrainingsGewichtProgressComponent } from './trainings-gewicht-progress/trainings-gewicht-progress.component';
 import { SettingsComponent } from './settings/settings.component';
 import { SessionFormComponent } from './bausteine/session-form/session-form.component';
@@ -39,7 +40,9 @@ export const routes: Routes = [
     { path: 'app-trainings-gewicht-progress', component: TrainingsGewichtProgressComponent },
     { path: 'app-edit-trainings-gewicht-progress', component: EditTrainingsGewichtProgressComponent },
     { path: 'app-initial-weight', component: InitialWeightComponent },
-    { path: 'app-history', component: HistoryComponent }
+    { path: 'app-history', component: HistoryComponent },
+    { path: 'app-bodyweight', component: BodyweightComponent },
+    
     
     
 ];

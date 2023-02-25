@@ -1,3 +1,4 @@
+import { BodyWeight, BodyWeightDB } from './../../Business/Bodyweight/Bodyweight';
 import { SessionCopyPara } from './../../Business/Session/Session';
 import { HypertrophicProgramm } from '../../Business/TrainingsProgramm/Hypertrophic';
 import { InUpcomingSessionSetzen, UebungDB, WdhVorgabeStatus } from './../../Business/Uebung/Uebung';
@@ -178,6 +179,7 @@ export class DexieSvcService extends Dexie {
 	readonly cHantelscheibe: string = "Hantelscheibe";
 	readonly cProgress: string = "Progress";
 	readonly cDiaUebungSettings: string = "DiaUebungSettings";
+	readonly cBodyweight : string = "BodyWeightDB";
 
 	AktuellerProgrammTyp: ProgrammTyp;
 	AktuellesProgramm: ITrainingsProgramm;
@@ -197,6 +199,7 @@ export class DexieSvcService extends Dexie {
 	private EquipmentTable: Dexie.Table<Equipment, number>;
 	private ProgressTable: Dexie.Table<Progress, number>;
 	private DiaUebungSettingsTable: Dexie.Table<DiaUebungSettings, number>;
+	private BodyweightTable: Dexie.Table<BodyWeightDB, number>;
 	private worker: Worker;
 	public Programme: Array<ITrainingsProgramm> = [];
 	public StammUebungsListe: Array<Uebung> = [];
@@ -668,7 +671,7 @@ export class DexieSvcService extends Dexie {
 		}
 
 		    //    Dexie.delete("ConceptCoach");
-		this.version(16).stores({
+		this.version(18).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
@@ -680,6 +683,7 @@ export class DexieSvcService extends Dexie {
 			Hantelscheibe: "++ID,&[Durchmesser+Gewicht]",
 			Progress: "++ID,&Name",
 			DiaUebungSettings: "++ID,&UebungID",
+			BodyWeightDB: "++ID,Datum"
 			
 		});
 		this.InitDatenbank();
@@ -779,6 +783,7 @@ export class DexieSvcService extends Dexie {
 		this.InitMuskelGruppe();
 		this.InitSatz();
 		this.InitDiaUebung();
+		this.InitBodyweight();
 		// this.InitDataDB();
 		// const mDataClient: DataClient = new DataClient();
 		// mDataClient.Name = 'otto';
@@ -855,6 +860,56 @@ export class DexieSvcService extends Dexie {
 	private InitDiaUebung() {
 		this.DiaUebungSettingsTable = this.table(this.cDiaUebungSettings);
 		this.DiaUebungSettingsTable.mapToClass(DiaUebungSettings);
+	}
+
+	private InitBodyweight() {
+		this.BodyweightTable = this.table(this.cBodyweight);
+		this.BodyweightTable.mapToClass(BodyWeightDB);
+	}
+
+	public LadeBodyweight(): PromiseExtended<Array<BodyWeight>> {
+		return this.table(this.cBodyweight)
+			.orderBy("Datum")
+			.reverse()
+			.toArray()
+			.then((mBodyweights) => {
+				const mResult: Array<BodyWeight> = [];
+				mBodyweights.map((aBodyweightDB) => mResult.push(new BodyWeight(aBodyweightDB)))
+				return mResult;
+		});
+	}
+
+	public LadeSessionBodyweight(aSession:Session): PromiseExtended<Array<BodyWeight>> {
+		return this.table(this.cBodyweight)
+			.where("Datum")
+			.belowOrEqual(aSession.GestartedWann)
+			.first();
+	}
+
+
+	public BodyweightSpeichern(aBodyweight: BodyWeight) {
+		this.BodyweightTable.put(aBodyweight.BodyWeightDB).then(
+			(aID) => {
+				aBodyweight.BodyWeightDB.ID = aID;
+			});
+	}
+
+	public BodyweightListeSpeichern(aBodyweightListe: Array<BodyWeight>) {
+		const mBodyweightSpeicherListe: Array<BodyWeightDB> = [];
+		aBodyweightListe.map(aBw => mBodyweightSpeicherListe.push(aBw.BodyWeightDB));
+		try {
+			this.BodyweightTable.bulkPut(mBodyweightSpeicherListe);
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	public DeleteBodyweight(aID: number) {
+		try {
+			this.BodyweightTable.delete(aID);
+		} catch (error) {
+			console.error(error);
+		}
 	}
 
 	private NeueUebung(aName: string, aKategorie02: UebungsKategorie02, aTyp: UebungsTyp): Uebung {

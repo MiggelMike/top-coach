@@ -1,3 +1,4 @@
+import { DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { Zeitraum, MaxZeitraum } from './../Business/Dauer';
 import { AppData, GewichtsEinheit } from './Coach/Coach';
 
@@ -67,7 +68,10 @@ export class SessionDB implements ISessionDB {
     public DauerFormatted: string = '';
     public SessionDauer: Zeitraum;
     public DauerTimer: any;
-    get BodyWeight(): number { return 0; };
+    get BodyWeight(): number {
+        return 0;
+    };
+
     public BodyWeightAtSessionStart: number = 0;
     public PausenListe: Array<Pause> = [];
     public GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;

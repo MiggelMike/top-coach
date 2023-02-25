@@ -82,6 +82,16 @@ body {
 	width: 65px;
 }
 
+.width-75 {
+	width: 75px;
+}
+
+.width-85 {
+	width: 85px;
+}
+
+
+
 .width-100-Prozent {
 	width: 100%!important;
 }
@@ -218,6 +228,11 @@ div.herz:after {
 	justify-content: left;
 	align-items: left;
 	flex-direction: column;
+}
+
+.align-items-right {
+	justify-content: right;
+	align-items: right;
 }
 
 .center-item {

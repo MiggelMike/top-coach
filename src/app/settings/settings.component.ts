@@ -76,8 +76,7 @@ export class SettingsComponent implements OnInit {
     }
 
     NavBodyweight(): void {
-        alert("Bodyweight - Noch nicht fertig");
-        // this.router.navigate(['/exercise']);
+        this.router.navigate(['/app-bodyweight']);
     }
 
     NavMuscleGroups(): void {
