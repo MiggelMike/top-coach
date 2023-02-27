@@ -17,6 +17,7 @@ import { ProgressPara, ProgressSet } from 'src/Business/Progress/Progress';
 import { Satz, SatzStatus } from 'src/Business/Satz/Satz';
 import { ExerciseSettingSvcService } from 'src/app/services/exercise-setting-svc.service';
 import { ExerciseSettingsComponent } from 'src/app/exercise-settings/exercise-settings.component';
+import { threadId } from 'worker_threads';
 
 @Component({
 	selector: "app-session-form",
@@ -120,8 +121,8 @@ export class SessionFormComponent implements OnInit {
 		switch (this.Session.Kategorie02) {
 			case SessionStatus.Wartet:
 				this.Session.GestartedWann = new Date();
+				this.Session.Datum = this.Session.GestartedWann;
 				this.Session.Kategorie02 = SessionStatus.Laueft;
-				this.Session.Datum = new Date();
 				this.EvalStart();
 				break;
 				
@@ -130,7 +131,8 @@ export class SessionFormComponent implements OnInit {
 				this.EvalStart();
 				break;
 		}//switch
-					
+
+		this.fDbModule.SessionSpeichern(this.Session);
 		const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
 		mSessionCopyPara.Komplett = true;
 		mSessionCopyPara.CopySessionID = true;
@@ -297,6 +299,16 @@ export class SessionFormComponent implements OnInit {
 	}
 
 	leave() {
+		const mSuchSession = this.fDbModule.AktuellesProgramm.SessionListe.find((mSession) => {
+			if (mSession.ID === this.Session.ID || mSession.ListenIndex === this.Session.ListenIndex) 
+				return mSession;
+			return null;
+		});
+
+		if (mSuchSession !== null)
+			if (mSuchSession !== null)
+				this.fDbModule.AktuellesProgramm.SessionListe[mSuchSession.ListenIndex] = this.Session;
+
 		if (this.fSessionStatsOverlayComponent !== undefined && this.fSessionStatsOverlayComponent !== null) this.fSessionStatsOverlayComponent.close();
 		this.location.back();
 	}
