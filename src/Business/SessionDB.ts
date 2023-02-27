@@ -41,7 +41,6 @@ export interface ISessionDB {
     DauerFormatted: string;
     SessionDauer: Zeitraum;
     DauerTimer: any;
-    BodyWeight: number;
     BodyWeightAtSessionStart: number;
     ProgressIsCalced: boolean;
     GewichtsEinheit: GewichtsEinheit;
@@ -68,9 +67,6 @@ export class SessionDB implements ISessionDB {
     public DauerFormatted: string = '';
     public SessionDauer: Zeitraum;
     public DauerTimer: any;
-    get BodyWeight(): number {
-        return 0;
-    };
 
     public BodyWeightAtSessionStart: number = 0;
     public PausenListe: Array<Pause> = [];
@@ -91,7 +87,7 @@ export class SessionDB implements ISessionDB {
 
     public PruefeGewichtsEinheit(aGewichtsEinheit: GewichtsEinheit) {
         if (aGewichtsEinheit !== this.GewichtsEinheit) {
-            this.BodyWeightAtSessionStart = AppData.StaticConvertWeight(this.BodyWeight, aGewichtsEinheit);
+            // this.BodyWeightAtSessionStart = AppData.StaticConvertWeight(this.BodyWeight, aGewichtsEinheit);
             this.GewichtsEinheit = aGewichtsEinheit;
         }
     }

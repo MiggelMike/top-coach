@@ -65,7 +65,14 @@ export class SatzEditComponent implements OnInit {
     
     
     ngOnInit() {
-        this.satz.BodyWeight = this.sess.BodyWeight;
+		this.fDbModule.LadeSessionBodyweight(this.sess)
+			.then((aBw) => {
+                if (aBw !== undefined)
+                    this.satz.BodyWeight = aBw.Weight;
+                else
+                this.satz.BodyWeight = 0;
+			});
+        
         if (this.satz.FkHantel === undefined) {
             const mStammUebung = this.fDbModule.StammUebungsListe.find((u) => u.ID === this.sessUebung.FkUebung);
             if ((mStammUebung !== undefined) && (mStammUebung.FkHantel !== undefined)) {

@@ -671,7 +671,7 @@ export class DexieSvcService extends Dexie {
 		}
 
 		    //    Dexie.delete("ConceptCoach");
-		this.version(18).stores({
+		this.version(19).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
@@ -879,11 +879,17 @@ export class DexieSvcService extends Dexie {
 		});
 	}
 
-	public LadeSessionBodyweight(aSession:Session): PromiseExtended<Array<BodyWeight>> {
-		return this.table(this.cBodyweight)
+	public LadeSessionBodyweight(aSession: Session): Promise<BodyWeight> {
+		return this.BodyweightTable
 			.where("Datum")
 			.belowOrEqual(aSession.GestartedWann)
-			.first();
+			.last()
+			.then((aBw) => {
+				if (aBw !== undefined)
+					return new BodyWeight(new BodyWeight(aBw));
+				else
+					return null;
+			})
 	}
 
 

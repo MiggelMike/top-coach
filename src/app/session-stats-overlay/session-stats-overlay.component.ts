@@ -1,3 +1,4 @@
+import { BodyWeight } from 'src/Business/Bodyweight/Bodyweight';
 import { floatMask } from 'src/app/app.module';
 import { AppData } from './../../Business/Coach/Coach';
 import { SessionOverlayConfig } from './../services/session-overlay-service.service';
@@ -66,7 +67,16 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 	}
 
 	SetBodyweight(aEvent: any) {
-		this.sess.BodyWeight =  Number(aEvent.target.value);
+		
+	}
+
+	fBodyWeight: number = 0;
+	BodyWeight() {
+		this.fDexieService.LadeSessionBodyweight(this.sess)
+			.then((aBw) => {
+				if (aBw !== undefined)
+					this.fBodyWeight = aBw.Weight;
+			});
 	}
 
     public handleMousedown( event: MouseEvent ) : void {
@@ -118,6 +128,7 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 
     ngOnInit(): void { 
 		this.showDuration = true;
+		this.BodyWeight();
     }
     
 	ngAfterViewInit() { }

@@ -69,13 +69,6 @@ export class Session extends SessionDB implements ISession {
         return mResult;
     }
 
-    public override get BodyWeight(): number {
-        // if (this.BodyWeightAtSessionStart === 0) {
-        //     this.BodyWeightAtSessionStart = new DexieSvcService(null).getBodyWeight();
-        // }
-        return this.BodyWeightAtSessionStart;
-    }
-
 
     public getFirstWaitingExercise(aFromIndex: number, aToIndex?: number): Uebung
     {
