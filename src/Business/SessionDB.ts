@@ -34,7 +34,6 @@ export interface ISessionDB {
     Kategorie01: SessionStatus;
     Kategorie02: SessionStatus;
     Bearbeitbar: Boolean;
-    LiftedWeight: number;
     GestartedWann: Date;
     PausenListe: Array<Pause>; 
     PauseInSek: number;
@@ -44,7 +43,7 @@ export interface ISessionDB {
     BodyWeightAtSessionStart: number;
     ProgressIsCalced: boolean;
     GewichtsEinheit: GewichtsEinheit;
-    PruefeGewichtsEinheit(aGewichtsEinheit: GewichtsEinheit);
+    // PruefeGewichtsEinheit(aGewichtsEinheit: GewichtsEinheit);
 }
 
 export class SessionDB implements ISessionDB {
@@ -61,7 +60,6 @@ export class SessionDB implements ISessionDB {
     public Kategorie01: SessionStatus = SessionStatus.Bearbeitbar;
     public Kategorie02: SessionStatus = SessionStatus.Wartet;
     public Bearbeitbar: Boolean;
-    get LiftedWeight(): number { return 0; };
     public GestartedWann: Date;
     public PauseInSek: number = 0;
     public DauerFormatted: string = '';
@@ -72,24 +70,16 @@ export class SessionDB implements ISessionDB {
     public PausenListe: Array<Pause> = [];
     public GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
 
-    constructor() {
-        // Object.defineProperty(this, "UebungsListe", { enumerable: false });
-        SessionDB.StaticCheckMembers(this);
-    }
+    // constructor() {
+    //     // Object.defineProperty(this, "UebungsListe", { enumerable: false });
+    //     SessionDB.StaticCheckMembers(this);
+    // }
     
-    public static StaticCheckMembers(aSessionDB: ISessionDB) {
-        if (aSessionDB.GewichtsEinheit === undefined)
-            aSessionDB.GewichtsEinheit = GewichtsEinheit.KG;
+    // public static StaticCheckMembers(aSessionDB: ISessionDB) {
+    //     if (aSessionDB.GewichtsEinheit === undefined)
+    //         aSessionDB.GewichtsEinheit = GewichtsEinheit.KG;
     
-        if (aSessionDB.BodyWeightAtSessionStart === undefined)
-            aSessionDB.BodyWeightAtSessionStart = 0;
-    }
-
-    public PruefeGewichtsEinheit(aGewichtsEinheit: GewichtsEinheit) {
-        if (aGewichtsEinheit !== this.GewichtsEinheit) {
-            // this.BodyWeightAtSessionStart = AppData.StaticConvertWeight(this.BodyWeight, aGewichtsEinheit);
-            this.GewichtsEinheit = aGewichtsEinheit;
-        }
-    }
-
+    //     if (aSessionDB.BodyWeightAtSessionStart === undefined)
+    //         aSessionDB.BodyWeightAtSessionStart = 0;
+    // }
 }

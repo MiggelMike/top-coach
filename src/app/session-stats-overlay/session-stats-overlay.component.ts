@@ -4,7 +4,7 @@ import { AppData } from './../../Business/Coach/Coach';
 import { SessionOverlayConfig } from './../services/session-overlay-service.service';
 import { ElementRef  } from '@angular/core';
 import { XY_Position, ModalPositionService } from './../services/modal-position.service';
-import { ISession } from './../../Business/Session/Session';
+import { ISession, Session } from './../../Business/Session/Session';
 import { Component, OnInit, Inject, InjectionToken, AfterViewInit,ViewContainerRef, TemplateRef, ViewChild } from '@angular/core';
 import { cSessionStatsOverlayData, SessionOverlayRef } from '../services/session-overlay-service.service';
 import { DexieSvcService } from '../services/dexie-svc.service';
@@ -72,7 +72,7 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 
 	fBodyWeight: number = 0;
 	BodyWeight() {
-		this.fDexieService.LadeSessionBodyweight(this.sess)
+		this.fDexieService.LadeSessionBodyweight(this.sess as Session)
 			.then((aBw) => {
 				if (aBw !== undefined)
 					this.fBodyWeight = aBw.Weight;

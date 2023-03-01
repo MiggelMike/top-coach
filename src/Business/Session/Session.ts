@@ -4,11 +4,13 @@ import { Zeitraum, MaxZeitraum } from './../Dauer';
 import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
 import { Satz, SatzStatus, SatzTyp } from '../Satz/Satz';
 import { WeightProgress } from '../Progress/Progress';
+import { GewichtsEinheit } from '../Coach/Coach';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
 
 
 export interface ISession extends ISessionDB {
+    SessionDB: SessionDB;
     StarteDauerTimer(): void;
     SetSessionFertig();
     AddPause(): void;
@@ -31,6 +33,8 @@ export interface ISession extends ISessionDB {
     isLetzteUebungInSession(aUebung: Uebung): boolean;
     NextExercise(aUebung: Uebung): Uebung;
     UebungsListe: Array<Uebung>;
+    PruefeGewichtsEinheit(aGewichtsEinheit: GewichtsEinheit);
+    LiftedWeight: number;
 }
 
 export class SessionCopyPara {
@@ -41,8 +45,205 @@ export class SessionCopyPara {
 }
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
-export class Session extends SessionDB implements ISession {
+export class Session implements ISession {
+    SessionDB: SessionDB;
     UebungsListe: Array<Uebung> = [];
+    //#region ID
+    get ID(): number {
+        return this.SessionDB.ID;
+    }
+    set ID(aVal: number) {
+        this.SessionDB.ID = aVal;
+    }
+    //#endregion
+    //#region FK_Programm 
+    get FK_Programm(): number {
+        return Number(this.SessionDB.FK_Programm);
+    }
+    set FK_Programm(aVal: number) {
+        this.SessionDB.FK_Programm = Number(aVal);
+    }
+    //#endregion
+    //#region FK_VorlageProgramm 
+    get FK_VorlageProgramm(): number {
+        return Number(this.SessionDB.FK_VorlageProgramm);
+    }
+    set FK_VorlageProgramm(aVal: number) {
+        this.SessionDB.FK_VorlageProgramm = Number(aVal);
+    }
+    //#endregion
+    //#region ProgressIsCalced
+    get ProgressIsCalced(): boolean {
+        return this.SessionDB.ProgressIsCalced;
+    }
+    set ProgressIsCalced(aVal: boolean) {
+        this.SessionDB.ProgressIsCalced = aVal;
+    }
+    //#endregion
+    //#region SessionNr 
+    get SessionNr(): number {
+        return Number(this.SessionDB.SessionNr);
+    }
+    set SessionNr(aVal: number) {
+        this.SessionDB.SessionNr = Number(aVal);
+    }
+    //#endregion  
+    //#region ListenIndex 
+    get ListenIndex(): number {
+        return Number(this.SessionDB.ListenIndex)
+    }
+    set ListenIndex(aVal: number) {
+        this.SessionDB.ListenIndex = Number(aVal);
+    }
+    //#endregion  
+    //#region Name 
+    get Name(): string {
+        return this.SessionDB.Name;
+    }
+    set Name(aVal: string) {
+        this.SessionDB.Name = aVal;
+    }
+    //#endregion  
+    //#region Datum 
+    get Datum(): Date {
+        return this.SessionDB.Datum;
+    }
+    set Datum(aVal: Date) {
+        this.SessionDB.Datum = aVal;
+    }
+    //#endregion      
+    //#region DauerInSek 
+    get DauerInSek(): number {
+        return Number(this.SessionDB.DauerInSek)
+    }
+    set DauerInSek(aVal: number) {
+        this.SessionDB.DauerInSek = Number(aVal);
+    }
+    //#endregion 
+    //#region Expanded 
+    get Expanded(): Boolean {
+        return this.SessionDB.Expanded;
+    }
+    set Expanded(aVal: Boolean) {
+        this.SessionDB.Expanded = aVal;
+    }
+    //#endregion 
+    //#region Kategorie01 
+    get Kategorie01(): SessionStatus {
+        return this.SessionDB.Kategorie01;
+    }
+    set Kategorie01(aVal: SessionStatus) {
+        this.SessionDB.Kategorie01 = aVal;
+    }
+    //#endregion 
+    //#region Kategorie02
+    get Kategorie02(): SessionStatus {
+        return this.SessionDB.Kategorie02;
+    }
+    set Kategorie02(aVal: SessionStatus) {
+        this.SessionDB.Kategorie02 = aVal;
+    }
+    //#endregion 
+    //#region Bearbeitbar 
+    get Bearbeitbar(): Boolean {
+        return this.SessionDB.Bearbeitbar;
+    }
+    set Bearbeitbar(aVal: Boolean) {
+        this.SessionDB.Bearbeitbar = aVal;
+    }
+    //#endregion 
+    //#region GestartedWann 
+    get GestartedWann(): Date {
+        return this.SessionDB.GestartedWann;
+    }
+    set GestartedWann(aVal: Date) {
+        this.SessionDB.GestartedWann = aVal;
+    }
+    //#endregion    
+    //#region PauseInSek 
+    get PauseInSek(): number {
+        return Number(this.SessionDB.PauseInSek)
+    }
+    set PauseInSek(aVal: number) {
+        this.SessionDB.PauseInSek = Number(aVal);
+    }
+    //#endregion 
+    //#region DauerFormatted 
+    get DauerFormatted(): string {
+        return this.SessionDB.DauerFormatted;
+    }
+    set DauerFormatted(aVal: string) {
+        this.SessionDB.DauerFormatted = aVal;
+    }
+    //#endregion  
+    //#region SessionDauer 
+    get SessionDauer(): Zeitraum {
+        return this.SessionDB.SessionDauer;
+    }
+    set SessionDauer(aVal: Zeitraum) {
+        this.SessionDB.SessionDauer = aVal;
+    }
+    //#endregion  
+    //#region DauerTimer 
+    get DauerTimer(): any {
+        return this.SessionDB.DauerTimer;
+    }
+    set DauerTimer(aVal: any) {
+        this.SessionDB.SessionDauer = aVal;
+    }
+    //#endregion  
+    //#region BodyWeightAtSessionStart 
+    get BodyWeightAtSessionStart(): number {
+        return Number(this.SessionDB.BodyWeightAtSessionStart)
+    }
+    set BodyWeightAtSessionStart(aVal: number) {
+        this.SessionDB.BodyWeightAtSessionStart = Number(aVal);
+    }
+    //#endregion 
+    //#region PausenListe 
+    get PausenListe(): Array<Pause> {
+        return this.SessionDB.PausenListe;
+    }
+    set PausenListe(aVal: Array<Pause>) {
+        this.SessionDB.PausenListe = aVal;
+    }
+    //#endregion 
+    //#region GewichtsEinheit 
+    get GewichtsEinheit(): GewichtsEinheit {
+        return this.SessionDB.GewichtsEinheit;
+    }
+    set GewichtsEinheit(aVal: GewichtsEinheit) {
+        this.SessionDB.GewichtsEinheit = aVal;
+    }
+    //#endregion 
+
+    constructor(aSessionDB?: SessionDB) {
+        if (aSessionDB === undefined)
+            this.SessionDB = new SessionDB();
+        else
+            this.SessionDB = aSessionDB;
+        
+        Session.StaticCheckMembers(this.SessionDB);
+
+        const mJetzt = new Date();
+        this.SessionDauer = new Zeitraum(mJetzt, mJetzt, new MaxZeitraum(99, 59, 59));
+    }
+    
+    public static StaticCheckMembers(aSessionDB: ISessionDB) {
+        if (aSessionDB.GewichtsEinheit === undefined)
+            aSessionDB.GewichtsEinheit = GewichtsEinheit.KG;
+    
+        if (aSessionDB.BodyWeightAtSessionStart === undefined)
+            aSessionDB.BodyWeightAtSessionStart = 0;
+    }
+
+    public PruefeGewichtsEinheit(aGewichtsEinheit: GewichtsEinheit) {
+        if (aGewichtsEinheit !== this.GewichtsEinheit) {
+            // this.BodyWeightAtSessionStart = AppData.StaticConvertWeight(this.BodyWeight, aGewichtsEinheit);
+            this.GewichtsEinheit = aGewichtsEinheit;
+        }
+    }
+
 
     public static nummeriereUebungsListe(aUebungsListe: Array<Uebung>) {
         for (let index = 0; index < aUebungsListe.length; index++)
@@ -70,8 +271,7 @@ export class Session extends SessionDB implements ISession {
     }
 
 
-    public getFirstWaitingExercise(aFromIndex: number, aToIndex?: number): Uebung
-    {
+    public getFirstWaitingExercise(aFromIndex: number, aToIndex?: number): Uebung {
         for (let mUebungIndex = 0; mUebungIndex < this.UebungsListe.length; mUebungIndex++) {
             const mPtrUbung = this.UebungsListe[mUebungIndex];
             if (mPtrUbung.ListenIndex >= aFromIndex) {
@@ -84,7 +284,7 @@ export class Session extends SessionDB implements ISession {
     }
 
     public init(aResetID: boolean = true): void {
-        if(aResetID === true)
+        if (aResetID === true)
             this.ID = undefined;
         this.PausenListe = [];
         this.Kategorie02 = SessionStatus.Wartet;
@@ -109,14 +309,14 @@ export class Session extends SessionDB implements ISession {
 
     public isEqual(aOtherSession: Session): boolean {
         const mSessionCopyPara = new SessionCopyPara();
-		mSessionCopyPara.Komplett = true;
-		mSessionCopyPara.CopySessionID = true;
-		mSessionCopyPara.CopyUebungID = true;
-		mSessionCopyPara.CopySatzID = true;
+        mSessionCopyPara.Komplett = true;
+        mSessionCopyPara.CopySessionID = true;
+        mSessionCopyPara.CopyUebungID = true;
+        mSessionCopyPara.CopySatzID = true;
         
-        const mSession = Session.StaticCopy(this,mSessionCopyPara);
-        const mCmpSession = Session.StaticCopy(aOtherSession,mSessionCopyPara);
-		mCmpSession.DauerInSek = mSession.DauerInSek;
+        const mSession = Session.StaticCopy(this, mSessionCopyPara);
+        const mCmpSession = Session.StaticCopy(aOtherSession, mSessionCopyPara);
+        mCmpSession.DauerInSek = mSession.DauerInSek;
         mCmpSession.DauerFormatted = mSession.DauerFormatted;
 
         if (mSession.UebungsListe.length !== mCmpSession.UebungsListe.length)
@@ -205,7 +405,7 @@ export class Session extends SessionDB implements ISession {
         // }
         
         // return mResult as boolean;
-    }    
+    }
 
     public CalcDauer(): void {
         if ((this.Kategorie02 === SessionStatus.Fertig) || (this.Kategorie02 === SessionStatus.FertigTimeOut)) {
@@ -236,9 +436,9 @@ export class Session extends SessionDB implements ISession {
         if (this.PausenListe === undefined)
             this.PausenListe = new Array<Pause>();
         
-        if (   (this.PausenListe.length > 0)
+        if ((this.PausenListe.length > 0)
             && (this.Kategorie02 === SessionStatus.Pause)) {
-                this.PausenListe[this.PausenListe.length-1].Bis = new Date();
+            this.PausenListe[this.PausenListe.length - 1].Bis = new Date();
         }
         this.Kategorie02 = SessionStatus.Laueft;
         this.DauerTimer = setInterval(() => this.CalcDauer(), 450);
@@ -256,7 +456,7 @@ export class Session extends SessionDB implements ISession {
         this.PausenListe.push(new Pause(mJetzt, mJetzt));
     }
 
-    public override get LiftedWeight():number {
+    public get LiftedWeight(): number {
         let mResult: number = 0;
         if (this.UebungsListe !== undefined) {
             for (let index = 0; index < this.UebungsListe.length; index++) {
@@ -279,21 +479,20 @@ export class Session extends SessionDB implements ISession {
     }
 
     public isLetzteUebungInSession(aUebung: Uebung): boolean {
-		return (aUebung.ListenIndex >= this.UebungsListe.length - 1);
-	}
+        return (aUebung.ListenIndex >= this.UebungsListe.length - 1);
+    }
 
     public static StaticCopy(aSession: Session, aSessionCopyPara: SessionCopyPara): Session {
         // public Copy(aKomplett: boolean, aCopySessionID: boolean = false): Session {        
         // SessionCopyPara
         const mNeueSession: Session = cloneDeep(aSession);
-        if(mNeueSession.UebungsListe === undefined)
+        if (mNeueSession.UebungsListe === undefined)
             mNeueSession.UebungsListe = [];
         
         if (aSessionCopyPara.CopySessionID === false)
             mNeueSession.ID = undefined;
         
-        if(aSessionCopyPara.Komplett === true)
-        {
+        if (aSessionCopyPara.Komplett === true) {
             mNeueSession.UebungsListe = [];
             
             if (aSession.UebungsListe !== undefined) {
@@ -301,7 +500,7 @@ export class Session extends SessionDB implements ISession {
                     const mPrtUebung = aSession.UebungsListe[index1];
                     const mNeueUebung = mPrtUebung.Copy();
                     mNeueUebung.SatzListe = [];
-                    if(aSessionCopyPara.CopyUebungID === false)
+                    if (aSessionCopyPara.CopyUebungID === false)
                         mNeueUebung.ID = undefined;
 
                     for (let index2 = 0; index2 < mPrtUebung.SatzListe.length; index2++) {
@@ -309,7 +508,7 @@ export class Session extends SessionDB implements ISession {
                         const mNeuerSatz = mPrtSatz.Copy();
                         mNeuerSatz.SessionID = 0;
                         mNeuerSatz.UebungID = 0;
-                        if(aSessionCopyPara.CopySatzID === false)
+                        if (aSessionCopyPara.CopySatzID === false)
                             mNeuerSatz.ID = undefined;
                         mNeueUebung.SatzListe.push(mNeuerSatz);
                     }
@@ -319,16 +518,6 @@ export class Session extends SessionDB implements ISession {
         }
         return mNeueSession;
     }
-
-    constructor() {
-        super();
-        const mJetzt = new Date();
-        this.SessionDauer = new Zeitraum(mJetzt, mJetzt, new MaxZeitraum(99, 59, 59));
-        // Object.defineProperty(this, "UebungsListe", { enumerable: false });
-
-
-    }
-   
 
     public addUebung(aUebung: Uebung) {
         Session.StaticAddUebung(aUebung, this.UebungsListe);
@@ -340,7 +529,7 @@ export class Session extends SessionDB implements ISession {
         Session.nummeriereUebungsListe(aUebungsListe);
     }
 
-    public NextExercise(aUebung: Uebung): Uebung{
+    public NextExercise(aUebung: Uebung): Uebung {
         let mIndex = this.UebungsListe.indexOf(aUebung);
         if (mIndex >= 0) {
             mIndex++;
@@ -358,7 +547,7 @@ export class Session extends SessionDB implements ISession {
         if (aCmpSession.FK_Programm != this.FK_Programm) return true;
         if (aCmpSession.Kategorie01 != this.Kategorie01) return true;
         if (aCmpSession.Name != this.Name) return true;
-        if (aCmpSession.SessionNr != this.SessionNr) return true;    
+        if (aCmpSession.SessionNr != this.SessionNr) return true;
         
         if ((aCmpSession.UebungsListe) && (this.UebungsListe)) {
             if (aCmpSession.UebungsListe.length != this.UebungsListe.length)
@@ -379,7 +568,7 @@ export class Session extends SessionDB implements ISession {
         return false;
     }
 
-    public resetSession(aQuellSession: ISession):void {
+    public resetSession(aQuellSession: ISession): void {
         const mUebungsListe: Array<Uebung> = new Array<Uebung>();
         this.UebungsListe.forEach(u => mUebungsListe.push(u.Copy()));
         this.UebungsListe = [];
@@ -430,7 +619,7 @@ export class Session extends SessionDB implements ISession {
         return this.UebungsListe.filter(
             (u) =>
                 u.FkUebung === aUebung.FkUebung &&
-                u.FkProgress === aProgessID ? aProgessID : aUebung.FkProgress && 
+                    u.FkProgress === aProgessID ? aProgessID : aUebung.FkProgress &&
                 u.ProgressGroup === aUebung.ProgressGroup
         );
     }
@@ -439,7 +628,7 @@ export class Session extends SessionDB implements ISession {
         return this.UebungsListe.filter(
             (u) =>
                 u.FkUebung === aUebung.FkUebung &&
-                u.FkAltProgress === aProgessID !== undefined ? aProgessID : aUebung.FkAltProgress && 
+                    u.FkAltProgress === aProgessID !== undefined ? aProgessID : aUebung.FkAltProgress &&
                 u.ProgressGroup === aUebung.ProgressGroup
         );
     }
@@ -461,5 +650,5 @@ export class Session extends SessionDB implements ISession {
                     }
                 }
             });
-        }
+    }
 }

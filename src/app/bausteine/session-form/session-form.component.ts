@@ -464,7 +464,7 @@ export class SessionFormComponent implements OnInit {
 											});
 									}
 								
-									SessionDB.StaticCheckMembers(mPtrSession);
+									Session.StaticCheckMembers(mPtrSession);
 									mPtrSession.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
 								});
 							}
