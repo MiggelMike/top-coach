@@ -20,7 +20,7 @@ export class BodyWeight {
     }
 
     set ID(aVal: number) {
-        this.BodyWeightDB.ID = Number(aVal);
+        this.BodyWeightDB.ID = aVal;
     }
     //#endregion
     //#region Datum

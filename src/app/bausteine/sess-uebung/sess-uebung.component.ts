@@ -37,13 +37,9 @@ export class SessUebungComponent implements OnInit {
         private fDialogService: DialogeService,
         private fGlobalService: GlobalService
     ) {
-        const x = 0;
     }
 
     ngOnInit(): void {
-        const x = 0;
-        // this.satzListe = this.sessUebung.SatzListe;
-
     }
     
     ngOnDestroy() {

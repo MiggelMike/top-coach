@@ -2036,7 +2036,7 @@ export class DexieSvcService extends Dexie {
 		if (aUebung.SatzListe !== undefined)
 			mSatzListe = aUebung.SatzListe.map(sz => sz);
 		
-		// aUebung.SatzListe = [];
+		aUebung.SatzListe = [];
 		return await this.UebungTable.put(aUebung.UebungDB)
 			.then(async (mUebungID) => {
 				if (mSatzListe !== undefined) {
