@@ -249,11 +249,13 @@ export class SessionFormComponent implements OnInit {
 			}
 	
 			mDialogData.CancelFn = (): void => {
-				const mCancelDialogData = new DialogData();
-				mCancelDialogData.textZeilen.push("Changes will be lost!");
-				mCancelDialogData.textZeilen.push("Are you shure?");
-				mCancelDialogData.OkFn = (): void => this.leave();
-				this.fDialogService.JaNein(mCancelDialogData);
+				this.leave();
+
+				// const mCancelDialogData = new DialogData();
+				// mCancelDialogData.textZeilen.push("Changes will be lost!");
+				// mCancelDialogData.textZeilen.push("Are you shure?");
+				// mCancelDialogData.OkFn = (): void => this.leave();
+				// this.fDialogService.JaNein(mCancelDialogData);
 			}
 	
 			this.fDialogService.JaNein(mDialogData);
