@@ -1,4 +1,4 @@
-import { DexieSvcService } from 'src/app/services/dexie-svc.service';
+import { cDateTimeFormat, DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { Component, OnInit } from '@angular/core';
 import { BodyWeight } from 'src/Business/Bodyweight/Bodyweight';
 import { floatMask } from '../app.module';
@@ -9,6 +9,7 @@ import { floatMask } from '../app.module';
 	styleUrls: ['./bodyweight.component.scss'],
 })
 export class BodyweightComponent implements OnInit {
+  DateTimeFormat: string = cDateTimeFormat;
   BodyweightList: Array<BodyWeight> = [];
   public floatMask = floatMask;
 

@@ -31,6 +31,7 @@ export const cSatzSelectLimit = 1;
 //Number.MAX_SAFE_INTEGER
 export const cMaxLimnit = 1000000;
 export const cWeightDigits = 3;
+export const cDateTimeFormat = 'MMMM d, y, h:mm';
 
 export enum WorkerAction {
 	LadeAktuellesProgramm,
