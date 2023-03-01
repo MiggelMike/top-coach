@@ -4,7 +4,6 @@ import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
-import { setTimeout } from 'timers';
 
 
 
