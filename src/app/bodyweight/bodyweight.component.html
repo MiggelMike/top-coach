@@ -16,9 +16,9 @@
                     <!-- Zeilen-Hintergrundfarbe -> [ngClass]="{'HG-01': i % 2 === 0}" -->
                     <div fxLayout="row wrap" fxLayoutGap="2px" [ngClass]="{'HG-01': i % 2 === 0}" fxLayoutAlign="center center">
                         <div fxLayout="column" fxFlex="150px" fxLayoutAlign="center start">
-                            <mat-form-field class="width-75 pd-l-5">
+                            <mat-form-field class="align-right width-75 pd-l-5">
                                 <mat-label>Bodyweight</mat-label>
-                                <input class="width-75 pd-l-5 mg-top-23" 
+                                <input class="align-right width-75 pd-l-5 mg-top-23" 
                                        matInput [textMask]="{mask: floatMask, guide: false }" 
                                        (focusout)="SetBodyweight($event, bw)" 
                                        [ngModel]="(bw.Weight | number: '1.2')" 
@@ -34,8 +34,8 @@
                                     <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
                                   </mat-datepicker-toggle>
                                 <mat-datepicker #picker></mat-datepicker>
-                                <input matInput [matDatepicker]="picker" [(ngModel)]="bw.Datum" class="width-85 align-items-right">
-                                <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
+                                <input matInput [matDatepicker]="picker" [(ngModel)]="bw.Datum" class="width-85 align-items-right" readonly>
+                                <mat-hint>MM/DD/YYYY</mat-hint>
                               </mat-form-field>
                               
 
