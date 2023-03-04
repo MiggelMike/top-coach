@@ -1,4 +1,4 @@
-import {DragDropModule} from '@angular/cdk/drag-drop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {CdkTableModule} from '@angular/cdk/table';
 import {CdkTreeModule} from '@angular/cdk/tree';
@@ -233,7 +233,7 @@ export const floatMask = createNumberMask({
         BodyweightComponent
     ],
     imports: [
-        RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
+      RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
         TextMaskModule,
         MatCheckboxModule,
         MatCardModule,
