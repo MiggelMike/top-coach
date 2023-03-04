@@ -54,9 +54,12 @@ import { routes } from "./app-routing.module";
 import { SessionStatsOverlayComponent } from './session-stats-overlay/session-stats-overlay.component';
 import { DataStoreButtonsComponent } from './bausteine/data-store-buttons/data-store-buttons.component';
 import { ToolbarComponent } from './bausteine/toolbar/toolbar.component';
+
 import { MatSelectModule } from '@angular/material/select';
+
+
 import { MatRadioModule } from '@angular/material/radio';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs';ng v
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -109,6 +112,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import { BodyweightComponent } from './bodyweight/bodyweight.component';
+import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 
 
 //import { MatBadgeModule } from '@angular/material/m/MatBadgeModule';
@@ -268,7 +272,10 @@ export const floatMask = createNumberMask({
       DexieSvcService,
       MatSelectModule,
       NgChartsModule,
-      NgxChartsModule
+      NgxChartsModule,
+
+      NgxMatTimepickerModule,
+      NgxMatDatetimePickerModule      
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA,
