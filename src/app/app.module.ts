@@ -237,7 +237,7 @@ export const floatMask = createNumberMask({
         BodyweightComponent
     ],
     imports: [
-      RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
+        RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
         TextMaskModule,
         MatCheckboxModule,
         MatCardModule,
@@ -247,13 +247,13 @@ export const floatMask = createNumberMask({
         RouterModule,
         CdkTableModule,
         CdkTreeModule,
-      DragDropModule,
-      MatRadioModule,
-      MatTabsModule,
-      MatProgressBarModule,
-      MatTooltipModule,
-      MatDatepickerModule,MatInputModule,MatNativeDateModule,
-        MatSliderModule,  
+        DragDropModule,
+        MatRadioModule,
+        MatTabsModule,
+        MatProgressBarModule,
+        MatTooltipModule,
+        MatDatepickerModule, MatInputModule, MatNativeDateModule,
+        MatSliderModule,
         MatToolbarModule,
         MatExpansionModule,
         MatMenuModule,
@@ -269,21 +269,19 @@ export const floatMask = createNumberMask({
         ReactiveFormsModule,
         OverlayModule,
         FormsModule,
-      DexieSvcService,
-      MatSelectModule,
-      NgChartsModule,
-      NgxChartsModule,
-
-      NgxMatTimepickerModule,
-      NgxMatDatetimePickerModule      
+        DexieSvcService,
+        MatSelectModule,
+        NgChartsModule,
+        NgxChartsModule,
+        NgxMatTimepickerModule,
+        NgxMatDatetimePickerModule
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA,
         NO_ERRORS_SCHEMA
-      ],
-
-  exports: [
-    MatSelectModule,
+    ],
+    exports: [
+        MatSelectModule,
         RouterModule,
         CdkTableModule,
         CdkTreeModule,
@@ -300,9 +298,7 @@ export const floatMask = createNumberMask({
         MatRippleModule,
         MatSidenavModule,
         MatSliderModule,
-    MatAutocompleteModule,
-
-
+        MatAutocompleteModule,
         // MatBadgeModule,
         // MatBottomSheetModule,
         MatButtonModule,
@@ -337,15 +333,6 @@ export const floatMask = createNumberMask({
         MatToolbarModule,
         // MatTooltipModule,
         // MatTreeModule,
-        
-  ],
-    
-  
-    entryComponents: [
-        DialogComponent,
-        FilePreviewOverlayComponent,
-        UebungWaehlenComponent,
-        SessionStatsOverlayComponent
     ],
     providers: [MatDialog, FilePreviewOverlayService, DexieSvcService],
     bootstrap: [AppComponent]

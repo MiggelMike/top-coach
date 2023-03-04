@@ -1,7 +1,7 @@
 import { GlobalService } from 'src/app/services/global.service';
 import { Component, OnInit } from '@angular/core';
 import { FilePreviewOverlayService } from './services/file-preview-overlay.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { TrainingServiceModule } from '../modules/training-service.module';
 import { Observable } from 'rxjs';
 import { Router, NavigationStart } from '@angular/router';
@@ -20,14 +20,14 @@ const numericNumberReg = '[0-9]';
 
 export class AppComponent implements OnInit {
   title = 'Top-Coach';
-    public form: FormGroup;
+    public form: UntypedFormGroup;
     public state$: Observable<{ [key: string]: string }>;
   
     constructor(
         private router: Router,
         private previewDialog: FilePreviewOverlayService,
         private svc: GlobalService,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         // private aTrainingServiceModule: TrainingServiceModule
     ) {
         const y = 0;
