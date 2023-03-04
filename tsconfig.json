@@ -6,15 +6,14 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
-    
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-
     "strictPropertyInitialization": false,
-    "types": [ "node" ],
+    "types": [
+      "node"
+    ],
     "noImplicitAny": false,
     "strictNullChecks": false,
-
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
@@ -25,12 +24,13 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es5",
+    "target": "ES2022",
     "module": "es2020",
     "lib": [
       "es2020",
       "dom"
-    ]
+    ],
+    "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

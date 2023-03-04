@@ -237,7 +237,7 @@ export const floatMask = createNumberMask({
         BodyweightComponent
     ],
     imports: [
-        RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
+        RouterModule.forRoot(routes, {}),
         TextMaskModule,
         MatCheckboxModule,
         MatCardModule,
