@@ -27,10 +27,7 @@ export class ProgrammWaehlenComponent implements OnInit {
     }
         
         ngOnInit() {
-        // this.activatedRoute.data.subscribe(
-        //     (StandardProgramme: Array<ITrainingsProgramm>) => {
-        //         this.ProgrammListe = StandardProgramme;
-        //     });
+   
     }
     
     public TrainingsProgrammeVorhanden(): Boolean {
