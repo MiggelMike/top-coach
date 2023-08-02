@@ -2002,6 +2002,7 @@ export class DexieSvcService extends Dexie {
 	public async LadeStandardProgramme(): Promise<Array<ITrainingsProgramm>> {
 		const mProgrammPara: ProgrammParaDB = new ProgrammParaDB();
 		mProgrammPara.WhereClause = { ProgrammKategorie: ProgrammKategorie.Vorlage.toString() };
+		mProgrammPara.SessionBeachten = true;
 		return this.LadeProgrammeEx(mProgrammPara);
 	}
 
