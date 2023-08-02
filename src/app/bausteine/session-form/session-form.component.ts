@@ -17,7 +17,6 @@ import { ProgressPara, ProgressSet } from 'src/Business/Progress/Progress';
 import { Satz, SatzStatus } from 'src/Business/Satz/Satz';
 import { ExerciseSettingSvcService } from 'src/app/services/exercise-setting-svc.service';
 import { ExerciseSettingsComponent } from 'src/app/exercise-settings/exercise-settings.component';
-import { threadId } from 'worker_threads';
 
 @Component({
 	selector: "app-session-form",

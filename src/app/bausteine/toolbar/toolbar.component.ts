@@ -1,6 +1,8 @@
 import { Router } from '@angular/router';
 import { Component, OnInit, Input } from '@angular/core';
 
+
+
 interface INavCheck {
     (aNavPath: string, aPara?:any): void;
 }
@@ -11,7 +13,7 @@ interface INavCheck {
     styleUrls: ['./toolbar.component.scss']
 })
 export class ToolbarComponent implements OnInit {
-    @Input() NavCheckFn: INavCheck = null;
+    @Input() NavCheckFn: INavCheck = null!;
     @Input() Data: any = null;
     public isVisible: boolean = true;
 
@@ -39,3 +41,7 @@ export class ToolbarComponent implements OnInit {
 
 
 }
+
+
+
+  

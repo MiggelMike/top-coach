@@ -49,12 +49,21 @@ export class Programm02Component implements OnInit {
 	private SessionListObserver: Observable<Array<ISession>>;
 	
 
-	drop(event: CdkDragDrop<ISession[]>) {
-		this.programm.SessionListe[event.previousIndex].ListenIndex = event.currentIndex;
-		this.programm.SessionListe[event.currentIndex].ListenIndex = event.previousIndex;
-		this.fDbModule.SessionSpeichern(this.programm.SessionListe[event.previousIndex] as Session);
-		this.fDbModule.SessionSpeichern(this.programm.SessionListe[event.currentIndex] as Session);		
+	drop(event: any) {
+		const mEvent = event as CdkDragDrop<ISession[]>;
+		
+		this.programm.SessionListe[event.previousIndex].ListenIndex = mEvent.currentIndex;
+		this.programm.SessionListe[event.currentIndex].ListenIndex = mEvent.previousIndex;
+		this.fDbModule.SessionSpeichern(this.programm.SessionListe[mEvent.previousIndex] as Session);
+		this.fDbModule.SessionSpeichern(this.programm.SessionListe[mEvent.currentIndex] as Session);		
 	}
+
+	// drop(event: CdkDragDrop<ISession[] | any>) {
+	// 	this.programm.SessionListe[event.previousIndex].ListenIndex = event.currentIndex;
+	// 	this.programm.SessionListe[event.currentIndex].ListenIndex = event.previousIndex;
+	// 	this.fDbModule.SessionSpeichern(this.programm.SessionListe[event.previousIndex] as Session);
+	// 	this.fDbModule.SessionSpeichern(this.programm.SessionListe[event.currentIndex] as Session);		
+	// }
 	
 	DoSessionName(aSess:ISession, aEvent: any) {
 		aSess.Name = aEvent.target.value;
@@ -208,9 +217,11 @@ export class Programm02Component implements OnInit {
 		});
 	}
 
-	public get SortedSessionListe(): Array<ISession> {
-		if (this.programmTyp === "history") return this.SessionListe;
-		else return this.fDbModule.SortSessionByListenIndex(this.SessionListe as Array<Session>);
+	public get SortedSessionListe(): Array<Session> {
+		let mResult: Array<Session> = [];
+		if (this.programmTyp === "history") mResult = this.SessionListe as Array<Session>;
+		else mResult = this.fDbModule.SortSessionByListenIndex(this.SessionListe as Array<Session>) as Array<Session>;
+		return mResult;
     }
 	
 	private DeleteSessionPrim(aSession: ISession, aRowNum: number, aOnDelete: onDeleteFn ) {

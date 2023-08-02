@@ -13,7 +13,7 @@ import { cStoppUhrOverlayData, StoppUhrOverlayConfig, StoppUhrOverlayRef } from 
 	styleUrls: ["./stoppuhr.component.scss"],
 })
 export class StoppuhrComponent implements OnInit {
-	public fConfig: StoppUhrOverlayConfig;
+	public fConfig!: StoppUhrOverlayConfig;
 	public Session: ISession;	
 	public Satz: Satz;
 	public Uebung: Uebung;
@@ -32,12 +32,12 @@ export class StoppuhrComponent implements OnInit {
 		private cd: ChangeDetectorRef,
 		public overlayRef: StoppUhrOverlayRef, public fDbModule: DexieSvcService, @Inject(cStoppUhrOverlayData) public aStoppUhrOverlayConfig: StoppUhrOverlayConfig)
 	{
-		this.Satz = aStoppUhrOverlayConfig.satz;
-		this.Uebung = aStoppUhrOverlayConfig.uebung;
-		this.Session = aStoppUhrOverlayConfig.session;
-		this.SatzListenNr = aStoppUhrOverlayConfig.satznr;
+		this.Satz = aStoppUhrOverlayConfig.satz!;
+		this.Uebung = aStoppUhrOverlayConfig.uebung!;
+		this.Session = aStoppUhrOverlayConfig.session!;
+		this.SatzListenNr = aStoppUhrOverlayConfig.satznr!;
 		this.StartZeitpunkt = new Date();
-		this.NextSetText = aStoppUhrOverlayConfig.headerText;
+		this.NextSetText = aStoppUhrOverlayConfig.headerText!;
 		this.NaechsteUebungPauseSec = aStoppUhrOverlayConfig.NaechsteUebungPauseSec === undefined ? 0 : aStoppUhrOverlayConfig.NaechsteUebungPauseSec;
 		this.AufwaermArbeitsSatzPauseSec = aStoppUhrOverlayConfig.AufwaermArbeitsSatzPauseSec === undefined ? 0 : aStoppUhrOverlayConfig.AufwaermArbeitsSatzPauseSec;
 		// ../../../assets/audio/alarm.wav
@@ -51,7 +51,7 @@ export class StoppuhrComponent implements OnInit {
 
 	close() {
 		if (this.overlayRef != null) this.overlayRef.close();
-		this.overlayRef = null;
+		this.overlayRef = null!;
 	}
 
 	get ScheduledPauseTimeEasy(): string {

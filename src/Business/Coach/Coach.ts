@@ -10,6 +10,7 @@ export interface IAppData {
     GewichtsEinheit: GewichtsEinheit;
     GewichtsEinheitText: string;
     MaxHistorySessions: number;
+    SprachID: number;
     // LetzteProgrammID: number;
     // LetzteSessionID: number;
     // LetzteSatzID: number;
@@ -21,6 +22,7 @@ export interface IAppData {
 
 export class AppData {
     public ID: number;
+    public SprachID: number = null;
     GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
     
     private fMaxHistorySessions: number = 10;

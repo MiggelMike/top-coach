@@ -11,8 +11,8 @@ import { DialogeService } from "../services/dialoge.service";
 	styleUrls: ["./trainings-gewicht-progress.component.scss"],
 })
 export class TrainingsGewichtProgressComponent implements OnInit {
-	public NeuerProgress: Progress = null;
-	public CmpNeuerProgress: Progress = null;
+	public NeuerProgress: Progress = null!;
+	public CmpNeuerProgress: Progress = null!;
 
 	constructor(private router: Router, public fDexieService: DexieSvcService, public fDialogService: DialogeService) {
 		this.fDexieService.LadeProgress();

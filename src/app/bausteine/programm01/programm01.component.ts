@@ -1,7 +1,7 @@
-import { SessionParaDB, UebungParaDB } from 'src/app/services/dexie-svc.service';
-import { DexieSvcService, ParaDB, cSessionSelectLimit } from './../../services/dexie-svc.service';
-import { Component, OnInit, Input } from "@angular/core";
-import { TrainingsProgramm, ITrainingsProgramm, ProgrammKategorie, ProgrammTyp } from "../../../Business/TrainingsProgramm/TrainingsProgramm";
+import { SessionParaDB  } from 'src/app/services/dexie-svc.service';
+import { DexieSvcService, cSessionSelectLimit } from './../../services/dexie-svc.service';
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { TrainingsProgramm, ITrainingsProgramm } from "../../../Business/TrainingsProgramm/TrainingsProgramm";
 import { DialogeService } from 'src/app/services/dialoge.service';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
 import { Router } from '@angular/router';
@@ -19,18 +19,19 @@ export class Programm01Component implements OnInit {
     @Input() showSaveButtons: boolean | false;
     @Input() programmtext: { value: null };
 
+    StandardProgramme: Array<ITrainingsProgramm>;
+
     SelectBtnDisabled: boolean = false;
 
     constructor(
         private fDbModul: DexieSvcService,
         public fDialogService: DialogeService,
         private router: Router
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
-     }
-
+    }
+    
     private SelectWorkout(aSelectedProgram: ITrainingsProgramm) {
         this.fDbModul.RefreshAktuellesProgramm = true;
         this.router.navigate(["/app-initial-weight"], { state: { Program: aSelectedProgram } });

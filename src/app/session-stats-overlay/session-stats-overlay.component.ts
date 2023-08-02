@@ -137,6 +137,6 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
     close() {
         if(this.overlayRef != null)
             this.overlayRef.close();
-        this.overlayRef = null;
+        this.overlayRef = null!;
     }
 }

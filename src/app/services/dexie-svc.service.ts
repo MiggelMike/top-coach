@@ -1,3 +1,4 @@
+import { cDeutsch, cDeutschKuezel, cEnglish, cEnglishKuerzel, cEnglishDatumFormat, cEnglishZeitFormat, cDeutschDatumFormat, cDeutschZeitFormat } from './../Sprache/Sprache';
 import { BodyWeight, BodyWeightDB } from './../../Business/Bodyweight/Bodyweight';
 import { SessionCopyPara } from './../../Business/Session/Session';
 import { HypertrophicProgramm } from '../../Business/TrainingsProgramm/Hypertrophic';
@@ -20,6 +21,8 @@ import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardU
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
 import { DiaDatum, DiaUebung, DiaUebungSettings } from 'src/Business/Diagramm/Diagramm';
+import { Sprache } from '../Sprache/Sprache';
+import { TranslateService } from '@ngx-translate/core';
 var cloneDeep = require('lodash.clonedeep');
 
 
@@ -180,7 +183,8 @@ export class DexieSvcService extends Dexie {
 	readonly cHantelscheibe: string = "Hantelscheibe";
 	readonly cProgress: string = "Progress";
 	readonly cDiaUebungSettings: string = "DiaUebungSettings";
-	readonly cBodyweight : string = "BodyWeightDB";
+	readonly cBodyweight: string = "BodyWeightDB";
+	readonly cSprache  : string = "Sprache";
 
 	AktuellerProgrammTyp: ProgrammTyp;
 	AktuellesProgramm: ITrainingsProgramm;
@@ -189,6 +193,7 @@ export class DexieSvcService extends Dexie {
 	CmpAktuellesProgramm: ITrainingsProgramm;
 	VorlageProgramme: Array<TrainingsProgramm> = [];
 	AppRec: AppData;
+	AktuellSprache: Sprache;
 	AppDataTable: Dexie.Table<AppData, number>;
 	private UebungTable: Dexie.Table<UebungDB, number>;
 	private SatzTable: Dexie.Table<SatzDB, number>;
@@ -201,6 +206,7 @@ export class DexieSvcService extends Dexie {
 	private ProgressTable: Dexie.Table<Progress, number>;
 	private DiaUebungSettingsTable: Dexie.Table<DiaUebungSettings, number>;
 	private BodyweightTable: Dexie.Table<BodyWeightDB, number>;
+	private SpracheTable: Dexie.Table<Sprache, number>;
 	private worker: Worker;
 	public Programme: Array<ITrainingsProgramm> = [];
 	public StammUebungsListe: Array<Uebung> = [];
@@ -670,14 +676,18 @@ export class DexieSvcService extends Dexie {
 		// return mResult;
 	}
 
-	constructor(private fDialogeService: DialogeService, @Optional() @SkipSelf() parentModule?: DexieSvcService) {
+	constructor(
+		private fDialogeService: DialogeService,
+		// private fTranslateService: TranslateService,
+		@Optional() @SkipSelf()
+		parentModule?: DexieSvcService) {
 		super("ConceptCoach");
 		if (parentModule) {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
 		}
 
 		          //Dexie.delete("ConceptCoach");
-		this.version(25).stores({
+		this.version(28).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
@@ -689,7 +699,8 @@ export class DexieSvcService extends Dexie {
 			Hantelscheibe: "++ID,&[Durchmesser+Gewicht]",
 			Progress: "++ID,&Name",
 			DiaUebungSettings: "++ID,&UebungID",
-			BodyWeightDB: "++ID,Datum"
+			BodyWeightDB: "++ID,Datum",
+			Sprache: "++id"
 			
 		});
 		this.InitDatenbank();
@@ -702,7 +713,8 @@ export class DexieSvcService extends Dexie {
 		this.PruefeStandardLanghanteln();
 		this.PruefeStandardEquipment();
 		this.PruefeStandardMuskelGruppen();
-		this.DoWorker(WorkerAction.LadeDiagrammDaten);
+		// Worker funktioniert NICHT in Android!
+		// this.DoWorker(WorkerAction.LadeDiagrammDaten);
 		// this.LadeStammUebungen();
 	}
 
@@ -778,6 +790,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	private InitAll() {
+		this.InitSprache();
 		this.InitAppData();
 		this.InitProgress();
 		this.InitHantel();
@@ -965,16 +978,17 @@ export class DexieSvcService extends Dexie {
 
 	public InsertUebungen(aUebungsListe: Array<Uebung>): PromiseExtended<Array<Uebung>> {
 		let mUebungsDB_Liste: Array<UebungDB> = [];
-		aUebungsListe.map((u) => mUebungsDB_Liste.push(u.UebungDB) );
-		return this.UebungTable.bulkPut(mUebungsDB_Liste).then(
-			(mSavedUebungsDB_Liste) => {
-				for (let index = 0; index < aUebungsListe.length; index++) {
-					const mPtrUebung: Uebung = aUebungsListe[index];
-					mPtrUebung.UebungDB = mSavedUebungsDB_Liste[index];
+		aUebungsListe.map((u) => mUebungsDB_Liste.push(u.UebungDB));
+		return this.UebungTable.bulkPut(mUebungsDB_Liste, {allKeys: true})
+			.then(
+				(mKeyList) => {
+					for (let index = 0; index < aUebungsListe.length; index++) {
+						const mPtrUebung: Uebung = aUebungsListe[index];
+						mPtrUebung.UebungDB.ID = mKeyList[index];
 					
-				}
-				return aUebungsListe;
-			});
+					}
+					return aUebungsListe;
+				});
 	}
 
 	public InsertDiaUebungen(aDiaUebungsListe: Array<DiaUebungSettings>): PromiseExtended {
@@ -1116,7 +1130,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public DeleteHantelListe(aHantelListe: Array<Hantel>) {
-		const mKeys = [];
+		const mKeys:any = [];
 		aHantelListe.forEach((mHantel) => mKeys.push(mHantel.ID));
 		this.HantelTable.bulkDelete(mKeys);
 	}
@@ -1146,7 +1160,7 @@ export class DexieSvcService extends Dexie {
 				// this.DeleteHantelListe(mHantelListe);
 
 				const mDurchmesser: number[] = [50, 30, 25];
-				for (const mTyp in HantelTyp) {
+				for (const mTyp of DexieSvcService.StaticEnumKeys(HantelTyp)) {
 					if (mTyp === HantelTyp.Dumbbel)
 						continue;
 
@@ -1205,13 +1219,18 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
+	public static StaticEnumKeys<O extends object, K extends keyof O = keyof O>(obj: O): K[] {
+		return Object.keys(obj).filter(k => Number.isNaN(+k)) as K[];
+	}
+
+
 	public PruefeStandardEquipment() {
 		const mAnlegen: Array<Equipment> = new Array<Equipment>();
 		this.table(this.cEquipment)
 			.filter((mEquipment: Equipment) => mEquipment.EquipmentOrigin === EquipmentOrigin.Standard)
 			.toArray()
 			.then((mEquipmentListe) => {
-				for (const mEquipmentTyp in EquipmentTyp) {
+				for (const mEquipmentTyp of DexieSvcService.StaticEnumKeys(EquipmentTyp) ) {
 					if (mEquipmentTyp === EquipmentTyp.Unbestimmt) continue;
 
 					if (mEquipmentListe.find((mEquipment: Equipment) => mEquipment.EquipmentTyp === mEquipmentTyp) === undefined) {
@@ -1582,7 +1601,9 @@ export class DexieSvcService extends Dexie {
 						for (let index = 0; index < mResult.length; index++) {
 							const mPtrSession = mResult[index];
 							await this.LadeSessionUebungen(mPtrSession.ID, aSessionParaDB.UebungParaDB)
-								.then((aUebungsListe) => mPtrSession.UebungsListe = aUebungsListe);
+								.then((aUebungsListe) => {
+									mPtrSession.UebungsListe = aUebungsListe;
+								});
 						}
 					}//if
 				}//if
@@ -1957,7 +1978,7 @@ export class DexieSvcService extends Dexie {
 		// mLadePara.OnProgrammAfterLoadFn = (aAktuellesProgramm: TrainingsProgramm) => {
 		// 	return aAktuellesProgramm
 		// };
-		return this.LadeProgrammeEx(mLadePara);
+		return await this.LadeProgrammeEx(mLadePara);
 		
 	}
 
@@ -2110,6 +2131,67 @@ export class DexieSvcService extends Dexie {
 		this.LadeProgrammeEx(this.ProgramLadeStandardPara);
 	}
 
+	//#region Sprache
+	private async InitSprache() {
+		this.SpracheTable = this.table(this.cSprache);
+		this.SpracheTable.mapToClass(Sprache);
+		await this.LadeAlleSprachen().then(async (mSprachen) => {
+			if (mSprachen.length === 0) {
+				await this.InsertSprache(Sprache.StaticNeueSprache(
+					cEnglish,
+					cEnglishKuerzel,
+					cEnglishDatumFormat,
+					cEnglishZeitFormat
+				));
+
+				await this.InsertSprache(Sprache.StaticNeueSprache(
+					cDeutsch,
+					cDeutschKuezel,
+					cDeutschDatumFormat,
+					cDeutschZeitFormat
+				));
+			} else {
+				if (mSprachen.find((aSprache) => aSprache.Name === cDeutsch) === undefined)
+					await this.InsertSprache(Sprache.StaticNeueSprache(
+						cDeutsch,
+						cDeutschKuezel,
+						cDeutschDatumFormat,
+						cDeutschZeitFormat
+					));
+					
+				if (mSprachen.find((aSprache) => aSprache.Name = cEnglish) === undefined)
+					await this.InsertSprache(Sprache.StaticNeueSprache(
+						cEnglish,
+						cEnglishKuerzel,
+						cEnglishDatumFormat,
+						cEnglishZeitFormat
+					));
+
+			}
+		});
+	}
+
+	async InsertSprache(aSprache: Sprache) {
+		await this.SpracheTable.put(aSprache);
+	}
+
+	public async LadeAlleSprachen(): Promise<Array<Sprache>> {
+		return await this.SpracheTable
+			.toArray()
+			.then(async (aSprachen: Array<Sprache>) => {
+				return aSprachen;
+			});
+	}
+
+	public async LadeSpracheFromID(aID: number): Promise<Sprache> {
+		return await this.SpracheTable
+			.where({ id: aID})
+			.first(async (aSprache: Sprache) => {
+				return aSprache;
+			});
+	}
+	//#endregion
+
 	//#region  AppaData
 	private async InitAppData() {
 		this.AppDataTable = this.table(this.cAppData);
@@ -2122,6 +2204,21 @@ export class DexieSvcService extends Dexie {
 				console.error(error);
 			});
 		}
+		
+		if (this.AppRec.SprachID <= 0) {
+			this.LadeAlleSprachen().then(async (aSprachen) => {
+				// const mSprache = aSprachen.find((aSprache) => aSprache.Kuerzel === this.fTranslateService.getBrowserLang());
+				const mSprache = new Sprache();
+				this.AppRec.SprachID = mSprache.id;
+				this.AktuellSprache = mSprache;
+				await this.AppDataTable.put(this.AppRec).catch((error) => {
+					console.error(error);
+				})
+			});
+		} else {
+			this.LadeSpracheFromID(this.AppRec.SprachID)
+				.then((aSprache) => this.AktuellSprache = aSprache);
+		}// if
 	}
 
 	public async LadeAppData(): Promise<AppData>{

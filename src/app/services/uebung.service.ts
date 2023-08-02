@@ -1,12 +1,13 @@
+import { EditExerciseComponent } from "../edit-exercise/edit-exercise.component";
 import { DexieSvcService } from './dexie-svc.service';
-import { Observable } from 'rxjs';
 import { Session } from 'src/Business/Session/Session';
 import { Uebung } from 'src/Business/Uebung/Uebung';
 import { UebungWaehlenComponent, UebungWaehlenData } from './../uebung-waehlen/uebung-waehlen.component';
 import { Injectable } from '@angular/core';
 import { JsonProperty } from '@peerlancers/json-serialization';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { EditExerciseComponent, UebungEditData } from '../edit-exercise/edit-exercise.component';
+// import { EditExerciseComponent, UebungEditData } from '../edit-exercise/edit-exercise.component';
+import { UebungEditData } from '../edit-exercise/edit-exercise.component';
 
 
 @Injectable({
@@ -38,7 +39,7 @@ export class UebungService {
 
         mUebungEditData.fUebung = aUebung;
         mUebungEditData.fUebungListe = aUebungsListe;
-        mUebungEditData.fMatDialog = this.fDialog.open(EditExerciseComponent, mDialogConfig);
+        mUebungEditData.fMatDialog = this.fDialog!.open(EditExerciseComponent, mDialogConfig);
         
         (mUebungEditData.fMatDialog.componentInstance as EditExerciseComponent).UebungEditData = mUebungEditData;
         (mUebungEditData.fMatDialog.componentInstance as EditExerciseComponent).fDialog = mUebungEditData.fMatDialog;
@@ -76,7 +77,7 @@ export class UebungService {
                 mUebungWaehlenData.fSession = aSession;
                 // mUebungWaehlenData.fMatDialog = this.fDialog;
         
-                mUebungWaehlenData.fMatDialog = this.fDialog.open(UebungWaehlenComponent, mDialogConfig);
+                mUebungWaehlenData.fMatDialog = this.fDialog!.open(UebungWaehlenComponent, mDialogConfig);
         
             }
         )

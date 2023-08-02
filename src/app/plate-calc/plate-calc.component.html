@@ -15,7 +15,7 @@
             <div class="mg-5" layout-align="end" layout-margin>
                 <mat-checkbox 
                 [(ngModel)]="SetForAllSets" (click)="$event.stopPropagation()"
-                (change)="DoWeightAllSets($event.checked)"
+                (change)="DoWeightAllSets($event)"
 
                 >All sets
                 </mat-checkbox>
@@ -37,7 +37,7 @@
             <div class="mg-5" layout-align="end" layout-margin>
                 <mat-checkbox 
                 [(ngModel)]="HantelForAllSets" (click)="$event.stopPropagation()"
-                (change)="DoHantelAllSets($event.checked)"
+                (change)="DoHantelAllSets($event)"
                 >All sets
                 </mat-checkbox>
             </div>
@@ -63,7 +63,7 @@
             <div class="mg-5" layout-align="end" layout-margin>
                 <mat-checkbox 
                 [(ngModel)]="RepRangeForAllSets" (click)="$event.stopPropagation()"
-                (change)="DoRepRangelAllSets($event.checked)"
+                (change)="DoRepRangelAllSets($event)"
                 >All sets
                 </mat-checkbox>
             </div>
@@ -89,7 +89,7 @@
             <div class="mg-5" layout-align="end" layout-margin>
                 <mat-checkbox 
                 [(ngModel)]="DoneRepsForAllSets" (click)="$event.stopPropagation()"
-                (change)="DoDoneRepsAllSets($event.checked)"
+                (change)="DoDoneRepsAllSets($event)"
                 >All sets
                 </mat-checkbox>
             </div>

@@ -186,7 +186,8 @@ export class SatzEditComponent implements OnInit {
         return aSatz.Status === SatzStatus.Fertig;
     }
 
-    async onClickSatzFertig(aSatz: Satz, aChecked: boolean) {
+    async onClickSatzFertig(aSatz: Satz, aEvent: any) {
+        const mChecked = aEvent.checked;
         if (this.programmTyp === 'history')
             return;
 
@@ -197,11 +198,11 @@ export class SatzEditComponent implements OnInit {
         
             
         let mHeader: string = '';
-        if (aChecked) {
+        if (mChecked) {
             mHeader = '';
         }
 
-        aSatz.Datum = aChecked === true ? new Date() : undefined;
+        aSatz.Datum = mChecked === true ? new Date() : undefined;
         const mProgressPara: ProgressPara = new ProgressPara();
         mProgressPara.AusgangsSatz = aSatz as Satz;
         mProgressPara.AusgangsSession = this.sess;
@@ -211,7 +212,7 @@ export class SatzEditComponent implements OnInit {
         //        this.sessUebung.WeightInitDate = Uebung.StaticArbeitsSaetzeStatus(this.sessUebung) === SaetzeStatus.AlleFertig ? new Date : cMinDatum;
         mProgressPara.Programm = this.programm;
         mProgressPara.DbModule = this.fDbModule;
-        mProgressPara.SatzDone = aChecked;
+        mProgressPara.SatzDone = mChecked;
         mProgressPara.ProgressHasChanged = false;
         mProgressPara.ProgressListe = this.fDbModule.ProgressListe;
         // Routine zum Starten der Stoppuhr.

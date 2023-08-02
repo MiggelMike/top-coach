@@ -80,23 +80,24 @@ export class PlateCalcComponent implements OnInit {
 		return aSatz1.SatzListIndex === aSatz2.SatzListIndex;
 	}
 
-	public DoWeightAllSets(aChecked: boolean) {
-    if (this.Uebung && this.Satz && aChecked) {
-      if (this.Satz.SatzTyp === SatzTyp.Aufwaermen) {
-        this.Uebung.AufwaermSatzListe.forEach((sz) => {
-          if (this.SetsAreEqual(sz, this.Satz) === false) sz.GewichtAusgefuehrt = this.Satz.GewichtAusgefuehrt;
-        });
-      }
-      else if (this.Satz.SatzTyp === SatzTyp.Training) {
-        this.Uebung.ArbeitsSatzListe.forEach((sz) => {
-          if (this.SetsAreEqual(sz, this.Satz) === false) sz.GewichtAusgefuehrt = this.Satz.GewichtAusgefuehrt;
-        });
-      }
-      else if (this.Satz.SatzTyp === SatzTyp.Abwaermen) {
-        this.Uebung.AbwaermSatzListe.forEach((sz) => {
-          if (this.SetsAreEqual(sz, this.Satz) === false) sz.GewichtAusgefuehrt = this.Satz.GewichtAusgefuehrt;
-        });
-      }
+	public DoWeightAllSets(aEvent: any) {
+		const mChecked = aEvent.checked;
+		if (this.Uebung && this.Satz && mChecked) {
+			if (this.Satz.SatzTyp === SatzTyp.Aufwaermen) {
+				this.Uebung.AufwaermSatzListe.forEach((sz) => {
+					if (this.SetsAreEqual(sz, this.Satz) === false) sz.GewichtAusgefuehrt = this.Satz.GewichtAusgefuehrt;
+				});
+			}
+			else if (this.Satz.SatzTyp === SatzTyp.Training) {
+				this.Uebung.ArbeitsSatzListe.forEach((sz) => {
+					if (this.SetsAreEqual(sz, this.Satz) === false) sz.GewichtAusgefuehrt = this.Satz.GewichtAusgefuehrt;
+				});
+			}
+			else if (this.Satz.SatzTyp === SatzTyp.Abwaermen) {
+				this.Uebung.AbwaermSatzListe.forEach((sz) => {
+					if (this.SetsAreEqual(sz, this.Satz) === false) sz.GewichtAusgefuehrt = this.Satz.GewichtAusgefuehrt;
+				});
+			}
 		}
 	}
 
@@ -117,23 +118,24 @@ export class PlateCalcComponent implements OnInit {
 		this.DoDoneRepsAllSets(this.DoneRepsForAllSets);
 	}
 
-	public DoHantelAllSets(aChecked: boolean) {
-    if (this.Uebung && this.Satz && aChecked) {
-      if (this.Satz.SatzTyp === SatzTyp.Aufwaermen) {
-        this.Uebung.AufwaermSatzListe.forEach((sz) => {
-          if (this.SetsAreEqual(sz, this.Satz) === false) sz.FkHantel = this.Satz.FkHantel;
-        });
-      }
-      else if (this.Satz.SatzTyp === SatzTyp.Training) {
-        this.Uebung.ArbeitsSatzListe.forEach((sz) => {
-          if (this.SetsAreEqual(sz, this.Satz) === false) sz.FkHantel = this.Satz.FkHantel;
-        });
-      }
-      else if (this.Satz.SatzTyp === SatzTyp.Abwaermen) {
-        this.Uebung.AbwaermSatzListe.forEach((sz) => {
-          if (this.SetsAreEqual(sz, this.Satz) === false) sz.FkHantel = this.Satz.FkHantel;
-        });
-      }
+	public DoHantelAllSets(aEvent: any) {
+		const mChecked = aEvent.checked;
+		if (this.Uebung && this.Satz && mChecked) {
+			if (this.Satz.SatzTyp === SatzTyp.Aufwaermen) {
+				this.Uebung.AufwaermSatzListe.forEach((sz) => {
+					if (this.SetsAreEqual(sz, this.Satz) === false) sz.FkHantel = this.Satz.FkHantel;
+				});
+			}
+			else if (this.Satz.SatzTyp === SatzTyp.Training) {
+				this.Uebung.ArbeitsSatzListe.forEach((sz) => {
+					if (this.SetsAreEqual(sz, this.Satz) === false) sz.FkHantel = this.Satz.FkHantel;
+				});
+			}
+			else if (this.Satz.SatzTyp === SatzTyp.Abwaermen) {
+				this.Uebung.AbwaermSatzListe.forEach((sz) => {
+					if (this.SetsAreEqual(sz, this.Satz) === false) sz.FkHantel = this.Satz.FkHantel;
+				});
+			}
 		}
 	}
 
@@ -142,8 +144,9 @@ export class PlateCalcComponent implements OnInit {
 		aEvent.stopPropagation();
 	}
 
-	public DoRepRangelAllSets(aChecked: boolean) {
-		if (this.Uebung && this.Satz && aChecked) {
+	public DoRepRangelAllSets(aEvent: any) {
+		const mChecked = aEvent.checked;
+		if (this.Uebung && this.Satz && mChecked) {
 			if (this.Satz.SatzTyp === SatzTyp.Aufwaermen) {
 				this.Uebung.AufwaermSatzListe.forEach((sz) => {
 					if (this.SetsAreEqual(sz, this.Satz) === false) {
@@ -171,8 +174,9 @@ export class PlateCalcComponent implements OnInit {
 		}
 	}
 
-	public DoDoneRepsAllSets(aChecked: boolean) {
-		if (this.Uebung && this.Satz && aChecked) {
+	public DoDoneRepsAllSets($event: any) {
+		const mChecked = $event.checked;
+		if (this.Uebung && this.Satz && mChecked) {
 		  if (this.Satz.SatzTyp === SatzTyp.Aufwaermen) {
 			this.Uebung.AufwaermSatzListe.forEach((sz) => {
 			  if (this.SetsAreEqual(sz, this.Satz) === false) {

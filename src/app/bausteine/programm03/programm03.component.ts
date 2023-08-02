@@ -1,4 +1,4 @@
-import { DexieSvcService, SatzParaDB, onFormCloseFn } from './../../services/dexie-svc.service';
+import { DexieSvcService, SatzParaDB } from './../../services/dexie-svc.service';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { Uebung, SaetzeStatus } from './../../../Business/Uebung/Uebung';
 import { GlobalService } from 'src/app/services/global.service';
@@ -8,7 +8,6 @@ import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProg
 import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, Output, EventEmitter, ChangeDetectionStrategy  } from "@angular/core";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
-import { of, throwIfEmpty } from 'rxjs';
 import { LOCALE_ID, Inject } from '@angular/core';
 import { floatMask } from 'src/app/app.module';
 import { ExerciseSettingsComponent } from 'src/app/exercise-settings/exercise-settings.component';
@@ -141,9 +140,10 @@ export class Programm03Component implements OnInit {
             this.DoCheckSettings.emit(this.fExerciseSettingSvcService);
     }
 
-    drop(event: CdkDragDrop<Uebung[]>) {
-        this.session.UebungsListe[event.previousIndex].ListenIndex = event.currentIndex;
-        this.session.UebungsListe[event.currentIndex].ListenIndex = event.previousIndex;
+    drop(event: any) {
+        const mEvent = event as CdkDragDrop<Uebung[]>;
+        this.session.UebungsListe[event.previousIndex].ListenIndex = mEvent.currentIndex;
+        this.session.UebungsListe[event.currentIndex].ListenIndex = mEvent.previousIndex;
     }
     
     public get UebungsListe(): Array<Uebung>{

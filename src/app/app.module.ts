@@ -1,357 +1,332 @@
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ProgrammWaehlenModule } from './programm-waehlen/programm-waehlen.module';
+import { PlateCalcModule } from "./plate-calc/plate-calc-module/plate-calc-module.module";
+import { StoppUhrModuleModule } from "./stoppuhr/stopp-uhr-module/stopp-uhr-module.module";
+import { SatzEditModule } from "./bausteine/satz-edit/satz-edit-module/satz-edit-module.module";
+import { SessUebungModule } from './bausteine/sess-uebung/sess-uebung-module/sess-uebung-module.module';
+import { EditExerciseModule } from './edit-exercise/edit-exercise-module/edit-exercise-module.module';
+import { ExerciseSettingsModule } from './exercise-settings/exercise-settings-module/exercise-settings-module.module';
+// import { ToolBarModuleModule } from './bausteine/test/test.component';
+import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+import { RouteReuseStrategy } from "@angular/router";
+
+import { IonicModule, IonicRouteStrategy } from "@ionic/angular";
+import { AppRoutingModule } from "./app-routing.module";
+import { AppComponent } from "./app.component";
+import { MatCardModule } from "@angular/material/card";
+import { MatSliderModule } from "@angular/material/slider";
+import { MatToolbarModule } from "@angular/material/toolbar";
+import { MatAccordion, MatExpansionModule } from "@angular/material/expansion";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { MatInputModule } from "@angular/material/input";
+import { MatRippleModule, MAT_DATE_LOCALE } from "@angular/material/core";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatDialogModule } from "@angular/material/dialog";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatRadioModule } from "@angular/material/radio";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatSidenavModule } from "@angular/material/sidenav";
+import { MatSelectModule } from "@angular/material/select";
+import { MatTabsModule } from "@angular/material/tabs";
+import { RouterModule } from '@angular/router';
+import { FlexLayoutModule } from "@angular/flex-layout";
+import { MatNativeDateModule } from "@angular/material/core";
+// import { Router, NavigationStart } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+// import { Programm01Component } from "./bausteine/programm01/programm01.component";
+// import { Programm02Component } from "./bausteine/programm02/programm02.component";
+// import { Programm03Component } from "./bausteine/programm03/programm03.component";
+// import { SatzComponent } from "./bausteine/satz/satz.component";
+// import { SatzEditComponent } from "./bausteine/satz-edit/satz-edit.component";
+// import { SatzSimpleComponent } from "./bausteine/satz-simple/satz-simple.component";
+// import { SessUebungComponent } from "./bausteine/sess-uebung/sess-uebung.component";
+// import { SessionFormComponent } from "./bausteine/session-form/session-form.component";
+// import { WorkoutFormComponent } from "./bausteine/workout-form/workout-form.component";
+// import { UebungWaehlenComponent } from "./uebung-waehlen/uebung-waehlen.component";
+// import { StoppuhrComponent } from "./stoppuhr/stoppuhr.component";
+// import { SessionStatsOverlayComponent } from "./session-stats-overlay/session-stats-overlay.component";
+// import { PlateCalcComponent } from "./plate-calc/plate-calc.component";
+import createNumberMask from 'text-mask-addons/dist/createNumberMask';
+// import { TextMaskModule } from 'angular2-text-mask';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader'
+import { HttpClient } from '@angular/common/http';
+import { DialogComponent } from "./dialoge/hinweis/hinweis.component";
+// import { OverlayModule } from '@angular/cdk/overlay';
+// import { FilePreviewOverlayComponent  } from './file-preview-overlay/file-preview-overlay.component';
+import { FilePreviewOverlayService } from './services/file-preview-overlay.service';
+import { LOCALE_ID } from '@angular/core';
+import { DatePipePipe } from './date-pipe.pipe';
+import { DatePipe } from "@angular/common";
+//import { ExerciseSettingsModuleModule } from
+
+import {
+	TranslateModule,
+	TranslateLoader,
+	TranslateService
+  } from '@ngx-translate/core';
+// import { TestModule } from "./bausteine/test/test.component";
+// import { ExerciseSettingsComponent } from "./exercise-settings/exercise-settings.component";
+// import { EditExerciseComponent } from "./edit-exercise/edit-exercise.component";
+import {DragDropModule} from '@angular/cdk/drag-drop';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {CdkTableModule} from '@angular/cdk/table';
 import {CdkTreeModule} from '@angular/cdk/tree';
-import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
-import { DexieSvcService } from './services/dexie-svc.service';
-import { MatCardModule } from '@angular/material/card';
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
-import { NgModule, NO_ERRORS_SCHEMA,CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
-import { FlexLayoutModule } from "@angular/flex-layout";
-
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatSliderModule } from '@angular/material/slider';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatMenuModule } from '@angular/material/menu';
-import { AppRoutingModule } from './app-routing.module';
-import { AnstehendeSessionsComponent } from './anstehende-sessions/anstehende-sessions.component';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { MatRippleModule } from '@angular/material/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDialog, MatDialogModule  } from '@angular/material/dialog';
-import { MatCheckboxModule } from "@angular/material/checkbox"; 
-
+import { DexieSvcService } from "./services/dexie-svc.service";
+import { MatDialog  } from '@angular/material/dialog';  
+// import { HistoryComponent } from "./history/history.component";
+// import { BodyweightComponent } from "./bodyweight/bodyweight.component";
+// import { DataStoreButtonsComponent } from "./bausteine/data-store-buttons/data-store-buttons.component";
+// import { SettingsComponent } from "./settings/settings.component";
+// import { MuscleGroupsComponent } from "./muscle-groups/muscle-groups.component";
+// import { LanghantelComponent } from "./langhantel/langhantel.component";
+// import { TrainingsGewichtProgressComponent } from "./trainings-gewicht-progress/trainings-gewicht-progress.component";
+// import { ScheibenComponent } from "./scheiben/scheiben.component";
+// import { EditLanghantelComponent } from "./edit-langhantel/edit-langhantel.component";
+// import { EditEquipmentComponent } from "./edit-equipment/edit-equipment.component";
+// import { EditMuscleGroupComponent } from "./edit-muscle-group/edit-muscle-group.component";
+// import { EditTrainingsGewichtProgressComponent } from "./edit-trainings-gewicht-progress/edit-trainings-gewicht-progress.component";
+// import { InitialWeightComponent } from "./initial-weight/initial-weight.component";
+// import { ExerciseComponent } from "./exercise/exercise.component";
+import { ToolBarModule } from "./bausteine/toolbar/tool-bar-module/tool-bar-module.module";
+import { DialogeService } from "./services/dialoge.service";
+import { Programm01Module } from "./bausteine/programm01/programm01Md/programm01.module";
+import { Programm02Module } from "./bausteine/programm02/programm02Md/programm02.module";
+import { Programm03Module } from "./bausteine/programm03/programm03Md/programm03.module";
+import { UebungWaehlenModule } from "./uebung-waehlen/uebung-waehlen-module/uebung-waehlen-module.module";
+import { AnstehendeSessionsModule } from "./anstehende-sessions/anstehende-sessions/anstehende-sessions.module";
+import { ToolbarComponent } from "./bausteine/toolbar/toolbar.component";
+import { AnstehendeSessionsComponent } from "./anstehende-sessions/anstehende-sessions.component";
 import { ProgrammWaehlenComponent } from './programm-waehlen/programm-waehlen.component';
-import { Programm01Component } from './bausteine/programm01/programm01.component';
-import { Programm02Component } from './bausteine/programm02/programm02.component';
-import { Programm03Component } from './bausteine/programm03/programm03.component';
-import { ProgrammLadeDirective } from './AppDirectives';
-import { DialogComponent } from './dialoge/hinweis/hinweis.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { OverlayModule } from '@angular/cdk/overlay';
-import { FilePreviewOverlayComponent  } from './file-preview-overlay/file-preview-overlay.component';
-import { FilePreviewOverlayService } from './services/file-preview-overlay.service';
-import { ReactiveFormsModule } from '@angular/forms';
-import { SatzSimpleComponent } from './bausteine/satz-simple/satz-simple.component';
-import { SessionFormComponent } from './bausteine/session-form/session-form.component';
-import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.component';
-import { SatzEditComponent } from './bausteine/satz-edit/satz-edit.component';
-import { TextMaskModule } from 'angular2-text-mask';
-import createNumberMask from 'text-mask-addons/dist/createNumberMask';
-import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe'
-import { SatzComponent } from './bausteine/satz/satz.component';
-import { SessUebungComponent } from './bausteine/sess-uebung/sess-uebung.component';
-import { UebungWaehlenComponent } from './uebung-waehlen/uebung-waehlen.component';
-import { RouterModule } from '@angular/router';
-import { routes } from "./app-routing.module";
-import { SessionStatsOverlayComponent } from './session-stats-overlay/session-stats-overlay.component';
-import { DataStoreButtonsComponent } from './bausteine/data-store-buttons/data-store-buttons.component';
-import { ToolbarComponent } from './bausteine/toolbar/toolbar.component';
-
-import { MatSelectModule } from '@angular/material/select';
-
-
-import { MatRadioModule } from '@angular/material/radio';
-import { MatTabsModule } from '@angular/material/tabs';ng v
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatTooltipModule } from '@angular/material/tooltip';
-
-// import {
-//     MatAutocompleteModule,
-//     MatBadgeModule,
-//     MatBottomSheetModule,
-//     MatButtonToggleModule,
-//     MatChipsModule,
-//     MatDatepickerModule,
-//     MatDividerModule,
-//     MatGridListModule,
-//     MatListModule,
-//     MatNativeDateModule,
-//     MatPaginatorModule,
-//     MatProgressBarModule,
-//     MatProgressSpinnerModule,
-//     MatRadioModule,
-//     MatSelectModule,
-//     MatSlideToggleModule,
-//     MatSnackBarModule,
-//     MatSortModule,
-//     MatStepperModule,
-//     MatTableModule,
-//     MatTabsModule,
-//     MatTooltipModule,
-//     MatTreeModule,
-//   } from '@angular/material';
-import { SettingsComponent } from './settings/settings.component';
-import { ExerciseComponent } from './exercise/exercise.component';
-import { EditExerciseComponent } from './edit-exercise/edit-exercise.component';
-import { MuscleGroupsComponent } from './muscle-groups/muscle-groups.component';
-import { EditMuscleGroupComponent } from './edit-muscle-group/edit-muscle-group.component';
-import { EquipmentComponent } from './equipment/equipment.component';
-import { EditEquipmentComponent } from './edit-equipment/edit-equipment.component';
-import { LanghantelComponent } from './langhantel/langhantel.component';
-import { EditLanghantelComponent } from './edit-langhantel/edit-langhantel.component';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { ScheibenComponent } from './scheiben/scheiben.component';
-import { TrainingsGewichtProgressComponent } from './trainings-gewicht-progress/trainings-gewicht-progress.component';
-import { ExerciseSettingsComponent } from './exercise-settings/exercise-settings.component';
-import { EditTrainingsGewichtProgressComponent } from './edit-trainings-gewicht-progress/edit-trainings-gewicht-progress.component';
-import { InitialWeightComponent } from './initial-weight/initial-weight.component';
-import { PlateCalcComponent } from './plate-calc/plate-calc.component';
-import { StoppuhrComponent } from './stoppuhr/stoppuhr.component';
-import { HistoryComponent } from './history/history.component';
-import { NgChartsModule } from 'ng2-charts';
-import { ChartsComponent } from './bausteine/charts/charts.component';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material/core';
-import { BodyweightComponent } from './bodyweight/bodyweight.component';
-import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+  export function HttpLoaderFactory(http: HttpClient) {
+	return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+  }
+  
+  //import { MatBadgeModule } from '@angular/material/m/MatBadgeModule';
+  
+  // import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
+  
+  
+  // var sqlite3 = require('sqlite3');1
+  
+  //export const Firstmask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+  export const Firstmask = [/[0-9,'.', [0-9, [0-9,'.']]] /];
+  
+  
+  export interface IOkCallback {
+	():void;
+  }
+  
+  export interface ICancelCallback {
+	():void;
+  }
+  
+  export const floatMask = createNumberMask({
+	  prefix: '',
+	  suffix: '', 
+	  includeThousandsSeparator: true, //  (boolean): whether or not to separate thousands. Defaults to to true.
+	  integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
+	  allowDecimal: true, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
+	  decimalLimit: 3,
+	  // requireDecimal: true,
+	  // allowLeadingZeroes: true
+	})
+  
+	export const repMask = createNumberMask({
+	  prefix: '',
+	  suffix: '', 
+	  includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
+	  integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
+	  allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
+	})
+  
+	export const Int2DigitMask = createNumberMask({
+	  prefix: '',
+	  suffix: '', 
+	  includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
+	  integerLimit: 2, // (number): limit the length of the integer number. Defaults to null for unlimited
+	  allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
+	})
+  
+	export const Int3DigitMask = createNumberMask({
+	  prefix: '',
+	  suffix: '', 
+	  includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
+	  integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
+	  allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
+	})  
+  
+	export const Int4DigitMask = createNumberMask({
+	  prefix: '',
+	  suffix: '', 
+	  includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
+	  integerLimit: 4, // (number): limit the length of the integer number. Defaults to null for unlimited
+	  allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
+	})    
 
 
-//import { MatBadgeModule } from '@angular/material/m/MatBadgeModule';
-
-// import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
-
-
-// var sqlite3 = require('sqlite3');1
-
-//export const Firstmask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
-export const Firstmask = [/[0-9,'.', [0-9, [0-9,'.']]] /];
-export const cAutoCorrectedDatePipe = createAutoCorrectedDatePipe('mm/dd/yyyy HH:MM');
-
-export interface IOkCallback {
-  ():void;
-}
-
-export interface ICancelCallback {
-  ():void;
-}
-
-// export const dateMask = createNumberMask({
-//   prefix: '',
-//   suffix: '', 
-//   includeThousandsSeparator: true, //  (boolean): whether or not to separate thousands. Defaults to to true.
-//   integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
-//   allowDecimal: true, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
-//   decimalLimit: 3,
-//   // requireDecimal: true,
-//   // allowLeadingZeroes: true
-// })
-
-// export class datemask {
-//   guide: true,
-//   showMask: true,
-//   mask: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]
-// };
-
-
-export const floatMask = createNumberMask({
-    prefix: '',
-    suffix: '', 
-    includeThousandsSeparator: true, //  (boolean): whether or not to separate thousands. Defaults to to true.
-    integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
-    allowDecimal: true, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
-    decimalLimit: 3,
-    // requireDecimal: true,
-    // allowLeadingZeroes: true
-  })
-
-  export const repMask = createNumberMask({
-    prefix: '',
-    suffix: '', 
-    includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
-    integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
-    allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
-  })
-
-  export const Int2DigitMask = createNumberMask({
-    prefix: '',
-    suffix: '', 
-    includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
-    integerLimit: 2, // (number): limit the length of the integer number. Defaults to null for unlimited
-    allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
-  })
-
-  export const Int3DigitMask = createNumberMask({
-    prefix: '',
-    suffix: '', 
-    includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
-    integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
-    allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
-  })  
-
-  export const Int4DigitMask = createNumberMask({
-    prefix: '',
-    suffix: '', 
-    includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
-    integerLimit: 4, // (number): limit the length of the integer number. Defaults to null for unlimited
-    allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
-  })    
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        AnstehendeSessionsComponent,
-        ProgrammWaehlenComponent,
-        Programm01Component,
-        Programm02Component,
-        Programm03Component,
-        ProgrammLadeDirective,
-        DialogComponent,
-        FilePreviewOverlayComponent,
-        SatzSimpleComponent,
-        SessionFormComponent,
-        WorkoutFormComponent,
-        SatzEditComponent,
-        SatzComponent,
-        SessUebungComponent,
-        UebungWaehlenComponent,
-        SessionStatsOverlayComponent,
-        DataStoreButtonsComponent,
-        ToolbarComponent,
-        SettingsComponent,
-        ExerciseComponent,
-        EditExerciseComponent,
-        MuscleGroupsComponent,
-        EditMuscleGroupComponent,
-        EquipmentComponent,
-        EditEquipmentComponent,
-        LanghantelComponent,
-        EditLanghantelComponent,
-        ScheibenComponent,
-        TrainingsGewichtProgressComponent,
-        ExerciseSettingsComponent,
-        EditTrainingsGewichtProgressComponent,
-        InitialWeightComponent,
-        PlateCalcComponent,
-        StoppuhrComponent,
-        HistoryComponent,
-        ChartsComponent,
-        BodyweightComponent
-    ],
-    imports: [
-        RouterModule.forRoot(routes, {}),
-        TextMaskModule,
-        MatCheckboxModule,
-        MatCardModule,
-        FlexLayoutModule,
-        BrowserModule,
-        BrowserAnimationsModule,
-        RouterModule,
-        CdkTableModule,
-        CdkTreeModule,
-        DragDropModule,
-        MatRadioModule,
-        MatTabsModule,
-        MatProgressBarModule,
-        MatTooltipModule,
-        MatDatepickerModule, MatInputModule, MatNativeDateModule,
-        MatSliderModule,
-        MatToolbarModule,
-        MatExpansionModule,
-        MatMenuModule,
-        AppRoutingModule,
-        BsDropdownModule,
-        MatIconModule,
-        MatSidenavModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatRippleModule,
-        MatDialogModule,
-        ReactiveFormsModule,
-        OverlayModule,
-        FormsModule,
-        DexieSvcService,
-        MatSelectModule,
-        NgChartsModule,
-        NgxChartsModule,
-        NgxMatTimepickerModule,
-        NgxMatDatetimePickerModule
-    ],
-    schemas: [
-        CUSTOM_ELEMENTS_SCHEMA,
-        NO_ERRORS_SCHEMA
-    ],
-    exports: [
-        MatSelectModule,
-        RouterModule,
-        CdkTableModule,
-        CdkTreeModule,
-        DragDropModule,
-        ScrollingModule,
-        MatButtonModule,
-        MatCardModule,
-        MatCheckboxModule,
-        MatDialogModule,
-        MatExpansionModule,
-        MatIconModule,
-        MatInputModule,
-        MatMenuModule,
-        MatRippleModule,
-        MatSidenavModule,
-        MatSliderModule,
-        MatAutocompleteModule,
-        // MatBadgeModule,
-        // MatBottomSheetModule,
-        MatButtonModule,
-        // MatButtonToggleModule,
-        MatCardModule,
-        MatCheckboxModule,
-        // MatChipsModule,
-        // MatStepperModule,
-        // MatDatepickerModule,
-        MatDialogModule,
-        // MatDividerModule,
-        MatExpansionModule,
-        // MatGridListModule,
-        MatIconModule,
-        MatInputModule,
-        // MatListModule,
-        MatMenuModule,
-        // MatNativeDateModule,
-        // MatPaginatorModule,
-        // MatProgressBarModule,
-        // MatProgressSpinnerModule,
-        // MatRadioModule,
-        MatRippleModule,
-        // MatSelectModule,
-        MatSidenavModule,
-        MatSliderModule,
-        // MatSlideToggleModule,
-        // MatSnackBarModule,
-        // MatSortModule,
-        // MatTableModule,
-        // MatTabsModule,
-        MatToolbarModule,
-        // MatTooltipModule,
-        // MatTreeModule,
-    ],
-    providers: [MatDialog, FilePreviewOverlayService, DexieSvcService],
-    bootstrap: [AppComponent]
-})  
-    
-    
-export class AppModule {
-    public ProgrammListe: Array<ITrainingsProgramm> = [];
+	declarations: [
+		AppComponent
+		,ToolbarComponent
+		, AnstehendeSessionsComponent
+		,ProgrammWaehlenComponent
+		, DialogComponent
 
-    constructor(public pDexieSvc: DexieSvcService) {
-        // this.pDexieSvc.LadeProgramme().then(
-        //     () => {
-        //         this.ProgrammListe = this.pDexieSvc.Programme;
-        //     }
-        // )
-    }
+		//TestComponent
+		// TestModule
+		// ,ToolBarModuleModule
+		// SatzComponent,
+		// FilePreviewOverlayComponent,
+		// SatzEditComponent,
+		// SatzSimpleComponent,
+		// SessUebungComponent,
+		// SessionFormComponent,
+		// OverlayModule,
+		// WorkoutFormComponent,
+		// UebungWaehlenComponent,
+		// StoppuhrComponent,
+		// SessionStatsOverlayComponent,
+		// PlateCalcComponent,
+		// ExerciseSettingsComponent,
+		// EditExerciseComponent,
+		// StoppuhrComponent,
+		// PlateCalcComponent
+		// StoppuhrComponent,
+		// HistoryComponent,
+		// BodyweightComponent,
+		// DatePipePipe,
+		// DataStoreButtonsComponent,
+        // ToolbarComponent,
+        // SettingsComponent,
+        // ExerciseComponent,
+        // EditExerciseComponent,
+        // MuscleGroupsComponent,
+        // EditMuscleGroupComponent,
+        // EditEquipmentComponent,
+        // EditEquipmentComponent,
+        // LanghantelComponent,
+        // EditLanghantelComponent,
+        // ScheibenComponent,
+        // TrainingsGewichtProgressComponent,
+        // ExerciseSettingsComponent,
+        // EditTrainingsGewichtProgressComponent,
+        // InitialWeightComponent,
+	
+		
+	],
+	
+	imports: [
+		TranslateModule.forRoot({
+			// defaultLanguage: 'en',
+			loader: {
+				provide: TranslateLoader,
+				useFactory: HttpLoaderFactory,
+				deps: [HttpClient]
+			}
+		})
+		,BrowserAnimationsModule
+		,BrowserModule
+		,AppRoutingModule
+		,FormsModule
+		,MatTabsModule
+		,MatSidenavModule
+		,MatSelectModule
+		,MatMenuModule
+		,FlexLayoutModule
+		,MatCheckboxModule
+		,MatRadioModule
+		,MatNativeDateModule
+		,MatToolbarModule		
+		,MatSliderModule
+		,IonicModule.forRoot()
+		,DexieSvcService
+		, EditExerciseModule
+		
+		
+		
+		//		,MatDatepickerModule
+		// ,ToolbarComponent
+		
+		,MatCardModule
+		,MatExpansionModule
+		// ,BsDropdownModule
+		,MatIconModule
+		,MatButtonModule
+		,MatFormFieldModule
+		,MatInputModule
+		, MatRippleModule
+		, ToolBarModule
+		, AnstehendeSessionsModule
+		, Programm01Module
+		, Programm02Module
+		, Programm03Module
+		, SessUebungModule
+		,SatzEditModule
+		 , RouterModule
 
-}
+		, DragDropModule
+		,ScrollingModule
+		,CdkTableModule
+		,CdkTreeModule
+
+	],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+	providers: [
+		 MatDialog
+		, FilePreviewOverlayService
+		, DatePipePipe
+		, DexieSvcService
+		, DialogeService 
+		,{ provide: MAT_DATE_LOCALE, useValue: 'de-DE' }
+		,{ provide: LOCALE_ID, useValue: 'de-DE' }
+		,{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+	],
+	bootstrap: [AppComponent],
+	
+	exports: [
+		BrowserModule
+		, MatExpansionModule
+        ,MatRadioModule
+		,MatTabsModule
+		, MatCheckboxModule
+		,MatAccordion
+		
+		// // MatDatepickerModule,
+		// MatNativeDateModule,
+		,MatSliderModule
+		,MatToolbarModule
+		//  BsDropdownModule,
+		,MatIconModule
+		,MatSidenavModule
+		,MatButtonModule
+		,MatFormFieldModule
+		,MatInputModule
+		,MatRippleModule
+		,MatDialogModule
+		,RouterModule
+		,MatCardModule
+		, Programm01Module
+		,ProgrammWaehlenModule
+		, Programm02Module
+		, Programm03Module
+		, UebungWaehlenModule
+		, ExerciseSettingsModule
+		, EditExerciseModule
+		, SessUebungModule
+		, SatzEditModule
+		, DatePipe
+		, StoppUhrModuleModule
+		, PlateCalcModule
+		, ToolBarModule
+		, AnstehendeSessionsModule
+		, FlexLayoutModule
+		,BrowserAnimationsModule
+	]
 
 
-
-
+})
+export class AppModule {}

@@ -1,0 +1,7 @@
+{
+  "name": "ccoc",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

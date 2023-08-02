@@ -1,7 +1,8 @@
+import { cDeutschKuezel as cDeutschKuerzel, cEnglishKuerzel, cDeutschDateInputMask, cEnglishDateInputMask } from './../Sprache/Sprache';
 import { cMaxDatum, cMinDatum } from './../services/dexie-svc.service';
 import { DiaUebungSettings } from './../../Business/Diagramm/Diagramm';
 import { DexieSvcService, SessionParaDB } from 'src/app/services/dexie-svc.service';
-import { Component, ContentChild, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ContentChild, Inject, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ISession } from 'src/Business/Session/Session';
 import { repMask } from './../../app/app.module';
 import { AppData } from 'src/Business/Coach/Coach';
@@ -9,6 +10,13 @@ import { DiaUebung, DiaDatum } from 'src/Business/Diagramm/Diagramm';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { LineChartComponent } from '@swimlane/ngx-charts';
+import { FormControl, FormGroup } from '@angular/forms';
+import { LOCALE_ID } from '@angular/core';
+import * as _moment from 'moment';
+// tslint:disable-next-line:no-duplicate-imports
+// import { default as _rollupMoment, Moment, MomentFormatSpecification, MomentInput } from 'moment';
+import { DatePipePipe } from '../date-pipe.pipe';
+// const moment = _rollupMoment || _moment;
 var cloneDeep = require('lodash.clonedeep');
 
 
@@ -16,7 +24,7 @@ var cloneDeep = require('lodash.clonedeep');
 @Component({
 	selector: 'app-history',
 	templateUrl: './history.component.html',
-	styleUrls: ['./history.component.scss'],
+	styleUrls: ['./history.component.scss']
 })
 export class HistoryComponent implements OnInit {
 	SessionListe: Array<ISession> = [];
@@ -29,8 +37,23 @@ export class HistoryComponent implements OnInit {
 	public Diagramme: Array<Chart> = [];
 	private CreatingChartsDialogData: DialogData = new DialogData();
 	private Interval: any;
+	group: FormGroup;
 
-	fromDate: Date;
+	public date: moment.Moment;
+	public disabled = false;
+	public showSpinners = true;
+	public showSeconds = false;
+	public touchUi = false;
+	public enableMeridian = false;
+	public minDate: moment.Moment;
+	public maxDate: moment.Moment;
+	public stepHour = 1;
+	public stepMinute = 1;
+	public stepSecond = 1;
+	// public dateControl = new FormControl(moment());
+	// public dateControlMinMax = new FormControl(moment());
+
+	fromDate: Date = new Date();
 	toDate: Date = new Date();
 	chartWidth: number = 0;
 	chartHeight: number = 400;
@@ -43,19 +66,21 @@ export class HistoryComponent implements OnInit {
 	@ViewChild('matGroup') matGroup: any;
 	@ViewChild('matTabChart') matTabChart: any;
 	@ViewChild('ChartContainer') ChartContainer: any;
+	@Input() placeholderTime: string;
+	
 
 	constructor(
 		private fDbModul: DexieSvcService,
-		private fLoadingDialog: DialogeService
+		private fLoadingDialog: DialogeService,
+		@Inject(LOCALE_ID) locale: string
 	) {
-		this.fromDate = new Date();
-		this.fromDate.setDate(this.fromDate.getDate() - 90);
+		this.toDate = new Date();
+		this.fromDate.setDate(this.toDate.getDate() - 90);
 		this.CreatingChartsDialogData.ShowAbbruch = false;
 		this.CreatingChartsDialogData.ShowOk = false;
 		this.CreatingChartsDialogData.hasBackDrop = false;
 		this.CreatingChartsDialogData.height = '150px';
 		this.CreatingChartsDialogData.textZeilen[0] = 'Creating charts';
-		
 
 		this.fDbModul
 			.LadeAppData()
@@ -64,6 +89,11 @@ export class HistoryComponent implements OnInit {
 				this.LadeLimit = mAppData.MaxHistorySessions;
 				this.LadeSessions(0);
 			});
+	}
+	timeChange($event){}
+
+	get DateInputMask(): string{
+		return this.fDbModul.AktuellSprache.Kuerzel === cDeutschKuerzel ? cDeutschDateInputMask : cEnglishDateInputMask;
 	}
 
 	drop(aEvent: any) {
@@ -329,7 +359,15 @@ export class HistoryComponent implements OnInit {
 
 	isLeapYear(year:number):boolean {
 		return new Date(year, 1, 29).getDate() === 29;
-	  }
+	}
+	
+	FromDateChanged($event:any) {
+		this.fromDate = $event.target.value;
+	}
+
+	ToDateChanged($event:any) {
+		this.toDate = $event.target.value;
+	}
 
 
 
@@ -341,7 +379,19 @@ export class HistoryComponent implements OnInit {
 		mDialogData.OkFn = () => {this.fLoadingDialog.fDialog.closeAll() }
 
 		let s: string = aEvent.target.value;
-		const mSplittedDateText: Array<string>  = s.split('/');
+		if (s.trim() === "")
+			return;
+		
+		let mDelimiter = '/';
+		let mMonthColumnIndex = 0;	
+		let mDayColumnIndex = 1;	
+		if (this.fDbModul.AktuellSprache.Kuerzel === cDeutschKuerzel) {
+			mDelimiter = '.';
+			mMonthColumnIndex = 1;	
+			mDayColumnIndex = 0;	
+		}
+
+		const mSplittedDateText: Array<string>  = s.split(mDelimiter);
 		if (mSplittedDateText.length !== 3) {
 			mDialogData.textZeilen[0] = aEvent.target.value + ' is no valid date';
 			this.fLoadingDialog.Hinweis(mDialogData);
@@ -355,9 +405,9 @@ export class HistoryComponent implements OnInit {
 			return;
 		}
 
-		const mMonth = Number(mSplittedDateText[0]);
+		const mMonth = Number(mSplittedDateText[mMonthColumnIndex]);
 		if (isNaN(mMonth)||(mMonth > 12)||(mMonth < 1) ) {
-			mDialogData.textZeilen[0] = mSplittedDateText[0] + ' is no valid month';
+			mDialogData.textZeilen[0] = mSplittedDateText[mMonthColumnIndex] + ' is no valid month';
 			this.fLoadingDialog.Hinweis(mDialogData);
 			return;
 		}
@@ -376,9 +426,9 @@ export class HistoryComponent implements OnInit {
 			}
 		}//switch
 
-		const mDay = Number(mSplittedDateText[1]);
+		const mDay = Number(mSplittedDateText[mDayColumnIndex]);
 		if (isNaN(mDay)||(mDay < 1)||(mDay > mDayInMonth)) {
-			mDialogData.textZeilen[0] = mSplittedDateText[1] + ' is no valid day';
+			mDialogData.textZeilen[0] = mSplittedDateText[mDayColumnIndex] + ' is no valid day';
 			this.fLoadingDialog.Hinweis(mDialogData);
 		}
 	}
@@ -397,21 +447,22 @@ export class HistoryComponent implements OnInit {
 				this.Interval = undefined;
 			}
 
-			if ((this.LineChart === undefined) && (this.BarChart === undefined)) {
-				this.fLoadingDialog.Loading(this.CreatingChartsDialogData);
-				this.Interval = setInterval(() => {
-					if ((this.LineChart !== undefined) || (this.BarChart !== undefined)) {
-						clearInterval(this.Interval);
-						this.Interval = undefined;
-						this.fLoadingDialog.fDialog.closeAll();
-					}
-				}, 10);
-			}//if
+			const that = this; 
+			// if ((this.LineChart === undefined) && (this.BarChart === undefined)) {
+			// 	this.fLoadingDialog.Loading(this.CreatingChartsDialogData);
+			// 	this.Interval = setInterval(() => {
+			// 		if ((that.LineChart !== undefined) || (that.BarChart !== undefined)) {
+			// 			clearInterval(that.Interval);
+			// 			that.Interval = undefined;
+			// 			that.fLoadingDialog.fDialog.closeAll();
+			// 		}
+			// 	}, 10);
+			// }//if
 		}//if
 		this.CalcChartSize();
 	}
 	
-	onResize(event) {
+	onResize(event:any) {
 		this.CalcChartSize();
 	}
 	

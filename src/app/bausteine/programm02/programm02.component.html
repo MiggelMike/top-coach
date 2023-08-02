@@ -49,8 +49,9 @@
                             </div>
                         </mat-expansion-panel-header>
 
-                        <div [id]="'collapseSession' + i" aria-labelledby="headingOne" attr.data-parent="#accordionSession">
-                            <div class="card-body">
+                        <div [id]="'collapseSession' + i" aria-labelledby="headingOne">
+                            <!-- <div [id]="'collapseSession' + i" aria-labelledby="headingOne" attr.data-parent="#accordionSession"> -->
+                                <div class="card-body">
                                 <!-- session an Sub-Komponente durchreichen -->
                                 <ng-container *ngIf="sess.Expanded === true">
                                     <app-programm03 

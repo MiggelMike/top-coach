@@ -38,7 +38,7 @@ const DEFAULT_CONFIG: StoppUhrOverlayConfig = {
 	height: 200,
 	width: 100,
 	// backdropClass: "dark-backdrop",
-	satz: null,
+	satz: null!,
 	satznr: 0,
 	nextTimeWeight: 0 
 };
@@ -49,8 +49,8 @@ const DEFAULT_CONFIG: StoppUhrOverlayConfig = {
 })
 export class StoppuhrSvcService {
 
-	public StoppuhrOverlayRef: OverlayRef = null;
-	public StoppuhrComponent: StoppuhrComponent;
+	public StoppuhrOverlayRef: OverlayRef|null = null;
+	public StoppuhrComponent!: StoppuhrComponent;
 	private DialogConfig = { ...DEFAULT_CONFIG };
 
 	constructor(private overlay: Overlay, private injector: Injector) {}
@@ -76,7 +76,7 @@ export class StoppuhrSvcService {
 			return containerRef.instance;
 		} catch (error) {
 			alert(error);
-			return null;
+			return null!;
 		}
 	}
 
@@ -97,7 +97,7 @@ export class StoppuhrSvcService {
 
 	close() {
 		this.StoppuhrComponent.close();
-		this.StoppuhrComponent = undefined;
+		this.StoppuhrComponent = undefined!;
 
 		if (this.DialogConfig.beforeCloseFn !== undefined)
 			this.DialogConfig.beforeCloseFn(this.StoppuhrComponent);

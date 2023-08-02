@@ -2,9 +2,8 @@ import { Session } from 'src/Business/Session/Session';
 import { Uebung  } from './../../Business/Uebung/Uebung';
 import { Component, OnInit, Inject  } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { EditExerciseComponent, UebungEditData } from '../edit-exercise/edit-exercise.component';
 import { UebungService } from "src/app/services/uebung.service"
+import { EditExerciseComponent } from '../edit-exercise/edit-exercise.component';
 
 
 type UebungWaehlenDelegate = (aUebungWaehlenData: UebungWaehlenData ) => void;

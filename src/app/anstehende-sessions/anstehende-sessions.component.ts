@@ -5,8 +5,6 @@ import { Session } from '../../Business/Session/Session';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 
-
-
 @Component({
     selector: "app-anstehende-sessions",
     templateUrl: "./anstehende-sessions.component.html",
@@ -20,7 +18,9 @@ export class AnstehendeSessionsComponent implements OnInit {
     constructor(
         private fDbModule: DexieSvcService,
         private fLoadingDialog: DialogeService,
-        ) {}
+    ) {
+        const x = 0;
+        }
         
     public get Programm(): ITrainingsProgramm {
         return this.fDbModule.AktuellesProgramm;
