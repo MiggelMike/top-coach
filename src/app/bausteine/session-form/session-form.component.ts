@@ -33,7 +33,7 @@ export class SessionFormComponent implements OnInit {
 	public cmpSession: Session;
 	public cmpSessionSettings: Session;
 	public BodyWeight: number = 0;
-	public fSessionStatsOverlayComponent: SessionStatsOverlayComponent = null;
+	public fSessionStatsOverlayComponent: SessionStatsOverlayComponent;
 	private fSessionOverlayConfig: SessionOverlayConfig;
 	public DeletedExerciseList: Array<Uebung> = [];
 	public DeletedSatzList: Array<Satz> = [];
@@ -51,7 +51,8 @@ export class SessionFormComponent implements OnInit {
 		private fSessionOverlayServiceService: SessionOverlayServiceService,
 		private location: Location
 	) {
-		const mNavigation = this.router.getCurrentNavigation();
+		this.fExerciseSettingsComponent = null;
+		const mNavigation = this.router.getCurrentNavigation()!;
 		const mState = mNavigation.extras.state as { programm: ITrainingsProgramm, sess: Session, programmTyp: string };
 
 
@@ -204,6 +205,7 @@ export class SessionFormComponent implements OnInit {
 		if (this.fSessionStatsOverlayComponent === null || this.fSessionStatsOverlayComponent.overlayRef === null) {
 			this.fSessionOverlayConfig = {
 				session: this.Session,
+				panelClass: 'cc-overlay'
 			} as SessionOverlayConfig;
 
 			this.fSessionStatsOverlayComponent = this.fSessionOverlayServiceService.open(this.fSessionOverlayConfig);

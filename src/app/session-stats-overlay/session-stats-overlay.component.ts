@@ -2,7 +2,7 @@ import { BodyWeight } from 'src/Business/Bodyweight/Bodyweight';
 import { floatMask } from 'src/app/app.module';
 import { AppData } from './../../Business/Coach/Coach';
 import { SessionOverlayConfig } from './../services/session-overlay-service.service';
-import { ElementRef  } from '@angular/core';
+import { ElementRef, ViewEncapsulation  } from '@angular/core';
 import { XY_Position, ModalPositionService } from './../services/modal-position.service';
 import { ISession, Session } from './../../Business/Session/Session';
 import { Component, OnInit, Inject, InjectionToken, AfterViewInit,ViewContainerRef, TemplateRef, ViewChild } from '@angular/core';
@@ -14,8 +14,10 @@ import { DexieSvcService } from '../services/dexie-svc.service';
 @Component({
     selector: "app-session-stats-overlay",
     templateUrl: "./session-stats-overlay.component.html",
-    styleUrls: ["./session-stats-overlay.component.scss"],
+	styleUrls: ["./session-stats-overlay.component.scss"],
+	encapsulation: ViewEncapsulation.None
 })
+	
 export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
     @ViewChild(TemplateRef) _ovelayTemplate: TemplateRef<any>;
     @ViewChild("anchorRef") anchorRef: any;

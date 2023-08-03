@@ -45,7 +45,7 @@ import { FormsModule } from '@angular/forms';
 // import { WorkoutFormComponent } from "./bausteine/workout-form/workout-form.component";
 // import { UebungWaehlenComponent } from "./uebung-waehlen/uebung-waehlen.component";
 // import { StoppuhrComponent } from "./stoppuhr/stoppuhr.component";
-// import { SessionStatsOverlayComponent } from "./session-stats-overlay/session-stats-overlay.component";
+import { SessionStatsOverlayComponent } from "./session-stats-overlay/session-stats-overlay.component";
 // import { PlateCalcComponent } from "./plate-calc/plate-calc.component";
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 // import { TextMaskModule } from 'angular2-text-mask';
@@ -189,7 +189,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 		// WorkoutFormComponent,
 		// UebungWaehlenComponent,
 		// StoppuhrComponent,
-		// SessionStatsOverlayComponent,
+		,SessionStatsOverlayComponent,
 		// PlateCalcComponent,
 		// ExerciseSettingsComponent,
 		// EditExerciseComponent,

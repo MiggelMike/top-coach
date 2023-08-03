@@ -422,16 +422,25 @@ textarea:focus {
 	background-color: transparent;
 }
 
-
-  .excercise-overlay {
-	overflow-y: auto;
-	padding: 5px;
-  }
-
   .box-shadow-ex {
-    box-shadow: 2px 2px 1px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: 3px 3px 1px 1px rgba(0, 0, 0, 0.2);
   }
 
   .mat-expansion-panel:not([class*='mat-elevation-z']) {
     box-shadow: none;
 }
+
+.cc-overlay {
+	@extend .box-shadow-ex;
+	
+	overflow-y: auto;
+	padding: 5px;	
+	border-style: inset;
+	border-radius: 10px;
+	border-color:  rgba(0, 0, 0, 0.2);
+	border-width: 1px;
+	border-bottom: none;
+	border-right: none;
+  }
+
+
