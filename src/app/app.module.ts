@@ -321,6 +321,7 @@ import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.comp
 		, ExerciseSettingsModule
 		, EditExerciseModule
 		, SessUebungModule
+		, WorkoutFormModule
 		, SatzEditModule
 		, DatePipe
 		, StoppUhrModuleModule
