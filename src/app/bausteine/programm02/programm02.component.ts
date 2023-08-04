@@ -38,6 +38,7 @@ export class Programm02Component implements OnInit {
 	@Input() showWarmUpCheckBox: Boolean = true;
 	@Input() showCoolDownCheckBox: Boolean = true;
 	@Input() DeletedSatzList: Array<Satz> = [];
+	@Input() SessionNameVisible: Boolean = false;
 	@ViewChildren("accSession") accSession: QueryList<MatAccordion>;
 	@ViewChildren("panSession") panUebung: QueryList<MatExpansionPanel>;
 
