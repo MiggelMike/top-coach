@@ -110,7 +110,6 @@ body {
 }
 
 
-
 .width-100-Prozent {
 	width: 100%!important;
 }
@@ -430,9 +429,12 @@ textarea:focus {
     box-shadow: none;
 }
 
+.cc-Scrollbar-AutoY{
+	overflow-y: auto;
+}
+
 .cc-overlay {
 	@extend .box-shadow-ex;
-	overflow-y: auto;
 	padding: 5px;	
 	border-style: inset;
 	border-radius: 10px;
@@ -441,6 +443,7 @@ textarea:focus {
 	border-bottom: none;
 	border-right: none;
 	background-color: white;
+	// width: 50%;
   }
 
 

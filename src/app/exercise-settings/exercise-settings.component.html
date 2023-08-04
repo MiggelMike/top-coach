@@ -1,5 +1,4 @@
 
-<mat-card class="tc-font-size-smaller">
     <div class="align-left" fxLayout="column">
         <div fxLayout="row wrap" fxFlex="100%">
             <h4>{{SessUeb.Name}}</h4>
@@ -109,9 +108,9 @@
             <mat-tab label="Pause">
                 <div class="align-left mg-top-5" fxLayout="column" >
                     <div fxLayout="row" fxFlex="100%">
-                        <mat-form-field class="align-right" fxFlex="90%">
-                            <mat-label>Pause seconds between last warm up and first work set</mat-label>
-                            <input matInput
+                        <mat-form-field class="width-100-Prozent">
+                            <mat-label>Seconds between last warm up and first work set</mat-label>
+                            <input matInput class="align-right"
                                 [textMask]="{mask: Int3DigitMask, guide: false }"
                                 [ngModel]="(SessUeb.AufwaermArbeitsSatzPause | number: '1.0')"
                                 (focus)="onFocusSelect($event)"
@@ -121,9 +120,9 @@
                     </div>        
 
                     <div fxLayout="row" fxFlex="100%">
-                        <mat-form-field class="align-right" fxFlex="90%">
-                            <mat-label>Pause seconds between sets if last set was easy</mat-label>
-                            <input matInput
+                        <mat-form-field class="width-100-Prozent">
+                            <mat-label>Seconds between sets if last set was easy</mat-label>
+                            <input matInput class="align-right"
                                 [textMask]="{mask: Int3DigitMask, guide: false }"
                                 [ngModel]="(SessUeb.ArbeitsSatzPause1 | number: '1.0')" 
                                 (focus)="onFocusSelect($event)"
@@ -133,9 +132,9 @@
                     </div>    
                     
                     <div fxLayout="row" fxFlex="100%">
-                        <mat-form-field class="align-right" fxFlex="90%">
-                            <mat-label>Pause seconds between sets if last set was hard</mat-label>
-                            <input matInput
+                        <mat-form-field class="width-100-Prozent">
+                            <mat-label>Seconds between sets if last set was hard</mat-label>
+                            <input matInput class="align-right"
                                 [textMask]="{mask: Int3DigitMask, guide: false }"
                                 [ngModel]="(SessUeb.ArbeitsSatzPause2 | number: '1.0')" 
                                 (focus)="onFocusSelect($event)"
@@ -145,9 +144,9 @@
                     </div>    
                     
                     <div fxLayout="row" fxFlex="100%">
-                        <mat-form-field class="align-right" fxFlex="90%">
-                            <mat-label>Pause seconds between last excercise set and first set of next exercise</mat-label>
-                            <input matInput
+                        <mat-form-field class="width-100-Prozent">
+                            <mat-label>Seconds between last excercise set and first set of next exercise</mat-label>
+                            <input matInput class="align-right"
                                 [textMask]="{mask: Int3DigitMask, guide: false }"
                                 [ngModel]="(SessUeb.NaechsteUebungPause | number: '1.0')" 
                                 (focus)="onFocusSelect($event)"
@@ -163,4 +162,3 @@
     <div fxLayout="row" fxLayoutAlign="center center">
         <a mat-button (click)="close()"><span class="tc-font-size-small">close</span></a>
     </div>
-</mat-card>
