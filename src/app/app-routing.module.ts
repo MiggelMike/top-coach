@@ -5,6 +5,8 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterModule, RouterStateSnapshot, R
 import { DexieSvcService } from "./services/dexie-svc.service";
 import { WorkoutFormComponent } from "./bausteine/workout-form/workout-form.component";
 
+
+
 export const LadeStandardProgramme: ResolveFn<ITrainingsProgramm[]> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
 	return inject(DexieSvcService)
 		.LadeStandardProgramme()

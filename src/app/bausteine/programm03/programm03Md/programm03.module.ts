@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { MatExpansionModule } from "@angular/material/expansion";
 import { CommonModule, DatePipe } from "@angular/common";
 import { SessUebungModule } from '../../sess-uebung/sess-uebung-module/sess-uebung-module.module';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
     declarations: [Programm03Component],
@@ -14,6 +16,8 @@ import { SessUebungModule } from '../../sess-uebung/sess-uebung-module/sess-uebu
         MatExpansionModule,
         SessUebungModule,
         CommonModule,
+        MatInputModule,
+        MatFormFieldModule,
         DatePipe]
 })
 export class Programm03Module { }

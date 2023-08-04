@@ -21,7 +21,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
 import { MatRippleModule, MAT_DATE_LOCALE } from "@angular/material/core";
-import { MatFormFieldModule } from "@angular/material/form-field";
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule } from "@angular/material/form-field";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatRadioModule } from "@angular/material/radio";
@@ -106,7 +106,7 @@ import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.comp
 	return new TranslateHttpLoader(http, './assets/i18n/', '.json');
   }
   
-  //import { MatBadgeModule } from '@angular/material/m/MatBadgeModule';
+//   import { MatBadgeModule } from '@angular/material/m/MatBadgeModule';
   
   // import { CanDeactivateGuard } from 'src/app/can-deactivate-guard';
   
@@ -177,7 +177,8 @@ import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.comp
 		, AnstehendeSessionsComponent
 		,ProgrammWaehlenComponent
 		, DialogComponent
-		,WorkoutFormComponent
+		// , WorkoutFormComponent
+		
 
 		//TestComponent
 		// TestModule
@@ -275,7 +276,8 @@ import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.comp
 		,ScrollingModule
 		,CdkTableModule
 		, CdkTreeModule
-		,WorkoutFormModule
+		, WorkoutFormModule
+		
 
 	],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
@@ -287,7 +289,8 @@ import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.comp
 		, DialogeService 
 		,{ provide: MAT_DATE_LOCALE, useValue: 'de-DE' }
 		,{ provide: LOCALE_ID, useValue: 'de-DE' }
-		,{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+		, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+		// , { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance:  'outline' }}
 	],
 	bootstrap: [AppComponent],
 	

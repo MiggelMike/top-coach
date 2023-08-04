@@ -9,8 +9,8 @@ import { ToolBarModule } from '../toolbar/tool-bar-module/tool-bar-module.module
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
-  // declarations: [WorkoutFormComponent],
-  // exports: [WorkoutFormComponent],
+  declarations: [WorkoutFormComponent],
+  exports: [WorkoutFormComponent],
   imports: [
     FormsModule,
     // MatExpansionModule,
