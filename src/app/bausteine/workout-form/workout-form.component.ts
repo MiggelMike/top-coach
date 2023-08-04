@@ -20,7 +20,7 @@ export class WorkoutFormComponent implements OnInit  {
         private fDialogService: DialogeService,
         private fDbModule: DexieSvcService
     ) {
-        const mNavigation = this.router.getCurrentNavigation();
+        const mNavigation = this.router.getCurrentNavigation()!;
         const mState = mNavigation.extras.state as { programm: ITrainingsProgramm };
         this.programm = mState.programm;
         this.fDbModule.CheckSessions(this.programm);

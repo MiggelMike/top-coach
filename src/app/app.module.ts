@@ -99,6 +99,8 @@ import { ToolbarComponent } from "./bausteine/toolbar/toolbar.component";
 import { AnstehendeSessionsComponent } from "./anstehende-sessions/anstehende-sessions.component";
 import { ProgrammWaehlenComponent } from './programm-waehlen/programm-waehlen.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { WorkoutFormModule } from './bausteine/workout-form/workout-form.module';
+import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.component';
 
   export function HttpLoaderFactory(http: HttpClient) {
 	return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -175,6 +177,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 		, AnstehendeSessionsComponent
 		,ProgrammWaehlenComponent
 		, DialogComponent
+		,WorkoutFormComponent
 
 		//TestComponent
 		// TestModule
@@ -271,7 +274,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 		, DragDropModule
 		,ScrollingModule
 		,CdkTableModule
-		,CdkTreeModule
+		, CdkTreeModule
+		,WorkoutFormModule
 
 	],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],

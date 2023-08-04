@@ -3,6 +3,7 @@ import { ProgrammWaehlenComponent } from "./programm-waehlen/programm-waehlen.co
 import { NgModule, inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn, RouterModule, RouterStateSnapshot, Routes } from "@angular/router";
 import { DexieSvcService } from "./services/dexie-svc.service";
+import { WorkoutFormComponent } from "./bausteine/workout-form/workout-form.component";
 
 export const LadeStandardProgramme: ResolveFn<ITrainingsProgramm[]> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
 	return inject(DexieSvcService)
@@ -17,8 +18,10 @@ const routes: Routes = [
 		path: "programmwaehlen",
 		component: ProgrammWaehlenComponent,
 		resolve: { StandardProgramme: LadeStandardProgramme },
-	},
-	{ path: "", loadChildren: () => import("./anstehende-sessions/anstehende-sessions/anstehende-sessions.module").then((m) => m.AnstehendeSessionsModule) },
+	}
+	,{ path: "", loadChildren: () => import("./anstehende-sessions/anstehende-sessions/anstehende-sessions.module").then((m) => m.AnstehendeSessionsModule) }
+	// ,{ path: "workoutform", loadChildren: () => import("../app/bausteine/workout-form/workout-form.module").then((m) => m.WorkoutFormModule) }
+	, { path: "workoutform",  component: WorkoutFormComponent  },
 ];
 	
 @NgModule({

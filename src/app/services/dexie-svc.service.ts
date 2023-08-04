@@ -899,15 +899,21 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public LadeSessionBodyweight(aSession: Session): Promise<BodyWeight> {
+		const mDatum: Date = (aSession.GestartedWann !== undefined) ? aSession.GestartedWann : cMinDatum; 
+		
 		return this.BodyweightTable
 			.where("Datum")
-			.belowOrEqual(aSession.GestartedWann)
+			.belowOrEqual(mDatum)
 			.last()
 			.then((aBw) => {
 				if (aBw !== undefined)
 					return new BodyWeight(new BodyWeight(aBw));
-				else
-					return null;
+				else {
+					const mBwDB: BodyWeightDB = new BodyWeightDB();
+					mBwDB.Datum = cMinDatum;
+					mBwDB.Weight = 0;
+					return new BodyWeight(mBwDB);
+				}
 			})
 	}
 
