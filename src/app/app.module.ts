@@ -97,7 +97,6 @@ import { UebungWaehlenModule } from "./uebung-waehlen/uebung-waehlen-module/uebu
 import { AnstehendeSessionsModule } from "./anstehende-sessions/anstehende-sessions/anstehende-sessions.module";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WorkoutFormModule } from './bausteine/workout-form/workout-form.module';
-import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.component';
 
   export function HttpLoaderFactory(http: HttpClient) {
 	return new TranslateHttpLoader(http, './assets/i18n/', '.json');

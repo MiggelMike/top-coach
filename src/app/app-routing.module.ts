@@ -20,7 +20,7 @@ const routes: Routes = [
 	{
 		path: "programmwaehlen",
 		// component: ProgrammWaehlenComponent,
-		// resolve: { StandardProgramme: LadeStandardProgramme },
+		resolve: { StandardProgramme: LadeStandardProgramme },
 		loadChildren: () => import("../app/programm-waehlen/programm-waehlen.module").then((m) => m.ProgrammWaehlenModule)
 	}
 	, {
