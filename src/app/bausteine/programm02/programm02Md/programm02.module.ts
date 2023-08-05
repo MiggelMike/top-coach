@@ -21,7 +21,6 @@ import { MatRippleModule } from '@angular/material/core';
     DatePipe,
     CommonModule,
     Programm03Module,
-    ToolBarModule,
     FlexLayoutModule,
     MatInputModule,
     MatFormFieldModule,

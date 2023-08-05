@@ -21,9 +21,12 @@ const routes: Routes = [
 		component: ProgrammWaehlenComponent,
 		resolve: { StandardProgramme: LadeStandardProgramme },
 	}
-	,{ path: "", loadChildren: () => import("./anstehende-sessions/anstehende-sessions/anstehende-sessions.module").then((m) => m.AnstehendeSessionsModule) }
-	// ,{ path: "workoutform", loadChildren: () => import("../app/bausteine/workout-form/workout-form.module").then((m) => m.WorkoutFormModule) }
-	, { path: "workoutform", component: WorkoutFormComponent }
+	, {
+		path: "",
+		loadChildren: () => import("./anstehende-sessions/anstehende-sessions/anstehende-sessions.module").then((m) => m.AnstehendeSessionsModule)
+	}
+	,{ path: "workoutform", loadChildren: () => import("../app/bausteine/workout-form/workout-form.module").then((m) => m.WorkoutFormModule), }
+	// , { path: "workoutform", component: WorkoutFormComponent }
 	
 ];
 	

@@ -15,7 +15,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatExpansionModule,
     CommonModule,
     Programm02Module,
-    ToolBarModule,
     FlexLayoutModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]

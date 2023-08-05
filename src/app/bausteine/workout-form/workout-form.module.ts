@@ -7,17 +7,22 @@ import { Programm02Module } from '../programm02/programm02Md/programm02.module';
 import { CommonModule } from '@angular/common';
 import { ToolBarModule } from '../toolbar/tool-bar-module/tool-bar-module.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [{ path: 'workoutform', component:WorkoutFormComponent }];
 
 @NgModule({
   declarations: [WorkoutFormComponent],
-  exports: [WorkoutFormComponent],
+  exports: [RouterModule],
   imports: [
     FormsModule,
     // MatExpansionModule,
+    RouterModule.forChild(routes),
     CommonModule,
     Programm02Module,
     ToolBarModule,
-    FlexLayoutModule,
+    FlexLayoutModule
+    
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })

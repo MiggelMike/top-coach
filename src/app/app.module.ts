@@ -173,8 +173,8 @@ import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.comp
 @NgModule({
 	declarations: [
 		AppComponent
-		,ToolbarComponent
-		, AnstehendeSessionsComponent
+		// ,ToolbarComponent
+		// , AnstehendeSessionsComponent
 		,ProgrammWaehlenComponent
 		, DialogComponent
 		// , WorkoutFormComponent
@@ -263,7 +263,7 @@ import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.comp
 		,MatFormFieldModule
 		,MatInputModule
 		, MatRippleModule
-		, ToolBarModule
+		// , ToolBarModule
 		, AnstehendeSessionsModule
 		, Programm01Module
 		, Programm02Module
@@ -329,8 +329,8 @@ import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.comp
 		, DatePipe
 		, StoppUhrModuleModule
 		, PlateCalcModule
-		, ToolBarModule
-		, AnstehendeSessionsModule
+		// , ToolBarModule
+		// , AnstehendeSessionsModule
 		, FlexLayoutModule
 		,BrowserAnimationsModule
 	]
