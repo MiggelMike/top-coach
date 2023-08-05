@@ -95,9 +95,6 @@ import { Programm02Module } from "./bausteine/programm02/programm02Md/programm02
 import { Programm03Module } from "./bausteine/programm03/programm03Md/programm03.module";
 import { UebungWaehlenModule } from "./uebung-waehlen/uebung-waehlen-module/uebung-waehlen-module.module";
 import { AnstehendeSessionsModule } from "./anstehende-sessions/anstehende-sessions/anstehende-sessions.module";
-import { ToolbarComponent } from "./bausteine/toolbar/toolbar.component";
-import { AnstehendeSessionsComponent } from "./anstehende-sessions/anstehende-sessions.component";
-import { ProgrammWaehlenComponent } from './programm-waehlen/programm-waehlen.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WorkoutFormModule } from './bausteine/workout-form/workout-form.module';
 import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.component';
@@ -175,7 +172,7 @@ import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.comp
 		AppComponent
 		// ,ToolbarComponent
 		// , AnstehendeSessionsComponent
-		,ProgrammWaehlenComponent
+		// ,ProgrammWaehlenComponent
 		, DialogComponent
 		// , WorkoutFormComponent
 		

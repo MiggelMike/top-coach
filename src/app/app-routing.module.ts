@@ -1,3 +1,4 @@
+import { ProgrammWaehlenModule } from './programm-waehlen/programm-waehlen.module';
 import { ITrainingsProgramm } from "./../Business/TrainingsProgramm/TrainingsProgramm";
 import { ProgrammWaehlenComponent } from "./programm-waehlen/programm-waehlen.component";
 import { NgModule, inject } from "@angular/core";
@@ -18,8 +19,9 @@ export const LadeStandardProgramme: ResolveFn<ITrainingsProgramm[]> = (route: Ac
 const routes: Routes = [
 	{
 		path: "programmwaehlen",
-		component: ProgrammWaehlenComponent,
-		resolve: { StandardProgramme: LadeStandardProgramme },
+		// component: ProgrammWaehlenComponent,
+		// resolve: { StandardProgramme: LadeStandardProgramme },
+		loadChildren: () => import("../app/programm-waehlen/programm-waehlen.module").then((m) => m.ProgrammWaehlenModule)
 	}
 	, {
 		path: "",
