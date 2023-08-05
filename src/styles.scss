@@ -443,7 +443,12 @@ textarea:focus {
 	border-bottom: none;
 	border-right: none;
 	background-color: white;
-	// width: 50%;
+  }
+
+  .cc-Dialog {
+	padding: 10px;
+	border-radius: 10px;
+	// border-style: inset;
   }
 
 

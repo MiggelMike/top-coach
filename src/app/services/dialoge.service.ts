@@ -20,6 +20,7 @@ export class DialogeService {
 
     private DialogBasis(aDialogData: DialogData):MatDialogRef<DialogComponent> {
         const mDialogConfig = new MatDialogConfig();
+        mDialogConfig.panelClass = "cc-Dialog";
         mDialogConfig.width = 'auto';
         mDialogConfig.height = aDialogData.height;
         mDialogConfig.disableClose = true;
