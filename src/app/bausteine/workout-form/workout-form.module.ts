@@ -12,14 +12,14 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [{ path: 'workoutform', component:WorkoutFormComponent }];
 
 @NgModule({
-  declarations: [WorkoutFormComponent],
+  // declarations: [WorkoutFormComponent],
   exports: [RouterModule],
   imports: [
+    CommonModule,
     FormsModule,
+    Programm02Module,
     // MatExpansionModule,
     RouterModule.forChild(routes),
-    CommonModule,
-    Programm02Module,
     ToolBarModule,
     FlexLayoutModule
     

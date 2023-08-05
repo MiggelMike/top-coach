@@ -18,17 +18,17 @@ export const LadeStandardProgramme: ResolveFn<ITrainingsProgramm[]> = (route: Ac
 
 const routes: Routes = [
 	{
+		path: "",
+		loadChildren: () => import("./anstehende-sessions/anstehende-sessions/anstehende-sessions.module").then((m) => m.AnstehendeSessionsModule)
+	}
+	,{
 		path: "programmwaehlen",
 		// component: ProgrammWaehlenComponent,
 		resolve: { StandardProgramme: LadeStandardProgramme },
 		loadChildren: () => import("../app/programm-waehlen/programm-waehlen.module").then((m) => m.ProgrammWaehlenModule)
 	}
-	, {
-		path: "",
-		loadChildren: () => import("./anstehende-sessions/anstehende-sessions/anstehende-sessions.module").then((m) => m.AnstehendeSessionsModule)
-	}
-	,{ path: "workoutform", loadChildren: () => import("../app/bausteine/workout-form/workout-form.module").then((m) => m.WorkoutFormModule), }
-	// , { path: "workoutform", component: WorkoutFormComponent }
+	// ,{ path: "workoutform", loadChildren: () => import("../app/bausteine/workout-form/workout-form.module").then((m) => m.WorkoutFormModule) }
+	, { path: "workoutform", component: WorkoutFormComponent }
 	
 ];
 	
