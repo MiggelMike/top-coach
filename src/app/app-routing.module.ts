@@ -28,7 +28,10 @@ const routes: Routes = [
 		loadChildren: () => import("../app/programm-waehlen/programm-waehlen.module").then((m) => m.ProgrammWaehlenModule)
 	}
 	// ,{ path: "workoutform", loadChildren: () => import("../app/bausteine/workout-form/workout-form.module").then((m) => m.WorkoutFormModule) }
-	, { path: "workoutform", component: WorkoutFormComponent }
+	, {
+		path: "workoutform",
+		component: WorkoutFormComponent
+	}
 	
 ];
 	

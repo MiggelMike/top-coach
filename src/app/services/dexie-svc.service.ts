@@ -213,6 +213,7 @@ export class DexieSvcService extends Dexie {
 	public MuskelGruppenListe: Array<MuscleGroup> = [];
 	public EquipmentListe: Array<Equipment> = [];
 	public LangHantelListe: Array<Hantel> = [];
+	public StandardProgramme: Array<ITrainingsProgramm> = [];
 	public HantelscheibenListe: Array<Hantelscheibe> = [];
 	public ProgressListe: Array<Progress> = [];
 	// public DiagrammDatenListe: Array<DiaDatum> = [];
@@ -2009,7 +2010,10 @@ export class DexieSvcService extends Dexie {
 		const mProgrammPara: ProgrammParaDB = new ProgrammParaDB();
 		mProgrammPara.WhereClause = { ProgrammKategorie: ProgrammKategorie.Vorlage.toString() };
 		mProgrammPara.SessionBeachten = true;
-		return this.LadeProgrammeEx(mProgrammPara);
+		return this.LadeProgrammeEx(mProgrammPara).then((aProgramme) => {
+			this.StandardProgramme = aProgramme;
+			return aProgramme;
+		});
 	}
 
 

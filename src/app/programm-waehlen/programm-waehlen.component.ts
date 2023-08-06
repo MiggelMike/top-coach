@@ -20,10 +20,7 @@ export class ProgrammWaehlenComponent implements OnInit {
         private fLoadingDialog: DialogeService,
         private activatedRoute: ActivatedRoute
     ) {
-        this.fDbModule.LadeStandardProgramme()
-            .then((programme) => {
-                this.ProgrammListe = programme;
-            });
+        this.ProgrammListe = this.fDbModule.StandardProgramme;
     }
         
         ngOnInit() {
