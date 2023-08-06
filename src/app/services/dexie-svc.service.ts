@@ -2010,6 +2010,10 @@ export class DexieSvcService extends Dexie {
 		const mProgrammPara: ProgrammParaDB = new ProgrammParaDB();
 		mProgrammPara.WhereClause = { ProgrammKategorie: ProgrammKategorie.Vorlage.toString() };
 		mProgrammPara.SessionBeachten = true;
+		mProgrammPara.SessionParaDB = new SessionParaDB();
+		mProgrammPara.SessionParaDB.UebungenBeachten = true;
+		mProgrammPara.SessionParaDB.UebungParaDB = new UebungParaDB();
+		mProgrammPara.SessionParaDB.UebungParaDB.SaetzeBeachten = true;
 		return this.LadeProgrammeEx(mProgrammPara).then((aProgramme) => {
 			this.StandardProgramme = aProgramme;
 			return aProgramme;
@@ -2031,11 +2035,19 @@ export class DexieSvcService extends Dexie {
 				for (let index = 0; index < aProgramme.length; index++) {
 					if (aProgrammPara.SessionBeachten !== undefined && aProgrammPara.SessionBeachten === true) {
 						const mPtrProgramm = aProgramme[index];
-						const mLadePara: SessionParaDB = new SessionParaDB();
+						let mLadePara: SessionParaDB;
+						
+						if (aProgrammPara.SessionParaDB !== undefined)
+							mLadePara = aProgrammPara.SessionParaDB;
+						else
+							mLadePara = new SessionParaDB();
+						
 						// SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02]",
 						mLadePara.WhereClause = { FK_Programm: mPtrProgramm.id };
 						await this.LadeProgrammSessionsEx(mLadePara)
-							.then((aSessionListe: Array<Session>) => mPtrProgramm.SessionListe = aSessionListe);
+							.then((aSessionListe: Array<Session>) => {
+								mPtrProgramm.SessionListe = aSessionListe;
+							});
 					}
 					else if (aProgrammPara.SessionParaDB !== undefined) await this.LadeProgrammSessionsEx(aProgrammPara.SessionParaDB);
 				
