@@ -1,3 +1,4 @@
+import { SatzSimpleModule } from './bausteine/satz-simple/satz-simple.module';
 import { ProgrammWaehlenModule } from './programm-waehlen/programm-waehlen.module';
 import { PlateCalcModule } from "./plate-calc/plate-calc-module/plate-calc-module.module";
 import { StoppUhrModuleModule } from "./stoppuhr/stopp-uhr-module/stopp-uhr-module.module";
@@ -34,6 +35,7 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 import { MatNativeDateModule } from "@angular/material/core";
 // import { Router, NavigationStart } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { SatzSimpleComponent } from '../app/bausteine/satz-simple/satz-simple.component'
 // import { Programm01Component } from "./bausteine/programm01/programm01.component";
 // import { Programm02Component } from "./bausteine/programm02/programm02.component";
 // import { Programm03Component } from "./bausteine/programm03/programm03.component";
@@ -99,7 +101,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WorkoutFormModule } from './bausteine/workout-form/workout-form.module';
 import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.component';
 
-  export function HttpLoaderFactory(http: HttpClient) {
+export function HttpLoaderFactory(http: HttpClient) {
 	return new TranslateHttpLoader(http, './assets/i18n/', '.json');
   }
   
@@ -274,6 +276,7 @@ import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.comp
 		,CdkTableModule
 		, CdkTreeModule
 		, WorkoutFormModule
+		,SatzSimpleModule
 		
 
 	],
