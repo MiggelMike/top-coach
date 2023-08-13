@@ -6,6 +6,8 @@ import { CommonModule, DatePipe } from "@angular/common";
 import { SessUebungModule } from '../../sess-uebung/sess-uebung-module/sess-uebung-module.module';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatRippleModule } from '@angular/material/core';
+
 
 @NgModule({
     declarations: [Programm03Component],
@@ -13,11 +15,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     imports: [
         FormsModule,
+        CommonModule,
         MatExpansionModule,
         SessUebungModule,
-        CommonModule,
         MatInputModule,
         MatFormFieldModule,
+        MatRippleModule,
         DatePipe]
 })
 export class Programm03Module { }

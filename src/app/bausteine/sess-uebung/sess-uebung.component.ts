@@ -38,8 +38,13 @@ export class SessUebungComponent implements OnInit {
         private fGlobalService: GlobalService
     ) {
     }
-
+    
     ngOnInit(): void {
+        // this.satzListe = this.sessUebung.ArbeitsSatzListe;
+    }
+    
+    ngAfterViewInit() {
+        const x = 0;
     }
     
     ngOnDestroy() {

@@ -31,7 +31,7 @@ export class Programm03Component implements OnInit {
     @Input() cmpSettingsSession: ISession;
     @Input() SessUeb: Uebung;
     @Input() rowNum: number = 0;
-    @Input() bearbeitbar: Boolean;
+    @Input() bearbeitbar: Boolean = true;
     @Input() panUebung1: MatExpansionPanel;
     @Input() ShowStats: Boolean = false;
     @Input() StatsVisible: Boolean = false;
@@ -98,7 +98,7 @@ export class Programm03Component implements OnInit {
     }
             
     ngAfterViewInit() {
-        this.DoWorker();
+        // this.DoWorker();
 
         if (this.session.UebungsListe !== undefined) {
             // if(this.session.UebungsListe.length <= 0) {

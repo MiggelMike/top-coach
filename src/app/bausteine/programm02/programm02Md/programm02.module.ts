@@ -5,7 +5,6 @@ import { CommonModule, DatePipe } from "@angular/common";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { Programm03Module } from '../../programm03/programm03Md/programm03.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ToolBarModule } from '../../toolbar/tool-bar-module/tool-bar-module.module';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatRippleModule } from '@angular/material/core';

@@ -128,7 +128,7 @@
             <!-- Training laeuft nicht -->
             <ng-template #showPlan>
                 <!-- Geplantes Vorgabe-Gewicht -->
-                <mat-form-field class="align-right" fxFlex="45px">
+                <mat-form-field class="align-right" fxFlex="65px">
                     <mat-label>{{satz.GewichtVorgabe | number: '1.2'}}</mat-label>
                     <input  matInput [textMask]="{mask: floatMask, guide: false }"
                             [ngModel]="(satz.GewichtAusgefuehrt | number: '1.2')" 

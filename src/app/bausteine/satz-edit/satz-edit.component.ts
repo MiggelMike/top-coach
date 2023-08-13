@@ -62,6 +62,10 @@ export class SatzEditComponent implements OnInit {
                 this.AppData = mAppData;
             });
     }
+
+    ngAfterViewInit() {
+        const x = 0;        
+    }
     
     
     ngOnInit() {
