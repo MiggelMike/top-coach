@@ -1,12 +1,12 @@
-<div class="cardInner" fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center center">
+<div class="cardInner center-item" fxLayout="row wrap" fxLayout.lt-sm="row wrap">
     <div class="center-item align-right" fxLayout="column" fxFlex="100%">
 
-        <div class="kreis font-size-xsmall" fxLayout="row"   fxLayoutAlign="center center">
+        <div class="kreis  center-item font-size-xsmall" fxLayout="row">
             {{satz.WdhVonVorgabe}}
             <ng-container *ngIf="satz.AMRAP">+</ng-container>
         </div>
         
-        <div class="font-size-xsmall" fxLayout="row" fxFlex="100%" fxLayoutAlign="center center">
+        <div class="font-size-xsmall  center-item" fxLayout="row" fxFlex="100%">
             <mat-label>
                 {{satz.GewichtVorgabe}}
             </mat-label>  
