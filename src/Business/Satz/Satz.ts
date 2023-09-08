@@ -10,8 +10,9 @@ var isEqual = require('lodash.isEqual');
 export enum SatzTyp {
     Aufwaermen = 'Aufwaermen',
     Training = 'Training',
-    Abwaermen = 'Abwaermen',
+    Abwaermen = 'Abwaermen'
 }
+
 
 export enum LiftTyp {
     NoLift = 'NoLift',

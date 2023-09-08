@@ -74,11 +74,11 @@ export class SessUebungComponent implements OnInit {
         mSatz.UebungID = this.sessUebung.ID;
         
         switch (this.satzTypText) {
-            case "Warm Up":
+            case "Warm up sets":
                 mSatz.SatzTyp = SatzTyp.Aufwaermen;
                 break;
 
-            case "Cool Down":
+            case "Cool down sets":
                 mSatz.SatzTyp = SatzTyp.Abwaermen;  
                 break;
             
