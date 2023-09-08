@@ -407,7 +407,7 @@ export class Uebung  {
         if (!this.SatzListe) return mResult;
 
         this.SatzListe.forEach((mSatz) => {
-            if (mSatz.SatzTyp == SatzTyp.Abwaermen) {
+            if (mSatz.SatzTyp == SatzTyp.Abkuehlen) {
                 mResult.push(mSatz);
             }
         });

@@ -12,8 +12,8 @@ export class SatzComponent implements OnInit {
     public floatMask = floatMask;
     public repMask = repMask;
     @Input() satzTypText: string = '';
-    @Input() satz: Satz = null;
-    @Input() session: ISession = null;
+    @Input() satz: Satz = null!;
+    @Input() session: ISession = null!;
     @Input() satzListe: Array<Satz>;
     
     constructor() {}

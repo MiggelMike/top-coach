@@ -93,7 +93,7 @@ export class PlateCalcComponent implements OnInit {
 					if (this.SetsAreEqual(sz, this.Satz) === false) sz.GewichtAusgefuehrt = this.Satz.GewichtAusgefuehrt;
 				});
 			}
-			else if (this.Satz.SatzTyp === SatzTyp.Abwaermen) {
+			else if (this.Satz.SatzTyp === SatzTyp.Abkuehlen) {
 				this.Uebung.AbwaermSatzListe.forEach((sz) => {
 					if (this.SetsAreEqual(sz, this.Satz) === false) sz.GewichtAusgefuehrt = this.Satz.GewichtAusgefuehrt;
 				});
@@ -131,7 +131,7 @@ export class PlateCalcComponent implements OnInit {
 					if (this.SetsAreEqual(sz, this.Satz) === false) sz.FkHantel = this.Satz.FkHantel;
 				});
 			}
-			else if (this.Satz.SatzTyp === SatzTyp.Abwaermen) {
+			else if (this.Satz.SatzTyp === SatzTyp.Abkuehlen) {
 				this.Uebung.AbwaermSatzListe.forEach((sz) => {
 					if (this.SetsAreEqual(sz, this.Satz) === false) sz.FkHantel = this.Satz.FkHantel;
 				});
@@ -163,7 +163,7 @@ export class PlateCalcComponent implements OnInit {
 					}
 				});
 			}
-			else if (this.Satz.SatzTyp === SatzTyp.Abwaermen) {
+			else if (this.Satz.SatzTyp === SatzTyp.Abkuehlen) {
 				this.Uebung.AbwaermSatzListe.forEach((sz) => {
 					if (this.SetsAreEqual(sz, this.Satz) === false) {
 						sz.WdhVonVorgabe = this.Satz.WdhVonVorgabe;
@@ -191,7 +191,7 @@ export class PlateCalcComponent implements OnInit {
 			  }
 			});
 		  }
-		  else if (this.Satz.SatzTyp === SatzTyp.Abwaermen) {
+		  else if (this.Satz.SatzTyp === SatzTyp.Abkuehlen) {
 			this.Uebung.AbwaermSatzListe.forEach((sz) => {
 			  if (this.SetsAreEqual(sz, this.Satz) === false) {
 				sz.WdhAusgefuehrt = this.Satz.WdhAusgefuehrt;

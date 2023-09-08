@@ -1,4 +1,3 @@
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { cWeightDigits, cMinDatum, UebungParaDB } from './../../services/dexie-svc.service';
 import { NextProgress, Progress, ProgressPara, ProgressSet, ProgressTyp, VorgabeWeightLimit, WeightProgress } from './../../../Business/Progress/Progress';
 import { DexieSvcService } from 'src/app/services/dexie-svc.service';
@@ -7,7 +6,7 @@ import { ISession } from 'src/Business/Session/Session';
 import { Uebung, SaetzeStatus } from './../../../Business/Uebung/Uebung';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { Satz, SatzStatus } from "./../../../Business/Satz/Satz";
+import { Satz, SatzStatus, SatzTyp } from "./../../../Business/Satz/Satz";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
@@ -29,7 +28,7 @@ export class SatzEditComponent implements OnInit {
     @Input() sessUebung: Uebung;
     @Input() satz: Satz;
     @Input() rowNum: number;
-    @Input() satzTyp: string;
+    @Input() satzTyp:SatzTyp;
     @Input() DeletedSatzList: Array<Satz> = [];
     public floatMask = floatMask;
     public repMask = repMask;
@@ -92,6 +91,10 @@ export class SatzEditComponent implements OnInit {
     }
 
     ngOnDestroy() {
+    }
+
+    public get CmpSatzTyp(): typeof SatzTyp {
+        return SatzTyp;
     }
 
     public DeleteSet() {

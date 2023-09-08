@@ -13,7 +13,7 @@ import { floatMask } from 'src/app/app.module';
 import { ExerciseSettingsComponent } from 'src/app/exercise-settings/exercise-settings.component';
 import { ExerciseOverlayConfig, ExerciseSettingSvcService } from 'src/app/services/exercise-setting-svc.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Satz } from 'src/Business/Satz/Satz';
+import { Satz, SatzTyp } from 'src/Business/Satz/Satz';
 
 
 @Component({
@@ -69,6 +69,10 @@ export class Programm03Component implements OnInit {
     // };
 
     ngOnInit() {
+    }
+
+    public get satzTyp(): typeof SatzTyp {
+        return SatzTyp;
     }
 
     constructor(

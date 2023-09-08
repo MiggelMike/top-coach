@@ -18,7 +18,7 @@ import { SatzEditComponent } from '../satz-edit/satz-edit.component';
 export class SessUebungComponent implements OnInit {
     public floatMask = floatMask;
     public repMask = repMask;
-    @Input() satzTypText: string = "";
+    @Input() satzTyp: SatzTyp;
     @Input() programm: ITrainingsProgramm = null;
     @Input() programmTyp: string ='';
     @Input() session: ISession = null;
@@ -59,6 +59,7 @@ export class SessUebungComponent implements OnInit {
             });
     }
 
+
     public PasteSet(aEvent: Event) {
         if(this.ExpansionPanel.expanded === true)
             aEvent.stopPropagation();
@@ -73,13 +74,13 @@ export class SessUebungComponent implements OnInit {
         const mSatz: Satz = this.fGlobalService.SatzKopie.Copy();
         mSatz.UebungID = this.sessUebung.ID;
         
-        switch (this.satzTypText) {
-            case "Warm up sets":
+        switch (this.satzTyp) {
+            case SatzTyp.Aufwaermen:
                 mSatz.SatzTyp = SatzTyp.Aufwaermen;
                 break;
 
-            case "Cool down sets":
-                mSatz.SatzTyp = SatzTyp.Abwaermen;  
+            case SatzTyp.Abkuehlen:
+                mSatz.SatzTyp = SatzTyp.Abkuehlen;  
                 break;
             
             default:
@@ -94,8 +95,8 @@ export class SessUebungComponent implements OnInit {
             aEvent.stopPropagation();
         
         let mSatz: Satz;
-        switch (this.satzTypText) {
-            case "Warm up sets":
+        switch (this.satzTyp) {
+            case SatzTyp.Aufwaermen:
                 mSatz = Satz.NeuerSatz(
                     SatzTyp.Aufwaermen,
                     LiftTyp.Custom,
@@ -108,9 +109,9 @@ export class SessUebungComponent implements OnInit {
                 );
                 break;
 
-                case "Cool down sets":
+                case SatzTyp.Abkuehlen:
                     mSatz = Satz.NeuerSatz(
-                        SatzTyp.Abwaermen,
+                        SatzTyp.Abkuehlen,
                         LiftTyp.Custom,
                         0,
                         0,

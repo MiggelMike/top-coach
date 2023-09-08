@@ -168,9 +168,6 @@ export function HttpLoaderFactory(http: HttpClient) {
 	})    
 
 
-	export const SatzType  = "Warm up sets";	
-export const cWarmUpSets = "Warm up sets";
-
 
 @NgModule({
 	declarations: [

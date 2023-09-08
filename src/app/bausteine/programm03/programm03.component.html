@@ -86,7 +86,7 @@
                                                 <app-sess-uebung 
                                                     [panUebung1]="panUebung"
                                                     [rowNum]="i" 
-                                                    [satzTypText]="'Warm up sets'"
+                                                    [satzTyp]="satzTyp.Aufwaermen"
                                                     [satzListe]="SessUeb.AufwaermSatzListe"
                                                     [session]="session"
                                                     [DeletedSatzList]="DeletedSatzList"
@@ -101,7 +101,7 @@
                                                 <app-sess-uebung 
                                                     [panUebung1]="panUebung" 
                                                     [rowNum]="i" 
-                                                    [satzTypText]="'Work sets'"
+                                                    [satzTyp]="satzTyp.Training"
                                                     [satzListe]="SessUeb.ArbeitsSatzListe"
                                                     [session]="session"
                                                     [programm]="programm"
@@ -116,7 +116,7 @@
                                                 <app-sess-uebung 
                                                     [panUebung1]="panUebung"
                                                     [rowNum]="i"
-                                                    [satzTypText]="'Cool down sets'"
+                                                    [satzTyp]="satzTyp.Abkuehlen"
                                                     [satzListe]="SessUeb.AbwaermSatzListe"
                                                     [programm]="programm"
                                                     [DeletedSatzList]="DeletedSatzList"
