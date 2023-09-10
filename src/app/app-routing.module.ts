@@ -4,7 +4,7 @@ import { ITrainingsProgramm } from "./../Business/TrainingsProgramm/TrainingsPro
 import { ProgrammWaehlenComponent } from "./programm-waehlen/programm-waehlen.component";
 import { NgModule, inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn, RouterModule, RouterStateSnapshot, Routes } from "@angular/router";
-import { DexieSvcService } from "./services/dexie-svc.service";
+import { DexieSvcService, ProgrammParaDB, SessionParaDB, UebungParaDB } from "./services/dexie-svc.service";
 import { WorkoutFormComponent } from "./bausteine/workout-form/workout-form.component";
 import { InitialWeightComponent } from './initial-weight/initial-weight.component';
 
@@ -18,9 +18,21 @@ export const LadeStandardProgramme: ResolveFn<ITrainingsProgramm[]> = (route: Ac
 		});
 };
 
+export const LadeAktuellesProgramm: ResolveFn<ITrainingsProgramm> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+	const mProgrammParaDB: ProgrammParaDB = new ProgrammParaDB();
+	mProgrammParaDB.SessionBeachten = true;
+	mProgrammParaDB.SessionParaDB = new SessionParaDB();
+	mProgrammParaDB.SessionParaDB.UebungenBeachten = true;
+	mProgrammParaDB.SessionParaDB.UebungParaDB = new UebungParaDB();
+	mProgrammParaDB.SessionParaDB.UebungParaDB.SaetzeBeachten = true;
+	return inject(DexieSvcService)
+		.LadeAktuellesProgramm();
+};	
+
 const routes: Routes = [
 	{
 		path: "",
+		resolve: { AktuellesProgramm: LadeAktuellesProgramm },		
 		loadChildren: () => import("./anstehende-sessions/anstehende-sessions/anstehende-sessions.module").then((m) => m.AnstehendeSessionsModule)
 	}
 	,{

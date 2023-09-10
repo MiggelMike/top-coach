@@ -19,7 +19,7 @@ export class Programm01Component implements OnInit {
     @Input() showSaveButtons: boolean | false;
     @Input() programmtext: { value: null };
 
-    StandardProgramme: Array<ITrainingsProgramm>;
+   // StandardProgramme: Array<ITrainingsProgramm>;
 
     SelectBtnDisabled: boolean = false;
 

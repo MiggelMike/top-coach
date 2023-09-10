@@ -1489,7 +1489,6 @@ export class DexieSvcService extends Dexie {
 
 		// 		})//then
 		// ).flat());
-		
 		return await this.SessionTable
 			.where("[FK_Programm+Kategorie02]")
 			.anyOf([[aProgrammID, SessionStatus.Laueft], [aProgrammID, SessionStatus.Pause], [aProgrammID, SessionStatus.Wartet]])

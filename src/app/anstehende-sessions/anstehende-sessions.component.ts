@@ -18,9 +18,7 @@ export class AnstehendeSessionsComponent implements OnInit {
     constructor(
         private fDbModule: DexieSvcService,
         private fLoadingDialog: DialogeService,
-    ) {
-        const x = 0;
-        }
+    ) {}
         
     public get Programm(): ITrainingsProgramm {
         return this.fDbModule.AktuellesProgramm;
@@ -73,7 +71,7 @@ export class AnstehendeSessionsComponent implements OnInit {
         
         
     ngOnInit() {
-        this.DoWorker();
+        // this.DoWorker();
         // this.fDbModule.DoWorker(WorkerAction.LadeDiagrammDaten);
     }
 
