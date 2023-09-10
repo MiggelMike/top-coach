@@ -64,9 +64,7 @@ import { DatePipe } from "@angular/common";
 
 import {
 	TranslateModule,
-	TranslateLoader,
-	TranslateService
-  } from '@ngx-translate/core';
+	TranslateLoader  } from '@ngx-translate/core';
 // import { TestModule } from "./bausteine/test/test.component";
 // import { ExerciseSettingsComponent } from "./exercise-settings/exercise-settings.component";
 // import { EditExerciseComponent } from "./edit-exercise/edit-exercise.component";
@@ -100,6 +98,8 @@ import { AnstehendeSessionsModule } from "./anstehende-sessions/anstehende-sessi
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WorkoutFormModule } from './bausteine/workout-form/workout-form.module';
 import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.component';
+// import { InitialWeightModule } from './initial-weight/initial-weight.module';
+import { InitialWeightComponent } from './initial-weight/initial-weight.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
 	return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -177,6 +177,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 		// ,ProgrammWaehlenComponent
 		, DialogComponent
 		, WorkoutFormComponent
+		,InitialWeightComponent 
 		
 
 		//TestComponent
@@ -276,7 +277,8 @@ export function HttpLoaderFactory(http: HttpClient) {
 		,CdkTableModule
 		, CdkTreeModule
 		, WorkoutFormModule
-		,SatzSimpleModule
+		, SatzSimpleModule
+		// ,InitialWeightModule
 		
 
 	],

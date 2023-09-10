@@ -1,15 +1,13 @@
-import { ISession } from 'src/Business/Session/Session';
 import { SessionParaDB, UebungParaDB } from './../services/dexie-svc.service';
 import { InitialWeight } from "./../../Business/Uebung/InitialWeight";
-import { TrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { DexieSvcService } from "../services/dexie-svc.service";
 import { DialogeService } from "../services/dialoge.service";
-import { Location } from "@angular/common";
-import { Uebung } from "src/Business/Uebung/Uebung";
 import { floatMask } from "../app.module";
-import { cLoadingDefaultHeight, DialogData } from "src/app/dialoge/hinweis/hinweis.component";
+import { TrainingsProgramm } from '../../Business/TrainingsProgramm/TrainingsProgramm';
+import { Uebung } from '../../Business/Uebung/Uebung';
+import { DialogData, cLoadingDefaultHeight } from '../dialoge/hinweis/hinweis.component';
 
 @Component({
 	selector: "app-initial-weight",
@@ -26,7 +24,7 @@ export class InitialWeightComponent implements OnInit {
 		private fLoadingDialog: DialogeService,
 		public fDialogService: DialogeService)
 	{
-		const mNavigation = this.router.getCurrentNavigation();
+		const mNavigation = this.router.getCurrentNavigation()!;
 		const mState = mNavigation.extras.state as { Program: TrainingsProgramm };
 		this.Program = mState.Program;
 		const mUebungen: Array<Uebung> = [];
