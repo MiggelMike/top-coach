@@ -26,8 +26,7 @@ export const LadeAktuellesProgramm: ResolveFn<ITrainingsProgramm> = (route: Acti
 	mProgrammParaDB.SessionParaDB.UebungenBeachten = true;
 	mProgrammParaDB.SessionParaDB.UebungParaDB = new UebungParaDB();
 	mProgrammParaDB.SessionParaDB.UebungParaDB.SaetzeBeachten = true;
-	return inject(DexieSvcService)
-		.LadeAktuellesProgramm(mProgrammParaDB);
+	return inject(DexieSvcService).LadeAktuellesProgramm(mProgrammParaDB);
 };	
 
 const routes: Routes = [
