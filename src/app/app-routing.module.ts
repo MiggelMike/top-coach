@@ -7,6 +7,7 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterModule, RouterStateSnapshot, R
 import { DexieSvcService, ProgrammParaDB, SessionParaDB, UebungParaDB } from "./services/dexie-svc.service";
 import { WorkoutFormComponent } from "./bausteine/workout-form/workout-form.component";
 import { InitialWeightComponent } from './initial-weight/initial-weight.component';
+import { AnstehendeSessionsComponent } from './anstehende-sessions/anstehende-sessions.component';
 
 
 
@@ -33,7 +34,8 @@ const routes: Routes = [
 	{
 		path: "",
 		resolve: { AktuellesProgramm: LadeAktuellesProgramm },		
-		loadChildren: () => import("./anstehende-sessions/anstehende-sessions/anstehende-sessions.module").then((m) => m.AnstehendeSessionsModule)
+		component: AnstehendeSessionsComponent
+		// loadChildren: () => import("./anstehende-sessions/anstehende-sessions/anstehende-sessions.module").then((m) => m.AnstehendeSessionsModule)
 	}
 	,{
 		path: "programmwaehlen",

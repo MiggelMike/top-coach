@@ -100,6 +100,7 @@ import { WorkoutFormModule } from './bausteine/workout-form/workout-form.module'
 import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.component';
 // import { InitialWeightModule } from './initial-weight/initial-weight.module';
 import { InitialWeightComponent } from './initial-weight/initial-weight.component';
+import { AnstehendeSessionsComponent } from './anstehende-sessions/anstehende-sessions.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
 	return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -173,7 +174,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 	declarations: [
 		AppComponent
 		// ,ToolbarComponent
-		// , AnstehendeSessionsComponent
+		, AnstehendeSessionsComponent
 		// ,ProgrammWaehlenComponent
 		, DialogComponent
 		, WorkoutFormComponent

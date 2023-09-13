@@ -16,9 +16,7 @@ export class ProgrammWaehlenComponent implements OnInit {
     public ProgrammListe: Array<ITrainingsProgramm> = [];
 
     constructor(
-        public fDbModule: DexieSvcService,
-        private fLoadingDialog: DialogeService,
-        private activatedRoute: ActivatedRoute
+        public fDbModule: DexieSvcService
     ) {
         this.ProgrammListe = this.fDbModule.StandardProgramme;
     }

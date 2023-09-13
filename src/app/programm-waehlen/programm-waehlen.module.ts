@@ -1,4 +1,3 @@
-import { WorkoutFormModule } from '../bausteine/workout-form/workout-form.module';
 import { ProgrammWaehlenComponent } from './programm-waehlen.component';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA  } from '@angular/core';
 import { CommonModule } from '@angular/common';

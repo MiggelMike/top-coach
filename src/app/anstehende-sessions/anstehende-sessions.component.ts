@@ -76,7 +76,7 @@ export class AnstehendeSessionsComponent implements OnInit {
     }
 
     public get AktuellesProgramm(): ITrainingsProgramm {
-        return this.Programm;
+        return this.fDbModule.AktuellesProgramm;
     }
                 
     beforePanelOpened(aSess: Session) {

@@ -223,6 +223,7 @@ export class Programm02Component implements OnInit {
 		if (this.programmTyp === "history") mResult = this.SessionListe as Array<Session>;
 		else mResult = this.fDbModule.SortSessionByListenIndex(this.SessionListe as Array<Session>) as Array<Session>;
 		return mResult;
+		// return this.SessionListe;
     }
 	
 	private DeleteSessionPrim(aSession: ISession, aRowNum: number, aOnDelete: onDeleteFn ) {

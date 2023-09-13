@@ -1307,7 +1307,6 @@ export class DexieSvcService extends Dexie {
 			.equals(ProgrammKategorie.AktuellesProgramm)
 			.toArray()
 			.then(async (aProgrammListe: Array<ITrainingsProgramm>) => {
-				const x = 0;
 				if (aProgrammListe.length > 0) {
 					this.AktuellesProgramm = aProgrammListe[0];
 					if ((aProgrammParaDB !== undefined) &&
@@ -1316,11 +1315,11 @@ export class DexieSvcService extends Dexie {
 						await this.LadeProgrammSessions(aProgrammListe[0].id, aProgrammParaDB.SessionParaDB)
 							.then(
 								(aSessionListe) => {
-									aProgrammListe[0].SessionListe = aSessionListe;
+									this.AktuellesProgramm.SessionListe = aSessionListe;
 								}
 							);
 					}//if
-					return aProgrammListe[0];
+					return this.AktuellesProgramm;
 				}//if
 				return undefined;
 			});
