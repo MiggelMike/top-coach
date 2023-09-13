@@ -5,10 +5,9 @@
             <h6>{{AktuellesProgramm.Name}}</h6>
             <app-programm02 [showButtons]="false"
                             [showSaveButtons] = "false" 
-                            [context] = "'anstehende-sessions'"
+                            [ModulTyp] = "programModul.AnstehendeSessions"
                             [programm]="AktuellesProgramm" 
                             [SessionListe] = "AktuellesProgramm.SessionListe"
-                            [programmTyp]="'AktuellesProgramm'" 
                             [bearbeitbar]="false"
                             [StartButtonVisible]= "true"
                             [SofortSpeichern]= "true">

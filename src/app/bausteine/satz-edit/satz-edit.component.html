@@ -11,9 +11,9 @@
                     <div class="center-item" fxLayout="column" fxFlex="45px">
                         Weight
                     </div>
-                    <ng-container *ngIf="  (satzTyp === CmpSatzTyp.Aufwaermen && sessUebung.checkWarmUpSatzIncludedBodyWeight())
-                                         ||(satzTyp === CmpSatzTyp.Training && sessUebung.checkArbeitsSatzIncludedBodyWeight())
-                                         ||(satzTyp === CmpSatzTyp.Abkuehlen && sessUebung.checkCoolDownSatzIncludedBodyWeight())
+                    <ng-container *ngIf="  (SatzTyp === satzTyp.Aufwaermen && sessUebung.checkWarmUpSatzIncludedBodyWeight())
+                                         ||(SatzTyp === satzTyp.Training && sessUebung.checkArbeitsSatzIncludedBodyWeight())
+                                         ||(SatzTyp === satzTyp.Abkuehlen && sessUebung.checkCoolDownSatzIncludedBodyWeight())
                                          ">
                         <div class="align-right" fxLayout="column" fxFlex="60px"></div>
                     
@@ -82,9 +82,9 @@
                                 type="text">
                     </mat-form-field>
 
-                    <ng-container *ngIf="  (satzTyp === CmpSatzTyp.Aufwaermen && sessUebung.checkWarmUpSatzIncludedBodyWeight())
-                                         ||(satzTyp === CmpSatzTyp.Training && sessUebung.checkArbeitsSatzIncludedBodyWeight())
-                                         ||(satzTyp === CmpSatzTyp.Abkuehlen && sessUebung.checkCoolDownSatzIncludedBodyWeight())
+                    <ng-container *ngIf="  (SatzTyp === satzTyp.Aufwaermen && sessUebung.checkWarmUpSatzIncludedBodyWeight())
+                                         ||(SatzTyp === satzTyp.Training && sessUebung.checkArbeitsSatzIncludedBodyWeight())
+                                         ||(SatzTyp === satzTyp.Abkuehlen && sessUebung.checkCoolDownSatzIncludedBodyWeight())
                                           ">
                         <mat-form-field  class="align-right"fxFlex="75px">
                             <mat-label>Bodyweight</mat-label>

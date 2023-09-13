@@ -13,6 +13,10 @@ export enum SatzTyp {
     Abkuehlen = 'Cool down sets'
 }
 
+export interface ISatzTyp {
+	get satzTyp(): typeof SatzTyp;
+}
+
 
 export enum LiftTyp {
     NoLift = 'NoLift',

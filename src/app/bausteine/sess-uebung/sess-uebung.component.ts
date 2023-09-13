@@ -6,7 +6,7 @@ import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
 import { Satz, SatzTyp, LiftTyp } from "./../../../Business/Satz/Satz";
-import { repMask, floatMask } from "./../../app.module";
+import { repMask, floatMask, ProgramModulTyp } from "./../../app.module";
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { SatzEditComponent } from '../satz-edit/satz-edit.component';
 
@@ -20,7 +20,7 @@ export class SessUebungComponent implements OnInit {
     public repMask = repMask;
     @Input() satzTyp: SatzTyp;
     @Input() programm: ITrainingsProgramm = null;
-    @Input() programmTyp: string ='';
+    @Input() programmModul: ProgramModulTyp = ProgramModulTyp.Kein;
     @Input() session: ISession = null;
     @Input() sessUebung: Uebung;
     @Input() satzListe: Array<Satz>;

@@ -17,16 +17,17 @@ import { UebungService } from "src/app/services/uebung.service";
 import { Router } from "@angular/router";
 import {CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Satz } from "src/Business/Satz/Satz";
+import { IProgramModul, ProgramModulTyp } from "src/app/app.module";
 
 @Component({
 	selector: "app-programm02",
 	templateUrl: "./programm02.component.html",
 	styleUrls: ["./programm02.component.scss"],
 })
-export class Programm02Component implements OnInit {
+export class Programm02Component implements OnInit, IProgramModul {
 	@Input() programm: ITrainingsProgramm = null;
 	@Input() SessionListe: Array<ISession> = [];
-	@Input() programmTyp: string = "";	
+	@Input() ModulTyp: ProgramModulTyp = ProgramModulTyp.Kein;
 	@Output() ProgrammSavedEvent = new EventEmitter<ITrainingsProgramm>();
 	@Output() OnLeaveFn = new EventEmitter();
 	@Input() showButtons: Boolean = false;
@@ -65,6 +66,7 @@ export class Programm02Component implements OnInit {
 	// 	this.fDbModule.SessionSpeichern(this.programm.SessionListe[event.previousIndex] as Session);
 	// 	this.fDbModule.SessionSpeichern(this.programm.SessionListe[event.currentIndex] as Session);		
 	// }
+
 	
 	DoSessionName(aSess:ISession, aEvent: any) {
 		aSess.Name = aEvent.target.value;
@@ -99,6 +101,9 @@ export class Programm02Component implements OnInit {
 		public fDbModule: DexieSvcService,
 		private fLoadingDialog: DialogeService,
 		private router: Router) {
+	}
+	get programModul(): typeof ProgramModulTyp {
+		return ProgramModulTyp;
 	}
 
 	private async LadeUebungen(aSess: ISession, aUebungPara: UebungParaDB): Promise<void>  {
@@ -220,10 +225,11 @@ export class Programm02Component implements OnInit {
 
 	public get SortedSessionListe(): Array<Session> {
 		let mResult: Array<Session> = [];
-		if (this.programmTyp === "history") mResult = this.SessionListe as Array<Session>;
+		if (this.ModulTyp === ProgramModulTyp.History) mResult = this.SessionListe as Array<Session>;
 		else mResult = this.fDbModule.SortSessionByListenIndex(this.SessionListe as Array<Session>) as Array<Session>;
+
+		// const s: string = mResult[0].Name
 		return mResult;
-		// return this.SessionListe;
     }
 	
 	private DeleteSessionPrim(aSession: ISession, aRowNum: number, aOnDelete: onDeleteFn ) {
@@ -377,7 +383,7 @@ export class Programm02Component implements OnInit {
 			mDialogData.ShowAbbruch = false;
 			mDialogData.ShowOk = false;
 		
-			if (this.programmTyp === "history") mDialogData.textZeilen.push('Preparing history');
+			if (this.ModulTyp === ProgramModulTyp.History) mDialogData.textZeilen.push('Preparing history');
 			else mDialogData.textZeilen.push('Preparing session');
 			const mLadePara: UebungParaDB = new UebungParaDB();
 			mLadePara.SaetzeBeachten = true;
@@ -398,12 +404,12 @@ export class Programm02Component implements OnInit {
 						this.fLoadingDialog.fDialog.closeAll();
 						aSession.UebungsListe = aUebungsListe;
 						aUebungsListe.forEach((mUebung) => mUebung.Expanded = false);
-						this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
+						this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, ModulTyp: this.ModulTyp } });
 					})
 			} catch (err) {
 				this.fLoadingDialog.fDialog.closeAll();
 			}
-		}else this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, programmTyp: this.programmTyp } });
+		}else this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, ModulTyp: this.ModulTyp } });
 	}
 
 

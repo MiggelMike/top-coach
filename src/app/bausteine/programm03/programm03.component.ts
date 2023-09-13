@@ -9,11 +9,11 @@ import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, Output, E
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { LOCALE_ID, Inject } from '@angular/core';
-import { floatMask } from 'src/app/app.module';
+import { floatMask, IProgramModul, ProgramModulTyp } from 'src/app/app.module';
 import { ExerciseSettingsComponent } from 'src/app/exercise-settings/exercise-settings.component';
 import { ExerciseOverlayConfig, ExerciseSettingSvcService } from 'src/app/services/exercise-setting-svc.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Satz, SatzTyp } from 'src/Business/Satz/Satz';
+import { ISatzTyp, Satz, SatzTyp } from 'src/Business/Satz/Satz';
 
 
 @Component({
@@ -24,7 +24,7 @@ import { Satz, SatzTyp } from 'src/Business/Satz/Satz';
 })
     
     
-export class Programm03Component implements OnInit {
+export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
     @Input() programm: ITrainingsProgramm;
     @Input() session: ISession;
     @Input() cmpSession: ISession;
@@ -37,13 +37,12 @@ export class Programm03Component implements OnInit {
     @Input() StatsVisible: Boolean = false;
     @Input() DeletedSatzList: Array<Satz> = [];
     @Input() SofortSpeichern: Boolean = false;
-    @Input() programmTyp: string = "";
     @Input() StatsButtonVisible: boolean = false;
+    @Input() ModulTyp: ProgramModulTyp = ProgramModulTyp.Kein;
     
     @Output() DoStats = new EventEmitter<any>();
     @Output() DoCheckSettings = new EventEmitter<ExerciseSettingSvcService>();
     @Output() AddDeletedExercise = new EventEmitter<Uebung>();
-
     
     @ViewChildren("accUebung") accUebung: QueryList<MatAccordion>;
     @ViewChildren("panUebung") panUebung: QueryList<MatExpansionPanel>;
@@ -71,9 +70,7 @@ export class Programm03Component implements OnInit {
     ngOnInit() {
     }
 
-    public get satzTyp(): typeof SatzTyp {
-        return SatzTyp;
-    }
+
 
     constructor(
         @Inject(LOCALE_ID) localID: string,
@@ -86,6 +83,13 @@ export class Programm03Component implements OnInit {
         // if (this.fGlobalService.Comp03PanelUebungObserver === null)
         //     this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;
     }
+    get satzTyp(): typeof SatzTyp {
+        return SatzTyp
+    }
+    get programModul(): typeof ProgramModulTyp {
+        return ProgramModulTyp;
+    }
+
 
     DoWorker() {
         const that = this;

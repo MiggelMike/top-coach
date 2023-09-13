@@ -123,7 +123,20 @@ export function HttpLoaderFactory(http: HttpClient) {
   
   export interface ICancelCallback {
 	():void;
-  }
+}
+
+export enum ProgramModulTyp {
+	Kein,
+	AnstehendeSessions,
+	History
+
+ }
+
+export interface IProgramModul {
+	get programModul(): (typeof ProgramModulTyp);
+}
+
+
   
   export const floatMask = createNumberMask({
 	  prefix: '',
@@ -167,7 +180,6 @@ export function HttpLoaderFactory(http: HttpClient) {
 	  integerLimit: 4, // (number): limit the length of the integer number. Defaults to null for unlimited
 	  allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
 	})    
-
 
 
 @NgModule({

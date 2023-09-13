@@ -1,21 +1,17 @@
 import { cDeutschKuezel as cDeutschKuerzel, cEnglishKuerzel, cDeutschDateInputMask, cEnglishDateInputMask } from './../Sprache/Sprache';
-import { cMaxDatum, cMinDatum } from './../services/dexie-svc.service';
-import { DiaUebungSettings } from './../../Business/Diagramm/Diagramm';
-import { DexieSvcService, SessionParaDB } from 'src/app/services/dexie-svc.service';
+import { DexieSvcService, SessionParaDB, cMaxDatum, cMinDatum } from './../services/dexie-svc.service';
+import { DiaDatum, DiaUebung, DiaUebungSettings } from './../../Business/Diagramm/Diagramm';
 import { Component, ContentChild, Inject, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ISession } from 'src/Business/Session/Session';
-import { repMask } from './../../app/app.module';
-import { AppData } from 'src/Business/Coach/Coach';
-import { DiaUebung, DiaDatum } from 'src/Business/Diagramm/Diagramm';
+import { IProgramModul, ProgramModulTyp, repMask } from './../../app/app.module';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { LineChartComponent } from '@swimlane/ngx-charts';
 import { FormControl, FormGroup } from '@angular/forms';
 import { LOCALE_ID } from '@angular/core';
 import * as _moment from 'moment';
-// tslint:disable-next-line:no-duplicate-imports
-// import { default as _rollupMoment, Moment, MomentFormatSpecification, MomentInput } from 'moment';
 import { DatePipePipe } from '../date-pipe.pipe';
+import { AppData } from '../../Business/Coach/Coach';
+import { ISession } from '../../Business/Session/Session';
 // const moment = _rollupMoment || _moment;
 var cloneDeep = require('lodash.clonedeep');
 
@@ -26,7 +22,7 @@ var cloneDeep = require('lodash.clonedeep');
 	templateUrl: './history.component.html',
 	styleUrls: ['./history.component.scss']
 })
-export class HistoryComponent implements OnInit {
+export class HistoryComponent implements OnInit, IProgramModul {
 	SessionListe: Array<ISession> = [];
 	LadeLimit: number = 10;
 	public repMask = repMask;
@@ -89,6 +85,9 @@ export class HistoryComponent implements OnInit {
 				this.LadeLimit = mAppData.MaxHistorySessions;
 				this.LadeSessions(0);
 			});
+	}
+	get programModul(): typeof ProgramModulTyp {
+		return ProgramModulTyp;
 	}
 	timeChange($event){}
 

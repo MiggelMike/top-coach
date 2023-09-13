@@ -6,11 +6,11 @@ import { ISession } from 'src/Business/Session/Session';
 import { Uebung, SaetzeStatus } from './../../../Business/Uebung/Uebung';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { Satz, SatzStatus, SatzTyp } from "./../../../Business/Satz/Satz";
+import { ISatzTyp, Satz, SatzStatus, SatzTyp } from "./../../../Business/Satz/Satz";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
-import { floatMask, repMask } from './../../app.module';
+import { ProgramModulTyp as ProgramModulTyp, floatMask, repMask } from './../../app.module';
 import { PlateCalcComponent } from 'src/app/plate-calc/plate-calc.component';
 import { StoppuhrComponent } from 'src/app/stoppuhr/stoppuhr.component';
 import { StoppUhrOverlayConfig, StoppuhrSvcService } from 'src/app/services/stoppuhr-svc.service';
@@ -21,14 +21,14 @@ import { AppData } from 'src/Business/Coach/Coach';
     templateUrl: "./satz-edit.component.html",
     styleUrls: ["./satz-edit.component.scss"],
 })
-export class SatzEditComponent implements OnInit {
+export class SatzEditComponent implements OnInit, ISatzTyp {
     @Input() programm: ITrainingsProgramm = null;
-    @Input() programmTyp: string = '';
+    @Input() programmModul: ProgramModulTyp;
     @Input() sess: ISession;
     @Input() sessUebung: Uebung;
     @Input() satz: Satz;
     @Input() rowNum: number;
-    @Input() satzTyp:SatzTyp;
+    @Input() SatzTyp:SatzTyp;
     @Input() DeletedSatzList: Array<Satz> = [];
     public floatMask = floatMask;
     public repMask = repMask;
@@ -61,6 +61,9 @@ export class SatzEditComponent implements OnInit {
                 this.AppData = mAppData;
             });
     }
+    get satzTyp(): typeof SatzTyp {
+        return SatzTyp;
+    }
 
     
     
@@ -91,10 +94,6 @@ export class SatzEditComponent implements OnInit {
     }
 
     ngOnDestroy() {
-    }
-
-    public get CmpSatzTyp(): typeof SatzTyp {
-        return SatzTyp;
     }
 
     public DeleteSet() {
@@ -192,7 +191,7 @@ export class SatzEditComponent implements OnInit {
 
     async onClickSatzFertig(aSatz: Satz, aEvent: any) {
         const mChecked = aEvent.checked;
-        if (this.programmTyp === 'history')
+        if (this.programmModul === ProgramModulTyp.History)
             return;
 
         if (this.fStoppUhrService.StoppuhrComponent) {

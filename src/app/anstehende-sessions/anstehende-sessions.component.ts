@@ -4,13 +4,14 @@ import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
+import { IProgramModul, ProgramModulTyp } from '../app.module';
 
 @Component({
     selector: "app-anstehende-sessions",
     templateUrl: "./anstehende-sessions.component.html",
     styleUrls: ["./anstehende-sessions.component.scss"],
 })
-export class AnstehendeSessionsComponent implements OnInit {
+export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
     public isCollapsed = false;
     private worker: Worker;
     // private fProgramm: ITrainingsProgramm;
@@ -19,11 +20,10 @@ export class AnstehendeSessionsComponent implements OnInit {
         private fDbModule: DexieSvcService,
         private fLoadingDialog: DialogeService,
     ) {}
-        
-    public get Programm(): ITrainingsProgramm {
-        return this.fDbModule.AktuellesProgramm;
+    get programModul(): typeof ProgramModulTyp {
+        return ProgramModulTyp;
     }
-
+  
     private async LadeSessions(aOffSet: number = 0): Promise<void> {
         const mDialogData = new DialogData();
         mDialogData.ShowAbbruch = false;
@@ -36,7 +36,7 @@ export class AnstehendeSessionsComponent implements OnInit {
             mSessionParaDB.UebungenBeachten = true;
             mSessionParaDB.UebungParaDB = new UebungParaDB();
             mSessionParaDB.UebungParaDB.SaetzeBeachten = true;
-            this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
+            this.fDbModule.LadeUpcomingSessions(this.AktuellesProgramm.id, mSessionParaDB)
                 .then((aSessionListe) => {
                     if (aSessionListe.length > 0) {
                         // this.Programm.SessionListe = [];

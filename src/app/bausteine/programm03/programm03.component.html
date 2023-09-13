@@ -11,7 +11,7 @@
             </div>
         </ng-container> 
 
-        <ng-container *ngIf="programmTyp ==='history'"> 
+        <ng-container *ngIf="ModulTyp === programModul.History"> 
             <div fxLayout="column">
                 <div fxLayout="row">
                     <mat-label class="ml-5">History --- </mat-label>
@@ -44,7 +44,7 @@
 
             <div cdkDropList  (cdkDropListDropped)="drop($event)">
                 <ng-container *ngFor="let SessUeb of  session.UebungsListe, index as i; let isOdd=odd">
-                    <div class="mg-lr-30" layout-align="center center" cdkDrag [cdkDragDisabled]="programmTyp === 'history'">
+                    <div class="mg-lr-30" layout-align="center center" cdkDrag [cdkDragDisabled]="ModulTyp === programModul.History">
                         <mat-accordion  #accUebung='matAccordion' multi="true">
                             <mat-expansion-panel 
                                 #panUebung='matExpansionPanel' 
@@ -52,7 +52,7 @@
                                 [disabled]="checkingSets"
                                 (closed)="PanelUebungClosed(SessUeb)" 
                                 (opened)="PanelUebungOpened(i,SessUeb)">
-                                <mat-expansion-panel-header [matTooltipDisabled]="programmTyp === 'history'" mat-tooltip-panel-below  matTooltip="Hold and drag" >
+                                <mat-expansion-panel-header [matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag" >
                                     <div fxLayout="row wrap" fxLayoutGap="2px" fxLayout.lt-sm="row wrap" fxFlex="auto">
                                         <div layout-align="start center" fxFlex="0 0 35%">
                                             <span class="tc-font-size-smaller font-bold">#{{i+1}} {{SessUeb.Name}}</span>
@@ -62,7 +62,7 @@
                                         (click)="DoSettings(SessUeb, $event)">Settings
                                     </a>
                                     
-                                    <ng-container *ngIf="bearbeitbar && programmTyp !== 'history'">
+                                    <ng-container *ngIf="bearbeitbar && ModulTyp !== programModul.History">
                                         <a  [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="85px"
                                         (click)="CopyExcercise(SessUeb, $event)">Copy exercise</a>
                                         
@@ -91,7 +91,7 @@
                                                     [session]="session"
                                                     [DeletedSatzList]="DeletedSatzList"
                                                     [programm]="programm"
-                                                    [programmTyp]="programmTyp"
+                                                    [ModulTyp]="programModul"
                                                     [sessUebung]="SessUeb" 
                                                     [bearbeitbar]="bearbeitbar">
                                                 </app-sess-uebung>
@@ -106,7 +106,7 @@
                                                     [session]="session"
                                                     [programm]="programm"
                                                     [DeletedSatzList]="DeletedSatzList"
-                                                    [programmTyp]="programmTyp"
+                                                    [ModulTyp]="programModul"
                                                     [sessUebung]="SessUeb" 
                                                     [bearbeitbar]="bearbeitbar">
                                                 </app-sess-uebung>
@@ -121,7 +121,7 @@
                                                     [programm]="programm"
                                                     [DeletedSatzList]="DeletedSatzList"
                                                     [session]="session" 
-                                                    [programmTyp]="programmTyp"
+                                                    [ModulTyp]="programModul"
                                                     [sessUebung]="SessUeb" 
                                                     [bearbeitbar]="bearbeitbar">
                                                 </app-sess-uebung>

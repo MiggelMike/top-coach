@@ -244,7 +244,6 @@ export class DexieSvcService extends Dexie {
 						Session.StaticCheckMembers(mPtrSession);
 						mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
 						this.AktuellesProgramm.SessionListe.push(mPtrSession);
-						this.AktuellesProgramm.SessionListe.push(mPtrSession);
 						this.LadeSessionsInWorker(this.AktuellesProgramm.SessionListe.length);
                     
 					});

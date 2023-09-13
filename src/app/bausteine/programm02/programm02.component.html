@@ -1,11 +1,11 @@
 <ng-container *ngIf="SessionListe && (SessionListe.length > 0)">
     <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleSessions()">{{ToggleButtonText}}</a>
-    <ng-container *ngIf="programmTyp !== 'history'">
+    <ng-container *ngIf="ModulTyp !== programModul.History">
         <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="AdditionalSession()">Additional session</a>
     </ng-container>
 
     <div cdkDropList (cdkDropListDropped)="drop($event)">
-        <div *ngFor="let sess of SortedSessionListe, index as i" cdkDrag [cdkDragDisabled]="programmTyp === 'history' ">
+        <div *ngFor="let sess of SortedSessionListe, index as i" cdkDrag [cdkDragDisabled]="ModulTyp === programModul.History">
             <div class="mg-top-1" fxLayoutGap="10px" >
                 <mat-accordion #accSession="matAccordion" multi="true">
                     <mat-expansion-panel 
@@ -13,13 +13,13 @@
                         (closed) = "panelClosed(sess)"
                         #panSession='matExpansionPanel' 
                         class="HG-01">
-                        <mat-expansion-panel-header [matTooltipDisabled]="programmTyp === 'history'" mat-tooltip-panel-below  matTooltip="Hold and drag">
+                        <mat-expansion-panel-header [matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag">
                             <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="flex-start center">
                                 <mat-form-field class="align-left" fxFlex="auto">
                                     <input matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
                                 </mat-form-field>
                                 
-                                <ng-container *ngIf="programmTyp === 'history'"  >
+                                <ng-container *ngIf="ModulTyp === programModul.History"  >
                                     <div class="ml-10" fxLayout="column" fxFlex="155px" >
                                         <span> {{sess.GestartedWann | date: 'mediumDate'}} {{sess.GestartedWann | date:'shortTime'}}</span>
                                     </div>
@@ -39,7 +39,7 @@
                                     </div> -->
 
 
-                                    <ng-container *ngIf="sess.IstAusVorgabe === false && programmTyp !== 'history'">
+                                    <ng-container *ngIf="sess.IstAusVorgabe === false && ModulTyp !== programModul.History">
                                         <div class="center-item" layout-align="center center" fxFlex="0 0 auto">
                                             <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteSession($event,sess, i+1)">Delete</a>
                                         </div>
@@ -59,7 +59,7 @@
                                         [cmpSession]="sess" 
                                         [programm]="programm"
                                         [cmpSettingsSession]="sess" 
-                                        [programmTyp]="programmTyp"
+                                        [ModulTyp]="ModulTyp"
                                         [bearbeitbar]="bearbeitbar" 
                                         [SofortSpeichern]="SofortSpeichern"
                                         [DeletedSatzList]="DeletedSatzList">
@@ -96,7 +96,7 @@
     </div>
 </ng-container>
 
-<ng-container *ngIf="programmTyp !== 'history'">
+<ng-container *ngIf="ModulTyp !== programModul.History">
     <ng-container *ngIf="showButtons">
         <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center" [style.margin-top]="'5px'">
             <div class="center-item link-button-font" layout-align="center center">

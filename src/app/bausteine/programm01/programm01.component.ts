@@ -5,6 +5,7 @@ import { TrainingsProgramm, ITrainingsProgramm } from "../../../Business/Trainin
 import { DialogeService } from 'src/app/services/dialoge.service';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
 import { Router } from '@angular/router';
+import { ProgramModulTyp } from 'src/app/app.module';
 
 
 @Component({
@@ -18,6 +19,7 @@ export class Programm01Component implements OnInit {
     @Input() showButtons: boolean | false;
     @Input() showSaveButtons: boolean | false;
     @Input() programmtext: { value: null };
+    @Input() ModulTyp: ProgramModulTyp = ProgramModulTyp.Kein;
 
    // StandardProgramme: Array<ITrainingsProgramm>;
 
