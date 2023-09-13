@@ -1,4 +1,3 @@
-import { ProgramModulTyp } from 'src/app/app.module';
 import { Session, SessionCopyPara } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from './../../../Business/TrainingsProgramm/TrainingsProgramm';
 import { UebungService } from "./../../services/uebung.service";
@@ -56,15 +55,14 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 	) {
 		this.fExerciseSettingsComponent = null;
 		const mNavigation = this.router.getCurrentNavigation()!;
-		const mState = mNavigation.extras.state as { programm: ITrainingsProgramm, sess: Session, programmTyp: string };
-
+		const mState = mNavigation.extras.state as { programm: ITrainingsProgramm, sess: Session, ModulTyp: ProgramModulTyp  };
 
 		if (mState.sess.Kategorie02 === SessionStatus.Wartet) {
 			mState.sess.BodyWeightAtSessionStart = this.fDbModule.getBodyWeight();
 		}
 		mState.sess.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
 		
-		this.programmTyp = mState.programmTyp;
+		this.ModulTyp = mState.ModulTyp;
 		this.Programm = mState.programm;
 		const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
 		mSessionCopyPara.Komplett = true;
@@ -118,9 +116,10 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 			}
 		} else this.InitSession();
 	}
-	get programModul(): ProgramModulTyp {
+	get programModul(): typeof ProgramModulTyp {
 		return ProgramModulTyp;
 	}
+	
 		
 	private InitSession() {
 		//

@@ -3,7 +3,7 @@
     <!-- <ng-container *ngIf="session && session.UebungsListe && (session.UebungsListe.length > 0)"> -->
 
     <div class="font-14-data mg-lr-30" fxLayout="row wrap" fxLayoutAlign="cente center" fxLayoutGap="2px" >        
-        <ng-container *ngIf='bearbeitbar && false'> 
+        <ng-container *ngIf='bearbeitbar'> 
             <div fxLayout="column" fxFlex="20%">
                 <mat-form-field class="mg-5">
                     <input class="font-size-smaller font-bold" matInput [(ngModel)]="session.Name" maxlength="30" type="text">

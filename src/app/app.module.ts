@@ -101,6 +101,7 @@ import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.comp
 // import { InitialWeightModule } from './initial-weight/initial-weight.module';
 import { InitialWeightComponent } from './initial-weight/initial-weight.component';
 import { AnstehendeSessionsComponent } from './anstehende-sessions/anstehende-sessions.component';
+import { SessionFormModule } from './bausteine/session-form/session-form.module';
 
 export function HttpLoaderFactory(http: HttpClient) {
 	return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -187,6 +188,7 @@ export interface IProgramModul {
 		AppComponent
 		// ,ToolbarComponent
 		, AnstehendeSessionsComponent
+		// , SessionFormComponent
 		// ,ProgrammWaehlenComponent
 		, DialogComponent
 		, WorkoutFormComponent
@@ -291,6 +293,7 @@ export interface IProgramModul {
 		, CdkTreeModule
 		, WorkoutFormModule
 		, SatzSimpleModule
+		, SessionFormModule
 		// ,InitialWeightModule
 		
 
