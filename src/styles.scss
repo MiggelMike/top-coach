@@ -253,21 +253,28 @@ div.herz:after {
 	flex-direction: column;
 }
 
+.column-start-left {
+	@extend .align-items-left;
+}
+
 .align-items-right {
 	justify-content: right;
 	align-items: right;
 }
 
+
 .center-item {
-	
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
-	
+	}
+
+.column-center {
+	@extend .center-item;
 }
 
-.row {
+.row-Start-Left {
 	display: flex;
 	justify-content:flex-start;
 	align-items:flex-start;

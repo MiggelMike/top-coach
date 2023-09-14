@@ -1,38 +1,36 @@
 <div class="width-600">
     <ng-container *ngIf="session">
         <!-- <ng-container *ngIf="session && session.UebungsListe && (session.UebungsListe.length > 0)"> -->
-        <div class="font-14-data mg-lr-30" fxLayout="row wrap" fxLayoutAlign="cente center" fxLayoutGap="2px" >        
+        <div class="font-14-data">        
             <ng-container *ngIf='bearbeitbar'> 
-                <div fxLayout="column" fxFlex="20%">
-                    <mat-form-field class="mg-5">
-                        <input class="font-size-smaller font-bold" matInput [(ngModel)]="session.Name" maxlength="30" type="text">
-                    </mat-form-field>
-                </div>
-            </ng-container> 
-
-            <ng-container *ngIf="ModulTyp === programModul.History"> 
-                <div fxLayout="column">
-                    <div fxLayout="row">
-                        <mat-label class="ml-5">History --- </mat-label>
-                        <div class="ml-10">
-                            <span> {{session.GestartedWann | date: 'mediumDate'}} {{session.GestartedWann | date:'shortTime'}}</span>
+                <div class="row-Start-Left">
+                        <mat-form-field>
+                            <input class="font-size-smaller font-bold" matInput [(ngModel)]="session.Name" maxlength="30" type="text">
+                        </mat-form-field>
+                    </div>
+                </ng-container> 
+                
+                <ng-container *ngIf="ModulTyp === programModul.History"> 
+                    <div class="align-items-left" >
+                        <div fxLayout="row">
+                            <mat-label class="ml-5">History --- </mat-label>
+                            <div class="ml-10">
+                                <span> {{session.GestartedWann | date: 'mediumDate'}} {{session.GestartedWann | date:'shortTime'}}</span>
+                            </div>
                         </div>
                     </div>
+                </ng-container> 
+                
+            <div class="row-Start-Left">
+                <ng-container *ngIf="StatsButtonVisible">
+                    <div #Info class="align-items-left" fxFlex="70px">
+                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DoStatsFn()">Info</a>
+                    </div>
+                </ng-container>
+                
+                <div class="align-items-left">
+                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
                 </div>
-            </ng-container> 
-
-            
-            <ng-container *ngIf="StatsButtonVisible">
-                <div fxLayout="column" fxFlex="auto">
-                </div>
-
-                <div #Info fxLayout="column" fxFlex="70px">
-                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DoStatsFn()">Info</a>
-                </div>
-            </ng-container>
-            
-            <div fxLayout="column" fxFlex="120px">
-                <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
             </div>
             
             <!-- <span class="mg-5">{{session.Name}}</span> -->
@@ -40,11 +38,11 @@
 
         <!-- <div cdkDropList (cdkDropListDropped)="drop($event)">
             <div *ngFor="let sess of SortedSessionListe, index as i" cdkDrag cdkDragRootElement="accSession"> -->
-
-                <div cdkDropList  (cdkDropListDropped)="drop($event)">
+                
+                <div cdkDropList (cdkDropListDropped)="drop($event)">
                     <ng-container *ngFor="let SessUeb of  session.UebungsListe, index as i; let isOdd=odd">
-                        <div class="mg-lr-30" layout-align="center center" cdkDrag [cdkDragDisabled]="ModulTyp === programModul.History">
-                            <mat-accordion  #accUebung='matAccordion' multi="true">
+                        <div  cdkDrag [cdkDragDisabled]="ModulTyp === programModul.History">
+                            <mat-accordion #accUebung='matAccordion' multi="true">
                                 <mat-expansion-panel 
                                     #panUebung='matExpansionPanel' 
                                     [expanded]="false"
@@ -145,6 +143,6 @@
                             </mat-accordion>
                         </div>
                     </ng-container>
-                </div>            
+                </div>    
     </ng-container>
 </div>
