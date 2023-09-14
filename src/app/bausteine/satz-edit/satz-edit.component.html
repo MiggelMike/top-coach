@@ -10,7 +10,7 @@
                     <div class="center-item align-right" fxLayout="column" fxFlex="25px">
                         #
                     </div>
-                    <div class="center-item" fxLayout="column" fxFlex="45px">
+                    <div class="center-item weight-column align-right" fxLayout="column">
                         Weight
                     </div>
                     <ng-container *ngIf="  (SatzTyp === satzTyp.Aufwaermen && sessUebung.checkWarmUpSatzIncludedBodyWeight())
@@ -20,7 +20,7 @@
                         <div class="align-right" fxLayout="column" fxFlex="60px"></div>
                     
                     </ng-container>
-                    <div class="center-item" fxLayout="column" fxFlex="40px"  matTooltip="Reps">
+                    <div class="center-item rep-column" fxLayout="column" matTooltip="Reps">
                         RP.
                     </div>
                     <div class="center-item" fxLayout="column" fxFlex="33px"  matTooltip="As many reps as possible">
@@ -63,10 +63,12 @@
             <!-- Training laeuft -->
             <ng-template #noShowPlan>
                 <!-- Ausgefuehrtes-Gewicht -->
-                    <mat-form-field class="align-right" fxFlex="45px">
-                        <mat-label>{{satz.GewichtVorgabe | number: '1.2'}}</mat-label>
+                    <mat-form-field class="weight-column">
+                        <div class="align-right label">{{satz.GewichtVorgabe | number: '1.2'}}</div> 
                         <input  matInput [textMask]="{mask: floatMask, guide: false }"
-                                [ngModel]="(satz.GewichtAusgefuehrt | number: '1.2')" 
+                                class="align-right"
+                                maxlength="8"
+                                [ngModel]="(satz.GewichtAusgefuehrt | number: '1.2' )" 
                                 (focusout)="SetWeightAusgefuehrt($event)"
                                 (mousedown)="MouseDown(satz,$event)"
                                 (mouseup)="MouseUp($event)"
@@ -81,7 +83,7 @@
                                          ||(SatzTyp === satzTyp.Training && sessUebung.checkArbeitsSatzIncludedBodyWeight())
                                          ||(SatzTyp === satzTyp.Abkuehlen && sessUebung.checkCoolDownSatzIncludedBodyWeight())
                                           ">
-                        <mat-form-field  class="align-right"fxFlex="75px">
+                        <mat-form-field  class="align-right">
                             <mat-label>Bodyweight</mat-label>
                             <input matInput  [disabled]="true" 
                             [value]="satz.getBodyWeightText('+ ')"
@@ -90,9 +92,12 @@
                     </ng-container>
 
                 <!-- Ausgefuerte Wdh. -->
-                <mat-form-field class="align-right" fxFlex="40px">
-                    <mat-label>{{satz.WdhVonVorgabe | number: '1.0'}}</mat-label>
+                <mat-form-field class="rep-column">
+                    <!-- <mat-label>{{satz.WdhVonVorgabe | number: '1.0'}}</mat-label> -->
+                    <div class="align-right label">{{satz.WdhVonVorgabe | number: '1.0'}}</div> 
                     <input matInput [textMask]="{mask: repMask, guide: false}" 
+                           class="align-right"
+                           maxlength="4"
                            [ngModel]="satz.WdhAusgefuehrt" 
                            [disabled]="Disabled(satz)"
                            (click)="onClickWdhAusgefuehrt($event)" 
