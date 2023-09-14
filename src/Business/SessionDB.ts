@@ -14,6 +14,11 @@ export enum SessionStatus {
     Loeschen
 }
 
+export interface ISessionStatus {
+	get sessionStatus(): (typeof SessionStatus);
+}
+
+
 export class Pause extends Zeitraum {
     constructor(aVon: Date, aBis: Date) {
         super(aVon,aBis,new MaxZeitraum(99,59,59));

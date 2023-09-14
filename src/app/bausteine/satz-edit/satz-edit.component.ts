@@ -15,13 +15,14 @@ import { PlateCalcComponent } from 'src/app/plate-calc/plate-calc.component';
 import { StoppuhrComponent } from 'src/app/stoppuhr/stoppuhr.component';
 import { StoppUhrOverlayConfig, StoppuhrSvcService } from 'src/app/services/stoppuhr-svc.service';
 import { AppData } from 'src/Business/Coach/Coach';
+import { ISessionStatus, SessionStatus } from 'src/Business/SessionDB';
 
 @Component({
     selector: "app-satz-edit",
     templateUrl: "./satz-edit.component.html",
     styleUrls: ["./satz-edit.component.scss"],
 })
-export class SatzEditComponent implements OnInit, ISatzTyp {
+export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus {
     @Input() programm: ITrainingsProgramm = null;
     @Input() programmModul: ProgramModulTyp;
     @Input() sess: ISession;
@@ -61,11 +62,13 @@ export class SatzEditComponent implements OnInit, ISatzTyp {
                 this.AppData = mAppData;
             });
     }
+    get sessionStatus(): typeof SessionStatus {
+        return SessionStatus;
+    }
+    
     get satzTyp(): typeof SatzTyp {
         return SatzTyp;
     }
-
-    
     
     ngOnInit() {
 		this.fDbModule.LadeSessionBodyweight(this.sess)

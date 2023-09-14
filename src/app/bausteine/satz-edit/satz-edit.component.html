@@ -2,7 +2,7 @@
     <!-- Spalten-Titel -->
     <div fxLayout="row" fxLayoutGap="5px" fxFlex="100%">
         <ng-container *ngIf="rowNum === 0">
-            <ng-container *ngIf="(sess.Kategorie02 === 3 || sess.Kategorie02 === 4 || sess.Kategorie02 === 5); then TitelNoShowPlan else TitelShowPlan"></ng-container>
+            <ng-container *ngIf="(sess.Kategorie02 === sessionStatus.Pause || sess.Kategorie02 === sessionStatus.Laueft || sess.Kategorie02 === sessionStatus.Fertig); then TitelNoShowPlan else TitelShowPlan"></ng-container>
                 <!-- Spalten-Titel waehrend des Trainings  -->
                 <ng-template #TitelNoShowPlan> 
                     <div class="center-item align-right" fxLayout="column" fxFlex="25px">
@@ -64,7 +64,7 @@
         FertigTimeOut,
         Loeschen -->
 
-        <ng-container *ngIf="(sess.Kategorie02 === 3 || sess.Kategorie02 === 4 || sess.Kategorie02 === 5); then noShowPlan else showPlan"></ng-container>
+        <ng-container *ngIf="(sess.Kategorie02 === sessionStatus.Pause || sess.Kategorie02 === sessionStatus.Laueft || sess.Kategorie02 === sessionStatus.Fertig); then noShowPlan else showPlan"></ng-container>
             <!-- Training laeuft -->
             <ng-template #noShowPlan>
                 <!-- Ausgefuehrtes-Gewicht -->
