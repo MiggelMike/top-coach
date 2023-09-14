@@ -14,7 +14,7 @@ export enum SatzTyp {
 }
 
 export interface ISatzTyp {
-	get satzTyp(): typeof SatzTyp;
+	get satzTyp(): (typeof SatzTyp);
 }
 
 
