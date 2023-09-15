@@ -1592,14 +1592,13 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async LadeProgrammSessionsEx(aLadePara: SessionParaDB, aProgramm?: ITrainingsProgramm): Promise<Array<Session>> {
-
 		return await this.SessionTable
 			.where(aLadePara.WhereClause)
 			.anyOf(aLadePara.anyOf(aProgramm))
-			//.and((aLadePara === undefined || aLadePara.And === undefined ? () => { return 1 === 1 } : (session: SessionDB) => aLadePara.And(session)))
-			.filter((aLadePara === undefined || aLadePara.Filter === undefined ? () => { return 1 === 1 } : (session: SessionDB) => aLadePara.Filter(session)))
-			.limit(aLadePara === undefined || aLadePara.Limit === undefined ? cMaxLimnit : aLadePara.Limit)
-			.sortBy(aLadePara === undefined || aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
+			.and((aLadePara.And === undefined ? () => { return 1 === 1 } : (session: SessionDB) => aLadePara.And(session)))
+			.filter(aLadePara.Filter === undefined ? () => { return 1 === 1 } : (session: SessionDB) => aLadePara.Filter(session))
+			.limit(aLadePara.Limit === undefined ? cMaxLimnit : aLadePara.Limit)
+			.sortBy(aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
 			.then(async (aSessions: Array<SessionDB>) => {
 				let mResult: Array<Session> = [];
 				aSessions.forEach((mPtrSession) => Session.StaticCheckMembers(mPtrSession));
