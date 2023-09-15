@@ -1317,7 +1317,9 @@ export class DexieSvcService extends Dexie {
 			mHelpProgrammParaDB.SessionBeachten = true;
 			mHelpProgrammParaDB.SessionParaDB = new SessionParaDB();
 			mHelpProgrammParaDB.SessionParaDB.WhereClause = "[FK_Programm+Kategorie02]";
-			mHelpProgrammParaDB.SessionParaDB.anyOf = (aProgrammID) => { return [[aProgrammID, SessionStatus.Laueft], [aProgrammID, SessionStatus.Pause], [aProgrammID, SessionStatus.Wartet]]; };
+			mHelpProgrammParaDB.SessionParaDB.anyOf = (aProgramm: ITrainingsProgramm) => {
+				return [[aProgramm.id, SessionStatus.Laueft], [aProgramm.id, SessionStatus.Pause], [aProgramm.id, SessionStatus.Wartet]];
+			};
 			// Übungen laden
 			mHelpProgrammParaDB.SessionParaDB.UebungenBeachten = true;
 			mHelpProgrammParaDB.SessionParaDB.UebungParaDB = new UebungParaDB();
@@ -1586,11 +1588,11 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
-	public async LadeProgrammSessionsEx(aLadePara: SessionParaDB): Promise<Array<Session>> {
+	public async LadeProgrammSessionsEx(aLadePara: SessionParaDB, aProgramm?: ITrainingsProgramm): Promise<Array<Session>> {
 
 		return await this.SessionTable
 			.where(aLadePara.WhereClause)
-			.anyOf(aLadePara.anyOf())
+			.anyOf(aLadePara.anyOf(aProgramm))
 			//.and((aLadePara === undefined || aLadePara.And === undefined ? () => { return 1 === 1 } : (session: SessionDB) => aLadePara.And(session)))
 			.filter((aLadePara === undefined || aLadePara.Filter === undefined ? () => { return 1 === 1 } : (session: SessionDB) => aLadePara.Filter(session)))
 			.limit(aLadePara === undefined || aLadePara.Limit === undefined ? cMaxLimnit : aLadePara.Limit)
@@ -1938,30 +1940,27 @@ export class DexieSvcService extends Dexie {
 		return await this.ProgrammTable
 			.where(aProgrammPara.WhereClause)
 			.anyOf(aProgrammPara.anyOf())
-			.and((aProgrammPara === undefined || aProgrammPara.And === undefined ? () => { return 1 === 1 } : (programm: ITrainingsProgramm) => aProgrammPara.And(programm)))
-			.limit(aProgrammPara === undefined || aProgrammPara.Limit === undefined ? cMaxLimnit : aProgrammPara.Limit)
-			.sortBy(aProgrammPara === undefined || aProgrammPara.SortBy === undefined ? '' : aProgrammPara.SortBy)
-			//		.then((aLadePara === undefined || aLadePara.Then === undefined ? (aProgramme: Array<ITrainingsProgramm>) => { return aProgramme } : (aProgramme: Array<ITrainingsProgramm>) => aLadePara.Then(aProgramme)));
-			.then((aProgrammPara === undefined || aProgrammPara.Then === undefined ? async (aProgramme: Array<ITrainingsProgramm>) => {
+			.and(aProgrammPara.And === undefined ? () => { return 1 === 1 } : (aProgramm) => aProgrammPara.And(aProgramm))
+			.limit(aProgrammPara.Limit === undefined ? cMaxLimnit : aProgrammPara.Limit)
+			.sortBy(aProgrammPara.SortBy === undefined ? '' : aProgrammPara.SortBy)
+			.then(aProgrammPara.Then === undefined ? async (aProgramme: Array<ITrainingsProgramm>) => {
 				for (let index = 0; index < aProgramme.length; index++) {
 					if (aProgrammPara.SessionBeachten !== undefined && aProgrammPara.SessionBeachten === true) {
 						const mPtrProgramm = aProgramme[index];
 						let mLadePara: SessionParaDB;
 						
-						if (aProgrammPara.SessionParaDB !== undefined)
+						if (aProgrammPara.SessionParaDB !== undefined) {
 							mLadePara = aProgrammPara.SessionParaDB;
-						else
+						}
+						else {
 							mLadePara = new SessionParaDB();
-						
-						// SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02]",
-						// mLadePara.WhereClause = { FK_Programm: mPtrProgramm.id };
-						mLadePara.WhereClause = "FK_Programm";
-						mLadePara.anyOf = () =>
-						{
-							return mPtrProgramm.id as any;
-						};
+							mLadePara.WhereClause = "FK_Programm";
+							mLadePara.anyOf = () => {
+								return mPtrProgramm.id as any;
+							};
+						}
 					
-						await this.LadeProgrammSessionsEx(mLadePara)
+						await this.LadeProgrammSessionsEx(mLadePara, aProgramme[index])
 							.then((aSessionListe: Array<Session>) => {
 								mPtrProgramm.SessionListe = aSessionListe;
 							});
@@ -1973,7 +1972,7 @@ export class DexieSvcService extends Dexie {
 
 				return aProgramme;
 			
-			} : (aProgramme: Array<ITrainingsProgramm>) => aProgrammPara.Then(aProgramme)));
+			} : (aProgramme: Array<ITrainingsProgramm>) => aProgrammPara.Then(aProgramme));
 	}
 
 	public async SatzSpeichern(aSatz: Satz): Promise<number> {
