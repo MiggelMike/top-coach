@@ -1639,7 +1639,6 @@ export class DexieSvcService extends Dexie {
 				}
 				return mResult;
 			});
-		// });
 	}
 
 	public async LadeSessionUebungen(aSessionID: number, aLadeParaDB?: UebungParaDB): Promise<Array<Uebung>> {
