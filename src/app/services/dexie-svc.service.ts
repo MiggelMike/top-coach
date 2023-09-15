@@ -1306,6 +1306,7 @@ export class DexieSvcService extends Dexie {
 
 	public async LadeAktuellesProgramm(aProgrammParaDB?: ProgrammParaDB): Promise<ITrainingsProgramm> {
 		let mHelpProgrammParaDB: ProgrammParaDB;
+		// Wenn keine Übergabe-Parameter vorhanden sind, hier lokale erzeugen. 
 		if (mHelpProgrammParaDB === undefined) {
 			mHelpProgrammParaDB = new ProgrammParaDB();
 			mHelpProgrammParaDB.WhereClause = "ProgrammKategorie";
