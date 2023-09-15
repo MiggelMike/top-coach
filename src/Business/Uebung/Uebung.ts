@@ -1,5 +1,3 @@
-import { EquipmentTyp } from 'src/Business/Equipment/Equipment';
-import { EquipmentOrigin } from './../Equipment/Equipment';
 import { AppData, GewichtsEinheit } from 'src/Business/Coach/Coach';
 import { cWeightDigits, cMinDatum } from './../../app/services/dexie-svc.service';
 import { ProgressGroup, WeightProgress } from 'src/Business/Progress/Progress';
@@ -7,7 +5,6 @@ import { Zeitraum } from './../Dauer';
 import { MuscleGroupKategorie02 } from '../MuscleGroup/MuscleGroup';
 import { VorgabeWeightLimit } from '../Progress/Progress';
 import { Satz, SatzTyp, LiftTyp, SatzPausen, SatzStatus } from './../Satz/Satz';
-import { isJSDocThisTag } from 'typescript';
 
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual')

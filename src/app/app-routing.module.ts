@@ -1,7 +1,4 @@
-import { InitialWeight } from './../Business/Uebung/InitialWeight';
-import { ProgrammWaehlenModule } from './programm-waehlen/programm-waehlen.module';
-import { ITrainingsProgramm, ProgrammKategorie, TrainingsProgramm } from "./../Business/TrainingsProgramm/TrainingsProgramm";
-import { ProgrammWaehlenComponent } from "./programm-waehlen/programm-waehlen.component";
+import { ITrainingsProgramm } from "./../Business/TrainingsProgramm/TrainingsProgramm";
 import { NgModule, inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn, RouterModule, RouterStateSnapshot, Routes } from "@angular/router";
 import { DexieSvcService, ProgrammParaDB, SessionParaDB, UebungParaDB } from "./services/dexie-svc.service";
@@ -9,7 +6,6 @@ import { WorkoutFormComponent } from "./bausteine/workout-form/workout-form.comp
 import { InitialWeightComponent } from './initial-weight/initial-weight.component';
 import { AnstehendeSessionsComponent } from './anstehende-sessions/anstehende-sessions.component';
 import { SessionFormComponent } from './bausteine/session-form/session-form.component';
-import { SessionStatus } from 'src/Business/SessionDB';
 
 
 

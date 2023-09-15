@@ -2,7 +2,7 @@ import { cDeutsch, cDeutschKuezel, cEnglish, cEnglishKuerzel, cEnglishDatumForma
 import { BodyWeight, BodyWeightDB } from './../../Business/Bodyweight/Bodyweight';
 import { SessionCopyPara } from './../../Business/Session/Session';
 import { HypertrophicProgramm } from '../../Business/TrainingsProgramm/Hypertrophic';
-import { InUpcomingSessionSetzen, UebungDB, WdhVorgabeStatus } from './../../Business/Uebung/Uebung';
+import { InUpcomingSessionSetzen, UebungDB } from './../../Business/Uebung/Uebung';
 import { InitialWeight } from './../../Business/Uebung/InitialWeight';
 import { Progress, ProgressSet, ProgressTyp, WeightCalculation, WeightProgressTime, ProgressPara } from './../../Business/Progress/Progress';
 import { Hantelscheibe } from 'src/Business/Hantelscheibe/Hantelscheibe';
@@ -145,17 +145,20 @@ export class ParaDB {
 }    
 
 export class SatzParaDB extends ParaDB {
+	Uebung?: Uebung;
 	SaetzeBeachten?: boolean;
 	SatzListe?: Array<Satz>;
 }
 
 export class UebungParaDB extends ParaDB {
+	Session?: ISession;
 	SatzParaDB?: SatzParaDB;
 	SaetzeBeachten?: boolean;
 	UebungsListe?: Array<Uebung>;
 }
 
 export class SessionParaDB extends ParaDB {
+	Programm?: ITrainingsProgramm;
 	UebungParaDB?: UebungParaDB;
 	UebungenBeachten?: boolean = false;
 	SessionListe?: Array<Session>;
@@ -1923,9 +1926,15 @@ export class DexieSvcService extends Dexie {
 		mProgrammPara.anyOf = () => {
 			return ProgrammKategorie.Vorlage.toString() as any;
 		};
+
 		mProgrammPara.SessionBeachten = true;
 		mProgrammPara.SessionParaDB = new SessionParaDB();
 		mProgrammPara.SessionParaDB.UebungenBeachten = true;
+		mProgrammPara.SessionParaDB.WhereClause = "FK_Programm";
+		mProgrammPara.SessionParaDB.anyOf = (aProgramm: ITrainingsProgramm) => {
+			return aProgramm.id as any
+		};
+
 		mProgrammPara.SessionParaDB.UebungParaDB = new UebungParaDB();
 		mProgrammPara.SessionParaDB.UebungParaDB.SaetzeBeachten = true;
 
@@ -1947,20 +1956,20 @@ export class DexieSvcService extends Dexie {
 				for (let index = 0; index < aProgramme.length; index++) {
 					if (aProgrammPara.SessionBeachten !== undefined && aProgrammPara.SessionBeachten === true) {
 						const mPtrProgramm = aProgramme[index];
-						let mLadePara: SessionParaDB;
+						let mSessionParaDB: SessionParaDB;
 						
 						if (aProgrammPara.SessionParaDB !== undefined) {
-							mLadePara = aProgrammPara.SessionParaDB;
+							mSessionParaDB = aProgrammPara.SessionParaDB;
 						}
 						else {
-							mLadePara = new SessionParaDB();
-							mLadePara.WhereClause = "FK_Programm";
-							mLadePara.anyOf = () => {
+							mSessionParaDB = new SessionParaDB();
+							mSessionParaDB.WhereClause = "FK_Programm";
+							mSessionParaDB.anyOf = () => {
 								return mPtrProgramm.id as any;
 							};
 						}
 					
-						await this.LadeProgrammSessionsEx(mLadePara, aProgramme[index])
+						await this.LadeProgrammSessionsEx(mSessionParaDB, aProgramme[index])
 							.then((aSessionListe: Array<Session>) => {
 								mPtrProgramm.SessionListe = aSessionListe;
 							});
