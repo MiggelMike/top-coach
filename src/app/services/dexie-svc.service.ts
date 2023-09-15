@@ -227,36 +227,37 @@ export class DexieSvcService extends Dexie {
 	
 	private ProgramLadeStandardPara: ProgrammParaDB;
 
-	private async LadeSessionsInWorker(aOffSet: number = 0): Promise<void> {
-		const mSessionParaDB: SessionParaDB = new SessionParaDB();
-		mSessionParaDB.Limit = 1;
-		mSessionParaDB.OffSet = aOffSet;
-		this.LadeUpcomingSessions(this.AktuellesProgramm.id, mSessionParaDB)
-			.then((aSessionListeDB) => {
-				const mSessionListe: Array<Session> = [];
-				aSessionListeDB.map((aSessionDB) => mSessionListe.push(new Session(aSessionDB)));
+	// private async LadeSessionsInWorker(aOffSet: number = 0): Promise<void> {
+	// 	const mSessionParaDB: SessionParaDB = new SessionParaDB();
+	// 	mSessionParaDB.Limit = 1;
+	// 	mSessionParaDB.OffSet = aOffSet;
+	// 	this.LadeUpcomingSessions(this.AktuellesProgramm.id, mSessionParaDB)
+	// 		.then((aSessionListeDB) => {
+	// 			const mSessionListe: Array<Session> = [];
+	// 			aSessionListeDB.map((aSessionDB) => mSessionListe.push(new Session(aSessionDB)));
 
-				if (mSessionListe.length > 0) {
-					mSessionListe.forEach((mPtrSession) => {
-						// if (mPtrSession.Kategorie02 !== SessionStatus.Wartet) {                            
-						const mUebungParaDB = new UebungParaDB();
-						mUebungParaDB.SaetzeBeachten = true;
-						this.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
-							(aUebungsListe) => {
-								if (aUebungsListe.length > 0)
-									mPtrSession.UebungsListe = aUebungsListe;
-							});
-						// }
+	// 			if (mSessionListe.length > 0) {
+	// 				mSessionListe.forEach((mPtrSession) => {
+	// 					// if (mPtrSession.Kategorie02 !== SessionStatus.Wartet) {                            
+	// 					const mUebungParaDB = new UebungParaDB();
+	// 					mUebungParaDB.SaetzeBeachten = true;
+	// 					mUebungParaDB.
+	// 					this.LadeSessionUebungen(mUebungParaDB, mPtrSession.ID).then(
+	// 						(aUebungsListe) => {
+	// 							if (aUebungsListe.length > 0)
+	// 								mPtrSession.UebungsListe = aUebungsListe;
+	// 						});
+	// 					// }
                         
-						Session.StaticCheckMembers(mPtrSession);
-						mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
-						this.AktuellesProgramm.SessionListe.push(mPtrSession);
-						this.LadeSessionsInWorker(this.AktuellesProgramm.SessionListe.length);
+	// 					Session.StaticCheckMembers(mPtrSession);
+	// 					mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+	// 					this.AktuellesProgramm.SessionListe.push(mPtrSession);
+	// 					this.LadeSessionsInWorker(this.AktuellesProgramm.SessionListe.length);
                     
-					});
-				}
-			});
-	}
+	// 				});
+	// 			}
+	// 		});
+	// }
 
 	public async LadeDiagrammData(aVonDatum: Date, aBisDatum: Date, aLimit: number, aExtraFn?: ExtraFn): Promise<Array<DiaDatum>> {
 		let mBisDatum: Date = aBisDatum;
@@ -462,39 +463,39 @@ export class DexieSvcService extends Dexie {
 		// 	});//then
 	}
 	
-	public DoWorker(aAction: WorkerAction, aExtraFn?: ExtraFn) {
-		// const that: AnstehendeSessionsComponent = this;
-		if (typeof Worker !== 'undefined') {
-			this.worker = new Worker(new URL('./dexie-svc.worker', import.meta.url));
-			this.worker.addEventListener('message', ({ data }) => {
-				switch (aAction) {
-					case WorkerAction.LadeAktuellesProgramm:
-						this.LadeAktuellesProgramm()
-							.then(async (aProgramm) => {
-								if (aProgramm !== undefined) {
-									const mDialogData = new DialogData();
-									mDialogData.ShowAbbruch = false;
-									mDialogData.ShowOk = false;
-									mDialogData.hasBackDrop = false;
-									this.AktuellesProgramm.SessionListe = [];
-									this.LadeSessionsInWorker();
-								}
-							});// then
-						break;
+	// public DoWorker(aAction: WorkerAction, aExtraFn?: ExtraFn) {
+	// 	// const that: AnstehendeSessionsComponent = this;
+	// 	if (typeof Worker !== 'undefined') {
+	// 		this.worker = new Worker(new URL('./dexie-svc.worker', import.meta.url));
+	// 		this.worker.addEventListener('message', ({ data }) => {
+	// 			switch (aAction) {
+	// 				case WorkerAction.LadeAktuellesProgramm:
+	// 					this.LadeAktuellesProgramm()
+	// 						.then(async (aProgramm) => {
+	// 							if (aProgramm !== undefined) {
+	// 								const mDialogData = new DialogData();
+	// 								mDialogData.ShowAbbruch = false;
+	// 								mDialogData.ShowOk = false;
+	// 								mDialogData.hasBackDrop = false;
+	// 								this.AktuellesProgramm.SessionListe = [];
+	// 								this.LadeSessionsInWorker();
+	// 							}
+	// 						});// then
+	// 					break;
 					
-					case WorkerAction.LadeDiagrammDaten:
-						// if (this.MustLoadDiagramData === true) {
-						// 	this.LadeAppData().then((aAppRec) => {
-						// 		this.AppRec = aAppRec;
-						// 		this.LadeDiagrammData(this.DiagrammDatenListe, aAppRec.MaxHistorySessions, aExtraFn);
-						// 	});
-						// }
-						break;
-				}//switch
-			});
-			this.worker.postMessage(aAction);
-		}
-	}
+	// 				case WorkerAction.LadeDiagrammDaten:
+	// 					// if (this.MustLoadDiagramData === true) {
+	// 					// 	this.LadeAppData().then((aAppRec) => {
+	// 					// 		this.AppRec = aAppRec;
+	// 					// 		this.LadeDiagrammData(this.DiagrammDatenListe, aAppRec.MaxHistorySessions, aExtraFn);
+	// 					// 	});
+	// 					// }
+	// 					break;
+	// 			}//switch
+	// 		});
+	// 		this.worker.postMessage(aAction);
+	// 	}
+	// }
 
 	public UpComingSessionList(): Array<Session> {
 		if ((this.AktuellesProgramm) && (this.AktuellesProgramm.SessionListe)) {
@@ -1640,16 +1641,18 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
-	public async LadeSessionUebungen(aSessionID: number, aLadeParaDB?: UebungParaDB): Promise<Array<Uebung>> {
+	public async LadeSessionUebungen(aSessionID?: number, aLadeParaDB?: UebungParaDB): Promise<Array<Uebung>> {
 		const mSession: ISession = new Session();
 		mSession.ID = aSessionID;
 
-		let mLadeParaDB: UebungParaDB = aLadeParaDB;
+		let mLadeParaDB: UebungParaDB;
 		if (aLadeParaDB === undefined) {
 			mLadeParaDB = new UebungParaDB();
 			mLadeParaDB.WhereClause = "SessionID"
 			mLadeParaDB.anyOf = () => { return aSessionID as any };
 		}
+		else mLadeParaDB = aLadeParaDB;
+
 		return this.LadeSessionUebungenEx(mSession, mLadeParaDB);
 	}
 
@@ -1695,11 +1698,6 @@ export class DexieSvcService extends Dexie {
 					const mPtrUebung: Uebung = mUebungen[index];
 					if (mPtrUebung.FailDatum.valueOf() > cMinDatum.valueOf())
 						break;
-					
-					// if ((mPtrUebung.FkProgress !== aUebung.FkProgress) ||
-					// 	(mPtrUebung.ProgressGroup !== aUebung.ProgressGroup)
-					// )
-					// 	continue;
 					
 					mResult.push(mUebungen[index]);
 				}
