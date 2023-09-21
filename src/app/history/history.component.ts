@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { cDeutschKuezel as cDeutschKuerzel, cEnglishKuerzel, cDeutschDateInputMask, cEnglishDateInputMask } from './../Sprache/Sprache';
 import { DexieSvcService, SessionParaDB, cMaxDatum, cMinDatum } from './../services/dexie-svc.service';
 import { DiaDatum, DiaUebung, DiaUebungSettings } from './../../Business/Diagramm/Diagramm';
@@ -9,7 +10,8 @@ import { LineChartComponent } from '@swimlane/ngx-charts';
 import { FormControl, FormGroup } from '@angular/forms';
 import { LOCALE_ID } from '@angular/core';
 import * as _moment from 'moment';
-import { DatePipePipe } from '../date-pipe.pipe';
+import { DatePipePipe } from '../../app/DatePipe/date-pipe.pipe';
+
 import { AppData } from '../../Business/Coach/Coach';
 import { ISession } from '../../Business/Session/Session';
 // const moment = _rollupMoment || _moment;
@@ -34,7 +36,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	private CreatingChartsDialogData: DialogData = new DialogData();
 	private Interval: any;
 	group: FormGroup;
-
 	public date: moment.Moment;
 	public disabled = false;
 	public showSpinners = true;
@@ -63,6 +64,11 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	@ViewChild('matTabChart') matTabChart: any;
 	@ViewChild('ChartContainer') ChartContainer: any;
 	@Input() placeholderTime: string;
+
+	range = new FormGroup({
+		start: new FormControl(),
+		end: new FormControl()
+	  });
 	
 
 	constructor(
@@ -70,8 +76,11 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		private fLoadingDialog: DialogeService,
 		@Inject(LOCALE_ID) locale: string
 	) {
+		
 		this.toDate = new Date();
 		this.fromDate.setDate(this.toDate.getDate() - 90);
+		this.range.controls['start'].setValue(this.fromDate);
+		this.range.controls['end'].setValue(this.toDate);
 		this.CreatingChartsDialogData.ShowAbbruch = false;
 		this.CreatingChartsDialogData.ShowOk = false;
 		this.CreatingChartsDialogData.hasBackDrop = false;
@@ -89,7 +98,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	get programModul(): typeof ProgramModulTyp {
 		return ProgramModulTyp;
 	}
-	timeChange($event){}
+	
 
 	get DateInputMask(): string{
 		return this.fDbModul.AktuellSprache.Kuerzel === cDeutschKuerzel ? cDeutschDateInputMask : cEnglishDateInputMask;

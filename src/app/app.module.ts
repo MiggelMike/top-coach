@@ -1,3 +1,5 @@
+import { SessionStatsOverlayModule } from './session-stats-overlay/session-stats-overlay.module';
+import { HistoryModule } from './history/history.module';
 import { SatzSimpleModule } from './bausteine/satz-simple/satz-simple.module';
 import { ProgrammWaehlenModule } from './programm-waehlen/programm-waehlen.module';
 import { PlateCalcModule } from "./plate-calc/plate-calc-module/plate-calc-module.module";
@@ -35,7 +37,7 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 import { MatNativeDateModule } from "@angular/material/core";
 // import { Router, NavigationStart } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { SatzSimpleComponent } from '../app/bausteine/satz-simple/satz-simple.component'
+// import { SatzSimpleComponent } from '../app/bausteine/satz-simple/satz-simple.component'
 // import { Programm01Component } from "./bausteine/programm01/programm01.component";
 // import { Programm02Component } from "./bausteine/programm02/programm02.component";
 // import { Programm03Component } from "./bausteine/programm03/programm03.component";
@@ -58,7 +60,6 @@ import { DialogComponent } from "./dialoge/hinweis/hinweis.component";
 // import { FilePreviewOverlayComponent  } from './file-preview-overlay/file-preview-overlay.component';
 import { FilePreviewOverlayService } from './services/file-preview-overlay.service';
 import { LOCALE_ID } from '@angular/core';
-import { DatePipePipe } from './date-pipe.pipe';
 import { DatePipe } from "@angular/common";
 //import { ExerciseSettingsModuleModule } from
 
@@ -102,6 +103,30 @@ import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.comp
 import { InitialWeightComponent } from './initial-weight/initial-weight.component';
 import { AnstehendeSessionsComponent } from './anstehende-sessions/anstehende-sessions.component';
 import { SessionFormModule } from './bausteine/session-form/session-form.module';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatTreeModule } from '@angular/material/tree';
+
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatListModule } from '@angular/material/list';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSortModule } from '@angular/material/sort';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatTableModule } from '@angular/material/table';
+import { ReactiveFormsModule } from '@angular/forms';
+
+// import { HistoryComponent } from './history/history.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
 	return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -192,7 +217,8 @@ export interface IProgramModul {
 		// ,ProgrammWaehlenComponent
 		, DialogComponent
 		, WorkoutFormComponent
-		,InitialWeightComponent 
+		, InitialWeightComponent 
+		// , HistoryComponent
 		
 
 		//TestComponent
@@ -208,7 +234,7 @@ export interface IProgramModul {
 		// WorkoutFormComponent,
 		// UebungWaehlenComponent,
 		// StoppuhrComponent,
-		,SessionStatsOverlayComponent,
+		// ,SessionStatsOverlayComponent
 		// PlateCalcComponent,
 		// ExerciseSettingsComponent,
 		// EditExerciseComponent,
@@ -264,7 +290,7 @@ export interface IProgramModul {
 		,IonicModule.forRoot()
 		,DexieSvcService
 		, EditExerciseModule
-		
+		,ReactiveFormsModule
 		
 		
 		//		,MatDatepickerModule
@@ -294,6 +320,7 @@ export interface IProgramModul {
 		, WorkoutFormModule
 		, SatzSimpleModule
 		, SessionFormModule
+		, HistoryModule
 		// ,InitialWeightModule
 		
 
@@ -302,7 +329,6 @@ export interface IProgramModul {
 	providers: [
 		 MatDialog
 		, FilePreviewOverlayService
-		, DatePipePipe
 		, DexieSvcService
 		, DialogeService 
 		,{ provide: MAT_DATE_LOCALE, useValue: 'de-DE' }
@@ -320,8 +346,8 @@ export interface IProgramModul {
 		, MatCheckboxModule
 		,MatAccordion
 		
-		// // MatDatepickerModule,
-		// MatNativeDateModule,
+		,MatDatepickerModule
+		,MatNativeDateModule
 		,MatSliderModule
 		,MatToolbarModule
 		//  BsDropdownModule,
@@ -350,7 +376,21 @@ export interface IProgramModul {
 		// , ToolBarModule
 		// , AnstehendeSessionsModule
 		, FlexLayoutModule
-		,BrowserAnimationsModule
+		, BrowserAnimationsModule
+		, NgxChartsModule
+		, MatTooltipModule
+		, MatTreeModule	
+		, SessionStatsOverlayModule
+
+		// ,MatAutocompleteModule
+		// ,MatBadgeModule,
+		// ,MatDividerModule
+        // ,MatGridListModule
+		// ,MatListModule
+		// ,MatPaginatorModule
+		// ,MatProgressBarModule
+		// ,MatProgressSpinnerModule
+		// ,MatSlideToggleModule
 	]
 
 

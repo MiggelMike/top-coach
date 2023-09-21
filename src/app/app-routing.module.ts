@@ -1,3 +1,5 @@
+import { HistoryModule } from './history/history.module';
+import { HistoryComponent } from './history/history.component';
 import { ITrainingsProgramm } from "./../Business/TrainingsProgramm/TrainingsProgramm";
 import { NgModule, inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn, RouterModule, RouterStateSnapshot, Routes } from "@angular/router";
@@ -49,9 +51,15 @@ const routes: Routes = [
 		//  	return m.SessionFormModule;
 		//  })		
 		component: SessionFormComponent
-		
+	},
+	{
+		path: "history",
+		// loadComponent: () => import("../../src/app/bausteine/session-form/session-form.component").then((m) => m.SessionFormComponent)		
+		//  loadChildren: () => import("../../src/app/history/history.module").then((m) => {
+		//  	return m.HistoryModule;
+		//  })		
+		component: HistoryComponent
 	}
-
 	
 ];
 	

@@ -36,7 +36,7 @@ export class ToolbarComponent implements OnInit {
     }
 
     NavHistory() {
-        this.router.navigate(['/app-history']);
+        this.router.navigate(['/history']);
     }
 
 

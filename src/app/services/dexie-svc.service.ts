@@ -270,8 +270,6 @@ export class DexieSvcService extends Dexie {
 		aVonDatum.setHours(0, 0, 0, 0);
 		const mDiagrammDatenListe: Array<DiaDatum> = [];
 		try {
-			const mUebungLadePara: UebungParaDB = new UebungParaDB();
-			mUebungLadePara.SaetzeBeachten = true;
 			return await this.SessionTable
 				.where("Kategorie02")
 				.anyOf([SessionStatus.Fertig, SessionStatus.FertigTimeOut])
@@ -306,8 +304,23 @@ export class DexieSvcService extends Dexie {
 						Session.StaticCheckMembers(mPtrSession);
 						mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
 						// Jetzt für mPtrSession die Übungen laden
-						await this.LadeSessionUebungen(mPtrSession.ID, mUebungLadePara)
+						const mUebungLadePara: UebungParaDB = new UebungParaDB();
+						mUebungLadePara.WhereClause = "SessionID";
+						mUebungLadePara.anyOf = () => {
+							return mPtrSession.ID as any;
+						};						
+						mUebungLadePara.SaetzeBeachten = true;
+						mUebungLadePara.SatzParaDB = new SatzParaDB();
+						mUebungLadePara.SatzParaDB.WhereClause = "[UebungID+Status]";
+						mUebungLadePara.SatzParaDB.anyOf = (aPara:{ ParaUebung: Uebung, ParaSatz: Satz }) => { 
+							return ([aPara.ParaUebung.ID,SatzStatus.Fertig]) as any;
+						};
+
+						const mDummySession: Session = new Session();
+						mDummySession.ID = mPtrSession.ID;
+						await this.LadeSessionUebungenEx(mDummySession, mUebungLadePara)
 							.then((mUebungsListe) => {
+								const x = 0;
 								for (let index2 = 0; index2 < mUebungsListe.length; index2++) {
 									const mPtrUebung: Uebung = mUebungsListe[index2];
 									for (let index2 = 0; index2 < mPtrUebung.SatzListe.length; index2++) {
@@ -694,12 +707,12 @@ export class DexieSvcService extends Dexie {
 		}
 
 		       //   Dexie.delete("ConceptCoach");
-		this.version(28).stores({
+		this.version(30).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
 			SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02],[FK_Programm+Kategorie02],ListenIndex,GestartedWann",
-			SatzDB: "++ID,UebungID,Datum",
+			SatzDB: "++ID,UebungID,Datum,[UebungID+Status]",
 			MuskelGruppe: "++ID,Name,MuscleGroupKategorie01",
 			Equipment: "++ID,Name",
 			Hantel: "++ID,Name,Typ,fDurchmesser",
@@ -1649,11 +1662,13 @@ export class DexieSvcService extends Dexie {
 		if (aLadeParaDB === undefined) {
 			mLadeParaDB = new UebungParaDB();
 			mLadeParaDB.WhereClause = "SessionID"
-			mLadeParaDB.anyOf = () => { return aSessionID as any };
+			mLadeParaDB.anyOf = () => {
+				return aSessionID as any;
+			};
 		}
 		else mLadeParaDB = aLadeParaDB;
 
-		return this.LadeSessionUebungenEx(mSession, mLadeParaDB);
+		return await this.LadeSessionUebungenEx(mSession, mLadeParaDB);
 	}
 
 	public async LoadLastFailDateEx(aSession: Session, aUebung: Uebung, aFailCount: number): Promise<Array<Uebung>> {
@@ -1788,8 +1803,9 @@ export class DexieSvcService extends Dexie {
 							aLadePara.ExtraFn(mExtraFnPara);
 						}
 						
-						if(aLadePara !== undefined && aLadePara.SaetzeBeachten === true)
+						if (aLadePara !== undefined && aLadePara.SaetzeBeachten === true) 
 							await this.LadeUebungsSaetzeEx(mPtrUebung);
+						
 					};
 
 					if (aLadePara !== undefined && aLadePara.OnUebungAfterLoadFn !== undefined) mResultUebungsListe = aLadePara.OnUebungAfterLoadFn(mResultUebungsListe);
@@ -1818,16 +1834,25 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
-	public async LadeUebungsSaetzeEx(aUebung: Uebung, aLadePara?: ParaDB): Promise<Array<Satz>> {
-		if (aLadePara !== undefined && aLadePara.OnSatzBeforeLoadFn !== undefined) aLadePara.OnSatzBeforeLoadFn(aLadePara);
+	public async LadeUebungsSaetzeEx(aUebung: Uebung, aSatzLadePara?: ParaDB): Promise<Array<Satz>> {
+		let mSatzLadePara: SatzParaDB;
+		if (mSatzLadePara === undefined) {
+			mSatzLadePara = new SatzParaDB();
+			mSatzLadePara.WhereClause = "UebungID";
+			mSatzLadePara.anyOf = () => {
+				return aUebung.ID as any;
+			};
+		} else mSatzLadePara = aSatzLadePara;
+
+		if (mSatzLadePara !== undefined && mSatzLadePara.OnSatzBeforeLoadFn !== undefined) mSatzLadePara.OnSatzBeforeLoadFn(mSatzLadePara);
 
 		return this.SatzTable
-			.where(aLadePara === undefined ? "id" : aLadePara.WhereClause)
-			.anyOf(aLadePara === undefined ? 0 : aLadePara.anyOf())
-			//.and((aLadePara === undefined || aLadePara.And === undefined ? () => { return 1 === 1 } : (satz: SatzDB) => aLadePara.And(satz)))
-			.offset(aLadePara !== undefined && aLadePara.OffSet !== undefined ? aLadePara.OffSet : 0)
-			.limit(aLadePara === undefined || aLadePara.Limit === undefined ? cMaxLimnit : aLadePara.Limit)
-			.sortBy(aLadePara === undefined || aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
+			.where(mSatzLadePara === undefined ? "id" : mSatzLadePara.WhereClause)
+			.anyOf(mSatzLadePara === undefined ? 0 : mSatzLadePara.anyOf())
+			//.and((mSatzLadePara === undefined || mSatzLadePara.And === undefined ? () => { return 1 === 1 } : (satz: SatzDB) => mSatzLadePara.And(satz)))
+			.offset(mSatzLadePara !== undefined && mSatzLadePara.OffSet !== undefined ? mSatzLadePara.OffSet : 0)
+			.limit(mSatzLadePara === undefined || mSatzLadePara.Limit === undefined ? cMaxLimnit : mSatzLadePara.Limit)
+			.sortBy(mSatzLadePara === undefined || mSatzLadePara.SortBy === undefined ? '' : mSatzLadePara.SortBy)
 			.then((aSaetze: Array<SatzDB>) => {
 				const mResult: Array<Satz> = [];
 				aSaetze.map((mSatzDB) => {
@@ -1839,9 +1864,9 @@ export class DexieSvcService extends Dexie {
 				if (aSaetze.length > 0) {
 					aUebung.SatzListe = mResult;
 					aUebung.SatzListe.forEach((s) => {
-						if (aLadePara !== undefined && aLadePara.OnSatzAfterLoadFn !== undefined) aLadePara.OnSatzAfterLoadFn(aLadePara);
+						if (mSatzLadePara !== undefined && mSatzLadePara.OnSatzAfterLoadFn !== undefined) mSatzLadePara.OnSatzAfterLoadFn(mSatzLadePara);
 					});
-				} else if (aLadePara !== undefined && aLadePara.OnSatzNoRecordFn !== undefined) aLadePara.OnSatzNoRecordFn(aLadePara);
+				} else if (mSatzLadePara !== undefined && mSatzLadePara.OnSatzNoRecordFn !== undefined) mSatzLadePara.OnSatzNoRecordFn(mSatzLadePara);
 				return mResult;
 			});
 	}

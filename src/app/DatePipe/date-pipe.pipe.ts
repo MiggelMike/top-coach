@@ -1,4 +1,4 @@
-import { cDeutschKuezel, cEnglishKuerzel } from './Sprache/Sprache';
+import { cDeutschKuezel, cEnglishKuerzel } from '../Sprache/Sprache';
 import { DatePipe } from '@angular/common';
 import { Pipe, PipeTransform } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -6,7 +6,7 @@ import localeEn from '@angular/common/locales/en';
 import localeDe from '@angular/common/locales/de';
 import { registerLocaleData } from '@angular/common';
 import { DateAdapter } from '@angular/material/core';
-import { DexieSvcService } from './services/dexie-svc.service';
+import { DexieSvcService } from '../services/dexie-svc.service';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeDe, 'de');
