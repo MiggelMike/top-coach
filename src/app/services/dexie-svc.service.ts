@@ -15,7 +15,7 @@ import { DialogeService } from './dialoge.service';
 import { Satz, SatzStatus, GewichtDiff, SatzTyp, SatzDB } from './../../Business/Satz/Satz';
 import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
 import { AppData } from './../../Business/Coach/Coach';
-import { Dexie, PromiseExtended } from 'dexie';
+import { Collection, Dexie, IndexableType, PromiseExtended, Table, WhereClause } from 'dexie';
 import { Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardUebung, SaetzeStatus } from "../../Business/Uebung/Uebung";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
@@ -88,12 +88,16 @@ export interface ExtraFn {
     (aData?: any): void | any;
 }
 
+export interface EqualsFn {
+	(aData?: any): Collection<any,any>;
+}
+
 export interface AndFn {
-	(aData?: any): boolean;
+	(aData?: any): void | any;
 }
 
 export interface FilterFn {
-	(aData?: any): boolean;
+	(aData?: any): void | any;
 }
 
 export interface ThenFn {
@@ -118,14 +122,16 @@ export interface AnyFn {
 
 export class ParaDB {
 	Data?: any;
-	WhereClause?: string | string[] = '1=1';
-	Filter?: FilterFn = () => { return true };
-	And?: AndFn = () => { return true };
+	WhereClause?: string | string[] = '';
+	Equals?: IndexableType;
+	Filter?: FilterFn = () => {};
+	And?: AndFn;
 	Then?: ThenFn;
-	anyOf?: AnyFn = (aPara: any):any => { return 0 as any; };
+	anyOf?: IndexableType[];
 	OffSet?: number = 0;
-	Limit?: number = cMaxLimnit;
-	SortBy?: string = '';
+	Limit?: number;
+	SortBy?: string = 'ID';
+	Reverse?: Boolean = false;
 	SortOrder?: SortOrder = SortOrder.ascending;
     fProgrammTyp?: ProgrammTyp;
     fProgrammKategorie?: ProgrammKategorie; 
@@ -143,6 +149,8 @@ export class ParaDB {
 	OnAfterSaveFn?: AfterSaveFn;
 	ExtraFn?: ExtraFn;
 }    
+
+export interface IParaDB { };
 
 export class SatzParaDB extends ParaDB {
 	Uebung?: Uebung;
@@ -706,8 +714,8 @@ export class DexieSvcService extends Dexie {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
 		}
 
-		       //   Dexie.delete("ConceptCoach");
-		this.version(30).stores({
+		//        Dexie.delete("ConceptCoach");
+		this.version(31).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
@@ -735,7 +743,7 @@ export class DexieSvcService extends Dexie {
 		this.PruefeStandardMuskelGruppen();
 		// Worker funktioniert NICHT in Android!
 		// this.DoWorker(WorkerAction.LadeDiagrammDaten);
-		// this.LadeStammUebungen();
+		this.LadeStammUebungen();
 	}
 
 	ResetDatenbank() {
@@ -1341,6 +1349,10 @@ export class DexieSvcService extends Dexie {
 			mHelpProgrammParaDB.SessionParaDB.UebungenBeachten = true;
 			mHelpProgrammParaDB.SessionParaDB.UebungParaDB = new UebungParaDB();
 			mHelpProgrammParaDB.SessionParaDB.UebungParaDB.SaetzeBeachten = true;
+			mHelpProgrammParaDB.SessionParaDB.UebungParaDB.WhereClause = "SessionID";
+			mHelpProgrammParaDB.SessionParaDB.UebungParaDB.anyOf = (aSession: Session) => {
+				return aSession.ID as any;
+			};
 		}
 		else mHelpProgrammParaDB = aProgrammParaDB;
 		
@@ -1605,50 +1617,58 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
-	public async LadeProgrammSessionsEx(aLadePara: SessionParaDB, aProgramm?: ITrainingsProgramm): Promise<Array<Session>> {
+	public async LadeProgrammSessionsEx(aSessionPara: SessionParaDB, aProgramm?: ITrainingsProgramm): Promise<Array<Session>> {
 		return await this.SessionTable
-			.where(aLadePara.WhereClause)
-			.anyOf(aLadePara.anyOf(aProgramm))
-			.and((aLadePara.And === undefined ? () => { return 1 === 1 } : (session: SessionDB) => aLadePara.And(session)))
-			.filter(aLadePara.Filter === undefined ? () => { return 1 === 1 } : (session: SessionDB) => aLadePara.Filter(session))
-			.limit(aLadePara.Limit === undefined ? cMaxLimnit : aLadePara.Limit)
-			.sortBy(aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
+			.where(aSessionPara.WhereClause)
+			.anyOf(aSessionPara.anyOf(aProgramm))
+			.and((aPara: any) => aSessionPara.And(aPara))
+			.filter(aSessionPara.Filter === undefined ? () => { return 1 === 1 } : (session: SessionDB) => aSessionPara.Filter(session))
+			.limit(aSessionPara.Limit === undefined ? cMaxLimnit : aSessionPara.Limit)
+			.sortBy(aSessionPara.SortBy === undefined ? '' : aSessionPara.SortBy)
 			.then(async (aSessions: Array<SessionDB>) => {
 				let mResult: Array<Session> = [];
 				aSessions.forEach((mPtrSession) => Session.StaticCheckMembers(mPtrSession));
 
 				aSessions.map((aSessionDB) => mResult.push(new Session(aSessionDB)));
-				const mUebungPara: UebungParaDB = new UebungParaDB();
+				let mUebungPara: UebungParaDB;
+				
 				for (let index = 0; index < mResult.length; index++) {
 					const mPtrSession = mResult[index];
-					mUebungPara.WhereClause = "SessionID";
-					mUebungPara.anyOf = () => {
-						return mPtrSession.ID as any;
-					};
 
-					mUebungPara.ExtraFn = async (aLadePara: ParaDB) => {
-						aLadePara.Data.Uebung.FK_Programm = aLadePara.Data.Session.FK_Programm;
-						aLadePara.Data.Uebung.Datum = aLadePara.Data.Session.Datum;
-						// Session-Übungen sind keine Stamm-Übungen.
-						// Ist der Schlüssel zur Stamm-Übung gesetzt?
-						if (aLadePara.Data.Uebung.FkUebung > 0) {
-							//Der Schlüssel zur Stamm-Übung ist gesetzt
-							const mStammUebung = this.StammUebungsListe.find((mGefundeneUebung) => mGefundeneUebung.ID === aLadePara.Data.Uebung.FkUebung);
-							if (mStammUebung !== undefined) aLadePara.Data.Uebung.Name = mStammUebung.Name;
-						} else {
-							// Der Schlüssel zur Stamm-Übung sollte normalerweise gesetzt sein
-							const mStammUebung = this.StammUebungsListe.find((mGefundeneUebung) => mGefundeneUebung.Name === aLadePara.Data.Uebung.Name);
-							if (mStammUebung !== undefined) aLadePara.Data.Uebung.FkUebung = mStammUebung.ID;
-						}
-						await this.UebungSpeichern(aLadePara.Data.Uebung);
-					};//mLadePara.ExtraFn
+					if (aSessionPara.UebungParaDB === undefined) {
+						mUebungPara = new UebungParaDB();
+						mUebungPara.WhereClause = "SessionID";
+						mUebungPara.anyOf = (aSession:Session) => {
+							return mPtrSession.ID as any;
+						};
+					}
+					else mUebungPara = aSessionPara.UebungParaDB;
+
+					if (mUebungPara.ExtraFn !== undefined) {
+						mUebungPara.ExtraFn = async (aLadePara: ParaDB) => {
+							aLadePara.Data.Uebung.FK_Programm = aLadePara.Data.Session.FK_Programm;
+							aLadePara.Data.Uebung.Datum = aLadePara.Data.Session.Datum;
+							// Session-Übungen sind keine Stamm-Übungen.
+							// Ist der Schlüssel zur Stamm-Übung gesetzt?
+							if (aLadePara.Data.Uebung.FkUebung > 0) {
+								//Der Schlüssel zur Stamm-Übung ist gesetzt
+								const mStammUebung = this.StammUebungsListe.find((mGefundeneUebung) => mGefundeneUebung.ID === aLadePara.Data.Uebung.FkUebung);
+								if (mStammUebung !== undefined) aLadePara.Data.Uebung.Name = mStammUebung.Name;
+							} else {
+								// Der Schlüssel zur Stamm-Übung sollte normalerweise gesetzt sein
+								const mStammUebung = this.StammUebungsListe.find((mGefundeneUebung) => mGefundeneUebung.Name === aLadePara.Data.Uebung.Name);
+								if (mStammUebung !== undefined) aLadePara.Data.Uebung.FkUebung = mStammUebung.ID;
+							}
+							await this.UebungSpeichern(aLadePara.Data.Uebung);
+						};//mLadePara.ExtraFn
+					}//if
 
 					await this.LadeSessionUebungenEx(mPtrSession, mUebungPara);
 				}
 
-				if (aLadePara !== undefined) {
-					if (aLadePara.OnSessionNoRecordFn !== undefined) mResult = aLadePara.OnSessionNoRecordFn(aLadePara);
-					if (aLadePara.OnSessionAfterLoadFn !== undefined) mResult = aLadePara.OnSessionAfterLoadFn(mResult);
+				if (aSessionPara !== undefined) {
+					if (aSessionPara.OnSessionNoRecordFn !== undefined) mResult = aSessionPara.OnSessionNoRecordFn(aSessionPara);
+					if (aSessionPara.OnSessionAfterLoadFn !== undefined) mResult = aSessionPara.OnSessionAfterLoadFn(mResult);
 				}
 				return mResult;
 			});
@@ -1766,16 +1786,16 @@ export class DexieSvcService extends Dexie {
 		return mResultUebungsListe;
 	}
 
-	public async LadeSessionUebungenEx(aSession: ISession, aLadePara?: UebungParaDB): Promise<Array<Uebung>> {
+	public async LadeSessionUebungenEx(aSession: ISession, aLadePara: UebungParaDB): Promise<Array<Uebung>> {
 		if (aLadePara !== undefined && aLadePara.OnUebungBeforeLoadFn !== undefined)
 			aLadePara.OnUebungBeforeLoadFn(aLadePara);
 
 		return await this.UebungTable
 			.where(aLadePara.WhereClause)
-			.anyOf(aLadePara.anyOf())
+			.anyOf(aLadePara.anyOf(aSession))
 			.reverse()
-			.limit(aLadePara === undefined || aLadePara.Limit === undefined ? cMaxLimnit : aLadePara.Limit)
-			.sortBy(aLadePara === undefined || aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
+			.limit(aLadePara.Limit === undefined ? cMaxLimnit : aLadePara.Limit)
+			.sortBy(aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
 			.then(async (aUebungenDB: Array<UebungDB>) => {
 				let mResultUebungsListe: Array<Uebung> = this.UebungDBtoUebung(aUebungenDB);
 				if (aUebungenDB.length > 0) {
@@ -1944,19 +1964,31 @@ export class DexieSvcService extends Dexie {
 	public async LadeStandardProgramme(): Promise<Array<ITrainingsProgramm>> {
 		const mProgrammPara: ProgrammParaDB = new ProgrammParaDB();
 		mProgrammPara.WhereClause = "ProgrammKategorie"
-		mProgrammPara.anyOf = () => {
-			return ProgrammKategorie.Vorlage.toString() as any;
-		};
+		mProgrammPara.Equals = ProgrammKategorie.Vorlage.toString();
+		// mProgrammPara.anyOf = () => {
+		// 	return [ProgrammKategorie.Vorlage.toString()];
+
+		//  }
+
+		//  mProgrammPara.And = () => {
+		// 	return ProgrammKategorie.Vorlage.toString();
+
+		//  }
+		
 
 		mProgrammPara.SessionBeachten = true;
 		mProgrammPara.SessionParaDB = new SessionParaDB();
 		mProgrammPara.SessionParaDB.UebungenBeachten = true;
-		mProgrammPara.SessionParaDB.WhereClause = "FK_Programm";
-		mProgrammPara.SessionParaDB.anyOf = (aProgramm: ITrainingsProgramm) => {
-			return aProgramm.id as any
+		mProgrammPara.SessionParaDB.WhereClause = "[FK_Programm]";
+		mProgrammPara.SessionParaDB.And = (aProgramm: ITrainingsProgramm) => {
+			return aProgramm.id; 
 		};
 
 		mProgrammPara.SessionParaDB.UebungParaDB = new UebungParaDB();
+		mProgrammPara.SessionParaDB.UebungParaDB.WhereClause = "SessionID"
+		mProgrammPara.SessionParaDB.UebungParaDB.And = (aSession: Session) => {
+			return aSession.ID;
+		}
 		mProgrammPara.SessionParaDB.UebungParaDB.SaetzeBeachten = true;
 
 		return this.LadeProgrammeEx(mProgrammPara).then((aProgramme) => {
@@ -1965,15 +1997,49 @@ export class DexieSvcService extends Dexie {
 		});
 	}
 
+	
+
+	private async LadePrim(aTableName: string, aThenFn: ThenFn, aPara: ProgrammParaDB): Promise<Table<any,IndexableType>> {
+		const mTable: Dexie.Table<any, any> = this.table(aTableName);
+
+		if (aPara.WhereClause !== undefined) {
+			const mWhere: WhereClause = mTable.where(aPara.WhereClause);
+			let mWhereCollection: Collection<any,IndexableType>;
+
+			if (aPara.Equals !== undefined)
+				mWhereCollection = mWhere.equals(aPara.Equals);
+			else if (aPara.anyOf !== undefined) {
+				mWhereCollection = mWhere.anyOf(aPara.anyOf);
+			}
+
+			if (aPara.And !== undefined)
+				mWhereCollection.and(aPara.And);
+
+			if (aPara.Limit !== undefined)
+				mWhereCollection.limit(aPara.Limit);
+
+			if (aPara.Limit !== undefined)
+				return mWhereCollection
+					.sortBy(aPara.SortBy)
+					.then(aThenFn);
+
+			if (aPara.Reverse !== undefined && aPara.Reverse === true) {
+				return mWhereCollection
+					.reverse()
+					.toArray()
+					.then(aThenFn);
+			}
+			return null;	
+		}
+		return mTable
+			.toArray()
+			.then(aThenFn);
+	}
+
 
 	public async LadeProgrammeEx(aProgrammPara: ProgrammParaDB): Promise<Array<ITrainingsProgramm>> {
-		return await this.ProgrammTable
-			.where(aProgrammPara.WhereClause)
-			.anyOf(aProgrammPara.anyOf())
-			.and(aProgrammPara.And === undefined ? () => { return 1 === 1 } : (aProgramm) => aProgrammPara.And(aProgramm))
-			.limit(aProgrammPara.Limit === undefined ? cMaxLimnit : aProgrammPara.Limit)
-			.sortBy(aProgrammPara.SortBy === undefined ? '' : aProgrammPara.SortBy)
-			.then(aProgrammPara.Then === undefined ? async (aProgramme: Array<ITrainingsProgramm>) => {
+		function Then(aProgramme: Array<ITrainingsProgramm>) {
+			async (aProgramme: Array<ITrainingsProgramm>) => {
 				for (let index = 0; index < aProgramme.length; index++) {
 					if (aProgrammPara.SessionBeachten !== undefined && aProgrammPara.SessionBeachten === true) {
 						const mPtrProgramm = aProgramme[index];
@@ -1995,15 +2061,58 @@ export class DexieSvcService extends Dexie {
 								mPtrProgramm.SessionListe = aSessionListe;
 							});
 					}
-					else if (aProgrammPara.SessionParaDB !== undefined) await this.LadeProgrammSessionsEx(aProgrammPara.SessionParaDB);
+					else if (aProgrammPara.SessionParaDB !== undefined)
+						await this.LadeProgrammSessionsEx(aProgrammPara.SessionParaDB);
 				
 				}
-				if (aProgrammPara.OnProgrammAfterLoadFn !== undefined) aProgrammPara.OnProgrammAfterLoadFn(aProgramme);
+				//if (aProgrammPara.OnProgrammAfterLoadFn !== undefined) aProgrammPara.OnProgrammAfterLoadFn(aProgramme);
 
 				return aProgramme;
 			
-			} : (aProgramme: Array<ITrainingsProgramm>) => aProgrammPara.Then(aProgramme));
-	}
+			}
+		};
+	
+
+		
+		
+	return await this.ProgrammTable
+		.where(aProgrammPara.WhereClause)
+		.anyOf(aProgrammPara.anyOf(aProgrammPara))
+		.and((aProgramm) => aProgrammPara.And(aProgramm))
+		.limit(aProgrammPara.Limit === undefined ? cMaxLimnit : aProgrammPara.Limit)
+			// .sortBy(aProgrammPara.SortBy === undefined ? '' : aProgrammPara.SortBy)
+		.toArray()
+		.then(async (aProgramme: Array<ITrainingsProgramm>) => {
+				for (let index = 0; index < aProgramme.length; index++) {
+					if (aProgrammPara.SessionBeachten !== undefined && aProgrammPara.SessionBeachten === true) {
+						const mPtrProgramm = aProgramme[index];
+						let mSessionParaDB: SessionParaDB;
+						
+						if (aProgrammPara.SessionParaDB !== undefined) {
+							mSessionParaDB = aProgrammPara.SessionParaDB;
+						}
+						else {
+							mSessionParaDB = new SessionParaDB();
+							mSessionParaDB.WhereClause = "FK_Programm";
+							mSessionParaDB.anyOf = [mPtrProgramm.id];
+							};
+						}
+					
+						await this.LadeProgrammSessionsEx(mSessionParaDB, aProgramme[index])
+							.then((aSessionListe: Array<Session>) => {
+								mPtrProgramm.SessionListe = aSessionListe;
+							});
+					}
+					else if (aProgrammPara.SessionParaDB !== undefined)
+						await this.LadeProgrammSessionsEx(aProgrammPara.SessionParaDB);
+				
+				}
+				//if (aProgrammPara.OnProgrammAfterLoadFn !== undefined) aProgrammPara.OnProgrammAfterLoadFn(aProgramme);
+
+				return aProgramme;
+			
+			}); // : (aProgramme: Array<ITrainingsProgramm>) => aProgrammPara.Then(aProgramme));
+	};
 
 	public async SatzSpeichern(aSatz: Satz): Promise<number> {
 		return await this.SatzTable.put(aSatz.SatzDB);
