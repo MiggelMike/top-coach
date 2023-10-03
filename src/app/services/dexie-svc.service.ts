@@ -121,6 +121,7 @@ export interface AnyFn {
 }
 
 export class ParaDB {
+	ChildPara?: ParaDB;
 	Data?: any;
 	WhereClause?: string | string[] = '';
 	Equals?: IndexableType;
@@ -154,27 +155,23 @@ export interface IParaDB { };
 
 export class SatzParaDB extends ParaDB {
 	Uebung?: Uebung;
-	SaetzeBeachten?: boolean;
 	SatzListe?: Array<Satz>;
 }
 
 export class UebungParaDB extends ParaDB {
 	Session?: ISession;
 	SatzParaDB?: SatzParaDB;
-	SaetzeBeachten?: boolean;
 	UebungsListe?: Array<Uebung>;
 }
 
 export class SessionParaDB extends ParaDB {
 	Programm?: ITrainingsProgramm;
 	UebungParaDB?: UebungParaDB;
-	UebungenBeachten?: boolean = false;
 	SessionListe?: Array<Session>;
 }
 
 export class ProgrammParaDB extends ParaDB {
 	SessionParaDB?: SessionParaDB;
-	SessionBeachten?: boolean;
 	ProgrammListe?: Array<TrainingsProgramm>;
 }
 
@@ -314,10 +311,8 @@ export class DexieSvcService extends Dexie {
 						// Jetzt für mPtrSession die Übungen laden
 						const mUebungLadePara: UebungParaDB = new UebungParaDB();
 						mUebungLadePara.WhereClause = "SessionID";
-						mUebungLadePara.anyOf = () => {
-							return mPtrSession.ID as any;
-						};						
-						mUebungLadePara.SaetzeBeachten = true;
+						mUebungLadePara.anyOf = [mPtrSession.ID];
+												
 						mUebungLadePara.SatzParaDB = new SatzParaDB();
 						mUebungLadePara.SatzParaDB.WhereClause = "[UebungID+Status]";
 						mUebungLadePara.SatzParaDB.anyOf = (aPara:{ ParaUebung: Uebung, ParaSatz: Satz }) => { 
@@ -2051,15 +2046,14 @@ export class DexieSvcService extends Dexie {
 						else {
 							mSessionParaDB = new SessionParaDB();
 							mSessionParaDB.WhereClause = "FK_Programm";
-							mSessionParaDB.anyOf = () => {
-								return mPtrProgramm.id as any;
+							mSessionParaDB.anyOf = [mPtrProgramm.id];
 							};
-						}
-					
-						await this.LadeProgrammSessionsEx(mSessionParaDB, aProgramme[index])
+							
+							await this.LadeProgrammSessionsEx(mSessionParaDB, aProgramme[index])
 							.then((aSessionListe: Array<Session>) => {
 								mPtrProgramm.SessionListe = aSessionListe;
 							});
+						}
 					}
 					else if (aProgrammPara.SessionParaDB !== undefined)
 						await this.LadeProgrammSessionsEx(aProgrammPara.SessionParaDB);
