@@ -117,7 +117,7 @@ export interface PromiseFn {
 }
 
 export interface AnyFn {
-	(aPara?: any): Array<any>;
+	(aPara?: any): IndexableType[];
 }
 
 export class ParaDB {
@@ -128,10 +128,12 @@ export class ParaDB {
 	Filter?: FilterFn = () => {};
 	And?: AndFn;
 	Then?: ThenFn;
-	anyOf?: IndexableType[];
+	anyOf?: AnyFn;
+	anyOfPara?: IndexableType[] = [];
 	OffSet?: number = 0;
 	Limit?: number;
 	SortBy?: string = 'ID';
+	OrderBy?: string = 'ID';
 	Reverse?: Boolean = false;
 	SortOrder?: SortOrder = SortOrder.ascending;
     fProgrammTyp?: ProgrammTyp;
@@ -1030,11 +1032,12 @@ export class DexieSvcService extends Dexie {
 
 
 	public LadeDiaUebungen(): PromiseExtended<Array<DiaUebungSettings>> {
-		return this.table(this.cDiaUebungSettings)
-			.toArray()
-			.then((mDiaUebungSettings) => {
-				return mDiaUebungSettings;
-			});
+		return this.LadePrim(
+			this.cDiaUebungSettings,
+			//then
+			(mDiaUebungSettings) => {
+				return mDiaUebungSettings as PromiseExtended<Array<DiaUebungSettings>>;
+			}).then(());
 	}
 
 
@@ -1102,25 +1105,45 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public LadeHantelscheiben(aAfterLoadFn?: AfterLoadFn) {
-		this.table(this.cHantelscheibe)
-			.orderBy(["Durchmesser", "Gewicht"])
-			.toArray()
-			.then((mHantelscheibenListe) => {
+		const mPara: ParaDB = new ParaDB();
+		mPara.OrderBy = "Durchmesser", "Gewicht";
+		this.LadePrim(
+			this.cHantelscheibe,
+			// then 
+			(mHantelscheibenListe) => {
 				this.HantelscheibenListe = mHantelscheibenListe;
-				if (aAfterLoadFn !== undefined) aAfterLoadFn(mHantelscheibenListe);
-			});
+			},
+			mPara
+		)
+		// this.table(this.cHantelscheibe)
+		// 	.orderBy(["Durchmesser", "Gewicht"])
+		// 	.toArray()
+		// 	.then((mHantelscheibenListe) => {
+		// 		this.HantelscheibenListe = mHantelscheibenListe;
+		// 		if (aAfterLoadFn !== undefined) aAfterLoadFn(mHantelscheibenListe);
+		// 	});
 	}
 
 	public LadeMuskelGruppen(aAfterLoadFn?: AfterLoadFn) {
-		this.MuskelGruppenListe = [];
-		this.table(this.cMuskelGruppe)
-			.orderBy("Name")
-			.toArray()
-			.then((mMuskelgruppenListe) => {
+		const mPara: ParaDB = new ParaDB();
+		mPara.OrderBy = 'Name';
+		this.LadePrim(
+			this.cMuskelGruppe,
+			// then 
+			(mMuskelgruppenListe) => {
 				this.MuskelGruppenListe = mMuskelgruppenListe;
+			},
+			mPara
+		)
+		//this.MuskelGruppenListe = [];
+		// this.table(this.cMuskelGruppe)
+		// 	.orderBy("Name")
+		// 	.toArray()
+		// 	.then((mMuskelgruppenListe) => {
+		// 		this.MuskelGruppenListe = mMuskelgruppenListe;
 
-				if (aAfterLoadFn !== undefined) aAfterLoadFn();
-			});
+		// 		if (aAfterLoadFn !== undefined) aAfterLoadFn();
+		// 	});
 	}
 
 	public MuskelListeSortedByName(aIgnorGeloeschte: Boolean = true): Array<MuscleGroup> {
@@ -1994,41 +2017,46 @@ export class DexieSvcService extends Dexie {
 
 	
 
-	private async LadePrim(aTableName: string, aThenFn: ThenFn, aPara: ProgrammParaDB): Promise<Table<any,IndexableType>> {
+	private async LadePrim(aTableName: string, aPara?: ProgrammParaDB): Promise<any[]> {
 		const mTable: Dexie.Table<any, any> = this.table(aTableName);
 
-		if (aPara.WhereClause !== undefined) {
-			const mWhere: WhereClause = mTable.where(aPara.WhereClause);
-			let mWhereCollection: Collection<any,IndexableType>;
+		if (aPara !== undefined) {
+			if (aPara.WhereClause !== undefined) {
+				const mWhere: WhereClause = mTable.where(aPara.WhereClause);
+				let mWhereCollection: Collection<any, IndexableType>;
 
-			if (aPara.Equals !== undefined)
-				mWhereCollection = mWhere.equals(aPara.Equals);
-			else if (aPara.anyOf !== undefined) {
-				mWhereCollection = mWhere.anyOf(aPara.anyOf);
+				if (aPara.Equals !== undefined)
+					mWhereCollection = mWhere.equals(aPara.Equals);
+				else if (aPara.anyOf !== undefined) {
+					mWhereCollection = mWhere.anyOf(aPara.anyOf(aPara.anyOfPara));
+				}
+
+				if (aPara.And !== undefined)
+					mWhereCollection.and(aPara.And);
+
+				if (aPara.Limit !== undefined)
+					mWhereCollection.limit(aPara.Limit);
+
+				if (aPara.Limit !== undefined)
+					return mWhereCollection
+						.sortBy(aPara.SortBy);
+						
+
+				if (aPara.Reverse !== undefined && aPara.Reverse === true) {
+					return mWhereCollection
+						.reverse()
+						.toArray();
+				}
+				return null;
 			}
 
-			if (aPara.And !== undefined)
-				mWhereCollection.and(aPara.And);
-
-			if (aPara.Limit !== undefined)
-				mWhereCollection.limit(aPara.Limit);
-
-			if (aPara.Limit !== undefined)
-				return mWhereCollection
-					.sortBy(aPara.SortBy)
-					.then(aThenFn);
-
-			if (aPara.Reverse !== undefined && aPara.Reverse === true) {
-				return mWhereCollection
-					.reverse()
-					.toArray()
-					.then(aThenFn);
-			}
-			return null;	
-		}
+			if (aPara.OrderBy !== undefined)
+				return mTable
+					.orderBy(aPara.OrderBy)
+					.toArray();
+		}//if
 		return mTable
-			.toArray()
-			.then(aThenFn);
+			.toArray();
 	}
 
 
