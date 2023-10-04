@@ -8,6 +8,8 @@ import { floatMask } from "../app.module";
 import { TrainingsProgramm } from '../../Business/TrainingsProgramm/TrainingsProgramm';
 import { Uebung } from '../../Business/Uebung/Uebung';
 import { DialogData, cLoadingDefaultHeight } from '../dialoge/hinweis/hinweis.component';
+import { Observable } from 'rxjs/internal/Observable';
+import { of } from 'rxjs';
 
 @Component({
 	selector: "app-initial-weight",
@@ -16,7 +18,12 @@ import { DialogData, cLoadingDefaultHeight } from '../dialoge/hinweis/hinweis.co
 })
 export class InitialWeightComponent implements OnInit {
 	Program: TrainingsProgramm;
+	
 	InitialWeightList: Array<InitialWeight> = [];
+	// fInitialWeightList: Array<InitialWeight> = [];
+	// get InitialWeightList(): Observable<InitialWeight[]> {
+	// 	return of(this.fInitialWeightList);
+	// }
 	public floatMask = floatMask;
 
 	constructor(private router: Router,
@@ -28,31 +35,42 @@ export class InitialWeightComponent implements OnInit {
 		const mState = mNavigation.extras.state as { Program: TrainingsProgramm };
 		this.Program = mState.Program;
 		const mUebungen: Array<Uebung> = [];
+		
 		const mSessionLadePara: SessionParaDB = new SessionParaDB();
+		mSessionLadePara.WhereClause = "FK_Programm";
+		mSessionLadePara.anyOf = () => { return this.Program.id; };
 		mSessionLadePara.UebungenBeachten = true;
-		mSessionLadePara.UebungParaDB = new UebungParaDB();
-		mSessionLadePara.UebungParaDB.SaetzeBeachten = true;
-		this.fDbModule.LadeProgrammSessions(this.Program.id, mSessionLadePara)
-			.then((aSessionListe) => {
-				this.Program.SessionListe = aSessionListe;
-				this.Program.SessionListe.forEach((s) => s.ExtractUebungen(mUebungen));
-				mUebungen.forEach((u) => {
-					const mInitialWeight = new InitialWeight();
-					mInitialWeight.Name = u.Name;
-					mInitialWeight.UebungID = u.FkUebung;
-					mInitialWeight.Weight = 0;
-					this.InitialWeightList.push(mInitialWeight);
-				});
-		
-				this.InitialWeightList = this.InitialWeightList.sort((a: InitialWeight, b: InitialWeight) => {
-					if (a.Name > b.Name) return 1;
-		
-					if (a.Name < b.Name) return -1;
-		
-					return 0;
-				});
-			});
+		// mSessionLadePara.UebungParaDB = new UebungParaDB();
+		// mSessionLadePara.UebungParaDB.WhereClause = "SessionID";
+		// mSessionLadePara.UebungParaDB.anyOf = (aSession) => {
+		// 	return aSession.ID
+		// };
 
+			try {
+				
+				this.fDbModule.LadeProgrammSessions(this.Program.id, mSessionLadePara)
+				.then((aSessionListe) => {
+					this.Program.SessionListe = aSessionListe;
+					this.Program.SessionListe.forEach((s) => s.ExtractUebungen(mUebungen));
+					mUebungen.forEach((u) => {
+						const mInitialWeight = new InitialWeight();
+						mInitialWeight.Name = u.Name;
+						mInitialWeight.UebungID = u.FkUebung;
+						mInitialWeight.Weight = 0;
+						this.InitialWeightList.push(mInitialWeight);
+					});
+					
+					this.InitialWeightList = this.InitialWeightList.sort((a: InitialWeight, b: InitialWeight) => {
+						if (a.Name > b.Name) return 1;
+						
+						if (a.Name < b.Name) return -1;
+						
+						return 0;
+					});
+				});
+			} catch (error) {
+				console.error(error);
+			}
 	}
 
 	ngOnInit(): void {}
