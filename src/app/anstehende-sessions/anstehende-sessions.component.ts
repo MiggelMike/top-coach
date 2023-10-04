@@ -1,4 +1,4 @@
-import { DexieSvcService, SessionParaDB, UebungParaDB, WorkerAction } from './../services/dexie-svc.service';
+import { DexieSvcService, SessionParaDB, UebungParaDB } from './../services/dexie-svc.service';
 import {  ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
@@ -35,7 +35,13 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
             const mSessionParaDB: SessionParaDB = new SessionParaDB();
             mSessionParaDB.UebungenBeachten = true;
             mSessionParaDB.UebungParaDB = new UebungParaDB();
+            mSessionParaDB.UebungParaDB.WhereClause = "SessionID";
+            mSessionParaDB.UebungParaDB.anyOf = (aSession) => {
+                return aSession.ID;
+            };
+
             mSessionParaDB.UebungParaDB.SaetzeBeachten = true;
+
             this.fDbModule.LadeUpcomingSessions(this.AktuellesProgramm.id, mSessionParaDB)
                 .then((aSessionListe) => {
                     if (aSessionListe.length > 0) {

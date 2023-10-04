@@ -1340,6 +1340,10 @@ export class DexieSvcService extends Dexie {
 			// Übungen laden
 			mHelpProgrammParaDB.SessionParaDB.UebungenBeachten = true;
 			mHelpProgrammParaDB.SessionParaDB.UebungParaDB = new UebungParaDB();
+			mHelpProgrammParaDB.SessionParaDB.UebungParaDB.WhereClause = "SessionID";
+			mHelpProgrammParaDB.SessionParaDB.UebungParaDB.anyOf = (aSession) => {
+				return aSession.ID;
+			};
 			mHelpProgrammParaDB.SessionParaDB.UebungParaDB.SaetzeBeachten = true;
 		}
 		else mHelpProgrammParaDB = aProgrammParaDB;
@@ -1618,13 +1622,20 @@ export class DexieSvcService extends Dexie {
 				aSessions.forEach((mPtrSession) => Session.StaticCheckMembers(mPtrSession));
 
 				aSessions.map((aSessionDB) => mResult.push(new Session(aSessionDB)));
-				const mUebungPara: UebungParaDB = new UebungParaDB();
+				
+				let mUebungPara: UebungParaDB
+				if (aLadePara.UebungParaDB === undefined) {
+					mUebungPara = new UebungParaDB();
+					mUebungPara.WhereClause = "SessionID";
+					mUebungPara.anyOf = (aSession) => {
+						return aSession.ID as any;
+					};
+				}
+				else
+					mUebungPara = aLadePara.UebungParaDB;
+						
 				for (let index = 0; index < mResult.length; index++) {
 					const mPtrSession = mResult[index];
-					mUebungPara.WhereClause = "SessionID";
-					mUebungPara.anyOf = () => {
-						return mPtrSession.ID as any;
-					};
 
 					mUebungPara.ExtraFn = async (aLadePara: ParaDB) => {
 						aLadePara.Data.Uebung.FK_Programm = aLadePara.Data.Session.FK_Programm;
@@ -1772,7 +1783,7 @@ export class DexieSvcService extends Dexie {
 
 		return await this.UebungTable
 			.where(aLadePara.WhereClause)
-			.anyOf(aLadePara.anyOf())
+			.anyOf(aLadePara.anyOf(aSession))
 			.reverse()
 			.limit(aLadePara === undefined || aLadePara.Limit === undefined ? cMaxLimnit : aLadePara.Limit)
 			.sortBy(aLadePara === undefined || aLadePara.SortBy === undefined ? '' : aLadePara.SortBy)
@@ -1804,7 +1815,7 @@ export class DexieSvcService extends Dexie {
 						}
 						
 						if (aLadePara !== undefined && aLadePara.SaetzeBeachten === true) 
-							await this.LadeUebungsSaetzeEx(mPtrUebung);
+							await this.LadeUebungsSaetzeEx(mPtrUebung, aLadePara.SatzParaDB);
 						
 					};
 

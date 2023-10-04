@@ -29,8 +29,7 @@ export class InitialWeightComponent implements OnInit {
 	constructor(private router: Router,
 		public fDbModule: DexieSvcService,
 		private fLoadingDialog: DialogeService,
-		public fDialogService: DialogeService)
-	{
+		public fDialogService: DialogeService) {
 		const mNavigation = this.router.getCurrentNavigation()!;
 		const mState = mNavigation.extras.state as { Program: TrainingsProgramm };
 		this.Program = mState.Program;
@@ -40,37 +39,26 @@ export class InitialWeightComponent implements OnInit {
 		mSessionLadePara.WhereClause = "FK_Programm";
 		mSessionLadePara.anyOf = () => { return this.Program.id; };
 		mSessionLadePara.UebungenBeachten = true;
-		// mSessionLadePara.UebungParaDB = new UebungParaDB();
-		// mSessionLadePara.UebungParaDB.WhereClause = "SessionID";
-		// mSessionLadePara.UebungParaDB.anyOf = (aSession) => {
-		// 	return aSession.ID
-		// };
-
-			try {
-				
-				this.fDbModule.LadeProgrammSessions(this.Program.id, mSessionLadePara)
-				.then((aSessionListe) => {
-					this.Program.SessionListe = aSessionListe;
-					this.Program.SessionListe.forEach((s) => s.ExtractUebungen(mUebungen));
-					mUebungen.forEach((u) => {
-						const mInitialWeight = new InitialWeight();
-						mInitialWeight.Name = u.Name;
-						mInitialWeight.UebungID = u.FkUebung;
-						mInitialWeight.Weight = 0;
-						this.InitialWeightList.push(mInitialWeight);
-					});
-					
-					this.InitialWeightList = this.InitialWeightList.sort((a: InitialWeight, b: InitialWeight) => {
-						if (a.Name > b.Name) return 1;
-						
-						if (a.Name < b.Name) return -1;
-						
-						return 0;
-					});
+		this.fDbModule.LadeProgrammSessions(this.Program.id, mSessionLadePara)
+			.then((aSessionListe) => {
+				this.Program.SessionListe = aSessionListe;
+				this.Program.SessionListe.forEach((s) => s.ExtractUebungen(mUebungen));
+				mUebungen.forEach((u) => {
+					const mInitialWeight = new InitialWeight();
+					mInitialWeight.Name = u.Name;
+					mInitialWeight.UebungID = u.FkUebung;
+					mInitialWeight.Weight = 0;
+					this.InitialWeightList.push(mInitialWeight);
 				});
-			} catch (error) {
-				console.error(error);
-			}
+					
+				this.InitialWeightList = this.InitialWeightList.sort((a: InitialWeight, b: InitialWeight) => {
+					if (a.Name > b.Name) return 1;
+						
+					if (a.Name < b.Name) return -1;
+						
+					return 0;
+				});
+			});
 	}
 
 	ngOnInit(): void {}
