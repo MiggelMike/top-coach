@@ -151,7 +151,7 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus {
             // this.plateCalcComponent.Satz.GewichtAusgefuehrt = $event;
             this.plateCalcComponent.CalcPlates($event);
         }
-       
+        // this.SetWeightAusgefuehrt($event); 
     }
 
     public MouseDown(aSatz: Satz, aEvent: any) {

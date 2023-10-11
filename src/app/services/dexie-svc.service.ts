@@ -857,54 +857,73 @@ export class DexieSvcService extends Dexie {
 	}
 
 	private InitProgress() {
-		this.ProgressTable = this.table(this.cProgress);
-		this.ProgressTable.mapToClass(Progress);
+		if (this.ProgressTable === undefined) {
+			this.ProgressTable = this.table(this.cProgress);
+			this.ProgressTable.mapToClass(Progress);
+		}
 	}
 
 	private InitHantel() {
-		this.HantelTable = this.table(this.cHantel);
-		this.HantelTable.mapToClass(Hantel);
+		if (this.HantelTable === undefined) {
+			this.HantelTable = this.table(this.cHantel);
+			this.HantelTable.mapToClass(Hantel);
+		}
 	}
 
 	private InitHantelscheibe() {
-
-		this.HantelscheibenTable = this.table(this.cHantelscheibe);
-		this.HantelscheibenTable.mapToClass(Hantelscheibe);
+		if (this.HantelscheibenTable === undefined) {
+			this.HantelscheibenTable = this.table(this.cHantelscheibe);
+			this.HantelscheibenTable.mapToClass(Hantelscheibe);
+		}
 	}
 
 	private InitMuskelGruppe() {
-		this.MuskelGruppeTable = this.table(this.cMuskelGruppe);
-		this.MuskelGruppeTable.mapToClass(MuscleGroup);
+		if (this.MuskelGruppeTable === undefined) {
+			this.MuskelGruppeTable = this.table(this.cMuskelGruppe);
+			this.MuskelGruppeTable.mapToClass(MuscleGroup);
+		}
 	}
 
 	private InitEquipment() {
-		this.EquipmentTable = this.table(this.cEquipment);
-		this.EquipmentTable.mapToClass(Equipment);
+		if (this.EquipmentTable === undefined) {
+			this.EquipmentTable = this.table(this.cEquipment);
+			this.EquipmentTable.mapToClass(Equipment);
+		}
 	}
 
 	private InitSession() {
-		this.SessionTable = this.table(this.cSession);
-		this.SessionTable.mapToClass(SessionDB);
+		if (this.SessionTable === undefined) {
+			this.SessionTable = this.table(this.cSession);
+			this.SessionTable.mapToClass(SessionDB);
+		}
 	}
 
 	private InitUebung() {
-		this.UebungTable = this.table(this.cUebung);
-		this.UebungTable.mapToClass(UebungDB);
+		if (this.UebungTable === undefined) {
+			this.UebungTable = this.table(this.cUebung);
+			this.UebungTable.mapToClass(UebungDB);
+		}
 	}
 
 	private InitSatz() {
-		this.SatzTable = this.table(this.cSatz);
-		this.SatzTable.mapToClass(SatzDB);
+		if (this.SatzTable === undefined) {
+			this.SatzTable = this.table(this.cSatz);
+			this.SatzTable.mapToClass(SatzDB);
+		}
 	}
 
 	private InitDiaUebung() {
-		this.DiaUebungSettingsTable = this.table(this.cDiaUebungSettings);
-		this.DiaUebungSettingsTable.mapToClass(DiaUebungSettings);
+		if (this.DiaUebungSettingsTable === undefined) {
+			this.DiaUebungSettingsTable = this.table(this.cDiaUebungSettings);
+			this.DiaUebungSettingsTable.mapToClass(DiaUebungSettings);
+		}
 	}
 
 	private InitBodyweight() {
-		this.BodyweightTable = this.table(this.cBodyweight);
-		this.BodyweightTable.mapToClass(BodyWeightDB);
+		if (this.BodyweightTable === undefined) {
+			this.BodyweightTable = this.table(this.cBodyweight);
+			this.BodyweightTable.mapToClass(BodyWeightDB);
+		}
 	}
 
 	public LadeBodyweight(): PromiseExtended<Array<BodyWeight>> {
@@ -1419,8 +1438,10 @@ export class DexieSvcService extends Dexie {
 	}
 
 	private InitProgramm() {
-		this.ProgrammTable = this.table(this.cProgramm);
-		this.ProgrammTable.mapToClass(TrainingsProgramm);
+		if (this.ProgrammTable === undefined) {
+			this.ProgrammTable = this.table(this.cProgramm);
+			this.ProgrammTable.mapToClass(TrainingsProgramm);
+		}
 	}
 
 	public SortSessionByListenIndex(aSessionListe: Array<Session>) {
@@ -1611,6 +1632,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async LadeProgrammSessionsEx(aLadePara: SessionParaDB, aProgramm?: ITrainingsProgramm): Promise<Array<Session>> {
+		this.InitSession();
 		return await this.SessionTable
 			.where(aLadePara.WhereClause)
 			.anyOf(aLadePara.anyOf(aProgramm))
@@ -1779,6 +1801,8 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async LadeSessionUebungenEx(aSession: ISession, aLadePara?: UebungParaDB): Promise<Array<Uebung>> {
+		this.InitUebung();
+
 		if (aLadePara !== undefined && aLadePara.OnUebungBeforeLoadFn !== undefined)
 			aLadePara.OnUebungBeforeLoadFn(aLadePara);
 
@@ -1847,6 +1871,8 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async LadeUebungsSaetzeEx(aUebung: Uebung, aSatzLadePara?: ParaDB): Promise<Array<Satz>> {
+		this.InitSatz();
+		
 		let mSatzLadePara: SatzParaDB;
 		if (mSatzLadePara === undefined) {
 			mSatzLadePara = new SatzParaDB();
@@ -1979,6 +2005,7 @@ export class DexieSvcService extends Dexie {
 
 
 	public async LadeProgrammeEx(aProgrammPara: ProgrammParaDB): Promise<Array<ITrainingsProgramm>> {
+		this.InitProgramm();
 		return await this.ProgrammTable
 			.where(aProgrammPara.WhereClause)
 			.anyOf(aProgrammPara.anyOf())
