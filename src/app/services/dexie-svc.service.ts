@@ -810,10 +810,10 @@ export class DexieSvcService extends Dexie {
 		// return mResult;
 	}
 
-	private InitAll() {
-		this.InitSprache();
-		this.InitAppData();
-		this.InitProgress();
+	private async InitAll() {
+	    this.InitProgress();
+		await this.InitSprache();
+		await this.InitAppData();
 		this.InitHantel();
 		this.InitHantelscheibe();
 		this.InitEquipment();
@@ -1213,7 +1213,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	private async PruefeStandardProgress() {
-		await this.ProgressTable.orderBy("Name")
+		await this.ProgressTable. orderBy("Name")
 			.toArray()
 			.then((mProgressListe) => {
 				this.ProgressListe = mProgressListe;
@@ -2186,7 +2186,7 @@ export class DexieSvcService extends Dexie {
 			});
 		}
 		
-		if (this.AppRec.SprachID <= 0) {
+		if (this.AppRec.SprachID === undefined || this.AppRec.SprachID <= 0) {
 			this.LadeAlleSprachen().then(async (aSprachen) => {
 				// const mSprache = aSprachen.find((aSprache) => aSprache.Kuerzel === this.fTranslateService.getBrowserLang());
 				const mSprache = new Sprache();
@@ -2206,6 +2206,7 @@ export class DexieSvcService extends Dexie {
 		return await this.AppDataTable
 			.limit(1)
 			.first((aAppRec) => {
+				this.AppRec = aAppRec;
 				return aAppRec;
 			});
 	}

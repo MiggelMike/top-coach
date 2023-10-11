@@ -19,7 +19,11 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
     constructor(
         private fDbModule: DexieSvcService,
         private fLoadingDialog: DialogeService,
-    ) {}
+    ) {
+        this.fDbModule.LadeAktuellesProgramm();
+
+     }
+    
     get programModul(): typeof ProgramModulTyp {
         return ProgramModulTyp;
     }

@@ -68,7 +68,7 @@
                         <input  matInput [textMask]="{mask: floatMask, guide: false }"
                                 class="align-right"
                                 maxlength="8"
-                                [ngModel]="(satz.GewichtAusgefuehrt | number: '1.2' )" 
+                                [ngModel]="(satz.GewichtAusgefuehrt | number: '1.2')" 
                                 (focusout)="SetWeightAusgefuehrt($event)"
                                 (mousedown)="MouseDown(satz,$event)"
                                 (mouseup)="MouseUp($event)"
