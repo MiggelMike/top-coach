@@ -1851,8 +1851,8 @@ export class DexieSvcService extends Dexie {
 		if (mSatzLadePara === undefined) {
 			mSatzLadePara = new SatzParaDB();
 			mSatzLadePara.WhereClause = "UebungID";
-			mSatzLadePara.anyOf = () => {
-				return aUebung.ID as any;
+			mSatzLadePara.anyOf = (aAnyOfUebung: Uebung) => {
+				return aAnyOfUebung.ID as any;
 			};
 		} else mSatzLadePara = aSatzLadePara;
 
@@ -1860,7 +1860,7 @@ export class DexieSvcService extends Dexie {
 
 		return this.SatzTable
 			.where(mSatzLadePara === undefined ? "id" : mSatzLadePara.WhereClause)
-			.anyOf(mSatzLadePara === undefined ? 0 : mSatzLadePara.anyOf())
+			.anyOf(mSatzLadePara === undefined ? 0 : mSatzLadePara.anyOf(aUebung))
 			//.and((mSatzLadePara === undefined || mSatzLadePara.And === undefined ? () => { return 1 === 1 } : (satz: SatzDB) => mSatzLadePara.And(satz)))
 			.offset(mSatzLadePara !== undefined && mSatzLadePara.OffSet !== undefined ? mSatzLadePara.OffSet : 0)
 			.limit(mSatzLadePara === undefined || mSatzLadePara.Limit === undefined ? cMaxLimnit : mSatzLadePara.Limit)
