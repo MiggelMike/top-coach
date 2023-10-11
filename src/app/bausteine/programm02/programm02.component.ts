@@ -3,7 +3,7 @@ import { ISessionDB, SessionDB } from "./../../../Business/SessionDB";
 import { SessionStatus } from "../../../Business/SessionDB";
 import { UebungWaehlenData } from "./../../uebung-waehlen/uebung-waehlen.component";
 import { UebungsKategorie02 } from "./../../../Business/Uebung/Uebung";
-import { DexieSvcService, onDeleteFn, UebungParaDB } from "./../../services/dexie-svc.service";
+import { DexieSvcService, onDeleteFn, SatzParaDB, UebungParaDB } from "./../../services/dexie-svc.service";
 import { Session } from "./../../../Business/Session/Session";
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Output, EventEmitter, Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";
@@ -106,7 +106,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 		return ProgramModulTyp;
 	}
 
-	private async LadeUebungen(aSess: ISession, aUebungPara: UebungParaDB): Promise<void>  {
+	private async LadeUebungen(aSess: ISession): Promise<void>  {
 		const mDialogData = new DialogData();
 		mDialogData.height = cLoadingDefaultHeight;
         mDialogData.ShowAbbruch = false;
@@ -115,8 +115,20 @@ export class Programm02Component implements OnInit, IProgramModul {
 		this.fLoadingDialog.Loading(mDialogData);
 		try {
 
+			const mUebungPara: UebungParaDB = new UebungParaDB();
+			mUebungPara.WhereClause = 'SessionID';
+			mUebungPara.anyOf = (aUebung: Uebung) => { 
+				return aUebung.SessionID;
+			};
 
-			this.fDbModule.LadeSessionUebungen(aSess.ID, aUebungPara)
+			mUebungPara.SaetzeBeachten = true;
+			mUebungPara.SatzParaDB = new SatzParaDB();
+			mUebungPara.SatzParaDB.WhereClause = 'UebungID';
+			mUebungPara.SatzParaDB.anyOf = (aSatz: Satz) => { 
+				return aSatz.UebungID;
+			};
+
+			this.fDbModule.LadeSessionUebungenEx(aSess, mUebungPara)
 				.then((aUebungsliste) => {
 					if (aUebungsliste.length > 0) {
 						aSess.UebungsListe = aUebungsliste;
@@ -133,8 +145,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 		aSess.Expanded = true;
 		if (aSess.UebungsListe === undefined || aSess.UebungsListe.length <= 0) {
 			aSess.UebungsListe = [];
-			const mUebungPara: UebungParaDB = new UebungParaDB();
-			this.LadeUebungen(aSess, mUebungPara);
+			this.LadeUebungen(aSess);
 		}
 	}
 

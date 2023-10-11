@@ -586,6 +586,7 @@ export class DexieSvcService extends Dexie {
 
 	public SetAktuellesProgramm(aSelectedProgram: TrainingsProgramm, aInitialWeightList?: Array<InitialWeight>): Promise<ITrainingsProgramm> {
 		return this.FindAktuellesProgramm().then(async (mAktuellesProgramm) => {
+			
 			if (mAktuellesProgramm) {
 				for (let index = 0; index < mAktuellesProgramm.length; index++) {
 					const mPtrProgramm = mAktuellesProgramm[index];
@@ -706,7 +707,7 @@ export class DexieSvcService extends Dexie {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
 		}
 
-		//         Dexie.delete("ConceptCoach");
+		 //        Dexie.delete("ConceptCoach");
 		this.version(35).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",

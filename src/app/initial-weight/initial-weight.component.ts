@@ -10,6 +10,7 @@ import { Uebung } from '../../Business/Uebung/Uebung';
 import { DialogData, cLoadingDefaultHeight } from '../dialoge/hinweis/hinweis.component';
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs';
+import { Session } from 'src/Business/Session/Session';
 
 @Component({
 	selector: "app-initial-weight",
@@ -39,6 +40,13 @@ export class InitialWeightComponent implements OnInit {
 		mSessionLadePara.WhereClause = "FK_Programm";
 		mSessionLadePara.anyOf = () => { return this.Program.id; };
 		mSessionLadePara.UebungenBeachten = true;
+		mSessionLadePara.UebungParaDB = new UebungParaDB();
+		mSessionLadePara.UebungParaDB.SaetzeBeachten = true;
+		mSessionLadePara.UebungParaDB.WhereClause = 'SessionID';
+		mSessionLadePara.UebungParaDB.anyOf = (aSession: Session) => { 
+			return aSession.ID;
+		};
+
 		this.fDbModule.LadeProgrammSessions(this.Program.id, mSessionLadePara)
 			.then((aSessionListe) => {
 				this.Program.SessionListe = aSessionListe;
@@ -53,9 +61,7 @@ export class InitialWeightComponent implements OnInit {
 					
 				this.InitialWeightList = this.InitialWeightList.sort((a: InitialWeight, b: InitialWeight) => {
 					if (a.Name > b.Name) return 1;
-						
 					if (a.Name < b.Name) return -1;
-						
 					return 0;
 				});
 			});
@@ -95,7 +101,7 @@ export class InitialWeightComponent implements OnInit {
 
 	CancelClick() {
 		const mDialogData = new DialogData();
-		mDialogData.textZeilen.push("Go ahead without initial weights?");
+		mDialogData.textZeilen.push("Go ahead without initializing weights?");
 		mDialogData.OkFn = (): void => {
 			this.fDbModule.SetAktuellesProgramm(this.Program
 			).then(() => this.router.navigate([''])

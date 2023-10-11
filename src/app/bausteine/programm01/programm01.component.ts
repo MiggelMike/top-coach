@@ -70,7 +70,7 @@ export class Programm01Component implements OnInit {
                     const mDialogData = new DialogData();
                     mDialogData.hasBackDrop = true;
                     mDialogData.textZeilen.push("The program is already chosen!");
-                    mDialogData.textZeilen.push("Do want to add it anyway?");
+                    mDialogData.textZeilen.push("Do want to select it anyway?");
                     mDialogData.OkFn = (): void => {
                         p.forEach((pr) =>
                             this.fDbModul.DeleteProgram(pr as TrainingsProgramm)
