@@ -122,11 +122,6 @@ export class Programm02Component implements OnInit, IProgramModul {
 			};
 
 			mUebungPara.SaetzeBeachten = true;
-			// mUebungPara.SatzParaDB = new SatzParaDB();
-			// mUebungPara.SatzParaDB.WhereClause = 'UebungID';
-			// mUebungPara.SatzParaDB.anyOf = (aSatz: Satz) => { 
-			// 	return aSatz.UebungID;
-			// };
 
 			this.fDbModule.LadeSessionUebungenEx(aSess, mUebungPara)
 				.then((aUebungsliste) => {

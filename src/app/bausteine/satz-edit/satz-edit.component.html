@@ -62,7 +62,7 @@
                               || sess.Kategorie02 === sessionStatus.Fertig); then noShowPlan else showPlan"></ng-container>
             <!-- Training laeuft -->
             <ng-template #noShowPlan>
-                <!-- Ausgefuehrtes-Gewicht -->
+                    <!-- Ausgefuehrtes-Gewicht -->
                     <mat-form-field class="weight-column">
                         <div class="align-right label">{{satz.GewichtVorgabe | number: '1.2'}}</div> 
                         <input  matInput [textMask]="{mask: floatMask, guide: false }"
