@@ -36,16 +36,16 @@
 
                 <!-- Spalten-Titel, wenn kein Training laeuft  -->
                 <ng-template #TitelShowPlan> 
-                    <div class="center-item align-right" fxLayout="column" fxFlex="25px">
+                    <div class="center-item align-right"  fxFlex="30px" fxLayout="column">
                         #
                     </div>
-                    <div class="center-item" fxLayout="column" fxFlex="45px">
+                    <div class="center-item weight-column align-right" fxFlex="85px" fxLayout="column">
                         Weight
                     </div>
-                    <div class="center-item" fxLayout="column" fxFlex="60px" matTooltip="Reps">
+                    <div class="center-item" fxLayout="column"  fxFlex="75px" matTooltip="Reps">
                         RP.                    
                     </div>
-                    <div class="center-item" fxLayout="column" fxFlex="35px"  matTooltip="As many reps as possible">
+                    <div class="center-item" fxLayout="column" fxFlex="15px"  matTooltip="As many reps as possible">
                         AR.
                     </div>
                 </ng-template>
@@ -94,7 +94,6 @@
 
                 <!-- Ausgefuerte Wdh. -->
                 <mat-form-field class="rep-column tc-font-size-small">
-                    <!-- <mat-label>{{satz.WdhVonVorgabe}}</mat-label> -->
                     <div class="align-right label">{{satz.WdhVonVorgabe}}</div> 
                     <input matInput [textMask]="{mask: repMask, guide: false}" 
                            class="align-right"
@@ -129,7 +128,7 @@
             <!-- Training laeuft nicht -->
             <ng-template #showPlan>
                 <!-- Geplantes Vorgabe-Gewicht -->
-                <mat-form-field class="align-right tc-font-size-small" fxFlex="65px">
+                <mat-form-field class="weight-column align-right tc-font-size-small">
                     <input  matInput 
                             [textMask]="{mask: floatMask, guide: false }"
                             class="align-right"
@@ -143,7 +142,7 @@
                 </mat-form-field>
 
                 <!-- Geplante Von-Vorgabe-Wdh. -->
-                <mat-form-field class="align-right tc-font-size-small" fxFlex="50px">
+                <mat-form-field class="rep-column align-right tc-font-size-small">
                     <input  matInput 
                             [textMask]="{mask: repMask, guide: false}" 
                             class="align-right"
