@@ -250,7 +250,7 @@ export class Satz implements ISatz {
     }
 
     get WdhAusgefuehrtText(): string{
-        return formatNumber(this.SatzDB.WdhAusgefuehrt,'en-US',cWeightFormat);
+        return formatNumber(this.SatzDB.WdhAusgefuehrt,'en-US');
     }
 
 
@@ -264,7 +264,7 @@ export class Satz implements ISatz {
     }
 
     get GewichtVorgabeText(): string {
-        return formatNumber(this.SatzDB.GewichtVorgabe,'en-US'); 
+        return formatNumber(this.SatzDB.GewichtVorgabe,'en-US',cWeightFormat); 
     }
 
     

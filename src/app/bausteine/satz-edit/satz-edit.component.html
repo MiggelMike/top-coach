@@ -94,7 +94,7 @@
 
                 <!-- Ausgefuerte Wdh. -->
                 <mat-form-field class="rep-column tc-font-size-small">
-                    <!-- <mat-label>{{satz.WdhVonVorgabe | number: '1.0'}}</mat-label> -->
+                    <!-- <mat-label>{{satz.WdhVonVorgabe}}</mat-label> -->
                     <div class="align-right label">{{satz.WdhVonVorgabe}}</div> 
                     <input matInput [textMask]="{mask: repMask, guide: false}" 
                            class="align-right"
@@ -129,10 +129,12 @@
             <!-- Training laeuft nicht -->
             <ng-template #showPlan>
                 <!-- Geplantes Vorgabe-Gewicht -->
-                <mat-form-field class="align-right" fxFlex="65px">
-                    <mat-label>{{satz.GewichtVorgabe | number: '1.2'}}</mat-label>
-                    <input  matInput [textMask]="{mask: floatMask, guide: false }"
-                            [ngModel]="(satz.GewichtAusgefuehrt | number: '1.2')" 
+                <mat-form-field class="align-right tc-font-size-small" fxFlex="65px">
+                    <input  matInput 
+                            [textMask]="{mask: floatMask, guide: false }"
+                            class="align-right"
+                            maxlength="8"
+                            [ngModel]="satz.GewichtAusgefuehrtText" 
                             (focusout)="SetWeightAusgefuehrt($event)"
                             (click)="WeightAusgefuehrtClick($event)"
                             (ngModelChange)="CalcPlates($event)"
@@ -141,10 +143,12 @@
                 </mat-form-field>
 
                 <!-- Geplante Von-Vorgabe-Wdh. -->
-                <mat-form-field class="align-right" fxFlex="50px">
-                    <mat-label>Reps</mat-label>
-                    <input  matInput [textMask]="{mask: repMask, guide: false}" 
-                            [ngModel]="satz.WdhVonVorgabe" 
+                <mat-form-field class="align-right tc-font-size-small" fxFlex="50px">
+                    <input  matInput 
+                            [textMask]="{mask: repMask, guide: false}" 
+                            class="align-right"
+                            maxlength="4"
+                            [ngModel]="satz.WdhVonVorgabeText" 
                             (focusout)="SetVonWdhVorgabe($event)" 
                             (click)="onClickWdhVonVorgabe($event)" 
                             type="text"
