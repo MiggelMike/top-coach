@@ -2,7 +2,7 @@ import { ISession } from 'src/Business/Session/Session';
 import { Uebung } from '../Uebung/Uebung';
 import {formatNumber, NumberSymbol} from '@angular/common';
 import { AppData, GewichtsEinheit } from '../Coach/Coach';
-import { cWeightDigits } from 'src/app/services/dexie-svc.service';
+import { cWeightDigits, cWeightFormat } from 'src/app/services/dexie-svc.service';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
 
@@ -233,6 +233,12 @@ export class Satz implements ISatz {
         return AppData.StaticRoundTo(this.SatzDB.GewichtAusgefuehrt,cWeightDigits);
     }
 
+    get GewichtAusgefuehrtText():string
+    {
+        return formatNumber(this.SatzDB.GewichtAusgefuehrt,'en-US',cWeightFormat);
+    }
+
+
     set GewichtAusgefuehrt(aValue: number)
     {
         this.SatzDB.GewichtAusgefuehrt = AppData.StaticRoundTo(aValue,cWeightDigits);
@@ -243,6 +249,11 @@ export class Satz implements ISatz {
         return Number(this.SatzDB.WdhAusgefuehrt);
     }
 
+    get WdhAusgefuehrtText(): string{
+        return formatNumber(this.SatzDB.WdhAusgefuehrt,'en-US',cWeightFormat);
+    }
+
+
     set WdhAusgefuehrt(aValue: number){
         this.SatzDB.WdhAusgefuehrt = Number(aValue);
     }
@@ -251,6 +262,11 @@ export class Satz implements ISatz {
     get GewichtVorgabe(): number {
         return AppData.StaticRoundTo(this.SatzDB.GewichtVorgabe,cWeightDigits); 
     }
+
+    get GewichtVorgabeText(): string {
+        return formatNumber(this.SatzDB.GewichtVorgabe,'en-US'); 
+    }
+
     
     set GewichtVorgabe(aValue: number) {
         this.SatzDB.GewichtVorgabe = AppData.StaticRoundTo(aValue,cWeightDigits); 
@@ -261,6 +277,10 @@ export class Satz implements ISatz {
         return Number(this.SatzDB.WdhVonVorgabe);
     }
 
+    get WdhVonVorgabeText(): string {
+        return formatNumber(this.SatzDB.WdhVonVorgabe,'en-US');
+    }
+
     set WdhVonVorgabe( aValue: number) {
         this.SatzDB.WdhVonVorgabe = Number(aValue);
     }
@@ -268,6 +288,10 @@ export class Satz implements ISatz {
     //#region WdhBisVorgabe
     get WdhBisVorgabe(): number {
         return Number(this.SatzDB.WdhBisVorgabe);
+    };
+    
+    get WdhBisVorgabeText(): string {
+        return formatNumber(this.SatzDB.WdhBisVorgabe,'en-US');
     };
 
     set WdhBisVorgabe( aValue: number) { 
