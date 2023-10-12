@@ -12,7 +12,7 @@
 
                             <div fxLayout="column" fxFlex="200px">{{programm.Name}}</div>
                             <!-- Soll ein Work-Out gewaehlt werden? -->
-                            <ng-container *ngIf="programmLadeContext; then AuswahlBlock"></ng-container>
+                            <ng-container *ngIf="ModulTyp === programModul.SelectWorkout; then AuswahlBlock"></ng-container>
 
                             <ng-template #AuswahlBlock>
                                 <div fxLayout="column" fxFlex="100px">

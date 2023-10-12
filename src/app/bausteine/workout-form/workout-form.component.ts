@@ -4,6 +4,7 @@ import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProg
 import { Component, OnInit } from "@angular/core";
 import { DialogeService } from 'src/app/services/dialoge.service';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
+import { IProgramModul, ProgramModulTyp } from 'src/app/app.module';
 
 
 @Component({
@@ -11,9 +12,10 @@ import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
     templateUrl: "./workout-form.component.html",
     styleUrls: ["./workout-form.component.scss"],
 })
-export class WorkoutFormComponent implements OnInit  {
+export class WorkoutFormComponent implements OnInit, IProgramModul  {
     public programm: ITrainingsProgramm;
     public cmpProgramm: ITrainingsProgramm;
+    public ModulTyp: ProgramModulTyp = ProgramModulTyp.Kein; 
 
     constructor(
         private router: Router,
@@ -21,12 +23,17 @@ export class WorkoutFormComponent implements OnInit  {
         private fDbModule: DexieSvcService
     ) {
         const mNavigation = this.router.getCurrentNavigation()!;
-        const mState = mNavigation.extras.state as { programm: ITrainingsProgramm };
+        const mState = mNavigation.extras.state as { programm: ITrainingsProgramm, ModulTyp: ProgramModulTyp };
         this.programm = mState.programm;
+        this.ModulTyp = mState.ModulTyp;
         this.fDbModule.CheckSessions(this.programm);
         this.cmpProgramm = mState.programm.Copy();
     }
+    get programModul(): typeof ProgramModulTyp {
+        return ProgramModulTyp;
+    }
 
+    
     CopyProgramm(aProgramm: ITrainingsProgramm) {
         this.cmpProgramm = aProgramm.Copy();    
     }

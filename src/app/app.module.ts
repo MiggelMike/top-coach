@@ -154,7 +154,8 @@ export function HttpLoaderFactory(http: HttpClient) {
 export enum ProgramModulTyp {
 	Kein,
 	AnstehendeSessions,
-	History
+	History,
+	SelectWorkout
 
  }
 

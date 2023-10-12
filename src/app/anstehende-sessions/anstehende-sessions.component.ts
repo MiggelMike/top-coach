@@ -20,7 +20,7 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
         private fDbModule: DexieSvcService,
         private fLoadingDialog: DialogeService,
     ) {
-        this.fDbModule.LadeAktuellesProgramm();
+        // this.fDbModule.LadeAktuellesProgramm();
 
      }
     

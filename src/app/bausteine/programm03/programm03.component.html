@@ -2,24 +2,24 @@
     <ng-container *ngIf="session">
         <!-- <ng-container *ngIf="session && session.UebungsListe && (session.UebungsListe.length > 0)"> -->
         <div class="font-14-data">        
-            <ng-container *ngIf='bearbeitbar'> 
+            <ng-container *ngIf='ModulTyp !== programModul.SelectWorkout'> 
                 <div class="row-Start-Left">
                         <mat-form-field>
                             <input class="font-size-smaller font-bold" matInput [(ngModel)]="session.Name" maxlength="30" type="text">
                         </mat-form-field>
                     </div>
-                </ng-container> 
+            </ng-container> 
                 
-                <ng-container *ngIf="ModulTyp === programModul.History"> 
-                    <div class="align-items-left" >
-                        <div fxLayout="row">
-                            <mat-label class="ml-5">History --- </mat-label>
-                            <div class="ml-10">
-                                <span> {{session.GestartedWann | date: 'mediumDate'}} {{session.GestartedWann | date:'shortTime'}}</span>
-                            </div>
+            <ng-container *ngIf="ModulTyp === programModul.History"> 
+                <div class="align-items-left" >
+                    <div fxLayout="row">
+                        <mat-label class="ml-5">History --- </mat-label>
+                        <div class="ml-10">
+                            <span> {{session.GestartedWann | date: 'mediumDate'}} {{session.GestartedWann | date:'shortTime'}}</span>
                         </div>
                     </div>
-                </ng-container> 
+                </div>
+            </ng-container> 
                 
             <div class="row-Start-Left">
                 <ng-container *ngIf="StatsButtonVisible">
@@ -59,7 +59,7 @@
                                             (click)="DoSettings(SessUeb, $event)">Settings
                                         </a>
                                         
-                                        <ng-container *ngIf="bearbeitbar && ModulTyp !== programModul.History">
+                                        <ng-container *ngIf="ModulTyp !== programModul.History">
                                             <a  [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="85px"
                                             (click)="CopyExcercise(SessUeb, $event)">Copy exercise</a>
                                             
@@ -88,7 +88,7 @@
                                                         [session]="session"
                                                         [DeletedSatzList]="DeletedSatzList"
                                                         [programm]="programm"
-                                                        [ModulTyp]="programModul"
+                                                        [ModulTyp]="ModulTyp"
                                                         [sessUebung]="SessUeb" 
                                                         [bearbeitbar]="bearbeitbar">
                                                     </app-sess-uebung>
@@ -103,7 +103,7 @@
                                                         [session]="session"
                                                         [programm]="programm"
                                                         [DeletedSatzList]="DeletedSatzList"
-                                                        [ModulTyp]="programModul"
+                                                        [ModulTyp]="ModulTyp"
                                                         [sessUebung]="SessUeb" 
                                                         [bearbeitbar]="bearbeitbar">
                                                     </app-sess-uebung>
@@ -118,7 +118,7 @@
                                                         [programm]="programm"
                                                         [DeletedSatzList]="DeletedSatzList"
                                                         [session]="session" 
-                                                        [ModulTyp]="programModul"
+                                                        [ModulTyp]="ModulTyp"
                                                         [sessUebung]="SessUeb" 
                                                         [bearbeitbar]="bearbeitbar">
                                                     </app-sess-uebung>

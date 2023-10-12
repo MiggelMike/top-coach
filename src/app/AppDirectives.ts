@@ -8,7 +8,6 @@ export class ProgrammLadeDirective implements OnChanges {
 
     constructor(private el: ElementRef, private viewContainer: ViewContainerRef) { }
 
-    @Input('appProgrammLadeContext') programmLadeContext: 'Auswahl';
 
     ngOnChanges(changes: SimpleChanges) {
         let s = changes;

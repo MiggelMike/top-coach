@@ -26,7 +26,7 @@ export const LadeAktuellesProgramm: ResolveFn<ITrainingsProgramm> = (route: Acti
 const routes: Routes = [
 	{
 		path: "",
-		// resolve: { AktuellesProgramm: LadeAktuellesProgramm },
+		resolve: { AktuellesProgramm: LadeAktuellesProgramm },
 		component: AnstehendeSessionsComponent
 		// loadChildren: () => import("./anstehende-sessions/anstehende-sessions/anstehende-sessions.module").then((m) => m.AnstehendeSessionsModule)
 	}

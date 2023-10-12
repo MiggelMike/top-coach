@@ -5,7 +5,7 @@ import { TrainingsProgramm, ITrainingsProgramm } from "../../../Business/Trainin
 import { DialogeService } from 'src/app/services/dialoge.service';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
 import { Router } from '@angular/router';
-import { ProgramModulTyp } from 'src/app/app.module';
+import { IProgramModul, ProgramModulTyp } from 'src/app/app.module';
 
 
 @Component({
@@ -13,9 +13,8 @@ import { ProgramModulTyp } from 'src/app/app.module';
     templateUrl: "./programm01.component.html",
     styleUrls: ["./programm01.component.scss"],
 })
-export class Programm01Component implements OnInit {
+export class Programm01Component implements OnInit, IProgramModul {
     @Input() programm: ITrainingsProgramm;
-    @Input() programmLadeContext: boolean | false;
     @Input() showButtons: boolean | false;
     @Input() showSaveButtons: boolean | false;
     @Input() programmtext: { value: null };
@@ -29,7 +28,14 @@ export class Programm01Component implements OnInit {
         private fDbModul: DexieSvcService,
         public fDialogService: DialogeService,
         private router: Router
-    ) {}
+    ) {
+        const x: ProgramModulTyp = this.ModulTyp;
+        const y = x;
+    }
+
+    get programModul(): typeof ProgramModulTyp {
+        return ProgramModulTyp;
+    }
 
     ngOnInit() {
     }
@@ -92,6 +98,6 @@ export class Programm01Component implements OnInit {
 
     EditThisWorkoutClick($event): void {
         $event.stopPropagation();
-        this.router.navigate(["/workoutform"], { state: { programm: this.programm } });
+        this.router.navigate(["/workoutform"], { state: { programm: this.programm, ModulTyp: this.ModulTyp} });
     }
 }

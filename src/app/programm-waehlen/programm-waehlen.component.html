@@ -12,7 +12,7 @@
             <ng-container *ngFor="let programm of ProgrammListe">
                 <div  class="mg-top-1">
                     <app-programm01
-                        [programmLadeContext]="true"  
+                        [ModulTyp]="programModul.SelectWorkout"
                         [programm]="programm" 
                         [showButtons]="false" 
                         [showSaveButtons]="false">
