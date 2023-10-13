@@ -77,7 +77,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 		if (aSess.Kategorie02 === undefined) aSess.Kategorie02 = SessionStatus.Wartet;
 
 		switch (aSess.Kategorie02) {
-			case SessionStatus.Wartet:
+			case SessionStatus.Wartet: 
 				return "Start";
 			case SessionStatus.Laueft:
 			case SessionStatus.Pause:
@@ -393,7 +393,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 			else mDialogData.textZeilen.push('Preparing session');
 			const mLadePara: UebungParaDB = new UebungParaDB();
 			mLadePara.SaetzeBeachten = true;
-			this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, ModulTyp: this.ModulTyp } });
+			this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, ModulTyp: ProgramModulTyp.RunningSession } });
 			//this.fLoadingDialog.Loading(mDialogData);
 			//try {
 				// aSession.UebungsListe.forEach( async(mUebung) => {
