@@ -323,6 +323,7 @@ export interface IProgramModul {
 		, SatzSimpleModule
 		, SessionFormModule
 		, HistoryModule
+		,StoppUhrModuleModule
 		// ,InitialWeightModule
 		
 
