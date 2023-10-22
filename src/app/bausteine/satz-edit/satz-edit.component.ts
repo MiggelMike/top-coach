@@ -358,6 +358,7 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus {
     private DoStoppUhr(aUebung: Uebung, aNextTimeWeight: number, aNaechsteUebungPauseSec: number, aAufwaermArbeitsSatzPauseSec: number, aHeaderText: string):void {
         this.StoppUhrOverlayConfig = 
             {
+                panelClass: 'cc-overlay',
                 satz: this.satz as Satz,
                 uebung: aUebung,
                 session: this.sess,
