@@ -1,7 +1,7 @@
-<div #anchorRef cdkDrag cdkDragRootElement=".cdk-overlay-pane"  class="cc-overlay"
+<div #anchorRef cdkDrag cdkDragRootElement=".cdk-overlay-pane"
     (mousedown)="handleMousedown( $event )">
 
-    <mat-card class="font-14-label overlay-width">
+    <div class="font-14-label overlay-width">
         <div fxLayout="column" fxFlex="100%">
 
             <!-- Session-Name -->
@@ -27,8 +27,8 @@
                         <mat-label class="font-14-label">Bodyweight ({{GewichtsEinheit}})</mat-label>
                         <input matInput 
                               class="align-right"
-                              value="{{fBodyWeight | number: '1.2'}}"
-                              [textMask]="{mask: floatMask, guide: false}" 
+                              [ngModel]="fBodyWeight"
+                              mask="990.000"
                               (focus)="onFocusBodyweight($event)"
                               (focusout)="SetBodyweight($event)"
                                type="text">
@@ -57,5 +57,5 @@
                 <a mat-button (click)="close()"><span class="tc-font-size-small">close</span></a>
             </div>
         </div>
-    </mat-card>
+    </div>
 </div>

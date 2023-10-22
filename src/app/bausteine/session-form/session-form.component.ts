@@ -207,7 +207,8 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 	}
 
 	doStats() {
-		if (this.fSessionStatsOverlayComponent === null || this.fSessionStatsOverlayComponent.overlayRef === null) {
+		if (   this.fSessionStatsOverlayComponent === undefined  
+			|| this.fSessionStatsOverlayComponent !== undefined && this.fSessionStatsOverlayComponent.overlayRef === null) {	
 			this.fSessionOverlayConfig = {
 				session: this.Session,
 				panelClass: 'cc-overlay'

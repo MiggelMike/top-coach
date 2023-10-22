@@ -23,6 +23,7 @@ import { Programm01Module } from '../programm01/programm01Md/programm01.module';
 import { Programm02Module } from '../programm02/programm02Md/programm02.module';
 import { Programm03Module } from '../programm03/programm03Md/programm03.module';
 import { ToolBarModule } from '../toolbar/tool-bar-module/tool-bar-module.module';
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 
 
 
@@ -31,6 +32,8 @@ const routes: Routes = [{ path: 'sessionFormComponent', component: SessionFormCo
 @NgModule({
   declarations: [SessionFormComponent],
   imports: [
+    NgxMaskDirective,
+    NgxMaskPipe,
     CommonModule,
     FormsModule,
     RouterModule.forChild(routes),

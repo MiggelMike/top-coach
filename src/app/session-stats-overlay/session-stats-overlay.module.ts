@@ -45,6 +45,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 
 
 
@@ -53,7 +54,8 @@ const routes: Routes = [{ path: 'SessionStatsOverlay', component: SessionStatsOv
 @NgModule({
   declarations: [SessionStatsOverlayComponent],
   imports: [
-
+    NgxMaskDirective,
+    NgxMaskPipe,
     CommonModule,
     FormsModule,
     RouterModule.forChild(routes),
