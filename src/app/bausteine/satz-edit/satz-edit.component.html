@@ -50,8 +50,7 @@
                     <mat-form-field class="weight-column tc-font-size-small">
                         <div class="align-right label">{{satz.GewichtVorgabeText}}</div> 
                         <input  matInput 
-                                mask="9990.000"
-                                
+                                mask="9999.000"
                                 class="align-right"
                                 [ngModel]="satz.GewichtAusgefuehrt" 
                                 (ngModelChange)="CalcPlates($event)"
@@ -81,7 +80,7 @@
                     <div class="align-right label">{{satz.WdhVonVorgabe}}</div> 
                     <input matInput 
                            class="align-right"
-                           mask="9990"
+                           mask="9999"
                            [ngModel]="satz.WdhAusgefuehrt" 
                            [disabled]="Disabled(satz)"
                            (click)="onClickWdhAusgefuehrt($event)" 
@@ -114,7 +113,7 @@
                 <!-- Geplantes Vorgabe-Gewicht -->
                 <mat-form-field class="weight-column align-right tc-font-size-small">
                     <input  matInput 
-                            mask="9990.000"
+                            mask="9999.000"
                             class="align-right"
                             maxlength="8"
                             [ngModel]="satz.GewichtAusgefuehrt" 
@@ -128,7 +127,7 @@
                 <!-- Geplante Von-Vorgabe-Wdh. -->
                 <mat-form-field class="rep-column align-right tc-font-size-small">
                     <input  matInput 
-                        mask="9990"
+                        mask="9999"
                             class="align-right"
                             maxlength="4"
                             [ngModel]="satz.WdhVonVorgabeText" 

@@ -141,7 +141,7 @@
                         <mat-form-field class="width-100-Prozent">
                             <mat-label>Seconds between sets if last set was hard</mat-label>
                             <input matInput class="align-right"
-                                mask="000"
+                                mask="999"
                                 [ngModel]="SessUeb.ArbeitsSatzPause2" 
                                 (focus)="onFocusSelect($event)"
                                 (focusout)="SetArbeitsSatzPause2($event)"
@@ -153,7 +153,7 @@
                         <mat-form-field class="width-100-Prozent">
                             <mat-label>Seconds between last excercise set and first set of next exercise</mat-label>
                             <input matInput class="align-right"
-                                mask="000"
+                                mask="999"
                                 [ngModel]="SessUeb.NaechsteUebungPause" 
                                 (focus)="onFocusSelect($event)"
                                 (focusout)="SetNextExercisePause($event)"
