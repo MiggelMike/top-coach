@@ -49,10 +49,10 @@ import { FormsModule } from '@angular/forms';
 // import { WorkoutFormComponent } from "./bausteine/workout-form/workout-form.component";
 // import { UebungWaehlenComponent } from "./uebung-waehlen/uebung-waehlen.component";
 // import { StoppuhrComponent } from "./stoppuhr/stoppuhr.component";
-import { SessionStatsOverlayComponent } from "./session-stats-overlay/session-stats-overlay.component";
+// import { SessionStatsOverlayComponent } from "./session-stats-overlay/session-stats-overlay.component";
 // import { PlateCalcComponent } from "./plate-calc/plate-calc.component";
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
-// import { TextMaskModule } from 'angular2-text-mask';
+//import { TextMaskModule } from 'angular2-text-mask';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader'
 import { HttpClient } from '@angular/common/http';
 import { DialogComponent } from "./dialoge/hinweis/hinweis.component";
@@ -108,23 +108,25 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatListModule } from '@angular/material/list';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatSortModule } from '@angular/material/sort';
-import { MatStepperModule } from '@angular/material/stepper';
-import { MatTableModule } from '@angular/material/table';
+// import { MatAutocompleteModule } from '@angular/material/autocomplete';
+// import { MatBadgeModule } from '@angular/material/badge';
+// import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+// import { MatButtonToggleModule } from '@angular/material/button-toggle';
+// import { MatChipsModule } from '@angular/material/chips';
+// import { MatDividerModule } from '@angular/material/divider';
+// import { MatGridListModule } from '@angular/material/grid-list';
+// import { MatListModule } from '@angular/material/list';
+// import { MatPaginatorModule } from '@angular/material/paginator';
+// import { MatProgressBarModule } from '@angular/material/progress-bar';
+// import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+// import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+// import { MatSnackBarModule } from '@angular/material/snack-bar';
+// import { MatSortModule } from '@angular/material/sort';
+// import { MatStepperModule } from '@angular/material/stepper';
+// import { MatTableModule } from '@angular/material/table';
 import { ReactiveFormsModule } from '@angular/forms';
+import { provideEnvironmentNgxMask,IConfig } from 'ngx-mask'
+
 
 // import { HistoryComponent } from './history/history.component';
 
@@ -192,14 +194,22 @@ export interface IProgramModul {
 	  integerLimit: 2, // (number): limit the length of the integer number. Defaults to null for unlimited
 	  allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
 	})
-  
-	export const Int3DigitMask = createNumberMask({
-	  prefix: '',
-	  suffix: '', 
-	  includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
-	  integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
-	  allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
-	})  
+
+	export const Int3DigitMask = "000";
+  	// export const Int3DigitMask = createNumberMask({
+	//   prefix: '',
+	// 	suffix: '', 
+	// regex: "\\d*",
+
+	//   includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
+	//   integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
+	// 	allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
+	  
+	// 	decimalLimit: 2,
+	// 	requireDecimal: false,
+	// 	allowNegative: false,
+	// 	allowLeadingZeroes: false
+	// })  
   
 	export const Int4DigitMask = createNumberMask({
 	  prefix: '',
@@ -208,6 +218,14 @@ export interface IProgramModul {
 	  integerLimit: 4, // (number): limit the length of the integer number. Defaults to null for unlimited
 	  allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
 	})    
+
+	export const Int8DigitMask = createNumberMask({
+		prefix: '',
+		suffix: '', 
+		includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
+		integerLimit: 8, // (number): limit the length of the integer number. Defaults to null for unlimited
+		allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
+	  }) 
 
 
 @NgModule({
@@ -267,6 +285,7 @@ export interface IProgramModul {
 	],
 	
 	imports: [
+	
 		TranslateModule.forRoot({
 			// defaultLanguage: 'en',
 			loader: {
@@ -334,6 +353,8 @@ export interface IProgramModul {
 		, FilePreviewOverlayService
 		, DexieSvcService
 		, DialogeService 
+		, provideEnvironmentNgxMask()
+		
 		,{ provide: MAT_DATE_LOCALE, useValue: 'de-DE' }
 		,{ provide: LOCALE_ID, useValue: 'de-DE' }
 		, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
@@ -399,3 +420,6 @@ export interface IProgramModul {
 
 })
 export class AppModule {}
+
+
+

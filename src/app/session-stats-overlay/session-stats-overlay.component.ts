@@ -1,4 +1,5 @@
 import { BodyWeight } from 'src/Business/Bodyweight/Bodyweight';
+import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import { floatMask } from 'src/app/app.module';
 import { AppData } from './../../Business/Coach/Coach';
 import { SessionOverlayConfig } from './../services/session-overlay-service.service';

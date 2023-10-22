@@ -76,9 +76,10 @@
                     <div fxLayout="row" fxFlex="100%">
                         <mat-form-field  class="width-100-Prozent">
                             <mat-label>Weight progression</mat-label>
-                            <input matInput [textMask]="{mask: floatMask, guide: false }"
+                            <input matInput 
+                                mask="999.000"
                                 class="align-right"
-                                [ngModel]=" (SessUeb.GewichtSteigerung | number: '1.2')"
+                                [ngModel]="SessUeb.GewichtSteigerung"
                                 (focusout)="SetGewichtSteigerung($event)"
                                 type="text">
                         </mat-form-field>
@@ -87,9 +88,10 @@
                     <div fxLayout="row" fxFlex="100%">
                         <mat-form-field  class="width-100-Prozent">
                             <mat-label>Weight reduction</mat-label>
-                            <input matInput [textMask]="{mask: floatMask, guide: false }"
+                            <input matInput 
+                                mask="999.000"
                                 class="align-right"
-                                [ngModel]="(SessUeb.GewichtReduzierung | number: '1.2')" 
+                                [ngModel]="SessUeb.GewichtReduzierung" 
                                 (focusout)="SetGewichtReduzierung($event)"
                                 type="text">
                         </mat-form-field>
@@ -98,9 +100,10 @@
                     <div fxLayout="row" fxFlex="100%">
                         <mat-form-field  class="width-100-Prozent">
                             <mat-label>Fail count</mat-label>
-                            <input matInput [textMask]="{mask: Int3DigitMask, guide: false }"
+                            <input matInput 
+                                mask="999"
                                 class="align-right"
-                                [ngModel]="(SessUeb.MaxFailCount | number: '1.0')"
+                                [ngModel]="SessUeb.MaxFailCount"
                                 (focusout)="SetFailCount($event)"
                                 type="text">
                         </mat-form-field>
@@ -114,8 +117,8 @@
                         <mat-form-field class="width-100-Prozent">
                             <mat-label>Seconds between last warm up and first work set</mat-label>
                             <input matInput class="align-right"
-                                [textMask]="{mask: Int3DigitMask, guide: false }"
-                                [ngModel]="(SessUeb.AufwaermArbeitsSatzPause | number: '1.0')"
+                                mask="999"
+                                [ngModel]="SessUeb.AufwaermArbeitsSatzPause"
                                 (focus)="onFocusSelect($event)"
                                 (focusout)="SetAufwaermArbeitsSatzPause($event)"
                                 type="text">
@@ -126,8 +129,8 @@
                         <mat-form-field class="width-100-Prozent">
                             <mat-label>Seconds between sets if last set was easy</mat-label>
                             <input matInput class="align-right"
-                                [textMask]="{mask: Int3DigitMask, guide: false }"
-                                [ngModel]="(SessUeb.ArbeitsSatzPause1 | number: '1.0')" 
+                                mask="999"
+                                [ngModel]="SessUeb.ArbeitsSatzPause1" 
                                 (focus)="onFocusSelect($event)"
                                 (focusout)="SetArbeitsSatzPause1($event)"
                                 type="text">
@@ -138,8 +141,8 @@
                         <mat-form-field class="width-100-Prozent">
                             <mat-label>Seconds between sets if last set was hard</mat-label>
                             <input matInput class="align-right"
-                                [textMask]="{mask: Int3DigitMask, guide: false }"
-                                [ngModel]="(SessUeb.ArbeitsSatzPause2 | number: '1.0')" 
+                                mask="000"
+                                [ngModel]="SessUeb.ArbeitsSatzPause2" 
                                 (focus)="onFocusSelect($event)"
                                 (focusout)="SetArbeitsSatzPause2($event)"
                                 type="text">
@@ -150,8 +153,8 @@
                         <mat-form-field class="width-100-Prozent">
                             <mat-label>Seconds between last excercise set and first set of next exercise</mat-label>
                             <input matInput class="align-right"
-                                [textMask]="{mask: Int3DigitMask, guide: false }"
-                                [ngModel]="(SessUeb.NaechsteUebungPause | number: '1.0')" 
+                                mask="000"
+                                [ngModel]="SessUeb.NaechsteUebungPause" 
                                 (focus)="onFocusSelect($event)"
                                 (focusout)="SetNextExercisePause($event)"
                                 type="text">

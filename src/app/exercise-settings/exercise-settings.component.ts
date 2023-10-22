@@ -31,6 +31,8 @@ enum InUpcomingSessionSetzenTyp {
 	NaechsteUebungPause
 }
 
+
+
 @Component({
 	selector: "app-exercise-settings",
 	templateUrl: "./exercise-settings.component.html",
@@ -39,7 +41,6 @@ enum InUpcomingSessionSetzenTyp {
 export class ExerciseSettingsComponent {
 	public fConfig: ExerciseOverlayConfig;
 	public floatMask = floatMask;
-	public Int3DigitMask = Int3DigitMask;
 	public ProgressName: string;
 	public ProgressListe: Array<Progress> = [];
 	public HantelListe: Array<Hantel> = [];
@@ -152,7 +153,7 @@ export class ExerciseSettingsComponent {
 	}
 
 	SetAufwaermArbeitsSatzPause(aEvent: any) {
-		this.SessUeb.AufwaermArbeitsSatzPause = aEvent.target.value;
+		this.SessUeb.AufwaermArbeitsSatzPause = Number(aEvent.target.value);
 		this.EvalSofortSpeichern();
 	}
 
