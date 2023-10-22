@@ -11,7 +11,8 @@
         <div class="center-item" fxLayout="column" fxFlex="25%">
             <mat-form-field class="align-left">
                 <mat-label>Initial weight</mat-label>
-                <input matInput [textMask]="{mask: floatMask, guide: false }" 
+                <input matInput 
+                    mask="999.000" 
                     (focus)="OnFocus($event)"
                     (focusout)="SetWeight(iw,$event)" 
                     (click)="onInitialWeightClick($event)" 

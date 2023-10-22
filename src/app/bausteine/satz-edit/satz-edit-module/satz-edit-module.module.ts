@@ -22,6 +22,7 @@ import { MatSliderModule } from "@angular/material/slider";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 
 
 @NgModule({
@@ -49,6 +50,8 @@ import { MatButtonModule } from "@angular/material/button";
     MatToolbarModule,
     MatIconModule,
     MatButtonModule,
+    NgxMaskDirective,
+    NgxMaskPipe
   ]
 })
 export class SatzEditModule { }

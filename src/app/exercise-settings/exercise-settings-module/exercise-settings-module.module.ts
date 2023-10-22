@@ -10,7 +10,6 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatButtonModule } from "@angular/material/button";
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
-import { Int3DigitMask } from 'src/app/app.module';
 
 
 
