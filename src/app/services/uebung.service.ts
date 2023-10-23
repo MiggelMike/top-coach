@@ -60,9 +60,7 @@ export class UebungService {
         mDialogConfig.height = "85%";
         mDialogConfig.disableClose = false;
         mDialogConfig.autoFocus = true;
-        mDialogConfig.scrollStrategy = this.fsso.close();
-        // mDialogConfig.panelClass = "uebung-wahlen-dialog";
-        
+        mDialogConfig.scrollStrategy = this.fsso.noop();
 
         this.fDbModule.LadeStammUebungen().then(
             (aUebungen: Array<Uebung>) => {
@@ -76,8 +74,6 @@ export class UebungService {
                 this.Uebungen = aUebungen;
                 mDialogConfig.data = mUebungWaehlenData;
                 mDialogConfig.hasBackdrop = false;
-        
-        
                 mUebungWaehlenData.fUebungsListe = aUebungen;
                 mUebungWaehlenData.OkClickFn = aSelectFn;
                 mUebungWaehlenData.fSession = aSession;

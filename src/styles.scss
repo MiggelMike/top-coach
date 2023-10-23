@@ -532,10 +532,15 @@ textarea:focus {
 	// border-style: inset;
   }
 
-  .uebung-wahlen-dialog {
-	@extend .cc-overlay;
-	overflow-y: hidden;
-  }
+  .cdk-global-scrollblock {
+	overflow-y: hidden !important;    
+}
+
+.mdc-dialog__surface {
+    overflow-y: hidden !important;
+    }
+
+
 
   .mdc-text-field--filled:not(.mdc-text-field--disabled){
 	background-color: transparent;
