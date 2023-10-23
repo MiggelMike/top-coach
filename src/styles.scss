@@ -526,19 +526,24 @@ textarea:focus {
 	background-color: white;
   }
 
+  .fix-pos {
+	position: sticky;
+	top: 10px;
+  }
+
   .cc-Dialog {
 	padding: 10px;
 	border-radius: 10px;
 	// border-style: inset;
   }
 
-  .cdk-global-scrollblock {
-	overflow-y: hidden !important;    
-}
+//   .cdk-global-scrollblock {
+// 	overflow-y: hidden !important;    
+// }
 
-.mdc-dialog__surface {
-    overflow-y: hidden !important;
-    }
+// .mdc-dialog__surface {
+//     overflow-y: hidden !important;
+//     }
 
 
 
