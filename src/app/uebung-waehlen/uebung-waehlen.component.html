@@ -1,13 +1,15 @@
 <div cdkDrag cdkDragRootElement=".cdk-overlay-pane"  class="column-center">
-    <h1 class="fix-pos" mat-dialog-title>Select exercise</h1>
     <ng-container *ngIf="data && data.fUebungsListe" >
-        <div class="column-center">
-            <a class="ref-button" mat-flat-button
-            (click)="NewButtonClick(data.fUebungsListe)">New exercise</a>
+        <div id="UebungWaehlenHeader" class="column-center">
+            <h1 mat-dialog-title>Select exercise</h1>
+            <div class="column-center">
+                <a class="ref-button" mat-flat-button
+                (click)="NewButtonClick(data.fUebungsListe)">New exercise</a>
+            </div>
         </div>
-        <div mat-dialog-content class="column-center">
-        
-            <ng-container *ngFor="let uebung of data.fUebungsListe, index as i">
+            <div mat-dialog-content class="column-center">
+                
+                <ng-container *ngFor="let uebung of data.fUebungsListe, index as i">
                 <!-- Zeilen-Hintergrundfarbe -> [ngClass]="{'HG-01': i % 2 === 0}" -->
                 <div class="row-Start-Left width-100-Prozent" [ngClass]="{'HG-01': i % 2 === 0}">
                         <div class="column-start-left width-10-Prozent">

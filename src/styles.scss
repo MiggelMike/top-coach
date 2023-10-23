@@ -526,9 +526,13 @@ textarea:focus {
 	background-color: white;
   }
 
-  .fix-pos {
+  #UebungWaehlenHeader {
+	background-color: white;
 	position: sticky;
-	top: 10px;
+	padding-top: 5px;
+	top: 0px;
+	width: 100%;
+	z-index: 1000;
   }
 
   .cc-Dialog {
