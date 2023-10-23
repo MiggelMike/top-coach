@@ -114,6 +114,45 @@ body {
 	min-width: 600px !important;
 }
 
+.width-5%-Prozent {
+	width: 5% !important;
+}
+
+.width-10%-Prozent {
+	width: 10% !important;
+}
+
+.width-20%-Prozent {
+	width: 20% !important;
+}
+
+.width-30%-Prozent {
+	width: 30% !important;
+}
+
+.width-40%-Prozent {
+	width: 40% !important;
+}
+
+.width-50%-Prozent {
+	width: 50% !important;
+}
+
+.width-60%-Prozent {
+	width: 60% !important;
+}
+
+.width-70%-Prozent {
+	width: 70% !important;
+}
+
+.width-80%-Prozent {
+	width: 80% !important;
+}
+
+.width-90%-Prozent {
+	width: 90% !important;
+}
 
 .width-100-Prozent {
 	width: 100% !important;
@@ -283,7 +322,7 @@ div.herz:after {
 .row-Start-Left {
 	display: flex;
 	justify-content:flex-start;
-	align-items:flex-start;
+	align-items:center;
 	flex-direction: row;
 }
 
@@ -447,6 +486,11 @@ textarea:focus {
 	overflow-y: scroll;
 }
 
+.no-scroll-Vert {
+	overflow-y: hidden !important;
+}
+
+
 .ref-button {
 	font-size: smaller;
 	color: #a9bcf5;
@@ -465,6 +509,11 @@ textarea:focus {
 	overflow-y: auto;
 }
 
+.border-radius-10 {
+	border-radius: 10px;
+}
+
+
 .cc-overlay {
 	@extend .box-shadow-ex;
 	padding: 5px;	
@@ -481,6 +530,11 @@ textarea:focus {
 	padding: 10px;
 	border-radius: 10px;
 	// border-style: inset;
+  }
+
+  .uebung-wahlen-dialog {
+	@extend .cc-overlay;
+	overflow-y: hidden;
   }
 
   .mdc-text-field--filled:not(.mdc-text-field--disabled){

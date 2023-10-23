@@ -8,6 +8,7 @@ import { JsonProperty } from '@peerlancers/json-serialization';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 // import { EditExerciseComponent, UebungEditData } from '../edit-exercise/edit-exercise.component';
 import { UebungEditData } from '../edit-exercise/edit-exercise.component';
+import { ScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
 
 
 @Injectable({
@@ -22,7 +23,9 @@ export class UebungService {
     @JsonProperty()
     public LetzteUebungID: number = 0;
 
-    constructor(private fDbModule: DexieSvcService, public fDialog?: MatDialog ) { }
+    constructor(private fDbModule: DexieSvcService,
+        private fsso: ScrollStrategyOptions,
+                public fDialog?: MatDialog) { }
 
     public EditUebung(aUebung: Uebung, aUebungsListe: Array<Uebung>) {
         const mUebungEditData: UebungEditData = new UebungEditData();
@@ -57,6 +60,9 @@ export class UebungService {
         mDialogConfig.height = "85%";
         mDialogConfig.disableClose = false;
         mDialogConfig.autoFocus = true;
+        mDialogConfig.scrollStrategy = this.fsso.close();
+        // mDialogConfig.panelClass = "uebung-wahlen-dialog";
+        
 
         this.fDbModule.LadeStammUebungen().then(
             (aUebungen: Array<Uebung>) => {

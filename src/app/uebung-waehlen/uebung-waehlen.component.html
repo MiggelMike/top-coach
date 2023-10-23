@@ -1,38 +1,35 @@
-<!-- <div fxLayout="column" fxFlex="100%"> -->
-<h1 mat-dialog-title>Select exercise</h1>
-<ng-container *ngIf="data && data.fUebungsListe" >
-    <div fxLayout="row" fxLayoutAlign="center center" class="mg-5">
-        <a class="ref-button" mat-flat-button
-            (click)="NewButtonClick(data.fUebungsListe)">New exercise</a>
-    </div>
+<div cdkDrag cdkDragRootElement=".cdk-overlay-pane" class="column-center"> 
+    <h1 mat-dialog-title>Select exercise</h1>
+    <ng-container *ngIf="data && data.fUebungsListe" >
+        <div class="no-scroll-Vert">
+            <div fxLayout="row" fxLayoutAlign="center center" class="mg-5">
+                <a class="ref-button" mat-flat-button
+                    (click)="NewButtonClick(data.fUebungsListe)">New exercise</a>
+            </div>
 
-    <div mat-dialog-content>
-        <div fxLayout="column" fxFlex="100%">
             <ng-container *ngFor="let uebung of data.fUebungsListe, index as i">
                 <!-- Zeilen-Hintergrundfarbe -> [ngClass]="{'HG-01': i % 2 === 0}" -->
-                <div fxLayout="row" fxFlex="100%" [ngClass]="{'HG-01': i % 2 === 0}" fxLayoutGap="5px">
-                    <div fxLayout="column" fxFlex="5%">
-                        <mat-checkbox class="mg-5" [(ngModel)]="uebung.Selected"></mat-checkbox>
-                    </div>
-
-                    <div fxLayout="column" fxFlex="20%">
-                        <a class="ref-button" mat-flat-button
+                <div class="row-Start-Left width-100-Prozent" [ngClass]="{'HG-01': i % 2 === 0}">
+                        <div class="column-start-left width-10-Prozent">
+                            <mat-checkbox class="mg-5" [(ngModel)]="uebung.Selected"></mat-checkbox>
+                        </div>
+                        
+                        <div class="column-center width-30-Prozent">
+                            <a class="link-button-font" mat-flat-button
                             (click)="EditButtonClick(uebung,data.fUebungsListe)">Edit exercise</a>
-                    </div>
-
-                    <div fxLayout="column" fxFlex="auto">
-                        <span class="mg-5">{{uebung.Name}}</span>
-                    </div>
-
-
-
+                        </div>
+                        
+                        <div class="column-start-left">
+                            <span class="mg-5">{{uebung.Name}}</span>
+                        </div>
                 </div>
             </ng-container>
+
+            <div class="row-center">
+                <a class="ref-button" mat-flat-button (click)="OkButtonClick()">Ok</a>
+                <a class="ref-button" mat-flat-button
+                (click)="CancelClickFn()">Cancel</a>
+            </div>
         </div>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="center center">
-        <a class="ref-button" mat-flat-button (click)="OkButtonClick()">Ok</a>
-        <a class="ref-button" mat-flat-button
-            (click)="CancelClickFn()">Cancel</a>
-    </div>
-</ng-container>
+        </ng-container>
+</div>
