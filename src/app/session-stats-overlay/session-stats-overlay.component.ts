@@ -32,7 +32,8 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 	public fConfig: SessionOverlayConfig;
 	public showDuration: boolean = false;
 	public AppData: AppData;
-	public floatMask = floatMask;
+
+	datum: Date = new Date();
 	
     constructor(
         public overlayRef: SessionOverlayRef,

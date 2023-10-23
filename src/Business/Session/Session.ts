@@ -35,6 +35,7 @@ export interface ISession extends ISessionDB {
     UebungsListe: Array<Uebung>;
     PruefeGewichtsEinheit(aGewichtsEinheit: GewichtsEinheit);
     LiftedWeight: number;
+    GestartedWannText: string;
 }
 
 export class SessionCopyPara {
@@ -158,6 +159,10 @@ export class Session implements ISession {
     }
     set GestartedWann(aVal: Date) {
         this.SessionDB.GestartedWann = aVal;
+    }
+
+    get GestartedWannText(): string {
+        return this.SessionDB.GestartedWann.toLocaleDateString() + ' ' + this.SessionDB.GestartedWann.toLocaleTimeString();
     }
     //#endregion    
     //#region PauseInSek 

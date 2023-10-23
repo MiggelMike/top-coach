@@ -60,7 +60,7 @@ import { DialogComponent } from "./dialoge/hinweis/hinweis.component";
 // import { FilePreviewOverlayComponent  } from './file-preview-overlay/file-preview-overlay.component';
 import { FilePreviewOverlayService } from './services/file-preview-overlay.service';
 import { LOCALE_ID } from '@angular/core';
-import { DatePipe } from "@angular/common";
+import { DATE_PIPE_DEFAULT_OPTIONS, DatePipe } from "@angular/common";
 //import { ExerciseSettingsModuleModule } from
 
 import {
@@ -358,6 +358,10 @@ export interface IProgramModul {
 		,{ provide: MAT_DATE_LOCALE, useValue: 'de-DE' }
 		,{ provide: LOCALE_ID, useValue: 'de-DE' }
 		, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+		,{
+			provide: DATE_PIPE_DEFAULT_OPTIONS,
+			useValue: { dateFormat: 'short' }
+		  }
 		// , { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance:  'outline' }}
 	],
 	bootstrap: [AppComponent],

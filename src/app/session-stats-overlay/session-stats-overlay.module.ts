@@ -2,7 +2,7 @@ import { SessionStatsOverlayComponent } from './session-stats-overlay.component'
 import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
@@ -46,13 +46,17 @@ import { MatTableModule } from '@angular/material/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
-
+import { DATE_PIPE_DEFAULT_OPTIONS } from "@angular/common";
 
 
 const routes: Routes = [{ path: 'SessionStatsOverlay', component: SessionStatsOverlayComponent }];
 
 @NgModule({
   declarations: [SessionStatsOverlayComponent],
+  providers: [ {
+    provide: DATE_PIPE_DEFAULT_OPTIONS,
+    useValue: { dateFormat: 'short' }
+  }],
   imports: [
     NgxMaskDirective,
     NgxMaskPipe,
@@ -121,7 +125,8 @@ const routes: Routes = [{ path: 'SessionStatsOverlay', component: SessionStatsOv
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatTreeModule
+    MatTreeModule,
+    DatePipe
     
   ],
   exports: [RouterModule],

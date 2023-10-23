@@ -16,7 +16,14 @@
             <div fxLayout="row wrap" fxFlex="100%">
                 <mat-form-field class="align-left" fxFlex="100%">
                     <mat-label class="font-14-label">Start</mat-label>
-                    <input  matInput maxlength="30" type="text"  [disabled]="true" class="font-14-data" value="{{sess.GestartedWann | date: 'mediumDate'}} {{sess.GestartedWann | date:'shortTime'}}">
+                    <input  
+                    matInput 
+                    type="text"  
+                    [disabled]="true" 
+                    class="font-14-data" 
+                    
+                    [ngModel]="sess.GestartedWannText"
+                    >
                 </mat-form-field>
             </div>
 
@@ -38,7 +45,10 @@
                 <div fxLayout="column" fxFlex="33%" class="mg-left-5">
                     <mat-form-field class="align-right">
                         <mat-label class="font-14-label">Weight lifted ({{GewichtsEinheit}})</mat-label>
-                        <input  matInput type="text"  [disabled]="true" class="align-right font-14-data" value="{{sess.LiftedWeight | number: '1.2'}}">
+                        <input  matInput type="text"  [disabled]="true" 
+                        class="align-right font-14-data" 
+                        [ngModel]="fBodyWeight"
+                        mask="990.000">
                     </mat-form-field>
                 </div>
 
