@@ -10,7 +10,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatButtonModule } from "@angular/material/button";
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
-
+import {CdkDrag} from '@angular/cdk/drag-drop';
 
 
 @NgModule({
@@ -18,7 +18,7 @@ import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
   exports: [ExerciseSettingsComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   imports: [
-    
+    CdkDrag,
     NgxMaskDirective,
     NgxMaskPipe,
     DecimalPipe,

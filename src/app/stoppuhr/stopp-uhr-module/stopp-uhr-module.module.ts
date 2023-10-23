@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from "@angular/common";
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatCardModule } from "@angular/material/card";
+import {CdkDrag} from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [StoppuhrComponent],
@@ -13,6 +14,7 @@ import { MatCardModule } from "@angular/material/card";
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   imports: [
     FormsModule,
+    CdkDrag,
     MatFormFieldModule,
     CommonModule,
     FlexLayoutModule,
