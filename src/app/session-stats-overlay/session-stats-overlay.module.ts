@@ -47,6 +47,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { DATE_PIPE_DEFAULT_OPTIONS } from "@angular/common";
+import {CdkDrag} from '@angular/cdk/drag-drop';
 
 
 const routes: Routes = [{ path: 'SessionStatsOverlay', component: SessionStatsOverlayComponent }];
@@ -58,6 +59,7 @@ const routes: Routes = [{ path: 'SessionStatsOverlay', component: SessionStatsOv
     useValue: { dateFormat: 'short' }
   }],
   imports: [
+    CdkDrag,
     NgxMaskDirective,
     NgxMaskPipe,
     CommonModule,
