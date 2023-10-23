@@ -267,12 +267,18 @@ div.herz:after {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	flex-direction: column;
-	}
+}
 
 .column-center {
 	@extend .center-item;
+	flex-direction: column;
 }
+
+.row-center {
+	@extend .center-item;
+	flex-direction: row;
+}
+
 
 .row-Start-Left {
 	display: flex;
