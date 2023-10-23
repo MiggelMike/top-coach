@@ -56,11 +56,10 @@ export class UebungService {
 
         const mDialogConfig = new MatDialogConfig();
         mDialogConfig.restoreFocus = true;
-        mDialogConfig.width = "75%";
-        mDialogConfig.height = "85%";
+        mDialogConfig.width = "500px";
+        mDialogConfig.height = "600px";
         mDialogConfig.disableClose = false;
         mDialogConfig.autoFocus = true;
-        mDialogConfig.scrollStrategy = this.fsso.noop();
 
         this.fDbModule.LadeStammUebungen().then(
             (aUebungen: Array<Uebung>) => {
