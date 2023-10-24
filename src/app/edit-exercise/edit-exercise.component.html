@@ -1,4 +1,4 @@
-<div id="editExercise">
+<div id="editExercise" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
     <ng-container *ngIf="fDialog === undefined; else Dialog">
         <mat-icon (click)="back()">arrow_back</mat-icon>
     </ng-container>

@@ -9,6 +9,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatIconModule } from "@angular/material/icon";
+import {CdkDrag} from '@angular/cdk/drag-drop';
 
 
 @NgModule({
@@ -16,6 +18,8 @@ import { MatTabsModule } from '@angular/material/tabs';
   exports: [EditExerciseComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   imports: [
+    CdkDrag,
+    MatIconModule,
     FormsModule,
     MatInputModule,
     MatButtonModule,
