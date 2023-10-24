@@ -72,31 +72,31 @@ export class EditExerciseComponent implements OnInit {
 	}
 	
 	closeDialog() {
-		this.onBeforeClose( () => this.fDialog.close());
+		this.onBeforeClose();
 	}
 
 	back() {
-		this.onBeforeClose( () => this.location.back());
+		this.onBeforeClose();
 	}
 	
-	onBeforeClose(aGoBackFn: any) {
+	onBeforeClose() {
 		this.Uebung.SatzListe = [];
 		this.CmpUebung.SatzListe = [];
-		if (this.Uebung.isEqual(this.CmpUebung)) aGoBackFn();
+		if (this.Uebung.isEqual(this.CmpUebung)) { this.fDialog.close(); }
 		else {
 			const mDialogData = new DialogData();
 			mDialogData.textZeilen.push("Save changes?");
 			mDialogData.ShowAbbruch = true;
 			
 			mDialogData.OkFn = (): void => {
-				this.SaveChanges(aGoBackFn);
+				this.SaveChanges();
 			}
 
 			mDialogData.CancelFn = (): void => {
 				const mCancelDialogData = new DialogData();
 				mCancelDialogData.textZeilen.push("Changes will be lost!");
 				mCancelDialogData.textZeilen.push("Are you shure?");
-				mCancelDialogData.OkFn = (): void => aGoBackFn();
+				mCancelDialogData.OkFn = (): void => { () => this.fDialog.close(); };
 				this.fDialogService.JaNein(mCancelDialogData);
 			}
 
@@ -104,7 +104,7 @@ export class EditExerciseComponent implements OnInit {
 		}
     }
 
-    SaveChanges(aGoBackFn: any) {
+    SaveChanges() {
 		if (this.Uebung.Name.trim() === '') {
 			const mDialogData = new DialogData();
 			mDialogData.textZeilen.push('Please enter a name!');
@@ -120,7 +120,7 @@ export class EditExerciseComponent implements OnInit {
 				);
 				this.fDialogService.Hinweis(mDialogData);
 			} else {
-				aGoBackFn();
+				this.fDialog.close();
 				this.fDexieService.UebungSpeichern(this.Uebung)
 					.then(() => {
 						let mUebungListe: Array<Uebung> = this.UebungEditData.fUebungListe;
@@ -139,7 +139,8 @@ export class EditExerciseComponent implements OnInit {
 							);
 						}
 						
-						(this.fDialog.componentInstance as EditExerciseComponent).UebungEditData.fUebungListe.push(this.Uebung);
+						//this.UebungEditData.fUebungListe.push(this.Uebung);
+						//(this.fDialog.componentInstance as EditExerciseComponent).UebungEditData.fUebungListe.push(this.Uebung);
 						this.fDexieService.LadeStammUebungen(
 							() => {
 								if (this.fDialog)
@@ -152,7 +153,7 @@ export class EditExerciseComponent implements OnInit {
 	}
 
 	CancelChanges() {
-		const mTmpEditExerciseComponent: EditExerciseComponent = this.ClickData as EditExerciseComponent;
+		const mTmpEditExerciseComponent: EditExerciseComponent = this; //.ClickData as EditExerciseComponent;
 		const mDialogData = new DialogData();
 		mDialogData.textZeilen.push('Cancel unsaved changes?');
 		mDialogData.OkFn = (): void => {

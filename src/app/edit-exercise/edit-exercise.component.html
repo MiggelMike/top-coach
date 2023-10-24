@@ -1,5 +1,5 @@
 <div id="editExercise" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
-    
+   
         <div id="editExerciseBackIcon">
             <ng-container *ngIf="fDialog === undefined; else Dialog">
                     <mat-icon  (click)="back()">arrow_back</mat-icon>
@@ -15,7 +15,7 @@
 
     <div class="colum-center width-100%-Prozent">
             <div class="row-Start-Left width-100%-Prozent">
-                <mat-form-field class="align-left" fxFlex="100%">
+                <mat-form-field class="align-left">
                     <mat-label>Name</mat-label>
                     <input #Name matInput [(ngModel)]="Uebung.Name" maxlength="30" type="text">
                 </mat-form-field>
@@ -86,7 +86,9 @@
                     maxlength="10000" ></textarea>
             </div>
     
-    <!-- <app-data-store-buttons [SaveClick]="SaveChanges" [CancelClick]="CancelChanges" [ClickData]="this">
-    </app-data-store-buttons> -->
+            <div class="row-center-gap10 pad-5">
+                <a class='link-button-font' mat-flat-button (click)="SaveChanges()">Done</a>
+                <a class='link-button-font' mat-flat-button (click)="CancelChanges()">Cancel</a>
+            </div>  
     </div>
 </div>

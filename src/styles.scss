@@ -318,6 +318,11 @@ div.herz:after {
 	flex-direction: row;
 }
 
+.row-center-gap10 {
+	@extend .row-center;
+	row-gap: 10px;
+	
+}
 
 .row-Start-Left {
 	display: flex;
@@ -573,8 +578,8 @@ textarea:focus {
 	overflow: auto;
 	color: black;
 	resize: none;
-	height: 160px !important;
-	max-height: 160px !important;
+	height: 140px !important;
+	max-height: 140px !important;
 }
 
 //   .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
