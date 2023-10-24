@@ -1,16 +1,18 @@
 <div id="editExercise" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
-    <ng-container *ngIf="fDialog === undefined; else Dialog">
-        <mat-icon (click)="back()">arrow_back</mat-icon>
-    </ng-container>
     
-    <ng-template #Dialog> 
-        <mat-icon (click)="closeDialog()">arrow_back</mat-icon>
-    </ng-template>
-    
-    <div fxLayout="row wrap" fxLayoutAlign="center center">
-        <h4>New/edit exercise</h4>
-    </div>
-    
+        <div id="editExerciseBackIcon">
+            <ng-container *ngIf="fDialog === undefined; else Dialog">
+                    <mat-icon  (click)="back()">arrow_back</mat-icon>
+            </ng-container>
+            
+            <ng-template #Dialog> 
+                    <mat-icon  (click)="closeDialog()">arrow_back</mat-icon>
+            </ng-template>
+        </div>
+        <div class="colum-center width-100%-Prozent">    
+            <h4>New/edit exercise</h4>
+        </div>
+
     <div class="colum-center width-100%-Prozent">
             <div class="row-Start-Left width-100%-Prozent">
                 <mat-form-field class="align-left" fxFlex="100%">

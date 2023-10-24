@@ -557,6 +557,16 @@ textarea:focus {
 	padding: 10px;
 }
 
+#editExerciseHeader {
+	@extend .row-center;
+	@extend .width-100-Prozent;
+}
+
+#editExerciseBackIcon {
+	@extend .row-Start-Left;
+	@extend .width-100-Prozent;
+}
+
 #editExerciseDescription {
 	@extend .colors-textarea; 
 	@extend .width-100-Prozent;
