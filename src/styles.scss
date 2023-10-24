@@ -547,8 +547,25 @@ textarea:focus {
 }
 
   .mdc-text-field--filled:not(.mdc-text-field--disabled){
-	@extend .background-color-transparent
+	@extend .background-color-transparent;
   }
+
+  #editExercise {
+    @extend .column-center;
+	height: 100% !important;
+	width: 100% !important;	
+	padding: 10px;
+}
+
+#editExerciseDescription {
+	@extend .colors-textarea; 
+	@extend .width-100-Prozent;
+	overflow: auto;
+	color: black;
+	resize: none;
+	height: 160px !important;
+	max-height: 160px !important;
+}
 
 //   .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
 //     color: rgba(0, 0, 0, 0.87);

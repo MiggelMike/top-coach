@@ -1,96 +1,90 @@
-<ng-container *ngIf="fDialog === undefined; else Dialog">
-    <mat-icon (click)="back()">arrow_back</mat-icon>
-</ng-container>
+<div id="editExercise">
+    <ng-container *ngIf="fDialog === undefined; else Dialog">
+        <mat-icon (click)="back()">arrow_back</mat-icon>
+    </ng-container>
+    
+    <ng-template #Dialog> 
+        <mat-icon (click)="closeDialog()">arrow_back</mat-icon>
+    </ng-template>
+    
+    <div fxLayout="row wrap" fxLayoutAlign="center center">
+        <h4>New/edit exercise</h4>
+    </div>
+    
+    <div class="colum-center width-100%-Prozent">
+            <div class="row-Start-Left width-100%-Prozent">
+                <mat-form-field class="align-left" fxFlex="100%">
+                    <mat-label>Name</mat-label>
+                    <input #Name matInput [(ngModel)]="Uebung.Name" maxlength="30" type="text">
+                </mat-form-field>
+            </div>
 
-<ng-template #Dialog> 
-    <mat-icon (click)="closeDialog()">arrow_back</mat-icon>
-</ng-template>
-
-<div fxLayout="row wrap" fxLayoutAlign="center center">
-    <h4>New/edit exercise</h4>
-</div>
-
-<div fxLayout="row wrap" fxLayoutAlign="center center">
-    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxFlex="100%">
-        <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
-            <mat-form-field class="align-left" fxFlex="100%">
-                <mat-label>Name</mat-label>
-                <input #Name matInput [(ngModel)]="Uebung.Name" maxlength="30" type="text">
-            </mat-form-field>
-        </div>
-
-        <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
-            <mat-form-field class="mg-5">
-                <mat-label>Equipment type</mat-label>
-                <mat-select [(ngModel)]="Uebung.EquipmentTyp">
-                    <mat-option [value]=""></mat-option>
-                    <mat-option *ngFor="let equip of EquipmentListe" [value]="equip"> {{ equip }}</mat-option>
-                </mat-select>
-            </mat-form-field>
-
-            <ng-container *ngIf="Uebung.EquipmentTyp === 'Barbell'">
-                <mat-form-field class="mg-5">
-                    <mat-label>Barbell</mat-label>
-                    <mat-select [(ngModel)]="Uebung.FkHantel">
-                        <mat-option [value]="0"></mat-option>
-                        <mat-option *ngFor="let h of HantelListe" [value]="h.ID"> {{ h.Name }}</mat-option>
+            <div class="row-Start-Left width-100%-Prozent">                
+                <mat-form-field>
+                    <mat-label>Equipment type</mat-label>
+                    <mat-select [(ngModel)]="Uebung.EquipmentTyp">
+                        <mat-option [value]=""></mat-option>
+                        <mat-option *ngFor="let equip of EquipmentListe" [value]="equip"> {{ equip }}</mat-option>
                     </mat-select>
                 </mat-form-field>
-            </ng-container>
-        </div>
 
-        <mat-form-field class="mg-5">
-            <mat-label>Involved Muscle #1</mat-label>
-            <mat-select [(ngModel)]="Uebung.FkMuskel01">
-                <mat-option [value]="0"></mat-option>
-                <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
-            </mat-select>
-        </mat-form-field>
+                <ng-container *ngIf="Uebung.EquipmentTyp === 'Barbell'">
+                    <mat-form-field>
+                        <mat-label>Barbell</mat-label>
+                        <mat-select [(ngModel)]="Uebung.FkHantel">
+                            <mat-option [value]="0"></mat-option>
+                            <mat-option *ngFor="let h of HantelListe" [value]="h.ID"> {{ h.Name }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </ng-container>
+            </div>
 
-        <mat-form-field class="mg-5">
-            <mat-label>Involved Muscle #2</mat-label>
-            <mat-select [(ngModel)]="Uebung.FkMuskel02">
-                <mat-option [value]="0"></mat-option>
-                <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-form-field class="mg-5">
-            <mat-label>Involved Muscle #3</mat-label>
-            <mat-select [(ngModel)]="Uebung.FkMuskel03">
-                <mat-option [value]="0"></mat-option>
-                <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-form-field class="mg-5">
-            <mat-label>Involved Muscle #4</mat-label>
-            <mat-select [(ngModel)]="Uebung.FkMuskel04">
-                <mat-option [value]="0"></mat-option>
-                <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-form-field class="mg-5">
-            <mat-label>Involved Muscle #5</mat-label>
-            <mat-select [(ngModel)]="Uebung.FkMuskel05">
-                <mat-option [value]="0"></mat-option>
-                <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
-            <mat-label>Notes</mat-label>
-        </div>
-        
-        <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
-            <md-input-container fxFlex="100%">
-                <textarea [(ngModel)]="Uebung.Beschreibung" mdInput placeholder="Notes" rows="3" fxFlex="100%"
-                    maxlength="1000" class="colors-textarea"></textarea>
-            </md-input-container>
-        </div>
-    </div>
-
+            <mat-form-field>
+                <mat-label>Involved Muscle #1</mat-label>
+                <mat-select [(ngModel)]="Uebung.FkMuskel01">
+                    <mat-option [value]="0"></mat-option>
+                    <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            
+            <mat-form-field>
+                <mat-label>Involved Muscle #2</mat-label>
+                <mat-select [(ngModel)]="Uebung.FkMuskel02">
+                    <mat-option [value]="0"></mat-option>
+                    <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            
+            <mat-form-field>
+                <mat-label>Involved Muscle #3</mat-label>
+                <mat-select [(ngModel)]="Uebung.FkMuskel03">
+                    <mat-option [value]="0"></mat-option>
+                    <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            
+            <mat-form-field>
+                <mat-label>Involved Muscle #4</mat-label>
+                <mat-select [(ngModel)]="Uebung.FkMuskel04">
+                    <mat-option [value]="0"></mat-option>
+                    <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            
+            <mat-form-field>
+                <mat-label>Involved Muscle #5</mat-label>
+                <mat-select [(ngModel)]="Uebung.FkMuskel05">
+                    <mat-option [value]="0"></mat-option>
+                    <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            
+            <div class="row-Start-Left width-100-Prozent">
+                    <textarea id="editExerciseDescription"  [(ngModel)]="Uebung.Beschreibung" mdInput placeholder="Notes" rows="3" 
+                    maxlength="10000" ></textarea>
+            </div>
+    
     <!-- <app-data-store-buttons [SaveClick]="SaveChanges" [CancelClick]="CancelChanges" [ClickData]="this">
     </app-data-store-buttons> -->
+    </div>
 </div>

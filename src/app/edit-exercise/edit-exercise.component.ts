@@ -8,8 +8,7 @@ import { Location } from '@angular/common'
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { DialogeService } from '../services/dialoge.service';
 import { Equipment, EquipmentTyp } from 'src/Business/Equipment/Equipment';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { min } from 'rxjs';
+import { MatDialogRef } from '@angular/material/dialog';
 
 
 type UebungEditDelegate = (aUebungWaehlenData: UebungEditData ) => void;
