@@ -542,10 +542,12 @@ textarea:focus {
     overflow-y: hidden !important;
     }
 
-
+.background-color-transparent {
+	background-color: transparent;
+}
 
   .mdc-text-field--filled:not(.mdc-text-field--disabled){
-	background-color: transparent;
+	@extend .background-color-transparent
   }
 
 //   .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
