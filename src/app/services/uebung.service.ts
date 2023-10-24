@@ -56,7 +56,7 @@ export class UebungService {
 
         const mDialogConfig = new MatDialogConfig();
         mDialogConfig.restoreFocus = true;
-        mDialogConfig.width = "500px";
+        mDialogConfig.width = "430px";
         mDialogConfig.height = "600px";
         mDialogConfig.disableClose = false;
         mDialogConfig.autoFocus = true;
