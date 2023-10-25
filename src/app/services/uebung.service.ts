@@ -36,9 +36,9 @@ export class UebungService {
         mDialogConfig.height = "650px";
         mDialogConfig.disableClose = false;
         mDialogConfig.autoFocus = true;
-
+        mDialogConfig.ariaModal = true;
         mDialogConfig.data = mUebungEditData;
-        mDialogConfig.hasBackdrop = false;
+        mDialogConfig.hasBackdrop = true;
 
         mUebungEditData.fUebung = aUebung;
         mUebungEditData.fUebungListe = aUebungsListe;
@@ -60,6 +60,7 @@ export class UebungService {
         mDialogConfig.height = "600px";
         mDialogConfig.disableClose = false;
         mDialogConfig.autoFocus = true;
+        mDialogConfig.ariaModal = true;
 
         this.fDbModule.LadeStammUebungen().then(
             (aUebungen: Array<Uebung>) => {

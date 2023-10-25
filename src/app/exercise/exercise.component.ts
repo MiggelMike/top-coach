@@ -5,6 +5,7 @@ import { Uebung } from "src/Business/Uebung/Uebung";
 import { Router } from "@angular/router";
 import { DialogData } from "../dialoge/hinweis/hinweis.component";
 import { Location } from '@angular/common'
+import { UebungService } from "../services/uebung.service";
 
 @Component({
 	selector: "app-exercise",
@@ -19,6 +20,7 @@ export class ExerciseComponent implements OnInit {
 		private location: Location,
 		private fDexieSvcService: DexieSvcService,
 		private router: Router,
+		private fUebungService: UebungService,
 		private fDialogService: DialogeService)
 	{
 		const mNavigation = this.router.getCurrentNavigation();
@@ -37,7 +39,9 @@ export class ExerciseComponent implements OnInit {
 	}
 
 	public EditExercise(aUebung: Uebung): void {
-		this.router.navigate(["/edit-exercise"], { state: { ueb: aUebung } });
+		const mUebungsListe: Array<Uebung> = [];
+		this.fUebungService.EditUebung(aUebung, mUebungsListe);
+		//this.router.navigate(["/edit-exercise"], { state: { ueb: aUebung } });
 	}
 
 	public NewExercise(): void {

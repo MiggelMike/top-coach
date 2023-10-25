@@ -37,7 +37,6 @@ export class EditExerciseComponent implements OnInit {
 	constructor(
 		private router: Router,
 		public fDexieService: DexieSvcService,
-		private location: Location,
 		public fDialogService: DialogeService
 	) {
 		const mNavigation = this.router.getCurrentNavigation();

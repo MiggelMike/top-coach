@@ -9,6 +9,7 @@ import { InitialWeightComponent } from './initial-weight/initial-weight.componen
 import { AnstehendeSessionsComponent } from './anstehende-sessions/anstehende-sessions.component';
 import { SessionFormComponent } from './bausteine/session-form/session-form.component';
 import { SettingsComponent } from './settings/settings.component';
+import { EditExerciseComponent } from './edit-exercise/edit-exercise.component';
 
 export const LadeStandardProgramme: ResolveFn<ITrainingsProgramm[]> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
 	return inject(DexieSvcService)
@@ -56,6 +57,10 @@ const routes: Routes = [
 	{
 		path: "exercise",
 		component: ExerciseComponent
+	},
+	{
+		path: "edit-exercise",
+		component: EditExerciseComponent
 	}
 ];
 	
