@@ -26,7 +26,6 @@ const routes: Routes = [
 		path: "",
 		resolve: { AktuellesProgramm: LadeAktuellesProgramm },
 		component: AnstehendeSessionsComponent
-		// loadChildren: () => import("./anstehende-sessions/anstehende-sessions/anstehende-sessions.module").then((m) => m.AnstehendeSessionsModule)
 	}
 	, {
 		path: "programmwaehlen",
@@ -40,22 +39,13 @@ const routes: Routes = [
 	, {
 		path: "app-initial-weight",
 		component: InitialWeightComponent
-		//		loadChildren: () => import("../app/initial-weight/initial-weight.module").then((m) => m.InitialWeightModule)
 	},
 	{
 		path: "sessionFormComponent",
-		// loadComponent: () => import("../../src/app/bausteine/session-form/session-form.component").then((m) => m.SessionFormComponent)		
-		//  loadChildren: () => import("../../src/app/bausteine/session-form/session-form.module").then((m) => {
-		//  	return m.SessionFormModule;
-		//  })		
 		component: SessionFormComponent
 	},
 	{
 		path: "history",
-		// loadComponent: () => import("../../src/app/bausteine/session-form/session-form.component").then((m) => m.SessionFormComponent)		
-		//  loadChildren: () => import("../../src/app/history/history.module").then((m) => {
-		//  	return m.HistoryModule;
-		//  })		
 		component: HistoryComponent
 	},
 	{
