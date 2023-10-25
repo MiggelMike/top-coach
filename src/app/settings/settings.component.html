@@ -13,12 +13,12 @@
     <p><a mat-button (click)="ResetDatabase()">Reset database</a></p>
 
     <!-- <div style="border-style:groove; border: 3px; border-color: blue; background-color: beige;"  fxLayoutAlign="center" > -->
-        <div class="center-item WeightUnit" fxLayout="column" fxFlex="80">
+        <div class="column-center WeightUnit">
             <div fxLayout="row wrap" fxLayoutAlign="center center">
                 <mat-label>Weight unit</mat-label>
             </div>
             
-            <div fxLayout="row wrap" fxLayoutAlign="center center">
+            <div class="row-center width-150">
                 
                 <div class="center-item" layout-align="center center" fxFlex="75px">
                     <mat-checkbox [(ngModel)]="KG">KG</mat-checkbox>
