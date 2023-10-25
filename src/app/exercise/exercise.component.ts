@@ -46,7 +46,7 @@ export class ExerciseComponent implements OnInit {
 
 	public DeleteExercise(aUebung: Uebung): void {
 		const mDialogData = new DialogData();
-		mDialogData.textZeilen.push("Delete record?");
+		mDialogData.textZeilen.push('Delete "' + aUebung.Name + '" ?');
 		mDialogData.OkFn = (): void => {
             this.fDexieSvcService.DeleteUebung(aUebung);
             this.fDexieSvcService.LadeStammUebungen();
