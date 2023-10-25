@@ -9,6 +9,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatSelectModule } from "@angular/material/select";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatButtonModule } from "@angular/material/button";
+import { ToolBarModule } from '../bausteine/toolbar/tool-bar-module/tool-bar-module.module';
 
 
 
@@ -28,6 +29,7 @@ import { MatButtonModule } from "@angular/material/button";
     MatSelectModule,
     MatInputModule,
     ReactiveFormsModule,
+    ToolBarModule
   ]
 })
 export class SettingsModule { }
