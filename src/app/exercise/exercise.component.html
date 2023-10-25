@@ -17,7 +17,7 @@
     </div>
 
     <ng-container *ngIf="UebungListeSortedByName">
-        <div fxLayout="row wrap"  fxFlex="100%" > 
+        <div class="row-center pad-5"> 
             <a class='link-button-font' mat-flat-button (click)="NewExercise()">New exercise</a>
         </div>
     
@@ -31,12 +31,11 @@
                     </ng-container>
 
                     <div id="exerciseName" class="column-center">
-                        <a (click)="EditExercise(uebung)">{{uebung.Name}}</a>
+                        <a class='exercise-button' (click)="EditExercise(uebung)">{{uebung.Name}}</a>
                     </div>
 
-
                     <div id="deleteExerciseButton" class="column-center">
-                        <a class="ref-button"  (click)="DeleteExercise(uebung)">Delete</a>
+                        <a class="exercise-button"  (click)="DeleteExercise(uebung)">Delete</a>
                     </div>
                 </div>
             </ng-container>
