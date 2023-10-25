@@ -8,7 +8,6 @@ import { JsonProperty } from '@peerlancers/json-serialization';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 // import { EditExerciseComponent, UebungEditData } from '../edit-exercise/edit-exercise.component';
 import { UebungEditData } from '../edit-exercise/edit-exercise.component';
-import { ScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
 
 
 @Injectable({
@@ -24,7 +23,6 @@ export class UebungService {
     public LetzteUebungID: number = 0;
 
     constructor(private fDbModule: DexieSvcService,
-        private fsso: ScrollStrategyOptions,
                 public fDialog?: MatDialog) { }
 
     public EditUebung(aUebung: Uebung, aUebungsListe: Array<Uebung>) {
@@ -36,14 +34,11 @@ export class UebungService {
         mDialogConfig.height = "650px";
         mDialogConfig.disableClose = false;
         mDialogConfig.autoFocus = true;
-        mDialogConfig.ariaModal = true;
-        mDialogConfig.data = mUebungEditData;
         mDialogConfig.hasBackdrop = true;
-
         mUebungEditData.fUebung = aUebung;
         mUebungEditData.fUebungListe = aUebungsListe;
+        mDialogConfig.data = mUebungEditData;
         mUebungEditData.fMatDialog = this.fDialog!.open(EditExerciseComponent, mDialogConfig);
-        
         (mUebungEditData.fMatDialog.componentInstance as EditExerciseComponent).UebungEditData = mUebungEditData;
         (mUebungEditData.fMatDialog.componentInstance as EditExerciseComponent).fDialog = mUebungEditData.fMatDialog;
         (mUebungEditData.fMatDialog.componentInstance as EditExerciseComponent).Uebung = mUebungEditData.fUebung;
@@ -76,8 +71,6 @@ export class UebungService {
                 mUebungWaehlenData.fUebungsListe = aUebungen;
                 mUebungWaehlenData.OkClickFn = aSelectFn;
                 mUebungWaehlenData.fSession = aSession;
-                // mUebungWaehlenData.fMatDialog = this.fDialog;
-        
                 mUebungWaehlenData.fMatDialog = this.fDialog!.open(UebungWaehlenComponent, mDialogConfig);
         
             }
