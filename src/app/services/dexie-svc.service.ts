@@ -757,21 +757,21 @@ export class DexieSvcService extends Dexie {
 	}
 
 	get UebungListeSortedByName(): Array<Uebung> {
-		return this.StammUebungsListe;
-		// const mResult: Array<Uebung> = this.StammUebungsListe.map((mUebung) => mUebung);
-		// mResult.sort((u1, u2) => {
-		// 	if (u1.Name > u2.Name) {
-		// 		return 1;
-		// 	}
+		// return this.StammUebungsListe;
+		const mResult: Array<Uebung> = this.StammUebungsListe.map((mUebung) => mUebung);
+		mResult.sort((u1, u2) => {
+			if (u1.Name > u2.Name) {
+				return 1;
+			}
 
-		// 	if (u1.Name < u2.Name) {
-		// 		return -1;
-		// 	}
+			if (u1.Name < u2.Name) {
+				return -1;
+			}
 
-		// 	return 0;
-		// });
+			return 0;
+		});
 
-		// return mResult;
+		return mResult;
 	}
 
 	MuskelgruppeListeSortedByName(): Array<MuscleGroup> {
