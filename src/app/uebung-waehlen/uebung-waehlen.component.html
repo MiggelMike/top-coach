@@ -11,7 +11,7 @@
         <div id="UebungWaehlen" class="column-center">
             <ng-container *ngFor="let uebung of data.fUebungsListe, index as i">
                 <!-- Zeilen-Hintergrundfarbe -> [ngClass]="{'HG-01': i % 2 === 0}" -->
-                <div class="row-Start-Left width-100-Prozent" [ngClass]="{'HG-01': i % 2 === 0}">
+                <div class="row-start-left width-100-Prozent" [ngClass]="{'HG-01': i % 2 === 0}">
                         <div class="column-start-left width-10-Prozent">
                             <mat-checkbox class="mg-5" [(ngModel)]="uebung.Selected"></mat-checkbox>
                         </div>

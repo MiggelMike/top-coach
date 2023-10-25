@@ -14,14 +14,14 @@
         </div>
 
     <div class="colum-center width-100%-Prozent">
-            <div class="row-Start-Left width-100%-Prozent">
+            <div class="row-start-left width-100%-Prozent">
                 <mat-form-field class="align-left">
                     <mat-label>Name</mat-label>
                     <input #Name matInput [(ngModel)]="Uebung.Name" maxlength="30" type="text">
                 </mat-form-field>
             </div>
 
-            <div class="row-Start-Left width-100%-Prozent">                
+            <div class="row-start-left width-100%-Prozent">                
                 <mat-form-field>
                     <mat-label>Equipment type</mat-label>
                     <mat-select [(ngModel)]="Uebung.EquipmentTyp">
@@ -81,7 +81,7 @@
                 </mat-select>
             </mat-form-field>
             
-            <div class="row-Start-Left width-100-Prozent">
+            <div class="row-start-left width-100-Prozent">
                     <textarea id="editExerciseDescription"  [(ngModel)]="Uebung.Beschreibung" mdInput placeholder="Notes" rows="3" 
                     maxlength="10000" ></textarea>
             </div>

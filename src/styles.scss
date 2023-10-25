@@ -324,7 +324,7 @@ div.herz:after {
 	
 }
 
-.row-Start-Left {
+.row-start-left {
 	display: flex;
 	justify-content:flex-start;
 	align-items:center;
@@ -568,7 +568,7 @@ textarea:focus {
 }
 
 #editExerciseBackIcon {
-	@extend .row-Start-Left;
+	@extend .row-start-left;
 	@extend .width-100-Prozent;
 }
 
