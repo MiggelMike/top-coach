@@ -1,3 +1,4 @@
+import { SettingsModule } from './settings/settings.module';
 import { SessionStatsOverlayModule } from './session-stats-overlay/session-stats-overlay.module';
 import { HistoryModule } from './history/history.module';
 import { SatzSimpleModule } from './bausteine/satz-simple/satz-simple.module';
@@ -125,7 +126,8 @@ import { MatTreeModule } from '@angular/material/tree';
 // import { MatStepperModule } from '@angular/material/stepper';
 // import { MatTableModule } from '@angular/material/table';
 import { ReactiveFormsModule } from '@angular/forms';
-import { provideEnvironmentNgxMask,IConfig } from 'ngx-mask'
+import { provideEnvironmentNgxMask } from 'ngx-mask'
+
 
 
 // import { HistoryComponent } from './history/history.component';
@@ -342,7 +344,8 @@ export interface IProgramModul {
 		, SatzSimpleModule
 		, SessionFormModule
 		, HistoryModule
-		,StoppUhrModuleModule
+		, StoppUhrModuleModule
+		, SettingsModule
 		// ,InitialWeightModule
 		
 

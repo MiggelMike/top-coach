@@ -2,7 +2,6 @@ import { AppData, GewichtsEinheit } from './../../Business/Coach/Coach';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DexieSvcService } from '../services/dexie-svc.service';
-import { GewichtsTyp } from 'src/Business/Konfiguration/Gewicht';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 

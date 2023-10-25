@@ -1,4 +1,3 @@
-import { HistoryModule } from './history/history.module';
 import { HistoryComponent } from './history/history.component';
 import { ITrainingsProgramm } from "./../Business/TrainingsProgramm/TrainingsProgramm";
 import { NgModule, inject } from "@angular/core";
@@ -8,8 +7,7 @@ import { WorkoutFormComponent } from "./bausteine/workout-form/workout-form.comp
 import { InitialWeightComponent } from './initial-weight/initial-weight.component';
 import { AnstehendeSessionsComponent } from './anstehende-sessions/anstehende-sessions.component';
 import { SessionFormComponent } from './bausteine/session-form/session-form.component';
-
-
+import { SettingsComponent } from './settings/settings.component';
 
 export const LadeStandardProgramme: ResolveFn<ITrainingsProgramm[]> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
 	return inject(DexieSvcService)
@@ -59,6 +57,10 @@ const routes: Routes = [
 		//  	return m.HistoryModule;
 		//  })		
 		component: HistoryComponent
+	},
+	{
+		path: "settings",
+		component: SettingsComponent
 	}
 	
 ];
