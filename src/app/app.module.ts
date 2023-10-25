@@ -1,3 +1,4 @@
+import { ExerciseModule } from './exercise/exercise.module';
 import { SettingsModule } from './settings/settings.module';
 import { SessionStatsOverlayModule } from './session-stats-overlay/session-stats-overlay.module';
 import { HistoryModule } from './history/history.module';
@@ -346,6 +347,7 @@ export interface IProgramModul {
 		, HistoryModule
 		, StoppUhrModuleModule
 		, SettingsModule
+		, ExerciseModule
 		// ,InitialWeightModule
 		
 

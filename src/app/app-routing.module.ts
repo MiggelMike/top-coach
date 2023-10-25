@@ -1,3 +1,4 @@
+import { ExerciseComponent } from './exercise/exercise.component';
 import { HistoryComponent } from './history/history.component';
 import { ITrainingsProgramm } from "./../Business/TrainingsProgramm/TrainingsProgramm";
 import { NgModule, inject } from "@angular/core";
@@ -51,8 +52,11 @@ const routes: Routes = [
 	{
 		path: "settings",
 		component: SettingsComponent
+	},
+	{
+		path: "exercise",
+		component: ExerciseComponent
 	}
-	
 ];
 	
 @NgModule({

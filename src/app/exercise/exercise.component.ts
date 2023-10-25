@@ -21,7 +21,6 @@ export class ExerciseComponent implements OnInit {
 		private router: Router,
 		private fDialogService: DialogeService)
 	{
-		const x = 0;
 		const mNavigation = this.router.getCurrentNavigation();
 		this.fDexieSvcService.LadeStammUebungen();
 		const mState = mNavigation.extras.state as { SelectMode: boolean; SelectedExerciseList: Array<Uebung>};
