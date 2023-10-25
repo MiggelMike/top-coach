@@ -1,6 +1,6 @@
 <div cdkDrag cdkDragRootElement=".cdk-overlay-pane"  class="column-center">
     <ng-container *ngIf="data && data.fUebungsListe" >
-        <div id="UebungWaehlenHeader" class="column-center">
+        <div  class="column-center">
             <h2 mat-dialog-title>Select exercise</h2>
             <div class="column-center">
                 <a class="ref-button" mat-flat-button
@@ -8,7 +8,7 @@
             </div>
         </div>
 
-        <div id="UebungWaehlen" class="column-center">
+        <div id="UebungsListe">
             <ng-container *ngFor="let uebung of data.fUebungsListe, index as i">
                 <!-- Zeilen-Hintergrundfarbe -> [ngClass]="{'HG-01': i % 2 === 0}" -->
                 <div class="row-start-left width-100-Prozent" [ngClass]="{'HG-01': i % 2 === 0}">
@@ -17,8 +17,7 @@
                         </div>
                         
                         <div class="column-center width-30-Prozent">
-                            <a class="link-button-font" mat-flat-button
-                            (click)="EditButtonClick(uebung,data.fUebungsListe)">Edit exercise</a>
+                            <a class="link-button-font" (click)="EditButtonClick(uebung,data.fUebungsListe)">Edit exercise</a>
                         </div>
                         
                         <div class="column-start-left">
@@ -26,13 +25,12 @@
                         </div>
                 </div>
             </ng-container>
-
         </div>
 
-            <div id="UebungWaehlenFooter" class="row-center">
-                <a class="ref-button" mat-flat-button (click)="OkButtonClick()">Ok</a>
-                <a class="ref-button" mat-flat-button
-                (click)="CancelClickFn()">Cancel</a>
-            </div>
-        </ng-container>
+        <div id="UebungWaehlenFooter" class="row-center">
+            <a class="ref-button" mat-flat-button (click)="OkButtonClick()">Ok</a>
+            <a class="ref-button" mat-flat-button
+            (click)="CancelClickFn()">Cancel</a>
+        </div>
+    </ng-container>
 </div>
