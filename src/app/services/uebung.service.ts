@@ -27,7 +27,6 @@ export class UebungService {
 
     public EditUebung(aUebung: Uebung, aUebungsListe: Array<Uebung>) {
         const mUebungEditData: UebungEditData = new UebungEditData();
-
         const mDialogConfig = new MatDialogConfig();
         mDialogConfig.restoreFocus = true;
         mDialogConfig.width = "450px";
@@ -78,9 +77,5 @@ export class UebungService {
         )
         
 
-    }
-
-    public AddUebung(aUebung: Uebung) {
-        this.Uebungen.push(aUebung);
     }
 }

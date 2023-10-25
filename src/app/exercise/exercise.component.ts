@@ -40,13 +40,10 @@ export class ExerciseComponent implements OnInit {
 
 	public EditExercise(aUebung: Uebung): void {
 		this.fUebungService.EditUebung(aUebung, this.fDexieSvcService.StammUebungsListe);
-		//this.router.navigate(["/edit-exercise"], { state: { ueb: aUebung } });
 	}
 
 	public NewExercise(): void {
-		const mUebungsListe: Array<Uebung> = [];
 		this.fUebungService.EditUebung(new Uebung(), this.fDexieSvcService.StammUebungsListe);
-		//this.router.navigate(["/edit-exercise"], { state: { ueb: new Uebung() } });
 	}
 
 	public DeleteExercise(aUebung: Uebung): void {
