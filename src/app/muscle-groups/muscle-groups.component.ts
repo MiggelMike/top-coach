@@ -41,7 +41,7 @@ export class MuscleGroupsComponent implements OnInit {
     
     public DeleteMuskel(aMuskelGruppe: MuscleGroup){
         const mDialogData = new DialogData();
-        mDialogData.textZeilen.push("Delete record?");
+        mDialogData.textZeilen.push('Delete "'+aMuskelGruppe.Name+'"?');
         mDialogData.OkFn = (): void => (this.DeletePrim(aMuskelGruppe));
         this.fDialogService.JaNein(mDialogData);
     }
