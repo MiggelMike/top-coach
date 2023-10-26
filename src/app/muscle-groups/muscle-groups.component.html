@@ -3,13 +3,12 @@
     <h4>Musclegroups</h4>
 </div>
 
-<div class="center-item" layout-align="center center">
+<div class="column-center">
     <a class='link-button-font btn btn-link' mat-flat-button (click)="NeueMuskelGruppe()">New Musclegroup</a>
-
 </div>
 
 <ng-container *ngIf="MuskelGruppenListe">
-    <div class="column-center">
+    <div class="column-center mg-top-5">
         <ng-container *ngFor="let mg of MuskelGruppenListe, index as i">
             <!-- Zeilen-Hintergrundfarbe -> [ngClass]="{'HG-01': i % 2 === 0}" -->
             <div class="row-center" [ngClass]="{'HG-01': i % 2 === 0}">

@@ -11,6 +11,7 @@ import { SessionFormComponent } from './bausteine/session-form/session-form.comp
 import { SettingsComponent } from './settings/settings.component';
 import { EditExerciseComponent } from './edit-exercise/edit-exercise.component';
 import { MuscleGroupsComponent } from './muscle-groups/muscle-groups.component';
+import { EditMuscleGroupComponent } from './edit-muscle-group/edit-muscle-group.component';
 
 export const LadeStandardProgramme: ResolveFn<ITrainingsProgramm[]> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
 	return inject(DexieSvcService)
@@ -66,6 +67,10 @@ const routes: Routes = [
 	{
 		path: "muscle-groups",
 		component: MuscleGroupsComponent
+	},
+	{
+		path: "edit-muscle-group",
+		component: EditMuscleGroupComponent
 	}
 
 	

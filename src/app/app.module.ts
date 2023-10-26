@@ -1,4 +1,5 @@
 import { MuscleGroupsModule } from './muscle-groups/muscle-groups.module';
+import { EditMuscleGroupModule } from './edit-muscle-group/edit-muscle-group.module';
 import { ExerciseModule } from './exercise/exercise.module';
 import { SettingsModule } from './settings/settings.module';
 import { SessionStatsOverlayModule } from './session-stats-overlay/session-stats-overlay.module';
@@ -350,6 +351,7 @@ export interface IProgramModul {
 		, SettingsModule
 		, ExerciseModule
 		, MuscleGroupsModule
+		, EditMuscleGroupModule
 		// ,InitialWeightModule
 		
 

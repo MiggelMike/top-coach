@@ -1,39 +1,29 @@
 <mat-icon  (click)="back()">arrow_back</mat-icon>
-<div fxLayout="row wrap" fxLayoutAlign="center center">
-    <h4>New/edit muscle</h4>
-</div>
+<div class="column-center"> 
+    <div id="EditMusclePanel" class="column-center"> 
+        <h4>New/edit muscle</h4>
 
-<div fxLayout="row wrap" fxLayoutAlign="center center">
-    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxFlex="100%"> 
-        <!-- <div layout-align="start center" fxFlex="0 0 70%">
-            <h6 flex>{{Muskelgruppe.Name}}</h6>
-        </div> -->
+        <mat-form-field class="column-start-left width-100-Prozent">
+            <mat-label>Name</mat-label>
+            <input 
+                #Name
+                matInput 
+                [(ngModel)]="Muskelgruppe.Name"
+                maxlength="30"
+                type="text"
+            >
+        </mat-form-field> 
 
-        <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">        
-            <mat-form-field class="align-left" fxFlex="100%">
-                <mat-label>Name</mat-label>
-                <input 
-                    #Name
-                    matInput 
-                    [(ngModel)]="Muskelgruppe.Name"
-                    maxlength="30"
-                    type="text"
-                >
-            </mat-form-field> 
-        </div>
+        <md-input-container class="width-100-Prozent">
+            <textarea id="EditMuscleDescripton" [(ngModel)]="Muskelgruppe.Bemerkung" mdInput placeholder="Notes" rows="3" maxlength="1000" class="colors-textarea width-100-Prozent"  ></textarea>
+        </md-input-container>
 
-        <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
-            <mat-label>Notes</mat-label>
-        </div>
+        <div class="row-center-gap10 pad-5">
+            <a class='link-button-font' mat-flat-button (click)="SaveChanges()">Save</a>
+            <a class='link-button-font' mat-flat-button (click)="CancelChanges()">Cancel</a>
+        </div>  
 
-        <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
-            <md-input-container fxFlex="100%">
-                
-                <textarea [(ngModel)]="Muskelgruppe.Bemerkung" mdInput placeholder="Notes" rows="3" fxFlex="100%"  maxlength="1000" class="colors-textarea"  ></textarea>
-            </md-input-container>
-        </div>   
     </div>
-
-    <!-- <app-data-store-buttons [SaveClick]="SaveChanges" [CancelClick]="CancelChanges" [ClickData]="this">
-    </app-data-store-buttons> -->
 </div>
+<!-- <app-data-store-buttons [SaveClick]="SaveChanges" [CancelClick]="CancelChanges" [ClickData]="this">
+    </app-data-store-buttons> -->

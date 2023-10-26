@@ -68,8 +68,8 @@ export class MuscleGroupsComponent implements OnInit {
         this.CmpMuscelListe = [];
         for (let index = 0; index < this.MuskelListeSortedByName.length; index++
         ) {
-            this.MuscelListe.push(this.MuskelListeSortedByName[index].Copy());
-            this.CmpMuscelListe.push(this.MuskelListeSortedByName[index].Copy());
+            this.MuscelListe.push(MuscleGroup.StaticCopy(this.MuskelListeSortedByName[index]));
+            this.CmpMuscelListe.push(MuscleGroup.StaticCopy(this.MuskelListeSortedByName[index]));
         }
     }
 

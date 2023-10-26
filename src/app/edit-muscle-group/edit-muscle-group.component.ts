@@ -25,15 +25,15 @@ export class EditMuscleGroupComponent implements OnInit {
   ) {
     const mNavigation = this.router.getCurrentNavigation();
     const mState = mNavigation.extras.state as { mg: MuscleGroup };
-    this.Muskelgruppe = mState.mg.Copy();
-    this.CmpMuskelgruppe = mState.mg.Copy();
+    this.Muskelgruppe = MuscleGroup.StaticCopy(mState.mg);
+    this.CmpMuskelgruppe = MuscleGroup.StaticCopy(mState.mg);
   }
 
   ngOnInit(): void {}
 
   back() {
 	  
-	if (this.Muskelgruppe.isEqual(this.CmpMuskelgruppe)) this.location.back();
+	if (MuscleGroup.StaticIsEqual(this.Muskelgruppe,this.CmpMuskelgruppe)) this.location.back();
 	else {
 		const mDialogData = new DialogData();
 		mDialogData.textZeilen.push("Save changes?");
@@ -65,7 +65,6 @@ export class EditMuscleGroupComponent implements OnInit {
 			mDialogData.textZeilen.push('Please enter a name!');
 			this.fDialogService.Hinweis(mDialogData);
 		} else {
-			this.location.back();
 			if (
 				(this.Muskelgruppe.ID === undefined ||
 					this.Muskelgruppe.ID <= 0) &&
@@ -83,7 +82,7 @@ export class EditMuscleGroupComponent implements OnInit {
 					.MuskelgruppeSpeichern(this.Muskelgruppe)
 					.then((mID: number) => {
 						this.Muskelgruppe.ID = mID;
-						this.CmpMuskelgruppe = this.Muskelgruppe.Copy();
+						this.CmpMuskelgruppe = MuscleGroup.StaticCopy(this.Muskelgruppe);
 						this.fDexieSvcService.LadeMuskelGruppen();
 					});
 			}
@@ -91,15 +90,15 @@ export class EditMuscleGroupComponent implements OnInit {
 	}
 
 	CancelChanges() {
-		const mTmpEditMuscleGroupComponent: EditMuscleGroupComponent = this
-			.ClickData as EditMuscleGroupComponent;
-		const mDialogData = new DialogData();
-		mDialogData.textZeilen.push('Cancel unsaved changes?');
-		mDialogData.OkFn = (): void => {
-			mTmpEditMuscleGroupComponent.Muskelgruppe =
-				mTmpEditMuscleGroupComponent.CmpMuskelgruppe.Copy();
-		};
-
-		mTmpEditMuscleGroupComponent.fDialogService.JaNein(mDialogData);
+		if (!MuscleGroup.StaticIsEqual(this.Muskelgruppe,this.CmpMuskelgruppe)){
+			const mDialogData = new DialogData();
+			mDialogData.textZeilen.push('Cancel changes?');
+			
+			mDialogData.OkFn = (): void => {
+				this.Muskelgruppe = MuscleGroup.StaticCopy(this.CmpMuskelgruppe);
+			}
+	
+			this.fDialogService.JaNein(mDialogData);
+		}		
 	}
 }

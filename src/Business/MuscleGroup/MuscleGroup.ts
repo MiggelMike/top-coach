@@ -53,12 +53,12 @@ export class MuscleGroup implements IMuscleGroup {
         return mMuscleGroup;
     }
 
-    public Copy(): MuscleGroup {
-        return cloneDeep(this); 
+    public static StaticCopy(aQuelle: MuscleGroup): MuscleGroup {
+        return cloneDeep(aQuelle); 
     }
 
-    public isEqual(aOtherMuscleGroup: MuscleGroup): Boolean {
-        return isEqual(this,aOtherMuscleGroup);
+    public static  StaticIsEqual(aMuscleGroup1: MuscleGroup, aMuscleGroup2: MuscleGroup): Boolean {
+        return isEqual(aMuscleGroup1,aMuscleGroup2);
     }
 }
 
