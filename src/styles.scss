@@ -302,7 +302,7 @@ div.herz:after {
 	flex-direction: column;
 }
 
-.column-start-left {
+@mixin column-start-left {
 	@extend .align-items-left;
 }
 

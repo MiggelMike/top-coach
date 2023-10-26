@@ -1,5 +1,5 @@
 <app-toolbar></app-toolbar>
-<div fxLayout="row wrap" fxLayoutAlign="center center">
+<div class="column-center">
     <h4>Muscles</h4>
 </div>
 
@@ -9,16 +9,16 @@
 </div>
 
 <ng-container *ngIf="MuskelGruppenListe">
-    <div class="center-item">
+    <div class="column-center">
         <ng-container *ngFor="let mg of MuskelGruppenListe, index as i">
             <!-- Zeilen-Hintergrundfarbe -> [ngClass]="{'HG-01': i % 2 === 0}" -->
-            <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%" [ngClass]="{'HG-01': i % 2 === 0}">
-                <div fxLayout="column" fxFlex="200px" fxLayoutAlign="center start">
-                    <a mat-button (click)="EditMuskelGruppe(mg)">{{mg.Name}}</a>
-                </div>
-                <div fxLayout="column" fxFlex="20%" fxLayoutAlign="center end">
-                    <a class="ref-button" mat-button (click)="DeleteMuskel(mg)">Delete</a>
-                </div>
+            <div class="row-center" [ngClass]="{'HG-01': i % 2 === 0}">
+                    <div id="muscleGroupName" class="column-center">
+                        <a class="HG-Transparent"  (click)="EditMuskelGruppe(mg)">{{mg.Name}}</a>
+                    </div>
+                    <div class="column-center width-20%-Prozent">
+                        <a class="ref-button" mat-button (click)="DeleteMuskel(mg)">Delete</a>
+                    </div>
             </div>
         </ng-container>
     </div>
