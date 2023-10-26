@@ -10,6 +10,7 @@ import { AnstehendeSessionsComponent } from './anstehende-sessions/anstehende-se
 import { SessionFormComponent } from './bausteine/session-form/session-form.component';
 import { SettingsComponent } from './settings/settings.component';
 import { EditExerciseComponent } from './edit-exercise/edit-exercise.component';
+import { MuscleGroupsComponent } from './muscle-groups/muscle-groups.component';
 
 export const LadeStandardProgramme: ResolveFn<ITrainingsProgramm[]> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
 	return inject(DexieSvcService)
@@ -61,7 +62,13 @@ const routes: Routes = [
 	{
 		path: "edit-exercise",
 		component: EditExerciseComponent
+	},
+	{
+		path: "muscle-groups",
+		component: MuscleGroupsComponent
 	}
+
+	
 ];
 	
 @NgModule({
