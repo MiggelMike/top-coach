@@ -1,5 +1,6 @@
 import { MuscleGroupsModule } from './muscle-groups/muscle-groups.module';
 import { EditMuscleGroupModule } from './edit-muscle-group/edit-muscle-group.module';
+import { LanghantelModule } from '../app/langhantel/langhantel.module';
 import { ExerciseModule } from './exercise/exercise.module';
 import { SettingsModule } from './settings/settings.module';
 import { SessionStatsOverlayModule } from './session-stats-overlay/session-stats-overlay.module';
@@ -352,6 +353,7 @@ export interface IProgramModul {
 		, ExerciseModule
 		, MuscleGroupsModule
 		, EditMuscleGroupModule
+		, LanghantelModule
 		// ,InitialWeightModule
 		
 

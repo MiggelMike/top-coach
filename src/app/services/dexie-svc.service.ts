@@ -22,6 +22,7 @@ import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
 import { DiaDatum, DiaUebung, DiaUebungSettings } from 'src/Business/Diagramm/Diagramm';
 import { Sprache } from '../Sprache/Sprache';
+import { promises } from 'dns';
 var cloneDeep = require('lodash.clonedeep');
 
 
@@ -207,7 +208,10 @@ export class DexieSvcService extends Dexie {
 	private ProgrammTable: Dexie.Table<ITrainingsProgramm, number>;
 	private SessionTable: Dexie.Table<SessionDB, number>;
 	private MuskelGruppeTable: Dexie.Table<MuscleGroup, number>;
-	private HantelTable: Dexie.Table<Hantel, number>;
+	private get HantelTable(): Dexie.Table<Hantel, number>
+	{ 
+		return this.table(this.cHantel);
+	};
 	private HantelscheibenTable: Dexie.Table<Hantelscheibe, number>;
 	private EquipmentTable: Dexie.Table<Equipment, number>;
 	private ProgressTable: Dexie.Table<Progress, number>;
@@ -708,7 +712,7 @@ export class DexieSvcService extends Dexie {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
 		}
 
-		 //        Dexie.delete("ConceptCoach");
+		        //  Dexie.delete("ConceptCoach");
 		this.version(35).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
@@ -725,6 +729,8 @@ export class DexieSvcService extends Dexie {
 			Sprache: "++id"
 			
 		});
+		this.table(this.cHantel).mapToClass(Hantel);
+
 		this.InitDatenbank();
 	}
 			
@@ -812,10 +818,10 @@ export class DexieSvcService extends Dexie {
 	}
 
 	private async InitAll() {
+		this.InitHantel();
 	    this.InitProgress();
 		await this.InitSprache();
 		await this.InitAppData();
-		this.InitHantel();
 		this.InitHantelscheibe();
 		this.InitEquipment();
 		this.InitUebung();
@@ -865,10 +871,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	private InitHantel() {
-		if (this.HantelTable === undefined) {
-			this.HantelTable = this.table(this.cHantel);
-			this.HantelTable.mapToClass(Hantel);
-		}
+
 	}
 
 	private InitHantelscheibe() {
@@ -1012,11 +1015,18 @@ export class DexieSvcService extends Dexie {
 		return this.MuskelGruppeTable.put(aMuskelgruppe);
 	}
 
-	public HantelSpeichern(aHantel: Hantel) {
-		return this.HantelTable.put(aHantel).then(
-			(aID) => {
-				aHantel.ID = aID;
-			});
+	public HantelSpeichern(aHantel: Hantel):Promise<Hantel> {
+		try {
+			return this.HantelTable.put(aHantel).then(
+				(aID) => {
+					aHantel.ID = aID;
+					return aHantel;
+				});
+		} catch (err) {
+			console.log(err);
+			return null;
+			
+		}
 	}
 
 	public InsertHanteln(aHantelListe: Array<Hantel>): PromiseExtended {
