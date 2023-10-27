@@ -4,11 +4,11 @@
     <h4>Barbells</h4>
     <a class='link-button-font' mat-flat-button (click)="NeueHantel()" >New barbell</a>
 
-<ng-container *ngIf="HantelListe">
-    <ng-container *ngFor="let Hantel of HantelListe, index as i">
-        <div fxLayout="row wrap" fxLayoutAlign="center center" >
-            <div fxLayout="row wrap" fxLayoutAlign="center center"  fxFlex="90%" fxLayoutGap="2px"    [ngClass]="{'HG-01': i % 2 === 0}">
-                <mat-form-field class="align-left" fxFlex="auto">
+    <ng-container *ngIf="HantelListe">
+        <ng-container *ngFor="let Hantel of HantelListe, index as i">
+            <div fxLayout="row wrap" fxLayoutAlign="center center" >
+                <div fxLayout="row wrap" fxLayoutAlign="center center"  fxFlex="90%" fxLayoutGap="2px"    [ngClass]="{'HG-01': i % 2 === 0}">
+                    <mat-form-field class="align-left" fxFlex="auto">
                         <mat-label>Name</mat-label>
                         <input matInput [(ngModel)]="Hantel.Name" maxlength="50" type="text">
                     </mat-form-field>
@@ -38,13 +38,6 @@
                 </div>
             </div>
         </ng-container>
-        
-        <!-- <div class="center-item" layout-align="center center">
-            <a class='link-button-font' mat-flat-button (click)="NeueHantel()" >New Barbell</a>
-        </div> -->
-        
-        <!-- <app-data-store-buttons [SaveClick]="SaveChanges" [CancelClick]="CancelChanges" [ClickData]="this"></app-data-store-buttons> -->
-        
     </ng-container>
 </div>
 
