@@ -1,7 +1,6 @@
-import { cDateTimeFormat, DexieSvcService } from 'src/app/services/dexie-svc.service';
+import { cDateTimeFormat, DexieSvcService } from '../services/dexie-svc.service';
 import { Component, OnInit } from '@angular/core';
-import { BodyWeight } from 'src/Business/Bodyweight/Bodyweight';
-import { floatMask } from '../app.module';
+import { BodyWeight } from '../../Business/Bodyweight/Bodyweight';
 
 @Component({
 	selector: 'app-bodyweight',
@@ -11,7 +10,6 @@ import { floatMask } from '../app.module';
 export class BodyweightComponent implements OnInit {
   DateTimeFormat: string = cDateTimeFormat;
   BodyweightList: Array<BodyWeight> = [];
-  public floatMask = floatMask;
 
   constructor(private fDbModul: DexieSvcService) {
     this.fDbModul.LadeBodyweight().then((aBodyweights) => this.BodyweightList = aBodyweights);
