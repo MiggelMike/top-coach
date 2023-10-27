@@ -77,6 +77,14 @@ body {
 	height: 50px;
 }
 
+.height-60 {
+	height: 60px;
+}
+
+.height-65 {
+	height: 65px;
+}
+
 .height-75 {
 	height: 75px;
 }
@@ -343,6 +351,12 @@ div.herz:after {
 	align-items:center;
 	flex-direction: row;
 }
+
+.row-start-left-gap-3 {
+	@extend .row-start-left;
+	column-gap: 3px;
+}
+
 
 .link-button-font {
 	padding: 5px;

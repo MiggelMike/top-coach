@@ -1,0 +1,25 @@
+.margin-left {
+    margin-left: 3px;
+}
+
+
+#Name{
+    @extend .margin-left;
+    width: 250px;
+}
+
+#Diameter{
+    @extend .margin-left;    
+    width: 70px;
+}
+
+#Weight{
+    @extend .margin-left;    
+    width: 65px;
+}
+
+
+#Delete{
+    @extend .margin-left;    
+    width: 48px;
+}
