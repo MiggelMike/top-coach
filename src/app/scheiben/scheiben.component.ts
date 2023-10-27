@@ -58,8 +58,9 @@ export class ScheibenComponent implements OnInit {
         mDialogData.textZeilen.push("Delete record?");
 		mDialogData.OkFn = (): void => {
 			const mIndex = this.HantelscheibenListe.indexOf(aScheibe);
-			if(mIndex >= 0)
-				this.HantelscheibenListe.splice(1,1);
+			if (mIndex >= 0) {
+				this.HantelscheibenListe.splice(mIndex, 1);
+			}
 		};
         this.fDialogService.JaNein(mDialogData);	
 	}
@@ -95,11 +96,7 @@ export class ScheibenComponent implements OnInit {
 			}
 
 			mDialogData.CancelFn = (): void => {
-				const mCancelDialogData = new DialogData();
-				mCancelDialogData.textZeilen.push("Changes will be lost!");
-				mCancelDialogData.textZeilen.push("Are you shure?");
-				mCancelDialogData.OkFn = (): void => this.location.back();
-				this.fDialogService.JaNein(mCancelDialogData);
+				this.location.back();
 			}
 
 			this.fDialogService.JaNein(mDialogData);
@@ -124,6 +121,18 @@ export class ScheibenComponent implements OnInit {
 					this.fDialogService.Hinweis(mDialogData);
 				} else alert(e);
 			});
+		
+		this.CmpHantelscheibenListe.forEach(
+			(mCpmHantelScheibe: Hantelscheibe) => {
+				if (mCpmHantelScheibe.ID !== undefined) {
+					if (!this.HantelscheibenListe.find(
+						(mHantelscheibe) => {
+							return mHantelscheibe.ID === mCpmHantelScheibe.ID;
+					})) {
+						this.fDexieSvcService.DeleteHantelscheibe(mCpmHantelScheibe.ID);
+					}
+				}
+		});
 	}
 
 	CancelChanges() {
