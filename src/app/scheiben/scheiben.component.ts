@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Hantelscheibe } from "src/Business/Hantelscheibe/Hantelscheibe";
 import { DialogData } from "../dialoge/hinweis/hinweis.component";
-import { floatMask, repMask, Int2DigitMask, Int4DigitMask } from "./../app.module";
 import { Location } from "@angular/common";
 import { DexieSvcService } from "../services/dexie-svc.service";
 import { DialogeService } from "../services/dialoge.service";
@@ -12,10 +11,6 @@ import { DialogeService } from "../services/dialoge.service";
 	styleUrls: ["./scheiben.component.scss"],
 })
 export class ScheibenComponent implements OnInit {
-	public floatMask = floatMask;
-	public repMask = repMask;
-	public Int2DigitMask = Int2DigitMask;
-	public Int4DigitMask = Int4DigitMask;
 	public ClickData: ScheibenComponent = this;
 
 	public HantelscheibenListe: Array<Hantelscheibe> = [];
