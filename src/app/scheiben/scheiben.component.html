@@ -1,34 +1,33 @@
 <mat-icon  (click)="back()">arrow_back</mat-icon>
 
-<div fxLayout="row wrap" fxLayoutAlign="center center">
+<div class="column-center">
     <h4>Plates</h4>
-</div>
+    <a class='link-button-font mg-bottom-3' mat-flat-button (click)="NeueScheibe()" >New Plate</a>
 
+    <ng-container *ngIf="HantelscheibenListe">
+        <ng-container *ngFor="let sch of HantelscheibenListe, index as i">
 
-<ng-container *ngIf="HantelscheibenListe">
-    <ng-container *ngFor="let sch of HantelscheibenListe, index as i">
-        <div fxLayout="row wrap" fxLayoutAlign="center center" class="mg-5"  >
-            <div fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="2px" fxFlex="100%"   [ngClass]="{'HG-01': i % 2 === 0}">
-                
-                <mat-form-field class="align-right" fxFlex="20%">
-                    <mat-label>Diameter</mat-label>
-                    <input matInput 
-                    class="align-right"
-                    mask="99" 
-                    (focusout)="SetDiameter(sch,$event)"
-                    [ngModel]="sch.Durchmesser" type="text">
-                </mat-form-field>
-                
-                <mat-form-field class="align-right" fxFlex="20%">
-                    <mat-label>Weight</mat-label>
-                    <input matInput 
-                    class="align-right"
-                    mask="999.00" 
-                    (focusout)="SetWeight(sch,$event)"
-                    [ngModel]="sch.Gewicht" type="text">
-                </mat-form-field>
-                
-                <mat-form-field class="align-right" fxFlex="20%">
+            <div fxLayout="row wrap" fxLayoutAlign="center center" class="mg-5"  >
+                <div class="row-start-left-gap-3" [ngClass]="{'HG-01': i % 2 === 0}">
+                    <mat-form-field id="Diameter" class="align-right">
+                        <mat-label>Diameter</mat-label>
+                        <input matInput 
+                        class="align-right"
+                        mask="99" 
+                        (focusout)="SetDiameter(sch,$event)"
+                        [ngModel]="sch.Durchmesser" type="text">
+                    </mat-form-field>
+                    
+                    <mat-form-field id="Weight" class="align-right">
+                        <mat-label>Weight</mat-label>
+                        <input matInput 
+                        class="align-right"
+                        mask="999.00" 
+                        (focusout)="SetWeight(sch,$event)"
+                        [ngModel]="sch.Gewicht" type="text">
+                    </mat-form-field>
+                    
+                    <mat-form-field id="Anzahl" class="align-right">
                     <mat-label>#</mat-label>
                     <input matInput 
                     class="align-right"
@@ -38,16 +37,11 @@
                 </mat-form-field>
                 
                 
-                <a class="ref-button" (click)="Delete(sch)">Delete</a>
+                <a id="Delete" class="ref-button" (click)="Delete(sch)">Delete</a>
             </div>
         </div>
     </ng-container>
     
-    <div class="center-item" layout-align="center center">
-        <a class='link-button-font' mat-flat-button (click)="NeueScheibe()" >New Plate</a>
-    </div>
-
-    <!-- <app-data-store-buttons [SaveClick]="SaveChanges" [CancelClick]="CancelChanges" [ClickData]="this"></app-data-store-buttons> -->
-
-</ng-container>
+    </ng-container>
+</div>
 

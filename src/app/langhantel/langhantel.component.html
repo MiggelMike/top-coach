@@ -7,7 +7,7 @@
     <ng-container *ngIf="HantelListe">
         <ng-container *ngFor="let Hantel of HantelListe, index as i">
                 <div class="row-start-left-gap-3" [ngClass]="{'HG-01': i % 2 === 0}">
-                    <mat-form-field id="Name" class="align-left" fxFlex="auto">
+                    <mat-form-field id="Name" class="align-left">
                         <mat-label>Name</mat-label>
                         <input matInput [(ngModel)]="Hantel.Name" maxlength="50" type="text">
                     </mat-form-field>
