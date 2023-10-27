@@ -29,9 +29,6 @@ export class ScheibenComponent implements OnInit {
 	GetHantelscheibenListe() {
 		this.fDexieSvcService.LadeHantelscheiben((mHantelscheibenListe) => {
 			this.HantelscheibenListe = this.fDexieSvcService.HantenscheibeListeSortedByDiameterAndWeight;
-			// mHantelscheibenListe.forEach((hs) => {
-			//  	this.HantelscheibenListe.push(hs);
-			// });
 			this.CopyHantelscheibenList();
 		});
 	}
@@ -60,8 +57,9 @@ export class ScheibenComponent implements OnInit {
 		const mDialogData = new DialogData();
         mDialogData.textZeilen.push("Delete record?");
 		mDialogData.OkFn = (): void => {
-			this.fDexieSvcService.DeleteHantelscheibe(aScheibe.ID)
-				.then( () => this.GetHantelscheibenListe() );
+			const mIndex = this.HantelscheibenListe.indexOf(aScheibe);
+			if(mIndex >= 0)
+				this.HantelscheibenListe.splice(1,1);
 		};
         this.fDialogService.JaNein(mDialogData);	
 	}
