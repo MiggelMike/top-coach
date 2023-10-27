@@ -1,32 +1,29 @@
-<div fxLayout="row wrap" fxLayoutAlign="center center">
+<div class="column-center">
     <h4>Initial weights</h4>
-</div>
+    
+    <ng-container *ngFor="let iw of InitialWeightList, index as i">
+        <div class="row-start-left-gap-3 height-65" [ngClass]="{'HG-01': i % 2 === 0}">            
 
-<ng-container *ngFor="let iw of InitialWeightList">
-    <div fxLayout="row wrap" fxLayoutAlign="center center">
-        <div class="center-item" fxLayout="column" fxFlex="15%">
-                <mat-label>{{iw.Name}}</mat-label>
+                <mat-label id="Name">{{iw.Name}}</mat-label>
+            
+                <mat-form-field>
+                    <mat-label>Initial weight</mat-label>
+                    <input matInput 
+                        class="align-right"
+                        mask="999.000" 
+                        (focus)="OnFocus($event)"
+                        (focusout)="SetWeight(iw,$event)" 
+                        (click)="onInitialWeightClick($event)" 
+                        [ngModel]="iw.Weight" type="text"
+                        >
+                </mat-form-field>
         </div>
-
-        <div class="center-item" fxLayout="column" fxFlex="25%">
-            <mat-form-field class="align-left">
-                <mat-label>Initial weight</mat-label>
-                <input matInput 
-                    mask="999.000" 
-                    (focus)="OnFocus($event)"
-                    (focusout)="SetWeight(iw,$event)" 
-                    (click)="onInitialWeightClick($event)" 
-                    [ngModel]="iw.Weight" type="text">
-            </mat-form-field>
-        </div>
-    </div>
-</ng-container>
-
-<div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center" [style.margin-top]="'5px'">
-    <div class="center-item" layout-align="center center">
+    </ng-container>
+    
+    
+    <div class="row-start-left-gap-3 mg-top-5">
         <a class='link-button-font' mat-flat-button (click)="OkClick()">Save</a>
-    </div>
-    <div class="center-item" layout-align="center center">
+
         <a class='link-button-font' mat-flat-button (click)="CancelClick()">Cancel</a>
     </div>
 </div>

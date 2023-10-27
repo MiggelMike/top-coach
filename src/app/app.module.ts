@@ -105,8 +105,8 @@ import { AnstehendeSessionsModule } from "./anstehende-sessions/anstehende-sessi
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WorkoutFormModule } from './bausteine/workout-form/workout-form.module';
 import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.component';
-// import { InitialWeightModule } from './initial-weight/initial-weight.module';
-import { InitialWeightComponent } from './initial-weight/initial-weight.component';
+import { InitialWeightModule } from './initial-weight/initial-weight.module';
+//import { InitialWeightComponent } from './initial-weight/initial-weight.component';
 import { AnstehendeSessionsComponent } from './anstehende-sessions/anstehende-sessions.component';
 import { SessionFormModule } from './bausteine/session-form/session-form.module';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -132,6 +132,7 @@ import { MatTreeModule } from '@angular/material/tree';
 // import { MatTableModule } from '@angular/material/table';
 import { ReactiveFormsModule } from '@angular/forms';
 import { provideEnvironmentNgxMask, provideNgxMask } from 'ngx-mask'
+import { InitialWeightComponent } from './initial-weight/initial-weight.component';
 
 
 
@@ -172,67 +173,6 @@ export enum ProgramModulTyp {
 export interface IProgramModul {
 	get programModul(): (typeof ProgramModulTyp);
 }
-
- 
-//   export const floatMask = createNumberMask({
-// 	  prefix: '',
-// 	  suffix: '', 
-// 	  includeThousandsSeparator: true, //  (boolean): whether or not to separate thousands. Defaults to to true.
-// 	  integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
-// 	  allowDecimal: true, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
-// 	  decimalLimit: 3,
-// 	  // requireDecimal: true,
-// 	  // allowLeadingZeroes: true
-// 	})
-  
-// 	export const repMask = createNumberMask({
-// 	  prefix: '',
-// 	  suffix: '', 
-// 	  includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
-// 	  integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
-// 	  allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
-// 	})
-  
-// 	export const Int2DigitMask = createNumberMask({
-// 	  prefix: '',
-// 	  suffix: '', 
-// 	  includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
-// 	  integerLimit: 2, // (number): limit the length of the integer number. Defaults to null for unlimited
-// 	  allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
-// 	})
-
-	export const Int3DigitMask = "000";
-  	// export const Int3DigitMask = createNumberMask({
-	//   prefix: '',
-	// 	suffix: '', 
-	// regex: "\\d*",
-
-	//   includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
-	//   integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
-	// 	allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
-	  
-	// 	decimalLimit: 2,
-	// 	requireDecimal: false,
-	// 	allowNegative: false,
-	// 	allowLeadingZeroes: false
-	// })  
-  
-	// export const Int4DigitMask = createNumberMask({
-	//   prefix: '',
-	//   suffix: '', 
-	//   includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
-	//   integerLimit: 4, // (number): limit the length of the integer number. Defaults to null for unlimited
-	//   allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
-	// })    
-
-	// export const Int8DigitMask = createNumberMask({
-	// 	prefix: '',
-	// 	suffix: '', 
-	// 	includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
-	// 	integerLimit: 8, // (number): limit the length of the integer number. Defaults to null for unlimited
-	// 	allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
-	//   }) 
-
 
 @NgModule({
 	declarations: [
@@ -355,7 +295,7 @@ export interface IProgramModul {
 		, EditMuscleGroupModule
 		, LanghantelModule
 		, ScheibenModule
-		// ,InitialWeightModule
+		, InitialWeightModule
 		
 
 	],
