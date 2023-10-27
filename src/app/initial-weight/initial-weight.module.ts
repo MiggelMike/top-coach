@@ -15,15 +15,15 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { InitialWeightComponent } from './initial-weight.component';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 
-const routes: Routes = [{ path: 'app-initial-weight', component: InitialWeightComponent }];
+//const routes: Routes = [{ path: 'app-initial-weight', component: InitialWeightComponent }];
 
 @NgModule({
-  declarations: [],
-  exports: [RouterModule],
+  declarations: [InitialWeightComponent],
+  exports: [InitialWeightComponent],
   imports: [
     CommonModule,
     FormsModule,
-    RouterModule.forChild(routes),
+  //  RouterModule.forChild(routes),
     MatIconModule,
     FormsModule,
     MatInputModule,

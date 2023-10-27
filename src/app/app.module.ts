@@ -183,7 +183,7 @@ export interface IProgramModul {
 		// ,ProgrammWaehlenComponent
 		, DialogComponent
 		, WorkoutFormComponent
-		, InitialWeightComponent 
+		// , InitialWeightComponent 
 		// , HistoryComponent
 		
 
