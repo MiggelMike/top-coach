@@ -107,11 +107,7 @@ export class LanghantelComponent implements OnInit {
 			}
 
 			mDialogData.CancelFn = (): void => {
-				const mCancelDialogData = new DialogData();
-				mCancelDialogData.textZeilen.push("Changes will be lost!");
-				mCancelDialogData.textZeilen.push("Are you shure?");
-				mCancelDialogData.OkFn = (): void => this.location.back();
-				this.fDialogService.JaNein(mCancelDialogData);
+				this.location.back();
 			}
 
 			this.fDialogService.JaNein(mDialogData);
