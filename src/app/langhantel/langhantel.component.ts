@@ -163,7 +163,7 @@ export class LanghantelComponent implements OnInit {
 
     Delete(aHantel: Hantel) {
         const mDialogData = new DialogData();
-        mDialogData.textZeilen.push("Delete record?");
+        mDialogData.textZeilen.push('Delete "'+ aHantel.Name+'"?');
         mDialogData.OkFn = (): void => (this.DeletePrim(aHantel));
         this.fDialogService.JaNein(mDialogData);
     }
