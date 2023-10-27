@@ -98,6 +98,6 @@ export class Programm01Component implements OnInit, IProgramModul {
 
     EditThisWorkoutClick($event): void {
         $event.stopPropagation();
-        this.router.navigate(["/workoutform"], { state: { programm: this.programm, ModulTyp: this.ModulTyp} });
+        this.router.navigate(["/workoutform"], { state: { programm: this.programm, ModulTyp: ProgramModulTyp.EditWorkout } });
     }
 }

@@ -54,18 +54,20 @@
                                             <div layout-align="start center" fxFlex="0 0 35%">
                                                 <span class="tc-font-size-smaller font-bold">#{{i+1}} {{SessUeb.Name}}</span>
                                             </div>
-                                            
-                                            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="60px"
-                                            (click)="DoSettings(SessUeb, $event)">Settings
-                                        </a>
                                         
-                                        <ng-container *ngIf="ModulTyp !== programModul.History">
-                                            <a  [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="85px"
-                                            (click)="CopyExcercise(SessUeb, $event)">Copy exercise</a>
-                                            
-                                            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
-                                            (click)="DeleteExercise(i+1,SessUeb,$event)">Delete Exercise</a>
-                                        </ng-container>
+                                            <ng-container *ngIf="ModulTyp === programModul.RunningSession">
+                                                <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="60px"
+                                                    (click)="DoSettings(SessUeb, $event)">Settings
+                                                </a>
+                                            </ng-container>
+                                        
+                                            <ng-container *ngIf="ModulTyp === programModul.RunningSession || ModulTyp === programModul.EditWorkout">
+                                                <a  [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="85px"
+                                                (click)="CopyExcercise(SessUeb, $event)">Copy exercise</a>
+                                                
+                                                <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
+                                                (click)="DeleteExercise(i+1,SessUeb,$event)">Delete Exercise</a>
+                                            </ng-container>
             
                                         <ng-container *ngIf="getArbeitsSaetzeStatus(SessUeb) === 2">
                                             <div fxLayout="column" class="height-10">

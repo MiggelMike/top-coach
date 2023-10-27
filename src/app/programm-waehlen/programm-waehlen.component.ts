@@ -14,7 +14,6 @@ import { IProgramModul, ProgramModulTyp } from '../app.module';
 export class ProgrammWaehlenComponent implements OnInit, IProgramModul {
     public ProgrammListeObserver: Observable<ITrainingsProgramm[]>;
     public ProgrammListe: Array<ITrainingsProgramm> = [];
-    // public ModulTyp: ProgramModulTyp = ProgramModulTyp.SelectWorkout;
 
     constructor(
         public fDbModule: DexieSvcService

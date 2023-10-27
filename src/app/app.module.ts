@@ -166,7 +166,8 @@ export enum ProgramModulTyp {
 	AnstehendeSessions,
 	History,
 	SelectWorkout,
-	RunningSession
+	RunningSession,
+	EditWorkout
 
  }
 
