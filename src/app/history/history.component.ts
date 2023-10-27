@@ -3,21 +3,16 @@ import { cDeutschKuezel as cDeutschKuerzel, cEnglishKuerzel, cDeutschDateInputMa
 import { DexieSvcService, SessionParaDB, cMaxDatum, cMinDatum } from './../services/dexie-svc.service';
 import { DiaDatum, DiaUebung, DiaUebungSettings } from './../../Business/Diagramm/Diagramm';
 import { Component, ContentChild, Inject, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { IProgramModul, ProgramModulTyp, repMask } from './../../app/app.module';
+import { IProgramModul, ProgramModulTyp } from './../../app/app.module';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { LineChartComponent } from '@swimlane/ngx-charts';
 import { FormControl, FormGroup } from '@angular/forms';
 import { LOCALE_ID } from '@angular/core';
 import * as _moment from 'moment';
-import { DatePipePipe } from '../../app/DatePipe/date-pipe.pipe';
-
 import { AppData } from '../../Business/Coach/Coach';
 import { ISession } from '../../Business/Session/Session';
-// const moment = _rollupMoment || _moment;
 var cloneDeep = require('lodash.clonedeep');
-
-
 
 @Component({
 	selector: 'app-history',
@@ -27,7 +22,6 @@ var cloneDeep = require('lodash.clonedeep');
 export class HistoryComponent implements OnInit, IProgramModul {
 	SessionListe: Array<ISession> = [];
 	LadeLimit: number = 10;
-	public repMask = repMask;
 	public AppData: AppData;
 	// public DiaTyp: string = 'line';
 	public DiaUebungsListe: Array<DiaUebung> = [];

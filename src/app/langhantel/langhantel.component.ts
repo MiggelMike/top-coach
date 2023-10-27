@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Hantel  } from 'src/Business/Hantel/Hantel';
 import { DexieSvcService, ErstellStatus } from '../services/dexie-svc.service';
 import { DialogeService } from '../services/dialoge.service';
-import { floatMask, repMask, Int2DigitMask } from './../app.module';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { Location } from '@angular/common';
 
@@ -13,22 +12,17 @@ import { Location } from '@angular/common';
     styleUrls: ["./langhantel.component.scss"],
 })
 export class LanghantelComponent implements OnInit {
-    public floatMask = floatMask;
-    public repMask = repMask;
-    public Int2DigitMask = Int2DigitMask;
     LoeschListe: Array<Hantel> = [];
     LoeschListeAutomatischErstellte: Array<Hantel> = [];
     HantelListe: Array<Hantel> = [];
     CmpHantelListe: Array<Hantel> = [];
-    public ClickData: LanghantelComponent;
 
     constructor(
         private fDexieSvcService: DexieSvcService,
         public fDialogService: DialogeService,
         private location: Location
     ) {
-        this.fDexieSvcService.LadeLanghanteln().then((mLanghantelListe: Array<Hantel>) =>
-        {
+        this.fDexieSvcService.LadeLanghanteln().then((mLanghantelListe: Array<Hantel>) => {
             this.CopyHantelList();
         });
     }
@@ -88,11 +82,16 @@ export class LanghantelComponent implements OnInit {
     }
 
     public SetDiameter(aHantel: Hantel, aEvent: any) {
-		aHantel.Durchmesser = Number(aEvent.target.value);
+		aHantel.Durchmesser = DexieSvcService.StaticCheckNumber(aEvent.target.value);
     }
     
     public SetGewicht(aHantel: Hantel, aEvent: any) {
-		aHantel.Gewicht =  Number(aEvent.target.value);
+        aHantel.Gewicht = DexieSvcService.StaticCheckNumber(aEvent.target.value);
+    }
+
+    detectChanges() {
+        let  x = 0;
+        x++;
     }
 
     back() {
@@ -136,11 +135,10 @@ export class LanghantelComponent implements OnInit {
     }
 
     CancelChanges() {
-        const mTmpEditHantelComponent: LanghantelComponent = this.ClickData as LanghantelComponent;
         const mDialogData = new DialogData();
         mDialogData.textZeilen.push("Cancel unsaved changes?");
-        mDialogData.OkFn = (): void => (mTmpEditHantelComponent.CopyHantelList());
-        mTmpEditHantelComponent.fDialogService.JaNein(mDialogData);
+        mDialogData.OkFn = (): void => (this.CopyHantelList());
+        this.fDialogService.JaNein(mDialogData);
     }
 
     private DeletePrim(aHantel: Hantel) {

@@ -2150,6 +2150,18 @@ export class DexieSvcService extends Dexie {
 		this.LadeProgrammeEx(this.ProgramLadeStandardPara);
 	}
 
+	public static StaticCheckNumber(aNumberText: string): number
+	{
+		try {
+			const mNumber = Number.parseFloat(aNumberText);
+			if (Number.isNaN(mNumber))
+				return 0;
+			return mNumber;
+		} catch (err) {
+			return 0;
+		}
+	}
+
 	//#region Sprache
 	private async InitSprache() {
 		this.SpracheTable = this.table(this.cSprache);

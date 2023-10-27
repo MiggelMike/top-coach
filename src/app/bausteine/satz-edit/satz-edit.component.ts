@@ -1,4 +1,4 @@
-import { cWeightDigits, cMinDatum, UebungParaDB } from './../../services/dexie-svc.service';
+import { cWeightDigits, cMinDatum } from './../../services/dexie-svc.service';
 import { NextProgress, Progress, ProgressPara, ProgressSet, ProgressTyp, VorgabeWeightLimit, WeightProgress } from './../../../Business/Progress/Progress';
 import { DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { PlateCalcSvcService, PlateCalcOverlayConfig } from './../../services/plate-calc-svc.service';
@@ -10,7 +10,7 @@ import { ISatzTyp, Satz, SatzStatus, SatzTyp } from "./../../../Business/Satz/Sa
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
-import { ProgramModulTyp as ProgramModulTyp, floatMask, repMask } from './../../app.module';
+import { ProgramModulTyp as ProgramModulTyp } from './../../app.module';
 import { PlateCalcComponent } from 'src/app/plate-calc/plate-calc.component';
 import { StoppuhrComponent } from 'src/app/stoppuhr/stoppuhr.component';
 import { StoppUhrOverlayConfig, StoppuhrSvcService } from 'src/app/services/stoppuhr-svc.service';
@@ -31,8 +31,6 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus {
     @Input() rowNum: number;
     @Input() SatzTyp:SatzTyp;
     @Input() DeletedSatzList: Array<Satz> = [];
-    public floatMask = floatMask;
-    public repMask = repMask;
     public plateCalcComponent: PlateCalcComponent;
     private plateCalcOverlayConfig: PlateCalcOverlayConfig;
     private StoppUhrOverlayConfig: StoppUhrOverlayConfig;

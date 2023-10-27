@@ -56,7 +56,7 @@ import { FormsModule } from '@angular/forms';
 // import { StoppuhrComponent } from "./stoppuhr/stoppuhr.component";
 // import { SessionStatsOverlayComponent } from "./session-stats-overlay/session-stats-overlay.component";
 // import { PlateCalcComponent } from "./plate-calc/plate-calc.component";
-import createNumberMask from 'text-mask-addons/dist/createNumberMask';
+//import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 //import { TextMaskModule } from 'angular2-text-mask';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader'
 import { HttpClient } from '@angular/common/http';
@@ -130,7 +130,7 @@ import { MatTreeModule } from '@angular/material/tree';
 // import { MatStepperModule } from '@angular/material/stepper';
 // import { MatTableModule } from '@angular/material/table';
 import { ReactiveFormsModule } from '@angular/forms';
-import { provideEnvironmentNgxMask } from 'ngx-mask'
+import { provideEnvironmentNgxMask, provideNgxMask } from 'ngx-mask'
 
 
 
@@ -172,34 +172,33 @@ export interface IProgramModul {
 	get programModul(): (typeof ProgramModulTyp);
 }
 
-
+ 
+//   export const floatMask = createNumberMask({
+// 	  prefix: '',
+// 	  suffix: '', 
+// 	  includeThousandsSeparator: true, //  (boolean): whether or not to separate thousands. Defaults to to true.
+// 	  integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
+// 	  allowDecimal: true, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
+// 	  decimalLimit: 3,
+// 	  // requireDecimal: true,
+// 	  // allowLeadingZeroes: true
+// 	})
   
-  export const floatMask = createNumberMask({
-	  prefix: '',
-	  suffix: '', 
-	  includeThousandsSeparator: true, //  (boolean): whether or not to separate thousands. Defaults to to true.
-	  integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
-	  allowDecimal: true, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
-	  decimalLimit: 3,
-	  // requireDecimal: true,
-	  // allowLeadingZeroes: true
-	})
+// 	export const repMask = createNumberMask({
+// 	  prefix: '',
+// 	  suffix: '', 
+// 	  includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
+// 	  integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
+// 	  allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
+// 	})
   
-	export const repMask = createNumberMask({
-	  prefix: '',
-	  suffix: '', 
-	  includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
-	  integerLimit: 3, // (number): limit the length of the integer number. Defaults to null for unlimited
-	  allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
-	})
-  
-	export const Int2DigitMask = createNumberMask({
-	  prefix: '',
-	  suffix: '', 
-	  includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
-	  integerLimit: 2, // (number): limit the length of the integer number. Defaults to null for unlimited
-	  allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
-	})
+// 	export const Int2DigitMask = createNumberMask({
+// 	  prefix: '',
+// 	  suffix: '', 
+// 	  includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
+// 	  integerLimit: 2, // (number): limit the length of the integer number. Defaults to null for unlimited
+// 	  allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
+// 	})
 
 	export const Int3DigitMask = "000";
   	// export const Int3DigitMask = createNumberMask({
@@ -217,21 +216,21 @@ export interface IProgramModul {
 	// 	allowLeadingZeroes: false
 	// })  
   
-	export const Int4DigitMask = createNumberMask({
-	  prefix: '',
-	  suffix: '', 
-	  includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
-	  integerLimit: 4, // (number): limit the length of the integer number. Defaults to null for unlimited
-	  allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
-	})    
+	// export const Int4DigitMask = createNumberMask({
+	//   prefix: '',
+	//   suffix: '', 
+	//   includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
+	//   integerLimit: 4, // (number): limit the length of the integer number. Defaults to null for unlimited
+	//   allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
+	// })    
 
-	export const Int8DigitMask = createNumberMask({
-		prefix: '',
-		suffix: '', 
-		includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
-		integerLimit: 8, // (number): limit the length of the integer number. Defaults to null for unlimited
-		allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
-	  }) 
+	// export const Int8DigitMask = createNumberMask({
+	// 	prefix: '',
+	// 	suffix: '', 
+	// 	includeThousandsSeparator: false, //  (boolean): whether or not to separate thousands. Defaults to to true.
+	// 	integerLimit: 8, // (number): limit the length of the integer number. Defaults to null for unlimited
+	// 	allowDecimal: false, // (boolean): whether or not to allow the user to enter a fraction with the amount. Default to false.
+	//   }) 
 
 
 @NgModule({
@@ -372,7 +371,8 @@ export interface IProgramModul {
 		,{
 			provide: DATE_PIPE_DEFAULT_OPTIONS,
 			useValue: { dateFormat: 'short' }
-		  }
+		},
+		provideNgxMask(),
 		// , { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance:  'outline' }}
 	],
 	bootstrap: [AppComponent],

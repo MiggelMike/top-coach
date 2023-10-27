@@ -2,7 +2,6 @@ import { Uebung } from './../../Business/Uebung/Uebung';
 import { Hantelscheibe } from "./../../Business/Hantelscheibe/Hantelscheibe";
 import { PlateCalcOverlayRef, cPlateCalcOverlayData } from "./../services/plate-calc-svc.service";
 import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
-import { repMask, floatMask } from "../app.module";
 import { PlateCalcOverlayConfig } from "../services/plate-calc-svc.service";
 import { DexieSvcService } from "../services/dexie-svc.service";
 import { Satz, SatzTyp } from "src/Business/Satz/Satz";
@@ -16,8 +15,6 @@ import { Observable, of } from "rxjs";
 })
 export class PlateCalcComponent implements OnInit {
 	public fConfig: PlateCalcOverlayConfig;
-	public floatMask = floatMask;
-	public repMask = repMask;
 	public PlateList: Array<Hantelscheibe>;
 	public HantelListe: Array<Hantel>;
 	public Hantel: Hantel;

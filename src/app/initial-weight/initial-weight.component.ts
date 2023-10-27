@@ -4,12 +4,9 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { DexieSvcService } from "../services/dexie-svc.service";
 import { DialogeService } from "../services/dialoge.service";
-import { floatMask } from "../app.module";
 import { TrainingsProgramm } from '../../Business/TrainingsProgramm/TrainingsProgramm';
 import { Uebung } from '../../Business/Uebung/Uebung';
 import { DialogData, cLoadingDefaultHeight } from '../dialoge/hinweis/hinweis.component';
-import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs';
 import { Session } from 'src/Business/Session/Session';
 
 @Component({
@@ -25,7 +22,6 @@ export class InitialWeightComponent implements OnInit {
 	// get InitialWeightList(): Observable<InitialWeight[]> {
 	// 	return of(this.fInitialWeightList);
 	// }
-	public floatMask = floatMask;
 
 	constructor(private router: Router,
 		public fDbModule: DexieSvcService,

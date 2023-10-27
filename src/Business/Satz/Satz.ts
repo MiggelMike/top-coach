@@ -1,6 +1,6 @@
 import { ISession } from 'src/Business/Session/Session';
 import { Uebung } from '../Uebung/Uebung';
-import {formatNumber, NumberSymbol} from '@angular/common';
+import {formatNumber} from '@angular/common';
 import { AppData, GewichtsEinheit } from '../Coach/Coach';
 import { cWeightDigits, cWeightFormat } from 'src/app/services/dexie-svc.service';
 var cloneDeep = require('lodash.clonedeep');

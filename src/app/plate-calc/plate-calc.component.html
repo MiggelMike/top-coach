@@ -4,7 +4,7 @@
         <div fxLayout="row" fxFlex="100%">
             <mat-form-field class="align-right" fxFlex="60%">
                 <mat-label>Weight</mat-label>
-                <input matInput [textMask]="{mask: floatMask, guide: false }"
+                <input matInput 
                 [ngModel]="(Satz.GewichtAusgefuehrt | number: '1.2')" 
                 (focusout)="SetWeightAusgefuehrt($event)"
                 (ngModelChange)="CalcPlates($event)"
@@ -50,7 +50,7 @@
                     <!-- Geplante Von-Vorgabe-Wdh. -->
                     <mat-form-field class="align-right" fxFlex="30px">
                         <mat-label>Reps</mat-label>
-                        <input  matInput [textMask]="{mask: repMask, guide: false}" 
+                        <input  matInput 
                                 (click)="onInitOnClick($event)"
                                 [ngModel]="Satz.WdhVonVorgabe" 
                                 (focusout)="SetVonWdhVorgabe($event)" 
@@ -76,7 +76,8 @@
                     <!-- Geplante Von-Vorgabe-Wdh. -->
                     <mat-form-field class="align-right" fxFlex="30px">
                         <mat-label>Reps</mat-label>
-                        <input  matInput [textMask]="{mask: repMask, guide: false}" 
+                        <input  matInput 
+                        
                                 (click)="onInitOnClick($event)"
                                 [ngModel]="Satz.WdhAusgefuehrt" 
                                 (focusout)="SetWdhAusgefuehrt($event)" 

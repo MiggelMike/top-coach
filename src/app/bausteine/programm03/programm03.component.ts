@@ -9,7 +9,7 @@ import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, Output, E
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { LOCALE_ID, Inject } from '@angular/core';
-import { floatMask, IProgramModul, ProgramModulTyp } from 'src/app/app.module';
+import { IProgramModul, ProgramModulTyp } from 'src/app/app.module';
 import { ExerciseSettingsComponent } from 'src/app/exercise-settings/exercise-settings.component';
 import { ExerciseOverlayConfig, ExerciseSettingSvcService } from 'src/app/services/exercise-setting-svc.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
@@ -53,7 +53,6 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
     private fExerciseSettingsComponent: ExerciseSettingsComponent;
     public checkingSets: boolean = false;
     private worker: Worker;
-    public floatMask = floatMask;
     private isExpanded: Boolean = true;
     public ToggleButtonText = "Close all excercises";
     public LocaleID: string;

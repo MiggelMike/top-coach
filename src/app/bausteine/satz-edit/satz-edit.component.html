@@ -50,7 +50,7 @@
                     <mat-form-field class="weight-column tc-font-size-small">
                         <div class="align-right label">{{satz.GewichtVorgabeText}}</div> 
                         <input  matInput 
-                                mask="9999.000"
+                                mask="9999.00"
                                 class="align-right"
                                 [ngModel]="satz.GewichtAusgefuehrt" 
                                 (ngModelChange)="CalcPlates($event)"

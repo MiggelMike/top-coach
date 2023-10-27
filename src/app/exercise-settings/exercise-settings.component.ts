@@ -3,7 +3,6 @@ import { ProgressPara } from './../../Business/Progress/Progress';
 import { ITrainingsProgramm } from './../../Business/TrainingsProgramm/TrainingsProgramm';
 import { Hantel } from './../../Business/Hantel/Hantel';
 import { DexieSvcService } from "src/app/services/dexie-svc.service";
-import { floatMask, Int3DigitMask } from "./../app.module";
 import { cExerciseOverlayData } from "./../services/exercise-setting-svc.service";
 import { InUpcomingSessionSetzen, Uebung } from "./../../Business/Uebung/Uebung";
 import { Component,  Inject } from "@angular/core";
@@ -40,7 +39,6 @@ enum InUpcomingSessionSetzenTyp {
 })
 export class ExerciseSettingsComponent {
 	public fConfig: ExerciseOverlayConfig;
-	public floatMask = floatMask;
 	public ProgressName: string;
 	public ProgressListe: Array<Progress> = [];
 	public HantelListe: Array<Hantel> = [];

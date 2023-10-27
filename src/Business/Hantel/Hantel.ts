@@ -1,5 +1,6 @@
-import { Gewicht } from './../Konfiguration/Gewicht';
 import { ErstellStatus } from "src/app/services/dexie-svc.service";
+import { cWeightFormat } from 'src/app/services/dexie-svc.service';
+import { formatNumber } from '@angular/common';
 
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
@@ -44,6 +45,10 @@ export class Hantel implements IHantel {
     }
     set Gewicht(aValue: number) {
         this.fGewicht = Number(aValue);
+    }
+
+    get GewichtText(): string {
+        return formatNumber(this.Gewicht,'en-US',cWeightFormat);
     }
     //#endregion
 
