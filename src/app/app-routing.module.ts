@@ -1,3 +1,4 @@
+import { BodyweightComponent } from './bodyweight/bodyweight.component';
 import { ExerciseComponent } from './exercise/exercise.component';
 import { HistoryComponent } from './history/history.component';
 import { ITrainingsProgramm } from "./../Business/TrainingsProgramm/TrainingsProgramm";
@@ -81,7 +82,12 @@ const routes: Routes = [
 	{
 		path: "app-scheiben",
 		component: ScheibenComponent
+	},
+	{
+		path: "app-bodyweight",
+		component: BodyweightComponent
 	}
+	
 ];
 	
 @NgModule({

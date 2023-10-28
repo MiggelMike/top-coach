@@ -39,8 +39,6 @@ const routes: Routes = [{ path: '', component: AnstehendeSessionsComponent }];
     Programm02Module,
     Programm03Module,
     SessUebungModule,
-
-
     ToolBarModule,
     FlexLayoutModule,
     MatExpansionModule,

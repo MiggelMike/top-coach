@@ -10,23 +10,24 @@
     </div>
 
     <ng-container *ngIf="BodyweightList">
-        <div class="mg-top-2" fxLayout="row wrap" fxLayoutAlign="center center">
-            <div fxLayout="column" fxFlex="500px" fxLayoutAlign="center center">
+        <div class="row-start-left-gap-2">
+            <div class="column-center">
                 <ng-container *ngFor="let bw of BodyweightList, index as i">
                     <!-- Zeilen-Hintergrundfarbe -> [ngClass]="{'HG-01': i % 2 === 0}" -->
                     <div fxLayout="row wrap" fxLayoutGap="2px" [ngClass]="{'HG-01': i % 2 === 0}" fxLayoutAlign="center center">
-                        <div fxLayout="column" fxFlex="150px" fxLayoutAlign="center start">
+                        <div class="column-center">
                             <mat-form-field class="align-right width-75 pd-l-5">
                                 <mat-label>Bodyweight</mat-label>
                                 <input class="align-right width-75 pd-l-5 mg-top-23" 
-                                       matInput [textMask]="{mask: floatMask, guide: false }" 
+                                       matInput 
+                                       mask="999.00" 
                                        (focusout)="SetBodyweight($event, bw)" 
-                                       [ngModel]="(bw.Weight | number: '1.2')" 
+                                       [ngModel]="bw.Weight" 
                                        type="text">
                             </mat-form-field>
                         </div>
 
-                        <div fxLayout="column" fxFlex="250px" fxLayoutAlign="center start">
+                        <div class="column-center">
                             <mat-form-field class="align-items-right">
                                 <mat-label>Choose a date</mat-label>
                                 <!-- <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle> -->
