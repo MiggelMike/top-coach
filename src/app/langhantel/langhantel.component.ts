@@ -126,10 +126,10 @@ export class LanghantelComponent implements OnInit {
             });
 
             this.fDexieSvcService
-                .InsertHanteln(this.LoeschListeAutomatischErstellte);
+                 .SaveHanteln(this.LoeschListeAutomatischErstellte);
 
             this.fDexieSvcService
-                .InsertHanteln(this.HantelListe)
+                .SaveHanteln(this.HantelListe)
                 .then((mDummy) => (this.location.back()));
         }
     }

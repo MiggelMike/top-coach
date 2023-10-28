@@ -1,3 +1,6 @@
+var cloneDeep = require('lodash.clonedeep');
+var isEqual = require('lodash.isEqual');
+
 export class BodyWeightDB {
     ID: number;
     Datum: Date;
@@ -41,4 +44,12 @@ export class BodyWeight {
         this.BodyWeightDB.Weight = Number(aVal);
     }
     //#endregion
+
+    public Copy(): BodyWeight {
+        return cloneDeep(this);
+    }
+
+    public isEqual(aOtherBodyWeight: BodyWeight): Boolean {
+        return isEqual(this,aOtherBodyWeight);
+    }
 }

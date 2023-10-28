@@ -1029,7 +1029,7 @@ export class DexieSvcService extends Dexie {
 		}
 	}
 
-	public InsertHanteln(aHantelListe: Array<Hantel>): PromiseExtended {
+	public SaveHanteln(aHantelListe: Array<Hantel>): PromiseExtended {
 		return this.HantelTable.bulkPut(aHantelListe);
 	}
 

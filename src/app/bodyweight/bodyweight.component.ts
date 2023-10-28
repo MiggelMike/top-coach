@@ -1,6 +1,9 @@
 import { cDateTimeFormat, DexieSvcService } from '../services/dexie-svc.service';
 import { Component, OnInit } from '@angular/core';
 import { BodyWeight } from '../../Business/Bodyweight/Bodyweight';
+import { Location } from "@angular/common";
+import { DialogData } from '../dialoge/hinweis/hinweis.component';
+import { DialogeService } from '../services/dialoge.service';
 
 @Component({
 	selector: 'app-bodyweight',
@@ -8,15 +11,75 @@ import { BodyWeight } from '../../Business/Bodyweight/Bodyweight';
 	styleUrls: ['./bodyweight.component.scss'],
 })
 export class BodyweightComponent implements OnInit {
+  [x: string]: any;
   DateTimeFormat: string = cDateTimeFormat;
   BodyweightList: Array<BodyWeight> = [];
+  CmpBodyweightList: Array<BodyWeight> = [];
 
-  constructor(private fDbModul: DexieSvcService) {
-    this.fDbModul.LadeBodyweight().then((aBodyweights) => this.BodyweightList = aBodyweights);
+  constructor(private fDbModul: DexieSvcService,public fDialogService: DialogeService, private location: Location) {
+    this.fDbModul.LadeBodyweight().then((aBodyweights) => {
+      aBodyweights.forEach((aBodyWeight) => {
+        this.BodyweightList.push(aBodyWeight.Copy());
+        this.CmpBodyweightList.push(aBodyWeight.Copy());
+      })
+    });
   }
 
-
   ngOnInit(): void { }
+
+  private ChangesExist(): Boolean {
+		if (this.BodyweightList.length !== this.CmpBodyweightList.length)
+		    return true;
+
+		for (let index = 0; index < this.BodyweightList.length; index++) {
+		    const mBodyWeight = this.BodyweightList[index];
+		    if (mBodyWeight.ID === undefined)
+		        return true;
+
+		    const mCmpHantel = this.CmpBodyweightList.find((h) => h.ID === mBodyWeight.ID);
+		    if (mBodyWeight.ID === undefined)
+		        return true;
+
+		    if (mBodyWeight.isEqual(mCmpHantel) === false)
+		        return true;
+		}
+		return false;
+  }
+  
+  SaveChanges() {
+    this.fDbModul.BodyweightListeSpeichern(this.BodyweightList);
+    this.CmpBodyweightList.forEach(
+			(mCpmBodyWeight: BodyWeight) => {
+				if (mCpmBodyWeight.ID !== undefined) {
+					if (!this.BodyweightList.find(
+						(mBodyWeight) => {
+							return mBodyWeight.ID === mCpmBodyWeight.ID;
+					})) {
+						this.fDbModul.DeleteBodyweight(mCpmBodyWeight.ID);
+					}
+				}
+		});
+	}
+
+  back() {
+		if (this.ChangesExist() === false) this.location.back();
+		else {
+			const mDialogData = new DialogData();
+			mDialogData.textZeilen.push("Save changes?");
+			mDialogData.ShowAbbruch = true;
+			
+			mDialogData.OkFn = (): void => {
+        this.SaveChanges();
+        this.location.back();
+			}
+
+			mDialogData.CancelFn = (): void => {
+				this.location.back();
+			}
+
+			this.fDialogService.JaNein(mDialogData);
+		}
+	}
 
   NewBodyweight() {
     const mBodyweight: BodyWeight = new BodyWeight();
@@ -26,12 +89,10 @@ export class BodyweightComponent implements OnInit {
 
   DeleteBodyweight(aBw: BodyWeight) {
     const mIndex = this.BodyweightList.indexOf(aBw);
-    this.fDbModul.DeleteBodyweight(aBw.ID);
     if (mIndex > -1) this.BodyweightList.splice(mIndex, 1);
   }
 
   ngOnDestroy() {
-    this.fDbModul.BodyweightListeSpeichern(this.BodyweightList);
   }
   
   SetBodyweight(aEvent: any, aBw: BodyWeight) {
