@@ -14,20 +14,17 @@
             <div class="column-center">
                 <ng-container *ngFor="let bw of BodyweightList, index as i">
                     <!-- Zeilen-Hintergrundfarbe -> [ngClass]="{'HG-01': i % 2 === 0}" -->
-                    <div fxLayout="row wrap" fxLayoutGap="2px" [ngClass]="{'HG-01': i % 2 === 0}" fxLayoutAlign="center center">
-                        <div class="column-center">
-                            <mat-form-field class="align-right width-75 pd-l-5">
+                    <div class="row-start-left-gap-3" [ngClass]="{'HG-01': i % 2 === 0}">
+                            <mat-form-field class="align-right width-100 pd-l-5">
                                 <mat-label>Bodyweight</mat-label>
-                                <input class="align-right width-75 pd-l-5 mg-top-23" 
+                                <input class="align-right pd-l-5 width-90" 
                                        matInput 
                                        mask="999.00" 
                                        (focusout)="SetBodyweight($event, bw)" 
                                        [ngModel]="bw.Weight" 
                                        type="text">
                             </mat-form-field>
-                        </div>
 
-                        <div class="column-center">
                             <mat-form-field class="align-items-right">
                                 <mat-label>Choose a date</mat-label>
                                 <!-- <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle> -->
@@ -38,15 +35,11 @@
                                 <input matInput [matDatepicker]="picker" [(ngModel)]="bw.Datum" class="width-85 align-items-right" readonly>
                                 <mat-hint>MM/DD/YYYY</mat-hint>
                               </mat-form-field>
-                              
-
 
                             <!-- <a>{{bw.Datum | date: DateTimeFormat}}</a>  -->
+                            <a class="ref-button"  (click)="DeleteBodyweight(bw)">Delete</a>
                         </div>
-                        <div fxLayout="column"  fxLayoutAlign="center end">
-                            <a class="ref-button" mat-button (click)="DeleteBodyweight(bw)">Delete</a>
-                        </div>
-                    </div>
+                        
                 </ng-container>
             </div>
         </div>

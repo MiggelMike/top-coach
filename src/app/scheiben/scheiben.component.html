@@ -6,8 +6,6 @@
 
     <ng-container *ngIf="HantelscheibenListe">
         <ng-container *ngFor="let sch of HantelscheibenListe, index as i">
-
-            <div fxLayout="row wrap" fxLayoutAlign="center center" class="mg-5"  >
                 <div class="row-start-left" [ngClass]="{'HG-01': i % 2 === 0}">
                     <mat-form-field id="Diameter" class="align-right">
                         <mat-label>Diameter</mat-label>
@@ -39,7 +37,6 @@
                 
                 <a id="Delete" class="ref-button" (click)="Delete(sch)">Delete</a>
             </div>
-        </div>
     </ng-container>
     
     </ng-container>
