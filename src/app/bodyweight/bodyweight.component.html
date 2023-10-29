@@ -9,6 +9,22 @@
         <a class='link-button-font HG-01' mat-flat-button (click)="NewBodyweight()">New bodyweight</a>
     </div>
 
+    <mat-form-field>
+        <input matInput 
+            [ngxMatDatetimePicker]="pickerWithActions" 
+            placeholder="Choose a date" 
+            [min]="minDate" 
+            [max]="maxDate" 
+            disabled="false">
+            <ngx-mat-datetime-picker #pickerWithActions>
+              <ngx-mat-datepicker-actions>
+                <button mat-button ngxMatDatepickerCancel>Cancel</button>
+                <button mat-raised-button color="primary" ngxMatDatepickerApply>Apply</button>
+              </ngx-mat-datepicker-actions>
+            </ngx-mat-datetime-picker>
+        <ngx-mat-datepicker-toggle matSuffix [for]="pickerWithActions"></ngx-mat-datepicker-toggle>
+      </mat-form-field>
+
     <ng-container *ngIf="BodyweightList">
         <div class="row-start-left-gap-2">
             <div class="column-center">

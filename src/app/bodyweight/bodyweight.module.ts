@@ -22,11 +22,16 @@ import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { BodyweightComponent } from './bodyweight.component';
 import { ToolBarModule } from '../bausteine/toolbar/tool-bar-module/tool-bar-module.module';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { NgxMatDatetimePickerModule, NgxMatTimepickerModule, NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [BodyweightComponent],
   exports: [BodyweightComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+  providers: [
+    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } }
+  ],
   imports: [
     DatePipe,
     FormsModule,
@@ -53,6 +58,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     NgxMaskDirective,
     NgxMaskPipe,
     ToolBarModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule,
+    NgxMatNativeDateModule
     
   ]
 })

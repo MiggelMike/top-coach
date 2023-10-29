@@ -11,10 +11,23 @@ import { DialogeService } from '../services/dialoge.service';
 	styleUrls: ['./bodyweight.component.scss'],
 })
 export class BodyweightComponent implements OnInit {
-  [x: string]: any;
   DateTimeFormat: string = cDateTimeFormat;
   BodyweightList: Array<BodyWeight> = [];
-  CmpBodyweightList: Array<BodyWeight> = [];
+	CmpBodyweightList: Array<BodyWeight> = [];
+
+	minDate: Date = new Date();
+	maxDate: Date = new Date();
+	disabled: Boolean = false;
+	showSpinners: Boolean = true;
+	showSeconds: Boolean = true;
+	stepHour: Boolean = true;
+	stepMinute: Boolean = true;
+	stepSecond: Boolean = true;
+	touchUi: Boolean = true;
+	enableMeridian: Boolean = true;
+	disableMinute: Boolean = false;
+	hideTime: Boolean = false;
+	
 
   constructor(private fDbModul: DexieSvcService,public fDialogService: DialogeService, private location: Location) {
     this.fDbModul.LadeBodyweight().then((aBodyweights) => {
