@@ -22,7 +22,6 @@ import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMuscleGroup } from '../../Business/MuscleGroup/MuscleGroup';
 import { DiaDatum, DiaUebung, DiaUebungSettings } from 'src/Business/Diagramm/Diagramm';
 import { Sprache } from '../Sprache/Sprache';
-import { promises } from 'dns';
 var cloneDeep = require('lodash.clonedeep');
 
 
