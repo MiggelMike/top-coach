@@ -107,7 +107,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WorkoutFormModule } from './bausteine/workout-form/workout-form.module';
 import { WorkoutFormComponent } from './bausteine/workout-form/workout-form.component';
 import { InitialWeightModule } from './initial-weight/initial-weight.module';
-//import { InitialWeightComponent } from './initial-weight/initial-weight.component';
 import { AnstehendeSessionsComponent } from './anstehende-sessions/anstehende-sessions.component';
 import { SessionFormModule } from './bausteine/session-form/session-form.module';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -133,7 +132,8 @@ import { MatTreeModule } from '@angular/material/tree';
 // import { MatTableModule } from '@angular/material/table';
 import { ReactiveFormsModule } from '@angular/forms';
 import { provideEnvironmentNgxMask, provideNgxMask } from 'ngx-mask'
-import { InitialWeightComponent } from './initial-weight/initial-weight.component';
+// import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 
 
 
@@ -260,9 +260,10 @@ export interface IProgramModul {
 		,DexieSvcService
 		, EditExerciseModule
 		,ReactiveFormsModule
+		, NgxMatDatetimePickerModule
+		, NgxMatTimepickerModule
 		
-		
-		//		,MatDatepickerModule
+			 ,MatDatepickerModule
 		// ,ToolbarComponent
 		
 		,MatCardModule
