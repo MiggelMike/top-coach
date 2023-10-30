@@ -5,6 +5,7 @@ import { ScheibenModule } from './scheiben/scheiben.module';
 import { LanghantelModule } from '../app/langhantel/langhantel.module';
 import { ExerciseModule } from './exercise/exercise.module';
 import { SettingsModule } from './settings/settings.module';
+import { TrainingsGewichtProgressModule } from '../app/trainings-gewicht-progress/trainings-gewicht-progress.module';
 import { SessionStatsOverlayModule } from './session-stats-overlay/session-stats-overlay.module';
 import { HistoryModule } from './history/history.module';
 import { SatzSimpleModule } from './bausteine/satz-simple/satz-simple.module';
@@ -300,6 +301,7 @@ export interface IProgramModul {
 		, ScheibenModule
 		, InitialWeightModule
 		, BodyweightModule
+		, TrainingsGewichtProgressModule
 		
 
 	],
