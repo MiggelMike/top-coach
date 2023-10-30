@@ -30,15 +30,6 @@ export class EditTrainingsGewichtProgressComponent implements OnInit {
 		this.Progress.AdditionalReps = aEvent.target.value;
 	}
 
-	ShowInfo() {
-		// const mDialogData = new DialogData();
-		// mDialogData.textZeilen.push("If ");
-		// mDialogData.textZeilen.push("The sum of the repetitions of all sets must be at least the sum of the above target reps of all sets.");
-		// // mDialogData.OkFn = (): void => this.location.back();		
-		// this.fDialogService.Hinweis(mDialogData);
-		
-	}
-
 	back() {
 		if (this.Progress.isEqual(this.CmpProgress)) this.location.back();
 		else {
@@ -51,26 +42,11 @@ export class EditTrainingsGewichtProgressComponent implements OnInit {
 			}
 
 			mDialogData.CancelFn = (): void => {
-				const mCancelDialogData = new DialogData();
-				mCancelDialogData.textZeilen.push("Changes will be lost!");
-				mCancelDialogData.textZeilen.push("Are you shure?");
-				mCancelDialogData.OkFn = (): void => this.location.back();
-				this.fDialogService.JaNein(mCancelDialogData);
+				this.location.back();
 			}
 
 			this.fDialogService.JaNein(mDialogData);
 		}
-
-
-
-		// if (this.Progress.isEqual(this.CmpProgress)) this.location.back();
-		// else {
-		// 	const mDialogData = new DialogData();
-		// 	mDialogData.textZeilen.push("Cancel unsaved changes?");
-		// 	mDialogData.OkFn = (): void => this.location.back();
-
-		// 	this.fDialogService.JaNein(mDialogData);
-		// }
 	}
 
 	SaveChanges() {

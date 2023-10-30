@@ -4,11 +4,9 @@
         <div class="column-center">
             <h4>New/edit progress schema</h4>
         </div>
-        <!-- <img src="..\..\assets\icons\24x24 Free Application Icons\24x24_free_application_icons_icons_pack_120732\png\24x24\Help.png" (click)="ShowInfo()" > -->
 
         <div class="column-center">
                 <mat-form-field class="align-left">
-                    <!-- <mat-label>Name</mat-label> -->
                     <input #Name matInput [(ngModel)]="Progress.Name" maxlength="50" type="text">
                 </mat-form-field>
         </div>
@@ -31,10 +29,10 @@
                 <h6>Check type</h6>
             </mat-label>
             
-                <mat-radio-group class="tp-radio-group"  [(ngModel)] = "Progress.WeightCalculation">
-                    <mat-radio-button class="tp-radio-button" [value]="0">Sum of sets</mat-radio-button>
-                    <mat-radio-button class="tp-radio-button" [value]="1">Every single set</mat-radio-button>
-                </mat-radio-group>
+            <mat-radio-group class="tp-radio-group"  [(ngModel)] = "Progress.WeightCalculation">
+                <mat-radio-button class="tp-radio-button" [value]="0">Sum of sets</mat-radio-button>
+                <mat-radio-button class="tp-radio-button" [value]="1">Every single set</mat-radio-button>
+            </mat-radio-group>
         </div>
 
         <div class="column-center">
@@ -44,7 +42,5 @@
                     [ngModel]="Progress.AdditionalReps" type="text">
             </mat-form-field>
         </div>
-        <!-- <app-data-store-buttons [SaveClick]="SaveChanges" [CancelClick]="CancelChanges" [ClickData]="this">
-        </app-data-store-buttons> -->
     </div>
 </div>    
