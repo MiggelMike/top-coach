@@ -89,27 +89,10 @@ export class LanghantelComponent implements OnInit {
         aHantel.Gewicht = DexieSvcService.StaticCheckNumber(aEvent.target.value);
     }
 
-    detectChanges() {
-        let  x = 0;
-        x++;
-    }
-
     back() {
         if (this.ChangesExist() === false) this.location.back();
 		else {
-			const mDialogData = new DialogData();
-			mDialogData.textZeilen.push("Save changes?");
-			mDialogData.ShowAbbruch = true;
-			
-			mDialogData.OkFn = (): void => {
 				this.SaveChanges();
-			}
-
-			mDialogData.CancelFn = (): void => {
-				this.location.back();
-			}
-
-			this.fDialogService.JaNein(mDialogData);
 		}
     }
 

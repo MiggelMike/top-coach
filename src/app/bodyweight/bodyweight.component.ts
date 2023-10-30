@@ -13,7 +13,6 @@ import { DialogeService } from '../services/dialoge.service';
 export class BodyweightComponent implements OnInit {
   DateTimeFormat: string = cDateTimeFormat;
   BodyweightList: Array<BodyWeight> = [];
-	CmpBodyweightList: Array<BodyWeight> = [];
 
 	minDate: Date = new Date();
 	maxDate: Date = new Date();
@@ -28,7 +27,6 @@ export class BodyweightComponent implements OnInit {
     this.fDbModul.LadeBodyweight().then((aBodyweights) => {
       aBodyweights.forEach((aBodyWeight) => {
         this.BodyweightList.push(aBodyWeight.Copy());
-        this.CmpBodyweightList.push(aBodyWeight.Copy());
       })
     });
   }
@@ -38,61 +36,7 @@ SetDatum(aBodyWeight: BodyWeight, aEvent: any) {
 }
 	
   ngOnInit(): void { }
-
-  private ChangesExist(): Boolean {
-		if (this.BodyweightList.length !== this.CmpBodyweightList.length)
-		    return true;
-
-		for (let index = 0; index < this.BodyweightList.length; index++) {
-		    const mBodyWeight = this.BodyweightList[index];
-		    if (mBodyWeight.ID === undefined)
-		        return true;
-
-		    const mCmpHantel = this.CmpBodyweightList.find((h) => h.ID === mBodyWeight.ID);
-		    if (mBodyWeight.ID === undefined)
-		        return true;
-
-		    if (mBodyWeight.isEqual(mCmpHantel) === false)
-		        return true;
-		}
-		return false;
-  }
   
-  SaveChanges() {
-    this.fDbModul.BodyweightListeSpeichern(this.BodyweightList);
-    this.CmpBodyweightList.forEach(
-			(mCpmBodyWeight: BodyWeight) => {
-				if (mCpmBodyWeight.ID !== undefined) {
-					if (!this.BodyweightList.find(
-						(mBodyWeight) => {
-							return mBodyWeight.ID === mCpmBodyWeight.ID;
-					})) {
-						this.fDbModul.DeleteBodyweight(mCpmBodyWeight.ID);
-					}
-				}
-		});
-	}
-
-  back() {
-		if (this.ChangesExist() === false) this.location.back();
-		else {
-			const mDialogData = new DialogData();
-			mDialogData.textZeilen.push("Save changes?");
-			mDialogData.ShowAbbruch = true;
-			
-			mDialogData.OkFn = (): void => {
-        this.SaveChanges();
-        this.location.back();
-			}
-
-			mDialogData.CancelFn = (): void => {
-				this.location.back();
-			}
-
-			this.fDialogService.JaNein(mDialogData);
-		}
-	}
-
   NewBodyweight() {
     const mBodyweight: BodyWeight = new BodyWeight();
     mBodyweight.Datum = new Date();
@@ -100,15 +44,28 @@ SetDatum(aBodyWeight: BodyWeight, aEvent: any) {
   }
 
   DeleteBodyweight(aBw: BodyWeight) {
-    const mIndex = this.BodyweightList.indexOf(aBw);
-    if (mIndex > -1) this.BodyweightList.splice(mIndex, 1);
-  }
+	  const mDialogData = new DialogData();
+	  mDialogData.textZeilen.push("Delete Record?");
+	  mDialogData.ShowAbbruch = false;
+	  mDialogData.OkFn = (): void => {
+		  const mIndex = this.BodyweightList.indexOf(aBw);
+		  this.BodyweightList.splice(mIndex, 1);
+		  if (mIndex > -1)
+		  	this.fDbModul.DeleteBodyweight(aBw.ID);
+	  }
+	this.fDialogService.JaNein(mDialogData);		  
+	}
+	
+	back() {
+		this.fDbModul.BodyweightListeSpeichern(this.BodyweightList);
+		this.location.back();
+	}
 
   ngOnDestroy() {
   }
   
-  SetBodyweight(aEvent: any, aBw: BodyWeight) {
-    aEvent.stopPropagation();
-    aBw.Weight = Number(aEvent.target.value);
-  }
+	SetBodyweight(aEvent: any, aBw: BodyWeight) {
+		aEvent.stopPropagation();
+		aBw.Weight = Number(aEvent.target.value);
+	}
 }
