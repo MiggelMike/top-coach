@@ -1,5 +1,4 @@
-<div #anchorRef cdkDrag cdkDragRootElement=".cdk-overlay-pane"
-    (mousedown)="handleMousedown( $event )">
+<div #anchorRef cdkDrag cdkDragRootElement=".cdk-overlay-pane">
 
     <div class="font-14-label overlay-width">
         <div fxLayout="column" fxFlex="100%">
@@ -34,7 +33,7 @@
                         <mat-label class="font-14-label">Bodyweight ({{GewichtsEinheit}})</mat-label>
                         <input matInput 
                               class="align-right"
-                              [ngModel]="BodyWeightVal"
+                              [ngModel]="BodyWeight.Weight"
                               mask="990.000"
                               (focus)="onFocusBodyweight($event)"
                               (focusout)="SetBodyweight($event)"

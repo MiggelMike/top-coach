@@ -34,11 +34,11 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 
 	datum: Date = new Date();
 	
-    constructor(
-        public overlayRef: SessionOverlayRef,
+	constructor(
+		public overlayRef: SessionOverlayRef,
 		public _ModalPositionService: ModalPositionService,
 		public fDexieService: DexieSvcService,
-        @Inject(cSessionStatsOverlayData) public sess: ISession
+		@Inject(cSessionStatsOverlayData) public sess: ISession
 	) {
 		sess.PruefeGewichtsEinheit(this.fDexieService.AppRec.GewichtsEinheit);
 
@@ -48,21 +48,27 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 		}
 
 
-        this.fAnchorPosition = {
+		this.fAnchorPosition = {
 			left: 10,
 			top: 120
-        };
+		};
         
 		this.fAnchorMouseOffset = {
 			left: 0,
 			top: 0
-        };
+		};
         
 		this.fIsConstrained = false;
 
 		this.fDexieService.LadeAppData()
 			.then((aAppData) => this.AppData = aAppData);
 		
+		this.fDexieService.LadeSessionBodyweight(this.sess as Session)
+			.then((aBw) => {
+				if (aBw !== undefined)
+					this.BodyWeight = aBw;
+				else this.BodyWeight.Weight = 0;
+			});
 	}
 	
 	get GewichtsEinheit(): string {
@@ -77,70 +83,13 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 
 	SetBodyweight(aEvent: any) {
 		this.BodyWeight.Weight = Number(aEvent.value);
-	}
-
-	BodyWeightVal() {
-		this.fDexieService.LadeSessionBodyweight(this.sess as Session)
+		this.fDexieService.LadeSessionBodyweight(this.sess)
 			.then((aBw) => {
 				if (aBw !== undefined)
 					this.BodyWeight = aBw;
 				else this.BodyWeight.Weight = 0;
 			});
 	}
-
-    public handleMousedown( event: MouseEvent ) : void {
-		// event.preventDefault();
-		// var anchorRect = this.anchorRef.nativeElement.getBoundingClientRect();
-		// this.fAnchorMouseOffset.left = ( event.clientX - anchorRect.left );
-		// this.fAnchorMouseOffset.top = ( event.clientY - anchorRect.top );
-		// window.addEventListener( "mousemove", this.handleMousemove );
-		// window.addEventListener( "mouseup", this.handleMouseup );
-
-	}
-
-    public handleMouseup = (): void => {
-        // var anchorRect = this.anchorRef.nativeElement.getBoundingClientRect();
-		// window.removeEventListener( "mousemove", this.handleMousemove );
-		// window.removeEventListener( "mouseup", this.handleMouseup );
-        // this.fConfig.left = anchorRect.left; 
-        // this.fConfig.top = anchorRect.top; 
-		// this.fPopupPosition.left = -1000;
-		// this.fPopupPosition.top = -1000;
-	}
-
-    public handleMousemove = ( event: MouseEvent ): void => {
-// 		this.fAnchorPosition.left = ( event.clientX - this.fAnchorMouseOffset.left + window.pageXOffset );
-// 		this.fAnchorPosition.top = ( event.clientY - this.fAnchorMouseOffset.top + window.pageYOffset );
-// 		// this.fPopupRef = this.anchorRef.nativeElement.getBoundingClientRect();
-// 		var popupRect = this.anchorRef.nativeElement.getBoundingClientRect();
-// 		var popupWidth = popupRect.width;
-// 		var popupHeight = popupRect.height;
-// 		var windowWidth = document.documentElement.clientWidth;
-// 		var windowHeight = document.documentElement.clientHeight;
-// 		var naturalLeft = ( this.fAnchorPosition.left - window.pageXOffset );
-// 		var naturalTop = ( this.fAnchorPosition.top + 40 - window.pageYOffset );
-// 		var minLeft = 10;
-// 		var maxLeft = ( windowWidth - popupWidth - 10 );
-// 		// var minTop = 10;
-// 		var maxTop = ( windowHeight - popupHeight - 10 );
-// 		this.fPopupPosition.left = Math.min( naturalLeft, maxLeft );
-// 		this.fPopupPosition.left = Math.max( minLeft, this.fPopupPosition.left );
-// 		this.fPopupPosition.top = Math.min( naturalTop, maxTop );
-// 		this.fPopupPosition.top = Math.max(minLeft, this.fPopupPosition.top);
-// 		popupRect.x = this.fPopupPosition.left;
-// 		//popupRect.left = this.fPopupPosition.left;
-// //		popupRect.top = this.fPopupPosition.top;
-// 		popupRect.y = this.fPopupPosition.top;
-// 		this.anchorRef.nativeElement.left = this.fPopupPosition.left + 100;
-// 		this.anchorRef.nativeElement.top = this.fPopupPosition.top + 100;
-
-// 		this.fIsConstrained = (
-// 			( this.fPopupPosition.left !== naturalLeft ) ||
-// 			( this.fPopupPosition.top !== naturalTop )
-//         );
-       
-	}
-
 
     ngOnInit(): void { 
 		this.showDuration = true;
