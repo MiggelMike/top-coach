@@ -13,6 +13,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatRippleModule } from '@angular/material/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
+import { MatRadioModule } from '@angular/material/radio';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
     MatInputModule,
     MatRippleModule,
     NgxMaskDirective,
-    NgxMaskPipe
+    NgxMaskPipe,
+    MatRadioModule
   ]
 })
   

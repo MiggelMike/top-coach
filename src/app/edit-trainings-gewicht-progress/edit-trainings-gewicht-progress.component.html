@@ -1,52 +1,50 @@
 <mat-icon (click)="back()">arrow_back</mat-icon>
-<div fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="5px">
-    <h4>New/edit progress schema</h4>
-    <img src="..\..\assets\icons\24x24 Free Application Icons\24x24_free_application_icons_icons_pack_120732\png\24x24\Help.png" (click)="ShowInfo()" >
-</div>
+<div class="column-center">
+    <div class=" width-400">
+        <div class="column-center">
+            <h4>New/edit progress schema</h4>
+        </div>
+        <!-- <img src="..\..\assets\icons\24x24 Free Application Icons\24x24_free_application_icons_icons_pack_120732\png\24x24\Help.png" (click)="ShowInfo()" > -->
 
-<div fxLayout="row wrap" fxLayoutAlign="center center">
-    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxFlex="100%">
-        <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
-            <mat-form-field class="align-left" fxFlex="100%">
-                <!-- <mat-label>Name</mat-label> -->
-                <input #Name matInput [(ngModel)]="Progress.Name" maxlength="50" type="text">
+        <div class="column-center">
+                <mat-form-field class="align-left">
+                    <!-- <mat-label>Name</mat-label> -->
+                    <input #Name matInput [(ngModel)]="Progress.Name" maxlength="50" type="text">
+                </mat-form-field>
+        </div>
+
+         <div class="column-center">
+            <mat-label>
+                <h6>Relevant sets for progress determination</h6>
+            </mat-label>
+            <div fxLayout="row wrap" fxLayoutAlign="center center" fxLayout.lt-sm="row wrap" fxFlex="100%">
+                <mat-radio-group class="tp-radio-group" [(ngModel)] = "Progress.ProgressSet">
+                    <mat-radio-button class="tp-radio-button" [value]="0">First set only</mat-radio-button>
+                    <mat-radio-button class="tp-radio-button" [value]="1">Last set only</mat-radio-button>
+                    <mat-radio-button class="tp-radio-button" [value]="2">All sets</mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div>
+
+        <div class="column-center">
+            <mat-label>
+                <h6>Check type</h6>
+            </mat-label>
+            
+                <mat-radio-group class="tp-radio-group"  [(ngModel)] = "Progress.WeightCalculation">
+                    <mat-radio-button class="tp-radio-button" [value]="0">Sum of sets</mat-radio-button>
+                    <mat-radio-button class="tp-radio-button" [value]="1">Every single set</mat-radio-button>
+                </mat-radio-group>
+        </div>
+
+        <div class="column-center">
+            <mat-form-field class="width-150">
+                <mat-label>Additional reps</mat-label>
+                <input matInput  class="align-right" [textMask]="9990" (focusout)="SetAdditionalReps($event)"
+                    [ngModel]="Progress.AdditionalReps" type="text">
             </mat-form-field>
         </div>
+        <!-- <app-data-store-buttons [SaveClick]="SaveChanges" [CancelClick]="CancelChanges" [ClickData]="this">
+        </app-data-store-buttons> -->
     </div>
-
-    <div class="height-150" fxLayout="row wrap" fxLayoutAlign="center center" fxLayout.lt-sm="row wrap" fxFlex="100%">
-        <mat-label>
-            <h6>Relevant sets for progress determination</h6>
-        </mat-label>
-        <div fxLayout="row wrap" fxLayoutAlign="center center" fxLayout.lt-sm="row wrap" fxFlex="100%">
-            <mat-radio-group class="tp-radio-group" [(ngModel)] = "Progress.ProgressSet">
-                <mat-radio-button class="tp-radio-button" [value]="0">First set only</mat-radio-button>
-                <mat-radio-button class="tp-radio-button" [value]="1">Last set only</mat-radio-button>
-                <mat-radio-button class="tp-radio-button" [value]="2">All sets</mat-radio-button>
-            </mat-radio-group>
-        </div>
-    </div>
-
-    <div class="height-100" fxLayout="row wrap" fxLayoutAlign="center center" fxLayout.lt-sm="row wrap" fxFlex="100%">
-        <mat-label>
-            <h6>Check type</h6>
-        </mat-label>
-        <div fxLayout="row wrap" fxLayoutAlign="center center" fxLayout.lt-sm="row wrap" fxFlex="100%">
-            <mat-radio-group class="tp-radio-group"  [(ngModel)] = "Progress.WeightCalculation">
-                <mat-radio-button class="tp-radio-button" [value]="0">Sum of sets</mat-radio-button>
-                <mat-radio-button class="tp-radio-button" [value]="1">Every single set</mat-radio-button>
-            </mat-radio-group>
-        </div>
-    </div>
-
-    <div class="height-100" fxLayout="row wrap" fxLayoutAlign="center center" fxLayout.lt-sm="row wrap" fxFlex="100%">
-        <mat-form-field class="align-right" fxFlex="30%">
-            <mat-label>Additional reps</mat-label>
-            <input matInput [textMask]="9990" (focusout)="SetAdditionalReps($event)"
-                [ngModel]="Progress.AdditionalReps" type="text">
-        </mat-form-field>
-    </div>
-
-    <!-- <app-data-store-buttons [SaveClick]="SaveChanges" [CancelClick]="CancelChanges" [ClickData]="this">
-    </app-data-store-buttons> -->
-</div>
+</div>    

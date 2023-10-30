@@ -2,17 +2,17 @@
 <div class="column-center">
     <h4>Progress schemas</h4>
 
-    <a class='link-button-font btn btn-link' mat-flat-button (click)="DoNeuerProgress()">New Progress schema</a>
+    <a class="ref-button mg-bottom-3" mat-flat-button (click)="DoNeuerProgress()">New Progress schema</a>
 
     <ng-container *ngIf="ProgressListe">
             <ng-container *ngFor="let progress of ProgressListe, index as i">
-                <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%"  [ngClass]="{'HG-01': i % 2 === 0}">
-                        <div fxLayout="column" fxFlex="300px" fxLayoutAlign="start start">
-                            <a class="width-100-Prozent" mat-button (click)="EditProgress(progress)">{{progress.Name}}</a>
+                <div class="row-start-left height-40 pad-right-5"  [ngClass]="{'HG-01': i % 2 === 0}">
+                        <div class="column-center width-300">
+                            <a class="ref-button" (click)="EditProgress(progress)">{{progress.Name}}</a>
                         </div>
 
-                        <div fxLayout="column" fxFlex="auto" fxLayoutAlign="center">
-                            <a class="ref-button" mat-button (click)="DeleteProgress(progress)">Delete</a>
+                        <div class="column-center mg-right-5">
+                            <a class="ref-button" (click)="DeleteProgress(progress)">Delete</a>
                         </div>
                 </div>
             </ng-container>
