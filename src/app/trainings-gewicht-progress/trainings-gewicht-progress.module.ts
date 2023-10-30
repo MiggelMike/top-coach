@@ -13,6 +13,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { TrainingsGewichtProgressComponent } from './trainings-gewicht-progress.component';
+import { ToolBarModule } from '../bausteine/toolbar/tool-bar-module/tool-bar-module.module';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { TrainingsGewichtProgressComponent } from './trainings-gewicht-progress.
     MatInputModule,
     MatRippleModule,
     NgxMaskDirective,
-    NgxMaskPipe
+    NgxMaskPipe,
+    ToolBarModule
   ]
 })
   

@@ -15,6 +15,7 @@ import { MuscleGroupsComponent } from './muscle-groups/muscle-groups.component';
 import { EditMuscleGroupComponent } from './edit-muscle-group/edit-muscle-group.component';
 import { LanghantelComponent } from './langhantel/langhantel.component';
 import { ScheibenComponent } from './scheiben/scheiben.component';
+import { TrainingsGewichtProgressComponent } from './trainings-gewicht-progress/trainings-gewicht-progress.component';
 
 export const LadeStandardProgramme: ResolveFn<ITrainingsProgramm[]> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
 	return inject(DexieSvcService)
@@ -86,6 +87,10 @@ const routes: Routes = [
 	{
 		path: "app-bodyweight",
 		component: BodyweightComponent
+	},
+	{
+		path: "app-trainings-gewicht-progress",
+		component: TrainingsGewichtProgressComponent
 	}
 	
 ];
