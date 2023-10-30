@@ -29,10 +29,8 @@
                                 <mat-label>Choose a date</mat-label>
                                 <input matInput 
                                     [ngxMatDatetimePicker]="pickerWithActions" 
-                                    
-                                    [min]="minDate" 
-                                    [max]="maxDate" 
-                                    [(ngModel)]="bw.Datum" 
+                                    [ngModel]="bw.Datum" 
+                                    (focusout)="SetDatum(bw,$event)"
                                     class="width-200 align-items-right" 
                                     disabled="false">
                                     <ngx-mat-datetime-picker #pickerWithActions

@@ -1,11 +1,11 @@
-import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA, LOCALE_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
+import { CommonModule, DATE_PIPE_DEFAULT_OPTIONS, DatePipe, DecimalPipe } from '@angular/common';
 import { MatExpansionModule } from "@angular/material/expansion";
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatRippleModule } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MatRippleModule } from '@angular/material/core';
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatMenuModule } from "@angular/material/menu";
@@ -31,6 +31,13 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   providers: [
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } }
+    ,{ provide: MAT_DATE_LOCALE, useValue: 'de-DE' }
+		,{ provide: LOCALE_ID, useValue: 'de-DE' }
+    ,{
+			provide: DATE_PIPE_DEFAULT_OPTIONS,
+			useValue: { dateFormat: 'short' }
+    },
+    DatePipe
   ],
   imports: [
     DatePipe,

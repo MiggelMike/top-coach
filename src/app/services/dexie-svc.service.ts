@@ -36,6 +36,12 @@ export const cWeightDigits = 3;
 export const cWeightFormat = '1.2-2';
 export const cDateTimeFormat = 'MMMM d, y, h:mm';
 
+export enum DateFormatTyp {
+	Komplett,
+	NurDatum,
+	NurZeit
+}
+
 export enum WorkerAction {
 	LadeAktuellesProgramm,
 	LadeDiagrammDaten
@@ -2158,6 +2164,20 @@ export class DexieSvcService extends Dexie {
 			return mNumber;
 		} catch (err) {
 			return 0;
+		}
+	}
+
+	public static StaticFormatDate(aDate: Date, aDateFormatTyp: DateFormatTyp = DateFormatTyp.Komplett): string {
+		switch (aDateFormatTyp) {
+			case DateFormatTyp.NurZeit:
+				return aDate.toLocaleTimeString();
+				break;
+			case DateFormatTyp.NurDatum:
+				return aDate.toLocaleDateString()
+				break;
+			default:
+				return aDate.toLocaleDateString() + ' ' + aDate.toLocaleTimeString();
+				break;
 		}
 	}
 

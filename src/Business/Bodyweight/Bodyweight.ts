@@ -1,3 +1,5 @@
+import { DexieSvcService } from "src/app/services/dexie-svc.service";
+
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
 
@@ -32,6 +34,10 @@ export class BodyWeight {
     }
     set Datum(aVal: Date) {
         this.BodyWeightDB.Datum = aVal;
+    }
+
+    get DatumTxt(): string {
+        return DexieSvcService.StaticFormatDate(this.Datum);
     }
     //#endregion
     //#region Weight 

@@ -18,11 +18,6 @@ export class BodyweightComponent implements OnInit {
 	minDate: Date = new Date();
 	maxDate: Date = new Date();
 	disabled: Boolean = false;
-	showSpinners: Boolean = true;
-	showSeconds: Boolean = true;
-	stepHour: Boolean = true;
-	stepMinute: Boolean = true;
-	stepSecond: Boolean = true;
 	touchUi: Boolean = true;
 	enableMeridian: Boolean = true;
 	disableMinute: Boolean = false;
@@ -38,6 +33,10 @@ export class BodyweightComponent implements OnInit {
     });
   }
 
+SetDatum(aBodyWeight: BodyWeight, aEvent: any) {
+	aBodyWeight.Datum = aEvent.target.value;
+}
+	
   ngOnInit(): void { }
 
   private ChangesExist(): Boolean {
