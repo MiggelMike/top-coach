@@ -42,7 +42,7 @@
     <div class="height-100" fxLayout="row wrap" fxLayoutAlign="center center" fxLayout.lt-sm="row wrap" fxFlex="100%">
         <mat-form-field class="align-right" fxFlex="30%">
             <mat-label>Additional reps</mat-label>
-            <input matInput [textMask]="{mask: Int4DigitMask, guide: false }" (focusout)="SetAdditionalReps($event)"
+            <input matInput [textMask]="9990" (focusout)="SetAdditionalReps($event)"
                 [ngModel]="Progress.AdditionalReps" type="text">
         </mat-form-field>
     </div>

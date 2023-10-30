@@ -16,6 +16,7 @@ import { EditMuscleGroupComponent } from './edit-muscle-group/edit-muscle-group.
 import { LanghantelComponent } from './langhantel/langhantel.component';
 import { ScheibenComponent } from './scheiben/scheiben.component';
 import { TrainingsGewichtProgressComponent } from './trainings-gewicht-progress/trainings-gewicht-progress.component';
+import { EditTrainingsGewichtProgressComponent } from './edit-trainings-gewicht-progress/edit-trainings-gewicht-progress.component';
 
 export const LadeStandardProgramme: ResolveFn<ITrainingsProgramm[]> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
 	return inject(DexieSvcService)
@@ -91,8 +92,11 @@ const routes: Routes = [
 	{
 		path: "app-trainings-gewicht-progress",
 		component: TrainingsGewichtProgressComponent
+	},
+	{
+		path: "app-edit-trainings-gewicht-progress",
+		component: EditTrainingsGewichtProgressComponent
 	}
-	
 ];
 	
 @NgModule({

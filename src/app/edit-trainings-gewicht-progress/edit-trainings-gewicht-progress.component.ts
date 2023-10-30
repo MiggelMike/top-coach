@@ -5,7 +5,6 @@ import { DialogData } from "../dialoge/hinweis/hinweis.component";
 import { DexieSvcService } from "../services/dexie-svc.service";
 import { DialogeService } from "../services/dialoge.service";
 import { Location } from "@angular/common";
-import { Int4DigitMask } from "../app.module";
 
 @Component({
 	selector: "app-edit-trainings-gewicht-progress",
@@ -13,7 +12,6 @@ import { Int4DigitMask } from "../app.module";
 	styleUrls: ["./edit-trainings-gewicht-progress.component.scss"],
 })
 export class EditTrainingsGewichtProgressComponent implements OnInit {
-	public Int4DigitMask = Int4DigitMask;
 	public Progress: IProgress;
 	public CmpProgress: IProgress;
 	public ClickData: EditTrainingsGewichtProgressComponent;
