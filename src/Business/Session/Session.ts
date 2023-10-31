@@ -37,6 +37,7 @@ export interface ISession extends ISessionDB {
     UebungsListe: Array<Uebung>;
     PruefeGewichtsEinheit(aGewichtsEinheit: GewichtsEinheit);
     LiftedWeight: number;
+    LiftedWeightText: string;
     GestartedWannText: string;
     BodyWeight: BodyWeight;
     BodyWeightSession: number;
@@ -482,6 +483,10 @@ export class Session implements ISession {
             }
         }
         return mResult;
+    }
+
+    public get LiftedWeightText() {
+        return formatNumber(this.LiftedWeight,'en-US',cWeightFormat);
     }
 
     public ExtractUebungen(aUebungen: Array<Uebung>) {
