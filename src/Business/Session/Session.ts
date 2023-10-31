@@ -1,10 +1,12 @@
-import { cMinDatum } from './../../app/services/dexie-svc.service';
+import { cMinDatum, cWeightFormat } from './../../app/services/dexie-svc.service';
 import { SessionDB, Pause, ISessionDB, SessionStatus } from './../SessionDB';
 import { Zeitraum, MaxZeitraum } from './../Dauer';
 import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
 import { Satz, SatzStatus, SatzTyp } from '../Satz/Satz';
 import { WeightProgress } from '../Progress/Progress';
 import { GewichtsEinheit } from '../Coach/Coach';
+import { BodyWeight } from '../Bodyweight/Bodyweight';
+import { formatNumber } from '@angular/common';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
 
@@ -36,6 +38,9 @@ export interface ISession extends ISessionDB {
     PruefeGewichtsEinheit(aGewichtsEinheit: GewichtsEinheit);
     LiftedWeight: number;
     GestartedWannText: string;
+    BodyWeight: BodyWeight;
+    BodyWeightSession: number;
+    BodyWeightSessionText: string;
 }
 
 export class SessionCopyPara {
@@ -196,7 +201,7 @@ export class Session implements ISession {
     set DauerTimer(aVal: any) {
         this.SessionDB.SessionDauer = aVal;
     }
-    //#endregion  
+    //#endregion
     //#region BodyWeightAtSessionStart 
     get BodyWeightAtSessionStart(): number {
         return Number(this.SessionDB.BodyWeightAtSessionStart)
@@ -205,6 +210,13 @@ export class Session implements ISession {
         this.SessionDB.BodyWeightAtSessionStart = Number(aVal);
     }
     //#endregion 
+    //#region BodyWeight 
+    public BodyWeightSession: number = 0;
+    public get BodyWeightSessionText(): string{
+        return formatNumber(this.BodyWeightSession,'en-US',cWeightFormat);
+    } 
+    public BodyWeight: BodyWeight;
+    //#endregion
     //#region PausenListe 
     get PausenListe(): Array<Pause> {
         return this.SessionDB.PausenListe;

@@ -956,7 +956,7 @@ export class DexieSvcService extends Dexie {
 			.last()
 			.then((aBw) => {
 				if (aBw !== undefined)
-					return new BodyWeight(new BodyWeight(aBw));
+					return new BodyWeight(aBw);
 				else {
 					const mBwDB: BodyWeightDB = new BodyWeightDB();
 					mBwDB.Datum = cMinDatum;
@@ -1442,10 +1442,6 @@ export class DexieSvcService extends Dexie {
 			if (aProgramm.SessionListe[i].Kategorie02 === SessionStatus.Fertig || aProgramm.SessionListe[i].Kategorie02 === SessionStatus.FertigTimeOut)
 				mDoneSessions.push(aProgramm.SessionListe[i]);
 		}
-	}
-
-	public getBodyWeight(): number {
-		return 105;
 	}
 
 	public SucheUebungPerName(aName: string): Uebung {

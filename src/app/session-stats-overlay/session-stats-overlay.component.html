@@ -33,8 +33,8 @@
                         <mat-label class="font-14-label">Bodyweight ({{GewichtsEinheit}})</mat-label>
                         <input matInput 
                               class="align-right"
-                              [ngModel]="BodyWeight.Weight"
-                              mask="990.000"
+                              [ngModel]="sess.BodyWeightSessionText"
+                              mask="999.000"
                               (focus)="onFocusBodyweight($event)"
                               (focusout)="SetBodyweight($event)"
                                type="text">

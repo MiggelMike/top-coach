@@ -30,7 +30,6 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 	public fConfig: SessionOverlayConfig;
 	public showDuration: boolean = false;
 	public AppData: AppData;
-	public BodyWeight: BodyWeight;
 
 	datum: Date = new Date();
 	
@@ -63,12 +62,15 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 		this.fDexieService.LadeAppData()
 			.then((aAppData) => this.AppData = aAppData);
 		
-		this.fDexieService.LadeSessionBodyweight(this.sess as Session)
-			.then((aBw) => {
-				if (aBw !== undefined)
-					this.BodyWeight = aBw;
-				else this.BodyWeight.Weight = 0;
-			});
+		// this.fDexieService.LadeSessionBodyweight(this.sess as Session)
+		// 	.then((aBw) => {
+		// 		if (this.sess.BodyWeightAtSessionStart === 0) {
+		// 			if (aBw !== undefined) 
+		// 				this.sess.BodyWeightAtSessionStart = aBw.Weight;
+		// 			else
+		// 				this.sess.BodyWeightAtSessionStart = 0;
+		// 		}
+		// 	});
 	}
 	
 	get GewichtsEinheit(): string {
@@ -82,19 +84,11 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 	}
 
 	SetBodyweight(aEvent: any) {
-		this.BodyWeight.Weight = Number(aEvent.value);
-		this.fDexieService.LadeSessionBodyweight(this.sess)
-			.then((aBw) => {
-				if (aBw !== undefined)
-					this.BodyWeight = aBw;
-				else this.BodyWeight.Weight = 0;
-			});
+		this.sess.BodyWeightSession = Number(aEvent.target.value);
 	}
 
     ngOnInit(): void { 
 		this.showDuration = true;
-		
-		// this.BodyWeight();
     }
     
 	ngAfterViewInit() { }

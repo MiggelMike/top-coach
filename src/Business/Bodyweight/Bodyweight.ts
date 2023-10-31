@@ -1,4 +1,5 @@
-import { DexieSvcService } from "src/app/services/dexie-svc.service";
+import { formatNumber } from "@angular/common";
+import { DexieSvcService, cWeightFormat } from "src/app/services/dexie-svc.service";
 
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
@@ -41,13 +42,15 @@ export class BodyWeight {
     }
     //#endregion
     //#region Weight 
-
-    private fWeight: number = 0;
     get Weight(): number {
         return Number(this.BodyWeightDB.Weight);
     }
     set Weight(aVal: number) {
         this.BodyWeightDB.Weight = Number(aVal);
+    }
+
+    get WeightTxt(): string {
+        return formatNumber(this.Weight,'en-US',cWeightFormat);
     }
     //#endregion
 
