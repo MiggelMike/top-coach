@@ -70,31 +70,24 @@
             </div>
             
             <mat-label>Done reps</mat-label>
-            <div fxLayout="row" fxFlex="100%" >
-                <div fxLayout="column" fxFlex="60%" >
-                    <div fxLayout="row" fxFlex="100%" fxLayoutGap="5px" >
+            <div class="row-start-left">                
                         <!-- Geplante Von-Vorgabe-Wdh. -->
-                        <mat-form-field class="align-right" fxFlex="30px">
+                        <mat-form-field>
                             <mat-label>Reps</mat-label>
                             <input  matInput 
-                            
-                            (click)="onInitOnClick($event)"
-                            [ngModel]="Satz.WdhAusgefuehrt" 
-                            (focusout)="SetWdhAusgefuehrt($event)" 
-                            type="text"
-                            >
+                                    class="align-right"
+                                    (click)="onInitOnClick($event)"
+                                    [ngModel]="Satz.WdhAusgefuehrt" 
+                                    (focusout)="SetWdhAusgefuehrt($event)" 
+                                    type="text">
                         </mat-form-field> 
-                    </div>
-                </div>
                 
-                <div class="mg-5" layout-align="end" layout-margin>
                     <mat-checkbox 
                         [(ngModel)]="DoneRepsForAllSets" (click)="$event.stopPropagation()"
                         (change)="DoDoneRepsAllSets($event)"
                         >All sets
                     </mat-checkbox>
                 </div>
-            </div>
 
             <ng-container *ngIf="PlateList.length > 0">
                 <div fxLayout="row" fxFlex="100%">
