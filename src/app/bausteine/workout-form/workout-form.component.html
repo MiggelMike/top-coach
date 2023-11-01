@@ -1,10 +1,8 @@
     <app-toolbar></app-toolbar>
 
     <ng-container *ngIf="programm">
-        <div class="container">
-            <div fxLayout="row" fxLayoutAlign="flex-center">
-                <div><strong>{{programm.Name}}</strong></div>
-            </div>
+        <div class="column-center width-600">
+            <div><strong>{{programm.Name}}</strong></div>
         
             <ng-container *ngIf="programm.SessionListe">
                 <app-programm02 

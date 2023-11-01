@@ -1,7 +1,7 @@
 <!-- "programm" wird in Eltern-Komponente gesetzt. -->
 <ng-container *ngIf="programm">
-    <div fxLayoutAlign="center" id="accordionProgramme">
-        <div fxLayout="column" fxFlex="100%">
+    <div class="colum-center width-600" id="accordionProgramme">
+        <div>
             <mat-accordion #accordion="matAccordion" multi="true">
                 <mat-expansion-panel  #panProgramm='matExpansionPanel' [expanded]="false" 
                     class="HG-01"

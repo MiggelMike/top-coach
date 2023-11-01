@@ -7,17 +7,19 @@
         </ng-container>
     </div> -->
 
-    <div class="container">
+<div class="column-center">
+    <div class="width-600">
         <p class="font-bold">Choose workout</p>
-            <ng-container *ngFor="let programm of ProgrammListe">
-                <div  class="mg-top-1">
-                    <app-programm01
-                        [ModulTyp]="programModul.SelectWorkout"
-                        [programm]="programm" 
-                        [showButtons]="false" 
-                        [showSaveButtons]="false">
-                    </app-programm01>
-                </div>
+        <ng-container *ngFor="let programm of ProgrammListe">
+            <div  class="mg-top-1">
+                <app-programm01
+                    [ModulTyp]="programModul.SelectWorkout"
+                    [programm]="programm" 
+                    [showButtons]="false" 
+                    [showSaveButtons]="false">
+                </app-programm01>
+            </div>
          </ng-container>
     </div>
+</div>
     
