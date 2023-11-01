@@ -4,12 +4,14 @@
                 <div class="row-start-left">
                     <mat-form-field>
                         <mat-label>Weight</mat-label>
-                        <input matInput 
-                        [ngModel]="(Satz.GewichtAusgefuehrt | number: '1.2')" 
-                        (focusout)="SetWeightAusgefuehrt($event)"
-                        (ngModelChange)="CalcPlates($event)"
-                        (click)="onClickWeightVorgabe($event)" 
-                        type="text">
+                        <input  matInput 
+                                mask="9999.00"
+                                class="align-right"
+                                [ngModel]="Satz.GewichtAusgefuehrtText" 
+                                (focusout)="SetWeightAusgefuehrt($event)"
+                                (ngModelChange)="CalcPlates($event)"
+                                (click)="onClickWeightVorgabe($event)" 
+                                type="text">
                     </mat-form-field>
                     
                     <div class="mg-5" layout-align="end" layout-margin>
@@ -34,31 +36,29 @@
                         </mat-select>
                     </mat-form-field>
 
-                    <div class="mg-5" layout-align="end" layout-margin>
+                    <div class="mg-5">
                         <mat-checkbox 
-                        [(ngModel)]="HantelForAllSets" (click)="$event.stopPropagation()"
-                        (change)="DoHantelAllSets($event)"
-                        >All sets
-                    </mat-checkbox>
-                </div>
-            </div>
-        
-            <mat-label>Min target reps</mat-label>
-            <div fxLayout="row" fxFlex="100%" >
-                <div fxLayout="column" fxFlex="60%" >
-                    <div fxLayout="row" fxFlex="100%" fxLayoutGap="5px" >
-                        <!-- Geplante Von-Vorgabe-Wdh. -->
-                        <mat-form-field class="align-right" fxFlex="30px">
-                            <mat-label>Reps</mat-label>
-                            <input  matInput 
-                            (click)="onInitOnClick($event)"
-                            [ngModel]="Satz.WdhVonVorgabe" 
-                            (focusout)="SetVonWdhVorgabe($event)" 
-                            type="text"
-                            >
-                        </mat-form-field> 
+                            [(ngModel)]="HantelForAllSets" (click)="$event.stopPropagation()"
+                            (change)="DoHantelAllSets($event)"
+                            >All sets
+                        </mat-checkbox>
                     </div>
                 </div>
+        
+            <mat-label>Min target reps</mat-label>
+            <div class="row-start-left">                
+                        <!-- Geplante Von-Vorgabe-Wdh. -->
+                        <mat-form-field>
+                            <mat-label>Reps</mat-label>
+                            <input  matInput 
+                                    class="align-right"
+                                    mask="99999"
+                                    (click)="onInitOnClick($event)"
+                                    [ngModel]="Satz.WdhVonVorgabeText" 
+                                    (focusout)="SetVonWdhVorgabe($event)" 
+                                    type="text"
+                                    >
+                        </mat-form-field> 
             
                 <div class="mg-5" layout-align="end" layout-margin>
                     <mat-checkbox 
