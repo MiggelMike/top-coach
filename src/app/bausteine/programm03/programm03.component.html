@@ -21,19 +21,11 @@
                 </div>
             </ng-container> 
                 
-            <div class="row-start-left">
-                <ng-container *ngIf="StatsButtonVisible">
-                    <div #Info class="align-items-left" fxFlex="70px">
-                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DoStatsFn()">Info</a>
-                    </div>
-                </ng-container>
-                
-                <div class="align-items-left">
-                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
-                </div>
-            </div>
+            <ng-container *ngIf="StatsButtonVisible">
+                <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DoStatsFn()">Info</a>
+            </ng-container>
             
-            <!-- <span class="mg-5">{{session.Name}}</span> -->
+            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
         </div>
 
         <!-- <div cdkDropList (cdkDropListDropped)="drop($event)">
