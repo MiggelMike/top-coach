@@ -2,10 +2,10 @@
     <ng-container *ngIf="session">
         <!-- <ng-container *ngIf="session && session.UebungsListe && (session.UebungsListe.length > 0)"> -->
         <div class="font-14-data">        
-            <ng-container *ngIf='ModulTyp !== programModul.SelectWorkout && ModulTyp !== programModul.AnstehendeSessions '> 
+            <ng-container *ngIf='ModulTyp !== programModul.SelectWorkout && ModulTyp !== programModul.EditWorkout'> 
                 <div class="row-start-left">
-                        <mat-form-field>
-                            <input class="font-size-smaller font-bold" matInput [(ngModel)]="session.Name" maxlength="30" type="text">
+                        <mat-form-field class="width-100-Prozent">
+                            <input class="tc-font-size-smaller font-bold width-100-Prozent" matInput [(ngModel)]="session.Name" maxlength="30" type="text">
                         </mat-form-field>
                     </div>
             </ng-container> 
