@@ -1,126 +1,127 @@
-<mat-card class="tc-font-size-smaller overlay-width box-shadow">
-    <div class="align-left" fxLayout="column">
-        <h5>{{Uebung.Name}} {{SatzNr}}</h5>
-        <div fxLayout="row" fxFlex="100%">
-            <mat-form-field class="align-right" fxFlex="60%">
-                <mat-label>Weight</mat-label>
-                <input matInput 
-                [ngModel]="(Satz.GewichtAusgefuehrt | number: '1.2')" 
-                (focusout)="SetWeightAusgefuehrt($event)"
-                (ngModelChange)="CalcPlates($event)"
-                (click)="onClickWeightVorgabe($event)" 
-                type="text">
-            </mat-form-field>
+<div #anchorRef cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+        <div class="column-center cc-overlay pad-5">
+                <h5>{{Uebung.Name}} {{SatzNr}}</h5>
+                <div class="row-start-left">
+                    <mat-form-field>
+                        <mat-label>Weight</mat-label>
+                        <input matInput 
+                        [ngModel]="(Satz.GewichtAusgefuehrt | number: '1.2')" 
+                        (focusout)="SetWeightAusgefuehrt($event)"
+                        (ngModelChange)="CalcPlates($event)"
+                        (click)="onClickWeightVorgabe($event)" 
+                        type="text">
+                    </mat-form-field>
+                    
+                    <div class="mg-5" layout-align="end" layout-margin>
+                        <mat-checkbox 
+                        [(ngModel)]="SetForAllSets" (click)="$event.stopPropagation()"
+                        (change)="DoWeightAllSets($event)"
 
-            <div class="mg-5" layout-align="end" layout-margin>
-                <mat-checkbox 
-                [(ngModel)]="SetForAllSets" (click)="$event.stopPropagation()"
-                (change)="DoWeightAllSets($event)"
+                        >All sets
+                        </mat-checkbox>
+                    </div>
+                </div>
+            
+                <div class="row-start-left">
+                    <mat-form-field>
+                        <mat-label>Barbell</mat-label>
+                        <mat-select 
+                            [(ngModel)]="Satz.FkHantel"
+                            (selectionChange)="CalcPlates()"
+                            >
+                            <mat-option [value]="0"></mat-option>
+                            <mat-option *ngFor="let h of HantelListe" [value]="h.ID"> {{ h.Name }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
 
-                >All sets
-                </mat-checkbox>
+                    <div class="mg-5" layout-align="end" layout-margin>
+                        <mat-checkbox 
+                        [(ngModel)]="HantelForAllSets" (click)="$event.stopPropagation()"
+                        (change)="DoHantelAllSets($event)"
+                        >All sets
+                    </mat-checkbox>
+                </div>
             </div>
-        </div>
         
-        <div fxLayout="row" fxFlex="100%">
-            <mat-form-field fxFlex="60%">
-                <mat-label>Barbell</mat-label>
-                <mat-select 
-                    [(ngModel)]="Satz.FkHantel"
-                    (selectionChange)="CalcPlates()"
-                    >
-                    <mat-option [value]="0"></mat-option>
-                    <mat-option *ngFor="let h of HantelListe" [value]="h.ID"> {{ h.Name }}</mat-option>
-                </mat-select>
-            </mat-form-field>
-
-            <div class="mg-5" layout-align="end" layout-margin>
-                <mat-checkbox 
-                [(ngModel)]="HantelForAllSets" (click)="$event.stopPropagation()"
-                (change)="DoHantelAllSets($event)"
-                >All sets
-                </mat-checkbox>
+            <mat-label>Min target reps</mat-label>
+            <div fxLayout="row" fxFlex="100%" >
+                <div fxLayout="column" fxFlex="60%" >
+                    <div fxLayout="row" fxFlex="100%" fxLayoutGap="5px" >
+                        <!-- Geplante Von-Vorgabe-Wdh. -->
+                        <mat-form-field class="align-right" fxFlex="30px">
+                            <mat-label>Reps</mat-label>
+                            <input  matInput 
+                            (click)="onInitOnClick($event)"
+                            [ngModel]="Satz.WdhVonVorgabe" 
+                            (focusout)="SetVonWdhVorgabe($event)" 
+                            type="text"
+                            >
+                        </mat-form-field> 
+                    </div>
+                </div>
+            
+                <div class="mg-5" layout-align="end" layout-margin>
+                    <mat-checkbox 
+                        [(ngModel)]="RepRangeForAllSets" (click)="$event.stopPropagation()"
+                        (change)="DoRepRangelAllSets($event)"
+                        >All sets
+                    </mat-checkbox>
+                </div>
             </div>
-        </div>
-
-        <mat-label>Min target reps</mat-label>
-        <div fxLayout="row" fxFlex="100%" >
-            <div fxLayout="column" fxFlex="60%" >
-                <div fxLayout="row" fxFlex="100%" fxLayoutGap="5px" >
-                    <!-- Geplante Von-Vorgabe-Wdh. -->
-                    <mat-form-field class="align-right" fxFlex="30px">
-                        <mat-label>Reps</mat-label>
-                        <input  matInput 
-                                (click)="onInitOnClick($event)"
-                                [ngModel]="Satz.WdhVonVorgabe" 
-                                (focusout)="SetVonWdhVorgabe($event)" 
-                                type="text"
-                        >
-                    </mat-form-field> 
+            
+            <mat-label>Done reps</mat-label>
+            <div fxLayout="row" fxFlex="100%" >
+                <div fxLayout="column" fxFlex="60%" >
+                    <div fxLayout="row" fxFlex="100%" fxLayoutGap="5px" >
+                        <!-- Geplante Von-Vorgabe-Wdh. -->
+                        <mat-form-field class="align-right" fxFlex="30px">
+                            <mat-label>Reps</mat-label>
+                            <input  matInput 
+                            
+                            (click)="onInitOnClick($event)"
+                            [ngModel]="Satz.WdhAusgefuehrt" 
+                            (focusout)="SetWdhAusgefuehrt($event)" 
+                            type="text"
+                            >
+                        </mat-form-field> 
+                    </div>
+                </div>
+                
+                <div class="mg-5" layout-align="end" layout-margin>
+                    <mat-checkbox 
+                        [(ngModel)]="DoneRepsForAllSets" (click)="$event.stopPropagation()"
+                        (change)="DoDoneRepsAllSets($event)"
+                        >All sets
+                    </mat-checkbox>
                 </div>
             </div>
 
-            <div class="mg-5" layout-align="end" layout-margin>
-                <mat-checkbox 
-                [(ngModel)]="RepRangeForAllSets" (click)="$event.stopPropagation()"
-                (change)="DoRepRangelAllSets($event)"
-                >All sets
-                </mat-checkbox>
-            </div>
-        </div>
-
-        <mat-label>Done reps</mat-label>
-        <div fxLayout="row" fxFlex="100%" >
-            <div fxLayout="column" fxFlex="60%" >
-                <div fxLayout="row" fxFlex="100%" fxLayoutGap="5px" >
-                    <!-- Geplante Von-Vorgabe-Wdh. -->
-                    <mat-form-field class="align-right" fxFlex="30px">
-                        <mat-label>Reps</mat-label>
-                        <input  matInput 
-                        
-                                (click)="onInitOnClick($event)"
-                                [ngModel]="Satz.WdhAusgefuehrt" 
-                                (focusout)="SetWdhAusgefuehrt($event)" 
-                                type="text"
-                        >
-                    </mat-form-field> 
-                </div>
-            </div>
-
-            <div class="mg-5" layout-align="end" layout-margin>
-                <mat-checkbox 
-                [(ngModel)]="DoneRepsForAllSets" (click)="$event.stopPropagation()"
-                (change)="DoDoneRepsAllSets($event)"
-                >All sets
-                </mat-checkbox>
-            </div>
-        </div>
-
-        <ng-container *ngIf="PlateList.length > 0">
-            <div fxLayout="row" fxFlex="100%">
-                <mat-label>Plates per side</mat-label>
-            </div>
-
-            <ng-container *ngFor="let hs of PlateList">
+            <ng-container *ngIf="PlateList.length > 0">
                 <div fxLayout="row" fxFlex="100%">
-                    <mat-label>{{hs.Anzahl / 2}} x {{hs.Gewicht}}</mat-label>
+                    <mat-label>Plates per side</mat-label>
                 </div>
+            
+                <ng-container *ngFor="let hs of PlateList">
+                    <div fxLayout="row" fxFlex="100%">
+                        <mat-label>{{hs.Anzahl / 2}} x {{hs.Gewicht}}</mat-label>
+                    </div>
+                </ng-container>
             </ng-container>
-        </ng-container>
-
-        
-        <container *ngIf="JustTheBar === true; else PlateListlength">
-            <mat-label>Just the bar</mat-label>
-        </container>
-        
-        <ng-template #PlateListlength>
-            <container *ngIf="PlateList.length < 1">
-                <mat-label>Can not determine plates!</mat-label>
+            
+            
+            <container *ngIf="JustTheBar === true; else PlateListlength">
+                <mat-label>Just the bar</mat-label>
             </container>
-        </ng-template>
-
-        <div fxLayout="row" fxLayoutAlign="center center">
-            <a mat-button (click)="close()"><span class="tc-font-size-small">close</span></a>
-        </div>
-    </div>
-</mat-card>
+            
+            <ng-template #PlateListlength>
+                <container *ngIf="PlateList.length < 1">
+                    <mat-label>Can not determine plates!</mat-label>
+                </container>
+            </ng-template>
+            
+            <div fxLayout="row" fxLayoutAlign="center center">
+                <a mat-button (click)="close()"><span class="tc-font-size-small">close</span></a>
+            </div>
+     
+    </div>        
+</div>
