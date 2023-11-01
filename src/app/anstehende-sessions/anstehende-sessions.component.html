@@ -2,7 +2,7 @@
     <div class="container">
         <p class="font-bold">Upcoming sessions</p>
         <ng-container  *ngIf="AktuellesProgramm">
-            <h6>{{AktuellesProgramm.Name}}</h6>
+            <h4>{{AktuellesProgramm.Name}}</h4>
             <app-programm02 [showButtons]="false"
                             [showSaveButtons] = "false" 
                             [ModulTyp] = "programModul.AnstehendeSessions"
