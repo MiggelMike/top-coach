@@ -15,8 +15,8 @@
                         class="HG-01">
                         <mat-expansion-panel-header [matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag">
                             <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="flex-start center">
-                                <mat-form-field class="align-left" fxFlex="auto">
-                                    <input matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
+                                <mat-form-field class="align-left width-400">
+                                    <input class="tc-font-size-smaller" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
                                 </mat-form-field>
                                 
                                 <ng-container *ngIf="ModulTyp === programModul.History"  >

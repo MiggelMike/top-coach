@@ -646,6 +646,14 @@ textarea:focus {
 	max-height: 140px !important;
 }
 
+.ng-star-inserted {
+    margin-top: 5px;
+}
+
+.mat-expansion-panel {
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0), 0px 0px 0px 0px rgba(0, 0, 0, 0), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+}
+
 //   .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
 //     color: rgba(0, 0, 0, 0.87);
 //     text-align: right;
