@@ -11,16 +11,15 @@ import { DialogData } from '../dialoge/hinweis/hinweis.component';
     styleUrls: ["./settings.component.scss"],
 })
 export class SettingsComponent implements OnInit {
-    public AppData: AppData;
+    public get AppData() :AppData{
+        return this.fDbModule.AppRec;
+    }
 
     constructor(
         private fDbModule: DexieSvcService,
         private fDialogService: DialogeService,
         private router: Router)
-    {
-        this.fDbModule.LadeAppData()
-            .then((aAppData: AppData) => this.AppData = aAppData);
-    }
+    {}
 
     ngOnInit(): void { }
 

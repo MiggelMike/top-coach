@@ -17,6 +17,7 @@ import { LanghantelComponent } from './langhantel/langhantel.component';
 import { ScheibenComponent } from './scheiben/scheiben.component';
 import { TrainingsGewichtProgressComponent } from './trainings-gewicht-progress/trainings-gewicht-progress.component';
 import { EditTrainingsGewichtProgressComponent } from './edit-trainings-gewicht-progress/edit-trainings-gewicht-progress.component';
+import { AppData } from 'src/Business/Coach/Coach';
 
 export const LadeStandardProgramme: ResolveFn<ITrainingsProgramm[]> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
 	return inject(DexieSvcService)
@@ -29,6 +30,11 @@ export const LadeStandardProgramme: ResolveFn<ITrainingsProgramm[]> = (route: Ac
 export const LadeAktuellesProgramm: ResolveFn<ITrainingsProgramm> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
 	return inject(DexieSvcService).LadeAktuellesProgramm();
 };	
+
+export const LadeAppData: ResolveFn<AppData> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+	return inject(DexieSvcService).LadeAppData();
+};	
+
 
 const routes: Routes = [
 	{
@@ -59,6 +65,7 @@ const routes: Routes = [
 	},
 	{
 		path: "settings",
+		resolve: { AppData: LadeAppData },
 		component: SettingsComponent
 	},
 	{

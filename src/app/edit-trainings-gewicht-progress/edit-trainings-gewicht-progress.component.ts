@@ -2,9 +2,9 @@ import { IProgress, Progress } from './../../Business/Progress/Progress';
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { DialogData } from "../dialoge/hinweis/hinweis.component";
-import { DexieSvcService } from "../services/dexie-svc.service";
+import { DexieSvcService, cNumberFormat } from "../services/dexie-svc.service";
 import { DialogeService } from "../services/dialoge.service";
-import { Location } from "@angular/common";
+import { Location, formatNumber } from "@angular/common";
 
 @Component({
 	selector: "app-edit-trainings-gewicht-progress",
@@ -27,7 +27,12 @@ export class EditTrainingsGewichtProgressComponent implements OnInit {
 	ngOnInit(): void {}
 
 	SetAdditionalReps(aEvent: any) {
-		this.Progress.AdditionalReps = aEvent.target.value;
+		aEvent.stopPropagation();
+		this.Progress.AdditionalReps = Number(aEvent.target.value);
+	}
+
+	get AdditionalReps(): string {
+		return formatNumber(this.Progress.AdditionalReps,'en-US',cNumberFormat);
 	}
 
 	back() {

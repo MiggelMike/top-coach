@@ -34,6 +34,7 @@ export const cSatzSelectLimit = 1;
 export const cMaxLimnit = 1000000;
 export const cWeightDigits = 3;
 export const cWeightFormat = '1.2-2';
+export const cNumberFormat =  '1.0-0';
 export const cDateTimeFormat = 'MMMM d, y, h:mm';
 
 export enum DateFormatTyp {
