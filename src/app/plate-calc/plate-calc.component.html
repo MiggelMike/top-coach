@@ -1,6 +1,6 @@
 <div #anchorRef cdkDrag cdkDragRootElement=".cdk-overlay-pane">
         <div class="column-center cc-overlay pad-5">
-                <h5>{{Uebung.Name}} {{SatzNr}}</h5>
+                <div class="font-14-label">{{Uebung.Name}} {{SatzNr}}</div>
                 <div class="row-start-left">
                     <mat-form-field>
                         <mat-label>Weight</mat-label>
@@ -45,7 +45,7 @@
                     </div>
                 </div>
         
-            <mat-label>Min target reps</mat-label>
+            <mat-label class="font-14-label">Min target reps</mat-label>
             <div class="row-start-left">                
                         <!-- Geplante Von-Vorgabe-Wdh. -->
                         <mat-form-field>
@@ -69,7 +69,7 @@
                 </div>
             </div>
             
-            <mat-label>Done reps</mat-label>
+            <mat-label class="font-14-label">Done reps</mat-label>
             <div class="row-start-left">                
                         <!-- Geplante Von-Vorgabe-Wdh. -->
                         <mat-form-field>
