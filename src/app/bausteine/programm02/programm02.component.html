@@ -20,9 +20,9 @@
                                         <input class="tc-font-size-smaller align-left width-400" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
                                     </mat-form-field>
                                     
-                                    <ng-container *ngIf="ModulTyp === programModul.History"  >
+                                    <ng-container *ngIf="ModulTyp === programModul.History">
                                         <div class="ml-10" fxLayout="column" fxFlex="155px" >
-                                            <span> {{sess.GestartedWann | date: 'mediumDate'}} {{sess.GestartedWann | date:'shortTime'}}</span>
+                                            <span> {{GestartedWann(sess)}}</span>
                                         </div>
                                     </ng-container>
 

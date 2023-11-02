@@ -1,5 +1,4 @@
-import { DatePipe } from '@angular/common';
-import { cDeutschKuezel as cDeutschKuerzel, cEnglishKuerzel, cDeutschDateInputMask, cEnglishDateInputMask } from './../Sprache/Sprache';
+import { cDeutschKuezel as cDeutschKuerzel, cDeutschDateInputMask, cEnglishDateInputMask } from './../Sprache/Sprache';
 import { DexieSvcService, SessionParaDB, cMaxDatum, cMinDatum } from './../services/dexie-svc.service';
 import { DiaDatum, DiaUebung, DiaUebungSettings } from './../../Business/Diagramm/Diagramm';
 import { Component, ContentChild, Inject, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
@@ -89,6 +88,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 				this.LadeSessions(0);
 			});
 	}
+	
 	get programModul(): typeof ProgramModulTyp {
 		return ProgramModulTyp;
 	}

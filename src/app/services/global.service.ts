@@ -9,6 +9,15 @@ import { Subscriber } from 'rxjs';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { Satz } from 'src/Business/Satz/Satz';
 
+export enum DateFormatTyp {
+	Komplett,
+	NurDatum,
+	NurZeit
+}
+
+export interface IDateFormatTyp {
+	get dateFormatTyp(): (typeof DateFormatTyp);
+}
 
 export enum SpeicherOrtTyp {
     Lokal = 'Lokal',
@@ -42,6 +51,8 @@ export class AppDataMap {
     // @JsonProperty()
     // public AktuellesProgramm = new AktuellesProgramm();
     public AktuelleSession: ISession;
+
+   
 }
 
 
@@ -90,6 +101,20 @@ export class GlobalService {
         const s = localStorage.getItem('SportlerID');
         return (s === null) || (s.length === 0) ? 0 : Number(s);
     }
+
+    public static StaticFormatDate(aDate: Date, aDateFormatTyp: DateFormatTyp = DateFormatTyp.Komplett): string {
+		switch (aDateFormatTyp) {
+			case DateFormatTyp.NurZeit:
+				return aDate.toLocaleTimeString();
+				break;
+			case DateFormatTyp.NurDatum:
+				return aDate.toLocaleDateString()
+				break;
+			default:
+				return aDate.toLocaleDateString() + ' ' + aDate.toLocaleTimeString();
+				break;
+		}
+	}
 
     // public LadeAnstehendeSession(): Observable<ISession[]> {
     //     const mResult = new Observable<ISession[]>(

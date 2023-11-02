@@ -1,5 +1,7 @@
+import { GlobalService } from 'src/app/services/global.service';
 import { formatNumber } from "@angular/common";
 import { DexieSvcService, cWeightFormat } from "src/app/services/dexie-svc.service";
+
 
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
@@ -38,7 +40,7 @@ export class BodyWeight {
     }
 
     get DatumTxt(): string {
-        return DexieSvcService.StaticFormatDate(this.Datum);
+        return GlobalService.StaticFormatDate(this.Datum);
     }
     //#endregion
     //#region Weight 
