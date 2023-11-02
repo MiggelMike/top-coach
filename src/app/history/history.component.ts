@@ -85,7 +85,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 			.LadeAppData()
 			.then((mAppData) => {
 				this.AppData = mAppData;
-				this.LadeLimit = mAppData.MaxHistorySessions;
+				this.LadeLimit = mAppData.MaxHistorySessions + 100000;
 				this.LadeSessions(0);
 			});
 	}

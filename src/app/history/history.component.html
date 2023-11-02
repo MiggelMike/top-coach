@@ -16,7 +16,7 @@
 
         </div>
 
-        <mat-tab-group #matGroup style="width:100%;height:100%" (selectedTabChange)="onTabChanged($event)">
+        <mat-tab-group #matGroup (selectedTabChange)="onTabChanged($event)">
             <mat-tab label="Sessions">
                 <app-programm02 [showButtons]="false" [showSaveButtons]="false" [ModulTyp]="programModul.History"
                     [SessionListe]="SessionListe" [bearbeitbar]="false" [StartButtonVisible]="true"

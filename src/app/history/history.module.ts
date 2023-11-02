@@ -47,7 +47,6 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatSortModule} from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { ReactiveFormsModule } from '@angular/forms';
-import { DatePipePipe } from '../DatePipe/date-pipe.pipe';
 
 const routes: Routes = [{ path: 'history', component: HistoryComponent }];
 
