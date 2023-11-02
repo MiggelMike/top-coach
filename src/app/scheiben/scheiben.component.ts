@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { Hantelscheibe } from "src/Business/Hantelscheibe/Hantelscheibe";
 import { DialogData } from "../dialoge/hinweis/hinweis.component";
-import { Location } from "@angular/common";
-import { DexieSvcService } from "../services/dexie-svc.service";
+import { Location, formatNumber } from "@angular/common";
+import { DexieSvcService, cWeightFormat } from "../services/dexie-svc.service";
 import { DialogeService } from "../services/dialoge.service";
 
 @Component({
@@ -43,6 +43,10 @@ export class ScheibenComponent implements OnInit {
 
 	public SetWeight(aScheibe: Hantelscheibe, aEvent: any) {
 		aScheibe.Gewicht = Number(aEvent.target.value);
+	}
+
+	public GetWeightText(aScheibe: Hantelscheibe): string{
+		return formatNumber(aScheibe.Gewicht,'en-US', cWeightFormat);
 	}
 
 	public SetAnzahl(aScheibe: Hantelscheibe, aEvent: any) {

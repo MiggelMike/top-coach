@@ -22,7 +22,7 @@
                         class="align-right"
                         mask="999.00" 
                         (focusout)="SetWeight(sch,$event)"
-                        [ngModel]="sch.Gewicht" type="text">
+                        [ngModel]="GetWeightText(sch)" type="text">
                     </mat-form-field>
                     
                     <mat-form-field id="Anzahl" class="align-right">
