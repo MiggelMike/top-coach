@@ -7,7 +7,7 @@ import { WeightProgress } from '../Progress/Progress';
 import { GewichtsEinheit } from '../Coach/Coach';
 import { BodyWeight } from '../Bodyweight/Bodyweight';
 import { formatNumber } from '@angular/common';
-import { DateFormatTyp, GlobalService } from 'src/app/services/global.service';
+import { DateFormatTyp, Datum } from '../Datum';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
 
@@ -39,7 +39,7 @@ export interface ISession extends ISessionDB {
     PruefeGewichtsEinheit(aGewichtsEinheit: GewichtsEinheit);
     LiftedWeight: number;
     LiftedWeightText: string;
-    GestartedWannText(): string;
+    GestartedWannText(aDateFormatTyp: DateFormatTyp): string;
     BodyWeight: BodyWeight;
     BodyWeightSession: number;
     BodyWeightSessionText: string;
@@ -168,8 +168,8 @@ export class Session implements ISession {
         this.SessionDB.GestartedWann = aVal;
     }
 
-    public GestartedWannText(): string {
-        return GlobalService.StaticFormatDate(this.SessionDB.GestartedWann, DateFormatTyp.Komplett);
+    public GestartedWannText(aDateFormatTyp: DateFormatTyp) :string {
+        return Datum.StaticFormatDate(this.SessionDB.GestartedWann, aDateFormatTyp);
     }
     //#endregion    
     //#region PauseInSek 

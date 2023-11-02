@@ -1,3 +1,4 @@
+import { DateFormatTyp, Datum } from './../../../Business/Datum';
 import { ISession, SessionCopyPara } from "src/Business/Session/Session";
 import { ISessionDB, SessionDB } from "./../../../Business/SessionDB";
 import { SessionStatus } from "../../../Business/SessionDB";
@@ -10,7 +11,7 @@ import { Output, EventEmitter, Component, OnInit, Input, ViewChildren, QueryList
 import { MatAccordion, MatExpansionPanel } from "@angular/material/expansion";
 import { DialogeService } from "./../../services/dialoge.service";
 import { cLoadingDefaultHeight, DialogData } from "./../../dialoge/hinweis/hinweis.component";
-import { DateFormatTyp, GlobalService } from "src/app/services/global.service";
+import { GlobalService } from "src/app/services/global.service";
 import { Observable, of } from "rxjs";
 import { Uebung } from "src/Business/Uebung/Uebung";
 import { UebungService } from "src/app/services/uebung.service";
@@ -68,7 +69,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 	// }
 	
 	GestartedWann(aSess: Session): string{
-		return GlobalService.StaticFormatDate(aSess.GestartedWann, DateFormatTyp.Komplett);
+		return Datum.StaticFormatDate(aSess.GestartedWann, DateFormatTyp.KomplettOhneSekunden);
 	}
 
 	

@@ -7,6 +7,7 @@ import { ISession, Session } from './../../Business/Session/Session';
 import { Component, OnInit, Inject, InjectionToken, AfterViewInit,ViewContainerRef, TemplateRef, ViewChild } from '@angular/core';
 import { cSessionStatsOverlayData, SessionOverlayRef } from '../services/session-overlay-service.service';
 import { DexieSvcService } from '../services/dexie-svc.service';
+import { DateFormatTyp, IDateFormatTyp } from 'src/Business/Datum';
 
 
 
@@ -17,7 +18,7 @@ import { DexieSvcService } from '../services/dexie-svc.service';
 	encapsulation: ViewEncapsulation.None
 })
 	
-export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
+export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit , IDateFormatTyp{
     @ViewChild(TemplateRef) _ovelayTemplate: TemplateRef<any>;
     @ViewChild("anchorRef") anchorRef: any;
     public top: number;
@@ -71,6 +72,9 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit {
 		// 				this.sess.BodyWeightAtSessionStart = 0;
 		// 		}
 		// 	});
+	}
+	get dateFormatTyp(): typeof DateFormatTyp {
+		return DateFormatTyp;
 	}
 	
 	get GewichtsEinheit(): string {
