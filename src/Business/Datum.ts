@@ -16,13 +16,13 @@ export class Datum{
                 return aDate.toLocaleTimeString();
                 break;
             case DateFormatTyp.Datum:
-                return aDate.toLocaleDateString()
+                return aDate.toLocaleDateString([], {year: 'numeric', month: 'numeric', day: 'numeric'});
                 break;
             case DateFormatTyp.Komplett:
-                return aDate.toLocaleDateString() + ' ' + aDate.toLocaleTimeString();
+                return aDate.toLocaleDateString();
                 break;
             default:
-                return aDate.toLocaleDateString() + ' ' + aDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                return aDate.toLocaleDateString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'})
                 break;
         }
 	}
