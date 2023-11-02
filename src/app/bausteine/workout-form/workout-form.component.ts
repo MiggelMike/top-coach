@@ -1,10 +1,11 @@
 import { DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { Router } from '@angular/router';
-import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
+import { ITrainingsProgramm, TrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit } from "@angular/core";
 import { DialogeService } from 'src/app/services/dialoge.service';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
 import { IProgramModul, ProgramModulTyp } from 'src/app/app.module';
+import { Location } from "@angular/common";
 
 
 @Component({
@@ -16,11 +17,13 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
     public programm: ITrainingsProgramm;
     public cmpProgramm: ITrainingsProgramm;
     public ModulTyp: ProgramModulTyp = ProgramModulTyp.Kein; 
+    
 
     constructor(
         private router: Router,
         private fDialogService: DialogeService,
-        private fDbModule: DexieSvcService
+        private fDbModule: DexieSvcService,
+        private location: Location
     ) {
         const mNavigation = this.router.getCurrentNavigation()!;
         const mState = mNavigation.extras.state as { programm: ITrainingsProgramm, ModulTyp: ProgramModulTyp };
@@ -38,26 +41,49 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
         this.cmpProgramm = aProgramm.Copy();    
     }
 
-    ngOnInit() {}
+    ngOnInit() { }
 
-    CancelChanges(aPara: WorkoutFormComponent, aNavRoute: string) {
+    
+    public back() {
+		if (TrainingsProgramm.StaticIsEqual(this.programm,this.cmpProgramm) === true) this.leave();
+		else {
+			const mDialogData = new DialogData();
+			mDialogData.textZeilen.push("Save changes?");
+			mDialogData.ShowAbbruch = true;
+		
+			mDialogData.OkFn = () => {
+				this.SaveChangesPrim();
+				this.leave();
+			}
+	
+			mDialogData.CancelFn = (): void => {
+				this.leave();
+			}
+	
+			this.fDialogService.JaNein(mDialogData);
+		}
+	}
+    SaveChangesPrim() {
+        this.fDbModule.ProgrammSpeichern(this.programm);
+    }
+
+    CancelChanges() {
         const mDialogData = new DialogData();
         mDialogData.textZeilen.push("Cancel unsaved changes?");
         mDialogData.OkFn = (): void => {
-            aPara.programm.resetProgram(aPara.cmpProgramm);
-            this.router.navigate([aNavRoute] );
+            this.programm.resetProgram(this.programm);
+            this.leave();
         };
 
         this.fDialogService.JaNein(mDialogData);
     }
 
-
-    leave(aNavPath: string, aPara: any) {
-        if (aPara.programm.hasChanged(aPara.cmpProgramm) === false) {
-            this.router.navigate([aNavPath] );
-        } else {
-            aPara.CancelChanges(aPara, aNavPath);
-        }
+    leave() {
+        //if (TrainingsProgramm.StaticIsEqual(this.programm,this.cmpProgramm) === true) {
+            this.location.back();
+        //} else {
+           // this.CancelChanges();
+        //}//
     }
 }
 

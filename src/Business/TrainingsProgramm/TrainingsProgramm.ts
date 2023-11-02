@@ -2,7 +2,10 @@ import { ISession, Session, SessionCopyPara } from 'src/Business/Session/Session
 import { DexieSvcService } from './../../app/services/dexie-svc.service';
 import { Satz } from '../Satz/Satz';
 import { SessionStatus } from '../SessionDB';
+
 var cloneDeep = require('lodash.clonedeep');
+var isEqual = require('lodash.isEqual');
+
 
 export enum ProgrammTyp {
     Custom = "Custom",
@@ -61,6 +64,10 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
         this.ProgrammTyp = aProgrammTyp;
         Object.defineProperty(this, "pDbModule", { enumerable: false });
         // Object.defineProperty(this, "SessionListe", { enumerable: false });
+    }
+
+    public static StaticIsEqual( aProgramm1: ITrainingsProgramm, aProgramm2: ITrainingsProgramm): boolean {
+        return isEqual(aProgramm1, aProgramm2);
     }
 
     NummeriereSessions() {

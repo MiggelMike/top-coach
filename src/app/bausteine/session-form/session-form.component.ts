@@ -1,7 +1,7 @@
 import { Session, SessionCopyPara } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from './../../../Business/TrainingsProgramm/TrainingsProgramm';
 import { UebungService } from "./../../services/uebung.service";
-import { SessionDB, SessionStatus } from "./../../../Business/SessionDB";
+import { SessionStatus } from "./../../../Business/SessionDB";
 import { SessionStatsOverlayComponent } from "./../../session-stats-overlay/session-stats-overlay.component";
 import { SessionOverlayServiceService, SessionOverlayConfig } from "./../../services/session-overlay-service.service";
 import { DialogeService } from "./../../services/dialoge.service";
@@ -17,7 +17,6 @@ import { ProgressPara, ProgressSet } from 'src/Business/Progress/Progress';
 import { Satz, SatzStatus } from 'src/Business/Satz/Satz';
 import { ExerciseSettingSvcService } from 'src/app/services/exercise-setting-svc.service';
 import { ExerciseSettingsComponent } from 'src/app/exercise-settings/exercise-settings.component';
-import { IPoint } from '@swimlane/ngx-charts/lib/models/coordinates.model';
 import { IProgramModul, ProgramModulTyp } from '../../app.module';
 import { BodyWeight } from 'src/Business/Bodyweight/Bodyweight';
 

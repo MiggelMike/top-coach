@@ -1,20 +1,21 @@
-    <app-toolbar></app-toolbar>
-
+    <!-- <app-toolbar></app-toolbar> -->
+    <mat-icon (click)="back()">arrow_back</mat-icon>
     <ng-container *ngIf="programm">
-        <div class="column-center width-600">
-            <div><strong>{{programm.Name}}</strong></div>
-        
-            <ng-container *ngIf="programm.SessionListe">
-                <app-programm02 
-                    [programm]="programm" 
-                    [SessionListe]="programm.SessionListe" 
-                    [showButtons]="true" 
-                    [showSaveButtons]="true" 
-                    [ModulTyp]="ModulTyp"
-                    [bearbeitbar]="true"
-                    (ProgrammSavedEvent)="CopyProgramm($event)">
-                </app-programm02>
-            </ng-container>
+        <div class="column-center">
+            <div class="width-600">
+                <div><strong>{{programm.Name}}</strong></div>
+                <ng-container *ngIf="programm.SessionListe">
+                    <app-programm02 
+                        [programm]="programm" 
+                        [SessionListe]="programm.SessionListe" 
+                        [showButtons]="true" 
+                        [showSaveButtons]="true" 
+                        [ModulTyp]="ModulTyp"
+                        [bearbeitbar]="true"
+                        (ProgrammSavedEvent)="CopyProgramm($event)">
+                    </app-programm02>
+                </ng-container>
+            </div>
         </div>
     </ng-container>
 
