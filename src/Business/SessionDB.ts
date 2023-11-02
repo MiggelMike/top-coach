@@ -1,6 +1,5 @@
-import { DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { Zeitraum, MaxZeitraum } from './../Business/Dauer';
-import { AppData, GewichtsEinheit } from './Coach/Coach';
+import { GewichtsEinheit } from './Coach/Coach';
 
 
 export enum SessionStatus {
@@ -74,17 +73,4 @@ export class SessionDB implements ISessionDB {
     public BodyWeightAtSessionStart: number = 0;
     public PausenListe: Array<Pause> = [];
     public GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
-
-    // constructor() {
-    //     // Object.defineProperty(this, "UebungsListe", { enumerable: false });
-    //     SessionDB.StaticCheckMembers(this);
-    // }
-    
-    // public static StaticCheckMembers(aSessionDB: ISessionDB) {
-    //     if (aSessionDB.GewichtsEinheit === undefined)
-    //         aSessionDB.GewichtsEinheit = GewichtsEinheit.KG;
-    
-    //     if (aSessionDB.BodyWeightAtSessionStart === undefined)
-    //         aSessionDB.BodyWeightAtSessionStart = 0;
-    // }
 }

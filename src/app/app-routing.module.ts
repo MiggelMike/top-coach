@@ -19,16 +19,24 @@ import { TrainingsGewichtProgressComponent } from './trainings-gewicht-progress/
 import { EditTrainingsGewichtProgressComponent } from './edit-trainings-gewicht-progress/edit-trainings-gewicht-progress.component';
 import { AppData } from 'src/Business/Coach/Coach';
 
+
+
 export const LadeStandardProgramme: ResolveFn<ITrainingsProgramm[]> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
 	return inject(DexieSvcService)
-		.LadeStandardProgramme()
-		.then((programme) => {
+	.LadeStandardProgramme()
+	.then((programme) => {
 			return programme;
 		});
 };
 
 export const LadeAktuellesProgramm: ResolveFn<ITrainingsProgramm> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-	return inject(DexieSvcService).LadeAktuellesProgramm();
+	const mDB: DexieSvcService = inject(DexieSvcService);
+	return mDB.LadeAktuellesProgramm().then(
+		(aProgram) => { 
+			// mDB.MakeExample(aProgram);
+			return aProgram;
+
+		});
 };	
 
 export const LadeAppData: ResolveFn<AppData> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {

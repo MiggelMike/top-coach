@@ -198,7 +198,7 @@ export class DexieSvcService extends Dexie {
 	readonly cProgress: string = "Progress";
 	readonly cDiaUebungSettings: string = "DiaUebungSettings";
 	readonly cBodyweight: string = "BodyWeightDB";
-	readonly cSprache  : string = "Sprache";
+	readonly cSprache: string = "Sprache";
 
 	AktuellerProgrammTyp: ProgrammTyp;
 	AktuellesProgramm: ITrainingsProgramm;
@@ -214,8 +214,7 @@ export class DexieSvcService extends Dexie {
 	private ProgrammTable: Dexie.Table<ITrainingsProgramm, number>;
 	private SessionTable: Dexie.Table<SessionDB, number>;
 	private MuskelGruppeTable: Dexie.Table<MuscleGroup, number>;
-	private get HantelTable(): Dexie.Table<Hantel, number>
-	{ 
+	private get HantelTable(): Dexie.Table<Hantel, number> {
 		return this.table(this.cHantel);
 	};
 	private HantelscheibenTable: Dexie.Table<Hantelscheibe, number>;
@@ -319,12 +318,12 @@ export class DexieSvcService extends Dexie {
 						mUebungLadePara.WhereClause = "SessionID";
 						mUebungLadePara.anyOf = () => {
 							return mPtrSession.ID as any;
-						};						
+						};
 						mUebungLadePara.SaetzeBeachten = true;
 						mUebungLadePara.SatzParaDB = new SatzParaDB();
 						mUebungLadePara.SatzParaDB.WhereClause = "[UebungID+Status]";
-						mUebungLadePara.SatzParaDB.anyOf = (aPara:{ ParaUebung: Uebung, ParaSatz: Satz }) => { 
-							return ([aPara.ParaUebung.ID,SatzStatus.Fertig]) as any;
+						mUebungLadePara.SatzParaDB.anyOf = (aPara: { ParaUebung: Uebung, ParaSatz: Satz }) => {
+							return ([aPara.ParaUebung.ID, SatzStatus.Fertig]) as any;
 						};
 
 						const mDummySession: Session = new Session();
@@ -396,7 +395,7 @@ export class DexieSvcService extends Dexie {
 					if (aExtraFn !== undefined)
 						aExtraFn();
 					return mDiagrammDatenListe;
-			});
+				});
 		} catch (err) {
 			console.error(err);
 			return null;
@@ -574,12 +573,12 @@ export class DexieSvcService extends Dexie {
 				aSessionListe.forEach((mSession) => {
 					mSession.UebungsListe = [];
 				});
-					aProgramm.SessionListe = aSessionListe;
-					//aProgramm.SessionListe = aProgramm.SessionListe.concat(aSessionListe);
-					//const mSessionLadePara: SessionParaDB = new SessionParaDB();
-					// mSessionLadePara.Limit = cSessionSelectLimit;
-					// mSessionLadePara.OffSet = aSessionListe.length;
-					//this.LadeSessions(aProgramm, mSessionLadePara);
+				aProgramm.SessionListe = aSessionListe;
+				//aProgramm.SessionListe = aProgramm.SessionListe.concat(aSessionListe);
+				//const mSessionLadePara: SessionParaDB = new SessionParaDB();
+				// mSessionLadePara.Limit = cSessionSelectLimit;
+				// mSessionLadePara.OffSet = aSessionListe.length;
+				//this.LadeSessions(aProgramm, mSessionLadePara);
 			});
 	}
 
@@ -640,7 +639,7 @@ export class DexieSvcService extends Dexie {
 					mSessionCopyPara.CopySessionID = false;
 					mSessionCopyPara.CopyUebungID = false;
 					mSessionCopyPara.CopySatzID = false;
-					const mNeueSession = Session.StaticCopy(mPrtSession as Session,mSessionCopyPara);
+					const mNeueSession = Session.StaticCopy(mPrtSession as Session, mSessionCopyPara);
 					mNeueSession.ListenIndex = index;
 					mNeueSession.FK_VorlageProgramm = aSelectedProgram.id;
 
@@ -718,7 +717,7 @@ export class DexieSvcService extends Dexie {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
 		}
 
-		        //  Dexie.delete("ConceptCoach");
+	//	 Dexie.delete("ConceptCoach");
 		this.version(36).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
@@ -756,15 +755,15 @@ export class DexieSvcService extends Dexie {
 		this.ProgrammTable.clear()
 			.then(() => {
 				this.SessionTable.clear()
-				.then(() => {
-					this.UebungTable.clear()
-						.then(() => {
-							this.SatzTable.clear()
-								.then(() => {
-									this.InitDatenbank();
+					.then(() => {
+						this.UebungTable.clear()
+							.then(() => {
+								this.SatzTable.clear()
+									.then(() => {
+										this.InitDatenbank();
+									});
 							});
 					});
-				});
 			});
 	}
 
@@ -825,7 +824,7 @@ export class DexieSvcService extends Dexie {
 
 	private async InitAll() {
 		this.InitHantel();
-	    this.InitProgress();
+		this.InitProgress();
 		await this.InitSprache();
 		await this.InitAppData();
 		this.InitHantelscheibe();
@@ -945,11 +944,11 @@ export class DexieSvcService extends Dexie {
 				const mResult: Array<BodyWeight> = [];
 				mBodyweights.map((aBodyweightDB) => mResult.push(new BodyWeight(aBodyweightDB)))
 				return mResult;
-		});
+			});
 	}
 
 	public LadeSessionBodyweight(aSession: Session): Promise<BodyWeight> {
-		const mDatum: Date = (aSession.GestartedWann !== undefined) ? aSession.GestartedWann : cMinDatum; 
+		const mDatum: Date = (aSession.GestartedWann !== undefined) ? aSession.GestartedWann : cMinDatum;
 		
 		return this.BodyweightTable
 			.where("Datum")
@@ -1021,7 +1020,7 @@ export class DexieSvcService extends Dexie {
 		return this.MuskelGruppeTable.put(aMuskelgruppe);
 	}
 
-	public HantelSpeichern(aHantel: Hantel):Promise<Hantel> {
+	public HantelSpeichern(aHantel: Hantel): Promise<Hantel> {
 		try {
 			return this.HantelTable.put(aHantel).then(
 				(aID) => {
@@ -1042,7 +1041,7 @@ export class DexieSvcService extends Dexie {
 	public InsertUebungen(aUebungsListe: Array<Uebung>): PromiseExtended<Array<Uebung>> {
 		let mUebungsDB_Liste: Array<UebungDB> = [];
 		aUebungsListe.map((u) => mUebungsDB_Liste.push(u.UebungDB));
-		return this.UebungTable.bulkPut(mUebungsDB_Liste, {allKeys: true})
+		return this.UebungTable.bulkPut(mUebungsDB_Liste, { allKeys: true })
 			.then(
 				(mKeyList) => {
 					for (let index = 0; index < aUebungsListe.length; index++) {
@@ -1193,7 +1192,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public DeleteHantelListe(aHantelListe: Array<Hantel>) {
-		const mKeys:any = [];
+		const mKeys: any = [];
 		aHantelListe.forEach((mHantel) => mKeys.push(mHantel.ID));
 		this.HantelTable.bulkDelete(mKeys);
 	}
@@ -1249,7 +1248,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	private async PruefeStandardProgress() {
-		await this.ProgressTable. orderBy("Name")
+		await this.ProgressTable.orderBy("Name")
 			.toArray()
 			.then((mProgressListe) => {
 				this.ProgressListe = mProgressListe;
@@ -1293,7 +1292,7 @@ export class DexieSvcService extends Dexie {
 			.filter((mEquipment: Equipment) => mEquipment.EquipmentOrigin === EquipmentOrigin.Standard)
 			.toArray()
 			.then((mEquipmentListe) => {
-				for (const mEquipmentTyp of DexieSvcService.StaticEnumKeys(EquipmentTyp) ) {
+				for (const mEquipmentTyp of DexieSvcService.StaticEnumKeys(EquipmentTyp)) {
 					if (mEquipmentTyp === EquipmentTyp.Unbestimmt) continue;
 
 					if (mEquipmentListe.find((mEquipment: Equipment) => mEquipment.EquipmentTyp === mEquipmentTyp) === undefined) {
@@ -1386,7 +1385,7 @@ export class DexieSvcService extends Dexie {
 		else mHelpProgrammParaDB = aProgrammParaDB;
 		
 		return this.LadeProgrammeEx(mHelpProgrammParaDB)
-			.then((aProgramme) => { 
+			.then((aProgramme) => {
 				this.AktuellesProgramm = undefined;
 				if (aProgramme.length > 0)
 					this.AktuellesProgramm = aProgramme[0];
@@ -1501,7 +1500,7 @@ export class DexieSvcService extends Dexie {
 				}
 				return mResult;
 			});
-	}	
+	}
 
 	// public async LadeUpcomingSessions(aProgrammID: number, aSessionParaDB?: SessionParaDB): Promise<Array<Session>> {
 	// 	return await this.SessionTable
@@ -1569,7 +1568,7 @@ export class DexieSvcService extends Dexie {
 		if (aSessionParaDB === undefined) {
 			mHelpSessionParaDB = new SessionParaDB();
 			mHelpSessionParaDB.WhereClause = "FK_Programm";
-			mHelpSessionParaDB.anyOf = () => { return aProgrammID as any};
+			mHelpSessionParaDB.anyOf = () => { return aProgrammID as any };
 		}
 		else mHelpSessionParaDB = aSessionParaDB;
 
@@ -1738,7 +1737,7 @@ export class DexieSvcService extends Dexie {
 				// Alle sätze der übungen müssen fertig sein
 				SaetzeStatus.AlleFertig
 			] as any
-		}; 
+		};
 
 		mUebungParaDB.And = (mUebung: Uebung): boolean => {
 			return (
@@ -1748,12 +1747,12 @@ export class DexieSvcService extends Dexie {
 			);
 		};
 		
-		mUebungParaDB.Limit = aFailCount-1;
+		mUebungParaDB.Limit = aFailCount - 1;
 		mUebungParaDB.SortBy = "WeightInitDate";
 		mUebungParaDB.SortOrder = SortOrder.descending;
 
 		return await this.LadeSessionUebungenEx(new Session(), // Dummy
-			                                    mUebungParaDB)
+			mUebungParaDB)
 			.then((mUebungen) => {
 				let mResult: Array<Uebung> = [];
 				for (let index = 0; index < mUebungen.length; index++) {
@@ -1779,7 +1778,7 @@ export class DexieSvcService extends Dexie {
 				aUebung.ProgressGroup,
 				SaetzeStatus.AlleFertig
 			];
-		}; 
+		};
 
 		mUebungParaDB.And = (mUebung: Uebung): boolean => {
 			return (
@@ -1793,7 +1792,7 @@ export class DexieSvcService extends Dexie {
 		mUebungParaDB.SortOrder = SortOrder.descending;
 
 		return await this.LadeSessionUebungenEx(new Session(), // Dummy
-			                                    mUebungParaDB)
+			mUebungParaDB)
 			.then((mUebungen) => {
 				for (let index = 0; index < mUebungen.length; index++) {
 					if (mUebungen[index].FailDatum.valueOf() > cMinDatum.valueOf())
@@ -1834,7 +1833,7 @@ export class DexieSvcService extends Dexie {
 						mResultUebungsListe = mResultUebungsListe.reverse();
 					
 					for (let index = 0; index < mResultUebungsListe.length; index++) {
-						const mPtrUebung:Uebung = mResultUebungsListe[index];
+						const mPtrUebung: Uebung = mResultUebungsListe[index];
 
 						// if (mPtrUebung.InUpcomingSessionSetzen === undefined)
 						mPtrUebung.InUpcomingSessionSetzen = new InUpcomingSessionSetzen();
@@ -1852,7 +1851,7 @@ export class DexieSvcService extends Dexie {
 							aLadePara.ExtraFn(mExtraFnPara);
 						}
 						
-						if (aLadePara !== undefined && aLadePara.SaetzeBeachten === true) 
+						if (aLadePara !== undefined && aLadePara.SaetzeBeachten === true)
 							await this.LadeUebungsSaetzeEx(mPtrUebung, aLadePara.SatzParaDB);
 						
 					};
@@ -2090,12 +2089,12 @@ export class DexieSvcService extends Dexie {
 		if (aSession.Datum === undefined || aSession.Datum === null)
 			aSession.Datum = new Date;
 		
-		return await this.SessionTable.put(aSession.SessionDB).then( (mID) => {
+		return await this.SessionTable.put(aSession.SessionDB).then((mID) => {
 			aSession.ID = mID;
 			aSession.UebungsListe.forEach(async (mUebung: Uebung) => {
 				mUebung.SessionID = aSession.ID;
 				mUebung.FK_Programm = aSession.FK_Programm;
-				if ((mUebung.Datum === undefined)||(mUebung.Datum === null))
+				if ((mUebung.Datum === undefined) || (mUebung.Datum === null))
 					mUebung.Datum = aSession.Datum;
 				await this.UebungSpeichern(mUebung);
 			});
@@ -2105,14 +2104,14 @@ export class DexieSvcService extends Dexie {
 
 	public async ProgrammSpeichern(aTrainingsProgramm: ITrainingsProgramm, aProgrammExtraParaDB?: ProgrammParaDB): Promise<ITrainingsProgramm> {
 		return await this.ProgrammTable.put(aTrainingsProgramm)
-			.then( async (mID) => {
+			.then(async (mID) => {
 				aTrainingsProgramm.id = mID;
 				const mSessionListe: Array<Session> = aTrainingsProgramm.SessionListe as Array<Session>;
 				
-				 mSessionListe.forEach( async (mSession) => {
+				mSessionListe.forEach(async (mSession) => {
 					mSession.FK_Programm = mID;
 					await this.SessionSpeichern(mSession);
-				 });
+				});
 				//  aTrainingsProgramm.SessionListe = [];
 
 				// this.ProgrammTable.where({ id: mid })
@@ -2122,7 +2121,7 @@ export class DexieSvcService extends Dexie {
 				// 	});
 				return aTrainingsProgramm;
 			});
-   }
+	}
 
 	public async ErzeugeVorlageProgramm(aProgrammTyp: ProgrammTyp) {
 		let mTrainingsProgramm: ITrainingsProgramm = null;
@@ -2135,8 +2134,7 @@ export class DexieSvcService extends Dexie {
 		this.LadeProgrammeEx(this.ProgramLadeStandardPara);
 	}
 
-	public static StaticCheckNumber(aNumberText: string): number
-	{
+	public static StaticCheckNumber(aNumberText: string): number {
 		try {
 			const mNumber = Number.parseFloat(aNumberText);
 			if (Number.isNaN(mNumber))
@@ -2215,7 +2213,7 @@ export class DexieSvcService extends Dexie {
 
 	public async LadeSpracheFromID(aID: number): Promise<Sprache> {
 		return await this.SpracheTable
-			.where({ id: aID})
+			.where({ id: aID })
 			.first(async (aSprache: Sprache) => {
 				return aSprache;
 			});
@@ -2251,7 +2249,7 @@ export class DexieSvcService extends Dexie {
 		}// if
 	}
 
-	public async LadeAppData(): Promise<AppData>{
+	public async LadeAppData(): Promise<AppData> {
 		return await this.AppDataTable
 			.limit(1)
 			.first((aAppRec) => {
@@ -2280,25 +2278,22 @@ export class DexieSvcService extends Dexie {
 
 			let mGewicht: number;
 			let mProgress: Progress;
-			if (   mQuellUebung.FkProgress !== undefined
-				&& mQuellUebung.FkProgress > 0)
-			{
+			if (mQuellUebung.FkProgress !== undefined
+				&& mQuellUebung.FkProgress > 0) {
 				mProgress = this.ProgressListe.find((p) => p.ID === mQuellUebung.FkProgress);
-				if (   mProgress !== undefined
+				if (mProgress !== undefined
 					&& mProgress.ProgressSet === ProgressSet.First
 					&& mQuellUebung.SatzListe !== undefined
-				){
+				) {
 					const mPtrQuellSatz = mQuellUebung.SatzListe.find((sz) => sz.SatzListIndex > 0);
 					if (mPtrQuellSatz !== undefined) {
-						if (   aQuellSession.Kategorie02 === SessionStatus.Fertig
-							&& mQuellUebung.ArbeitsSaetzeStatus === SaetzeStatus.AlleFertig)
-						{
+						if (aQuellSession.Kategorie02 === SessionStatus.Fertig
+							&& mQuellUebung.ArbeitsSaetzeStatus === SaetzeStatus.AlleFertig) {
 							mGewicht = mPtrQuellSatz.GewichtAusgefuehrt;
 						}
 						else if (
-							   mPtrQuellSatz.GewichtDiff !== undefined
-							&& mPtrQuellSatz.GewichtDiff.length > 0)
-						{
+							mPtrQuellSatz.GewichtDiff !== undefined
+							&& mPtrQuellSatz.GewichtDiff.length > 0) {
 							mGewicht = mPtrQuellSatz.GewichtAusgefuehrt - mPtrQuellSatz.GewichtDiff[mPtrQuellSatz.GewichtDiff.length - 1].Gewicht;
 						}//if
 					}//if
@@ -2361,19 +2356,19 @@ export class DexieSvcService extends Dexie {
 
 	public async CheckSessionUebungen(aSession: Session) {
 		if ((aSession.UebungsListe !== undefined)
-			&& (aSession.ID !== undefined )
+			&& (aSession.ID !== undefined)
 			&& (aSession.UebungsListe.length === 0)) {
 			const mUebungParaDB: UebungParaDB = new UebungParaDB();
 			mUebungParaDB.SaetzeBeachten = true;
 			await this.LadeSessionUebungenEx(aSession, mUebungParaDB)
-				.then((mUebungen) => aSession.UebungsListe = mUebungen )
+				.then((mUebungen) => aSession.UebungsListe = mUebungen)
 		}
 	}
 
 	public async CheckUebungSaetze(aUebung: Uebung) {
 		if (aUebung.SatzListe.length === 0) {
 			await this.LadeUebungsSaetze(aUebung.ID)
-				.then((mSaetze) => aUebung.SatzListe = mSaetze )
+				.then((mSaetze) => aUebung.SatzListe = mSaetze)
 		}
 	}
 
@@ -2399,7 +2394,7 @@ export class DexieSvcService extends Dexie {
 			const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
 			mSessionCopyPara.CopySatzID = false;
 			mSessionCopyPara.CopyUebungID = false;
-			const mNeueSession: Session = Session.StaticCopy(aSession,mSessionCopyPara);
+			const mNeueSession: Session = Session.StaticCopy(aSession, mSessionCopyPara);
 			mNeueSession.init();
 			this.InitSessionSaetze(aSession, mNeueSession);
 			mNeueSession.FK_Programm = aSession.FK_Programm;
@@ -2431,14 +2426,12 @@ export class DexieSvcService extends Dexie {
 
 			mNeueSession.UebungsListe.forEach(
 				(u) => {
-					if (   (u.ArbeitsSatzListe !== undefined)
+					if ((u.ArbeitsSatzListe !== undefined)
 						&& (u.ArbeitsSatzListe.length > 0)
-					)
-					{
+					) {
 						const mPtrLetzerSatz: Satz = u.ArbeitsSatzListe[u.ArbeitsSatzListe.length - 1];
-						if (   mPtrLetzerSatz.GewichtDiff !== undefined
-							&& mPtrLetzerSatz.GewichtDiff.length > 0)
-						{
+						if (mPtrLetzerSatz.GewichtDiff !== undefined
+							&& mPtrLetzerSatz.GewichtDiff.length > 0) {
 							u.ArbeitsSatzListe.forEach((sz) => sz.SetPresetWeight(Number(mPtrLetzerSatz.GewichtVorgabe)));
 						}
 					}
@@ -2459,6 +2452,104 @@ export class DexieSvcService extends Dexie {
 				aPara.ExtraFn(mNeueSession);
 		}//if
 	}
+
+
+	public async MakeExample(aProgram: ITrainingsProgramm) {
+		if (aProgram === undefined)
+			return;
+
+		const mMaxWochen: number = 8;
+		let mMaxTage: number = mMaxWochen * 7;
+		let mDatum: Date = new Date();
+		mDatum.setDate(-mMaxTage);
+		let mMontag: number = mDatum.getDay();
+		// Mit Montag als ersten Trainingstag beginnen. 
+		// auf Montag setzen.
+		while (mMontag > 1) {
+			mDatum.setDate(mDatum.getDate() - 1);
+			mMontag = mDatum.getDay();
+		}
+
+		let mStartGewicht: number = 10;
+		// Sessions
+		while (mMaxTage > 0) {
+			for (let mSessionIndex = 0; mSessionIndex < aProgram.SessionListe.length; mSessionIndex++) {
+				const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+				mSessionCopyPara.CopyUebungID = false;
+				mSessionCopyPara.CopySatzID = false;
+				const mSession: Session = Session.StaticCopy(aProgram.SessionListe[mSessionIndex], mSessionCopyPara);
+				mSession.init();
+				mSession.GestartedWann = mDatum;
+				// Übungen
+				for (let mUebungsIndex = 0; mUebungsIndex < mSession.UebungsListe.length; mUebungsIndex++) {
+					const mUebung: Uebung = mSession.UebungsListe[mUebungsIndex];
+					// Sätze
+					for (let mSatzIndex = 0; mSatzIndex < mUebung.ArbeitsSatzListe.length; mSatzIndex++) {
+						const mSatz: Satz = mUebung.ArbeitsSatzListe[mSatzIndex];
+						mSatz.GewichtAusgefuehrt = mStartGewicht;
+						mSatz.WdhAusgefuehrt = 10;
+						mSatz.Status = SatzStatus.Fertig;
+					}
+				}// <<< Uebung
+				mStartGewicht += 2.5;
+				// Session-Status auf fertig setzen
+				mSession.SetSessionFertig();
+				await this.SessionSpeichern(mSession);
+
+				// const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+				// mSessionCopyPara.CopyUebungID = false;
+				// mSessionCopyPara.CopySatzID = false;
+				// // Mit den Daten der gespeicherten Session eine neue erstellen
+				// const mNeueSession: Session = Session.StaticCopy(mSession, mSessionCopyPara);
+				// mSession.ListenIndex = -mSession.ListenIndex;
+				// // Neue Session initialisieren
+				// mNeueSession.init();
+				// // Die neue Session gehört zum gleichen Programm wie die Alte
+				// mNeueSession.FK_Programm = mSession.FK_Programm;
+				// // Die Neue Session hat das gleiche Vorlage-Programm wie die Alte.
+				// mNeueSession.FK_VorlageProgramm = mSession.FK_VorlageProgramm;
+				// this.InitSessionSaetze(mSession, mNeueSession as Session);
+				// // Satzvorgaben für Sätze der neuen Übung setzen
+				// mNeueSession.UebungsListe.forEach((mNeueUebung) => {
+				// 	mNeueUebung.SatzListe.forEach((mNeuerSatz) => {
+				// 		mNeuerSatz.GewichtVorgabe = mNeuerSatz.GewichtNaechsteSession;
+				// 		mNeuerSatz.GewichtAusgefuehrt = mNeuerSatz.GewichtNaechsteSession;
+				// 	});
+				// });
+
+				let mTag = mDatum.getDay();
+				switch (mTag) {
+					// Montag?
+					case 1:
+					// Donnerstag?
+					case 4:
+						// Auf kommenden Dienstag oder kommenden  Freitag setzen
+						mDatum.setDate(mDatum.getDate() + 1);
+						break;
+					// Dienstag?
+					case 2:
+						// Auf kommenden Donnerstag setzen
+						mDatum.setDate(mDatum.getDate() + 2);
+						break;
+					// Freitag?
+					case 5:
+						// Auf kommenden Montag setzen
+						mDatum.setDate(mDatum.getDate() + 3);
+						break;
+				}//switch
+				// await this.SessionSpeichern(mNeueSession).then(
+				// 	async () => {
+				// 		aProgram.SessionListe.push(mNeueSession);
+				// 		aProgram.NummeriereSessions();
+				// 		await this.ProgrammSpeichern(aProgram).then(() => {
+				// 		});
+				// 	});
+			
+				if (--mMaxTage <= 0)
+					break;
+			}//for <<< Session
+		}// while
+	}
 }
 // if (typeof Worker !== 'undefined') {
 //   // Create a new
@@ -2470,4 +2561,4 @@ export class DexieSvcService extends Dexie {
 // } else {
 //   // Web Workers are not supported in this environment.
 //   // You should add a fallback so that your program still executes correctly.
-// }
+// 
