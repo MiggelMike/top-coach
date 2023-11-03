@@ -12,7 +12,7 @@ import { MatAccordion, MatExpansionPanel } from "@angular/material/expansion";
 import { DialogeService } from "./../../services/dialoge.service";
 import { cLoadingDefaultHeight, DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
-import { Observable, of } from "rxjs";
+import { Observable, min, of } from "rxjs";
 import { Uebung } from "src/Business/Uebung/Uebung";
 import { UebungService } from "src/app/services/uebung.service";
 import { Router } from "@angular/router";
@@ -142,7 +142,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 		
 	
 	panelOpened(aSess: ISession) {
-		aSess.Expanded = true;
+		// aSess.Expanded = true;
 		if (aSess.UebungsListe === undefined || aSess.UebungsListe.length <= 0) {
 			aSess.UebungsListe = [];
 			this.LadeUebungen(aSess);

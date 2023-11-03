@@ -14,6 +14,7 @@ import { AppData } from '../../Business/Coach/Coach';
 import { ISession } from '../../Business/Session/Session';
 import { Datum } from 'src/Business/Datum';
 import { MatTab } from '@angular/material/tabs';
+import { TrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 var cloneDeep = require('lodash.clonedeep');
 
 @Component({
@@ -22,9 +23,7 @@ var cloneDeep = require('lodash.clonedeep');
 	styleUrls: ['./history.component.scss']
 })
 export class HistoryComponent implements OnInit, IProgramModul {
-	SessionListe: Array<ISession> = [];
-	LadeLimit: number = 10;
-	public AppData: AppData;
+	public SessionListe: Array<ISession> = [];
 	// public DiaTyp: string = 'line';
 	public DiaUebungsListe: Array<DiaUebung> = [];
 	public DiaUebungSettingsListe: Array<DiaUebungSettings> = [];
@@ -82,14 +81,14 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		this.CreatingChartsDialogData.hasBackDrop = false;
 		this.CreatingChartsDialogData.height = '150px';
 		this.CreatingChartsDialogData.textZeilen[0] = 'Creating charts';
-
-		this.fDbModul
-			.LadeAppData()
-			.then((mAppData) => {
-				this.AppData = mAppData;
-				this.LadeLimit = mAppData.MaxHistorySessions + 100000;
-				this.LadeSessions();
-			});
+		this.LadeSessions();
+		// this.fDbModul
+		// 	.LadeAppData()
+		// 	.then((mAppData) => {
+		// 		this.AppData = mAppData;
+		// 		this.LadeLimit = mAppData.MaxHistorySessions + 100000;
+		// 		this.LadeSessions();
+		// 	});
 	}
 	
 	get programModul(): typeof ProgramModulTyp {

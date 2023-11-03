@@ -698,7 +698,7 @@ export class DexieSvcService extends Dexie {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
 		}
 
-	//	 Dexie.delete("ConceptCoach");
+		//  Dexie.delete("ConceptCoach");
 		this.version(36).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
@@ -2422,104 +2422,105 @@ export class DexieSvcService extends Dexie {
 			return;
 
 		// Alle Sessions löschen 
-		await this.SessionTable.toArray()
-			.then(async(aSessionListe) => {
-				aSessionListe.forEach((aSession: Session) => this.SessionTable.delete(aSession.ID));
-
-				const mMaxWochen: number = 8;
-				let mMaxSessions: number = mMaxWochen * 7;
-				const mSessionsProWoche = 4;
-				let mDatum: Date = new Date();
-				mDatum.setDate(-((mMaxSessions / mSessionsProWoche) * mMaxWochen));
-				let mMontag: number = mDatum.getDay();
-				// Mit Montag als ersten Trainingstag beginnen. 
-				// auf Montag setzen.
-				while (mMontag > 1) {
-					mDatum.setDate(mDatum.getDate() - 1);
-					mMontag = mDatum.getDay();
-				}
-
-				let mStartGewicht: number = 10;
-				// Sessions
-				while (mMaxSessions > 0) {
-					for (let mSessionIndex = 0; mSessionIndex < aProgram.SessionListe.length; mSessionIndex++) {
-						const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
-						mSessionCopyPara.CopyUebungID = false;
-						mSessionCopyPara.CopySatzID = false;
-						const mSession: Session = Session.StaticCopy(aProgram.SessionListe[mSessionIndex], mSessionCopyPara);
-						mSession.init();
-						mSession.GestartedWann = mDatum;
-						// Übungen
-						for (let mUebungsIndex = 0; mUebungsIndex < mSession.UebungsListe.length; mUebungsIndex++) {
-							const mUebung: Uebung = mSession.UebungsListe[mUebungsIndex];
-							// Sätze
-							for (let mSatzIndex = 0; mSatzIndex < mUebung.ArbeitsSatzListe.length; mSatzIndex++) {
-								const mSatz: Satz = mUebung.ArbeitsSatzListe[mSatzIndex];
-								mSatz.GewichtAusgefuehrt = mStartGewicht;
-								mSatz.WdhAusgefuehrt = 10;
-								mSatz.Status = SatzStatus.Fertig;
-							}
-						}// <<< Uebung
-						mStartGewicht += 2.5;
-						// Session-Status auf fertig setzen
-						mSession.SetSessionFertig();
-						await this.SessionSpeichern(mSession);
-
-						// const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
-						// mSessionCopyPara.CopyUebungID = false;
-						// mSessionCopyPara.CopySatzID = false;
-						// // Mit den Daten der gespeicherten Session eine neue erstellen
-						// const mNeueSession: Session = Session.StaticCopy(mSession, mSessionCopyPara);
-						// mSession.ListenIndex = -mSession.ListenIndex;
-						// // Neue Session initialisieren
-						// mNeueSession.init();
-						// // Die neue Session gehört zum gleichen Programm wie die Alte
-						// mNeueSession.FK_Programm = mSession.FK_Programm;
-						// // Die Neue Session hat das gleiche Vorlage-Programm wie die Alte.
-						// mNeueSession.FK_VorlageProgramm = mSession.FK_VorlageProgramm;
-						// this.InitSessionSaetze(mSession, mNeueSession as Session);
-						// // Satzvorgaben für Sätze der neuen Übung setzen
-						// mNeueSession.UebungsListe.forEach((mNeueUebung) => {
-						// 	mNeueUebung.SatzListe.forEach((mNeuerSatz) => {
-						// 		mNeuerSatz.GewichtVorgabe = mNeuerSatz.GewichtNaechsteSession;
-						// 		mNeuerSatz.GewichtAusgefuehrt = mNeuerSatz.GewichtNaechsteSession;
-						// 	});
-						// });
-
-						let mTag = mDatum.getDay();
-						switch (mTag) {
-							// Montag?
-							case 1:
-							// Donnerstag?
-							case 4:
-								// Auf kommenden Dienstag oder kommenden  Freitag setzen
-								mDatum.setDate(mDatum.getDate() + 1);
-								break;
-							// Dienstag?
-							case 2:
-								// Auf kommenden Donnerstag setzen
-								mDatum.setDate(mDatum.getDate() + 2);
-								break;
-							// Freitag?
-							case 5:
-								// Auf kommenden Montag setzen
-								mDatum.setDate(mDatum.getDate() + 3);
-								break;
-						}//switch
-						// await this.SessionSpeichern(mNeueSession).then(
-						// 	async () => {
-						// 		aProgram.SessionListe.push(mNeueSession);
-						// 		aProgram.NummeriereSessions();
-						// 		await this.ProgrammSpeichern(aProgram).then(() => {
-						// 		});
-						// 	});
-			
-						if (--mMaxSessions <= 0)
-							break;
-					}//for <<< Session
-				}// while
+		await this.SessionTable.toArray(async (aSessionListe) => {
+			aSessionListe.forEach((aSession: Session) => {
+				if (aSession.FK_Programm === 0)
+					this.SessionTable.delete(aSession.ID);
 			});
 
+			const mMaxWochen: number = 8;
+			let mMaxSessions: number = mMaxWochen * 7;
+			const mSessionsProWoche = 4;
+			let mDatum: Date = new Date();
+			mDatum.setDate(-((mMaxSessions / mSessionsProWoche) * mMaxWochen));
+			let mMontag: number = mDatum.getDay();
+			// Mit Montag als ersten Trainingstag beginnen. 
+			// auf Montag setzen.
+			while (mMontag > 1) {
+				mDatum.setDate(mDatum.getDate() - 1);
+				mMontag = mDatum.getDay();
+			}
+
+			let mStartGewicht: number = 10;
+			// Sessions
+			while (mMaxSessions > 0) {
+				for (let mSessionIndex = 0; mSessionIndex < aProgram.SessionListe.length; mSessionIndex++) {
+					const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+					mSessionCopyPara.CopyUebungID = false;
+					mSessionCopyPara.CopySatzID = false;
+					const mSession: Session = Session.StaticCopy(aProgram.SessionListe[mSessionIndex], mSessionCopyPara);
+					mSession.init();
+					mSession.GestartedWann = mDatum;
+					// Übungen
+					for (let mUebungsIndex = 0; mUebungsIndex < mSession.UebungsListe.length; mUebungsIndex++) {
+						const mUebung: Uebung = mSession.UebungsListe[mUebungsIndex];
+						// Sätze
+						for (let mSatzIndex = 0; mSatzIndex < mUebung.ArbeitsSatzListe.length; mSatzIndex++) {
+							const mSatz: Satz = mUebung.ArbeitsSatzListe[mSatzIndex];
+							mSatz.GewichtAusgefuehrt = mStartGewicht;
+							mSatz.WdhAusgefuehrt = 10;
+							mSatz.Status = SatzStatus.Fertig;
+						}
+					}// <<< Uebung
+					mStartGewicht += 2.5;
+					// Session-Status auf fertig setzen
+					mSession.SetSessionFertig();
+					await this.SessionSpeichern(mSession);
+
+					// const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+					// mSessionCopyPara.CopyUebungID = false;
+					// mSessionCopyPara.CopySatzID = false;
+					// // Mit den Daten der gespeicherten Session eine neue erstellen
+					// const mNeueSession: Session = Session.StaticCopy(mSession, mSessionCopyPara);
+					// mSession.ListenIndex = -mSession.ListenIndex;
+					// // Neue Session initialisieren
+					// mNeueSession.init();
+					// // Die neue Session gehört zum gleichen Programm wie die Alte
+					// mNeueSession.FK_Programm = mSession.FK_Programm;
+					// // Die Neue Session hat das gleiche Vorlage-Programm wie die Alte.
+					// mNeueSession.FK_VorlageProgramm = mSession.FK_VorlageProgramm;
+					// this.InitSessionSaetze(mSession, mNeueSession as Session);
+					// // Satzvorgaben für Sätze der neuen Übung setzen
+					// mNeueSession.UebungsListe.forEach((mNeueUebung) => {
+					// 	mNeueUebung.SatzListe.forEach((mNeuerSatz) => {
+					// 		mNeuerSatz.GewichtVorgabe = mNeuerSatz.GewichtNaechsteSession;
+					// 		mNeuerSatz.GewichtAusgefuehrt = mNeuerSatz.GewichtNaechsteSession;
+					// 	});
+					// });
+
+					let mTag = mDatum.getDay();
+					switch (mTag) {
+						// Montag?
+						case 1:
+						// Donnerstag?
+						case 4:
+							// Auf kommenden Dienstag oder kommenden  Freitag setzen
+							mDatum.setDate(mDatum.getDate() + 1);
+							break;
+						// Dienstag?
+						case 2:
+							// Auf kommenden Donnerstag setzen
+							mDatum.setDate(mDatum.getDate() + 2);
+							break;
+						// Freitag?
+						case 5:
+							// Auf kommenden Montag setzen
+							mDatum.setDate(mDatum.getDate() + 3);
+							break;
+					}//switch
+					// await this.SessionSpeichern(mNeueSession).then(
+					// 	async () => {
+					// 		aProgram.SessionListe.push(mNeueSession);
+					// 		aProgram.NummeriereSessions();
+					// 		await this.ProgrammSpeichern(aProgram).then(() => {
+					// 		});
+					// 	});
+			
+					if (--mMaxSessions <= 0)
+						break;
+				}//for <<< Session
+			}// while
+		});
 	}
 }
 // if (typeof Worker !== 'undefined') {

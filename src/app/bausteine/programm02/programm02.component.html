@@ -9,10 +9,11 @@
             <div *ngFor="let sess of SortedSessionListe, index as i" cdkDrag [cdkDragDisabled]="ModulTyp === programModul.History">
                 <div class="mg-top-1" fxLayoutGap="10px" >
                     <mat-accordion #accSession="matAccordion" multi="true">
-                        <mat-expansion-panel 
+                        <mat-expansion-panel #SessPanel
+                            #panSession='matExpansionPanel'                            
                             (opened) = "panelOpened(sess)"
-                            (closed) = "panelClosed(sess)"
-                            #panSession='matExpansionPanel' 
+                            (closed) = "panelClosed(sess)" 
+    
                             class="HG-01">
                             <mat-expansion-panel-header [matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag">
                                 <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="flex-start center">
@@ -21,7 +22,7 @@
                                     </mat-form-field>
                                     
                                     <ng-container *ngIf="ModulTyp === programModul.History">
-                                        <div class="ml-10" fxLayout="column" fxFlex="155px" >
+                                        <div class="ml-10" fxLayout="column" fxFlex="135px" >
                                             <span> {{GestartedWann(sess)}}</span>
                                         </div>
                                     </ng-container>
