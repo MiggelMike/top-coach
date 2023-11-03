@@ -647,6 +647,8 @@ export class DexieSvcService extends Dexie {
 					mProgramm.SessionListe.push(mNeueSession);
 				}
 
+				DexieSvcService.StaticAktuellesProgramm = mProgramm;
+				DexieSvcService.StaticCmpAktuellesProgramm = mProgramm;
 				return this.ProgrammSpeichern(mProgramm);
 			}//if
 			return null;
@@ -1377,9 +1379,12 @@ export class DexieSvcService extends Dexie {
 		
 		return this.LadeProgrammeEx(mHelpProgrammParaDB)
 			.then((aProgramme) => {
-				DexieSvcService.StaticAktuellesProgramm = undefined;
-				if (aProgramme.length > 0)
-				DexieSvcService.StaticAktuellesProgramm = aProgramme[0];
+				DexieSvcService.StaticAktuellesProgramm = null;
+				if (aProgramme.length > 0) {
+					DexieSvcService.StaticAktuellesProgramm = aProgramme[0];
+					DexieSvcService.StaticCmpAktuellesProgramm = aProgramme[0];
+				}
+					
 				return DexieSvcService.StaticAktuellesProgramm;
 			});
 	}
