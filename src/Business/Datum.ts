@@ -25,5 +25,17 @@ export class Datum{
                 return aDate.toLocaleDateString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'})
                 break;
         }
-	}
+    }
+    
+    public static StaticParseDatum(aDateText: string, aDefault: Date): Date {
+        try {
+            return new Date(Date.parse(aDateText));
+        } catch {
+            try {
+                return new Date(Date.parse(aDateText + ' 00:00:00'));
+            } catch {
+                return aDefault;
+            }
+        }
+    }
 }

@@ -11,6 +11,7 @@ import { LOCALE_ID } from '@angular/core';
 import * as _moment from 'moment';
 import { AppData } from '../../Business/Coach/Coach';
 import { ISession } from '../../Business/Session/Session';
+import { Datum } from 'src/Business/Datum';
 var cloneDeep = require('lodash.clonedeep');
 
 @Component({
@@ -85,7 +86,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 			.then((mAppData) => {
 				this.AppData = mAppData;
 				this.LadeLimit = mAppData.MaxHistorySessions + 100000;
-				this.LadeSessions(0);
+				this.LadeSessions();
 			});
 	}
 	
@@ -318,13 +319,9 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		// }));
 	}
 
-	SetLadeLimit(aEvent: any) {
-		// aEvent.stopPropagation();
-		this.LadeLimit = Number(aEvent.target.value);
-		this.AppData.MaxHistorySessions = this.LadeLimit;
-		this.fDbModul.AppDataSpeichern(this.AppData);
-		this.SessionListe = [];
-		this.LadeSessions(0);
+	Load(aEvent: any) {
+		aEvent.stopPropagation();
+		this.LadeSessions();
 	}
 
 	DiaTypChanged(aChartData:ChartData, aEvent: any) {
@@ -335,7 +332,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 
 
-	private LadeSessions(aOffSet: number) {
+	private LadeSessions() {
 		const mDialogData = new DialogData();
 		mDialogData.ShowAbbruch = false;
 		mDialogData.ShowOk = false;
@@ -360,15 +357,15 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		return new Date(year, 1, 29).getDate() === 29;
 	}
 	
-	FromDateChanged($event:any) {
-		this.fromDate = $event.target.value;
+	FromDateChanged(aEvent: any) {
+		aEvent.stopPropagation();
+		this.fromDate = new Date(aEvent.target.value);
 	}
 
-	ToDateChanged($event:any) {
-		this.toDate = $event.target.value;
+	ToDateChanged(aEvent: any) {
+		aEvent.stopPropagation();
+		this.toDate = Datum.StaticParseDatum(aEvent.target.value, this.toDate);
 	}
-
-
 
 	CheckDatum(aEvent: any) {
 		const mDialogData = new DialogData();
