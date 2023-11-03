@@ -142,7 +142,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 		
 	
 	panelOpened(aSess: ISession) {
-		// aSess.Expanded = true;
+		aSess.Expanded = true;
 		if (aSess.UebungsListe === undefined || aSess.UebungsListe.length <= 0) {
 			aSess.UebungsListe = [];
 			this.LadeUebungen(aSess);

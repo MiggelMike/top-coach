@@ -11,16 +11,16 @@
                         </div>
                 </ng-container>   -->
                      
-                <ng-container *ngIf="ModulTyp === programModul.History"> 
+                <!-- <ng-container *ngIf="ModulTyp === programModul.History"> 
                     <div class="align-items-left" >
                         <div fxLayout="row">
                             <mat-label class="ml-5">History</mat-label>
                             <div class="ml-10">
-                                <span> {{session.GestartedWann | date: 'mediumDate'}} {{session.GestartedWann | date:'shortTime'}}</span>
+                                <span> {{session.GestartedWannText() | date: 'mediumDate'}} {{session.GestartedWann | date:'shortTime'}}</span>
                             </div>
                         </div>
                     </div>
-                </ng-container> 
+                </ng-container>  -->
                     
                 <ng-container *ngIf="StatsButtonVisible">
                     <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DoStatsFn()">Info</a>

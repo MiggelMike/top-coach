@@ -698,7 +698,7 @@ export class DexieSvcService extends Dexie {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
 		}
 
-		//  Dexie.delete("ConceptCoach");
+		//   Dexie.delete("ConceptCoach");
 		this.version(36).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
@@ -1594,6 +1594,7 @@ export class DexieSvcService extends Dexie {
 			.sortBy("GestartetWann")
 			.then(async (aSessionListe) => {
 				let mResult: Array<Session> = [];
+				aSessionListe.map((aSessionDB) => mResult.push(new Session(aSessionDB)));
 				const mUebungParaDB: UebungParaDB = new UebungParaDB();
 				mUebungParaDB.WhereClause = "SessionID";
 				mUebungParaDB.anyOf = (aSession: Session) => {
@@ -1602,8 +1603,9 @@ export class DexieSvcService extends Dexie {
 				mUebungParaDB.SaetzeBeachten = true;
 				mUebungParaDB.SatzParaDB = new SatzParaDB();
 				mUebungParaDB.SatzParaDB.WhereClause = "UebungID";
-				mUebungParaDB.SatzParaDB.anyOf = (aSatz: Satz) => { return aSatz.UebungID; };
-				aSessionListe.map((aSessionDB) => mResult.push(new Session(aSessionDB)));
+				mUebungParaDB.SatzParaDB.anyOf = (aUebung: Uebung) => {
+					return aUebung.ID;
+				};
 				for (let index = 0; index < mResult.length; index++) {
 					const mPtrSession: Session = mResult[index];
 					Session.StaticCheckMembers(mPtrSession);
@@ -1861,7 +1863,7 @@ export class DexieSvcService extends Dexie {
 		this.InitSatz();
 		
 		let mSatzLadePara: SatzParaDB;
-		if (mSatzLadePara === undefined) {
+		if (aSatzLadePara === undefined) {
 			mSatzLadePara = new SatzParaDB();
 			mSatzLadePara.WhereClause = "UebungID";
 			mSatzLadePara.anyOf = (aAnyOfUebung: Uebung) => {

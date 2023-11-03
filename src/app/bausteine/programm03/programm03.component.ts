@@ -138,7 +138,7 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
     }
 
     public DoStatsFn() {
-        if (this.DoStats !== undefined)
+        if (this.DoStats !== undefined && this.Info !== undefined)
             this.DoStats.emit(this.Info);
     }
 
