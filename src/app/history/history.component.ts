@@ -1,3 +1,4 @@
+import { DiagramData } from './../bausteine/charts/charts.component';
 import { cDeutschKuezel as cDeutschKuerzel, cDeutschDateInputMask, cEnglishDateInputMask } from './../Sprache/Sprache';
 import { DexieSvcService, SessionParaDB, cMaxDatum, cMinDatum } from './../services/dexie-svc.service';
 import { DiaDatum, DiaUebung, DiaUebungSettings } from './../../Business/Diagramm/Diagramm';
@@ -12,6 +13,7 @@ import * as _moment from 'moment';
 import { AppData } from '../../Business/Coach/Coach';
 import { ISession } from '../../Business/Session/Session';
 import { Datum } from 'src/Business/Datum';
+import { MatTab } from '@angular/material/tabs';
 var cloneDeep = require('lodash.clonedeep');
 
 @Component({
@@ -55,7 +57,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	@ViewChild('BarChart') BarChart: any;
 	@ViewChild('ExercisesInChart') ExercisesInChart: any;
 	@ViewChild('matGroup') matGroup: any;
-	@ViewChild('matTabChart') matTabChart: any;
+	@ViewChild('matTabChart') matTabChart: MatTab;
 	@ViewChild('ChartContainer') ChartContainer: any;
 	@Input() placeholderTime: string;
 
@@ -134,139 +136,139 @@ export class HistoryComponent implements OnInit, IProgramModul {
 			this.fLoadingDialog.Loading(this.CreatingChartsDialogData);
 		
 		try {
-			this.fDbModul.LadeDiagrammData(mVonDatum, mBisDatum, 20).then((aDiagrammData: Array<DiaDatum>) => {
-				for (let index = 0; index < aDiagrammData.length; index++) {
-					const mPtrDiaDatum: DiaDatum = aDiagrammData[index];
+			const aDiagrammData: Array<DiaDatum> = [];
+			this.fDbModul.LadeDiagrammData(mVonDatum, mBisDatum, this.SessionListe, aDiagrammData);
+			for (let index = 0; index < aDiagrammData.length; index++) {
+				const mPtrDiaDatum: DiaDatum = aDiagrammData[index];
 					
-					mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDiaUebung) => {
-						if (mUebungsNamen.indexOf(mPtrDiaUebung.UebungName) === -1) {
-							mUebungsNamen.push(mPtrDiaUebung.UebungName);
-							this.DiaUebungsListe.push(mPtrDiaUebung);
+				mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDiaUebung) => {
+					if (mUebungsNamen.indexOf(mPtrDiaUebung.UebungName) === -1) {
+						mUebungsNamen.push(mPtrDiaUebung.UebungName);
+						this.DiaUebungsListe.push(mPtrDiaUebung);
 
-							const mDiaUebungSetting = (this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
-								if (mPtrDiaUebungSetting.UebungID === mPtrDiaUebung.UebungID)
-									return true;
-								return false;
-							}));
-							if (mDiaUebungSetting !== undefined)
-								mPtrDiaUebung.Visible = mDiaUebungSetting.Visible;
-						}
-					});
-				} // for
-
-				const mVisibleDiaUebungListe: Array<DiaUebung> = this.DiaUebungsListe.filter((mFilterDiaUebung) => {
-					return ( mFilterDiaUebung.Visible === true);
-				});
-
-				const mCharTypes = ['line', 'bar'];
-				for (let index = 0; index < mCharTypes.length; index++) {
-					const mDiaTyp: any = mCharTypes[index];
-					// Jede sichtbare Übung prüfen 
-					for (let mIindexDiaUebung = 0; mIindexDiaUebung < mVisibleDiaUebungListe.length; mIindexDiaUebung++) {
-						const mPtrDiaUebung = mVisibleDiaUebungListe[mIindexDiaUebung];
 						const mDiaUebungSetting = (this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
 							if (mPtrDiaUebungSetting.UebungID === mPtrDiaUebung.UebungID)
 								return true;
 							return false;
 						}));
-
-						if (mDiaUebungSetting === undefined) {
-							if (mPtrDiaUebung.ID === undefined)
-								this.fDbModul.InsertEineDiaUebung(mPtrDiaUebung)
-									.then((aID) => mPtrDiaUebung.ID = aID);
-					
-							this.DiaUebungSettingsListe.push(mPtrDiaUebung);
-						}
-
-						mPtrDiaUebung.Relevant = false;
-						// Jedes Datum aus der Liste prüfen
-						for (let mIndexDiagrammData = 0; mIndexDiagrammData < aDiagrammData.length; mIndexDiagrammData++) {
-							const mPtrDiaDatum: DiaDatum = aDiagrammData[mIndexDiagrammData];
-							let mMaxWeight: number = 0;
-							// In der Übungsliste des Datums nach der Übung suchen 
-							// Ist die Übung gleich der zu prüfenden Übung und ist MaxWeight größer als das bisher ermittelte mMaxWeight? 
-							const mPtrDatumUebung: DiaUebung = mPtrDiaDatum.DiaUebungsListe.find((mSuchDatumUebung) => {
-								return (
-									mSuchDatumUebung.Visible === true
-									&& mSuchDatumUebung.UebungID === mPtrDiaUebung.UebungID
-									&& mSuchDatumUebung.MaxWeight > mMaxWeight
-								);
-							});
-
-							if (mPtrDatumUebung === undefined)
-								continue;
-
-							mMaxWeight = mPtrDatumUebung.MaxWeight;
-							let mWorkChartData: ChartData = mWorkChartListe.find((mChartData) => {
-								return (mChartData.UebungName === mPtrDiaUebung.UebungName);
-							});
-											
-							if (mWorkChartData === undefined) {
-								mWorkChartData = new ChartData();
-								mWorkChartData.UebungName = mPtrDiaUebung.UebungName;
-								mWorkChartListe.push(mWorkChartData);
-							}
-							mPtrDiaUebung.Relevant = true;
-							let mSeriesPoint: any;
-							// Die verschiedenen Chart-Typen prüfen.
-							switch (mDiaTyp) {
-								case 'line': {
-									let mLineChartData: LineChartData = mWorkChartData.LineChartListe.find((mSuchChartData) => {
-										return (mSuchChartData.name === mPtrDiaUebung.UebungName)
-									});
-
-									if (mLineChartData === undefined) {
-										mLineChartData = new LineChartData();
-										mLineChartData.name = mPtrDiaUebung.UebungName;
-										mWorkChartData.LineChartListe.push(mLineChartData);
-										mWorkChartData.colors.push({ "name": mPtrDiaUebung.UebungName, "value": "#63B8FF" });
-									}
-
-									mSeriesPoint = mLineChartData.series.find((mSuchPoint) => {
-										return (mSuchPoint.name === mPtrDiaDatum.Datum.toDateString())
-									});
-									
-									if (mSeriesPoint === undefined) {
-										mSeriesPoint = { name: mPtrDiaDatum.Datum.toDateString(), value: 0 };
-										mLineChartData.series.push(mSeriesPoint);
-									}
-
-									if (mLineChartData.series.find((mSuch) => {
-										return (mSuch.value > mMaxWeight && mSuch.name === mPtrDiaDatum.Datum.toDateString());
-									}) === undefined) {
-										mSeriesPoint.value = mMaxWeight;
-									}
-
-									break;
-								} // <-- case line
-								case 'bar': {
-									let mBarPoint: BarPoint = mWorkChartData.BarChartListe.find((mBarPoint) => {
-										return (mBarPoint.name === mPtrDiaDatum.Datum.toDateString());
-									});
-
-									if (mBarPoint === undefined) {
-										mBarPoint = new BarPoint();
-										mBarPoint.name = mPtrDiaDatum.Datum.toDateString();
-										mBarPoint.value = 0;
-										mWorkChartData.colors.push({ "name": mPtrDiaDatum.Datum.toDateString(), "value": "#63B8FF" });
-										mWorkChartData.BarChartListe.push(mBarPoint);
-									}
-
-									if (mWorkChartData.BarChartListe.find((mBarPoint) => {
-										return (mBarPoint.value > mMaxWeight && mBarPoint.name === mPtrDiaDatum.Datum.toDateString());
-									}) === undefined) {
-										mBarPoint.value = mMaxWeight;
-									}
-									break;
-								} // bar
-							}//switch
-						} // for
+						if (mDiaUebungSetting !== undefined)
+							mPtrDiaUebung.Visible = mDiaUebungSetting.Visible;
 					}
-				}//for
-				
-				this.ChartData = mWorkChartListe;
-				this.fLoadingDialog.fDialog.closeAll();
+				});
+			} // for
+
+			const mVisibleDiaUebungListe: Array<DiaUebung> = this.DiaUebungsListe.filter((mFilterDiaUebung) => {
+				return (mFilterDiaUebung.Visible === true);
 			});
+
+			const mCharTypes = ['line', 'bar'];
+			for (let index = 0; index < mCharTypes.length; index++) {
+				const mDiaTyp: any = mCharTypes[index];
+				// Jede sichtbare Übung prüfen 
+				for (let mIindexDiaUebung = 0; mIindexDiaUebung < mVisibleDiaUebungListe.length; mIindexDiaUebung++) {
+					const mPtrDiaUebung = mVisibleDiaUebungListe[mIindexDiaUebung];
+					const mDiaUebungSetting = (this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
+						if (mPtrDiaUebungSetting.UebungID === mPtrDiaUebung.UebungID)
+							return true;
+						return false;
+					}));
+
+					if (mDiaUebungSetting === undefined) {
+						if (mPtrDiaUebung.ID === undefined)
+							this.fDbModul.InsertEineDiaUebung(mPtrDiaUebung)
+								.then((aID) => mPtrDiaUebung.ID = aID);
+					
+						this.DiaUebungSettingsListe.push(mPtrDiaUebung);
+					}
+
+					mPtrDiaUebung.Relevant = false;
+					// Jedes Datum aus der Liste prüfen
+					for (let mIndexDiagrammData = 0; mIndexDiagrammData < aDiagrammData.length; mIndexDiagrammData++) {
+						const mPtrDiaDatum: DiaDatum = aDiagrammData[mIndexDiagrammData];
+						let mMaxWeight: number = 0;
+						// In der Übungsliste des Datums nach der Übung suchen 
+						// Ist die Übung gleich der zu prüfenden Übung und ist MaxWeight größer als das bisher ermittelte mMaxWeight? 
+						const mPtrDatumUebung: DiaUebung = mPtrDiaDatum.DiaUebungsListe.find((mSuchDatumUebung) => {
+							return (
+								mSuchDatumUebung.Visible === true
+								&& mSuchDatumUebung.UebungID === mPtrDiaUebung.UebungID
+								&& mSuchDatumUebung.MaxWeight > mMaxWeight
+							);
+						});
+
+						if (mPtrDatumUebung === undefined)
+							continue;
+
+						mMaxWeight = mPtrDatumUebung.MaxWeight;
+						let mWorkChartData: ChartData = mWorkChartListe.find((mChartData) => {
+							return (mChartData.UebungName === mPtrDiaUebung.UebungName);
+						});
+											
+						if (mWorkChartData === undefined) {
+							mWorkChartData = new ChartData();
+							mWorkChartData.UebungName = mPtrDiaUebung.UebungName;
+							mWorkChartListe.push(mWorkChartData);
+						}
+						mPtrDiaUebung.Relevant = true;
+						let mSeriesPoint: any;
+						// Die verschiedenen Chart-Typen prüfen.
+						switch (mDiaTyp) {
+							case 'line': {
+								let mLineChartData: LineChartData = mWorkChartData.LineChartListe.find((mSuchChartData) => {
+									return (mSuchChartData.name === mPtrDiaUebung.UebungName)
+								});
+
+								if (mLineChartData === undefined) {
+									mLineChartData = new LineChartData();
+									mLineChartData.name = mPtrDiaUebung.UebungName;
+									mWorkChartData.LineChartListe.push(mLineChartData);
+									mWorkChartData.colors.push({ "name": mPtrDiaUebung.UebungName, "value": "#63B8FF" });
+								}
+
+								mSeriesPoint = mLineChartData.series.find((mSuchPoint) => {
+									return (mSuchPoint.name === mPtrDiaDatum.Datum.toDateString())
+								});
+									
+								if (mSeriesPoint === undefined) {
+									mSeriesPoint = { name: mPtrDiaDatum.Datum.toDateString(), value: 0 };
+									mLineChartData.series.push(mSeriesPoint);
+								}
+
+								if (mLineChartData.series.find((mSuch) => {
+									return (mSuch.value > mMaxWeight && mSuch.name === mPtrDiaDatum.Datum.toDateString());
+								}) === undefined) {
+									mSeriesPoint.value = mMaxWeight;
+								}
+
+								break;
+							} // <-- case line
+							case 'bar': {
+								let mBarPoint: BarPoint = mWorkChartData.BarChartListe.find((mBarPoint) => {
+									return (mBarPoint.name === mPtrDiaDatum.Datum.toDateString());
+								});
+
+								if (mBarPoint === undefined) {
+									mBarPoint = new BarPoint();
+									mBarPoint.name = mPtrDiaDatum.Datum.toDateString();
+									mBarPoint.value = 0;
+									mWorkChartData.colors.push({ "name": mPtrDiaDatum.Datum.toDateString(), "value": "#63B8FF" });
+									mWorkChartData.BarChartListe.push(mBarPoint);
+								}
+
+								if (mWorkChartData.BarChartListe.find((mBarPoint) => {
+									return (mBarPoint.value > mMaxWeight && mBarPoint.name === mPtrDiaDatum.Datum.toDateString());
+								}) === undefined) {
+									mBarPoint.value = mMaxWeight;
+								}
+								break;
+							} // bar
+						}//switch
+					} // for
+				}
+			}//for
+				
+			this.ChartData = mWorkChartListe;
+			this.fLoadingDialog.fDialog.closeAll();
 		} catch (error) {
 			console.error(error);
 			this.fLoadingDialog.fDialog.closeAll();
@@ -345,6 +347,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 				.then((aSessionListe) => {
 					this.SessionListe = aSessionListe;
 					this.fLoadingDialog.fDialog.closeAll();
+					this.Draw(this.matTabChart.isActive);
 				});
 		} catch (err) {
 			this.fLoadingDialog.fDialog.closeAll();
@@ -430,10 +433,11 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 
 	async DoDia() {
-		this.fDbModul.LadeDiaUebungen().then((mDiaUebungen => {
-			this.DiaUebungSettingsListe = mDiaUebungen;
-			this.Draw(false);
-		}));
+		this.Draw(false);
+		// this.fDbModul.LadeDiaUebungen().then((mDiaUebungen => {
+		// 	this.DiaUebungSettingsListe = mDiaUebungen;
+		// 	this.Draw(false);
+		// }));
 	}
 
 	onTabChanged(event:any) {
