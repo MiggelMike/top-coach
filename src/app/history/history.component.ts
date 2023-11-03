@@ -51,7 +51,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	chartHeight: number = 400;
 	ChartData: Array<ChartData> = [];
 	BarChartDataHelperList: Array<ChartData> = [];
-	ActiveDiaType: string = '?';
 	@ContentChild('legendEntryTemplate') legendEntryTemplate: TemplateRef<any>;
 	@ViewChild('LineChart') LineChart: LineChartComponent;
 	@ViewChild('BarChart') BarChart: any;
@@ -84,13 +83,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		this.CreatingChartsDialogData.height = '150px';
 		this.CreatingChartsDialogData.textZeilen[0] = 'Creating charts';
 		this.LadeSessions();
-		// this.fDbModul
-		// 	.LadeAppData()
-		// 	.then((mAppData) => {
-		// 		this.AppData = mAppData;
-		// 		this.LadeLimit = mAppData.MaxHistorySessions + 100000;
-		// 		this.LadeSessions();
-		// 	});
 	}
 	
 	get programModul(): typeof ProgramModulTyp {
@@ -118,7 +110,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 
 		if (mDiaUebungSetting !== undefined)
 			mDiaUebungSetting.Visible = aChecked;
-		// this.Draw(true);
 	}
 
 	ToolTip(aDia: any, aBarPoint: BarPoint): string {
@@ -267,12 +258,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 				}
 			}//for
 
-			// const mChartData: ChartData = this.ChartData[aEvent.currentIndex];
-			// this.ChartData[aEvent.currentIndex] = this.ChartData[aEvent.previousIndex];
-			// this.ChartData[aEvent.previousIndex] = mChartData;
-	
-		
-			
 			let mAktiveIndex = 0;
 			if (this.ChartType !== undefined) {
 				mAktiveIndex = this.ChartType.selectedIndex;
@@ -331,9 +316,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	
 	Save() {
 		this.fDbModul.InsertDiaUebungen(this.DiaUebungSettingsListe);
-		// this.fDbModul.LadeDiaUebungen().then((mDiaUebungen => {
-		// 	this.DiaUebungSettingsListe = mDiaUebungen;
-		// }));
 	}
 
 	Load(aEvent: any) {
@@ -346,8 +328,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 			aChartData.ActiveDiaType = 'line';
 		else
 			aChartData.ActiveDiaType = 'bar';
-		
-		this.ActiveDiaType = aChartData.ActiveDiaType;		
 	}
 
 
@@ -453,10 +433,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 
 	async DoDia() {
 		this.Draw(false);
-		// this.fDbModul.LadeDiaUebungen().then((mDiaUebungen => {
-		// 	this.DiaUebungSettingsListe = mDiaUebungen;
-		// 	this.Draw(false);
-		// }));
 	}
 
 	onTabChanged(event:any) {
@@ -465,8 +441,8 @@ export class HistoryComponent implements OnInit, IProgramModul {
 				clearInterval(this.Interval);
 				this.Interval = undefined;
 			}
+			this.Draw(true);
 		}//if
-		this.Draw(true);
 		this.CalcChartSize();
 	}
 	
@@ -480,8 +456,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 
 	ngOnInit(): void {
-		// this.DiaTyp = 'line';
-		//setTimeout(() => this.DoDia(), 1000);
 	}
 }
 
@@ -492,7 +466,6 @@ class LineChartData {
 
 
 class Chart {
-	// UebungName: string = '';
 	ChartData: Array<Object> = [];
 }
 
