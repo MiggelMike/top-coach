@@ -196,6 +196,9 @@ export class DexieSvcService extends Dexie {
 	readonly cBodyweight: string = "BodyWeightDB";
 	readonly cSprache: string = "Sprache";
 
+	public static HistorySessions: Array<Session> = [];
+	public static AmHistoryLaden: boolean = false;
+	public HistorySessionsAfterLoadFn: AfterLoadFn = null; 
 	AktuellerProgrammTyp: ProgrammTyp;
 	AktuellesProgramm: ITrainingsProgramm;
 	RefreshAktuellesProgramm: boolean = false;
@@ -1586,6 +1589,16 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async LadeHistorySessions(aVonDatum: Date, aBisDatum: Date): Promise<Array<Session>> {
+		if (DexieSvcService.AmHistoryLaden === true)
+			return null;
+		else DexieSvcService.AmHistoryLaden = true;
+
+		if (aVonDatum === null)
+			aVonDatum = new Date('01.01.2020');
+
+		if (aBisDatum === null)
+			aBisDatum = new Date('01.01.2099');
+
 		return await this.SessionTable
 			.where("GestartedWann")
 			.between(aVonDatum, aBisDatum, true, true)
@@ -1616,6 +1629,11 @@ export class DexieSvcService extends Dexie {
 							mPtrSession.UebungsListe = aUebungsListe;
 						});
 				}// for
+				DexieSvcService.HistorySessions = mResult;
+				DexieSvcService.AmHistoryLaden = false;
+				if (this.HistorySessionsAfterLoadFn !== null) {
+					this.HistorySessionsAfterLoadFn();
+				}
 				return mResult;
 			});
 	}

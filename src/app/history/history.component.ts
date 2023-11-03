@@ -14,7 +14,6 @@ import { AppData } from '../../Business/Coach/Coach';
 import { ISession } from '../../Business/Session/Session';
 import { Datum } from 'src/Business/Datum';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
-import { TrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 var cloneDeep = require('lodash.clonedeep');
 
 @Component({
@@ -23,7 +22,12 @@ var cloneDeep = require('lodash.clonedeep');
 	styleUrls: ['./history.component.scss']
 })
 export class HistoryComponent implements OnInit, IProgramModul {
-	public SessionListe: Array<ISession> = [];
+	public get SessionListe(): Array<ISession> {
+		const mVonBisSessions: Array<ISession> = DexieSvcService.HistorySessions.filter((sess) => { 
+			return (sess.GestartedWann >= this.fromDate && sess.GestartedWann <= this.toDate)
+		});
+		return mVonBisSessions;
+	}
 	// public DiaTyp: string = 'line';
 	public DiaUebungsListe: Array<DiaUebung> = [];
 	public DiaUebungSettingsListe: Array<DiaUebungSettings> = [];
@@ -42,8 +46,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	public stepHour = 1;
 	public stepMinute = 1;
 	public stepSecond = 1;
-	// public dateControl = new FormControl(moment());
-	// public dateControlMinMax = new FormControl(moment());
 	selectedChartIndex: number = 0;
 	fromDate: Date = new Date();
 	toDate: Date = new Date();
@@ -82,7 +84,16 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		this.CreatingChartsDialogData.hasBackDrop = false;
 		this.CreatingChartsDialogData.height = '150px';
 		this.CreatingChartsDialogData.textZeilen[0] = 'Creating charts';
-		this.LadeSessions();
+		
+		if (DexieSvcService.AmHistoryLaden === true) {
+			this.fDbModul.HistorySessionsAfterLoadFn = () => {
+				this.fLoadingDialog.fDialog.closeAll();
+				if (this.matGroup.selectedIndex === 1)
+					this.Draw(this.matTabChart.isActive);
+			}
+		}
+		 
+			//this.LadeSessions();
 	}
 	
 	get programModul(): typeof ProgramModulTyp {
@@ -116,7 +127,14 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		return aDia.UebungName + ' | ' + aBarPoint.name + ' | ' + aBarPoint.value;
 	}
 
+	onClose() {
+		this.Draw(true);
+	}
+
 	public Draw(aDialogOn: boolean): void {
+		if (this.matGroup.selectedIndex === 0)
+			return;
+
 		this.Diagramme = [];
 		const mWorkChartListe: Array<ChartData> = [];
 		this.DiaUebungsListe = [];
@@ -332,25 +350,36 @@ export class HistoryComponent implements OnInit, IProgramModul {
 
 
 	private LadeSessions() {
-		const that = this;
-		const mDialogData = new DialogData();
-		mDialogData.ShowAbbruch = false;
-		mDialogData.ShowOk = false;
-		mDialogData.hasBackDrop = false;
-		mDialogData.height = '150px';
-		mDialogData.textZeilen[0] = 'Loading history';
-		this.fLoadingDialog.Loading(mDialogData);
-		try {
-			this.fDbModul.LadeHistorySessions(this.fromDate,this.toDate)
-				.then((aSessionListe) => {
-					this.SessionListe = aSessionListe;
-					this.fLoadingDialog.fDialog.closeAll();
-					if(that.matGroup.selectedIndex === 1)
-						this.Draw(this.matTabChart.isActive);
-				});
-		} catch (err) {
-			this.fLoadingDialog.fDialog.closeAll();
-		}
+		// const that = this;
+		
+		// const mDialogData = new DialogData();
+		// mDialogData.ShowAbbruch = false;
+		// mDialogData.ShowOk = false;
+		// mDialogData.hasBackDrop = false;
+		// mDialogData.height = '150px';
+		// mDialogData.textZeilen[0] = 'Loading history';
+		// this.fLoadingDialog.Loading(mDialogData);
+		// try {
+		// 	// this.SessionListe.filter((sess) => { 
+		// 	// 	return (sess.GestartedWann >= this.fromDate && sess.GestartedWann <= this.toDate)
+		// 	// });
+		// 	// this.fDbModul.LadeHistorySessions(this.fromDate, this.toDate)
+		// 	// 	.then((aSessionListe) => {
+		// 	// 		this.fLoadingDialog.fDialog.closeAll();
+		// 	// 		if (that.matGroup.selectedIndex === 1)
+		// 	// 			this.Draw(this.matTabChart.isActive);
+		// 	// 	});
+
+
+		// 	// this.fDbModul.LadeHistorySessions(this.fromDate, this.toDate)
+		// 	// 	.then((aSessionListe) => {
+		// 	// 		this.fLoadingDialog.fDialog.closeAll();
+		// 	// 		if (that.matGroup.selectedIndex === 1)
+		// 	// 			this.Draw(this.matTabChart.isActive);
+		// 	// 	});
+		// } catch (err) {
+		// 	this.fLoadingDialog.fDialog.closeAll();
+		// }
 	}
 
 	
@@ -358,15 +387,18 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	isLeapYear(year:number):boolean {
 		return new Date(year, 1, 29).getDate() === 29;
 	}
+
 	
 	FromDateChanged(aEvent: any) {
 		aEvent.stopPropagation();
 		this.fromDate = new Date(aEvent.target.value);
+		this.Draw(true);
 	}
 
 	ToDateChanged(aEvent: any) {
 		aEvent.stopPropagation();
 		this.toDate = Datum.StaticParseDatum(aEvent.target.value, this.toDate);
+		this.Draw(true);
 	}
 
 	CheckDatum(aEvent: any) {
@@ -442,8 +474,8 @@ export class HistoryComponent implements OnInit, IProgramModul {
 				this.Interval = undefined;
 			}
 			this.Draw(true);
+			this.CalcChartSize();
 		}//if
-		this.CalcChartSize();
 	}
 	
 	onResize(event:any) {

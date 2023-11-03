@@ -20,7 +20,7 @@
                        [(ngModel)]="toDate">
                 </mat-date-range-input>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-date-range-picker #picker></mat-date-range-picker>
+                <mat-date-range-picker #picker (closed)="onClose()"></mat-date-range-picker>
             </mat-form-field>
             
             <div class="center-item" layout-align="center center">
