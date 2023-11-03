@@ -604,6 +604,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 							});
 					});
 				this.fSavingDialog.fDialog.closeAll();
+				this.fDbModule.LadeHistorySessions(null, null);
 				// }); // <= SessionSpeichern
 			} catch(err) {
 				this.fSavingDialog.fDialog.closeAll();
