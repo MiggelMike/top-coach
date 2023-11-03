@@ -84,6 +84,8 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		this.CreatingChartsDialogData.hasBackDrop = false;
 		this.CreatingChartsDialogData.height = '150px';
 		this.CreatingChartsDialogData.textZeilen[0] = 'Creating charts';
+		this.fDbModul.LadeDiaUebungen()
+			.then((mData) =>  this.DiaUebungSettingsListe = mData);
 	}
 	
 	get programModul(): typeof ProgramModulTyp {
