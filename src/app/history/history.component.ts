@@ -13,7 +13,7 @@ import * as _moment from 'moment';
 import { AppData } from '../../Business/Coach/Coach';
 import { ISession } from '../../Business/Session/Session';
 import { Datum } from 'src/Business/Datum';
-import { MatTab } from '@angular/material/tabs';
+import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { TrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 var cloneDeep = require('lodash.clonedeep');
 
@@ -44,13 +44,14 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	public stepSecond = 1;
 	// public dateControl = new FormControl(moment());
 	// public dateControlMinMax = new FormControl(moment());
-
+	selectedChartIndex: number = 0;
 	fromDate: Date = new Date();
 	toDate: Date = new Date();
 	chartWidth: number = 0;
 	chartHeight: number = 400;
 	ChartData: Array<ChartData> = [];
 	BarChartDataHelperList: Array<ChartData> = [];
+	ActiveDiaType: string = '?';
 	@ContentChild('legendEntryTemplate') legendEntryTemplate: TemplateRef<any>;
 	@ViewChild('LineChart') LineChart: LineChartComponent;
 	@ViewChild('BarChart') BarChart: any;
@@ -58,6 +59,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	@ViewChild('matGroup') matGroup: any;
 	@ViewChild('matTabChart') matTabChart: MatTab;
 	@ViewChild('ChartContainer') ChartContainer: any;
+	@ViewChild('ChartType') ChartType: MatTabGroup;
 	@Input() placeholderTime: string;
 
 	range = new FormGroup({
@@ -124,7 +126,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 
 	public Draw(aDialogOn: boolean): void {
-		const that = this;
 		this.Diagramme = [];
 		const mWorkChartListe: Array<ChartData> = [];
 		this.DiaUebungsListe = [];
@@ -265,8 +266,23 @@ export class HistoryComponent implements OnInit, IProgramModul {
 					} // for
 				}
 			}//for
-				
+
+			// const mChartData: ChartData = this.ChartData[aEvent.currentIndex];
+			// this.ChartData[aEvent.currentIndex] = this.ChartData[aEvent.previousIndex];
+			// this.ChartData[aEvent.previousIndex] = mChartData;
+	
+		
+			
+			let mAktiveIndex = 0;
+			if (this.ChartType !== undefined) {
+				mAktiveIndex = this.ChartType.selectedIndex;
+				if(this.ChartType.selectedIndex === 1)
+					mWorkChartListe.forEach((mChar) => mChar.ActiveDiaType = 'bar');
+			}
+
 			this.ChartData = mWorkChartListe;
+			this.selectedChartIndex = mAktiveIndex;
+
 			this.fLoadingDialog.fDialog.closeAll();
 		} catch (error) {
 			console.error(error);
@@ -329,11 +345,14 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		if (aEvent.index === 0)
 			aChartData.ActiveDiaType = 'line';
 		else
-		    aChartData.ActiveDiaType = 'bar';
+			aChartData.ActiveDiaType = 'bar';
+		
+		this.ActiveDiaType = aChartData.ActiveDiaType;		
 	}
 
 
 	private LadeSessions() {
+		const that = this;
 		const mDialogData = new DialogData();
 		mDialogData.ShowAbbruch = false;
 		mDialogData.ShowOk = false;
@@ -346,7 +365,8 @@ export class HistoryComponent implements OnInit, IProgramModul {
 				.then((aSessionListe) => {
 					this.SessionListe = aSessionListe;
 					this.fLoadingDialog.fDialog.closeAll();
-					this.Draw(this.matTabChart.isActive);
+					if(that.matGroup.selectedIndex === 1)
+						this.Draw(this.matTabChart.isActive);
 				});
 		} catch (err) {
 			this.fLoadingDialog.fDialog.closeAll();
@@ -445,19 +465,8 @@ export class HistoryComponent implements OnInit, IProgramModul {
 				clearInterval(this.Interval);
 				this.Interval = undefined;
 			}
-
-			const that = this; 
-			// if ((this.LineChart === undefined) && (this.BarChart === undefined)) {
-			// 	this.fLoadingDialog.Loading(this.CreatingChartsDialogData);
-			// 	this.Interval = setInterval(() => {
-			// 		if ((that.LineChart !== undefined) || (that.BarChart !== undefined)) {
-			// 			clearInterval(that.Interval);
-			// 			that.Interval = undefined;
-			// 			that.fLoadingDialog.fDialog.closeAll();
-			// 		}
-			// 	}, 10);
-			// }//if
 		}//if
+		this.Draw(true);
 		this.CalcChartSize();
 	}
 	
@@ -472,7 +481,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 
 	ngOnInit(): void {
 		// this.DiaTyp = 'line';
-		setTimeout(() => this.DoDia(), 1000);
+		//setTimeout(() => this.DoDia(), 1000);
 	}
 }
 
