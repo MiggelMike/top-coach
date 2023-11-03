@@ -84,16 +84,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		this.CreatingChartsDialogData.hasBackDrop = false;
 		this.CreatingChartsDialogData.height = '150px';
 		this.CreatingChartsDialogData.textZeilen[0] = 'Creating charts';
-		
-		if (DexieSvcService.AmHistoryLaden === true) {
-			this.fDbModul.HistorySessionsAfterLoadFn = () => {
-				this.fLoadingDialog.fDialog.closeAll();
-				if (this.matGroup.selectedIndex === 1)
-					this.Draw(this.matTabChart.isActive);
-			}
-		}
-		 
-			//this.LadeSessions();
 	}
 	
 	get programModul(): typeof ProgramModulTyp {
@@ -128,7 +118,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 
 	onClose() {
-		this.Draw(true);
+		this.Draw(false);
 	}
 
 	public Draw(aDialogOn: boolean): void {
@@ -338,7 +328,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 
 	Load(aEvent: any) {
 		aEvent.stopPropagation();
-		this.LadeSessions();
 	}
 
 	DiaTypChanged(aChartData:ChartData, aEvent: any) {
@@ -348,42 +337,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 			aChartData.ActiveDiaType = 'bar';
 	}
 
-
-	private LadeSessions() {
-		// const that = this;
-		
-		// const mDialogData = new DialogData();
-		// mDialogData.ShowAbbruch = false;
-		// mDialogData.ShowOk = false;
-		// mDialogData.hasBackDrop = false;
-		// mDialogData.height = '150px';
-		// mDialogData.textZeilen[0] = 'Loading history';
-		// this.fLoadingDialog.Loading(mDialogData);
-		// try {
-		// 	// this.SessionListe.filter((sess) => { 
-		// 	// 	return (sess.GestartedWann >= this.fromDate && sess.GestartedWann <= this.toDate)
-		// 	// });
-		// 	// this.fDbModul.LadeHistorySessions(this.fromDate, this.toDate)
-		// 	// 	.then((aSessionListe) => {
-		// 	// 		this.fLoadingDialog.fDialog.closeAll();
-		// 	// 		if (that.matGroup.selectedIndex === 1)
-		// 	// 			this.Draw(this.matTabChart.isActive);
-		// 	// 	});
-
-
-		// 	// this.fDbModul.LadeHistorySessions(this.fromDate, this.toDate)
-		// 	// 	.then((aSessionListe) => {
-		// 	// 		this.fLoadingDialog.fDialog.closeAll();
-		// 	// 		if (that.matGroup.selectedIndex === 1)
-		// 	// 			this.Draw(this.matTabChart.isActive);
-		// 	// 	});
-		// } catch (err) {
-		// 	this.fLoadingDialog.fDialog.closeAll();
-		// }
-	}
-
-	
-
 	isLeapYear(year:number):boolean {
 		return new Date(year, 1, 29).getDate() === 29;
 	}
@@ -392,13 +345,13 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	FromDateChanged(aEvent: any) {
 		aEvent.stopPropagation();
 		this.fromDate = new Date(aEvent.target.value);
-		this.Draw(true);
+		this.Draw(false);
 	}
 
 	ToDateChanged(aEvent: any) {
 		aEvent.stopPropagation();
 		this.toDate = Datum.StaticParseDatum(aEvent.target.value, this.toDate);
-		this.Draw(true);
+		this.Draw(false);
 	}
 
 	CheckDatum(aEvent: any) {
@@ -473,7 +426,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 				clearInterval(this.Interval);
 				this.Interval = undefined;
 			}
-			this.Draw(true);
+			this.Draw(false);
 			this.CalcChartSize();
 		}//if
 	}

@@ -197,7 +197,6 @@ export class DexieSvcService extends Dexie {
 	readonly cSprache: string = "Sprache";
 
 	public static HistorySessions: Array<Session> = [];
-	public static AmHistoryLaden: boolean = false;
 	public HistorySessionsAfterLoadFn: AfterLoadFn = null; 
 	AktuellerProgrammTyp: ProgrammTyp;
 	AktuellesProgramm: ITrainingsProgramm;
@@ -1589,10 +1588,6 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async LadeHistorySessions(aVonDatum: Date, aBisDatum: Date): Promise<Array<Session>> {
-		if (DexieSvcService.AmHistoryLaden === true)
-			return null;
-		else DexieSvcService.AmHistoryLaden = true;
-
 		if (aVonDatum === null)
 			aVonDatum = new Date('01.01.2020');
 
@@ -1630,7 +1625,6 @@ export class DexieSvcService extends Dexie {
 						});
 				}// for
 				DexieSvcService.HistorySessions = mResult;
-				DexieSvcService.AmHistoryLaden = false;
 				if (this.HistorySessionsAfterLoadFn !== null) {
 					this.HistorySessionsAfterLoadFn();
 				}
