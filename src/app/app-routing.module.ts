@@ -31,11 +31,11 @@ export const LadeStandardProgramme: ResolveFn<ITrainingsProgramm[]> = (route: Ac
 
 export const LadeAktuellesProgramm: ResolveFn<ITrainingsProgramm> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
 	const mDB: DexieSvcService = inject(DexieSvcService);
-	
+	if (DexieSvcService.HistorySessions.length <= 0) 
+		mDB.LadeHistorySessions(null, null);
+
 	return mDB.LadeAktuellesProgramm().then(
 		(aProgram) => { 
-			if (DexieSvcService.HistorySessions.length <= 0) 
-				mDB.LadeHistorySessions(null, null);
 			// mDB.MakeExample(aProgram);
 			return aProgram;
 

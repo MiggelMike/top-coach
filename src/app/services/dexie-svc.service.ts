@@ -720,6 +720,7 @@ export class DexieSvcService extends Dexie {
 		this.table(this.cHantel).mapToClass(Hantel);
 
 		this.InitDatenbank();
+
 	}
 			
 	InitDatenbank() {
@@ -1587,14 +1588,15 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
-	public async LadeHistorySessions(aVonDatum: Date, aBisDatum: Date): Promise<Array<Session>> {
+	public LadeHistorySessions(aVonDatum: Date, aBisDatum: Date): Promise<Array<Session>> {
 		if (aVonDatum === null)
 			aVonDatum = new Date('01.01.2020');
 
 		if (aBisDatum === null)
 			aBisDatum = new Date('01.01.2099');
 
-		return await this.SessionTable
+		this.InitSession();
+		return this.SessionTable
 			.where("GestartedWann")
 			.between(aVonDatum, aBisDatum, true, true)
 			.and((aSession: Session) => aSession.Kategorie02 === SessionStatus.Fertig || aSession.Kategorie02 === SessionStatus.FertigTimeOut)
