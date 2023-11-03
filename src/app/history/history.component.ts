@@ -344,10 +344,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		mDialogData.textZeilen[0] = 'Loading history';
 		this.fLoadingDialog.Loading(mDialogData);
 		try {
-			const mSessionParaDB: SessionParaDB = new SessionParaDB();
-			mSessionParaDB.UebungenBeachten = false;
-			mSessionParaDB.Limit = this.LadeLimit;
-			this.fDbModul.LadeHistorySessions(mSessionParaDB)
+			this.fDbModul.LadeHistorySessions(this.fromDate,this.toDate)
 				.then((aSessionListe) => {
 					this.SessionListe = aSessionListe;
 					this.fLoadingDialog.fDialog.closeAll();

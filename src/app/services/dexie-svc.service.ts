@@ -1600,16 +1600,24 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
-	public async LadeHistorySessions(aSessionParaDB: SessionParaDB): Promise<Array<Session>> {
+	public async LadeHistorySessions(aVonDatum: Date, aBisDatum: Date): Promise<Array<Session>> {
 		return await this.SessionTable
-			.where("Kategorie02")
-			.anyOf([SessionStatus.Fertig, SessionStatus.FertigTimeOut])
-			.offset(aSessionParaDB !== undefined && aSessionParaDB.OffSet !== undefined ? aSessionParaDB.OffSet : 0)
-			.limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : cMaxLimnit)
+			.where("GestartedWann")
+			.between(aVonDatum, aBisDatum, true, true)
+			.and((aSession: Session) => aSession.Kategorie02 === SessionStatus.Fertig || aSession.Kategorie02 === SessionStatus.FertigTimeOut)
 			.reverse()
-			.sortBy("Datum")
+			.sortBy("GestartetWann")
 			.then(async (aSessionListe) => {
 				let mResult: Array<Session> = [];
+				const mSessionParaDB: SessionParaDB = new SessionParaDB();
+				mSessionParaDB.UebungenBeachten = true;
+				mSessionParaDB.UebungParaDB = new UebungParaDB();
+			    mSessionParaDB.UebungParaDB.WhereClause = "SessionID";
+				mSessionParaDB.UebungParaDB.anyOf = (aUebung: Uebung) => { return aUebung.SessionID; };
+				mSessionParaDB.UebungParaDB.SaetzeBeachten = true;
+				mSessionParaDB.UebungParaDB.SatzParaDB = new SatzParaDB();
+				mSessionParaDB.UebungParaDB.SatzParaDB.WhereClause = "UebungID";
+				mSessionParaDB.UebungParaDB.SatzParaDB.anyOf = (aSatz: Satz) => { return aSatz.UebungID; };
 				aSessionListe.map((aSessionDB) => mResult.push(new Session(aSessionDB)));
 				for (let index = 0; index < mResult.length; index++) {
 					const mPtrSession: Session = mResult[index];
@@ -1617,23 +1625,16 @@ export class DexieSvcService extends Dexie {
 					mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
 					mPtrSession.UebungsListe = [];
 
-					if (aSessionParaDB.UebungenBeachten === true) {
 						for (let index = 0; index < mResult.length; index++) {
 							const mPtrSession = mResult[index];
-							if (aSessionParaDB.UebungParaDB === undefined)
-								aSessionParaDB.UebungParaDB = new UebungParaDB();
+							if (mSessionParaDB.UebungParaDB === undefined)
 
-							aSessionParaDB.UebungParaDB.WhereClause = "SessionID";
-							aSessionParaDB.UebungParaDB.anyOf = () => { return mPtrSession.ID as any; };
-
-							await this.LadeSessionUebungen(mPtrSession.ID, aSessionParaDB.UebungParaDB)
+							await this.LadeSessionUebungenEx(mPtrSession, mSessionParaDB)
 								.then((aUebungsListe) => {
 									mPtrSession.UebungsListe = aUebungsListe;
 									return mResult;
 								});
 						}//for
-					}//if
-					else return mResult;
 				}// for
 				return mResult;
 			});
