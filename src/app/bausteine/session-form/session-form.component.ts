@@ -93,7 +93,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 										if (aUebungsListe.length > 0)
 											this.Session.UebungsListe = aUebungsListe;
 										else
-											this.fDbModule.CmpAktuellesProgramm = this.fDbModule.AktuellesProgramm.Copy();
+											DexieSvcService.StaticCmpAktuellesProgramm = DexieSvcService.StaticAktuellesProgramm.Copy();
 							
 										if (this.Session.UebungsListe !== undefined) {
 											this.Session.UebungsListe.forEach((mPtrUebung) => {
@@ -158,35 +158,6 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 
 	DoWorker() {
 		return;
-        if (typeof Worker !== 'undefined') {
-            this.worker = new Worker(new URL('./session-form.worker', import.meta.url));
-            this.worker.addEventListener('message', ({ data }) => {
-				if (data.action === "LadeUebungen") {
-					const mUebungParaDB: UebungParaDB = new UebungParaDB();
-					// mUebungParaDB.Limit = cUebungSelectLimit;
-					// mUebungParaDB.OffSet = 0;
-					mUebungParaDB.SaetzeBeachten = true;
-					this.Programm.SessionListe.forEach(
-						(aSession) => {
-							if (this.Session.ID !== aSession.ID) {
-								this.fDbModule.LadeSessionUebungen(aSession.ID, mUebungParaDB).then(
-									(aUebungsListe) => {
-										if (aUebungsListe.length > 0) aSession.UebungsListe = aUebungsListe;
-										else this.fDbModule.CmpAktuellesProgramm = this.fDbModule.AktuellesProgramm.Copy();
-										if (this.cmpSession.UebungsListe === undefined || this.cmpSession.UebungsListe.length <= 0) {
-											this.cmpSession.UebungsListe = [];
-											aSession.UebungsListe.forEach((mUebung) => this.cmpSession.UebungsListe.push(mUebung.Copy()));
-										}
-									});
-								}
-						});//foreach
-				}//if
-            });
-            this.worker.postMessage('LadeUebungen');
-        } else {
-            // Web Workers are not supported in this environment.
-            // You should add a fallback so that your program still executes correctly.
-        }
     }
 
 	private EvalStart() {
@@ -301,7 +272,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 	}
 
 	leave() {
-		const mSuchSession = this.fDbModule.AktuellesProgramm.SessionListe.find((mSession) => {
+		const mSuchSession = DexieSvcService.StaticAktuellesProgramm.SessionListe.find((mSession) => {
 			if (mSession.ID === this.Session.ID || mSession.ListenIndex === this.Session.ListenIndex) 
 				return mSession;
 			return null;
@@ -309,7 +280,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 
 		if (mSuchSession !== null)
 			if (mSuchSession !== null)
-				this.fDbModule.AktuellesProgramm.SessionListe[mSuchSession.ListenIndex] = this.Session;
+			DexieSvcService.StaticAktuellesProgramm.SessionListe[mSuchSession.ListenIndex] = this.Session;
 
 		if (this.fSessionStatsOverlayComponent !== undefined && this.fSessionStatsOverlayComponent !== null) this.fSessionStatsOverlayComponent.close();
 		this.location.back();
@@ -384,25 +355,25 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 	}
 
 	private DoAfterDone(aSessionForm: SessionFormComponent) {
-		const mIndex = aSessionForm.fDbModule.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
-		if (mIndex > -1) aSessionForm.fDbModule.AktuellesProgramm.SessionListe.splice(mIndex, 1);
+		const mIndex = DexieSvcService.StaticAktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
+		if (mIndex > -1) DexieSvcService.StaticAktuellesProgramm.SessionListe.splice(mIndex, 1);
 		
-		aSessionForm.fDbModule.AktuellesProgramm.SessionListe = this.Programm.SessionListe;
-		aSessionForm.fDbModule.AktuellesProgramm.NummeriereSessions();
+		DexieSvcService.StaticAktuellesProgramm.SessionListe = this.Programm.SessionListe;
+		DexieSvcService.StaticAktuellesProgramm.NummeriereSessions();
 		this.SaveChangesPrim().then(() => {
 			this.fDbModule.LadeAktuellesProgramm()
 				.then(async (aProgramm) => {
 					this.router.navigate(['/']);
 
-					this.fDbModule.AktuellesProgramm = aProgramm;
-					this.fDbModule.CmpAktuellesProgramm = aProgramm;
+					DexieSvcService.StaticAktuellesProgramm = aProgramm;
+					DexieSvcService.StaticCmpAktuellesProgramm = aProgramm;
 
 					const mSessionParaDB: SessionParaDB = new SessionParaDB();
 					mSessionParaDB.UebungenBeachten = true;
 					this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
 						.then((aSessionListe) => {
 							if (aSessionListe.length > 0) {
-								this.fDbModule.AktuellesProgramm.SessionListe = aSessionListe;
+								DexieSvcService.StaticAktuellesProgramm.SessionListe = aSessionListe;
 								aSessionListe.forEach(async (mPtrSession) => {
 									if (mPtrSession.Kategorie02 === SessionStatus.Wartet) {
 										const mUebungParaDB = new UebungParaDB();
@@ -599,7 +570,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 					  	await this.fDbModule.ProgrammSpeichern(this.Programm, mProgrammExtraParaDB)
 							.then((mPtrProgramm) => {
 								this.Programm = mPtrProgramm;
-								this.fDbModule.AktuellesProgramm = this.Programm;
+								DexieSvcService.StaticAktuellesProgramm = this.Programm;
 								this.DoAfterDone(this);
 							});
 					});

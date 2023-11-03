@@ -31,8 +31,6 @@ export const LadeStandardProgramme: ResolveFn<ITrainingsProgramm[]> = (route: Ac
 
 export const LadeAktuellesProgramm: ResolveFn<ITrainingsProgramm> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
 	const mDB: DexieSvcService = inject(DexieSvcService);
-	if (DexieSvcService.HistorySessions.length <= 0) 
-		mDB.LadeHistorySessions(null, null);
 
 	return mDB.LadeAktuellesProgramm().then(
 		(aProgram) => { 
@@ -50,7 +48,7 @@ export const LadeAppData: ResolveFn<AppData> = (route: ActivatedRouteSnapshot, s
 const routes: Routes = [
 	{
 		path: "",
-		resolve: { AktuellesProgramm: LadeAktuellesProgramm },
+		// resolve: { AktuellesProgramm: LadeAktuellesProgramm },
 		component: AnstehendeSessionsComponent
 	}
 	, {

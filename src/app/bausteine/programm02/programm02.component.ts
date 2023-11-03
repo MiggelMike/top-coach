@@ -223,11 +223,11 @@ export class Programm02Component implements OnInit, IProgramModul {
 			aRowNum,
 			() => {
 				aSession.Kategorie02 = SessionStatus.Loeschen;
-                if(this.fDbModule.AktuellesProgramm && this.fDbModule.AktuellesProgramm.SessionListe) {
-                const mSess: ISession = this.fDbModule.AktuellesProgramm.SessionListe.find( (s) => s.ID === aSession.ID);
+                if(DexieSvcService.StaticAktuellesProgramm && DexieSvcService.StaticAktuellesProgramm.SessionListe) {
+                const mSess: ISession = DexieSvcService.StaticAktuellesProgramm.SessionListe.find( (s) => s.ID === aSession.ID);
                 if (mSess) {
-                    const mIndex = this.fDbModule.AktuellesProgramm.SessionListe.indexOf(mSess);
-                    this.fDbModule.AktuellesProgramm.SessionListe.splice(mIndex, 1);
+                    const mIndex = DexieSvcService.StaticAktuellesProgramm.SessionListe.indexOf(mSess);
+                    DexieSvcService.StaticAktuellesProgramm.SessionListe.splice(mIndex, 1);
                 }
             }
 				this.fDbModule.EvalAktuelleSessionListe(aSession as Session);

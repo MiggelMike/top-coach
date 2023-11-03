@@ -21,7 +21,7 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
         private fLoadingDialog: DialogeService,
     ) {
         // this.fDbModule.LadeAktuellesProgramm();
-
+        
      }
     
     get programModul(): typeof ProgramModulTyp {
@@ -46,30 +46,30 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
 
             mSessionParaDB.UebungParaDB.SaetzeBeachten = true;
 
-            this.fDbModule.LadeUpcomingSessions(this.AktuellesProgramm.id, mSessionParaDB)
-                .then((aSessionListe) => {
-                    if (aSessionListe.length > 0) {
-                        // this.Programm.SessionListe = [];
-                        // this.fDbModule.AktuellesProgramm.SessionListe = [];
-                        // aSessionListe.forEach(async (mPtrSession) => {
-                        //     if (mPtrSession.Kategorie02 === SessionStatus.Wartet) {
-                        //         const mUebungParaDB = new UebungParaDB();
-                        //         mUebungParaDB.SaetzeBeachten = true;
-                        //         await this.fDbModule.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
-                        //             (aUebungsListe) => {
-                        //                 if (aUebungsListe.length > 0)
-                        //                     mPtrSession.UebungsListe = aUebungsListe;
-                        //             });
-                        //     }
+            // this.fDbModule.LadeUpcomingSessions(this.AktuellesProgramm.id, mSessionParaDB)
+            //     .then((aSessionListe) => {
+            //         if (aSessionListe.length > 0) {
+            //             // this.Programm.SessionListe = [];
+            //             // this.fDbModule.AktuellesProgramm.SessionListe = [];
+            //             // aSessionListe.forEach(async (mPtrSession) => {
+            //             //     if (mPtrSession.Kategorie02 === SessionStatus.Wartet) {
+            //             //         const mUebungParaDB = new UebungParaDB();
+            //             //         mUebungParaDB.SaetzeBeachten = true;
+            //             //         await this.fDbModule.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
+            //             //             (aUebungsListe) => {
+            //             //                 if (aUebungsListe.length > 0)
+            //             //                     mPtrSession.UebungsListe = aUebungsListe;
+            //             //             });
+            //             //     }
                         
-                        //     SessionDB.StaticCheckMembers(mPtrSession);
-                        //     mPtrSession.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
-                        // });
-                        // this.fProgramm.SessionListe = aSessionListe;
-                        this.fDbModule.AktuellesProgramm.SessionListe = aSessionListe;
-                    }
-                    this.fLoadingDialog.fDialog.closeAll();
-                });
+            //             //     SessionDB.StaticCheckMembers(mPtrSession);
+            //             //     mPtrSession.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
+            //             // });
+            //             // this.fProgramm.SessionListe = aSessionListe;
+            //             DexieSvcService.StaticAktuellesProgramm.SessionListe = aSessionListe;
+            //         }
+            //         this.fLoadingDialog.fDialog.closeAll();
+            //     });
         }
         catch (err) {
             this.fLoadingDialog.fDialog.closeAll();
@@ -81,12 +81,10 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
         
         
     ngOnInit() {
-        // this.DoWorker();
-        // this.fDbModule.DoWorker(WorkerAction.LadeDiagrammDaten);
     }
 
     public get AktuellesProgramm(): ITrainingsProgramm {
-        return this.fDbModule.AktuellesProgramm;
+        return DexieSvcService.StaticAktuellesProgramm;
     }
                 
     beforePanelOpened(aSess: Session) {
@@ -100,18 +98,18 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
     DoWorker() {
         const that: AnstehendeSessionsComponent = this;
         if (typeof Worker !== 'undefined') {
-            if (this.fDbModule.AktuellesProgramm === undefined || this.fDbModule.RefreshAktuellesProgramm === true) {
+            if (DexieSvcService.StaticAktuellesProgramm === undefined || this.fDbModule.RefreshAktuellesProgramm === true) {
                 this.fDbModule.RefreshAktuellesProgramm = false;
                 that.worker = new Worker(new URL('./anstehende-sessions.worker', import.meta.url));
                 that.worker.addEventListener('message', ({ data }) => {
                     if (data.action === "LadeAktuellesProgramm") {
                         that.fDbModule.LadeAktuellesProgramm()
                             .then(async (aProgramm) => {
-                                that.fDbModule.AktuellesProgramm = aProgramm;
-                                that.fDbModule.CmpAktuellesProgramm = aProgramm;
+                                DexieSvcService.StaticAktuellesProgramm = aProgramm;
+                                DexieSvcService.StaticCmpAktuellesProgramm = aProgramm;
                                 // this.fProgramm = aProgramm;
                                 if (aProgramm !== undefined) {
-                                    that.fDbModule.AktuellesProgramm.SessionListe = [];
+                                    DexieSvcService.StaticAktuellesProgramm.SessionListe = [];
                                     // this.fProgramm = that.fDbModule.AktuellesProgramm.Copy();
                                     that.LadeSessions();
                                 }
@@ -121,7 +119,7 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
                         // that.Programm.SessionListe = that.fDbModule.AktuellesProgramm.SessionListe;
                         const mUebungParaDB: UebungParaDB = new UebungParaDB();
                         // mUebungParaDB.SaetzeBeachten = true;
-                        that.fDbModule.AktuellesProgramm.SessionListe.forEach(
+                        DexieSvcService.StaticAktuellesProgramm.SessionListe.forEach(
                             // that.fDbModule.AktuellesProgramm.SessionListe.forEach(
                             (aSession) => {
                                 if (aSession.UebungsListe === undefined || aSession.UebungsListe.length <= 0) {
