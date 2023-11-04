@@ -107,38 +107,38 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
     ngAfterViewInit() {
         // this.DoWorker();
 
-        if (this.session.UebungsListe !== undefined) {
-            // if(this.session.UebungsListe.length <= 0) {
-            //     this.fDbModule.LadeSessionUebungen(this.session.ID)
-            //         .then((aUebungsListe) => {
-            //             this.session.UebungsListe = aUebungsListe;
-            //             this.session.UebungsListe.forEach((mUebung: Uebung) => {
-            //                 this.accCheckUebungPanels(mUebung);
-            //             });
-            //         });
-            // }
+        // if (this.session.UebungsListe !== undefined) {
+        //     // if(this.session.UebungsListe.length <= 0) {
+        //     //     this.fDbModule.LadeSessionUebungen(this.session.ID)
+        //     //         .then((aUebungsListe) => {
+        //     //             this.session.UebungsListe = aUebungsListe;
+        //     //             this.session.UebungsListe.forEach((mUebung: Uebung) => {
+        //     //                 this.accCheckUebungPanels(mUebung);
+        //     //             });
+        //     //         });
+        //     // }
 
-            if (this.session.UebungsListe.length > 0) {
-                this.session.UebungsListe.forEach((mUebung: Uebung) => {
-                    this.accCheckUebungPanels(mUebung);
-                });
-            } else {
-                this.accCheckUebungPanels();
+        //     if (this.session.UebungsListe.length > 0) {
+        //         this.session.UebungsListe.forEach((mUebung: Uebung) => {
+        //             this.accCheckUebungPanels(mUebung);
+        //         });
+        //     } else {
+        //         this.accCheckUebungPanels();
 
-                // this.accUebung.forEach((acc) => acc.closeAll());
-                // this.isExpanded = false;
-                // this.ToggleButtonText = "Open all exercises";
-                // if(this.SessUeb !== undefined)
-                //     this.SessUeb.Expanded = false;
-            }
-            setTimeout(() => {
-                this.DoStatsFn()
-            }, (500));
-        }
+        //         // this.accUebung.forEach((acc) => acc.closeAll());
+        //         // this.isExpanded = false;
+        //         // this.ToggleButtonText = "Open all exercises";
+        //         // if(this.SessUeb !== undefined)
+        //         //     this.SessUeb.Expanded = false;
+        //     }
+        //     setTimeout(() => {
+        //         this.DoStatsFn()
+        //     }, (500));
+        // }
     }
 
     public DoStatsFn() {
-        if (this.DoStats !== undefined && this.Info !== undefined)
+        // if (this.DoStats !== undefined && this.Info !== undefined)
             this.DoStats.emit(this.Info);
     }
 

@@ -720,7 +720,7 @@ export class DexieSvcService extends Dexie {
 			
 		});
 		this.table(this.cHantel).mapToClass(Hantel);
-
+		this.InitMuskelGruppe();
 		this.InitDatenbank();
 		this.InitSession();
 
