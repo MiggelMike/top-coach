@@ -168,11 +168,15 @@ export enum ProgramModulTyp {
 	Kein,
 	AnstehendeSessions,
 	History,
+	HistoryView,
 	SelectWorkout,
 	RunningSession,
 	EditWorkout
 
- }
+}
+ 
+
+
 
 export interface IProgramModul {
 	get programModul(): (typeof ProgramModulTyp);

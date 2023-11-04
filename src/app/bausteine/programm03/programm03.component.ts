@@ -69,7 +69,11 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
     ngOnInit() {
     }
 
-
+    get ProgrammName(): string{
+        if (this.programm !== undefined && this.programm !== null)
+            return this.programm.Name;
+        return '';
+    }
 
     constructor(
         @Inject(LOCALE_ID) localID: string,

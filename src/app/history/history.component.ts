@@ -10,7 +10,6 @@ import { LineChartComponent } from '@swimlane/ngx-charts';
 import { FormControl, FormGroup } from '@angular/forms';
 import { LOCALE_ID } from '@angular/core';
 import * as _moment from 'moment';
-import { AppData } from '../../Business/Coach/Coach';
 import { ISession } from '../../Business/Session/Session';
 import { Datum } from 'src/Business/Datum';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
@@ -74,7 +73,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		private fLoadingDialog: DialogeService,
 		@Inject(LOCALE_ID) locale: string
 	) {
-		
 		this.toDate = new Date();
 		this.fromDate.setDate(this.toDate.getDate() - 90);
 		this.range.controls['start'].setValue(this.fromDate);
@@ -86,6 +84,9 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		this.CreatingChartsDialogData.textZeilen[0] = 'Creating charts';
 		this.fDbModul.LadeDiaUebungen()
 			.then((mData) =>  this.DiaUebungSettingsListe = mData);
+	}
+
+	ngOnDestroy() {
 	}
 	
 	get programModul(): typeof ProgramModulTyp {

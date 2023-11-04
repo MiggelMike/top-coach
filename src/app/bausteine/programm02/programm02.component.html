@@ -16,6 +16,7 @@
                             class="HG-01">
                             <mat-expansion-panel-header [matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag">
                                 <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="flex-start center">
+                                    
                                     <mat-form-field class="align-left width-300">
                                         <input class="tc-font-size-smaller align-left width-400" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
                                     </mat-form-field>
@@ -52,20 +53,18 @@
 
                             <div [id]="'collapseSession' + i" aria-labelledby="headingOne">
                                 <!-- <div [id]="'collapseSession' + i" aria-labelledby="headingOne" attr.data-parent="#accordionSession"> -->
-                                    <div class="card-body">
+                                <div class="card-body">
                                     <!-- session an Sub-Komponente durchreichen -->
-                                    <ng-container *ngIf="sess.Expanded === true">
-                                        <app-programm03 
-                                            [session]="sess" 
-                                            [cmpSession]="sess" 
-                                            [programm]="programm"
-                                            [cmpSettingsSession]="sess" 
-                                            [ModulTyp]="ModulTyp"
-                                            [bearbeitbar]="bearbeitbar" 
-                                            [SofortSpeichern]="SofortSpeichern"
-                                            [DeletedSatzList]="DeletedSatzList">
-                                        </app-programm03>
-                                    </ng-container>
+                                    <app-programm03 
+                                        [session]="sess" 
+                                        [cmpSession]="sess" 
+                                        [programm]="programm"
+                                        [cmpSettingsSession]="sess" 
+                                        [ModulTyp]="ModulTyp"
+                                        [bearbeitbar]="bearbeitbar" 
+                                        [SofortSpeichern]="SofortSpeichern"
+                                        [DeletedSatzList]="DeletedSatzList">
+                                    </app-programm03>
                                 </div>
                             </div>
 

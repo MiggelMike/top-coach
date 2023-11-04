@@ -106,6 +106,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 		public fDbModule: DexieSvcService,
 		private fLoadingDialog: DialogeService,
 		private router: Router) {
+		const x = 0;
 	}
 	get programModul(): typeof ProgramModulTyp {
 		return ProgramModulTyp;
@@ -385,8 +386,8 @@ export class Programm02Component implements OnInit, IProgramModul {
 		// 		}
 		// 	});
 		
-		if (this.OnLeaveFn !== undefined)
-			this.OnLeaveFn.emit();
+		// if (this.OnLeaveFn !== undefined)
+		// 	this.OnLeaveFn.emit();
 
 		if (aRegularSession) {
 			const mDialogData = new DialogData();
@@ -422,13 +423,16 @@ export class Programm02Component implements OnInit, IProgramModul {
 			//} catch (err) {
 				//this.fLoadingDialog.fDialog.closeAll();
 			//}
-		}else this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, ModulTyp: this.ModulTyp } });
+		}else this.router.navigate(["sessionFormComponent"], { state: { programm: this.programm, sess: aSession, ModulTyp: ProgramModulTyp.HistoryView } });
 	}
 
 
 	public startSession(aEvent: Event, aSession: ISession) {
 		aEvent.stopPropagation();
-		this.startSessionPrim(aSession, true);
+		if (this.ModulTyp === ProgramModulTyp.History)
+			this.startSessionPrim(aSession, false);
+		else
+			this.startSessionPrim(aSession, true);
 	}
 
 	public resetSession(aEvent: Event,aSession: ISession, aRowNum: number) {
