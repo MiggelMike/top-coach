@@ -1,6 +1,6 @@
 import { cDeutsch, cDeutschKuezel, cEnglish, cEnglishKuerzel, cEnglishDatumFormat, cEnglishZeitFormat, cDeutschDatumFormat, cDeutschZeitFormat } from './../Sprache/Sprache';
 import { BodyWeight, BodyWeightDB } from './../../Business/Bodyweight/Bodyweight';
-import { SessionCopyPara } from './../../Business/Session/Session';
+import { HistorySession, SessionCopyPara } from './../../Business/Session/Session';
 import { HypertrophicProgramm } from '../../Business/TrainingsProgramm/Hypertrophic';
 import { InUpcomingSessionSetzen, UebungDB } from './../../Business/Uebung/Uebung';
 import { InitialWeight } from './../../Business/Uebung/InitialWeight';
@@ -706,7 +706,7 @@ export class DexieSvcService extends Dexie {
 
 		if (DexieSvcService.StaticModulTyp === null)
 			DexieSvcService.StaticModulTyp = ProgramModulTyp.Kein;
-		
+
 		//   Dexie.delete("ConceptCoach");
 		this.version(36).stores({
 			AppData: "++id",
@@ -1607,12 +1607,14 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
-	public LadeHistorySessions(aVonDatum: Date, aBisDatum: Date): Promise<Array<Session>> {
+	public LadeHistorySessions(aVonDatum: Date, aBisDatum: Date): Promise<Array<HistorySession>> {
 		if (aVonDatum === null)
 			aVonDatum = new Date('01.01.2020');
 
 		if (aBisDatum === null)
 			aBisDatum = new Date('01.01.2099');
+
+		const mProgramNamen: Array<{ ID: number, Name: string }> = []; 
 
 		return this.SessionTable
 			.where("GestartedWann")
@@ -1621,8 +1623,34 @@ export class DexieSvcService extends Dexie {
 			.reverse()
 			.sortBy("GestartetWann")
 			.then(async (aSessionListe) => {
-				let mResult: Array<Session> = [];
-				aSessionListe.map((aSessionDB) => mResult.push(new Session(aSessionDB)));
+				let mResult: Array<HistorySession> = [];
+
+				aSessionListe.map((aSessionDB) => mResult.push(new HistorySession(aSessionDB)));
+
+				
+				for (let index = 0; index < mResult.length; index++) {
+					const mPtrHistorySession: HistorySession = mResult[index];
+					
+					const mProgrammNameIndex = mProgramNamen.findIndex((aProgrammName) => { return aProgrammName.ID === mPtrHistorySession.FK_Programm; });
+					if (mProgrammNameIndex > -1) {
+						mPtrHistorySession.ProgrammName = mProgramNamen[mProgrammNameIndex].Name;
+					}
+					else {
+						const mProgrammParaDB: ProgrammParaDB = new ProgrammParaDB();
+						mProgrammParaDB.WhereClause = "id";
+						mProgrammParaDB.anyOf = () => {
+							return mPtrHistorySession.FK_Programm;
+						}
+						await this.LadeProgrammeEx(mProgrammParaDB)
+							.then((aProgramm) => {
+								if (aProgramm.length > 0) {
+									mPtrHistorySession.ProgrammName = aProgramm[0].Name;
+									mProgramNamen.push({ ID: mPtrHistorySession.FK_Programm, Name: aProgramm[0].Name });
+								}
+							});
+					}
+				}
+
 				const mUebungParaDB: UebungParaDB = new UebungParaDB();
 				mUebungParaDB.WhereClause = "SessionID";
 				mUebungParaDB.anyOf = (aSession: Session) => {

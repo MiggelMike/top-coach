@@ -675,3 +675,7 @@ export class Session implements ISession {
             });
     }
 }
+
+export class HistorySession extends Session { 
+    public ProgrammName: string = '';
+}

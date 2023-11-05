@@ -3,7 +3,7 @@ import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { Uebung, SaetzeStatus } from './../../../Business/Uebung/Uebung';
 import { GlobalService } from 'src/app/services/global.service';
 import { MatAccordion, MatExpansionPanel } from '@angular/material/expansion';
-import { ISession, Session } from './../../../Business/Session/Session';
+import { HistorySession, ISession, Session } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, Output, EventEmitter, ChangeDetectionStrategy  } from "@angular/core";
 import { DialogeService } from "./../../services/dialoge.service";
@@ -71,8 +71,8 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
     }
 
     get ProgrammName(): string{
-        if (this.programm !== undefined && this.programm !== null)
-            return this.programm.Name;
+        if (this.ModulTyp === ProgramModulTyp.HistoryView)
+            return (this.session as HistorySession).ProgrammName;
         return '';
     }
 

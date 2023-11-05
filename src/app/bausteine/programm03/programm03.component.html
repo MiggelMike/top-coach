@@ -2,10 +2,10 @@
     <div class="colum-center">
         <div class="width-600">
         <!-- <ng-container *ngIf="session && session.UebungsListe && (session.UebungsListe.length > 0)"> -->
-            <div class="font-14-data">        
+            <div>        
                 <ng-container *ngIf='ModulTyp !== programModul.SelectWorkout && ModulTyp !== programModul.EditWorkout  && ModulTyp !== programModul.AnstehendeSessions'>  
-                    <ng-container *ngIf='ProgrammName !== ""'>  
-                        <div>{{ProgrammName}}</div>
+                    <ng-container *ngIf='ModulTyp === programModul.HistoryView'>  
+                        <span class="font-14-data">{{ProgrammName}}</span> <span> --- History</span>
                     </ng-container>
                     <ng-container *ngIf="ModulTyp !== programModul.History" >
                         <div class="row-start-left">
