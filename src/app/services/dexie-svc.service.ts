@@ -213,6 +213,7 @@ export class DexieSvcService extends Dexie {
 	private ProgrammTable: Dexie.Table<ITrainingsProgramm, number>;
 	private SessionTable: Dexie.Table<SessionDB, number>;
 	private MuskelGruppeTable: Dexie.Table<MuscleGroup, number>;
+	static StaticModulTyp: ProgramModulTyp  = null;
 	private get HantelTable(): Dexie.Table<Hantel, number> {
 		return this.table(this.cHantel);
 	};
@@ -703,6 +704,9 @@ export class DexieSvcService extends Dexie {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
 		}
 
+		if (DexieSvcService.StaticModulTyp === null)
+			DexieSvcService.StaticModulTyp = ProgramModulTyp.Kein;
+		
 		//   Dexie.delete("ConceptCoach");
 		this.version(36).stores({
 			AppData: "++id",

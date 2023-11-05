@@ -58,6 +58,9 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 		const mState = mNavigation.extras.state as { programm: ITrainingsProgramm, sess: Session, ModulTyp: ProgramModulTyp };
 		
 		mState.sess.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
+		this.ModulTyp = mState.ModulTyp;  
+		this.Programm = mState.programm;
+		DexieSvcService.StaticModulTyp = mState.ModulTyp;
 
 		this.fDbModule.LadeSessionBodyweight(mState.sess)
 			.then((aBW) => {
@@ -68,8 +71,6 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 				else mState.sess.BodyWeightAtSessionStart = 0;
 
 				mState.sess.BodyWeightSession = mState.sess.BodyWeightAtSessionStart;
-				this.ModulTyp = mState.ModulTyp;
-				this.Programm = mState.programm;
 				const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
 				mSessionCopyPara.Komplett = true;
 				mSessionCopyPara.CopySessionID = true;

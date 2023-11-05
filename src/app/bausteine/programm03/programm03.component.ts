@@ -48,7 +48,8 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
     @ViewChildren("panUebung") panUebung: QueryList<MatExpansionPanel>;
     @ViewChild(CdkOverlayOrigin) cdkOverlayOrigin: CdkOverlayOrigin;
     @ViewChild("Info") Info: any;
-    
+
+    public ModulTypEx: ProgramModulTyp = ProgramModulTyp.Kein;
     private fExerciseOverlayConfig: ExerciseOverlayConfig;
     private fExerciseSettingsComponent: ExerciseSettingsComponent;
     public checkingSets: boolean = false;
@@ -83,6 +84,7 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
         private fDbModule: DexieSvcService
     ) {
         this.LocaleID = localID;
+        this.ModulTyp = DexieSvcService.StaticModulTyp;
         // if (this.fGlobalService.Comp03PanelUebungObserver === null)
         //     this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;
     }
