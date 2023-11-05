@@ -200,6 +200,8 @@ export class DexieSvcService extends Dexie {
 	public static StaticHistorySessions: Array<Session> = [];
 	public HistorySessionsAfterLoadFn: AfterLoadFn = null; 
 	AktuellerProgrammTyp: ProgrammTyp;
+	public static StaticHistoryBisDatum: Date = null; 
+	public static StaticHistoryVonDatum: Date = null; 
 	public static StaticAktuellesProgramm: ITrainingsProgramm = null;
 	public static StaticCmpAktuellesProgramm: ITrainingsProgramm = null;
 	RefreshAktuellesProgramm: boolean = false;

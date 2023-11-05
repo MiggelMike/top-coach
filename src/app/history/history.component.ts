@@ -46,8 +46,18 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	public stepMinute = 1;
 	public stepSecond = 1;
 	selectedChartIndex: number = 0;
-	fromDate: Date = new Date();
-	toDate: Date = new Date();
+	get fromDate(): Date {
+		return DexieSvcService.StaticHistoryVonDatum;
+	}
+	set fromDate(value: Date) {
+		DexieSvcService.StaticHistoryVonDatum = value;
+	}
+	get toDate(): Date {
+		return DexieSvcService.StaticHistoryBisDatum; 
+	}
+	set toDate(value: Date) {
+		DexieSvcService.StaticHistoryBisDatum = value;
+	}
 	chartWidth: number = 0;
 	chartHeight: number = 400;
 	ChartData: Array<ChartData> = [];
@@ -74,8 +84,17 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		@Inject(LOCALE_ID) locale: string
 	) {
 		DexieSvcService.StaticModulTyp = ProgramModulTyp.History;
-		this.toDate = new Date();
-		this.fromDate.setDate(this.toDate.getDate() - 90);
+		if (DexieSvcService.StaticHistoryBisDatum === null) {
+			DexieSvcService.StaticHistoryBisDatum = new Date();
+		}
+
+		if (DexieSvcService.StaticHistoryVonDatum === null) {
+			DexieSvcService.StaticHistoryVonDatum = new Date();
+			DexieSvcService.StaticHistoryVonDatum.setDate(DexieSvcService.StaticHistoryBisDatum.getDate() - 90);
+		}
+
+		this.toDate = DexieSvcService.StaticHistoryBisDatum;
+		this.fromDate = DexieSvcService.StaticHistoryVonDatum;
 		this.range.controls['start'].setValue(this.fromDate);
 		this.range.controls['end'].setValue(this.toDate);
 		this.CreatingChartsDialogData.ShowAbbruch = false;
@@ -133,8 +152,8 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		const mWorkChartListe: Array<ChartData> = [];
 		this.DiaUebungsListe = [];
 		let mUebungsNamen = [];
-		const mVonDatum: Date = this.fromDate === null ? cMinDatum : this.fromDate;
-		const mBisDatum: Date = this.toDate === null ? cMaxDatum : this.toDate;
+		const mVonDatum: Date = DexieSvcService.StaticHistoryVonDatum;
+		const mBisDatum: Date = DexieSvcService.StaticHistoryBisDatum;
 		if (aDialogOn)
 			this.fLoadingDialog.Loading(this.CreatingChartsDialogData);
 		
@@ -168,8 +187,8 @@ export class HistoryComponent implements OnInit, IProgramModul {
 			for (let index = 0; index < mCharTypes.length; index++) {
 				const mDiaTyp: any = mCharTypes[index];
 				// Jede sichtbare Übung prüfen 
-				for (let mIindexDiaUebung = 0; mIindexDiaUebung < mVisibleDiaUebungListe.length; mIindexDiaUebung++) {
-					const mPtrDiaUebung = mVisibleDiaUebungListe[mIindexDiaUebung];
+				for (let mIndexDiaUebung = 0; mIndexDiaUebung < mVisibleDiaUebungListe.length; mIndexDiaUebung++) {
+					const mPtrDiaUebung = mVisibleDiaUebungListe[mIndexDiaUebung];
 					const mDiaUebungSetting = (this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
 						if (mPtrDiaUebungSetting.UebungID === mPtrDiaUebung.UebungID)
 							return true;
