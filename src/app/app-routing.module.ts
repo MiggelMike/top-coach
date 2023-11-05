@@ -22,9 +22,10 @@ import { AppData } from 'src/Business/Coach/Coach';
 
 
 export const LadeStandardProgramme: ResolveFn<ITrainingsProgramm[]> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-	return inject(DexieSvcService)
-	.LadeStandardProgramme()
-	.then((programme) => {
+	const mDB: DexieSvcService = inject(DexieSvcService);
+	return mDB.LadeStandardProgramme()
+		.then((programme) => {
+
 			return programme;
 		});
 };
@@ -34,7 +35,6 @@ export const LadeAktuellesProgramm: ResolveFn<ITrainingsProgramm> = (route: Acti
 
 	return mDB.LadeAktuellesProgramm().then(
 		(aProgram) => { 
-			// mDB.MakeExample(aProgram);
 			return aProgram;
 
 		});

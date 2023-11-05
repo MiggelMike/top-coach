@@ -731,8 +731,12 @@ export class DexieSvcService extends Dexie {
 		this.InitDatenbank();
 		this.InitSession();
 
-		if (DexieSvcService.StaticAktuellesProgramm === null)
-			this.LadeAktuellesProgramm();
+		if (DexieSvcService.StaticAktuellesProgramm === null) {
+			this.LadeAktuellesProgramm()
+				.then((aProgram) => {
+					// this.MakeExample(aProgram)
+				});
+		}
 
 		if (DexieSvcService.StaticHistorySessions.length <= 0) 
 			this.LadeHistorySessions(null, null);
@@ -2490,11 +2494,11 @@ export class DexieSvcService extends Dexie {
 					this.SessionTable.delete(aSession.ID);
 			});
 
-			const mMaxWochen: number = 8;
-			let mMaxSessions: number = mMaxWochen * 7;
+			const mMaxWochen: number = 52;
 			const mSessionsProWoche = 4;
+			let mMaxSessions: number = mMaxWochen * mSessionsProWoche;
 			let mDatum: Date = new Date();
-			mDatum.setDate(-((mMaxSessions / mSessionsProWoche) * mMaxWochen));
+			mDatum.setDate(-((mMaxSessions / mSessionsProWoche) * 7));
 			let mMontag: number = mDatum.getDay();
 			// Mit Montag als ersten Trainingstag beginnen. 
 			// auf Montag setzen.
@@ -2524,7 +2528,6 @@ export class DexieSvcService extends Dexie {
 							mSatz.Status = SatzStatus.Fertig;
 						}
 					}// <<< Uebung
-					mStartGewicht += 2.5;
 					// Session-Status auf fertig setzen
 					mSession.SetSessionFertig();
 					await this.SessionSpeichern(mSession);
@@ -2581,6 +2584,7 @@ export class DexieSvcService extends Dexie {
 					if (--mMaxSessions <= 0)
 						break;
 				}//for <<< Session
+				mStartGewicht += 2.5;
 			}// while
 		});
 	}

@@ -122,7 +122,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 
 	onClose() {
-		this.Draw(false);
+		this.Draw(true);
 	}
 
 	public Draw(aDialogOn: boolean): void {
@@ -421,7 +421,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 
 	async DoDia() {
-		this.Draw(false);
+		this.Draw(true);
 	}
 
 	onTabChanged(event:any) {
@@ -430,7 +430,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 				clearInterval(this.Interval);
 				this.Interval = undefined;
 			}
-			this.Draw(false);
+			this.Draw(true);
 			this.CalcChartSize();
 		}//if
 	}
