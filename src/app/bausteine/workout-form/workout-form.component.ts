@@ -26,9 +26,8 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
         private location: Location
     ) {
         const mNavigation = this.router.getCurrentNavigation()!;
-        const mState = mNavigation.extras.state as { programm: ITrainingsProgramm, ModulTyp: ProgramModulTyp };
+        const mState = mNavigation.extras.state as { programm: ITrainingsProgramm };
         this.programm = mState.programm;
-        this.ModulTyp = mState.ModulTyp;
         this.fDbModule.CheckSessions(this.programm);
         this.cmpProgramm = mState.programm.Copy();
     }
@@ -41,7 +40,9 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
         this.cmpProgramm = aProgramm.Copy();    
     }
 
-    ngOnInit() { }
+    ngOnInit() { 
+        this.ModulTyp = DexieSvcService.StaticModulTyp;
+    }
 
     
     public back() {

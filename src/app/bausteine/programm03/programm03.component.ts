@@ -38,7 +38,6 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
     @Input() DeletedSatzList: Array<Satz> = [];
     @Input() SofortSpeichern: Boolean = false;
     @Input() StatsButtonVisible: boolean = false;
-    @Input() ModulTyp: ProgramModulTyp = ProgramModulTyp.Kein;
     
     @Output() DoStats = new EventEmitter<any>();
     @Output() DoCheckSettings = new EventEmitter<ExerciseSettingSvcService>();
@@ -48,8 +47,8 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
     @ViewChildren("panUebung") panUebung: QueryList<MatExpansionPanel>;
     @ViewChild(CdkOverlayOrigin) cdkOverlayOrigin: CdkOverlayOrigin;
     @ViewChild("Info") Info: any;
-
-    public ModulTypEx: ProgramModulTyp = ProgramModulTyp.Kein;
+    
+    ModulTyp: ProgramModulTyp = ProgramModulTyp.Kein;
     private fExerciseOverlayConfig: ExerciseOverlayConfig;
     private fExerciseSettingsComponent: ExerciseSettingsComponent;
     public checkingSets: boolean = false;
@@ -68,6 +67,7 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
     // };
 
     ngOnInit() {
+        this.ModulTyp = DexieSvcService.StaticModulTyp;
     }
 
     get ProgrammName(): string{

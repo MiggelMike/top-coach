@@ -18,6 +18,7 @@ export class ProgrammWaehlenComponent implements OnInit, IProgramModul {
     constructor(
         public fDbModule: DexieSvcService
     ) {
+        DexieSvcService.StaticModulTyp = ProgramModulTyp.SelectWorkout;
         this.ProgrammListe = this.fDbModule.StandardProgramme;
     }
     get programModul(): typeof ProgramModulTyp {

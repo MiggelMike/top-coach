@@ -20,7 +20,6 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
         private fDbModule: DexieSvcService,
         private fLoadingDialog: DialogeService,
     ) {
-        // this.fDbModule.LadeAktuellesProgramm();
         
      }
     
@@ -81,6 +80,7 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
         
         
     ngOnInit() {
+        DexieSvcService.StaticModulTyp = ProgramModulTyp.AnstehendeSessions;
     }
 
     public get AktuellesProgramm(): ITrainingsProgramm {

@@ -170,6 +170,7 @@ export enum ProgramModulTyp {
 	History,
 	HistoryView,
 	SelectWorkout,
+	SelectWorkoutEdit,
 	RunningSession,
 	EditWorkout
 

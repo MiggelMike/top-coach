@@ -28,7 +28,6 @@ import { IProgramModul, ProgramModulTyp } from "src/app/app.module";
 export class Programm02Component implements OnInit, IProgramModul {
 	@Input() programm: ITrainingsProgramm = null;
 	@Input() SessionListe: Array<ISession> = [];
-	@Input() ModulTyp: ProgramModulTyp = ProgramModulTyp.Kein;
 	@Output() ProgrammSavedEvent = new EventEmitter<ITrainingsProgramm>();
 	@Output() OnLeaveFn = new EventEmitter();
 	@Input() showButtons: Boolean = false;
@@ -43,7 +42,8 @@ export class Programm02Component implements OnInit, IProgramModul {
 	@Input() SessionNameVisible: Boolean = false;
 	@ViewChildren("accSession") accSession: QueryList<MatAccordion>;
 	@ViewChildren("panSession") panUebung: QueryList<MatExpansionPanel>;
-
+	
+	ModulTyp: ProgramModulTyp = ProgramModulTyp.Kein;
 	private CmpSessionListe: Array<ISession> = [];
 	private isExpanded: Boolean = true;
 	private DelSessionListe: Array<ISession> = [];
@@ -107,8 +107,8 @@ export class Programm02Component implements OnInit, IProgramModul {
 		private fLoadingDialog: DialogeService,
 		private router: Router)
 	{
-		this.ModulTyp = DexieSvcService.StaticModulTyp;
 	}
+
 	get programModul(): typeof ProgramModulTyp {
 		return ProgramModulTyp;
 	}
@@ -186,6 +186,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 	}
 
 	ngOnInit() {
+		this.ModulTyp = DexieSvcService.StaticModulTyp;
 		this.SessionListObserver = of(this.SessionListe);
 		this.CmpSessionListe = this.SessionListe;
 	}
