@@ -73,6 +73,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		private fLoadingDialog: DialogeService,
 		@Inject(LOCALE_ID) locale: string
 	) {
+		DexieSvcService.StaticModulTyp = ProgramModulTyp.History;
 		this.toDate = new Date();
 		this.fromDate.setDate(this.toDate.getDate() - 90);
 		this.range.controls['start'].setValue(this.fromDate);

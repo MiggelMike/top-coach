@@ -1,5 +1,5 @@
 import { DateFormatTyp, Datum } from './../../../Business/Datum';
-import { ISession, SessionCopyPara } from "src/Business/Session/Session";
+import { HistorySession, ISession, SessionCopyPara } from "src/Business/Session/Session";
 import { ISessionDB, SessionDB } from "./../../../Business/SessionDB";
 import { SessionStatus } from "../../../Business/SessionDB";
 import { UebungWaehlenData } from "./../../uebung-waehlen/uebung-waehlen.component";
@@ -105,11 +105,18 @@ export class Programm02Component implements OnInit, IProgramModul {
 		private fUebungService: UebungService,
 		public fDbModule: DexieSvcService,
 		private fLoadingDialog: DialogeService,
-		private router: Router) {
-		const x = 0;
+		private router: Router)
+	{
+		this.ModulTyp = DexieSvcService.StaticModulTyp;
 	}
 	get programModul(): typeof ProgramModulTyp {
 		return ProgramModulTyp;
+	}
+
+	ProgrammName(aSess: Session): string{
+		if (this.ModulTyp === ProgramModulTyp.History)
+			return (aSess as HistorySession).ProgrammName;
+		return '';
 	}
 
 	private async LadeUebungen(aSess: ISession): Promise<void>  {
