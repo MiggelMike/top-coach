@@ -19,7 +19,7 @@
                                     <ng-container *ngIf="ModulTyp === programModul.History">
                                         <mat-form-field class="width-300">
                                             <mat-label>{{ProgrammName(sess)}}</mat-label>
-                                            <input class="tc-font-size-smaller width-400" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
+                                            <input class="tc-font-size-smaller width-300" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
                                         </mat-form-field>
                                     </ng-container>
 
