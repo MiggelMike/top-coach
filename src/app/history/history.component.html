@@ -22,7 +22,7 @@
             </mat-form-field>
         </div>
 
-        <mat-tab-group #matGroup (selectedTabChange)="onTabChanged($event)">
+        <mat-tab-group #matGroup (selectedTabChange)="onTabChanged($event)" class="height-700">
             <mat-tab label="Sessions">
                 <app-programm02 [showButtons]="false" [showSaveButtons]="false" [ModulTyp]="programModul.History"
                     [SessionListe]="SessionListe" [bearbeitbar]="false" [StartButtonVisible]="true"

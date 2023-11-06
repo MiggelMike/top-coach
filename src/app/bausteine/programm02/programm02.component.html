@@ -4,10 +4,10 @@
         <ng-container *ngIf="ModulTyp !== programModul.History">
             <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="AdditionalSession()">Additional session</a>
         </ng-container>
-
+                
         <div cdkDropList (cdkDropListDropped)="drop($event)">
             <div *ngFor="let sess of SortedSessionListe, index as i" cdkDrag [cdkDragDisabled]="ModulTyp === programModul.History">
-                <div class="mg-top-1" fxLayoutGap="10px" >
+                <div  class='mg-top-1'>
                     <mat-accordion #accSession="matAccordion" multi="true">
                         <mat-expansion-panel 
                             #panSession='matExpansionPanel'                            
