@@ -14,6 +14,7 @@ import { HistorySession, ISession } from '../../Business/Session/Session';
 import { DateFormatTyp, Datum } from 'src/Business/Datum';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { Router } from '@angular/router';
+import { MatRadioGroup } from '@angular/material/radio';
 var cloneDeep = require('lodash.clonedeep');
 
 @Component({
@@ -62,12 +63,13 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	chartWidth: number = 0;
 	chartHeight: number = 400;
 	ChartData: Array<ChartData> = [];
+	Auswahl: number = 0;
 	BarChartDataHelperList: Array<ChartData> = [];
 	@ContentChild('legendEntryTemplate') legendEntryTemplate: TemplateRef<any>;
 	@ViewChild('LineChart') LineChart: LineChartComponent;
 	@ViewChild('BarChart') BarChart: any;
 	@ViewChild('ExercisesInChart') ExercisesInChart: any;
-	@ViewChild('matGroup') matGroup: any;
+	@ViewChild('AuswahlRadio') AuswahlRadio: MatRadioGroup;
 	@ViewChild('matTabChart') matTabChart: MatTab;
 	@ViewChild('ChartContainer') ChartContainer: any;
 	@ViewChild('ChartType') ChartType: MatTabGroup;
@@ -115,6 +117,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		this.ViewInitDone = true;
 	}
 	
+	
 	get programModul(): typeof ProgramModulTyp {
 		return ProgramModulTyp;
 	}
@@ -159,7 +162,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 
 	public Draw(aDialogOn: boolean): void {
-		if (this.matGroup.selectedIndex === 0)
+		if (this.AuswahlRadio.value === 0)
 			return;
 
 		this.Diagramme = [];
@@ -458,7 +461,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 
 	onTabChanged(event:any) {
-		if (event.index === 1) {
+		if (event.value === 1) {
 			if (this.Interval !== undefined) {
 				clearInterval(this.Interval);
 				this.Interval = undefined;
