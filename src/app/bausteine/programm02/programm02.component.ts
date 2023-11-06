@@ -49,6 +49,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 	private DelSessionListe: Array<ISession> = [];
 	public ToggleButtonText: string;
 	public ClickData: Programm02Component;
+	ViewInitDone: boolean = false;
 	private SessionListObserver: Observable<Array<ISession>>;
 	
 
@@ -152,7 +153,6 @@ export class Programm02Component implements OnInit, IProgramModul {
 	panelOpened(aSess: ISession) {
 		aSess.Expanded = true;
 		if (aSess.UebungsListe === undefined || aSess.UebungsListe.length <= 0) {
-			aSess.UebungsListe = [];
 			this.LadeUebungen(aSess);
 		}
 	}
@@ -179,10 +179,10 @@ export class Programm02Component implements OnInit, IProgramModul {
 		// 		this.SessionListe = this.programm.SessionListe;
 		// 	});
 		// }
-
 		this.panUebung.forEach((pan) => {
 			pan.expanded = this.SessionPanelsExpanded;
 		});
+		this.ViewInitDone = true;
 	}
 
 	ngOnInit() {

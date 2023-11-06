@@ -1,156 +1,138 @@
 <ng-container *ngIf="session">
-    <div class="colum-center">
-        <div class="width-600">
-        <!-- <ng-container *ngIf="session && session.UebungsListe && (session.UebungsListe.length > 0)"> -->
-            <div>        
-                <!-- <ng-container *ngIf='ModulTyp !== programModul.SelectWorkout && ModulTyp !== programModul.EditWorkout  && ModulTyp !== programModul.AnstehendeSessions'>   -->
-                    <ng-container *ngIf='ModulTyp === programModul.HistoryView'>  
-                        <span class="font-14-data">{{ProgrammName}}</span> <span> --- History</span>
-                    </ng-container>
+    <div class="colum-center">        
+        <div id="programm03">
+            <ng-container *ngIf='ModulTyp === programModul.HistoryView'>  
+                <span class="font-14-data">{{ProgrammName}}</span> <span> --- History</span>
+            </ng-container>
 
-                    <ng-container *ngIf='ModulTyp === programModul.RunningSession'>  
-                        <span class="font-14-data">{{programm.Name}}</span>
-                    </ng-container>
+            <ng-container *ngIf='ModulTyp === programModul.RunningSession'>  
+                <span class="font-14-data">{{programm.Name}}</span>
+            </ng-container>
 
 
-                    <ng-container *ngIf="ModulTyp !== programModul.History && ModulTyp !== programModul.AnstehendeSessions && ModulTyp !== programModul.EditWorkout && ModulTyp !== programModul.SelectWorkout" >
-                        <div class="row-start-left">
-                            <mat-form-field class="width-100-Prozent">
-                                <input class="tc-font-size-smaller font-bold width-100-Prozent" matInput [(ngModel)]="session.Name" maxlength="30" type="text">
-                            </mat-form-field>
-                        </div>
-                    </ng-container>  
-                <!-- </ng-container>   -->
-                     
-                <!-- <ng-container *ngIf="ModulTyp === programModul.History"> 
-                    <div class="align-items-left" >
-                        <div fxLayout="row">
-                            <mat-label class="ml-5">History</mat-label>
-                            <div class="ml-10">
-                                <span> {{session.GestartedWannText() | date: 'mediumDate'}} {{session.GestartedWann | date:'shortTime'}}</span>
-                            </div>
-                        </div>
-                    </div>
-                </ng-container>  -->
+            <ng-container *ngIf="ModulTyp !== programModul.History && ModulTyp !== programModul.AnstehendeSessions && ModulTyp !== programModul.EditWorkout && ModulTyp !== programModul.SelectWorkout" >
+                <div class="row-start-left">
+                    <mat-form-field class="width-100-Prozent">
+                        <input class="tc-font-size-smaller font-bold width-100-Prozent" matInput [(ngModel)]="session.Name" maxlength="30" type="text">
+                    </mat-form-field>
+                </div>
+            </ng-container>  
                     
-                <ng-container *ngIf="StatsButtonVisible">
-                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DoStatsFn()">Info</a>
-                </ng-container>
-                
-                <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
-            </div>
+            <ng-container *ngIf="StatsButtonVisible">
+                <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DoStatsFn()">Info</a>
+            </ng-container>
+            
+            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
 
-        <!-- <div cdkDropList (cdkDropListDropped)="drop($event)">
-            <div *ngFor="let sess of SortedSessionListe, index as i" cdkDrag cdkDragRootElement="accSession"> -->
-                
-                <div cdkDropList (cdkDropListDropped)="drop($event)">
-                    <ng-container *ngFor="let SessUeb of  session.UebungsListe, index as i; let isOdd=odd">
-                        <div  cdkDrag [cdkDragDisabled]="ModulTyp === programModul.History">
-                            <mat-accordion #accUebung='matAccordion' multi="true">
-                                <mat-expansion-panel 
-                                    #panUebung='matExpansionPanel' 
-                                    [expanded]="false"
-                                    [disabled]="checkingSets"
-                                    (closed)="PanelUebungClosed(SessUeb)" 
-                                    (opened)="PanelUebungOpened(i,SessUeb)">
-                                    <mat-expansion-panel-header [matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag" >
-                                        <div fxLayout="row wrap" fxLayoutGap="2px" fxLayout.lt-sm="row wrap" fxFlex="auto">
-                                            <div layout-align="start center" fxFlex="0 0 35%">
-                                                <span class="tc-font-size-smaller font-bold">#{{i+1}} {{SessUeb.Name}}</span>
-                                            </div>
-                                        
-                                            <ng-container *ngIf="ModulTyp === programModul.RunningSession || ModulTyp === programModul.EditWorkout">
-                                                <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="60px"
-                                                    (click)="DoSettings(SessUeb, $event)">Settings
-                                                </a>
-                                            </ng-container>
-                                        
-                                            <ng-container *ngIf="ModulTyp === programModul.RunningSession || ModulTyp === programModul.EditWorkout">
-                                                <a  [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="85px"
-                                                    (click)="CopyExcercise(SessUeb, $event)">Copy exercise</a>
-                                                
-                                                <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
-                                                    (click)="DeleteExercise(i+1,SessUeb,$event)">Delete Exercise
-                                                </a>
-                                            </ng-container>
             
-                                        <ng-container *ngIf="getArbeitsSaetzeStatus(SessUeb) === 2">
-                                            <div fxLayout="column" class="height-10">
-                                                <img class="mg-top-5 ml-10" src="./../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/Apply.png" />
-                                            </div>
-                                        </ng-container>
-            
+            <div cdkDropList (cdkDropListDropped)="drop($event)">
+                <ng-container *ngFor="let SessUeb of  session.UebungsListe, index as i; let isOdd=odd">
+                    <div  cdkDrag [cdkDragDisabled]="ModulTyp === programModul.History">
+                        <mat-accordion #accUebung='matAccordion' multi="true">
+                            <mat-expansion-panel 
+                                #panUebung='matExpansionPanel' 
+                                [expanded]="false"
+                                [disabled]="checkingSets"
+                                (closed)="PanelUebungClosed(SessUeb)" 
+                                (opened)="PanelUebungOpened(i,SessUeb)">
+                                <mat-expansion-panel-header [matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag" >
+                                    <div fxLayout="row wrap" fxLayoutGap="2px" fxLayout.lt-sm="row wrap" fxFlex="auto">
+                                        <div layout-align="start center" fxFlex="0 0 35%">
+                                            <span class="tc-font-size-smaller font-bold">#{{i+1}} {{SessUeb.Name}}</span>
                                         </div>
-                                    </mat-expansion-panel-header>
-            
-                                    <div class="card-body">
-                                        <ng-container *ngIf="SessUeb.Expanded === true" >
-                                            <div fxLayout="column" fxLayoutGap="2px" fxFlex="auto">
-                                                <ng-container *ngIf="SessUeb.WarmUpVisible === true">
-                                                    <app-sess-uebung 
-                                                        [panUebung1]="panUebung"
-                                                        [rowNum]="i" 
-                                                        [satzTyp]="satzTyp.Aufwaermen"
-                                                        [satzListe]="SessUeb.AufwaermSatzListe"
-                                                        [session]="session"
-                                                        [DeletedSatzList]="DeletedSatzList"
-                                                        [programm]="programm"
-                                                        [ModulTyp]="ModulTyp"
-                                                        [sessUebung]="SessUeb" 
-                                                        [bearbeitbar]="bearbeitbar">
-                                                    </app-sess-uebung>
-                                                </ng-container>
-                
-                                                <ng-container *ngIf="SessUeb.ArbeitsSatzListe">
-                                                    <app-sess-uebung 
-                                                        [panUebung1]="panUebung" 
-                                                        [rowNum]="i" 
-                                                        [satzTyp]="satzTyp.Training"
-                                                        [satzListe]="SessUeb.ArbeitsSatzListe"
-                                                        [session]="session"
-                                                        [programm]="programm"
-                                                        [DeletedSatzList]="DeletedSatzList"
-                                                        [ModulTyp]="ModulTyp"
-                                                        [sessUebung]="SessUeb" 
-                                                        [bearbeitbar]="bearbeitbar">
-                                                    </app-sess-uebung>
-                                                </ng-container>
-                
-                                                <ng-container *ngIf="SessUeb.CooldownVisible === true">
-                                                    <app-sess-uebung 
-                                                        [panUebung1]="panUebung"
-                                                        [rowNum]="i"
-                                                        [satzTyp]="satzTyp.Abkuehlen"
-                                                        [satzListe]="SessUeb.AbwaermSatzListe"
-                                                        [programm]="programm"
-                                                        [DeletedSatzList]="DeletedSatzList"
-                                                        [session]="session" 
-                                                        [ModulTyp]="ModulTyp"
-                                                        [sessUebung]="SessUeb" 
-                                                        [bearbeitbar]="bearbeitbar">
-                                                    </app-sess-uebung>
-                                                </ng-container>
-                                            </div>
-                                        </ng-container>    
-                                            <!-- <ng-container *ngIf="bearbeitbar">
-                                                <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
-                                                    <div class="center-item" layout-align="center center">
-                                                        <a [ngClass]="['link-button-font']" mat-flat-button
-                                                            (click)="CopyExcercise(SessUeb)">Copy exercise</a>
-                                                    </div>
-            
-                                                    <div class="center-item" layout-align="center center">
-                                                        <a [ngClass]="['link-button-font']" mat-flat-button
-                                                            (click)="DeleteExercise(i+1,SessUeb)">Delete Exercise</a>
-                                                    </div>
-                                                </div>
-                                            </ng-container> -->
+                                    
+                                        <ng-container *ngIf="ModulTyp === programModul.RunningSession || ModulTyp === programModul.EditWorkout">
+                                            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="60px"
+                                                (click)="DoSettings(SessUeb, $event)">Settings
+                                            </a>
+                                        </ng-container>
+                                    
+                                        <ng-container *ngIf="ModulTyp === programModul.RunningSession || ModulTyp === programModul.EditWorkout">
+                                            <a  [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="85px"
+                                                (click)="CopyExcercise(SessUeb, $event)">Copy exercise</a>
+                                            
+                                            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
+                                                (click)="DeleteExercise(i+1,SessUeb,$event)">Delete Exercise
+                                            </a>
+                                        </ng-container>
+        
+                                    <ng-container *ngIf="getArbeitsSaetzeStatus(SessUeb) === 2">
+                                        <div fxLayout="column" class="height-10">
+                                            <img class="mg-top-5 ml-10" src="./../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/Apply.png" />
+                                        </div>
+                                    </ng-container>
+        
                                     </div>
-                                </mat-expansion-panel>
-                            </mat-accordion>
-                        </div>
-                    </ng-container>
-                </div>    
-            </div>
+                                </mat-expansion-panel-header>
+        
+                                <div class="card-body">
+                                    <ng-container *ngIf="SessUeb.Expanded === true" >
+                                        <div fxLayout="column" fxLayoutGap="2px" fxFlex="auto">
+                                            <ng-container *ngIf="SessUeb.WarmUpVisible === true">
+                                                <app-sess-uebung 
+                                                    [panUebung1]="panUebung"
+                                                    [rowNum]="i" 
+                                                    [satzTyp]="satzTyp.Aufwaermen"
+                                                    [satzListe]="SessUeb.AufwaermSatzListe"
+                                                    [session]="session"
+                                                    [DeletedSatzList]="DeletedSatzList"
+                                                    [programm]="programm"
+                                                    [ModulTyp]="ModulTyp"
+                                                    [sessUebung]="SessUeb" 
+                                                    [bearbeitbar]="bearbeitbar">
+                                                </app-sess-uebung>
+                                            </ng-container>
+            
+                                            <ng-container *ngIf="SessUeb.ArbeitsSatzListe">
+                                                <app-sess-uebung 
+                                                    [panUebung1]="panUebung" 
+                                                    [rowNum]="i" 
+                                                    [satzTyp]="satzTyp.Training"
+                                                    [satzListe]="SessUeb.ArbeitsSatzListe"
+                                                    [session]="session"
+                                                    [programm]="programm"
+                                                    [DeletedSatzList]="DeletedSatzList"
+                                                    [ModulTyp]="ModulTyp"
+                                                    [sessUebung]="SessUeb" 
+                                                    [bearbeitbar]="bearbeitbar">
+                                                </app-sess-uebung>
+                                            </ng-container>
+            
+                                            <ng-container *ngIf="SessUeb.CooldownVisible === true">
+                                                <app-sess-uebung 
+                                                    [panUebung1]="panUebung"
+                                                    [rowNum]="i"
+                                                    [satzTyp]="satzTyp.Abkuehlen"
+                                                    [satzListe]="SessUeb.AbwaermSatzListe"
+                                                    [programm]="programm"
+                                                    [DeletedSatzList]="DeletedSatzList"
+                                                    [session]="session" 
+                                                    [ModulTyp]="ModulTyp"
+                                                    [sessUebung]="SessUeb" 
+                                                    [bearbeitbar]="bearbeitbar">
+                                                </app-sess-uebung>
+                                            </ng-container>
+                                        </div>
+                                    </ng-container>    
+                                        <!-- <ng-container *ngIf="bearbeitbar">
+                                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
+                                                <div class="center-item" layout-align="center center">
+                                                    <a [ngClass]="['link-button-font']" mat-flat-button
+                                                        (click)="CopyExcercise(SessUeb)">Copy exercise</a>
+                                                </div>
+        
+                                                <div class="center-item" layout-align="center center">
+                                                    <a [ngClass]="['link-button-font']" mat-flat-button
+                                                        (click)="DeleteExercise(i+1,SessUeb)">Delete Exercise</a>
+                                                </div>
+                                            </div>
+                                        </ng-container> -->
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                </ng-container>
+            </div>    
         </div>
+    </div>
 </ng-container>

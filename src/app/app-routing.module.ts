@@ -18,6 +18,7 @@ import { ScheibenComponent } from './scheiben/scheiben.component';
 import { TrainingsGewichtProgressComponent } from './trainings-gewicht-progress/trainings-gewicht-progress.component';
 import { EditTrainingsGewichtProgressComponent } from './edit-trainings-gewicht-progress/edit-trainings-gewicht-progress.component';
 import { AppData } from 'src/Business/Coach/Coach';
+import { ProgrammWaehlenComponent } from './programm-waehlen/programm-waehlen.component';
 
 
 
@@ -48,8 +49,9 @@ const routes: Routes = [
 	}
 	, {
 		path: "programmwaehlen",
-		resolve: { StandardProgramme: LadeStandardProgramme },
-		loadChildren: () => import("../app/programm-waehlen/programm-waehlen.module").then((m) => m.ProgrammWaehlenModule)
+		// resolve: { StandardProgramme: LadeStandardProgramme },
+		component: ProgrammWaehlenComponent
+		// loadChildren: () => import("../app/programm-waehlen/programm-waehlen.module").then((m) => m.ProgrammWaehlenModule)
 	}
 	, {
 		path: "workoutform",

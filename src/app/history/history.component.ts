@@ -44,6 +44,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	public stepHour = 1;
 	public stepMinute = 1;
 	public stepSecond = 1;
+	ViewInitDone:boolean = false;
 	selectedChartIndex: number = 0;
 	get fromDate(): Date {
 		return DexieSvcService.HistoryVonDatum;
@@ -106,6 +107,10 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 
 	ngOnDestroy() {
+	}
+
+	ngAfterViewInit() {
+		this.ViewInitDone = true;
 	}
 	
 	get programModul(): typeof ProgramModulTyp {

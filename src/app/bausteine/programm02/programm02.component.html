@@ -59,7 +59,7 @@
                                 </div>
                             </mat-expansion-panel-header>
 
-                            <ng-container *ngIf="sess.UebungsListe.length > 0">
+                            <ng-container *ngIf="ViewInitDone === true && sess.UebungsListe.length > 0">
                                 <div [id]="'collapseSession' + i" aria-labelledby="headingOne">
                                     <div class="card-body">
                                         <!-- session an Sub-Komponente durchreichen -->

@@ -1,7 +1,7 @@
 <app-toolbar></app-toolbar>
 
 <div class="column-center">
-    <div class="width-600">
+    <div id="History-Panel">
         <p class="font-bold">History</p>
         <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutGap="5px" fxLayoutAlign="flex-start center" [style.margin-top]="'5px'">
             <mat-form-field appearance="outline">
@@ -22,108 +22,110 @@
             </mat-form-field>
         </div>
 
-        <mat-tab-group #matGroup (selectedTabChange)="onTabChanged($event)" class="height-700">
-            <mat-tab label="Sessions">
-                <app-programm02 [showButtons]="false" [showSaveButtons]="false" [ModulTyp]="programModul.History"
-                    [SessionListe]="SessionListe" [bearbeitbar]="false" [StartButtonVisible]="true"
-                    [SofortSpeichern]="true">
-                </app-programm02>
-            </mat-tab>
+        <ng-container *ngIf="ViewInitDone === true">
+            <mat-tab-group #matGroup (selectedTabChange)="onTabChanged($event)" class="height-700">
+                <mat-tab label="Sessions">
+                    <app-programm02 [showButtons]="false" [showSaveButtons]="false" [ModulTyp]="programModul.History"
+                        [SessionListe]="SessionListe" [bearbeitbar]="false" [StartButtonVisible]="true"
+                        [SofortSpeichern]="true">
+                    </app-programm02>
+                </mat-tab>
 
-            <mat-tab #matTabChart label="Charts">
-                    <mat-accordion #accSession="matAccordion" multi="true">
-                        <mat-expansion-panel #ExercisesInChart class="HG-01">
-                            <mat-expansion-panel-header>
+                <mat-tab #matTabChart label="Charts">
+                        <mat-accordion #accSession="matAccordion" multi="true">
+                            <mat-expansion-panel #ExercisesInChart class="HG-01">
+                                <mat-expansion-panel-header>
+                                    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start center">
+                                        <div class="ml-10" fxLayout="column" fxFlex="155px">
+                                            <span>Chart settings</span>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel-header>
+
                                 <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start center">
-                                    <div class="ml-10" fxLayout="column" fxFlex="155px">
-                                        <span>Chart settings</span>
+                                    <ng-container *ngFor="let DiaUebung of DiaUebungsListe">
+                                        <div fxLayout="column" fxLayoutGap="2px" fxFlex="50">
+                                            <ng-container *ngIf="DiaUebung.Relevant">
+                                                <mat-checkbox [(ngModel)]="DiaUebung.Visible"
+                                                    (change)="onClickDiaUebung(DiaUebung, $event.checked)">{{DiaUebung.UebungName}}</mat-checkbox>
+                                            </ng-container>
+
+                                        </div>
+                                    </ng-container>
+                                </div>
+
+                                <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center center">
+
+                                    <div class="center-item" layout-align="center center">
+                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="Draw(true)">Create charts</a>
+                                    </div>
+                                    <div class="center-item" layout-align="center center">
+                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="Save()">Save</a>
                                     </div>
                                 </div>
-                            </mat-expansion-panel-header>
+                            </mat-expansion-panel>
+                        </mat-accordion>
 
-                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start center">
-                                <ng-container *ngFor="let DiaUebung of DiaUebungsListe">
-                                    <div fxLayout="column" fxLayoutGap="2px" fxFlex="50">
-                                        <ng-container *ngIf="DiaUebung.Relevant">
-                                            <mat-checkbox [(ngModel)]="DiaUebung.Visible"
-                                                (change)="onClickDiaUebung(DiaUebung, $event.checked)">{{DiaUebung.UebungName}}</mat-checkbox>
-                                        </ng-container>
-
-                                    </div>
-                                </ng-container>
-                            </div>
-
-                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center center">
-
-                                <div class="center-item" layout-align="center center">
-                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="Draw(true)">Create charts</a>
-                                </div>
-                                <div class="center-item" layout-align="center center">
-                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="Save()">Save</a>
-                                </div>
-                            </div>
-                        </mat-expansion-panel>
-                    </mat-accordion>
-
-                    <div #ChartContainer class="width-100-Prozent">
-                        <ng-container *ngIf="(ChartData.length !== undefined && ChartData.length > 0)">
-                            <div cdkDropList  (cdkDropListDropped)="drop($event)">
-                                <ng-container *ngFor="let mChartData of ChartData; index as i">
-                                    <div class="mg-top-2">
-                                        <mat-accordion #accSession="matAccordion" multi="true"  cdkDrag>
-                                            <mat-expansion-panel 
-                                                #ExercisesInChart class="HG-01" 
-                                                (opened)="OnBarChartExpanded(mChartData)"
-                                                (closed)="OnBarChartClosed(mChartData)"
-                                                [expanded]="BarChartExpanded(mChartData)"
-                                                >
-                                                <mat-expansion-panel-header mat-tooltip-panel-below  matTooltip="Hold and drag">
-                                                    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"
-                                                        fxLayoutAlign="flex-start center">
-                                                        <div class="ml-10" fxLayout="column" fxFlex="155px">
-                                                            <span>{{mChartData.UebungName}}</span>
+                        <div #ChartContainer class="width-100-Prozent">
+                            <ng-container *ngIf="(ChartData.length !== undefined && ChartData.length > 0)">
+                                <div cdkDropList  (cdkDropListDropped)="drop($event)">
+                                    <ng-container *ngFor="let mChartData of ChartData; index as i">
+                                        <div class="mg-top-2">
+                                            <mat-accordion #accSession="matAccordion" multi="true"  cdkDrag>
+                                                <mat-expansion-panel 
+                                                    #ExercisesInChart class="HG-01" 
+                                                    (opened)="OnBarChartExpanded(mChartData)"
+                                                    (closed)="OnBarChartClosed(mChartData)"
+                                                    [expanded]="BarChartExpanded(mChartData)"
+                                                    >
+                                                    <mat-expansion-panel-header mat-tooltip-panel-below  matTooltip="Hold and drag">
+                                                        <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"
+                                                            fxLayoutAlign="flex-start center">
+                                                            <div class="ml-10" fxLayout="column" fxFlex="155px">
+                                                                <span>{{mChartData.UebungName}}</span>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </mat-expansion-panel-header>
+                                                    </mat-expansion-panel-header>
 
-                                                <mat-tab-group #ChartType style="width:100%;height:100%" 
-                                                    [selectedIndex]="selectedChartIndex"
-                                                    (selectedTabChange)="DiaTypChanged(mChartData,$event)">
-                                                    <mat-tab label="Line">
-                                                        <ng-container *ngIf="mChartData.ActiveDiaType === 'line'">
-                                                            <ngx-charts-line-chart
-                                                                #LineChart (window:resize)="onResize($event)" [view]="[chartWidth,chartHeight]"
-                                                                [results]="mChartData.LineChartListe" [xAxisLabel]="'Date'" [legendTitle]="'Exercises'" [yAxisLabel]="'Weight'"
-                                                                [legend]="false" [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
-                                                                [customColors]="mChartData.colors"
-                                                                [gradient]="false">
-                                                            </ngx-charts-line-chart> 
+                                                    <mat-tab-group #ChartType style="width:100%;height:100%" 
+                                                        [selectedIndex]="selectedChartIndex"
+                                                        (selectedTabChange)="DiaTypChanged(mChartData,$event)">
+                                                        <mat-tab label="Line">
+                                                            <ng-container *ngIf="mChartData.ActiveDiaType === 'line'">
+                                                                <ngx-charts-line-chart
+                                                                    #LineChart (window:resize)="onResize($event)" [view]="[chartWidth,chartHeight]"
+                                                                    [results]="mChartData.LineChartListe" [xAxisLabel]="'Date'" [legendTitle]="'Exercises'" [yAxisLabel]="'Weight'"
+                                                                    [legend]="false" [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
+                                                                    [customColors]="mChartData.colors"
+                                                                    [gradient]="false">
+                                                                </ngx-charts-line-chart> 
+                                                            </ng-container>
+                                                        </mat-tab>
+
+                                                        <mat-tab label="Bar">
+                                                            <ng-container *ngIf="mChartData.ActiveDiaType === 'bar'">
+                                                                <ngx-charts-bar-vertical #BarChart (window:resize)="onResize($event)"
+                                                                    [view]="[chartWidth,chartHeight]" [results]="mChartData.BarChartListe" [xAxisLabel]=""
+                                                                    [legendTitle]="" [yAxisLabel]="'Weight'" [legend]="false"
+                                                                    [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
+                                                                    [customColors]="mChartData.colors" [gradient]="true">
+                                                                <ng-template #tooltipTemplate let-model="model">
+                                                                    {{ToolTip(mChartData,model)}}
+                                                                </ng-template>
+                                                            </ngx-charts-bar-vertical>
                                                         </ng-container>
-                                                    </mat-tab>
-
-                                                    <mat-tab label="Bar">
-                                                        <ng-container *ngIf="mChartData.ActiveDiaType === 'bar'">
-                                                            <ngx-charts-bar-vertical #BarChart (window:resize)="onResize($event)"
-                                                                [view]="[chartWidth,chartHeight]" [results]="mChartData.BarChartListe" [xAxisLabel]=""
-                                                                [legendTitle]="" [yAxisLabel]="'Weight'" [legend]="false"
-                                                                [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
-                                                                [customColors]="mChartData.colors" [gradient]="true">
-                                                            <ng-template #tooltipTemplate let-model="model">
-                                                                {{ToolTip(mChartData,model)}}
-                                                            </ng-template>
-                                                        </ngx-charts-bar-vertical>
-                                                    </ng-container>
-                
-                                                    </mat-tab>
-                                                </mat-tab-group>
-                                            </mat-expansion-panel>
-                                        </mat-accordion>
-                                    </div>
-                                </ng-container>
-                            </div>
-                        </ng-container>
-                    </div>
-            </mat-tab>
-        </mat-tab-group>
+                    
+                                                        </mat-tab>
+                                                    </mat-tab-group>
+                                                </mat-expansion-panel>
+                                            </mat-accordion>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                        </div>
+                </mat-tab>
+            </mat-tab-group>
+        </ng-container>
     </div>    
 </div>

@@ -279,8 +279,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 			return null;
 		});
 
-		if (mSuchSession !== null)
-			if (mSuchSession !== null)
+		if (mSuchSession !== undefined && mSuchSession !== null)
 			DexieSvcService.AktuellesProgramm.SessionListe[mSuchSession.ListenIndex] = this.Session;
 
 		if (this.fSessionStatsOverlayComponent !== undefined && this.fSessionStatsOverlayComponent !== null) this.fSessionStatsOverlayComponent.close();

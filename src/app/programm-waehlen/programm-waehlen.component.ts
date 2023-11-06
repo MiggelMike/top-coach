@@ -13,6 +13,7 @@ import { IProgramModul, ProgramModulTyp } from '../app.module';
 })
 export class ProgrammWaehlenComponent implements OnInit, IProgramModul {
     public ProgrammListeObserver: Observable<ITrainingsProgramm[]>;
+    ViewInitDone: boolean = false;
     get ProgrammListe(): Array<ITrainingsProgramm> {
         return this.fDbModule.StandardProgramme;
     };
@@ -28,6 +29,10 @@ export class ProgrammWaehlenComponent implements OnInit, IProgramModul {
         
     ngOnInit() {
    
+    }
+
+    ngAfterViewInit() {
+        this.ViewInitDone = true;        
     }
 
     public TrainingsProgrammeVorhanden(): Boolean {

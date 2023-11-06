@@ -38,6 +38,10 @@ export class Programm01Component implements OnInit, IProgramModul {
 
     ngOnInit() {
     }
+
+    ngAfterViewInit() {
+        
+    }
     
     private SelectWorkout(aSelectedProgram: ITrainingsProgramm) {
         this.fDbModul.RefreshAktuellesProgramm = true;
