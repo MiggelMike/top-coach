@@ -4,15 +4,16 @@
         <p class="font-bold">Upcoming sessions</p>
         <ng-container  *ngIf="AktuellesProgramm">
             <h4>{{AktuellesProgramm.Name}}</h4>
-            <app-programm02 [showButtons]="false"
-                            [showSaveButtons] = "false" 
-                            [ModulTyp] = "programModul.AnstehendeSessions"
-                            [programm]="AktuellesProgramm" 
-                            [SessionListe] = "AktuellesProgramm.SessionListe"
-                            [bearbeitbar]="false"
-                            [StartButtonVisible]= "true"
-                            [SofortSpeichern]= "true">
-            </app-programm02>
+                <app-programm02 
+                    [showButtons]="false"
+                    [showSaveButtons] = "false" 
+                    [ModulTyp] = "programModul.AnstehendeSessions"
+                    [programm]="AktuellesProgramm" 
+                    [SessionListe] = "AktuellesProgramm.SessionListe"
+                    [bearbeitbar]="false"
+                    [StartButtonVisible]= "true"
+                    [SofortSpeichern]= "true">
+                </app-programm02>
         </ng-container>
     </div>
 </div>
