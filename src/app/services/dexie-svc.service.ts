@@ -736,7 +736,7 @@ export class DexieSvcService extends Dexie {
 		if (DexieSvcService.StaticAktuellesProgramm === null) {
 			this.LadeAktuellesProgramm()
 				.then((aProgram) => {
-					this.MakeExample(aProgram)
+					// this.MakeExample(aProgram)
 				});
 		}
 
