@@ -47,7 +47,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	public stepMinute = 1;
 	public stepSecond = 1;
 	ViewInitDone:boolean = false;
-	selectedChartIndex: number = 0;
 	get fromDate(): Date {
 		return DexieSvcService.HistoryVonDatum;
 	}
@@ -60,10 +59,11 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	set toDate(value: Date) {
 		DexieSvcService.HistoryBisDatum = value;
 	}
-	chartWidth: number = 0;
+	chartWidth: number = 1000;
 	chartHeight: number = 400;
 	ChartData: Array<ChartData> = [];
 	Auswahl: number = 0;
+	ChartAuswahl: number = 0;
 	BarChartDataHelperList: Array<ChartData> = [];
 	@ContentChild('legendEntryTemplate') legendEntryTemplate: TemplateRef<any>;
 	@ViewChild('LineChart') LineChart: LineChartComponent;
@@ -72,7 +72,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	@ViewChild('AuswahlRadio') AuswahlRadio: MatRadioGroup;
 	@ViewChild('matTabChart') matTabChart: MatTab;
 	@ViewChild('ChartContainer') ChartContainer: any;
-	@ViewChild('ChartType') ChartType: MatTabGroup;
+	@ViewChild('ChartType') ChartType: MatRadioGroup;
 	@Input() placeholderTime: string;
 
 	range = new FormGroup({
@@ -162,7 +162,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 
 	public Draw(aDialogOn: boolean): void {
-		if (this.AuswahlRadio.value === 0)
+		if (this.Auswahl === 0)
 			return;
 
 		this.Diagramme = [];
@@ -308,13 +308,13 @@ export class HistoryComponent implements OnInit, IProgramModul {
 
 			let mAktiveIndex = 0;
 			if (this.ChartType !== undefined) {
-				mAktiveIndex = this.ChartType.selectedIndex;
-				if(this.ChartType.selectedIndex === 1)
+				mAktiveIndex = this.AuswahlRadio.value;
+				if(this.AuswahlRadio.value === 1)
 					mWorkChartListe.forEach((mChar) => mChar.ActiveDiaType = 'bar');
 			}
 
 			this.ChartData = mWorkChartListe;
-			this.selectedChartIndex = mAktiveIndex;
+			this.AuswahlRadio.value = mAktiveIndex;
 
 			this.fLoadingDialog.fDialog.closeAll();
 		} catch (error) {
@@ -460,24 +460,28 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		this.Draw(true);
 	}
 
-	onTabChanged(event:any) {
+	ChartChanged(event: any) {
+		this.Draw(true);
+	}
+
+	AuswahlChanged(event:any ) {
 		if (event.value === 1) {
 			if (this.Interval !== undefined) {
 				clearInterval(this.Interval);
 				this.Interval = undefined;
 			}
 			this.Draw(true);
-			this.CalcChartSize();
+			// this.CalcChartSize(aChartContainer);
 		}//if
 	}
 	
 	onResize(event:any) {
-		this.CalcChartSize();
+		this.CalcChartSize(event.clientWidth);
 	}
 	
-	CalcChartSize() {
-		if (this.ChartContainer.nativeElement.clientWidth != undefined)
-			this.chartWidth = this.ChartContainer.nativeElement.clientWidth - 48;
+	CalcChartSize(aChartContainer: any) {
+		if (aChartContainer.clientWidth != undefined)
+			this.chartWidth = aChartContainer.clientWidth - 48;
 	}
 
 	ngOnInit(): void {
