@@ -28,6 +28,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 			return (sess.GestartedWann >= this.fromDate && sess.GestartedWann <= this.toDate)
 		});
 	}
+	
 	// public DiaTyp: string = 'line';
 	public DiaUebungsListe: Array<DiaUebung> = [];
 	public DiaUebungSettingsListe: Array<DiaUebungSettings> = [];
@@ -161,6 +162,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 
 	onClose() {
+
 		this.Draw(true);
 	}
 
@@ -168,15 +170,15 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		if (this.Auswahl === 0)
 			return;
 
+		if (aDialogOn)
+			this.fLoadingDialog.Loading(this.CreatingChartsDialogData);
+
 		this.Diagramme = [];
-		const mWorkChartListe: Array<ChartData> = [];
+		this.ChartData = [];
 		this.DiaUebungsListe = [];
 		let mUebungsNamen = [];
 		const mVonDatum: Date = DexieSvcService.HistoryVonDatum;
 		const mBisDatum: Date = DexieSvcService.HistoryBisDatum;
-		
-		if (aDialogOn)
-			this.fLoadingDialog.Loading(this.CreatingChartsDialogData);
 		
 		try {
 			const aDiagrammData: Array<DiaDatum> = [];
@@ -243,14 +245,14 @@ export class HistoryComponent implements OnInit, IProgramModul {
 							continue;
 
 						mMaxWeight = mPtrDatumUebung.MaxWeight;
-						let mWorkChartData: ChartData = mWorkChartListe.find((mChartData) => {
+						let mWorkChartData: ChartData = this.ChartData.find((mChartData) => {
 							return (mChartData.UebungName === mPtrDiaUebung.UebungName);
 						});
 											
 						if (mWorkChartData === undefined) {
 							mWorkChartData = new ChartData();
 							mWorkChartData.UebungName = mPtrDiaUebung.UebungName;
-							mWorkChartListe.push(mWorkChartData);
+							this.ChartData.push(mWorkChartData);
 						}
 						mPtrDiaUebung.Relevant = true;
 						let mSeriesPoint: any;
@@ -314,10 +316,10 @@ export class HistoryComponent implements OnInit, IProgramModul {
 			if (this.ChartType !== undefined) {
 				mAktiveIndex = this.AuswahlRadio.value;
 				if(this.AuswahlRadio.value === 1)
-					mWorkChartListe.forEach((mChar) => mChar.ActiveDiaType = 'bar');
+				this.ChartData.forEach((mChar) => mChar.ActiveDiaType = 'bar');
 			}
 
-			this.ChartData = mWorkChartListe;
+			// this.ChartData = mWorkChartListe;
 			this.AuswahlRadio.value = mAktiveIndex;
 
 			this.fLoadingDialog.fDialog.closeAll();
@@ -484,8 +486,8 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 	
 	CalcChartSize(aChartContainer: any) {
-		if (aChartContainer.clientWidth != undefined)
-			this.chartWidth = aChartContainer.clientWidth - 48;
+		// if (aChartContainer.clientWidth != undefined)
+		// 	this.chartWidth = aChartContainer.clientWidth - 48;
 	}
 
 	ngOnInit(): void {
