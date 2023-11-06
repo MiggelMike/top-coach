@@ -24,7 +24,7 @@ var cloneDeep = require('lodash.clonedeep');
 })
 export class HistoryComponent implements OnInit, IProgramModul {
 	public get SessionListe(): Array<HistorySession> {
-		return  DexieSvcService.StaticHistorySessions.filter((sess) => { 
+		return  DexieSvcService.HistorySessions.filter((sess) => { 
 			return (sess.GestartedWann >= this.fromDate && sess.GestartedWann <= this.toDate)
 		});
 	}

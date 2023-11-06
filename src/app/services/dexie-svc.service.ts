@@ -197,7 +197,7 @@ export class DexieSvcService extends Dexie {
 	readonly cBodyweight: string = "BodyWeightDB";
 	readonly cSprache: string = "Sprache";
 
-	public static StaticHistorySessions: Array<HistorySession> = [];
+	public static HistorySessions: Array<HistorySession> = [];
 	public HistorySessionsAfterLoadFn: AfterLoadFn = null; 
 	AktuellerProgrammTyp: ProgrammTyp;
 	public static HistoryBisDatum: Date = null; 
@@ -742,7 +742,7 @@ export class DexieSvcService extends Dexie {
 				});
 		}
 
-		if (DexieSvcService.StaticHistorySessions.length <= 0) 
+		if (DexieSvcService.HistorySessions.length <= 0) 
 			this.LadeHistorySessions(null, null);
 
 	}
@@ -1631,13 +1631,13 @@ export class DexieSvcService extends Dexie {
 			.reverse()
 			.sortBy("GestartetWann")
 			.then(async (aSessionListe) => {
-				let mResult: Array<HistorySession> = [];
-
-				aSessionListe.map((aSessionDB) => mResult.push(new HistorySession(aSessionDB)));
+				//let mResult: Array<HistorySession> = [];
+				DexieSvcService.HistorySessions = [];
+				aSessionListe.map((aSessionDB) => DexieSvcService.HistorySessions.push(new HistorySession(aSessionDB)));
 
 				
-				for (let index = 0; index < mResult.length; index++) {
-					const mPtrHistorySession: HistorySession = mResult[index];
+				for (let index = 0; index < DexieSvcService.HistorySessions.length; index++) {
+					const mPtrHistorySession: HistorySession = DexieSvcService.HistorySessions[index];
 					
 					const mProgrammNameIndex = mProgramNamen.findIndex((aProgrammName) => { return aProgrammName.ID === mPtrHistorySession.FK_Programm; });
 					if (mProgrammNameIndex > -1) {
@@ -1670,8 +1670,8 @@ export class DexieSvcService extends Dexie {
 				mUebungParaDB.SatzParaDB.anyOf = (aUebung: Uebung) => {
 					return aUebung.ID;
 				};
-				for (let index = 0; index < mResult.length; index++) {
-					const mPtrSession: Session = mResult[index];
+				for (let index = 0; index < DexieSvcService.HistorySessions.length; index++) {
+					const mPtrSession: Session = DexieSvcService.HistorySessions[index];
 					Session.StaticCheckMembers(mPtrSession);
 					mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
 					mPtrSession.UebungsListe = [];
@@ -1680,11 +1680,10 @@ export class DexieSvcService extends Dexie {
 							mPtrSession.UebungsListe = aUebungsListe;
 						});
 				}// for
-				DexieSvcService.StaticHistorySessions = mResult;
 				if (this.HistorySessionsAfterLoadFn !== null) {
 					this.HistorySessionsAfterLoadFn();
 				}
-				return mResult;
+				return DexieSvcService.HistorySessions;
 			});
 	}
 
