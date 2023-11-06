@@ -197,7 +197,7 @@ export class DexieSvcService extends Dexie {
 	readonly cBodyweight: string = "BodyWeightDB";
 	readonly cSprache: string = "Sprache";
 
-	public static StaticHistorySessions: Array<Session> = [];
+	public static StaticHistorySessions: Array<HistorySession> = [];
 	public HistorySessionsAfterLoadFn: AfterLoadFn = null; 
 	AktuellerProgrammTyp: ProgrammTyp;
 	public static HistoryBisDatum: Date = null; 

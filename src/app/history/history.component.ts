@@ -10,9 +10,10 @@ import { LineChartComponent } from '@swimlane/ngx-charts';
 import { FormControl, FormGroup } from '@angular/forms';
 import { LOCALE_ID } from '@angular/core';
 import * as _moment from 'moment';
-import { ISession } from '../../Business/Session/Session';
-import { Datum } from 'src/Business/Datum';
+import { HistorySession, ISession } from '../../Business/Session/Session';
+import { DateFormatTyp, Datum } from 'src/Business/Datum';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
+import { Router } from '@angular/router';
 var cloneDeep = require('lodash.clonedeep');
 
 @Component({
@@ -21,7 +22,7 @@ var cloneDeep = require('lodash.clonedeep');
 	styleUrls: ['./history.component.scss']
 })
 export class HistoryComponent implements OnInit, IProgramModul {
-	public get SessionListe(): Array<ISession> {
+	public get SessionListe(): Array<HistorySession> {
 		return  DexieSvcService.StaticHistorySessions.filter((sess) => { 
 			return (sess.GestartedWann >= this.fromDate && sess.GestartedWann <= this.toDate)
 		});
@@ -81,7 +82,8 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	constructor(
 		private fDbModul: DexieSvcService,
 		private fLoadingDialog: DialogeService,
-		@Inject(LOCALE_ID) locale: string
+		@Inject(LOCALE_ID) locale: string,
+		private router: Router
 	) {
 		DexieSvcService.StaticModulTyp = ProgramModulTyp.History;
 		if (DexieSvcService.HistoryBisDatum === null) {
@@ -116,10 +118,18 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	get programModul(): typeof ProgramModulTyp {
 		return ProgramModulTyp;
 	}
-	
 
 	get DateInputMask(): string{
 		return this.fDbModul.AktuellSprache.Kuerzel === cDeutschKuerzel ? cDeutschDateInputMask : cEnglishDateInputMask;
+	}
+
+	ViewSession(aEvent: Event, aSession: ISession) {
+		aEvent.stopPropagation();
+		this.router.navigate(["sessionFormComponent"], { state: { programm: undefined, sess: aSession, ModulTyp: ProgramModulTyp.HistoryView } });
+	}
+		
+	GestartedWann(aSess: ISession): string{
+		return Datum.StaticFormatDate(aSess.GestartedWann, DateFormatTyp.KomplettOhneSekunden);
 	}
 
 	drop(aEvent: any) {

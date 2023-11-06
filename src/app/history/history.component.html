@@ -23,12 +23,31 @@
         </div>
 
         <ng-container *ngIf="ViewInitDone === true">
-            <mat-tab-group #matGroup (selectedTabChange)="onTabChanged($event)" class="height-700">
+            <mat-tab-group #matGroup (selectedTabChange)="onTabChanged($event)">
                 <mat-tab label="Sessions">
-                    <app-programm02 [showButtons]="false" [showSaveButtons]="false" [ModulTyp]="programModul.History"
+                    <div cdkDropList (cdkDropListDropped)="drop($event)">
+                        <div *ngFor="let sess of SessionListe, index as i" cdkDrag [cdkDragDisabled]="true">
+                            <div class="row-start-left width-100-Prozent">
+                                <mat-form-field class="width-300">
+                                    <mat-label>{{sess.ProgrammName}}</mat-label>
+                                    <input class="tc-font-size-smaller width-300" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()">
+                                </mat-form-field>
+
+                                <mat-form-field class="width-200">
+                                    <mat-label>Started at</mat-label>
+                                    <input class="tc-font-size-smaller width-200" readonly="true" matInput [ngModel]="GestartedWann(sess)" type="text" (click)="$event.stopPropagation()">
+                                </mat-form-field>
+
+                                <div class="width-100 center-item" layout-align="center center">
+                                    <a [ngClass]="['ml-5','link-button-font', 'HG-01']"  mat-flat-button (click)="ViewSession($event,sess)">View</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <app-programm02 [showButtons]="false" [showSaveButtons]="false" [ModulTyp]="programModul.History"
                         [SessionListe]="SessionListe" [bearbeitbar]="false" [StartButtonVisible]="true"
                         [SofortSpeichern]="true">
-                    </app-programm02>
+                    </app-programm02> -->
                 </mat-tab>
 
                 <mat-tab #matTabChart label="Charts">
