@@ -736,7 +736,7 @@ export class DexieSvcService extends Dexie {
 		if (DexieSvcService.StaticAktuellesProgramm === null) {
 			this.LadeAktuellesProgramm()
 				.then((aProgram) => {
-					// this.MakeExample(aProgram)
+					this.MakeExample(aProgram)
 				});
 		}
 
@@ -829,12 +829,12 @@ export class DexieSvcService extends Dexie {
 	}
 
 	private async InitAll() {
+		this.InitEquipment();
 		this.InitHantel();
 		this.InitProgress();
 		await this.InitSprache();
 		await this.InitAppData();
 		this.InitHantelscheibe();
-		this.InitEquipment();
 		this.InitUebung();
 		this.InitProgramm();
 		this.InitSession();
@@ -2486,13 +2486,13 @@ export class DexieSvcService extends Dexie {
 
 
 	public async MakeExample(aProgram: ITrainingsProgramm) {
-		if (aProgram === undefined)
+		if (aProgram === undefined || aProgram.SessionListe.length <= 0)
 			return;
 
 		// Alle Sessions löschen 
 		await this.SessionTable.toArray(async (aSessionListe) => {
 			aSessionListe.forEach((aSession: Session) => {
-				if (aSession.FK_Programm === 0)
+				if (aSession.FK_VorlageProgramm > 0)
 					this.SessionTable.delete(aSession.ID);
 			});
 
@@ -2503,7 +2503,6 @@ export class DexieSvcService extends Dexie {
 			mDatum.setDate(-((mMaxSessions / mSessionsProWoche) * 7));
 			let mMontag: number = mDatum.getDay();
 			// Mit Montag als ersten Trainingstag beginnen. 
-			// auf Montag setzen.
 			while (mMontag > 1) {
 				mDatum.setDate(mDatum.getDate() - 1);
 				mMontag = mDatum.getDay();

@@ -10,13 +10,11 @@
                 <input  matStartDate 
                         placeholder="Start Date" 
                         formControlName="start" 
-                        (change)="FromDateChanged($event)"
                         [(ngModel)]="fromDate"
                         >
                 <input matEndDate 
                        placeholder="End Date" 
                        formControlName="end" 
-                       (change)="ToDateChanged($event)"
                        [(ngModel)]="toDate">
                 </mat-date-range-input>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>

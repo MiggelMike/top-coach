@@ -22,10 +22,9 @@ var cloneDeep = require('lodash.clonedeep');
 })
 export class HistoryComponent implements OnInit, IProgramModul {
 	public get SessionListe(): Array<ISession> {
-		const mVonBisSessions: Array<ISession> = DexieSvcService.StaticHistorySessions.filter((sess) => { 
+		return  DexieSvcService.StaticHistorySessions.filter((sess) => { 
 			return (sess.GestartedWann >= this.fromDate && sess.GestartedWann <= this.toDate)
 		});
-		return mVonBisSessions;
 	}
 	// public DiaTyp: string = 'line';
 	public DiaUebungsListe: Array<DiaUebung> = [];

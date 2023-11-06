@@ -134,14 +134,14 @@ export class Programm02Component implements OnInit, IProgramModul {
 				return aSess.ID;
 			};
 
-			mUebungPara.SaetzeBeachten = true;
+			// mUebungPara.SaetzeBeachten = true;
 
 			this.fDbModule.LadeSessionUebungenEx(aSess, mUebungPara)
 				.then((aUebungsliste) => {
 					if (aUebungsliste.length > 0) {
 						aSess.UebungsListe = aUebungsliste;
-						this.fLoadingDialog.fDialog.closeAll();
 					}
+					this.fLoadingDialog.fDialog.closeAll();
 				});
 		} catch(err) {
 			this.fLoadingDialog.fDialog.closeAll();

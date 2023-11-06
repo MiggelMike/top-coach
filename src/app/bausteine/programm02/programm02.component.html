@@ -59,21 +59,22 @@
                                 </div>
                             </mat-expansion-panel-header>
 
-                            <div [id]="'collapseSession' + i" aria-labelledby="headingOne">
-                                <!-- <div [id]="'collapseSession' + i" aria-labelledby="headingOne" attr.data-parent="#accordionSession"> -->
-                                <div class="card-body">
-                                    <!-- session an Sub-Komponente durchreichen -->
-                                    <app-programm03 
-                                        [session]="sess" 
-                                        [cmpSession]="sess" 
-                                        [programm]="programm"
-                                        [cmpSettingsSession]="sess" 
-                                        [bearbeitbar]="bearbeitbar" 
-                                        [SofortSpeichern]="SofortSpeichern"
-                                        [DeletedSatzList]="DeletedSatzList">
-                                    </app-programm03>
+                            <ng-container *ngIf="sess.UebungsListe.length > 0">
+                                <div [id]="'collapseSession' + i" aria-labelledby="headingOne">
+                                    <div class="card-body">
+                                        <!-- session an Sub-Komponente durchreichen -->
+                                        <app-programm03 
+                                            [session]="sess" 
+                                            [cmpSession]="sess" 
+                                            [programm]="programm"
+                                            [cmpSettingsSession]="sess" 
+                                            [bearbeitbar]="bearbeitbar" 
+                                            [SofortSpeichern]="SofortSpeichern"
+                                            [DeletedSatzList]="DeletedSatzList">
+                                        </app-programm03>
+                                    </div>
                                 </div>
-                            </div>
+                            </ng-container>
 
                             <ng-container *ngIf="showButtons">
                                 <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
