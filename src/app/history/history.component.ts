@@ -46,21 +46,24 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	public stepHour = 1;
 	public stepMinute = 1;
 	public stepSecond = 1;
-	ViewInitDone:boolean = false;
+	ViewInitDone: boolean = false;
+	//#region fromDate
 	get fromDate(): Date {
 		return DexieSvcService.HistoryVonDatum;
 	}
 	set fromDate(value: Date) {
 		DexieSvcService.HistoryVonDatum = value;
 	}
+	//#endregion
+	//#region toData
 	get toDate(): Date {
 		return DexieSvcService.HistoryBisDatum; 
 	}
 	set toDate(value: Date) {
 		DexieSvcService.HistoryBisDatum = value;
 	}
-	chartWidth: number = 1000;
-	chartHeight: number = 400;
+	//#endregion
+
 	ChartData: Array<ChartData> = [];
 	Auswahl: number = 0;
 	ChartAuswahl: number = 0;
@@ -171,6 +174,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		let mUebungsNamen = [];
 		const mVonDatum: Date = DexieSvcService.HistoryVonDatum;
 		const mBisDatum: Date = DexieSvcService.HistoryBisDatum;
+		
 		if (aDialogOn)
 			this.fLoadingDialog.Loading(this.CreatingChartsDialogData);
 		
