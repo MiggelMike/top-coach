@@ -200,10 +200,11 @@ export class DexieSvcService extends Dexie {
 	public static StaticHistorySessions: Array<Session> = [];
 	public HistorySessionsAfterLoadFn: AfterLoadFn = null; 
 	AktuellerProgrammTyp: ProgrammTyp;
-	public static StaticHistoryBisDatum: Date = null; 
-	public static StaticHistoryVonDatum: Date = null; 
-	public static StaticAktuellesProgramm: ITrainingsProgramm = null;
-	public static StaticCmpAktuellesProgramm: ITrainingsProgramm = null;
+	public static HistoryBisDatum: Date = null; 
+	public static HistoryVonDatum: Date = null; 
+	public static AktuellesProgramm: ITrainingsProgramm = null;
+	public static CmpAktuellesProgramm: ITrainingsProgramm = null;
+	public static ExamplesDone: boolean = false;
 	RefreshAktuellesProgramm: boolean = false;
 	// Siehe Anstehende-Sessions
 	VorlageProgramme: Array<TrainingsProgramm> = [];
@@ -508,12 +509,12 @@ export class DexieSvcService extends Dexie {
 	// }
 
 	public UpComingSessionList(): Array<Session> {
-		if ((DexieSvcService.StaticAktuellesProgramm) && (DexieSvcService.StaticAktuellesProgramm.SessionListe)) {
-			DexieSvcService.StaticAktuellesProgramm.SessionListe =
-			DexieSvcService.StaticAktuellesProgramm.SessionListe.filter(
+		if ((DexieSvcService.AktuellesProgramm) && (DexieSvcService.AktuellesProgramm.SessionListe)) {
+			DexieSvcService.AktuellesProgramm.SessionListe =
+			DexieSvcService.AktuellesProgramm.SessionListe.filter(
 					(s) => (s.Kategorie02 !== SessionStatus.Fertig && s.Kategorie02 !== SessionStatus.FertigTimeOut)
 				);
-			return this.SortSessionByListenIndex(DexieSvcService.StaticAktuellesProgramm.SessionListe as Array<ISession>);
+			return this.SortSessionByListenIndex(DexieSvcService.AktuellesProgramm.SessionListe as Array<ISession>);
 		}
 		return undefined;
 	}
@@ -651,8 +652,8 @@ export class DexieSvcService extends Dexie {
 					mProgramm.SessionListe.push(mNeueSession);
 				}
 
-				DexieSvcService.StaticAktuellesProgramm = mProgramm;
-				DexieSvcService.StaticCmpAktuellesProgramm = mProgramm;
+				DexieSvcService.AktuellesProgramm = mProgramm;
+				DexieSvcService.CmpAktuellesProgramm = mProgramm;
 				return this.ProgrammSpeichern(mProgramm);
 			}//if
 			return null;
@@ -731,11 +732,13 @@ export class DexieSvcService extends Dexie {
 		this.InitMuskelGruppe();
 		this.InitDatenbank();
 		this.InitSession();
+		this.LadeStammUebungen();
 
-		if (DexieSvcService.StaticAktuellesProgramm === null) {
+		if (DexieSvcService.AktuellesProgramm === null) {
 			this.LadeAktuellesProgramm()
 				.then((aProgram) => {
-					// this.MakeExample(aProgram)
+					if(DexieSvcService.ExamplesDone === false)
+						this.MakeExample(aProgram)
 				});
 		}
 
@@ -1321,7 +1324,7 @@ export class DexieSvcService extends Dexie {
 			.where("Kategorie02")
 			.equals(UebungsKategorie02.Stamm as number)
 			.toArray()
-			.then((mUebungen) => {
+			.then(async (mUebungen) => {
 				let mNeueUebung: Uebung = null;
 				for (let index = 0; index < StandardUebungListe.length; index++) {
 					const mStandardUebung = StandardUebungListe[index];
@@ -1346,7 +1349,7 @@ export class DexieSvcService extends Dexie {
 					// mProgrammParaDB.LadeSession = true;
 					// mProgrammParaDB.SessionParaDB = new SessionParaDB();
 					// mProgrammParaDB.SessionParaDB.LadeUebungen
-					this.LadeStandardProgramme()
+					await this.LadeStandardProgramme()
 						.then(async (aProgrammListe) => {
 							if (aProgrammListe.find((programm) => programm.ProgrammTyp === ProgrammTyp.Gzclp) === undefined)
 								await this.ProgrammSpeichern(GzclpProgramm.ErzeugeGzclpVorlage(this));
@@ -1391,13 +1394,13 @@ export class DexieSvcService extends Dexie {
 		
 		return this.LadeProgrammeEx(mHelpProgrammParaDB)
 			.then((aProgramme) => {
-				DexieSvcService.StaticAktuellesProgramm = null;
+				DexieSvcService.AktuellesProgramm = null;
 				if (aProgramme.length > 0) {
-					DexieSvcService.StaticAktuellesProgramm = aProgramme[0];
-					DexieSvcService.StaticCmpAktuellesProgramm = aProgramme[0];
+					DexieSvcService.AktuellesProgramm = aProgramme[0];
+					DexieSvcService.CmpAktuellesProgramm = aProgramme[0];
 				}
 					
-				return DexieSvcService.StaticAktuellesProgramm;
+				return DexieSvcService.AktuellesProgramm;
 			});
 	}
 
@@ -1409,7 +1412,7 @@ export class DexieSvcService extends Dexie {
 
 		mProgrammParaDB.OnProgrammAfterLoadFn = (mProgramme: TrainingsProgramm[]) => {
 			if (mProgramme !== undefined && mProgramme.length > 0) {
-				DexieSvcService.StaticAktuellesProgramm = mProgramme[0];
+				DexieSvcService.AktuellesProgramm = mProgramme[0];
 			}
 		}
 
@@ -1970,7 +1973,7 @@ export class DexieSvcService extends Dexie {
 		}
 		const mNeu = aNeuesAktuellesProgramm.ErstelleSessionsAusVorlage(ProgrammKategorie.AktuellesProgramm);
 		this.ProgrammSpeichern(mNeu);
-		DexieSvcService.StaticAktuellesProgramm = mNeu;
+		DexieSvcService.AktuellesProgramm = mNeu;
 	}
 
 	public CheckAktuellesProgram(aNeuesAktuellesProgramm: ITrainingsProgramm, aAltesAktuellesProgramm?: ITrainingsProgramm): void {
@@ -2404,13 +2407,13 @@ export class DexieSvcService extends Dexie {
 
 
 	public async EvalAktuelleSessionListe(aSession: Session, aPara?: any): Promise<void> {
-		if (DexieSvcService.StaticAktuellesProgramm && DexieSvcService.StaticAktuellesProgramm.SessionListe) {
-			const mSess: ISession = DexieSvcService.StaticAktuellesProgramm.SessionListe.find((s) => s.ID === aSession.ID);
+		if (DexieSvcService.AktuellesProgramm && DexieSvcService.AktuellesProgramm.SessionListe) {
+			const mSess: ISession = DexieSvcService.AktuellesProgramm.SessionListe.find((s) => s.ID === aSession.ID);
 			if (aSession.Kategorie02 === SessionStatus.Loeschen) {
 				// Die Session kann schon aus der Session-Liste des aktuellen Programms genommen werden.
 				if (mSess !== undefined) {
-					const mIndex = DexieSvcService.StaticAktuellesProgramm.SessionListe.indexOf(aSession);
-					if (mIndex > -1) DexieSvcService.StaticAktuellesProgramm.SessionListe.splice(mIndex, 1);
+					const mIndex = DexieSvcService.AktuellesProgramm.SessionListe.indexOf(aSession);
+					if (mIndex > -1) DexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
 				}
 			} else {
 				// Die Session ersteinmal in die Session-Liste des aktuellen Programms aufnehmen.
@@ -2442,11 +2445,11 @@ export class DexieSvcService extends Dexie {
 			// 	Loeschen
 			// }
 			
-			const mIndex = DexieSvcService.StaticAktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSession.ID);
+			const mIndex = DexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSession.ID);
 			if (mIndex > -1)
-				DexieSvcService.StaticAktuellesProgramm.SessionListe.splice(mIndex, 1);
+				DexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
 			
-			const mAkuelleSessionListe: Array<ISession> = DexieSvcService.StaticAktuellesProgramm.SessionListe.filter((s) =>
+			const mAkuelleSessionListe: Array<ISession> = DexieSvcService.AktuellesProgramm.SessionListe.filter((s) =>
 				s.Kategorie02 !== SessionStatus.Fertig
 				&& s.Kategorie02 !== SessionStatus.FertigTimeOut
 				|| s.ID === aSession.ID
@@ -2487,6 +2490,8 @@ export class DexieSvcService extends Dexie {
 	public async MakeExample(aProgram: ITrainingsProgramm) {
 		if (aProgram === undefined || aProgram.SessionListe.length <= 0)
 			return;
+
+		DexieSvcService.ExamplesDone = true;
 
 		// Alle Sessions löschen 
 		await this.SessionTable.toArray(async (aSessionListe) => {

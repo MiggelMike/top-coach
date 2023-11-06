@@ -46,16 +46,16 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	public stepSecond = 1;
 	selectedChartIndex: number = 0;
 	get fromDate(): Date {
-		return DexieSvcService.StaticHistoryVonDatum;
+		return DexieSvcService.HistoryVonDatum;
 	}
 	set fromDate(value: Date) {
-		DexieSvcService.StaticHistoryVonDatum = value;
+		DexieSvcService.HistoryVonDatum = value;
 	}
 	get toDate(): Date {
-		return DexieSvcService.StaticHistoryBisDatum; 
+		return DexieSvcService.HistoryBisDatum; 
 	}
 	set toDate(value: Date) {
-		DexieSvcService.StaticHistoryBisDatum = value;
+		DexieSvcService.HistoryBisDatum = value;
 	}
 	chartWidth: number = 0;
 	chartHeight: number = 400;
@@ -83,17 +83,17 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		@Inject(LOCALE_ID) locale: string
 	) {
 		DexieSvcService.StaticModulTyp = ProgramModulTyp.History;
-		if (DexieSvcService.StaticHistoryBisDatum === null) {
-			DexieSvcService.StaticHistoryBisDatum = new Date();
+		if (DexieSvcService.HistoryBisDatum === null) {
+			DexieSvcService.HistoryBisDatum = new Date();
 		}
 
-		if (DexieSvcService.StaticHistoryVonDatum === null) {
-			DexieSvcService.StaticHistoryVonDatum = new Date();
-			DexieSvcService.StaticHistoryVonDatum.setDate(DexieSvcService.StaticHistoryBisDatum.getDate() - 90);
+		if (DexieSvcService.HistoryVonDatum === null) {
+			DexieSvcService.HistoryVonDatum = new Date();
+			DexieSvcService.HistoryVonDatum.setDate(DexieSvcService.HistoryBisDatum.getDate() - 90);
 		}
 
-		this.toDate = DexieSvcService.StaticHistoryBisDatum;
-		this.fromDate = DexieSvcService.StaticHistoryVonDatum;
+		this.toDate = DexieSvcService.HistoryBisDatum;
+		this.fromDate = DexieSvcService.HistoryVonDatum;
 		this.range.controls['start'].setValue(this.fromDate);
 		this.range.controls['end'].setValue(this.toDate);
 		this.CreatingChartsDialogData.ShowAbbruch = false;
@@ -151,8 +151,8 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		const mWorkChartListe: Array<ChartData> = [];
 		this.DiaUebungsListe = [];
 		let mUebungsNamen = [];
-		const mVonDatum: Date = DexieSvcService.StaticHistoryVonDatum;
-		const mBisDatum: Date = DexieSvcService.StaticHistoryBisDatum;
+		const mVonDatum: Date = DexieSvcService.HistoryVonDatum;
+		const mBisDatum: Date = DexieSvcService.HistoryBisDatum;
 		if (aDialogOn)
 			this.fLoadingDialog.Loading(this.CreatingChartsDialogData);
 		

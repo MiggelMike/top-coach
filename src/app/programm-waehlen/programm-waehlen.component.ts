@@ -13,13 +13,14 @@ import { IProgramModul, ProgramModulTyp } from '../app.module';
 })
 export class ProgrammWaehlenComponent implements OnInit, IProgramModul {
     public ProgrammListeObserver: Observable<ITrainingsProgramm[]>;
-    public ProgrammListe: Array<ITrainingsProgramm> = [];
+    get ProgrammListe(): Array<ITrainingsProgramm> {
+        return this.fDbModule.StandardProgramme;
+    };
 
     constructor(
         public fDbModule: DexieSvcService
     ) {
         DexieSvcService.StaticModulTyp = ProgramModulTyp.SelectWorkout;
-        this.ProgrammListe = this.fDbModule.StandardProgramme;
     }
     get programModul(): typeof ProgramModulTyp {
         return ProgramModulTyp;

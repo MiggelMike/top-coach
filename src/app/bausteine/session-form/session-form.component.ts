@@ -94,7 +94,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 										if (aUebungsListe.length > 0)
 											this.Session.UebungsListe = aUebungsListe;
 										else
-											DexieSvcService.StaticCmpAktuellesProgramm = DexieSvcService.StaticAktuellesProgramm.Copy();
+											DexieSvcService.CmpAktuellesProgramm = DexieSvcService.AktuellesProgramm.Copy();
 							
 										if (this.Session.UebungsListe !== undefined) {
 											this.Session.UebungsListe.forEach((mPtrUebung) => {
@@ -273,7 +273,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 	}
 
 	leave() {
-		const mSuchSession = DexieSvcService.StaticAktuellesProgramm.SessionListe.find((mSession) => {
+		const mSuchSession = DexieSvcService.AktuellesProgramm.SessionListe.find((mSession) => {
 			if (mSession.ID === this.Session.ID || mSession.ListenIndex === this.Session.ListenIndex) 
 				return mSession;
 			return null;
@@ -281,7 +281,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 
 		if (mSuchSession !== null)
 			if (mSuchSession !== null)
-			DexieSvcService.StaticAktuellesProgramm.SessionListe[mSuchSession.ListenIndex] = this.Session;
+			DexieSvcService.AktuellesProgramm.SessionListe[mSuchSession.ListenIndex] = this.Session;
 
 		if (this.fSessionStatsOverlayComponent !== undefined && this.fSessionStatsOverlayComponent !== null) this.fSessionStatsOverlayComponent.close();
 		this.location.back();
@@ -356,25 +356,25 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 	}
 
 	private DoAfterDone(aSessionForm: SessionFormComponent) {
-		const mIndex = DexieSvcService.StaticAktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
-		if (mIndex > -1) DexieSvcService.StaticAktuellesProgramm.SessionListe.splice(mIndex, 1);
+		const mIndex = DexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
+		if (mIndex > -1) DexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
 		
-		DexieSvcService.StaticAktuellesProgramm.SessionListe = this.Programm.SessionListe;
-		DexieSvcService.StaticAktuellesProgramm.NummeriereSessions();
+		DexieSvcService.AktuellesProgramm.SessionListe = this.Programm.SessionListe;
+		DexieSvcService.AktuellesProgramm.NummeriereSessions();
 		this.SaveChangesPrim().then(() => {
 			this.fDbModule.LadeAktuellesProgramm()
 				.then(async (aProgramm) => {
 					this.router.navigate(['/']);
 
-					DexieSvcService.StaticAktuellesProgramm = aProgramm;
-					DexieSvcService.StaticCmpAktuellesProgramm = aProgramm;
+					DexieSvcService.AktuellesProgramm = aProgramm;
+					DexieSvcService.CmpAktuellesProgramm = aProgramm;
 
 					const mSessionParaDB: SessionParaDB = new SessionParaDB();
 					mSessionParaDB.UebungenBeachten = true;
 					this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
 						.then((aSessionListe) => {
 							if (aSessionListe.length > 0) {
-								DexieSvcService.StaticAktuellesProgramm.SessionListe = aSessionListe;
+								DexieSvcService.AktuellesProgramm.SessionListe = aSessionListe;
 								aSessionListe.forEach(async (mPtrSession) => {
 									if (mPtrSession.Kategorie02 === SessionStatus.Wartet) {
 										const mUebungParaDB = new UebungParaDB();
@@ -571,7 +571,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 					  	await this.fDbModule.ProgrammSpeichern(this.Programm, mProgrammExtraParaDB)
 							.then((mPtrProgramm) => {
 								this.Programm = mPtrProgramm;
-								DexieSvcService.StaticAktuellesProgramm = this.Programm;
+								DexieSvcService.AktuellesProgramm = this.Programm;
 								this.DoAfterDone(this);
 							});
 					});

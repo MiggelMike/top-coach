@@ -180,8 +180,8 @@ export class GlobalService {
     }
 
     private SpeicherDatenLokal() {
-        if (DexieSvcService.StaticAktuellesProgramm !== undefined) {
-            this.fDbModule.ProgrammSpeichern(DexieSvcService.StaticAktuellesProgramm);
+        if (DexieSvcService.AktuellesProgramm !== undefined) {
+            this.fDbModule.ProgrammSpeichern(DexieSvcService.AktuellesProgramm);
             // Aktuelles Trainingsprogramm
             // let mStoreData = serialize(this.fDB.AktuellesProgramm);
             // localStorage.setItem(this.cAktuellesTrainingsProgramm, JSON.stringify(mStoreData));

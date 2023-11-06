@@ -84,7 +84,7 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
     }
 
     public get AktuellesProgramm(): ITrainingsProgramm {
-        return DexieSvcService.StaticAktuellesProgramm;
+        return DexieSvcService.AktuellesProgramm;
     }
                 
     beforePanelOpened(aSess: Session) {
@@ -98,18 +98,18 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
     DoWorker() {
         const that: AnstehendeSessionsComponent = this;
         if (typeof Worker !== 'undefined') {
-            if (DexieSvcService.StaticAktuellesProgramm === undefined || this.fDbModule.RefreshAktuellesProgramm === true) {
+            if (DexieSvcService.AktuellesProgramm === undefined || this.fDbModule.RefreshAktuellesProgramm === true) {
                 this.fDbModule.RefreshAktuellesProgramm = false;
                 that.worker = new Worker(new URL('./anstehende-sessions.worker', import.meta.url));
                 that.worker.addEventListener('message', ({ data }) => {
                     if (data.action === "LadeAktuellesProgramm") {
                         that.fDbModule.LadeAktuellesProgramm()
                             .then(async (aProgramm) => {
-                                DexieSvcService.StaticAktuellesProgramm = aProgramm;
-                                DexieSvcService.StaticCmpAktuellesProgramm = aProgramm;
+                                DexieSvcService.AktuellesProgramm = aProgramm;
+                                DexieSvcService.CmpAktuellesProgramm = aProgramm;
                                 // this.fProgramm = aProgramm;
                                 if (aProgramm !== undefined) {
-                                    DexieSvcService.StaticAktuellesProgramm.SessionListe = [];
+                                    DexieSvcService.AktuellesProgramm.SessionListe = [];
                                     // this.fProgramm = that.fDbModule.AktuellesProgramm.Copy();
                                     that.LadeSessions();
                                 }
@@ -119,7 +119,7 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
                         // that.Programm.SessionListe = that.fDbModule.AktuellesProgramm.SessionListe;
                         const mUebungParaDB: UebungParaDB = new UebungParaDB();
                         // mUebungParaDB.SaetzeBeachten = true;
-                        DexieSvcService.StaticAktuellesProgramm.SessionListe.forEach(
+                        DexieSvcService.AktuellesProgramm.SessionListe.forEach(
                             // that.fDbModule.AktuellesProgramm.SessionListe.forEach(
                             (aSession) => {
                                 if (aSession.UebungsListe === undefined || aSession.UebungsListe.length <= 0) {
