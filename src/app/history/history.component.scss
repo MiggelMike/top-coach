@@ -76,6 +76,16 @@
         }
     }
 
+    @media screen and (max-device-height: 914px){
+        #History-Panel{
+            height: 825px;
+        }
+    }
+    @media screen and (max-device-height: 720px){
+        #History-Panel{
+            height: 625px;
+        }
+    }
 }   
 
 @media screen and (orientation: landscape){
@@ -100,6 +110,12 @@
     @media screen and (max-device-height: 768px){
         #History-Panel {
             height: 675px;
+        }
+    }    
+
+    @media screen and (max-device-height: 412px){
+        #History-Panel {
+            height: 315px;
         }
     }    
 }
