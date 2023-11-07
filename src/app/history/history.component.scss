@@ -78,6 +78,26 @@
 
 }   
 
+@media screen and (orientation: landscape){
+    @media screen and (max-device-height: 1024px){
+        #History-Panel {
+            height: 930px;
+        }
+    }   
+
+    @media screen and (max-device-height: 820px){
+        #History-Panel {
+            height: 725px;
+        }
+    }    
+    
+    @media screen and (max-device-height: 768px){
+        #History-Panel {
+            height: 675px;
+        }
+    }    
+}
+
 // // ZB. iPad Air
 // @media screen and (max-device-height: 1180px), (orientation: portrait){
 //     #History-Panel{
