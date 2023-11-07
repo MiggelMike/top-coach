@@ -33,7 +33,17 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 	
 	// public DiaTyp: string = 'line';
-	public DiaUebungsListe: Array<DiaUebung> = [];
+	private fDiaUebungsListe: Array<DiaUebung> = [];
+	get DiaUebungsListe(): Array<DiaUebung> {
+		return this.fDiaUebungsListe.sort((u1, u2) => {
+			if (u1.UebungName > u2.UebungName)
+				return 1;
+			if (u1.UebungName < u2.UebungName)
+				return -1;
+			return 0;
+		});
+	}
+
 	public DiaUebungSettingsListe: Array<DiaUebungSettings> = [];
 	public Diagramme: Array<Chart> = [];
 	private CreatingChartsDialogData: DialogData = new DialogData();
@@ -179,7 +189,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 
 		this.Diagramme = [];
 		this.ChartData = [];
-		this.DiaUebungsListe = [];
+		this.fDiaUebungsListe = [];
 		let mUebungsNamen = [];
 		const mVonDatum: Date = DexieSvcService.HistoryVonDatum;
 		const mBisDatum: Date = DexieSvcService.HistoryBisDatum;
@@ -322,7 +332,15 @@ export class HistoryComponent implements OnInit, IProgramModul {
 				this.ChartData.forEach((mChar) => mChar.ActiveDiaType = 'bar');
 			}
 
-			// this.ChartData = mWorkChartListe;
+			this.ChartData = this.ChartData.sort((c1, c2) => { 
+				if (c1.UebungName > c2.UebungName) 
+					return 1;
+	
+				if (c1.UebungName < c2.UebungName) 
+					return -1;
+	
+				return 0;
+			});
 			this.AuswahlRadio.value = mAktiveIndex;
 
 			this.fLoadingDialog.fDialog.closeAll();
