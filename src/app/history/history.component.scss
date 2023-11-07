@@ -2,11 +2,120 @@
     box-shadow: none;
 } 
 
+#History-Sub-Panel {
+    height: 100%;;
+}
+
 #History-Panel{
     width: 100% !important;
+    height: 850px;
+    overflow-y: hidden !important;
     padding-left: 5px;
     padding-right: 5px;
 }
+
+
+.history-sessions{
+    overflow-y: scroll;
+    height: 100%;
+}
+
+// @media screen and (max-device-height: 568px){
+//     #History-Panel{
+//         height: 500px;
+//     }
+// }
+
+// @media screen and (max-device-height: 768px), (orientation: portrait){
+//     #History-Panel{
+//         height: 600px;
+//     }
+// }    
+
+// @media not screen and (max-device-height: 768px), (orientation: landscape){
+//     #History-Panel{
+//         height: 650px;
+//     }
+// }    
+
+// @media not screen and (max-device-height: 1024px), (orientation: portrait){
+//     #History-Panel{
+//         height: 910px;
+//     }
+// }    
+
+@media screen and (orientation: portrait){
+    // ZB. iPad Air
+    @media screen and (max-device-height: 1180px){
+        #History-Panel{
+            height: 1050px;
+        }
+    }   
+
+    #History-Panel{
+        height: 1050px;
+    }
+}   
+
+@media screen and (orientation: portrait){
+    @media screen and (max-device-height: 1180px){
+        #History-Panel {
+            height: 1075px;
+        }
+    }   
+    
+    @media screen and (max-device-height: 1024px){
+        #History-Panel{
+            height: 930px;
+        }
+    }
+
+}   
+
+// // ZB. iPad Air
+// @media screen and (max-device-height: 1180px), (orientation: portrait){
+//     #History-Panel{
+//         height: 1050px;
+//     }
+// }   
+
+// @media screen and (max-device-height: 820), (orientation: landscape){
+//     #History-Panel{
+//         height: 800px;
+//     }
+// }   
+
+// // ZB. iPad Mini
+// @media screen and (max-device-height: 1024px), (orientation: portrait){
+//     #History-Panel{
+//         height: 920px;
+//     }
+// }   
+
+// // ZB. iPad Mini
+// @media screen and (max-device-height: 768px), (orientation: landscape){
+//     #History-Panel{
+//         height: 710px;
+//     }
+// }   
+
+
+
+// @media  screen and (max-device-height: 1180px){
+//     @media screen and (orientation: portrait){
+//         #History-Panel{
+//             height: 1050px;
+//         }
+//     }
+//     @media screen and (orientation: portrait){
+//         #History-Panel{
+//             height: 820;
+//         }
+//     }
+// }    
+
+
+
 
 // .tp-radio-group{
 //     padding: 10px;
