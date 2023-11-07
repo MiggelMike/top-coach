@@ -480,17 +480,13 @@ export class HistoryComponent implements OnInit, IProgramModul {
 				this.Interval = undefined;
 			}
 			this.Draw(true);
-			// this.CalcChartSize(aChartContainer);
 		}//if
 	}
 	
 	onResize(event:any) {
-		this.CalcChartSize(event.clientWidth);
 	}
 	
 	CalcChartSize(aChartContainer: any) {
-		// if (aChartContainer.clientWidth != undefined)
-		// 	this.chartWidth = aChartContainer.clientWidth - 48;
 	}
 
 	ngOnInit(): void {

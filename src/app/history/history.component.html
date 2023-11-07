@@ -3,7 +3,7 @@
 <div id="History-Panel">
     <div class="column-center">
     <p class="font-bold">History</p>
-        <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutGap="5px" fxLayoutAlign="flex-start center" [style.margin-top]="'5px'">
+        <div class="row-start-left-gap-3">
             <mat-form-field appearance="outline">
                 <mat-label>Select Date Range</mat-label>
                 <mat-date-range-input [rangePicker]="picker" [formGroup]="range">
@@ -21,11 +21,12 @@
                 <mat-date-range-picker #picker (closed)="onClose()"></mat-date-range-picker>
             </mat-form-field>
 
+
             <mat-radio-group #AuswahlRadio class="tp-radio-group" [(ngModel)]="Auswahl" (change)="AuswahlChanged($event)">
                 <mat-radio-button class="tp-radio-button" [value]="0">Sessions</mat-radio-button>
                 <mat-radio-button class="tp-radio-button" [value]="1">Charts</mat-radio-button>
-            </mat-radio-group>     
-
+            </mat-radio-group>
+            
             <ng-container *ngIf="(Auswahl === 1)">
                 <mat-radio-group #ChartType class="tp-radio-group" [(ngModel)]="ChartAuswahl" (change)="ChartChanged($event)">
                     <mat-radio-button class="tp-radio-button" [value]="0">Line</mat-radio-button>
@@ -40,7 +41,7 @@
             <!-- *ngIf="isLoggedIn; then loggedIn; else loggedOut" -->
             <div cdkDropList (cdkDropListDropped)="drop($event)">
                 <div *ngFor="let sess of SessionListe, index as i" cdkDrag [cdkDragDisabled]="true">
-                    <div class="row-start-left width-100-Prozent">
+                    <div class="row-start-left width-100-Prozent height-55">
                         <mat-form-field class="width-300">
                             <mat-label>{{sess.ProgrammName}}</mat-label>
                             <input class="tc-font-size-smaller width-300" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()">
@@ -51,7 +52,7 @@
                             <input class="tc-font-size-smaller width-200" readonly="true" matInput [ngModel]="GestartedWann(sess)" type="text" (click)="$event.stopPropagation()">
                         </mat-form-field>
                         
-                        <div class="width-100 center-item" layout-align="center center">
+                        <div class="width-100 center-item">
                             <a [ngClass]="['ml-5','link-button-font', 'HG-01']"  mat-flat-button (click)="ViewSession($event,sess)">View</a>
                         </div>
                     </div>

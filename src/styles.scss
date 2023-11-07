@@ -77,6 +77,10 @@ body {
 	height: 50px;
 }
 
+.height-55 {
+	height: 55px;
+}
+
 .height-60 {
 	height: 60px;
 }
@@ -679,6 +683,15 @@ textarea:focus {
 .mat-expansion-panel {
     box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0), 0px 0px 0px 0px rgba(0, 0, 0, 0), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
 }
+
+// .radio-group {
+// 	padding: 5px;
+// 	height: 55px;
+// 	border-radius: 5px;
+// 	border: 1px;
+// 	border-style: solid;
+// 	border-color: gray;
+// }
 
 //   .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
 //     color: rgba(0, 0, 0, 0.87);
