@@ -76,11 +76,17 @@
         }
     }
 
-    @media screen and (max-device-height: 914px){
+    @media screen and (max-device-height: 914px), (max-device-height: 915px){
         #History-Panel{
             height: 825px;
         }
     }
+
+    @media screen and (max-device-height: 740px){
+        #History-Panel{
+            height: 660px;
+        }
+    }    
     @media screen and (max-device-height: 720px){
         #History-Panel{
             height: 625px;
@@ -128,6 +134,12 @@
     @media screen and (max-device-height: 412px){
         #History-Panel {
             height: 315px;
+        }
+    }    
+
+    @media screen and (max-device-height: 360px){
+        #History-Panel {
+            height: 270px;
         }
     }    
 }
