@@ -28,10 +28,10 @@
                             <mat-form-field class="align-items-right">
                                 <mat-label>Choose a date</mat-label>
                                 <input matInput 
-                                    [ngxMatDatetimePicker]="pickerWithActions" 
-                                    [(ngModel)]="bw.Datum" 
-                                    class="width-200 align-items-right" 
-                                    disabled="false">
+                                [ngxMatDatetimePicker]="pickerWithActions" 
+                                [(ngModel)]="bw.Datum" 
+                                class="width-200 align-items-right" 
+                                disabled="false">
                                     <ngx-mat-datetime-picker #pickerWithActions
                                         [showSeconds]="true"
                                         [hideTime]="false">
@@ -42,7 +42,6 @@
                                     </ngx-mat-datetime-picker>
                                 <ngx-mat-datepicker-toggle matSuffix [for]="pickerWithActions"></ngx-mat-datepicker-toggle>
                             </mat-form-field>
-
                             <a class="ref-button"  (click)="DeleteBodyweight(bw)">Delete</a>
                         </div>
                         

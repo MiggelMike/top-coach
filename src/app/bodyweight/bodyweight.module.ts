@@ -24,6 +24,7 @@ import { ToolBarModule } from '../bausteine/toolbar/tool-bar-module/tool-bar-mod
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { NgxMatDatetimePickerModule, NgxMatTimepickerModule, NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [BodyweightComponent],
@@ -40,6 +41,7 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
     DatePipe
   ],
   imports: [
+    BrowserAnimationsModule,
     DatePipe,
     FormsModule,
     CommonModule,
