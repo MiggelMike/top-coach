@@ -3,7 +3,8 @@
 } 
 
 #History-Sub-Panel {
-    height: 97%;
+    height: 100%;
+    width:100%;
 }
 
 #History-Panel{
@@ -21,42 +22,6 @@
     height: 100%;
 }
 
-// @media screen and (max-device-height: 568px){
-//     #History-Panel{
-//         height: 500px;
-//     }
-// }
-
-// @media screen and (max-device-height: 768px), (orientation: portrait){
-//     #History-Panel{
-//         height: 600px;
-//     }
-// }    
-
-// @media not screen and (max-device-height: 768px), (orientation: landscape){
-//     #History-Panel{
-//         height: 650px;
-//     }
-// }    
-
-// @media not screen and (max-device-height: 1024px), (orientation: portrait){
-//     #History-Panel{
-//         height: 910px;
-//     }
-// }    
-
-// @media screen and (orientation: portrait){
-//     // ZB. iPad Air
-//     @media screen and (max-device-height: 1180px){
-//         #History-Panel{
-//             height: 1050px;
-//         }
-//     }   
-
-//     #History-Panel{
-//         height: 1050px;
-//     }
-//    }   
 
 @media screen and (orientation: portrait){
     @media screen and  (max-device-height: 2560){
@@ -64,21 +29,20 @@
             height: 2420px;
         }
 
-        #History-Sub-Panel {
-            height: 2400px;
-        }
+        // #History-Sub-Panel {
+        //     height: 2400px;
+        // }
         
     }   
-
     
     @media screen and (max-device-height: 1366px),  (max-device-height: 1368px){
         #History-Panel {
             height: 1270px;
         }
 
-        #History-Sub-Panel {
-            height: 2250px;
-        }
+        // #History-Sub-Panel {
+        //     height: 2250px;
+        // }
     }   
     
     @media screen and (max-device-height: 1180px){
@@ -178,50 +142,6 @@
         }
     }    
 }
-
-// // ZB. iPad Air
-// @media screen and (max-device-height: 1180px), (orientation: portrait){
-//     #History-Panel{
-//         height: 1050px;
-//     }
-// }   
-
-// @media screen and (max-device-height: 820), (orientation: landscape){
-//     #History-Panel{
-//         height: 800px;
-//     }
-// }   
-
-// // ZB. iPad Mini
-// @media screen and (max-device-height: 1024px), (orientation: portrait){
-//     #History-Panel{
-//         height: 920px;
-//     }
-// }   
-
-// // ZB. iPad Mini
-// @media screen and (max-device-height: 768px), (orientation: landscape){
-//     #History-Panel{
-//         height: 710px;
-//     }
-// }   
-
-
-
-// @media  screen and (max-device-height: 1180px){
-//     @media screen and (orientation: portrait){
-//         #History-Panel{
-//             height: 1050px;
-//         }
-//     }
-//     @media screen and (orientation: portrait){
-//         #History-Panel{
-//             height: 820;
-//         }
-//     }
-// }    
-
-
 
 
 // .tp-radio-group{

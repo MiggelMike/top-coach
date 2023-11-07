@@ -1,9 +1,10 @@
 <app-toolbar></app-toolbar>
 
 <div id="History-Panel">
-    <div id="History-Sub-Panel" class="column-center">
+    <div id="History-Sub-Panel">
     <p class="font-bold">History</p>
-        <div class="row-start-left-gap-3">
+    <div class="column-center">
+                <div class="row-start-left-gap-3">
             <mat-form-field appearance="outline">
                 <mat-label>Select Date Range</mat-label>
                 <mat-date-range-input [rangePicker]="picker" [formGroup]="range">
@@ -20,8 +21,8 @@
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-date-range-picker #picker (closed)="onClose()"></mat-date-range-picker>
             </mat-form-field>
-
-
+            
+            
             <mat-radio-group #AuswahlRadio class="tp-radio-group" [(ngModel)]="Auswahl" (change)="AuswahlChanged($event)">
                 <mat-radio-button class="tp-radio-button" [value]="0">Sessions</mat-radio-button>
                 <mat-radio-button class="tp-radio-button" [value]="1">Charts</mat-radio-button>
@@ -34,12 +35,15 @@
                 </mat-radio-group>
             </ng-container>
         </div>
+        </div>
 
         <div class="history-sessions">
             <ng-container *ngIf="(Auswahl === 0); then Sessions; else Charts">
-            </ng-container>  
-            <ng-template #Sessions>
+        </ng-container>  
+        <ng-template #Sessions>
                 <!-- *ngIf="isLoggedIn; then loggedIn; else loggedOut" -->
+                <div class="column-center">
+
                 <div cdkDropList (cdkDropListDropped)="drop($event)" >
                     <div *ngFor="let sess of SessionListe, index as i" cdkDrag [cdkDragDisabled]="true">
                         <div class="row-start-left width-100-Prozent height-55">
@@ -59,7 +63,8 @@
                         </div>
                     </div>
                 </div>
-            </ng-template>
+                </div>
+        </ng-template>
             <ng-template #Charts>
                 <mat-accordion #accSession="matAccordion" multi="true">
                     <mat-expansion-panel #ExercisesInChart class="HG-01">
@@ -153,5 +158,7 @@
                 </div>
             </ng-template>
         </div>
-    </div>    
+    </div>
+<!-- </div> -->
+
 </div>
