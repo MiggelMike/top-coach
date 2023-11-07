@@ -58,6 +58,12 @@
 }   
 
 @media screen and (orientation: portrait){
+    @media screen and (max-device-height: 1366px){
+        #History-Panel {
+            height: 1270px;
+        }
+    }   
+
     @media screen and (max-device-height: 1180px){
         #History-Panel {
             height: 1075px;
