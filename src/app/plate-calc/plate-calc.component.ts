@@ -55,10 +55,10 @@ export class PlateCalcComponent implements OnInit {
 	constructor(
 		public overlayRef: PlateCalcOverlayRef,
 		public fDbModule: DexieSvcService,
-		@Inject(cPlateCalcOverlayData) public aPlateCalcOverlayConfig: PlateCalcOverlayConfig
+		@Inject(cPlateCalcOverlayData) public fPlateCalcOverlayConfig: PlateCalcOverlayConfig
 	) {
-		this.Satz = aPlateCalcOverlayConfig.satz;
-		this.Uebung = aPlateCalcOverlayConfig.uebung;
+		this.Satz = fPlateCalcOverlayConfig.satz;
+		this.Uebung = fPlateCalcOverlayConfig.uebung;
 		this.GewichtAusgefuehrt = this.Satz.GewichtAusgefuehrt;
 		this.HantelListe = this.fDbModule.LangHantelListe;
 		this.Hantel = this.fDbModule.LangHantelListe.find((lh) => lh.ID === this.Satz.FkHantel);
@@ -301,6 +301,24 @@ export class PlateCalcComponent implements OnInit {
 
 	close() {
 		if (this.overlayRef != null) this.overlayRef.close();
+
+		if (this.fPlateCalcOverlayConfig.onFormCloseFn !== undefined) {
+			this.fPlateCalcOverlayConfig.onFormCloseFn(
+				{
+					satz: this.fPlateCalcOverlayConfig.satz,
+					fertig: this.fPlateCalcOverlayConfig.satzDone,
+					sess: this.fPlateCalcOverlayConfig.sess,
+					uebung: this.fPlateCalcOverlayConfig.uebung,
+					programm: this.fPlateCalcOverlayConfig.programm,
+					dbModul: this.fPlateCalcOverlayConfig.dbModul,
+					dialogService: this.fPlateCalcOverlayConfig.dialogService,
+					gewichtEinheitsText: this.fPlateCalcOverlayConfig.gewichtEinheitsText,
+					stoppUhrFn: this.fPlateCalcOverlayConfig.stoppUhrFn,
+					stoppUhrService: this.fPlateCalcOverlayConfig.stoppUhrService,
+					rowNumber: this.fPlateCalcOverlayConfig.rowNumber
+				}
+			);
+		}
 		this.overlayRef = null;
 	}
 

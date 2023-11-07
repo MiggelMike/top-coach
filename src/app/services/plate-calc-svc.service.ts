@@ -1,3 +1,4 @@
+import { DexieSvcService, AnyFn, onFormCloseFn } from './dexie-svc.service';
 import { Uebung } from './../../Business/Uebung/Uebung';
 import { PlateCalcComponent } from "./../plate-calc/plate-calc.component";
 import { BaseOverlayRef } from "src/app/services/global.service";
@@ -5,8 +6,16 @@ import { Injectable, InjectionToken, ComponentRef, Injector } from "@angular/cor
 import { Overlay, OverlayConfig, OverlayRef } from "@angular/cdk/overlay";
 import { ComponentPortal, PortalInjector } from "@angular/cdk/portal";
 import { Satz } from "src/Business/Satz/Satz";
+import { ISession } from 'src/Business/Session/Session';
+import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
+import { DialogeService } from './dialoge.service';
+import { StoppuhrSvcService } from './stoppuhr-svc.service';
 
-export class PlateCalcOverlayRef extends BaseOverlayRef {}
+export class PlateCalcOverlayRef extends BaseOverlayRef { }
+
+export interface StoppUhrFn {
+	(aUebung: Uebung, aSatz: Satz, aSatzNr: number, aSession: ISession, aStoppUhrService: StoppuhrSvcService, aNextTimeWeight: number, aNaechsteUebungPauseSec: number, aAufwaermArbeitsSatzPauseSec: number, aHeaderText: string): void; 
+}
 
 export interface PlateCalcOverlayConfig {
 	panelClass?: string;
@@ -16,8 +25,18 @@ export interface PlateCalcOverlayConfig {
 	height?: number;
 	satz?: Satz;
 	uebung?: Uebung;
+	programm?: ITrainingsProgramm,
+	dbModul?: DexieSvcService,
+	sess?: ISession;
 	left?: number;
 	top?: number;
+	onFormCloseFn?: onFormCloseFn;
+	satzDone?: boolean;
+	dialogService?: DialogeService;
+	gewichtEinheitsText?: string;
+	stoppUhrFn?: StoppUhrFn;
+	rowNumber?: number;
+    stoppUhrService?: StoppuhrSvcService;
 }
 
 export const cPlateCalcOverlayData = new InjectionToken<Satz>("PlateCalc_Overlay_Component");
@@ -27,7 +46,7 @@ const DEFAULT_CONFIG: PlateCalcOverlayConfig = {
 	height: 100,
 	width: 100,
 	backdropClass: "dark-backdrop",
-	satz: null,
+	satz: null
 };
 
 @Injectable({
