@@ -58,7 +58,7 @@
 }   
 
 @media screen and (orientation: portrait){
-    @media screen and (max-device-height: 1366px){
+    @media screen and (max-device-height: 1366px),  (max-device-height: 1368px){
         #History-Panel {
             height: 1270px;
         }
@@ -84,6 +84,12 @@
             height: 930px;
         }
     }   
+
+    @media screen and (max-device-height: 912px){
+        #History-Panel {
+            height: 820px;
+        }
+    } 
 
     @media screen and (max-device-height: 820px){
         #History-Panel {
