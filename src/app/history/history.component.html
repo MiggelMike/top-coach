@@ -59,9 +59,6 @@
             </div>
         </ng-template>
         <ng-template #Charts>
-            <div class="row-center">
-  
-            
             <mat-accordion #accSession="matAccordion" multi="true">
                 <mat-expansion-panel #ExercisesInChart class="HG-01">
                     <mat-expansion-panel-header>
@@ -95,7 +92,6 @@
                     </div>
                 </mat-expansion-panel>
             </mat-accordion>
-            </div>
             <div #ChartContainer class="width-100-Prozent">
                 <ng-container *ngIf="(ChartData.length !== undefined && ChartData.length > 0)">
                     <div cdkDropList  (cdkDropListDropped)="drop($event)">
@@ -103,7 +99,7 @@
                             <div class="mg-top-2">
                                 <mat-accordion #accSession="matAccordion" multi="true"  cdkDrag>
                                     <mat-expansion-panel 
-                                        #ExercisesInChart class="HG-01" 
+                                        class="HG-01" 
                                         (opened)="OnBarChartExpanded(mChartData)"
                                         (closed)="OnBarChartClosed(mChartData)"
                                         [expanded]="BarChartExpanded(mChartData)"

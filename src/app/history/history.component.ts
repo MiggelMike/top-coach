@@ -1,3 +1,4 @@
+import { QueryList, ViewChildren } from '@angular/core';
 import { DiagramData } from './../bausteine/charts/charts.component';
 import { cDeutschKuezel as cDeutschKuerzel, cDeutschDateInputMask, cEnglishDateInputMask } from './../Sprache/Sprache';
 import { DexieSvcService, SessionParaDB, cMaxDatum, cMinDatum } from './../services/dexie-svc.service';
@@ -15,6 +16,8 @@ import { DateFormatTyp, Datum } from 'src/Business/Datum';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { Router } from '@angular/router';
 import { MatRadioGroup } from '@angular/material/radio';
+import {  MatExpansionPanelHeader, MatExpansionPanel } from '@angular/material/expansion';
+import { timeout } from 'rxjs';
 var cloneDeep = require('lodash.clonedeep');
 
 @Component({
@@ -72,11 +75,11 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	@ContentChild('legendEntryTemplate') legendEntryTemplate: TemplateRef<any>;
 	@ViewChild('LineChart') LineChart: LineChartComponent;
 	@ViewChild('BarChart') BarChart: any;
-	@ViewChild('ExercisesInChart') ExercisesInChart: any;
 	@ViewChild('AuswahlRadio') AuswahlRadio: MatRadioGroup;
 	@ViewChild('matTabChart') matTabChart: MatTab;
 	@ViewChild('ChartContainer') ChartContainer: any;
 	@ViewChild('ChartType') ChartType: MatRadioGroup;
+
 	@Input() placeholderTime: string;
 
 	range = new FormGroup({
@@ -121,7 +124,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		this.ViewInitDone = true;
 	}
 	
-	
 	get programModul(): typeof ProgramModulTyp {
 		return ProgramModulTyp;
 	}
@@ -155,6 +157,8 @@ export class HistoryComponent implements OnInit, IProgramModul {
 
 		if (mDiaUebungSetting !== undefined)
 			mDiaUebungSetting.Visible = aChecked;
+
+		this.Draw(true);
 	}
 
 	ToolTip(aDia: any, aBarPoint: BarPoint): string {
@@ -167,8 +171,8 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 
 	public Draw(aDialogOn: boolean): void {
-		if (this.Auswahl === 0)
-			return;
+		// if (this.Auswahl === 0)
+		// 	return;
 
 		if (aDialogOn)
 			this.fLoadingDialog.Loading(this.CreatingChartsDialogData);
@@ -179,7 +183,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		let mUebungsNamen = [];
 		const mVonDatum: Date = DexieSvcService.HistoryVonDatum;
 		const mBisDatum: Date = DexieSvcService.HistoryBisDatum;
-		
 		try {
 			const aDiagrammData: Array<DiaDatum> = [];
 			this.fDbModul.LadeDiagrammData(mVonDatum, mBisDatum, this.SessionListe, aDiagrammData);
