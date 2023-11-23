@@ -426,7 +426,6 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 				this.fSavingDialog.Loading(mSaveDialogData);
 				// Session-Status auf fertig setzen
 				aSessionForm.Session.SetSessionFertig();
-
 				const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
 				mSessionCopyPara.CopyUebungID = false;
 				mSessionCopyPara.CopySatzID = false;

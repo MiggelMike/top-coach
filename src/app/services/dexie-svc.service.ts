@@ -197,14 +197,15 @@ export class DexieSvcService extends Dexie {
 	readonly cBodyweight: string = "BodyWeightDB";
 	readonly cSprache: string = "Sprache";
 
-	public static HistorySessions: Array<HistorySession> = [];
 	public HistorySessionsAfterLoadFn: AfterLoadFn = null; 
 	AktuellerProgrammTyp: ProgrammTyp;
+	public static HistorySessions: Array<HistorySession> = [];
 	public static HistoryBisDatum: Date = null; 
 	public static HistoryVonDatum: Date = null; 
 	public static AktuellesProgramm: ITrainingsProgramm = null;
 	public static CmpAktuellesProgramm: ITrainingsProgramm = null;
 	public static ExamplesDone: boolean = false;
+	public static StaticModulTyp: ProgramModulTyp  = null;
 	RefreshAktuellesProgramm: boolean = false;
 	// Siehe Anstehende-Sessions
 	VorlageProgramme: Array<TrainingsProgramm> = [];
@@ -216,7 +217,6 @@ export class DexieSvcService extends Dexie {
 	private ProgrammTable: Dexie.Table<ITrainingsProgramm, number>;
 	private SessionTable: Dexie.Table<SessionDB, number>;
 	private MuskelGruppeTable: Dexie.Table<MuscleGroup, number>;
-	static StaticModulTyp: ProgramModulTyp  = null;
 	private get HantelTable(): Dexie.Table<Hantel, number> {
 		return this.table(this.cHantel);
 	};
