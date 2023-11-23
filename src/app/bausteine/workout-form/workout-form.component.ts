@@ -41,7 +41,7 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
     }
 
     ngOnInit() { 
-        this.ModulTyp = DexieSvcService.StaticModulTyp;
+        this.ModulTyp = DexieSvcService.ModulTyp;
     }
 
     

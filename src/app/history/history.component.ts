@@ -104,7 +104,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		@Inject(LOCALE_ID) locale: string,
 		private router: Router
 	) {
-		DexieSvcService.StaticModulTyp = ProgramModulTyp.History;
+		DexieSvcService.ModulTyp = ProgramModulTyp.History;
 		if (DexieSvcService.HistoryBisDatum === null) {
 			DexieSvcService.HistoryBisDatum = new Date();
 		}

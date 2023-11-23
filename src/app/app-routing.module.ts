@@ -19,12 +19,18 @@ import { TrainingsGewichtProgressComponent } from './trainings-gewicht-progress/
 import { EditTrainingsGewichtProgressComponent } from './edit-trainings-gewicht-progress/edit-trainings-gewicht-progress.component';
 import { AppData } from 'src/Business/Coach/Coach';
 import { ProgrammWaehlenComponent } from './programm-waehlen/programm-waehlen.component';
+import { HistorySession } from 'src/Business/Session/Session';
 
 
 
 export const LadeStandardProgramme: ResolveFn<ITrainingsProgramm[]> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
 	return inject(DexieSvcService).LadeStandardProgramme();
 };
+
+export const LadeHistory: ResolveFn<HistorySession[]> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+	return inject(DexieSvcService).LadeHistorySessions(null,null);
+};
+
 
 export const LadeAktuellesProgramm: ResolveFn<ITrainingsProgramm> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
 	const mDB: DexieSvcService = inject(DexieSvcService);
@@ -67,6 +73,7 @@ const routes: Routes = [
 	},
 	{
 		path: "history",
+		// resolve: { HistoryProgramme: LadeHistory },
 		component: HistoryComponent
 	},
 	{

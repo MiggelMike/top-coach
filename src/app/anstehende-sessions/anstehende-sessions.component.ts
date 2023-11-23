@@ -80,7 +80,7 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
         
         
     ngOnInit() {
-        DexieSvcService.StaticModulTyp = ProgramModulTyp.AnstehendeSessions;
+        DexieSvcService.ModulTyp = ProgramModulTyp.AnstehendeSessions;
     }
 
     public get AktuellesProgramm(): ITrainingsProgramm {

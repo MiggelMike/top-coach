@@ -67,7 +67,7 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
     // };
 
     ngOnInit() {
-        this.ModulTyp = DexieSvcService.StaticModulTyp;
+        this.ModulTyp = DexieSvcService.ModulTyp;
     }
 
     get ProgrammName(): string{
@@ -84,7 +84,7 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
         private fDbModule: DexieSvcService
     ) {
         this.LocaleID = localID;
-        this.ModulTyp = DexieSvcService.StaticModulTyp;
+        this.ModulTyp = DexieSvcService.ModulTyp;
         // if (this.fGlobalService.Comp03PanelUebungObserver === null)
         //     this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;
     }

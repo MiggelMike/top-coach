@@ -29,7 +29,7 @@ export class Programm01Component implements OnInit, IProgramModul {
         public fDialogService: DialogeService,
         private router: Router
     ) {
-        this.ModulTyp = DexieSvcService.StaticModulTyp;
+        this.ModulTyp = DexieSvcService.ModulTyp;
     }
 
     get programModul(): typeof ProgramModulTyp {
@@ -101,10 +101,10 @@ export class Programm01Component implements OnInit, IProgramModul {
 
     EditThisWorkoutClick($event): void {
         $event.stopPropagation();
-        if (DexieSvcService.StaticModulTyp === ProgramModulTyp.SelectWorkout)
-            DexieSvcService.StaticModulTyp = ProgramModulTyp.SelectWorkoutEdit;
+        if (DexieSvcService.ModulTyp === ProgramModulTyp.SelectWorkout)
+            DexieSvcService.ModulTyp = ProgramModulTyp.SelectWorkoutEdit;
         else
-        DexieSvcService.StaticModulTyp = ProgramModulTyp.EditWorkout;
+        DexieSvcService.ModulTyp = ProgramModulTyp.EditWorkout;
 
         this.router.navigate(["/workoutform"], { state: { programm: this.programm } });
     }

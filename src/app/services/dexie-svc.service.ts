@@ -205,7 +205,7 @@ export class DexieSvcService extends Dexie {
 	public static AktuellesProgramm: ITrainingsProgramm = null;
 	public static CmpAktuellesProgramm: ITrainingsProgramm = null;
 	public static ExamplesDone: boolean = false;
-	public static StaticModulTyp: ProgramModulTyp  = null;
+	public static ModulTyp: ProgramModulTyp  = null;
 	RefreshAktuellesProgramm: boolean = false;
 	// Siehe Anstehende-Sessions
 	VorlageProgramme: Array<TrainingsProgramm> = [];
@@ -707,8 +707,8 @@ export class DexieSvcService extends Dexie {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
 		}
 
-		if (DexieSvcService.StaticModulTyp === null)
-			DexieSvcService.StaticModulTyp = ProgramModulTyp.Kein;
+		if (DexieSvcService.ModulTyp === null)
+			DexieSvcService.ModulTyp = ProgramModulTyp.Kein;
 
 		//   Dexie.delete("ConceptCoach");
 		this.version(36).stores({

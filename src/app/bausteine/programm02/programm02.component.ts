@@ -186,7 +186,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 	}
 
 	ngOnInit() {
-		this.ModulTyp = DexieSvcService.StaticModulTyp;
+		this.ModulTyp = DexieSvcService.ModulTyp;
 		this.SessionListObserver = of(this.SessionListe);
 		this.CmpSessionListe = this.SessionListe;
 	}
