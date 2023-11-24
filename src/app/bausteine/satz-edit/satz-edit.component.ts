@@ -229,7 +229,7 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus {
 
     async onClickSatzFertig(aSatz: Satz, aEvent: any) {
         const mChecked = aEvent.checked;
-        if (this.programmModul === ProgramModulTyp.History)
+        if (DexieSvcService.ModulTyp === ProgramModulTyp.History || DexieSvcService.ModulTyp === ProgramModulTyp.HistoryView)
             return;
 
         if (this.fStoppUhrService.StoppuhrComponent) {
