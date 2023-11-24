@@ -19,6 +19,7 @@ export class DialogData {
     OkFn: IOkCallback;
     CancelFn: ICancelCallback;
     height: string = '280px';
+    width?: string = 'auto';
     OkData: any;
     CancelData: any;
     ShowAbbruch: boolean = false;

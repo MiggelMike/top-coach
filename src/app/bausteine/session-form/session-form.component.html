@@ -26,24 +26,34 @@
         <ng-container *ngIf="ready">
             <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center" [style.margin-top]="'5px'">
                 <ng-container *ngIf="PauseButtonVisible()">
-                    <div class="center-item" layout-align="center center">
                     <ng-container *ngIf="Paused; then unpauseBlock else pauseBlock"></ng-container>
-                    
+            
                     <ng-template #pauseBlock>
-                        <a class='link-button-font' mat-flat-button (click)="SetPause()">Pause</a>
+                        <div class="center-item" layout-align="center center">
+                            <a class='link-button-font' mat-flat-button (click)="SetPause()">Pause</a>
+                        </div>
                     </ng-template>
-                    
+            
                     <ng-template #unpauseBlock>
-                        <a class='link-button-font' mat-flat-button (click)="GoAhead()">Go ahead</a>
+                        <div class="center-item" layout-align="center center">
+                            <a class='link-button-font' mat-flat-button (click)="GoAhead()">Go ahead</a>
+                        </div>
                     </ng-template>
-                </div>
-            </ng-container>
+                </ng-container>
         
             <ng-container *ngIf="ModulTyp !== programModul.History">
+                <ng-container *ngIf="ModulTyp !== programModul.HistoryView; then NotHistoryView else HistoryView"></ng-container>
+                <ng-template #NotHistoryView>
+                    <div class="center-item" layout-align="center center">
+                        <a class='link-button-font' mat-flat-button (click)="SetDone()">Done</a>
+                    </div>
+                </ng-template>
                 
-                <div class="center-item" layout-align="center center">
-                    <a class='link-button-font' mat-flat-button (click)="SetDone()">Done</a>
-                </div>
+                <ng-template #HistoryView>
+                    <div class="center-item" layout-align="center center">
+                        <a class='link-button-font' mat-flat-button (click)="SetDone()">Save and exit</a>
+                    </div>
+                </ng-template>
                 
                 
                 <div class="center-item" layout-align="center center">

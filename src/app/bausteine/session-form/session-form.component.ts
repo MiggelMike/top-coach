@@ -429,6 +429,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 		mDialogData.OkFn = async (aSessionForm: SessionFormComponent) => {
 			const mSaveDialogData = new DialogData();
 			mSaveDialogData.height = '175px';
+			mSaveDialogData.width = '150px';
 			mSaveDialogData.ShowAbbruch = false;
 			mSaveDialogData.ShowOk = false;
 			mSaveDialogData.textZeilen.push('Saving');
