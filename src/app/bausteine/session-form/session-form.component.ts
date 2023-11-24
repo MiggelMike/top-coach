@@ -318,13 +318,15 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 
 		await this.fDbModule.SessionSpeichern(this.Session)
 			.then(() => {
-				const mHistorySessionIndex: number = DexieSvcService.HistorySessions.findIndex((aHistorySession) => {
-					return (aHistorySession.ID === this.Session.ID);
-				})
+				if (DexieSvcService.ModulTyp === ProgramModulTyp.HistoryView) {
+					const mHistorySessionIndex: number = DexieSvcService.HistorySessions.findIndex((aHistorySession) => {
+						return (aHistorySession.ID === this.Session.ID);
+					})
 			
-				if (mHistorySessionIndex > -1) {
-					DexieSvcService.HistorySessions[mHistorySessionIndex] = this.Session as HistorySession;
-				}
+					if (mHistorySessionIndex > -1) {
+						DexieSvcService.HistorySessions[mHistorySessionIndex] = this.Session as HistorySession;
+					}
+				}//if
 			});
 		
 		if (this.Session.BodyWeightSession !== this.Session.BodyWeightAtSessionStart) {
