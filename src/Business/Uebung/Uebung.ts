@@ -1,10 +1,11 @@
 import { AppData, GewichtsEinheit } from 'src/Business/Coach/Coach';
-import { cWeightDigits, cMinDatum } from './../../app/services/dexie-svc.service';
+import { cWeightDigits, cMinDatum, cNumberFormat, cWeightFormat } from './../../app/services/dexie-svc.service';
 import { ProgressGroup, WeightProgress } from 'src/Business/Progress/Progress';
 import { Zeitraum } from './../Dauer';
 import { MuscleGroupKategorie02 } from '../MuscleGroup/MuscleGroup';
 import { VorgabeWeightLimit } from '../Progress/Progress';
 import { Satz, SatzTyp, LiftTyp, SatzPausen, SatzStatus } from './../Satz/Satz';
+import { formatNumber } from '@angular/common';
 
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual')
@@ -917,7 +918,7 @@ export class Uebung  {
         return mUebung;
 
     }
-
+    //#region LiftedWeight
     public get LiftedWeight(): number {
         let mResult: number = 0;
 
@@ -936,6 +937,10 @@ export class Uebung  {
         return mResult;
     }
 
+    public get LiftedWeightText(): string{
+        return formatNumber(this.LiftedWeight,'en-US',cWeightFormat);
+    }
+    //#endregion
     private checkSatzIncludedBodyWeight(aSatzListe: Array<Satz>): Boolean {
         for (let index = 0; index < aSatzListe.length; index++) {
             const mSatz = aSatzListe[index];

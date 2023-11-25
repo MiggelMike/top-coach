@@ -14,7 +14,7 @@ import { ITrainingsProgramm, TrainingsProgramm, ProgrammTyp, ProgrammKategorie }
 import { DialogeService } from './dialoge.service';
 import { Satz, SatzStatus, GewichtDiff, SatzTyp, SatzDB } from './../../Business/Satz/Satz';
 import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
-import { AppData } from './../../Business/Coach/Coach';
+import { AppData, GewichtsEinheit } from './../../Business/Coach/Coach';
 import { Dexie, PromiseExtended } from 'dexie';
 import { Injectable, NgModule, Optional, SkipSelf } from '@angular/core';
 import { UebungsTyp, Uebung, StandardUebungListe , UebungsKategorie02, StandardUebung, SaetzeStatus } from "../../Business/Uebung/Uebung";
@@ -206,6 +206,8 @@ export class DexieSvcService extends Dexie {
 	public static CmpAktuellesProgramm: ITrainingsProgramm = null;
 	public static ExamplesDone: boolean = false;
 	public static ModulTyp: ProgramModulTyp  = null;
+	public static GewichtsEinheitText: string = 'KG';
+	public static GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
 	RefreshAktuellesProgramm: boolean = false;
 	// Siehe Anstehende-Sessions
 	VorlageProgramme: Array<TrainingsProgramm> = [];
@@ -1615,6 +1617,8 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
+
+
 	public LadeHistorySessions(aVonDatum: Date, aBisDatum: Date): Promise<Array<HistorySession>> {
 		if (aVonDatum === null)
 			aVonDatum = new Date('01.01.2020');
@@ -2286,6 +2290,8 @@ export class DexieSvcService extends Dexie {
 			.limit(1)
 			.first((aAppRec) => {
 				this.AppRec = aAppRec;
+				DexieSvcService.GewichtsEinheitText = aAppRec.GewichtsEinheitText;
+				DexieSvcService.GewichtsEinheit = aAppRec.GewichtsEinheit;
 				return aAppRec;
 			});
 	}

@@ -1,3 +1,4 @@
+import { DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { ISession } from 'src/Business/Session/Session';
 import { Uebung } from '../Uebung/Uebung';
 import {formatNumber} from '@angular/common';
@@ -405,6 +406,7 @@ export class Satz implements ISatz {
 
     public get LiftedWeight(): number {
         if (this.Status === SatzStatus.Fertig) {
+            this.PruefeGewichtsEinheit(DexieSvcService.GewichtsEinheit);
             let mResult: number = Number(this.WdhAusgefuehrt * this.GewichtAusgefuehrt);
             if (this.IncludeBodyweight) 
                 mResult += this.WdhAusgefuehrt * this.BodyWeight;
@@ -439,6 +441,7 @@ export class Satz implements ISatz {
         if (aGewichtsEinheit !== this.GewichtsEinheit) {
             this.GewichtAusgefuehrt = AppData.StaticConvertWeight(this.GewichtAusgefuehrt, aGewichtsEinheit);
             this.GewichtVorgabe = AppData.StaticConvertWeight(this.GewichtVorgabe, aGewichtsEinheit);
+            this.BodyWeight = AppData.StaticConvertWeight(this.BodyWeight, aGewichtsEinheit); 
             this.GewichtNaechsteSession = AppData.StaticConvertWeight(this.GewichtNaechsteSession, aGewichtsEinheit);
             this.GewichtDiff.forEach((mPtrDiff) => mPtrDiff.Gewicht = AppData.StaticConvertWeight(mPtrDiff.Gewicht, aGewichtsEinheit));
             this.GewichtsEinheit = aGewichtsEinheit;
@@ -466,6 +469,7 @@ export class Satz implements ISatz {
         this.Status = aPara.Status ? aPara.Status : SatzStatus.Wartet;
         this.AMRAP = aPara.AMRAP ? aPara.AMRAP : false;
         this.BodyWeight = aPara.BodyWeight ? aPara.BodyWeight : 0;
+        this.PruefeGewichtsEinheit(DexieSvcService.GewichtsEinheit);
     }
 
     public isEqual(aCmpSatz: Satz): boolean{

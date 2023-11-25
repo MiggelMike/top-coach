@@ -54,6 +54,7 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
 	private isExpanded: Boolean = true;
 	public ToggleButtonText = 'Close all excercises';
 	public LocaleID: string;
+	AppData: any;
 	// private UebungPanelsObserver = {
 	//     next: (x: MatExpansionPanel) => {
 	//         this.accCheckUebungPanels(this.SessUeb);
@@ -231,6 +232,10 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
 			this.isExpanded = true;
 			this.ToggleButtonText = 'Close all excercises';
 		}
+	}
+
+	get GewichtsEinheit(): string {
+		return DexieSvcService.GewichtsEinheitText;
 	}
 
 	public DeleteExercise(aRowNum: number, aUebung: Uebung, aEvent: Event) {
