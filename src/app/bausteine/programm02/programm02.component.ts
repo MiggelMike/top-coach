@@ -191,17 +191,12 @@ export class Programm02Component implements OnInit, IProgramModul {
 		this.CmpSessionListe = this.SessionListe;
 	}
 
-	public CopySession(aSession: ISession) {
-		//     this.fGlobalService.SessionKopie = aSession.Copy();
-	}
-
 	public DeleteSession(aEvent: any, aSession: ISession, aRowNum: number) {
 		aEvent.stopPropagation();
 		this.DeleteSessionPrim(
 			aSession,
 			aRowNum,
 			() => {
-				// this.DelSessionListe.push(aSession);
 				const index: number = this.SessionListe.indexOf(aSession);
 				if (index !== -1) 
 					this.SessionListe.splice(index, 1);
@@ -210,17 +205,6 @@ export class Programm02Component implements OnInit, IProgramModul {
 					this.SessionListe[index].ListenIndex = index;
 				
 				this.fDbModule.DeleteSession(aSession as Session);
-
-				// this.SessionListObserver.subscribe(() => {
-				// 	this.fDbModule.LadeAktuellesProgramm();//this.SortedSessionListe;
-					
-				// });
-
-				
-				// if (this.fGlobalService.Comp03PanelUebungObserver != null) {
-				// 	//this.panUebung.expanded = false;
-				// 	of(this.panUebung).subscribe(this.fGlobalService.Comp03PanelUebungObserver);
-				// }
 			}
 		);
 	}
