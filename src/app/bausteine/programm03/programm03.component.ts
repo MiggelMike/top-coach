@@ -82,8 +82,6 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
 	) {
 		this.LocaleID = localID;
 		this.ModulTyp = DexieSvcService.ModulTyp;
-		// if (this.fGlobalService.Comp03PanelUebungObserver === null)
-		//     this.fGlobalService.Comp03PanelUebungObserver = this.UebungPanelsObserver;
 	}
 	get satzTyp(): typeof SatzTyp {
 		return SatzTyp;
@@ -106,37 +104,9 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
 	}
 
 	ngAfterViewInit() {
-		// this.DoWorker();
-		// if (this.session.UebungsListe !== undefined) {
-		//     // if(this.session.UebungsListe.length <= 0) {
-		//     //     this.fDbModule.LadeSessionUebungen(this.session.ID)
-		//     //         .then((aUebungsListe) => {
-		//     //             this.session.UebungsListe = aUebungsListe;
-		//     //             this.session.UebungsListe.forEach((mUebung: Uebung) => {
-		//     //                 this.accCheckUebungPanels(mUebung);
-		//     //             });
-		//     //         });
-		//     // }
-		//     if (this.session.UebungsListe.length > 0) {
-		//         this.session.UebungsListe.forEach((mUebung: Uebung) => {
-		//             this.accCheckUebungPanels(mUebung);
-		//         });
-		//     } else {
-		//         this.accCheckUebungPanels();
-		//         // this.accUebung.forEach((acc) => acc.closeAll());
-		//         // this.isExpanded = false;
-		//         // this.ToggleButtonText = "Open all exercises";
-		//         // if(this.SessUeb !== undefined)
-		//         //     this.SessUeb.Expanded = false;
-		//     }
-		//     setTimeout(() => {
-		//         this.DoStatsFn()
-		//     }, (500));
-		// }
 	}
 
 	public DoStatsFn() {
-		// if (this.DoStats !== undefined && this.Info !== undefined)
 		this.DoStats.emit(this.Info);
 	}
 
@@ -159,9 +129,6 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
 	}
 
 	ngOnDestroy() {
-		// if (this.fExerciseSettingsComponent !== undefined)
-		//     this.fExerciseSettingsComponent.close();
-
 		if (this.fGlobalService.Comp03PanelUebungObserver != null) this.fGlobalService.Comp03PanelUebungObserver = null;
 	}
 
@@ -303,12 +270,6 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
 	public DoSettings(aSessUeb: Uebung, aEvent: Event) {
 		aEvent.stopPropagation();
 
-		// const mCmpUebung: Uebung = this.cmpSettingsSession.UebungsListe.find((mUebung) => {
-		//     if (mUebung.ID === aSessUeb.ID || mUebung.ListenIndex === aSessUeb.ListenIndex && mUebung.FkUebung === aSessUeb.FkUebung)
-		//         return mUebung;
-		//     return undefined;
-		// });
-
 		const mCmpUebung: Uebung = this.session.UebungsListe.find((mUebung) => {
 			if (
 				mUebung.ID === aSessUeb.ID ||
@@ -334,15 +295,3 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
 		this.DoCheckSettingsFn();
 	}
 }
-
-// if (typeof Worker !== 'undefined') {
-//   // Create a new
-//   const worker = new Worker(new URL('./programm03.worker', import.meta.url));
-//   worker.onmessage = ({ data }) => {
-//     console.log(`page got message: ${data}`);
-//   };
-//   worker.postMessage('hello');
-// } else {
-//   // Web Workers are not supported in this environment.
-//   // You should add a fallback so that your program still executes correctly.
-// }
