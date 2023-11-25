@@ -1,6 +1,6 @@
 import { DexieSvcService, SatzParaDB } from './../../services/dexie-svc.service';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
-import { Uebung, SaetzeStatus } from './../../../Business/Uebung/Uebung';
+import { Uebung, SaetzeStatus, ISaetzeStatus } from './../../../Business/Uebung/Uebung';
 import { GlobalService } from 'src/app/services/global.service';
 import { MatAccordion, MatExpansionPanel } from '@angular/material/expansion';
 import { HistorySession, ISession, Session } from './../../../Business/Session/Session';
@@ -22,7 +22,7 @@ import { ISatzTyp, Satz, SatzTyp } from 'src/Business/Satz/Satz';
 	styleUrls: ['./programm03.component.scss'],
 	// changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
+export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISaetzeStatus {
 	@Input() programm: ITrainingsProgramm;
 	@Input() session: ISession;
 	@Input() cmpSession: ISession;
@@ -84,12 +84,19 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp {
 		this.LocaleID = localID;
 		this.ModulTyp = DexieSvcService.ModulTyp;
 	}
+	get saetzeStatus(): typeof SaetzeStatus {
+		return SaetzeStatus;
+	}
 	get satzTyp(): typeof SatzTyp {
 		return SatzTyp;
 	}
 	get programModul(): typeof ProgramModulTyp {
 		return ProgramModulTyp;
 	}
+
+	AlleFertig(aUebung: Uebung): boolean{
+		return this.getArbeitsSaetzeStatus(aUebung) === SaetzeStatus.AlleFertig;
+	} 
 
 	DoWorker() {
 		const that = this;

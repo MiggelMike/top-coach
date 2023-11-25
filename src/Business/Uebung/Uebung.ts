@@ -38,7 +38,13 @@ export enum SaetzeStatus {
     KeinerVorhanden,
     NichtAlleFertig,
     AlleFertig
-  }
+}
+
+export interface ISaetzeStatus {
+	get saetzeStatus(): (typeof SaetzeStatus);
+}
+  
+
   
 export enum WdhVorgabeStatus {
     NichtGeschafft,
@@ -765,13 +771,13 @@ export class Uebung  {
             return SaetzeStatus.KeinerVorhanden;
         } else {
             let mAnzFertig: number = 0;
-            aUebung.SatzListe.forEach((s) => {
+            aUebung.ArbeitsSatzListe.forEach((s) => {
                 if (s.Status === SatzStatus.Fertig)
                     mAnzFertig++;
             });
 
-            if (mAnzFertig >= aUebung.SatzListe.length) {
-                return SaetzeStatus.AlleFertig;;
+            if (mAnzFertig >= aUebung.ArbeitsSatzListe.length) {
+                return SaetzeStatus.AlleFertig;
             }
         }
 

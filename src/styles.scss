@@ -509,8 +509,19 @@ div.herz:after {
 }
 
 .mg-bottom-3 {
-	margin-bottom: 3px;
+	margin-bottom: 3px !important;
 }
+
+.mg-bottom-5 {
+	margin-bottom: 5px !important;
+}
+
+.mg-bottom-10 {
+	margin-bottom: 10px !important;
+}
+
+
+
 
 .mg-right-3 {
 	margin-right: 3px;
