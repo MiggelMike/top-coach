@@ -46,7 +46,7 @@
                                             <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="85px" (click)="CopyExcercise(SessUeb, $event)">Copy exercise</a>
                                             <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteExercise(i+1,SessUeb,$event)">Delete Exercise</a>
 
-                                            <span> Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} --- Reps {{SessUeb.SummeWDH()}}</span>
+                                            <span> Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} - Reps {{SessUeb.SummeWDH()}}</span>
                                         </ng-container>
         
                                         <ng-container *ngIf="getArbeitsSaetzeStatus(SessUeb) === 2">
