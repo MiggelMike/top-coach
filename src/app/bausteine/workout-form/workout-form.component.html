@@ -1,8 +1,8 @@
     <!-- <app-toolbar></app-toolbar> -->
-    <mat-icon (click)="back()">arrow_back</mat-icon>
     <ng-container *ngIf="programm">
         <div class="column-center">
             <div class="width-600">
+                <mat-icon (click)="back()">arrow_back</mat-icon>
                 <div><strong>{{programm.Name}}</strong></div>
                 <ng-container *ngIf="programm.SessionListe">
                     <app-programm02 
