@@ -2,8 +2,7 @@ import { ITrainingsProgramm } from './../../Business/TrainingsProgramm/Trainings
 import { DexieSvcService } from './../services/dexie-svc.service';
 import { Observable, of } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
-import { DialogeService } from '../services/dialoge.service';
-import { ActivatedRoute } from '@angular/router';
+import {CdkDragDrop } from '@angular/cdk/drag-drop';
 import { IProgramModul, ProgramModulTyp } from '../app.module';
 
 @Component({
@@ -30,6 +29,15 @@ export class ProgrammWaehlenComponent implements OnInit, IProgramModul {
     ngOnInit() {
    
     }
+
+    // drop(event: any) {
+	// 	const mEvent = event as CdkDragDrop<ISession[]>;
+		
+	// 	this.ProgrammListe[event.previousIndex].ListenIndex = mEvent.currentIndex;
+	// 	this.programm.SessionListe[event.currentIndex].ListenIndex = mEvent.previousIndex;
+	// 	this.fDbModule.SessionSpeichern(this.programm.SessionListe[mEvent.previousIndex] as Session);
+	// 	this.fDbModule.SessionSpeichern(this.programm.SessionListe[mEvent.currentIndex] as Session);		
+	// }
 
     ngAfterViewInit() {
         this.ViewInitDone = true;        

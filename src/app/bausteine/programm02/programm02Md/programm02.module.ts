@@ -8,6 +8,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatRippleModule } from '@angular/material/core';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+
 
 
 @NgModule({
@@ -15,6 +17,7 @@ import { MatRippleModule } from '@angular/material/core';
   exports: [Programm02Component],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   imports: [
+    DragDropModule,
     FormsModule,
     MatExpansionModule,
     DatePipe,
