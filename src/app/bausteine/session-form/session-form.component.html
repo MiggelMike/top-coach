@@ -1,13 +1,18 @@
  
-    <ng-container *ngIf="BackButtonVisible === true">
-            <mat-icon (click)="back()">arrow_back</mat-icon>
-    </ng-container>
+<div class="column-center">
+    <div class="width-600">
+        <div class="row-start-left">
 
-    <ng-container *ngIf="BackButtonVisible === false">
-        <mat-icon>pan_tool</mat-icon>
-    </ng-container> 
+            <ng-container *ngIf="BackButtonVisible === true">
+                <mat-icon (click)="back()">arrow_back</mat-icon>
+            </ng-container>
+            
+            <ng-container *ngIf="BackButtonVisible === false">
+                <mat-icon>pan_tool</mat-icon>
+            </ng-container> 
+        </div>    
 
-    <div class="column-center">
+
         <app-programm03 #appProgramm03
             [session]="Session" 
             [cmpSession]="cmpSession" 
@@ -41,7 +46,7 @@
                     </ng-template>
                 </ng-container>
         
-            <ng-container *ngIf="ModulTyp !== programModul.History">
+                <ng-container *ngIf="ModulTyp !== programModul.History">
                 <ng-container *ngIf="ModulTyp !== programModul.HistoryView; then NotHistoryView else HistoryView"></ng-container>
                 <ng-template #NotHistoryView>
                     <div class="center-item" layout-align="center center">
@@ -63,7 +68,8 @@
                 <div class="center-item" layout-align="center center">
                     <a [ngClass]="'link-button-font'" mat-flat-button (click)="PasteExcercise()">Paste Exercise</a>
                 </div>
-            </ng-container>
-        </div>
-    </ng-container>
+                </ng-container>
+            </div>
+        </ng-container>
+    </div>
 </div>
