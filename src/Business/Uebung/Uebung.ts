@@ -854,7 +854,7 @@ export class Uebung  {
 
     public SummeWDH(): number {
         if ((this.ArbeitsSatzListe === undefined)||(this.ArbeitsSatzListe.length === 0))
-            return -1;
+            return 0;
         
         let mResult = 0;
         this.ArbeitsSatzListe.forEach(satz => {

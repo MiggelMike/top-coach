@@ -503,15 +503,12 @@ export class Satz implements ISatz {
     }
 
     public AddToDoneWeight(aDoneWeight: number) {
-        // const tmp: number = Number.parseFloat(this.GewichtAusgefuehrt.toString());
-        // const mDoneWeight: number = Number.parseFloat(aDoneWeight.toString());
         const tmp: number = Number(this.GewichtAusgefuehrt);
         const mDoneWeight: number = Number(aDoneWeight);
         this.GewichtAusgefuehrt = Number(tmp + mDoneWeight);
     }
 
     public SetPresetWeight(aPresetWeight: number) {
-        // this.GewichtVorgabe = Number.parseFloat(aPresetWeight.toString());
         this.GewichtVorgabe = Number(aPresetWeight);
     }
 

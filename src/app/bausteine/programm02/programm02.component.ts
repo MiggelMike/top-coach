@@ -247,8 +247,6 @@ export class Programm02Component implements OnInit, IProgramModul {
 		let mResult: Array<Session> = [];
 		if (this.ModulTyp === ProgramModulTyp.History) mResult = this.SessionListe as Array<Session>;
 		else mResult = this.fDbModule.SortSessionByListenIndex(this.SessionListe as Array<Session>) as Array<Session>;
-
-		// const s: string = mResult[0].Name
 		return mResult;
     }
 	

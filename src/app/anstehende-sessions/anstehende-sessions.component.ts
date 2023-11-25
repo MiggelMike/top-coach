@@ -44,31 +44,6 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
             };
 
             mSessionParaDB.UebungParaDB.SaetzeBeachten = true;
-
-            // this.fDbModule.LadeUpcomingSessions(this.AktuellesProgramm.id, mSessionParaDB)
-            //     .then((aSessionListe) => {
-            //         if (aSessionListe.length > 0) {
-            //             // this.Programm.SessionListe = [];
-            //             // this.fDbModule.AktuellesProgramm.SessionListe = [];
-            //             // aSessionListe.forEach(async (mPtrSession) => {
-            //             //     if (mPtrSession.Kategorie02 === SessionStatus.Wartet) {
-            //             //         const mUebungParaDB = new UebungParaDB();
-            //             //         mUebungParaDB.SaetzeBeachten = true;
-            //             //         await this.fDbModule.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
-            //             //             (aUebungsListe) => {
-            //             //                 if (aUebungsListe.length > 0)
-            //             //                     mPtrSession.UebungsListe = aUebungsListe;
-            //             //             });
-            //             //     }
-                        
-            //             //     SessionDB.StaticCheckMembers(mPtrSession);
-            //             //     mPtrSession.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
-            //             // });
-            //             // this.fProgramm.SessionListe = aSessionListe;
-            //             DexieSvcService.StaticAktuellesProgramm.SessionListe = aSessionListe;
-            //         }
-            //         this.fLoadingDialog.fDialog.closeAll();
-            //     });
         }
         catch (err) {
             this.fLoadingDialog.fDialog.closeAll();

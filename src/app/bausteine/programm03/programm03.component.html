@@ -48,8 +48,9 @@
                                                 <div class="column-center"><a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="60px" (click)="DoSettings(SessUeb, $event)">Settings</a></div>
                                                 <div class="column-center"><a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="85px" (click)="CopyExcercise(SessUeb, $event)">Copy exercise</a></div>
                                                 <div class="column-center"><a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteExercise(i+1,SessUeb,$event)">Delete Exercise</a></div>
-                                                <div class="column-center">Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} - Reps {{SessUeb.SummeWDH()}}</div>
                                             </ng-template>
+                                            
+                                            <div class="column-center">Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} - Reps {{SessUeb.SummeWDH()}}</div>
                                             
                                             <ng-container *ngIf="AlleFertig(SessUeb)">
                                                 <div class="column-center mg-left-10 mg-bottom-10">
