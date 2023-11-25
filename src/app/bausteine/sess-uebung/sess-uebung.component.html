@@ -7,13 +7,8 @@
                     <span class="Satz-Typ-Text">{{satzTyp}}</span>
 
                     <ng-container *ngIf='bearbeitbar'>
-                        <!-- <div class="center-item" layout-align="center center"> -->
-                            <a  [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="AddSet($event)">Add Set</a>
-                        <!-- </div> -->
-
-                        <!-- <div class="center-item" layout-align="center center"> -->
-                            <a [ngClass]="['link-button-font','HG-01']" mat-flat-button (click)="PasteSet($event)">Paste Set</a>
-                        <!-- </div> -->
+                        <a [ngClass]="['link-button-font','HG-01']" mat-flat-button (click)="AddSet($event)">Add Set</a>
+                        <a [ngClass]="['link-button-font','HG-01']" mat-flat-button (click)="PasteSet($event)">Paste Set</a>
                     </ng-container>
                 </div>
             </mat-expansion-panel-header>
