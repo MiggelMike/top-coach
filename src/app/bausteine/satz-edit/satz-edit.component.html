@@ -13,13 +13,14 @@
                     <div class="center-item weight-column align-right" fxLayout="column">
                         Weight
                     </div>
+
                     <ng-container *ngIf="  (SatzTyp === satzTyp.Aufwaermen && sessUebung.checkWarmUpSatzIncludedBodyWeight())
                                          ||(SatzTyp === satzTyp.Training && sessUebung.checkArbeitsSatzIncludedBodyWeight())
                                          ||(SatzTyp === satzTyp.Abkuehlen && sessUebung.checkCoolDownSatzIncludedBodyWeight())
                                          ">
                         <div class="align-right" fxLayout="column" fxFlex="60px"></div>
-                   
                     </ng-container>
+
                     <div class="center-item rep-column" fxLayout="column" matTooltip="Reps">RP.</div>
                     <div class="center-item" fxLayout="column" fxFlex="33px"  matTooltip="As many reps as possible">AR.</div>
                     <div class="center-item" fxLayout="column" fxFlex="22px"  matTooltip="Bodyweight">BW</div>
@@ -51,6 +52,9 @@
                         <div class="align-right label">{{satz.GewichtVorgabeText}}</div> 
                         <input  matInput 
                                 mask="9999.00"
+                                matTooltip="Hold to open details"
+                                matTooltipPosition="above"
+                                [matTooltipDisabled]="false"
                                 class="align-right tc-font-size-smaller"
                                 [ngModel]="satz.GewichtAusgefuehrtText" 
                                 (ngModelChange)="CalcPlates($event)"
@@ -80,6 +84,9 @@
                     <div class="align-right label">{{satz.WdhVonVorgabe}}</div> 
                     <input matInput 
                            class="align-right tc-font-size-smaller"
+                           matTooltip="Hold to open details"
+                           matTooltipPosition="above"
+                           [matTooltipDisabled]="false"
                            mask="9999"
                            [ngModel]="satz.WdhAusgefuehrtText" 
                            [disabled]="Disabled(satz)"
