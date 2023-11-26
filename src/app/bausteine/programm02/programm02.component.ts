@@ -256,6 +256,10 @@ export class Programm02Component implements OnInit, IProgramModul {
 		else this.fUebungService.UebungWaehlen(aSession as Session, this.SelectUebungDelegate);
 	}
 
+	CopySession(sess) {
+		
+	}
+
 	public PasteExcercise(aSession: ISession) {
 		if (this.fGlobalService.SessUebungKopie === null) {
 			const mDialoData = new DialogData();

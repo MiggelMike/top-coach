@@ -1,5 +1,5 @@
 <div class="colum-center">
-    <div class="kreis column-center font-size-xsmall mg-right-3">
+    <div class="column-center font-size-xsmall mg-right-3"  [ngClass]="{'kreisGruen': satz.Status === satzStatus.Fertig, 'kreisRot': satz.Status !== satzStatus.Fertig}" >
         {{satz.WdhAusgefuehrtText}}
         <ng-container *ngIf="satz.AMRAP">+</ng-container>
     </div>

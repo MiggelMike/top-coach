@@ -49,7 +49,7 @@
                                                 <div class="column-center"><a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="85px" (click)="CopyExcercise(SessUeb, $event)">Copy exercise</a></div>
                                                 <div class="column-center"><a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteExercise(i+1,SessUeb,$event)">Delete Exercise</a></div>
                                             </ng-template>
-                                            
+
                                             <div class="column-center">Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} - Reps {{SessUeb.SummeWDH()}}</div>
                                             
                                             <ng-container *ngIf="AlleFertig(SessUeb)">
@@ -112,19 +112,6 @@
                                             </ng-container>
                                         </div>
                                     </ng-container>    
-                                        <!-- <ng-container *ngIf="bearbeitbar">
-                                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
-                                                <div class="center-item" layout-align="center center">
-                                                    <a [ngClass]="['link-button-font']" mat-flat-button
-                                                        (click)="CopyExcercise(SessUeb)">Copy exercise</a>
-                                                </div>
-        
-                                                <div class="center-item" layout-align="center center">
-                                                    <a [ngClass]="['link-button-font']" mat-flat-button
-                                                        (click)="DeleteExercise(i+1,SessUeb)">Delete Exercise</a>
-                                                </div>
-                                            </div>
-                                        </ng-container> -->
                                 </div>
                             </mat-expansion-panel>
                         </mat-accordion>

@@ -35,6 +35,10 @@ export enum SatzStatus {
     Fertig = 'Fertig'
 }
 
+export interface ISatzStatus {
+    get satzStatus(): (typeof SatzStatus);
+}
+
 export enum SatzPausen {
     Standard_Min = 60,
     Standard_Max = 60,

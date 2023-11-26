@@ -1937,8 +1937,8 @@ export class DexieSvcService extends Dexie {
 		if (aSatzLadePara === undefined) {
 			mSatzLadePara = new SatzParaDB();
 			mSatzLadePara.WhereClause = "UebungID";
-			mSatzLadePara.anyOf = (aAnyOfUebung: Uebung) => {
-				return aAnyOfUebung.ID as any;
+			mSatzLadePara.anyOf = (aUebung: Uebung) => {
+				return aUebung.ID;
 			};
 		} else mSatzLadePara = aSatzLadePara;
 
