@@ -375,11 +375,8 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 		this.SaveChangesPrim().then(() => {
 			this.fDbModule.LadeAktuellesProgramm()
 				.then(async (aProgramm) => {
-					this.router.navigate(['/']);
-
 					DexieSvcService.AktuellesProgramm = aProgramm;
 					DexieSvcService.CmpAktuellesProgramm = aProgramm;
-
 					const mSessionParaDB: SessionParaDB = new SessionParaDB();
 					mSessionParaDB.UebungenBeachten = true;
 					this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
@@ -399,7 +396,12 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 								
 									Session.StaticCheckMembers(mPtrSession);
 									mPtrSession.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
+									this.fSavingDialog.fDialog.closeAll();
+									this.location.back();
 								});
+							} else {
+								this.fSavingDialog.fDialog.closeAll();
+								this.location.back();
 							}
 						});
 				});
@@ -455,7 +457,8 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 					mNeueSession.FK_VorlageProgramm = aSessionForm.Session.FK_VorlageProgramm;
 					mNeueSession.Expanded = false;
 					// Sätze der neuen Session initialisieren
-					mSaveDialogData.textZeilen[1] = 'Initializing new Session';
+					mSaveDialogData.textZeilen = [];
+					mSaveDialogData.textZeilen.push('Initializing new Session');
 				
 					if (aSessionForm.Session.UebungsListe.length > 0) {
 						this.DeletedExerciseList.forEach((mDelUebung) => {
@@ -485,9 +488,10 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 						});
 
 						try {
+							mSaveDialogData.textZeilen = [];
+							mSaveDialogData.textZeilen.push(`Checking upcoming Session`);
 							for (let index1 = 0; index1 < that.Programm.SessionListe.length; index1++) {
 								const mPtrSession = that.Programm.SessionListe[index1];
-								mSaveDialogData.textZeilen[1] = `Checking upcoming Session "${mPtrSession.Name}"`;
 								// Eventuell müssen die Sätze der Session-Übungen geladen werden
 								await that.fDbModule.CheckSessionUebungen(mPtrSession);
 							}
@@ -586,12 +590,15 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 									DexieSvcService.AktuellesProgramm = this.Programm;
 									this.DoAfterDone(this);
 									this.fDbModule.LadeHistorySessions(null, null);
+									
 								});
 							
 						});
-				} else await this.SaveChangesPrim().then(() => this.location.back() );
+				} else await this.SaveChangesPrim().then(() => {
+					this.fSavingDialog.fDialog.closeAll();
+					this.location.back();
+				});
 
-				this.fSavingDialog.fDialog.closeAll();
 			} catch (err) {
 				this.fSavingDialog.fDialog.closeAll();
 				console.error(err);

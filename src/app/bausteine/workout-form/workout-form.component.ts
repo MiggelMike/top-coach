@@ -53,8 +53,8 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
 			mDialogData.ShowAbbruch = true;
 		
 			mDialogData.OkFn = () => {
-				this.SaveChangesPrim();
 				this.leave();
+				this.SaveChangesPrim();
 			}
 	
 			mDialogData.CancelFn = (): void => {
