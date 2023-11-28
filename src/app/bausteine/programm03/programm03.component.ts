@@ -197,10 +197,10 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISa
 	}
 
 	private async CheckUebungSatzliste(aUebung: Uebung): Promise<Uebung> {
-		if (aUebung.SatzListe === undefined || aUebung.SatzListe.length <= 0) {
-			aUebung.SatzListe = [];
-			await this.LadeUebungsSaetze(aUebung);
-		}
+		// if (aUebung.SatzListe === undefined || aUebung.SatzListe.length <= 0) {
+		// 	aUebung.SatzListe = [];
+		// 	await this.LadeUebungsSaetze(aUebung);
+		// }
 		return aUebung;
 	}
 

@@ -5,7 +5,7 @@ import { Component, OnInit, Input, ViewChildren, QueryList, ElementRef, ViewChil
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
-import { Satz, SatzTyp, LiftTyp } from "./../../../Business/Satz/Satz";
+import { Satz, SatzTyp, LiftTyp, ISatzTyp } from "./../../../Business/Satz/Satz";
 import { ProgramModulTyp } from "./../../app.module";
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { SatzEditComponent } from '../satz-edit/satz-edit.component';
@@ -15,8 +15,8 @@ import { SatzEditComponent } from '../satz-edit/satz-edit.component';
     templateUrl: "./sess-uebung.component.html",
     styleUrls: ["./sess-uebung.component.scss"],
 })
-export class SessUebungComponent implements OnInit {
-    @Input() satzTyp: SatzTyp;
+export class SessUebungComponent implements OnInit, ISatzTyp {
+    @Input() satzType: SatzTyp;
     @Input() programm: ITrainingsProgramm = null;
     @Input() programmModul: ProgramModulTyp = ProgramModulTyp.Kein;
     @Input() session: ISession = null;
@@ -35,6 +35,9 @@ export class SessUebungComponent implements OnInit {
         private fDialogService: DialogeService,
         private fGlobalService: GlobalService
     ) {
+    }
+    get satzTyp(): typeof SatzTyp {
+        return SatzTyp;
     }
     
     ngOnInit(): void {
@@ -72,7 +75,7 @@ export class SessUebungComponent implements OnInit {
         const mSatz: Satz = this.fGlobalService.SatzKopie.Copy();
         mSatz.UebungID = this.sessUebung.ID;
         
-        switch (this.satzTyp) {
+        switch (this.satzType) {
             case SatzTyp.Aufwaermen:
                 mSatz.SatzTyp = SatzTyp.Aufwaermen;
                 break;
@@ -93,7 +96,7 @@ export class SessUebungComponent implements OnInit {
             aEvent.stopPropagation();
         
         let mSatz: Satz;
-        switch (this.satzTyp) {
+        switch (this.satzType) {
             case SatzTyp.Aufwaermen:
                 mSatz = Satz.NeuerSatz(
                     SatzTyp.Aufwaermen,

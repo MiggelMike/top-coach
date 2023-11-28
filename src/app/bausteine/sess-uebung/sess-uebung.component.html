@@ -1,6 +1,6 @@
 <ng-container *ngIf="session" >
     <mat-accordion multi="true">
-        <mat-expansion-panel #ExpansionPanel [expanded]="true">
+        <mat-expansion-panel #ExpansionPanel [expanded]="satzType === satzTyp.Training">
 
             <mat-expansion-panel-header>
                 <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutGap="2px" fxLayoutAlign="flex-start center"  >
