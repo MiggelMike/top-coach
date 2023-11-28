@@ -513,6 +513,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 													await this.fDbModule.CheckUebungSaetze(mProgrammSessionUebung).then(() => {
 														mProgrammSessionUebung.nummeriereSatzListe(mProgrammSessionUebung.SatzListe);
 														// Ist mNeueUebung gleich mProgrammSessionUebung?
+														// Das heißt: Handelt es sich um die gleiche Übung wie z.B "Kniebeuge"?
 														if(
 															// Ist die aktuelle Uebung aus dem Programm die gleiche wie die neue?
 															mProgrammSessionUebung.FkUebung === mNeueUebung.FkUebung &&
