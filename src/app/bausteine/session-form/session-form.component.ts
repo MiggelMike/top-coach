@@ -445,7 +445,9 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 					this.fDbModule.SessionSpeichern(aSessionForm.Session);
 						
 					const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+					// UebungID nicht kopieren
 					mSessionCopyPara.CopyUebungID = false;
+					// SatzID nicht kopieren
 					mSessionCopyPara.CopySatzID = false;
 					// Mit den Daten der gespeicherten Session eine neue erstellen
 					const mNeueSession: Session = Session.StaticCopy(aSessionForm.Session, mSessionCopyPara);
@@ -511,9 +513,14 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 													await this.fDbModule.CheckUebungSaetze(mProgrammSessionUebung).then(() => {
 														mProgrammSessionUebung.nummeriereSatzListe(mProgrammSessionUebung.SatzListe);
 														// Ist mNeueUebung gleich mProgrammSessionUebung?
-														if (mProgrammSessionUebung.FkUebung === mNeueUebung.FkUebung &&
+														if(
+															// Ist die aktuelle Uebung aus dem Programm die gleiche wie die neue?
+															mProgrammSessionUebung.FkUebung === mNeueUebung.FkUebung &&
+															// Ist der Progress aus dem Programm der gleiche wie der, der neuen Uebung?
 															mProgrammSessionUebung.FkProgress === mNeueUebung.FkProgress &&
-															mProgrammSessionUebung.ProgressGroup === mNeueUebung.ProgressGroup) {
+															// Ist die Progress-Gruppe aus dem Programm die gleiche wie die, der neuen Uebung?
+															mProgrammSessionUebung.ProgressGroup === mNeueUebung.ProgressGroup)
+														{
 															this.SaetzePruefen(mNeueUebung.AufwaermSatzListe, mProgrammSessionUebung.AufwaermSatzListe);
 															this.SaetzePruefen(mNeueUebung.ArbeitsSatzListe, mProgrammSessionUebung.ArbeitsSatzListe);
 															this.SaetzePruefen(mNeueUebung.AbwaermSatzListe, mProgrammSessionUebung.AbwaermSatzListe);
@@ -565,24 +572,35 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 									}//if
 								}//for
 							}//for
-								await this.fDbModule.SessionSpeichern(mNeueSession).then(
-									async () => {
-										const mProgrammExtraParaDB: ProgrammParaDB = new ProgrammParaDB();
-										mProgrammExtraParaDB.SessionBeachten = true;
-										mProgrammExtraParaDB.SessionParaDB = new SessionParaDB();
-										mProgrammExtraParaDB.SessionParaDB.UebungenBeachten = true;
-										mProgrammExtraParaDB.SessionParaDB.UebungParaDB = new UebungParaDB();
-										mProgrammExtraParaDB.SessionParaDB.UebungParaDB.SaetzeBeachten = true;
-										await this.fDbModule.ProgrammSpeichern(that.Programm, mProgrammExtraParaDB)
-											.then((mPtrProgramm) => {
-												this.Programm = mPtrProgramm;
-												this.fDbModule.LadeAktuellesProgramm();
-												this.fDbModule.LadeHistorySessions(null, null);
-												this.fSavingDialog.fDialog.closeAll();
-												this.location.back();
-																		
-											});
-									
+							const mSessionIndex = DexieSvcService.AktuellesProgramm.SessionListe.findIndex((mSuchSession) => {
+								return (aSessionForm.Session.ID === mSuchSession.ID);
+							});
+
+								if (mSessionIndex > -1) {
+									DexieSvcService.AktuellesProgramm.SessionListe.splice(mSessionIndex, 1);
+								}
+		
+							DexieSvcService.AktuellesProgramm.SessionListe = that.Programm.SessionListe;
+							await this.fDbModule.SessionSpeichern(mNeueSession).then(
+								async () => {
+									const mProgrammExtraParaDB: ProgrammParaDB = new ProgrammParaDB();
+									mProgrammExtraParaDB.SessionBeachten = true;
+									mProgrammExtraParaDB.SessionParaDB = new SessionParaDB();
+									mProgrammExtraParaDB.SessionParaDB.UebungenBeachten = true;
+									mProgrammExtraParaDB.SessionParaDB.UebungParaDB = new UebungParaDB();
+									mProgrammExtraParaDB.SessionParaDB.UebungParaDB.SaetzeBeachten = true;
+									DexieSvcService.AktuellesProgramm = that.Programm;
+									await this.fDbModule.ProgrammSpeichern(that.Programm, mProgrammExtraParaDB)
+										.then((mPtrProgramm) => {
+											this.Programm = mPtrProgramm;
+											// this.fDbModule.LadeAktuellesProgramm();
+											// this.DoAfterDone(this);
+											this.fDbModule.LadeHistorySessions(null, null);
+											this.fSavingDialog.fDialog.closeAll();
+											this.location.back();
+											
+										});
+										
 									});
 						} catch (err) {
 							console.error(err);
