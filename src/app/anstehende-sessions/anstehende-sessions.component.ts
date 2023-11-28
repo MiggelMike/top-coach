@@ -59,13 +59,14 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
     }
 
     public get AktuellesProgramm(): ITrainingsProgramm {
+        const p: ITrainingsProgramm = DexieSvcService.AktuellesProgramm;
         return DexieSvcService.AktuellesProgramm;
     }
                 
     beforePanelOpened(aSess: Session) {
         aSess.Expanded = true;
     }
-
+    
     beforePanelClosed(aSess: Session) {
         aSess.Expanded = false;
     }
