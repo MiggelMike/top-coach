@@ -2403,11 +2403,15 @@ export class DexieSvcService extends Dexie {
 		}
 	}
 
-	public async CheckUebungSaetze(aUebung: Uebung) {
+	public async CheckUebungSaetze(aUebung: Uebung):Promise<Array<Satz>> {
 		if (aUebung.SatzListe.length === 0) {
-			await this.LadeUebungsSaetze(aUebung.ID)
-				.then((mSaetze) => aUebung.SatzListe = mSaetze)
+			this.LadeUebungsSaetze(aUebung.ID)
+				.then((mSaetze) => {
+					aUebung.SatzListe = mSaetze;
+					return mSaetze;
+				});
 		}
+		return aUebung.SatzListe;
 	}
 
 

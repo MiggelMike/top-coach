@@ -510,23 +510,25 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 												// Prüfe alle Übungen der aktuellen Programm-Session
 												for (let index2 = 0; index2 < mProgrammSession.UebungsListe.length; index2++) {
 													const mProgrammSessionUebung = mProgrammSession.UebungsListe[index2];
-													await this.fDbModule.CheckUebungSaetze(mProgrammSessionUebung).then(() => {
-														mProgrammSessionUebung.nummeriereSatzListe(mProgrammSessionUebung.SatzListe);
-														// Ist mNeueUebung gleich mProgrammSessionUebung?
-														// Das heißt: Handelt es sich um die gleiche Übung wie z.B "Kniebeuge"?
-														if(
-															// Ist die aktuelle Uebung aus dem Programm die gleiche wie die neue?
-															mProgrammSessionUebung.FkUebung === mNeueUebung.FkUebung &&
-															// Ist der Progress aus dem Programm der gleiche wie der, der neuen Uebung?
-															mProgrammSessionUebung.FkProgress === mNeueUebung.FkProgress &&
-															// Ist die Progress-Gruppe aus dem Programm die gleiche wie die, der neuen Uebung?
-															mProgrammSessionUebung.ProgressGroup === mNeueUebung.ProgressGroup)
-														{
+													// Ist mNeueUebung gleich mProgrammSessionUebung?
+													// Das heißt: Handelt es sich um die gleiche Übung wie z.B "Kniebeuge"?
+													if (
+														// Ist die aktuelle Uebung aus dem Programm die gleiche wie die neue?
+														mProgrammSessionUebung.FkUebung === mNeueUebung.FkUebung &&
+														// Ist der Progress aus dem Programm der gleiche wie der, der neuen Uebung?
+														mProgrammSessionUebung.FkProgress === mNeueUebung.FkProgress &&
+														// Ist die Progress-Gruppe aus dem Programm die gleiche wie die, der neuen Uebung?
+														mProgrammSessionUebung.ProgressGroup === mNeueUebung.ProgressGroup)
+													{
+														await this.fDbModule.CheckUebungSaetze(mProgrammSessionUebung).then(() => {
+															// if (mProgrammSessionUebung.SatzListe.length <= 0)
+															// 	alert("Keine Sätze");
+															mProgrammSessionUebung.nummeriereSatzListe(mProgrammSessionUebung.SatzListe);
 															this.SaetzePruefen(mNeueUebung.AufwaermSatzListe, mProgrammSessionUebung.AufwaermSatzListe);
 															this.SaetzePruefen(mNeueUebung.ArbeitsSatzListe, mProgrammSessionUebung.ArbeitsSatzListe);
 															this.SaetzePruefen(mNeueUebung.AbwaermSatzListe, mProgrammSessionUebung.AbwaermSatzListe);
-														}
-													});
+														});
+													}
 												}//for
 											}//if
 										});
