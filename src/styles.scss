@@ -249,7 +249,7 @@ body {
 	width: 48px;
 	height: 48px;
 	border-radius: 24px;
-	color: lightgray;
+	color: black;
 }
 
 div.kreisRot {
@@ -259,7 +259,7 @@ div.kreisRot {
 
 div.kreisGruen {
 	@extend .kreis; 
-	background-color: green;
+	background-color: lightgreen;
 }
 
 
