@@ -1,10 +1,12 @@
-import { DexieSvcService, SessionParaDB, UebungParaDB } from './../services/dexie-svc.service';
+import { DexieSvcService, SessionParaDB, UebungParaDB, onDeleteFn } from './../services/dexie-svc.service';
 import {  ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Component, OnInit } from '@angular/core';
 import { Session } from '../../Business/Session/Session';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { IProgramModul, ProgramModulTyp } from '../app.module';
+import { SessionStatus } from 'src/Business/SessionDB';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 @Component({
     selector: "app-anstehende-sessions",
@@ -18,14 +20,29 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
     
     constructor(
         private fDbModule: DexieSvcService,
+        private fDialogService: DialogeService,
         private fLoadingDialog: DialogeService,
     ) {
         
-     }
+    }
+    
+    drop(event: any) {
+        const mEvent = event as CdkDragDrop<Session[]>;
+		this.SortedSessionListe[event.previousIndex].ListenIndex = mEvent.currentIndex;
+		this.SortedSessionListe[event.currentIndex].ListenIndex = mEvent.previousIndex;
+		this.fDbModule.SessionSpeichern(this.SortedSessionListe[mEvent.previousIndex] as Session);
+		this.fDbModule.SessionSpeichern(this.SortedSessionListe[mEvent.currentIndex] as Session);		
+	}
+
     
     get programModul(): typeof ProgramModulTyp {
         return ProgramModulTyp;
     }
+
+    DoSessionName(aSess:Session, aEvent: any) {
+		aSess.Name = aEvent.target.value;
+		this.fDbModule.SessionSpeichern(aSess as Session);
+	}
   
     private async LadeSessions(aOffSet: number = 0): Promise<void> {
         const mDialogData = new DialogData();
@@ -69,6 +86,73 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
     
     beforePanelClosed(aSess: Session) {
         aSess.Expanded = false;
+    }
+
+    get SessionListe(): Array<Session>{
+        return this.AktuellesProgramm.SessionListe;
+    }
+
+    panelOpened(aSess: Session) {
+        
+    }
+
+    panelClosed(aSess: Session) {
+        
+    }
+
+    startSession(aEvent: Event, aSess: Session) {
+        
+    }
+
+    public StartButtonText(aSess: Session): string {
+		if (aSess.Kategorie02 === undefined) aSess.Kategorie02 = SessionStatus.Wartet;
+
+		switch (aSess.Kategorie02) {
+			case SessionStatus.Wartet: 
+				return "Start";
+			case SessionStatus.Laueft:
+			case SessionStatus.Pause:
+				return "Go ahead";
+			case SessionStatus.Fertig:
+			case SessionStatus.FertigTimeOut:
+				return "View";
+			default:
+				return "?";
+		}
+    }
+
+    private DeleteSessionPrim(aSession: Session, aRowNum: number, aOnDelete: onDeleteFn ) {
+		const mDialogData = new DialogData();
+		mDialogData.textZeilen.push(`Delete session #${aRowNum} "${aSession.Name}" ?`);
+		mDialogData.OkFn = () => aOnDelete();
+		this.fDialogService.JaNein(mDialogData);
+	}
+    
+    public DeleteSession(aEvent: any, aSession: Session, aRowNum: number) {
+		aEvent.stopPropagation();
+		this.DeleteSessionPrim(
+			aSession,
+			aRowNum,
+			() => {
+				const index: number = this.SessionListe.indexOf(aSession);
+				if (index !== -1) 
+					this.SessionListe.splice(index, 1);
+				
+				for (let index = 0; index < this.SessionListe.length; index++) 
+					this.SessionListe[index].ListenIndex = index;
+				
+				this.fDbModule.DeleteSession(aSession as Session);
+			}
+		);
+	}
+
+    get SortedSessionListe(): Array<Session>{
+        this.AktuellesProgramm.SessionListe.sort((s1, s2) => {
+            if (s1.ListenIndex > s2.LiftedWeight) return 1;
+            if (s1.ListenIndex < s2.LiftedWeight) return -1;
+            return 0;
+        });
+        return this.AktuellesProgramm.SessionListe;
     }
 
     DoWorker() {

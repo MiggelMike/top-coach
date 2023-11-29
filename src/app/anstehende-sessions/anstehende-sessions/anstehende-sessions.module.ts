@@ -24,6 +24,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Programm03Module } from 'src/app/bausteine/programm03/programm03Md/programm03.module';
 import { SessUebungModule } from 'src/app/bausteine/sess-uebung/sess-uebung-module/sess-uebung-module.module';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 
 
@@ -57,6 +58,7 @@ const routes: Routes = [{ path: '', component: AnstehendeSessionsComponent }];
     MatToolbarModule,
     MatIconModule,
     MatButtonModule,
+    DragDropModule
     
   ],
   exports: [RouterModule],

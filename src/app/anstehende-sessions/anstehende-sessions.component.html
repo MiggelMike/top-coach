@@ -4,7 +4,125 @@
         <p class="font-bold">Upcoming sessions</p>
         <ng-container  *ngIf="AktuellesProgramm">
             <h4>{{AktuellesProgramm.Name}}</h4>
-                <app-programm02 
+            <div class="colum-center">
+                <ng-container *ngIf="SessionListe && (SessionListe.length > 0)">
+                    <!-- <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleSessions()">{{ToggleButtonText}}</a>
+                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="AdditionalSession()">Additional session</a> -->
+                            
+                    <div cdkDropList (cdkDropListDropped)="drop($event)">
+                        <ng-container *ngFor="let sess of SortedSessionListe, index as i">
+                            <div  class='mg-top-1'>
+                                <mat-accordion #accSession="matAccordion" multi="true">
+                                    <mat-expansion-panel 
+                                        #panSession='matExpansionPanel'                            
+                                        (opened) = "panelOpened(sess)"
+                                        (closed) = "panelClosed(sess)" 
+                                        class="HG-01">
+                                        <mat-expansion-panel-header mat-tooltip-panel-below  matTooltip="Hold and drag">
+                                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="flex-start center">
+            
+                                                    <mat-form-field class="width-300">
+                                                        <input class="tc-font-size-smaller width-400" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
+                                                    </mat-form-field>
+            
+            
+                                                    <div class="center-item" layout-align="center center" fxFlex="auto">
+                                                        <a [ngClass]="['ml-5','link-button-font', 'HG-01']" mat-flat-button (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
+                                                    </div>
+
+                                                    <ng-container *ngIf="sess.IstAusVorgabe === false">
+                                                        <div class="center-item" layout-align="center center" fxFlex="0 0 auto">
+                                                            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteSession($event,sess, i+1)">Delete</a>
+                                                        </div>
+                                                    </ng-container>
+                                                
+                                            </div>
+                                        </mat-expansion-panel-header>
+            
+                                        <ng-container *ngFor="let SessUeb of sess.UebungsListe, index as UebungIndex">
+                                            <div [id]="'collapseSession' + UebungIndex" aria-labelledby="headingOne">
+                                                <div class="card-body">
+                                                    <div class="row-start-left-gap-3">
+                                                        <span class="tc-font-size-smaller font-bold">#{{UebungIndex+1}} {{SessUeb.Name}}</span>
+                                                    </div>
+                                                    
+                                                    <ng-container *ngIf="SessUeb.AufwaermSatzListe.length > 0">
+                                                        <div class="row-start-left-gap-3">
+                                                            <span class="tc-font-size-smaller font-bold">Warm up</span>
+                                                        </div>
+                                                    
+                                                        <div class="row-start-left-gap-3">
+                                                            <ng-container *ngFor="let satz of SessUeb.AufwaermSatzListe, index as satzIndex">
+                                                                <app-satz-simple [satz]="satz"></app-satz-simple>
+                                                            </ng-container>
+                                                        </div>
+                                                    </ng-container>
+
+                                                    <ng-container *ngIf="SessUeb.ArbeitsSatzListe.length > 0">
+                                                        <div class="row-start-left-gap-3">
+                                                            <span class="tc-font-size-smaller font-bold">Work</span>
+                                                        </div>
+                                                        <div class="row-start-left-gap-3">
+                                                            <ng-container *ngFor="let satz of SessUeb.ArbeitsSatzListe, index as satzIndex">
+                                                                <app-satz-simple [satz]="satz"></app-satz-simple>
+                                                            </ng-container>
+                                                        </div>
+                                                    </ng-container>
+
+                                                    <ng-container *ngIf="SessUeb.AbwaermSatzListe.length > 0">
+                                                        <div class="row-start-left-gap-3">
+                                                            <span class="tc-font-size-smaller font-bold">Cool down</span>
+                                                        </div>                                                            
+                                                        <div class="row-start-left-gap-3">                                                            
+                                                            <ng-container *ngFor="let satz of SessUeb.AbwaermSatzListe, index as satzIndex">
+                                                                <div class="row-start-left-gap-3">
+                                                                    <app-satz-simple [satz]="satz"></app-satz-simple>
+                                                                </div>
+                                                            </ng-container>
+                                                        </div>
+                                                    </ng-container>
+
+                                                    <!-- session an Sub-Komponente durchreichen -->
+                                                    <!-- <app-programm03 
+                                                        [session]="sess" 
+                                                        [cmpSession]="sess" 
+                                                        [programm]="programm"
+                                                        [cmpSettingsSession]="sess" 
+                                                        [bearbeitbar]="bearbeitbar" 
+                                                        [SofortSpeichern]="SofortSpeichern"
+                                                        [DeletedSatzList]="DeletedSatzList">
+                                                    </app-programm03> -->
+                                                </div>
+                                            </div>
+                                        </ng-container>
+            
+                                            <!-- <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
+                                                <div class="center-item" layout-align="center center">
+                                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="CopySession(sess)">Copy Session</a>
+                                                </div>
+            
+                                                <div class="center-item" layout-align="center center">
+                                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteSession($event, sess,i)">Delete Session</a>
+                                                </div>
+                                            </div>
+            
+                                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
+                                                <div class="center-item" layout-align="center center">
+                                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="AddExercise(sess)">Add exercise</a>
+                                                </div>
+            
+                                                <div class="center-item" layout-align="center center">
+                                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="PasteExcercise(sess)">Paste Exercise</a>
+                                                </div>
+                                            </div> -->
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+                            </div>
+                        </ng-container>
+                    </div>
+                </ng-container>
+            </div>
+                <!-- <app-programm02 
                     [showButtons]="false"
                     [showSaveButtons] = "false" 
                     [ModulTyp] = "programModul.AnstehendeSessions"
@@ -13,7 +131,7 @@
                     [bearbeitbar]="false"
                     [StartButtonVisible]= "true"
                     [SofortSpeichern]= "true">
-                </app-programm02>
+                </app-programm02> -->
         </ng-container>
     </div>
 </div>
