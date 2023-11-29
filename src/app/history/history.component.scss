@@ -4,8 +4,9 @@
 
 #History-Sub-Panel {
     height: 100%;
-    width: 95%;
-
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 #History-Panel{
@@ -27,7 +28,7 @@
 @media screen and (orientation: portrait){
     @media screen and  (max-device-height: 2560){
         #History-Panel {
-            height: 2420px;
+            height: 2400px;
         }
 
         // #History-Sub-Panel {
@@ -38,7 +39,7 @@
     
     @media screen and (max-device-height: 1366px),  (max-device-height: 1368px){
         #History-Panel {
-            height: 1270px;
+            height: 1200px;
         }
 
         // #History-Sub-Panel {
@@ -48,38 +49,43 @@
     
     @media screen and (max-device-height: 1180px){
         #History-Panel {
-            height: 1075px;
+            height: 1000px;
         }
     }   
 
     @media screen and (max-device-height: 1138px){
         #History-Panel {
-            height: 1050px;
+            height: 1000px;
         }
     }       
     
     @media screen and (max-device-height: 1024px){
         #History-Panel{
-            height: 930px;
+            height: 900px;
         }
     }
 
     @media screen and (max-device-height: 914px), (max-device-height: 915px){
         #History-Panel{
-            height: 825px;
+            height: 800px;
         }
     }
 
     @media screen and (max-device-height: 740px){
         #History-Panel{
-            height: 660px;
+            height: 600px;
         }
     }    
     @media screen and (max-device-height: 720px){
         #History-Panel{
-            height: 625px;
+            height: 600x;
         }
     }
+    @media screen and (max-device-height: 640px){
+        #History-Panel{
+            height: 500x;
+        }
+    }    
 }   
 
 @media screen and (orientation: landscape){

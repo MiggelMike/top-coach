@@ -71,10 +71,10 @@
             </ng-template>
             <ng-template #Charts>
                 <mat-accordion #accSession="matAccordion" multi="true">
-                    <mat-expansion-panel #ExercisesInChart class="HG-01">
+                    <mat-expansion-panel #ExercisesInChart class="HG-01" [expanded]="false">
                         <mat-expansion-panel-header>
                             <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start center">
-                                <div class="ml-10" fxLayout="column" fxFlex="155px">
+                                <div class="ml-10 font-14-data" fxLayout="column" fxFlex="155px">
                                     <span>Chart settings</span>
                                 </div>
                             </div>
@@ -113,7 +113,7 @@
                                         class="HG-01" 
                                         (opened)="OnBarChartExpanded(mChartData)"
                                         (closed)="OnBarChartClosed(mChartData)"
-                                        [expanded]="BarChartExpanded(mChartData)"
+                                        [expanded]="false"
                                         >
                                         <mat-expansion-panel-header mat-tooltip-panel-below  matTooltip="Hold and drag">
                                             <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"
