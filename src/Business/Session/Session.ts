@@ -43,6 +43,7 @@ export interface ISession extends ISessionDB {
     BodyWeight: BodyWeight;
     BodyWeightSession: number;
     BodyWeightSessionText: string;
+    Vollstaending: boolean; 
 }
 
 export class SessionCopyPara {
@@ -64,6 +65,7 @@ export class Session implements ISession {
         this.SessionDB.ID = aVal;
     }
     //#endregion
+    Vollstaending: boolean = false;
     //#region FK_Programm 
     get FK_Programm(): number {
         return Number(this.SessionDB.FK_Programm);

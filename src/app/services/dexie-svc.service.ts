@@ -516,7 +516,7 @@ export class DexieSvcService extends Dexie {
 			DexieSvcService.AktuellesProgramm.SessionListe.filter(
 					(s) => (s.Kategorie02 !== SessionStatus.Fertig && s.Kategorie02 !== SessionStatus.FertigTimeOut)
 				);
-			return this.SortSessionByListenIndex(DexieSvcService.AktuellesProgramm.SessionListe as Array<ISession>);
+			return this.SortSessionByListenIndex(DexieSvcService.AktuellesProgramm.SessionListe);
 		}
 		return undefined;
 	}

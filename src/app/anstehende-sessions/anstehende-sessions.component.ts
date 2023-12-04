@@ -8,13 +8,14 @@ import { IProgramModul, ProgramModulTyp } from '../app.module';
 import { SessionStatus } from 'src/Business/SessionDB';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Router } from '@angular/router';
+import { ISatzStatus, SatzStatus } from 'src/Business/Satz/Satz';
 
 @Component({
 	selector: 'app-anstehende-sessions',
 	templateUrl: './anstehende-sessions.component.html',
 	styleUrls: ['./anstehende-sessions.component.scss'],
 })
-export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
+export class AnstehendeSessionsComponent implements OnInit, IProgramModul,  ISatzStatus  {
 	public isCollapsed = false;
 	private worker: Worker;
 	// private fProgramm: ITrainingsProgramm;
@@ -24,7 +25,11 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
 		private fDialogService: DialogeService,
 		private fLoadingDialog: DialogeService,
 		private router: Router
-	) {}
+    ) { }
+    
+    get satzStatus(): typeof SatzStatus {
+		return SatzStatus;
+	}
 
 	drop(event: any) {
 		const mEvent = event as CdkDragDrop<Session[]>;
@@ -146,12 +151,16 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul {
 		});
 	}
 
-	get SortedSessionListe(): Array<Session> {
-		return this.AktuellesProgramm.SessionListe.sort((s1, s2) => {
-			if (s1.ListenIndex > s2.LiftedWeight) return 1;
-			if (s1.ListenIndex < s2.LiftedWeight) return -1;
-			return 0;
-		});
+    get SortedSessionListe(): Array<Session> {
+        return (this.AktuellesProgramm.SessionListe).sort((s1, s2) => {
+			if (s1.ListenIndex > s2.ListenIndex) return 1;
+            if (s1.ListenIndex < s2.ListenIndex) return -1;
+            return 0;
+		}) ;
+	}
+
+	get GewichtsEinheit(): string {
+		return DexieSvcService.GewichtsEinheitText;
 	}
 
 	DoWorker() {
