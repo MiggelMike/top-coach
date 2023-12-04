@@ -15,20 +15,18 @@
                                 <mat-accordion #accSession="matAccordion" multi="true">
                                     <mat-expansion-panel 
                                         #panSession='matExpansionPanel'                            
+                                        disabled="true"
                                         (opened) = "panelOpened(sess)"
                                         (closed) = "panelClosed(sess)" 
                                         class="HG-01">
                                         <mat-expansion-panel-header mat-tooltip-panel-below  matTooltip="Hold and drag">
                                             <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="flex-start center">
-                                                <div class="mg-top-1">
                                                     <mat-form-field class="width-300">
                                                         <input class="tc-font-size-smaller width-400" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
                                                     </mat-form-field>
-                                                </div>
                                                 <!-- <input class="tc-font-size-smaller width-400" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)"> -->
                                            
-                                            <!-- <ng-container *ngIf="sess.Vollstaending === true; then Vollstaendig else Unvollstaendig"></ng-container>
-                                                
+                                            <ng-container *ngIf="sess.Vollstaendig === true; then Vollstaendig else Unvollstaendig"></ng-container>
                                                 <ng-template #Vollstaendig>
                                                     <div class="center-item" layout-align="center center" fxFlex="auto">
                                                         <a [ngClass]="['ml-5','link-button-font', 'HG-01']" mat-flat-button (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
@@ -44,7 +42,7 @@
                                                     <div class="center-item" layout-align="center center" fxFlex="auto">
                                                         <a [ngClass]="['ml-5','link-button-font', 'HG-01']" mat-flat-button disabled="true">Initializing</a>
                                                     </div>
-                                                </ng-template> -->
+                                                </ng-template>
                                             </div>
                                         </mat-expansion-panel-header>
             
@@ -161,6 +159,7 @@
                                     </mat-expansion-panel>
                                 </mat-accordion>
                             </div>
+                            <ng-container>{{setVollstaendig(panSession, sess, true) }}</ng-container>
                         </ng-container>
                     </div>
                 </ng-container>
