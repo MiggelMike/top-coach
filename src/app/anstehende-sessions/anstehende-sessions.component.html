@@ -20,13 +20,13 @@
                                         (closed) = "panelClosed(sess)" 
                                         class="HG-01">
                                         <mat-expansion-panel-header mat-tooltip-panel-below  matTooltip="Hold and drag">
-                                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="flex-start center">
-                                                    <mat-form-field class="width-300">
-                                                        <input class="tc-font-size-smaller width-400" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
-                                                    </mat-form-field>
+                                            <div class="row-start-left-gap-3 mg-bottom-3">
+                                                <mat-form-field class="width-300">
+                                                    <input class="tc-font-size-smaller width-400" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
+                                                </mat-form-field>
                                                 <!-- <input class="tc-font-size-smaller width-400" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)"> -->
                                            
-                                            <ng-container *ngIf="sess.Vollstaendig === true; then Vollstaendig else Unvollstaendig"></ng-container>
+                                                <ng-container *ngIf="sess.Vollstaendig === true; then Vollstaendig else Unvollstaendig"></ng-container>
                                                 <ng-template #Vollstaendig>
                                                     <div class="center-item" layout-align="center center" fxFlex="auto">
                                                         <a [ngClass]="['ml-5','link-button-font', 'HG-01']" mat-flat-button (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
