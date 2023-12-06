@@ -19,6 +19,7 @@ import { ExerciseSettingSvcService } from 'src/app/services/exercise-setting-svc
 import { ExerciseSettingsComponent } from 'src/app/exercise-settings/exercise-settings.component';
 import { IProgramModul, ProgramModulTyp } from '../../app.module';
 import { BodyWeight } from 'src/Business/Bodyweight/Bodyweight';
+import { AnstehendeSessionsComponent } from 'src/app/anstehende-sessions/anstehende-sessions.component';
 
 @Component({
 	selector: "app-session-form",
@@ -275,19 +276,18 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 	}
 
 	leave() {
-		const mSuchSession = DexieSvcService.AktuellesProgramm.SessionListe.find((mSession) => {
-			if (mSession.ID === this.Session.ID || mSession.ListenIndex === this.Session.ListenIndex)
-				return mSession;
-			return null;
-		});
+		// const mSuchSession = DexieSvcService.AktuellesProgramm.SessionListe.find((mSession) => {
+		// 	if (mSession.ID === this.Session.ID || mSession.ListenIndex === this.Session.ListenIndex)
+		// 		return mSession;
+		// 	return null;
+		// });
 
-		if (mSuchSession !== undefined && mSuchSession !== null)
-			DexieSvcService.AktuellesProgramm.SessionListe[mSuchSession.ListenIndex] = this.Session;
+		// if (mSuchSession !== undefined && mSuchSession !== null)
+		// 	DexieSvcService.AktuellesProgramm.SessionListe[mSuchSession.ListenIndex] = this.Session;
 
-		if (this.fSessionStatsOverlayComponent !== undefined && this.fSessionStatsOverlayComponent !== null) this.fSessionStatsOverlayComponent.close();
+		// if (this.fSessionStatsOverlayComponent !== undefined && this.fSessionStatsOverlayComponent !== null) this.fSessionStatsOverlayComponent.close();
 
-		
-		this.location.back();
+		this.router.navigate(['/']);
 	}
 
 	ngAfterViewInit() {
@@ -302,7 +302,8 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 
 	public SaveChanges(aPara: any) {
 		(aPara as SessionFormComponent).SaveChangesPrim();
-		this.router.navigate(['/']);
+		// this.router.navigate(['/']);
+		this.leave();
 	}
 
 	public async SaveChangesPrim(): Promise<void> {
@@ -351,7 +352,8 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 		mDialogData.textZeilen.push("Cancel unsaved changes?");
 		mDialogData.OkFn = (): void => {
 			aPara.Session.resetSession(aPara.cmpSession);
-			this.router.navigate([aNavRoute]);
+			// this.router.navigate([aNavRoute]);
+			this.leave();
 		};
 
 		this.fDialogService.JaNein(mDialogData);
@@ -400,11 +402,14 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 									Session.StaticCheckMembers(mPtrSession);
 									mPtrSession.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
 									this.fSavingDialog.fDialog.closeAll();
-									this.location.back();
+									// this.router.navigate(['/']);
+									this.leave();
 								});
 							} else {
 								this.fSavingDialog.fDialog.closeAll();
-								this.location.back();
+								this.leave();
+								// this.router.navigate(['/']);
+								// this.location.back();
 							}
 						});
 				});
@@ -542,7 +547,6 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 							for (let index1 = 0; index1 < that.Programm.SessionListe.length; index1++) {
 								const mPtrSession = that.Programm.SessionListe[index1];
 								// Eventuell müssen die Sätze der Session-Übungen geladen werden
-									
 								for (let mUebungIndex = 0; mUebungIndex < mPtrSession.UebungsListe.length; mUebungIndex++) {
 									const mPtrUebung = mPtrSession.UebungsListe[mUebungIndex];
 									if (mPtrUebung.ArbeitsSatzListe.length > 0
@@ -598,8 +602,10 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 											// this.DoAfterDone(this);
 											this.fDbModule.LadeHistorySessions(null, null);
 											this.fSavingDialog.fDialog.closeAll();
-											this.location.back();
-											
+											//this.location.back();
+											// this.router.navigate(['/']);
+											this.leave();
+
 										});
 										
 									});
@@ -609,7 +615,9 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 					} // <= mSavedSession.UebungsListe.length > 0
 				} else await this.SaveChangesPrim().then(() => {
 					this.fSavingDialog.fDialog.closeAll();
-					this.location.back();
+					// this.router.navigate(['/']);
+					//this.location.back();
+					this.leave();
 				});
 
 			} catch (err) {

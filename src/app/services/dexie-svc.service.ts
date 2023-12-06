@@ -1368,6 +1368,8 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async LadeAktuellesProgramm(aProgrammParaDB?: ProgrammParaDB): Promise<ITrainingsProgramm> {
+		DexieSvcService.AktuellesProgramm = null;
+		DexieSvcService.CmpAktuellesProgramm = null;
 		let mHelpProgrammParaDB: ProgrammParaDB;
 		// Wenn keine Übergabe-Parameter vorhanden sind, hier lokale erzeugen. 
 		if (mHelpProgrammParaDB === undefined) {
@@ -1399,7 +1401,8 @@ export class DexieSvcService extends Dexie {
 				DexieSvcService.AktuellesProgramm = null;
 				if (aProgramme.length > 0) {
 					DexieSvcService.AktuellesProgramm = aProgramme[0];
-					DexieSvcService.CmpAktuellesProgramm = aProgramme[0];
+					DexieSvcService.AktuellesProgramm.SessionListe.forEach((aSession) => aSession.Vollstaendig = true);
+					DexieSvcService.CmpAktuellesProgramm = DexieSvcService.AktuellesProgramm.Copy();
 				}
 					
 				return DexieSvcService.AktuellesProgramm;

@@ -9,7 +9,6 @@ import { SessionStatus } from 'src/Business/SessionDB';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Router } from '@angular/router';
 import { ISatzStatus, SatzStatus } from 'src/Business/Satz/Satz';
-import { MatExpansionPanel } from '@angular/material/expansion';
 
 @Component({
 	selector: 'app-anstehende-sessions',
@@ -150,11 +149,6 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul,  ISat
 
 			this.fDbModule.DeleteSession(aSession as Session);
 		});
-	}
-
-	setVollstaendig(aPanel: MatExpansionPanel, aSess: Session, aStatus: boolean): void{
-		aPanel.disabled = !aStatus;
-		aSess.Vollstaendig = aStatus;
 	}
 
     get SortedSessionListe(): Array<Session> {
