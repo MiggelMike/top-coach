@@ -197,17 +197,18 @@ export class DexieSvcService extends Dexie {
 	readonly cBodyweight: string = "BodyWeightDB";
 	readonly cSprache: string = "Sprache";
 
-	public HistorySessionsAfterLoadFn: AfterLoadFn = null; 
+	public HistorySessionsAfterLoadFn: AfterLoadFn = null;
 	public static HistorySessions: Array<HistorySession> = [];
-	public static HistoryBisDatum: Date = null; 
-	public static HistoryVonDatum: Date = null; 
+	public static HistoryBisDatum: Date = null;
+	public static HistoryVonDatum: Date = null;
 	public static AktuellesProgramm: ITrainingsProgramm = null;
 	public static CmpAktuellesProgramm: ITrainingsProgramm = null;
 	public static ExamplesDone: boolean = false;
-	public static ModulTyp: ProgramModulTyp  = null;
+	public static ModulTyp: ProgramModulTyp = null;
 	public static GewichtsEinheitText: string = 'KG';
 	public static GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
 	public static StammUebungen: Array<Uebung> = [];
+	private static LanghantelTable: Dexie.Table<Hantel, number>;
 	private static HantelscheibenTable: Dexie.Table<Hantelscheibe, number>;
 	private static ProgressTable: Dexie.Table<Progress, number>;
 	private static DiaUebungSettingsTable: Dexie.Table<DiaUebungSettings, number>;
@@ -302,8 +303,8 @@ export class DexieSvcService extends Dexie {
 			// 	})
 			// 	.sortBy("Datum")
 			// 	.then(async (aSessionListe) => {
-					let mResult: Array<Session> = aSessionListe;
-					//aSessionListe.map((aSessionDB) => mResult.push(new Session(aSessionDB)));
+			let mResult: Array<Session> = aSessionListe;
+			//aSessionListe.map((aSessionDB) => mResult.push(new Session(aSessionDB)));
 
 			for (let mSessionIndex = 0; mSessionIndex < mResult.length; mSessionIndex++) {
 				const mPtrSession: Session = mResult[mSessionIndex];
@@ -513,7 +514,7 @@ export class DexieSvcService extends Dexie {
 	public UpComingSessionList(): Array<Session> {
 		if ((DexieSvcService.AktuellesProgramm) && (DexieSvcService.AktuellesProgramm.SessionListe)) {
 			DexieSvcService.AktuellesProgramm.SessionListe =
-			DexieSvcService.AktuellesProgramm.SessionListe.filter(
+				DexieSvcService.AktuellesProgramm.SessionListe.filter(
 					(s) => (s.Kategorie02 !== SessionStatus.Fertig && s.Kategorie02 !== SessionStatus.FertigTimeOut)
 				);
 			return this.SortSessionByListenIndex(DexieSvcService.AktuellesProgramm.SessionListe);
@@ -541,7 +542,7 @@ export class DexieSvcService extends Dexie {
 		if (aSession.UebungsListe !== undefined)
 			aSession.UebungsListe.forEach((mLoeschUebung) => this.DeleteUebung(mLoeschUebung));
 		
-			DexieSvcService.SessionTable.delete(aSession.ID);
+		DexieSvcService.SessionTable.delete(aSession.ID);
 	}
 
 	public async DeleteUebung(aUebung: Uebung) {
@@ -712,7 +713,7 @@ export class DexieSvcService extends Dexie {
 		if (DexieSvcService.ModulTyp === null)
 			DexieSvcService.ModulTyp = ProgramModulTyp.Kein;
 
-		//Dexie.delete("ConceptCoach");
+		// Dexie.delete("ConceptCoach");
 		this.version(37).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
@@ -730,34 +731,15 @@ export class DexieSvcService extends Dexie {
 			
 		});
 
-		this.table(this.cHantel).mapToClass(Hantel);
-		this.InitMuskelGruppe();
 		this.InitDatenbank();
-		this.LadeStammUebungen();
-		this.InitSession();
-
-		if (DexieSvcService.AktuellesProgramm === null) {
-			this.LadeAktuellesProgramm()
-				.then((aProgram) => {
-					// if(DexieSvcService.ExamplesDone === false)
-						// this.MakeExample(aProgram)
-				});
-		}
-
-		if (DexieSvcService.HistorySessions.length <= 0) 
-			this.LadeHistorySessions(null, null);
-
 	}
 			
 	InitDatenbank() {
 		this.InitAll();
-		//  this.HantelTable.clear();
 		this.PruefeStandardProgress();
 		this.PruefeStandardLanghanteln();
 		this.PruefeStandardEquipment();
 		this.PruefeStandardMuskelGruppen();
-		// Worker funktioniert NICHT in Android!
-		// this.DoWorker(WorkerAction.LadeDiagrammDaten);
 		// this.LadeStammUebungen();
 	}
 
@@ -837,8 +819,8 @@ export class DexieSvcService extends Dexie {
 		this.InitHantel();
 		this.InitProgress();
 		this.InitUebung();
-		await this.InitSprache();
-		await this.InitAppData();
+		this.InitSprache();
+		this.InitAppData();
 		this.InitHantelscheibe();
 		this.InitProgramm();
 		this.InitSession();
@@ -886,7 +868,10 @@ export class DexieSvcService extends Dexie {
 	}
 
 	private InitHantel() {
-
+		if (DexieSvcService.LanghantelTable === undefined) {
+			DexieSvcService.LanghantelTable = this.table(this.cHantel);
+			DexieSvcService.LanghantelTable.mapToClass(Hantel);
+		}
 	}
 
 	private InitHantelscheibe() {
@@ -1363,13 +1348,37 @@ export class DexieSvcService extends Dexie {
 					// mProgrammParaDB.SessionParaDB.LadeUebungen
 					await this.LadeStandardProgramme()
 						.then(async (aProgrammListe) => {
-							if (aProgrammListe.find((programm) => programm.ProgrammTyp === ProgrammTyp.Gzclp) === undefined)
+							let mLoadAgain: boolean = false; 
+							if (aProgrammListe.find((programm) => programm.ProgrammTyp === ProgrammTyp.Gzclp) === undefined) {
+								mLoadAgain = true;
 								await this.ProgrammSpeichern(GzclpProgramm.ErzeugeGzclpVorlage(this));
+							}
 							
-							if (aProgrammListe.find((programm) => programm.ProgrammTyp === ProgrammTyp.HypertrophicSpecific) === undefined)
+							if (aProgrammListe.find((programm) => programm.ProgrammTyp === ProgrammTyp.HypertrophicSpecific) === undefined) {
+								mLoadAgain = true;
 								await this.ProgrammSpeichern(HypertrophicProgramm.ErzeugeHypertrophicVorlage(this));
+							}
+
+							if (mLoadAgain) {
+								return await this.LadeStandardProgramme()
+									.then((aProgrammListe) => { return DexieSvcService.StandardProgramme = aProgrammListe; });
+							} else {
+								DexieSvcService.StandardProgramme = aProgrammListe
+								return DexieSvcService.StandardProgramme;
+							}
 							
-							await this.LadeStandardProgramme();
+							// await this.LadeStandardProgramme();
+							// if (DexieSvcService.AktuellesProgramm === null) {
+							// 	this.LadeAktuellesProgramm()
+							// 		.then((aProgram) => {
+							// 			// if(DexieSvcService.ExamplesDone === false)
+							// 			// this.MakeExample(aProgram)
+							// 		});
+							// }
+					
+							if (DexieSvcService.HistorySessions.length <= 0)
+								this.LadeHistorySessions(null, null);
+					
 						});
 					// this.LadeAktuellesProgramm();
 				}
@@ -1640,7 +1649,7 @@ export class DexieSvcService extends Dexie {
 		if (aBisDatum === null)
 			aBisDatum = new Date('01.01.2099');
 
-		const mProgramNamen: Array<{ ID: number, Name: string }> = []; 
+		const mProgramNamen: Array<{ ID: number, Name: string }> = [];
 
 		return DexieSvcService.SessionTable
 			.where("GestartedWann")
@@ -2210,10 +2219,15 @@ export class DexieSvcService extends Dexie {
 
 
 	//#region Sprache
-	private async InitSprache() {
-		DexieSvcService.SpracheTable = this.table(this.cSprache);
-		DexieSvcService.SpracheTable.mapToClass(Sprache);
-		await this.LadeAlleSprachen().then(async (mSprachen) => {
+	private InitSprache() {
+		if (DexieSvcService.SpracheTable === undefined) {
+			DexieSvcService.SpracheTable = this.table(this.cSprache);
+			DexieSvcService.SpracheTable.mapToClass(Sprache);
+		}
+	}
+
+	private LadeSprache() {
+		this.LadeAlleSprachen().then(async (mSprachen) => {
 			if (mSprachen.length === 0) {
 				await this.InsertSprache(Sprache.StaticNeueSprache(
 					cEnglish,
@@ -2236,7 +2250,7 @@ export class DexieSvcService extends Dexie {
 						cDeutschDatumFormat,
 						cDeutschZeitFormat
 					));
-					
+				
 				if (mSprachen.find((aSprache) => aSprache.Name = cEnglish) === undefined)
 					await this.InsertSprache(Sprache.StaticNeueSprache(
 						cEnglish,
@@ -2248,6 +2262,7 @@ export class DexieSvcService extends Dexie {
 			}
 		});
 	}
+
 
 	async InsertSprache(aSprache: Sprache) {
 		await DexieSvcService.SpracheTable.put(aSprache);
@@ -2272,13 +2287,18 @@ export class DexieSvcService extends Dexie {
 
 	//#region  AppaData
 	private async InitAppData() {
-		DexieSvcService.AppDataTable = this.table(this.cAppData);
-		DexieSvcService.AppDataTable.mapToClass(AppData);
-		await this.LadeAppData().then((aAppRec) => (DexieSvcService.AppRec = aAppRec));
+		if (DexieSvcService.AppDataTable === undefined) {
+			DexieSvcService.AppDataTable = this.table(this.cAppData);
+			DexieSvcService.AppDataTable.mapToClass(AppData);
+		}
+	}
+
+	private SetAppData() {
+		this.LadeAppData().then((aAppRec) => (DexieSvcService.AppRec = aAppRec));
 
 		if (!DexieSvcService.AppRec) {
 			DexieSvcService.AppRec = new AppData();
-			await DexieSvcService.AppDataTable.put(DexieSvcService.AppRec).catch((error) => {
+			DexieSvcService.AppDataTable.put(DexieSvcService.AppRec).catch((error) => {
 				console.error(error);
 			});
 		}
@@ -2298,6 +2318,7 @@ export class DexieSvcService extends Dexie {
 				.then((aSprache) => DexieSvcService.AktuellSprache = aSprache);
 		}// if
 	}
+
 
 	public async LadeAppData(): Promise<AppData> {
 		return await DexieSvcService.AppDataTable
