@@ -14,7 +14,7 @@ export class ProgrammWaehlenComponent implements OnInit, IProgramModul {
     public ProgrammListeObserver: Observable<ITrainingsProgramm[]>;
     ViewInitDone: boolean = false;
     get ProgrammListe(): Array<ITrainingsProgramm> {
-        return this.fDbModule.StandardProgramme;
+        return DexieSvcService.StandardProgramme;
     };
 
     constructor(

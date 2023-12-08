@@ -60,8 +60,8 @@ export class PlateCalcComponent implements OnInit {
 		this.Satz = fPlateCalcOverlayConfig.satz;
 		this.Uebung = fPlateCalcOverlayConfig.uebung;
 		this.GewichtAusgefuehrt = this.Satz.GewichtAusgefuehrt;
-		this.HantelListe = this.fDbModule.LangHantelListe;
-		this.Hantel = this.fDbModule.LangHantelListe.find((lh) => lh.ID === this.Satz.FkHantel);
+		this.HantelListe = DexieSvcService.LangHantelListe;
+		this.Hantel = DexieSvcService.LangHantelListe.find((lh) => lh.ID === this.Satz.FkHantel);
 		this.PlateListObserver = of(this.PlateList);
 		this.CalcPlates();
 	}
@@ -206,7 +206,7 @@ export class PlateCalcComponent implements OnInit {
 		this.PlateListObserver.subscribe(() => {
 			this.PlateList = [];
 			if (this.Satz.FkHantel !== undefined) {
-				this.Hantel = this.fDbModule.LangHantelListe.find((lh) => lh.ID === this.Satz.FkHantel);
+				this.Hantel = DexieSvcService.LangHantelListe.find((lh) => lh.ID === this.Satz.FkHantel);
 				if (this.Hantel !== undefined) {
 					let mWeight: number = this.Satz.GewichtAusgefuehrt - this.Hantel.Gewicht;
 					if (aValue) {

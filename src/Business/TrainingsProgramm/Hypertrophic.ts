@@ -66,7 +66,7 @@ export class HypertrophicProgramm extends TrainingsProgramm {
 			mPtrUebung.GewichtSteigerung = 1;
 			mPtrUebung.GewichtReduzierung = 1;
 
-			const mProgress = this.pDbModule.ProgressListe.find((p: Progress) => p.Name === Progress.cStandardProgress);
+			const mProgress = DexieSvcService.ProgressListe.find((p: Progress) => p.Name === Progress.cStandardProgress);
 			if (mProgress !== undefined)
 				mPtrUebung.FkProgress = mProgress.ID;
 			

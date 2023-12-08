@@ -198,7 +198,6 @@ export class DexieSvcService extends Dexie {
 	readonly cSprache: string = "Sprache";
 
 	public HistorySessionsAfterLoadFn: AfterLoadFn = null; 
-	AktuellerProgrammTyp: ProgrammTyp;
 	public static HistorySessions: Array<HistorySession> = [];
 	public static HistoryBisDatum: Date = null; 
 	public static HistoryVonDatum: Date = null; 
@@ -208,38 +207,39 @@ export class DexieSvcService extends Dexie {
 	public static ModulTyp: ProgramModulTyp  = null;
 	public static GewichtsEinheitText: string = 'KG';
 	public static GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
-	RefreshAktuellesProgramm: boolean = false;
-	// Siehe Anstehende-Sessions
-	VorlageProgramme: Array<TrainingsProgramm> = [];
-	AppRec: AppData;
-	AktuellSprache: Sprache;
-	AppDataTable: Dexie.Table<AppData, number>;
-	private UebungTable: Dexie.Table<UebungDB, number>;
-	private SatzTable: Dexie.Table<SatzDB, number>;
-	private ProgrammTable: Dexie.Table<ITrainingsProgramm, number>;
-	private SessionTable: Dexie.Table<SessionDB, number>;
-	private MuskelGruppeTable: Dexie.Table<MuscleGroup, number>;
+	public static StammUebungen: Array<Uebung> = [];
+	private static HantelscheibenTable: Dexie.Table<Hantelscheibe, number>;
+	private static ProgressTable: Dexie.Table<Progress, number>;
+	private static DiaUebungSettingsTable: Dexie.Table<DiaUebungSettings, number>;
+	private static BodyweightTable: Dexie.Table<BodyWeightDB, number>;
+	private static SpracheTable: Dexie.Table<Sprache, number>;
+	public static Programme: Array<ITrainingsProgramm> = [];
+	public static StammUebungsListe: Array<Uebung> = [];
+	public static MuskelGruppenListe: Array<MuscleGroup> = [];
+	public static EquipmentListe: Array<Equipment> = [];
+	public static LangHantelListe: Array<Hantel> = [];
+	public static StandardProgramme: Array<ITrainingsProgramm> = [];
+	public static HantelscheibenListe: Array<Hantelscheibe> = [];
+	public static ProgressListe: Array<Progress> = [];
+	public static AppDataTable: Dexie.Table<AppData, number>;
+	private static UebungTable: Dexie.Table<UebungDB, number>;
+	private static SatzTable: Dexie.Table<SatzDB, number>;
+	private static ProgrammTable: Dexie.Table<ITrainingsProgramm, number>;
+	private static SessionTable: Dexie.Table<SessionDB, number>;
+	private static MuskelGruppeTable: Dexie.Table<MuscleGroup, number>;
+	public static VorlageProgramme: Array<TrainingsProgramm> = [];
+	public static AppRec: AppData;
+	public static AktuellSprache: Sprache;
+	private static EquipmentTable: Dexie.Table<Equipment, number>;
 	private get HantelTable(): Dexie.Table<Hantel, number> {
 		return this.table(this.cHantel);
 	};
-	private HantelscheibenTable: Dexie.Table<Hantelscheibe, number>;
-	private EquipmentTable: Dexie.Table<Equipment, number>;
-	private ProgressTable: Dexie.Table<Progress, number>;
-	private DiaUebungSettingsTable: Dexie.Table<DiaUebungSettings, number>;
-	private BodyweightTable: Dexie.Table<BodyWeightDB, number>;
-	private SpracheTable: Dexie.Table<Sprache, number>;
+
+	RefreshAktuellesProgramm: boolean = false;
+	// Siehe Anstehende-Sessions
 	private worker: Worker;
-	public Programme: Array<ITrainingsProgramm> = [];
-	public StammUebungsListe: Array<Uebung> = [];
-	public MuskelGruppenListe: Array<MuscleGroup> = [];
-	public EquipmentListe: Array<Equipment> = [];
-	public LangHantelListe: Array<Hantel> = [];
-	public StandardProgramme: Array<ITrainingsProgramm> = [];
-	public HantelscheibenListe: Array<Hantelscheibe> = [];
-	public ProgressListe: Array<Progress> = [];
 	// public DiagrammDatenListe: Array<DiaDatum> = [];
 	public MustLoadDiagramData: boolean = true;
-	
 	private ProgramLadeStandardPara: ProgrammParaDB;
 
 	// private async LadeSessionsInWorker(aOffSet: number = 0): Promise<void> {
@@ -312,7 +312,7 @@ export class DexieSvcService extends Dexie {
 							
 				const mNurSessionDatum = new Date(mPtrSession.GestartedWann.toDateString());
 				Session.StaticCheckMembers(mPtrSession);
-				mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+				mPtrSession.PruefeGewichtsEinheit(DexieSvcService.AppRec.GewichtsEinheit);
 				// Jetzt für mPtrSession die Übungen laden
 				const mUebungLadePara: UebungParaDB = new UebungParaDB();
 				mUebungLadePara.WhereClause = "SessionID";
@@ -525,23 +525,23 @@ export class DexieSvcService extends Dexie {
 		aProgramm.SessionListe.forEach((s) => {
 			if (s.Kategorie02 !== SessionStatus.Fertig && s.Kategorie02 !== SessionStatus.FertigTimeOut) {
 				s.UebungsListe.forEach((u) => {
-					if (u.ID !== undefined) this.UebungTable.delete(u.ID);
+					if (u.ID !== undefined) DexieSvcService.UebungTable.delete(u.ID);
 					u.SatzListe.forEach((sz) => {
-						if (sz.ID !== undefined) this.SatzTable.delete(sz.ID);
+						if (sz.ID !== undefined) DexieSvcService.SatzTable.delete(sz.ID);
 					});
 				});
 
-				if (s.ID !== undefined) this.SessionTable.delete(s.ID);
+				if (s.ID !== undefined) DexieSvcService.SessionTable.delete(s.ID);
 			}
 		});
-		this.ProgrammTable.delete(aProgramm.id);
+		DexieSvcService.ProgrammTable.delete(aProgramm.id);
 	}
 
 	public DeleteSession(aSession: Session) {
 		if (aSession.UebungsListe !== undefined)
 			aSession.UebungsListe.forEach((mLoeschUebung) => this.DeleteUebung(mLoeschUebung));
 		
-		this.SessionTable.delete(aSession.ID);
+			DexieSvcService.SessionTable.delete(aSession.ID);
 	}
 
 	public async DeleteUebung(aUebung: Uebung) {
@@ -550,11 +550,11 @@ export class DexieSvcService extends Dexie {
 				this.DeleteSatz(mLoeschSatz);
 		});
 
-		this.UebungTable.delete(aUebung.ID);
+		DexieSvcService.UebungTable.delete(aUebung.ID);
 	}
 
 	public DeleteSatz(aSatz: Satz) {
-		this.SatzTable.delete(aSatz.ID);
+		DexieSvcService.SatzTable.delete(aSatz.ID);
 	}
 
 	private LadeSessions(aProgramm: ITrainingsProgramm, aSessionLadePara?: SessionParaDB): Promise<void> {
@@ -663,11 +663,11 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public get HantenscheibeListeSortedByDiameterAndWeight(): Array<Hantelscheibe> {
-		return this.HantelscheibenListe;
+		return DexieSvcService.HantelscheibenListe;
 	}
 
 	public LanghantelListeSortedByName(aIgnorGeloeschte: Boolean = true): Array<Hantel> {
-		return this.LangHantelListe;
+		return DexieSvcService.LangHantelListe;
 	}
 
 	public get EquipmentTypListe(): Array<string> {
@@ -712,8 +712,8 @@ export class DexieSvcService extends Dexie {
 		if (DexieSvcService.ModulTyp === null)
 			DexieSvcService.ModulTyp = ProgramModulTyp.Kein;
 
-		//   Dexie.delete("ConceptCoach");
-		this.version(36).stores({
+		//Dexie.delete("ConceptCoach");
+		this.version(37).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
@@ -733,8 +733,8 @@ export class DexieSvcService extends Dexie {
 		this.table(this.cHantel).mapToClass(Hantel);
 		this.InitMuskelGruppe();
 		this.InitDatenbank();
-		this.InitSession();
 		this.LadeStammUebungen();
+		this.InitSession();
 
 		if (DexieSvcService.AktuellesProgramm === null) {
 			this.LadeAktuellesProgramm()
@@ -762,13 +762,13 @@ export class DexieSvcService extends Dexie {
 	}
 
 	ResetDatenbank() {
-		this.ProgrammTable.clear()
+		DexieSvcService.ProgrammTable.clear()
 			.then(() => {
-				this.SessionTable.clear()
+				DexieSvcService.SessionTable.clear()
 					.then(() => {
-						this.UebungTable.clear()
+						DexieSvcService.UebungTable.clear()
 							.then(() => {
-								this.SatzTable.clear()
+								DexieSvcService.SatzTable.clear()
 									.then(() => {
 										this.InitDatenbank();
 									});
@@ -779,7 +779,7 @@ export class DexieSvcService extends Dexie {
 
 	get UebungListeSortedByName(): Array<Uebung> {
 		// return this.StammUebungsListe;
-		const mResult: Array<Uebung> = this.StammUebungsListe.map((mUebung) => mUebung);
+		const mResult: Array<Uebung> = DexieSvcService.StammUebungsListe.map((mUebung) => mUebung);
 		mResult.sort((u1, u2) => {
 			if (u1.Name > u2.Name) {
 				return 1;
@@ -796,7 +796,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	MuskelgruppeListeSortedByName(): Array<MuscleGroup> {
-		return this.MuskelGruppenListe;
+		return DexieSvcService.MuskelGruppenListe;
 		// const mResult: Array<MuscleGroup> = this.MuskelGruppenListe.map((mMuskelgruppe) => mMuskelgruppe);
 
 		// mResult.sort((u1, u2) => {
@@ -815,7 +815,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	get EquipmentListSortedByDisplayName(): Array<Equipment> {
-		return this.EquipmentListe;
+		return DexieSvcService.EquipmentListe;
 		// const mResult: Array<Equipment> = this.EquipmentListe.map((mEquipment) => mEquipment);
 		// mResult.sort((u1, u2) => {
 		// 	if (u1.DisplayName > u2.DisplayName) {
@@ -836,10 +836,10 @@ export class DexieSvcService extends Dexie {
 		this.InitEquipment();
 		this.InitHantel();
 		this.InitProgress();
+		this.InitUebung();
 		await this.InitSprache();
 		await this.InitAppData();
 		this.InitHantelscheibe();
-		this.InitUebung();
 		this.InitProgramm();
 		this.InitSession();
 		this.InitMuskelGruppe();
@@ -879,9 +879,9 @@ export class DexieSvcService extends Dexie {
 	}
 
 	private InitProgress() {
-		if (this.ProgressTable === undefined) {
-			this.ProgressTable = this.table(this.cProgress);
-			this.ProgressTable.mapToClass(Progress);
+		if (DexieSvcService.ProgressTable === undefined) {
+			DexieSvcService.ProgressTable = this.table(this.cProgress);
+			DexieSvcService.ProgressTable.mapToClass(Progress);
 		}
 	}
 
@@ -890,58 +890,58 @@ export class DexieSvcService extends Dexie {
 	}
 
 	private InitHantelscheibe() {
-		if (this.HantelscheibenTable === undefined) {
-			this.HantelscheibenTable = this.table(this.cHantelscheibe);
-			this.HantelscheibenTable.mapToClass(Hantelscheibe);
+		if (DexieSvcService.HantelscheibenTable === undefined) {
+			DexieSvcService.HantelscheibenTable = this.table(this.cHantelscheibe);
+			DexieSvcService.HantelscheibenTable.mapToClass(Hantelscheibe);
 		}
 	}
 
 	private InitMuskelGruppe() {
-		if (this.MuskelGruppeTable === undefined) {
-			this.MuskelGruppeTable = this.table(this.cMuskelGruppe);
-			this.MuskelGruppeTable.mapToClass(MuscleGroup);
+		if (DexieSvcService.MuskelGruppeTable === undefined) {
+			DexieSvcService.MuskelGruppeTable = this.table(this.cMuskelGruppe);
+			DexieSvcService.MuskelGruppeTable.mapToClass(MuscleGroup);
 		}
 	}
 
 	private InitEquipment() {
-		if (this.EquipmentTable === undefined) {
-			this.EquipmentTable = this.table(this.cEquipment);
-			this.EquipmentTable.mapToClass(Equipment);
+		if (DexieSvcService.EquipmentTable === undefined) {
+			DexieSvcService.EquipmentTable = this.table(this.cEquipment);
+			DexieSvcService.EquipmentTable.mapToClass(Equipment);
 		}
 	}
 
 	private InitSession() {
-		if (this.SessionTable === undefined) {
-			this.SessionTable = this.table(this.cSession);
-			this.SessionTable.mapToClass(SessionDB);
+		if (DexieSvcService.SessionTable === undefined) {
+			DexieSvcService.SessionTable = this.table(this.cSession);
+			DexieSvcService.SessionTable.mapToClass(SessionDB);
 		}
 	}
 
 	private InitUebung() {
-		if (this.UebungTable === undefined) {
-			this.UebungTable = this.table(this.cUebung);
-			this.UebungTable.mapToClass(UebungDB);
+		if (DexieSvcService.UebungTable === undefined) {
+			DexieSvcService.UebungTable = this.table(this.cUebung);
+			DexieSvcService.UebungTable.mapToClass(UebungDB);
 		}
 	}
 
 	private InitSatz() {
-		if (this.SatzTable === undefined) {
-			this.SatzTable = this.table(this.cSatz);
-			this.SatzTable.mapToClass(SatzDB);
+		if (DexieSvcService.SatzTable === undefined) {
+			DexieSvcService.SatzTable = this.table(this.cSatz);
+			DexieSvcService.SatzTable.mapToClass(SatzDB);
 		}
 	}
 
 	private InitDiaUebung() {
-		if (this.DiaUebungSettingsTable === undefined) {
-			this.DiaUebungSettingsTable = this.table(this.cDiaUebungSettings);
-			this.DiaUebungSettingsTable.mapToClass(DiaUebungSettings);
+		if (DexieSvcService.DiaUebungSettingsTable === undefined) {
+			DexieSvcService.DiaUebungSettingsTable = this.table(this.cDiaUebungSettings);
+			DexieSvcService.DiaUebungSettingsTable.mapToClass(DiaUebungSettings);
 		}
 	}
 
 	private InitBodyweight() {
-		if (this.BodyweightTable === undefined) {
-			this.BodyweightTable = this.table(this.cBodyweight);
-			this.BodyweightTable.mapToClass(BodyWeightDB);
+		if (DexieSvcService.BodyweightTable === undefined) {
+			DexieSvcService.BodyweightTable = this.table(this.cBodyweight);
+			DexieSvcService.BodyweightTable.mapToClass(BodyWeightDB);
 		}
 	}
 
@@ -960,7 +960,7 @@ export class DexieSvcService extends Dexie {
 	public LadeSessionBodyweight(aSession: Session): Promise<BodyWeight> {
 		const mDatum: Date = (aSession.GestartedWann !== undefined) ? aSession.GestartedWann : cMinDatum;
 		
-		return this.BodyweightTable
+		return DexieSvcService.BodyweightTable
 			.where("Datum")
 			.belowOrEqual(mDatum)
 			.last()
@@ -978,7 +978,7 @@ export class DexieSvcService extends Dexie {
 
 
 	public BodyweightSpeichern(aBodyweight: BodyWeight) {
-		this.BodyweightTable.put(aBodyweight.BodyWeightDB).then(
+		DexieSvcService.BodyweightTable.put(aBodyweight.BodyWeightDB).then(
 			(aID) => {
 				aBodyweight.BodyWeightDB.ID = aID;
 			});
@@ -988,7 +988,7 @@ export class DexieSvcService extends Dexie {
 		const mBodyweightSpeicherListe: Array<BodyWeightDB> = [];
 		aBodyweightListe.map(aBw => mBodyweightSpeicherListe.push(aBw.BodyWeightDB));
 		try {
-			this.BodyweightTable.bulkPut(mBodyweightSpeicherListe);
+			DexieSvcService.BodyweightTable.bulkPut(mBodyweightSpeicherListe);
 		} catch (error) {
 			console.error(error);
 		}
@@ -996,7 +996,7 @@ export class DexieSvcService extends Dexie {
 
 	public DeleteBodyweight(aID: number) {
 		try {
-			this.BodyweightTable.delete(aID);
+			DexieSvcService.BodyweightTable.delete(aID);
 		} catch (error) {
 			console.error(error);
 		}
@@ -1005,7 +1005,7 @@ export class DexieSvcService extends Dexie {
 	private NeueUebung(aName: string, aKategorie02: UebungsKategorie02, aTyp: UebungsTyp): Uebung {
 		const mGzclpKategorieen01 = Uebung.ErzeugeGzclpKategorieen01();
 		const mKategorieen01 = [].concat(mGzclpKategorieen01);
-		const mProgress: Progress = this.ProgressListe.find((p) => p.Name === Progress.cStandardProgress);
+		const mProgress: Progress = DexieSvcService.ProgressListe.find((p) => p.Name === Progress.cStandardProgress);
 		if (mProgress === undefined)
 			return Uebung.StaticNeueUebung(aName, aTyp, mKategorieen01, aKategorie02, -1);
 		else
@@ -1023,11 +1023,11 @@ export class DexieSvcService extends Dexie {
 	public MuskelExists(aMuskel: MuscleGroup): MuscleGroup {
 		if (aMuskel.Name.trim() === "") return undefined;
 
-		return this.MuskelGruppenListe.find((mg) => mg.Name.toUpperCase() === aMuskel.Name.toUpperCase());
+		return DexieSvcService.MuskelGruppenListe.find((mg) => mg.Name.toUpperCase() === aMuskel.Name.toUpperCase());
 	}
 
 	public MuskelgruppeSpeichern(aMuskelgruppe: MuscleGroup) {
-		return this.MuskelGruppeTable.put(aMuskelgruppe);
+		return DexieSvcService.MuskelGruppeTable.put(aMuskelgruppe);
 	}
 
 	public HantelSpeichern(aHantel: Hantel): Promise<Hantel> {
@@ -1051,24 +1051,30 @@ export class DexieSvcService extends Dexie {
 	public InsertUebungen(aUebungsListe: Array<Uebung>): PromiseExtended<Array<Uebung>> {
 		let mUebungsDB_Liste: Array<UebungDB> = [];
 		aUebungsListe.map((u) => mUebungsDB_Liste.push(u.UebungDB));
-		return this.UebungTable.bulkPut(mUebungsDB_Liste, { allKeys: true })
-			.then(
-				(mKeyList) => {
-					for (let index = 0; index < aUebungsListe.length; index++) {
-						const mPtrUebung: Uebung = aUebungsListe[index];
-						mPtrUebung.UebungDB.ID = mKeyList[index];
-					
-					}
-					return aUebungsListe;
-				});
+		try {
+			
+			return DexieSvcService.UebungTable.bulkPut(mUebungsDB_Liste, { allKeys: true })
+				.then(
+					(mKeyList) => {
+						for (let index = 0; index < aUebungsListe.length; index++) {
+							const mPtrUebung: Uebung = aUebungsListe[index];
+							mPtrUebung.UebungDB.ID = mKeyList[index];
+						
+						}
+						return aUebungsListe;
+					});
+		} catch (error) {
+			console.log(error);
+			return null;
+		}
 	}
 
 	public InsertDiaUebungen(aDiaUebungsListe: Array<DiaUebungSettings>): PromiseExtended {
-		return this.DiaUebungSettingsTable.bulkPut(aDiaUebungsListe);
+		return DexieSvcService.DiaUebungSettingsTable.bulkPut(aDiaUebungsListe);
 	}
 
 	public InsertEineDiaUebung(aDiaUebung: DiaUebungSettings): PromiseExtended {
-		return this.DiaUebungSettingsTable.put(aDiaUebung);
+		return DexieSvcService.DiaUebungSettingsTable.put(aDiaUebung);
 	}
 
 
@@ -1082,15 +1088,15 @@ export class DexieSvcService extends Dexie {
 
 
 	public DeleteDiaUebung(aDiaUebung: DiaUebung): PromiseExtended {
-		return this.DiaUebungSettingsTable.delete(aDiaUebung.ID);
+		return DexieSvcService.DiaUebungSettingsTable.delete(aDiaUebung.ID);
 	}
 
 	public DeletetUebung(aUebungID: number): PromiseExtended {
-		return this.UebungTable.delete(aUebungID);
+		return DexieSvcService.UebungTable.delete(aUebungID);
 	}
 
 	public InsertMuskelGruppen(aMuskelGruppenListe: Array<MuscleGroup>): PromiseExtended {
-		return this.MuskelGruppeTable.bulkPut(aMuskelGruppenListe);
+		return DexieSvcService.MuskelGruppeTable.bulkPut(aMuskelGruppenListe);
 	}
 
 	public FindUebung(aUebung: Uebung): boolean {
@@ -1100,14 +1106,14 @@ export class DexieSvcService extends Dexie {
 	public UebungExists(aUebung: Uebung): Uebung {
 		if (aUebung.Name.trim() === "") return undefined;
 
-		return this.StammUebungsListe.find((ub) => ub.Name.toUpperCase() === aUebung.Name.toUpperCase());
+		return DexieSvcService.StammUebungsListe.find((ub) => ub.Name.toUpperCase() === aUebung.Name.toUpperCase());
 	}
 
 	public async LadeProgress(aProgressPara?: ProgressPara) {
 		await this.table(this.cProgress)
 			.toArray()
 			.then((mProgressListe) => {
-				this.ProgressListe = mProgressListe;
+				DexieSvcService.ProgressListe = mProgressListe;
 
 				if ((aProgressPara !== undefined) && (aProgressPara.AfterLoadFn)) {
 					aProgressPara.ProgressListe = mProgressListe;
@@ -1117,31 +1123,31 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public DeleteProgress(aProgressID: number): PromiseExtended {
-		return this.ProgressTable.delete(aProgressID);
+		return DexieSvcService.ProgressTable.delete(aProgressID);
 	}
 
 	public ProgressListeSortedByName(): Array<Progress> {
-		return this.ProgressListe
+		return DexieSvcService.ProgressListe;
 	}
 
 	public ProgressSpeichern(aProgess: Progress) {
-		return this.ProgressTable.put(aProgess);
+		return DexieSvcService.ProgressTable.put(aProgess);
 	}
 
 	public InsertProgresse(aProgessListe: Array<Progress>) {
-		return this.ProgressTable.bulkPut(aProgessListe);
+		return DexieSvcService.ProgressTable.bulkPut(aProgessListe);
 	}
 
 	public HantelscheibeSpeichern(aScheibe: Hantelscheibe) {
-		return this.HantelscheibenTable.put(aScheibe);
+		return DexieSvcService.HantelscheibenTable.put(aScheibe);
 	}
 
 	public InsertHantelscheiben(aHantelscheibenListe: Array<Hantelscheibe>): PromiseExtended {
-		return this.HantelscheibenTable.bulkPut(aHantelscheibenListe);
+		return DexieSvcService.HantelscheibenTable.bulkPut(aHantelscheibenListe);
 	}
 
 	public DeleteHantelscheibe(aHantelscheibeID: number): PromiseExtended<void> {
-		return this.HantelscheibenTable.delete(aHantelscheibeID);
+		return DexieSvcService.HantelscheibenTable.delete(aHantelscheibeID);
 	}
 
 	public LadeHantelscheiben(aAfterLoadFn?: AfterLoadFn) {
@@ -1149,29 +1155,29 @@ export class DexieSvcService extends Dexie {
 			.orderBy(["Durchmesser", "Gewicht"])
 			.toArray()
 			.then((mHantelscheibenListe) => {
-				this.HantelscheibenListe = mHantelscheibenListe;
+				DexieSvcService.HantelscheibenListe = mHantelscheibenListe;
 				if (aAfterLoadFn !== undefined) aAfterLoadFn(mHantelscheibenListe);
 			});
 	}
 
 	public LadeMuskelGruppen(aAfterLoadFn?: AfterLoadFn) {
-		this.MuskelGruppenListe = [];
+		DexieSvcService.MuskelGruppenListe = [];
 		this.table(this.cMuskelGruppe)
 			.orderBy("Name")
 			.toArray()
 			.then((mMuskelgruppenListe) => {
-				this.MuskelGruppenListe = mMuskelgruppenListe;
+				DexieSvcService.MuskelGruppenListe = mMuskelgruppenListe;
 
 				if (aAfterLoadFn !== undefined) aAfterLoadFn();
 			});
 	}
 
 	public MuskelListeSortedByName(aIgnorGeloeschte: Boolean = true): Array<MuscleGroup> {
-		return this.MuskelGruppenListe;
+		return DexieSvcService.MuskelGruppenListe;
 	}
 
 	public DeleteMuskelGruppe(aMuskelGruppeID: number) {
-		return this.MuskelGruppeTable.delete(aMuskelGruppeID);
+		return DexieSvcService.MuskelGruppeTable.delete(aMuskelGruppeID);
 	}
 
 	public async PruefeStandardMuskelGruppen() {
@@ -1210,12 +1216,12 @@ export class DexieSvcService extends Dexie {
 
 
 	public LadeLanghanteln(): PromiseExtended<Array<Hantel>> {
-		this.LangHantelListe = [];
+		DexieSvcService.LangHantelListe = [];
 		return this.table(this.cHantel)
 			.where({ Typ: HantelTyp.Barbell })
 			.sortBy("Name")
 			.then((mHantelListe) => {
-				this.LangHantelListe = mHantelListe;
+				DexieSvcService.LangHantelListe = mHantelListe;
 				return mHantelListe;
 			});
 	}
@@ -1258,10 +1264,10 @@ export class DexieSvcService extends Dexie {
 	}
 
 	private async PruefeStandardProgress() {
-		await this.ProgressTable.orderBy("Name")
+		await DexieSvcService.ProgressTable.orderBy("Name")
 			.toArray()
 			.then((mProgressListe) => {
-				this.ProgressListe = mProgressListe;
+				DexieSvcService.ProgressListe = mProgressListe;
 				if (mProgressListe === undefined || mProgressListe.length === 0) {
 					const mNeuProgress = new Progress();
 					mNeuProgress.AdditionalReps = 0;
@@ -1279,15 +1285,15 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public InsertEquipment(aEquipmentListe: Array<Equipment>): PromiseExtended {
-		return this.EquipmentTable.bulkPut(aEquipmentListe);
+		return DexieSvcService.EquipmentTable.bulkPut(aEquipmentListe);
 	}
 
 	public LadeEquipment() {
-		this.EquipmentListe = [];
+		DexieSvcService.EquipmentListe = [];
 		this.table(this.cEquipment)
 			.toArray()
 			.then((mEquipmentListe) => {
-				this.EquipmentListe = mEquipmentListe;
+				DexieSvcService.EquipmentListe = mEquipmentListe;
 			});
 	}
 
@@ -1320,7 +1326,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async LadeStammUebungen(aAfterLoadFn?: AfterLoadFn): Promise<Array<Uebung>> {
-		this.StammUebungsListe = [];
+		DexieSvcService.StammUebungsListe = [];
 		const mAnlegen: Array<Uebung> = new Array<Uebung>();
 		return await this.table(this.cUebung)
 			.where("Kategorie02")
@@ -1329,22 +1335,26 @@ export class DexieSvcService extends Dexie {
 			.then(async (mUebungen) => {
 				let mNeueUebung: Uebung = null;
 				for (let index = 0; index < StandardUebungListe.length; index++) {
-					const mStandardUebung = StandardUebungListe[index];
-					if (mUebungen.find((mUebung) => mUebung.Name === mStandardUebung.Name) === undefined) {
-						mNeueUebung = this.NeueUebung(mStandardUebung.Name, UebungsKategorie02.Stamm, mStandardUebung.Typ);
+					const mStandardUebungPtr = StandardUebungListe[index];
+					if (mUebungen.find((mUebung) => mUebung.Name === mStandardUebungPtr.Name) === undefined) {
+						mNeueUebung = this.NeueUebung(mStandardUebungPtr.Name, UebungsKategorie02.Stamm, mStandardUebungPtr.Typ);
 						mNeueUebung.SatzListe = [];
 						mAnlegen.push(mNeueUebung);
 					}
 				}
 
 				if (mAnlegen.length > 0) {
-					this.InsertUebungen(mAnlegen).then(() => {
-						this.LadeStammUebungen();
+					await this.InsertUebungen(mAnlegen).then((mNeueStammUebungen) => {
+						this.LadeStammUebungen()
+							.then((aUebungen) => {
+								DexieSvcService.StammUebungsListe = aUebungen;
+								return DexieSvcService.StammUebungsListe;
+							});
 					});
 				} else {
 					// Standard-Uebungen sind vorhanden.
 					const mStammUebungsListe: Array<Uebung> = this.UebungDBtoUebung(mUebungen);
-					this.StammUebungsListe = mStammUebungsListe;
+					DexieSvcService.StammUebungsListe = mStammUebungsListe;
 					if (aAfterLoadFn) aAfterLoadFn();
 					// Standard-Vorlage-Programme laden
 					// const mProgrammParaDB: ProgrammParaDB = new ProgrammParaDB();
@@ -1359,11 +1369,12 @@ export class DexieSvcService extends Dexie {
 							if (aProgrammListe.find((programm) => programm.ProgrammTyp === ProgrammTyp.HypertrophicSpecific) === undefined)
 								await this.ProgrammSpeichern(HypertrophicProgramm.ErzeugeHypertrophicVorlage(this));
 							
-							await this.LadeStandardProgramme()
+							await this.LadeStandardProgramme();
 						});
 					// this.LadeAktuellesProgramm();
 				}
-				return this.StammUebungsListe;
+				return DexieSvcService.StammUebungsListe;
+			
 			});
 	}
 
@@ -1449,7 +1460,7 @@ export class DexieSvcService extends Dexie {
 	public PrepAkuellesProgramm(aProgramm: ITrainingsProgramm) {
 		let mDoneSessions: Array<SessionDB> = [];
 
-		this.VorlageProgramme.find((p) => {
+		DexieSvcService.VorlageProgramme.find((p) => {
 			if (p.ProgrammTyp === aProgramm.ProgrammTyp) return p;
 			return null;
 		});
@@ -1461,14 +1472,14 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public SucheUebungPerName(aName: string): Uebung {
-		const mUebung = this.StammUebungsListe.find((u) => u.Name === aName);
+		const mUebung = DexieSvcService.StammUebungsListe.find((u) => u.Name === aName);
 		return mUebung === undefined ? null : mUebung;
 	}
 
 	private InitProgramm() {
-		if (this.ProgrammTable === undefined) {
-			this.ProgrammTable = this.table(this.cProgramm);
-			this.ProgrammTable.mapToClass(TrainingsProgramm);
+		if (DexieSvcService.ProgrammTable === undefined) {
+			DexieSvcService.ProgrammTable = this.table(this.cProgramm);
+			DexieSvcService.ProgrammTable.mapToClass(TrainingsProgramm);
 		}
 	}
 
@@ -1483,7 +1494,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async LadeUpcomingSessions(aProgrammID: number, aSessionParaDB?: SessionParaDB): Promise<Array<Session>> {
-		return await this.SessionTable
+		return await DexieSvcService.SessionTable
 			.where("[FK_Programm+Kategorie02]")
 			.anyOf([[aProgrammID, SessionStatus.Laueft], [aProgrammID, SessionStatus.Pause], [aProgrammID, SessionStatus.Wartet]])
 			.offset(aSessionParaDB !== undefined && aSessionParaDB.OffSet !== undefined ? aSessionParaDB.OffSet : 0)
@@ -1497,7 +1508,7 @@ export class DexieSvcService extends Dexie {
 					mResult.forEach((mPtrSession) => {
 						mPtrSession.UebungsListe = [];
 						// SessionDB.StaticCheckMembers(mPtrSession);
-						mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+						mPtrSession.PruefeGewichtsEinheit(DexieSvcService.AppRec.GewichtsEinheit);
 					});
 	
 					if (aSessionParaDB !== undefined) {
@@ -1547,7 +1558,7 @@ export class DexieSvcService extends Dexie {
 	// }
 
 	public async LadeEineSession(aSessionID: number, aSessionParaDB?: SessionParaDB): Promise<Session> {
-		return await this.SessionTable
+		return await DexieSvcService.SessionTable
 			.where("ID")
 			.equals(aSessionID)
 			.offset(aSessionParaDB !== undefined && aSessionParaDB.OffSet !== undefined ? aSessionParaDB.OffSet : 0)
@@ -1559,7 +1570,7 @@ export class DexieSvcService extends Dexie {
 				
 				mResult.forEach((mPtrSession) => {
 					Session.StaticCheckMembers(mPtrSession);
-					mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+					mPtrSession.PruefeGewichtsEinheit(DexieSvcService.AppRec.GewichtsEinheit);
 					const mSession: Session = new Session();
 				});
 
@@ -1588,7 +1599,7 @@ export class DexieSvcService extends Dexie {
 		}
 		else mHelpSessionParaDB = aSessionParaDB;
 
-		return await this.SessionTable
+		return await DexieSvcService.SessionTable
 			//.where("FK_Programm")
 			.where(mHelpSessionParaDB.WhereClause)
 			.anyOf(mHelpSessionParaDB.anyOf())
@@ -1602,7 +1613,7 @@ export class DexieSvcService extends Dexie {
 
 				mResult.forEach((mPtrSession) => {
 					Session.StaticCheckMembers(mPtrSession);
-					mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+					mPtrSession.PruefeGewichtsEinheit(DexieSvcService.AppRec.GewichtsEinheit);
 				});
 
 				if (mHelpSessionParaDB !== undefined) {
@@ -1631,7 +1642,7 @@ export class DexieSvcService extends Dexie {
 
 		const mProgramNamen: Array<{ ID: number, Name: string }> = []; 
 
-		return this.SessionTable
+		return DexieSvcService.SessionTable
 			.where("GestartedWann")
 			.between(aVonDatum, aBisDatum, true, true)
 			.and((aSession: Session) => aSession.Kategorie02 === SessionStatus.Fertig || aSession.Kategorie02 === SessionStatus.FertigTimeOut)
@@ -1680,7 +1691,7 @@ export class DexieSvcService extends Dexie {
 				for (let index = 0; index < DexieSvcService.HistorySessions.length; index++) {
 					const mPtrSession: Session = DexieSvcService.HistorySessions[index];
 					Session.StaticCheckMembers(mPtrSession);
-					mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
+					mPtrSession.PruefeGewichtsEinheit(DexieSvcService.AppRec.GewichtsEinheit);
 					mPtrSession.UebungsListe = [];
 					await this.LadeSessionUebungenEx(mPtrSession, mUebungParaDB)
 						.then((aUebungsListe) => {
@@ -1696,7 +1707,7 @@ export class DexieSvcService extends Dexie {
 
 	public async LadeProgrammSessionsEx(aLadePara: SessionParaDB, aProgramm?: ITrainingsProgramm): Promise<Array<Session>> {
 		this.InitSession();
-		return await this.SessionTable
+		return await DexieSvcService.SessionTable
 			.where(aLadePara.WhereClause)
 			.anyOf(aLadePara.anyOf(aProgramm))
 			.and((aLadePara.And === undefined ? () => { return 1 === 1 } : (session: SessionDB) => aLadePara.And(session)))
@@ -1730,11 +1741,11 @@ export class DexieSvcService extends Dexie {
 						// Ist der Schlüssel zur Stamm-Übung gesetzt?
 						if (aLadePara.Data.Uebung.FkUebung > 0) {
 							//Der Schlüssel zur Stamm-Übung ist gesetzt
-							const mStammUebung = this.StammUebungsListe.find((mGefundeneUebung) => mGefundeneUebung.ID === aLadePara.Data.Uebung.FkUebung);
+							const mStammUebung = DexieSvcService.StammUebungsListe.find((mGefundeneUebung) => mGefundeneUebung.ID === aLadePara.Data.Uebung.FkUebung);
 							if (mStammUebung !== undefined) aLadePara.Data.Uebung.Name = mStammUebung.Name;
 						} else {
 							// Der Schlüssel zur Stamm-Übung sollte normalerweise gesetzt sein
-							const mStammUebung = this.StammUebungsListe.find((mGefundeneUebung) => mGefundeneUebung.Name === aLadePara.Data.Uebung.Name);
+							const mStammUebung = DexieSvcService.StammUebungsListe.find((mGefundeneUebung) => mGefundeneUebung.Name === aLadePara.Data.Uebung.Name);
 							if (mStammUebung !== undefined) aLadePara.Data.Uebung.FkUebung = mStammUebung.ID;
 						}
 						await this.UebungSpeichern(aLadePara.Data.Uebung);
@@ -1869,7 +1880,7 @@ export class DexieSvcService extends Dexie {
 		if (aLadePara !== undefined && aLadePara.OnUebungBeforeLoadFn !== undefined)
 			aLadePara.OnUebungBeforeLoadFn(aLadePara);
 
-		return await this.UebungTable
+		return await DexieSvcService.UebungTable
 			.where(aLadePara.WhereClause)
 			.anyOf(aLadePara.anyOf(aSession))
 			.reverse()
@@ -1916,7 +1927,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async LadeUebungsSaetze(aUebungID: number, aLadePara?: SatzParaDB): Promise<Array<Satz>> {
-		return await this.SatzTable
+		return await DexieSvcService.SatzTable
 			.where("UebungID")
 			.equals(aUebungID)
 			.offset(aLadePara !== undefined && aLadePara.OffSet !== undefined ? aLadePara.OffSet : 0)
@@ -1947,7 +1958,7 @@ export class DexieSvcService extends Dexie {
 
 		if (mSatzLadePara !== undefined && mSatzLadePara.OnSatzBeforeLoadFn !== undefined) mSatzLadePara.OnSatzBeforeLoadFn(mSatzLadePara);
 
-		return this.SatzTable
+		return DexieSvcService.SatzTable
 			.where(mSatzLadePara === undefined ? "id" : mSatzLadePara.WhereClause)
 			.anyOf(mSatzLadePara === undefined ? 0 : mSatzLadePara.anyOf(aUebung))
 			//.and((mSatzLadePara === undefined || mSatzLadePara.And === undefined ? () => { return 1 === 1 } : (satz: SatzDB) => mSatzLadePara.And(satz)))
@@ -2044,7 +2055,7 @@ export class DexieSvcService extends Dexie {
 		mProgrammPara.SessionParaDB.UebungParaDB.SaetzeBeachten = true;
 
 		return this.LadeProgrammeEx(mProgrammPara).then((aProgramme) => {
-			this.StandardProgramme = aProgramme;
+			DexieSvcService.StandardProgramme = aProgramme;
 			return aProgramme;
 		});
 	}
@@ -2052,7 +2063,7 @@ export class DexieSvcService extends Dexie {
 
 	public async LadeProgrammeEx(aProgrammPara: ProgrammParaDB): Promise<Array<ITrainingsProgramm>> {
 		this.InitProgramm();
-		return await this.ProgrammTable
+		return await DexieSvcService.ProgrammTable
 			.where(aProgrammPara.WhereClause)
 			.anyOf(aProgrammPara.anyOf())
 			.and(aProgrammPara.And === undefined ? () => { return 1 === 1 } : (aProgramm) => aProgrammPara.And(aProgramm))
@@ -2091,7 +2102,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async SatzSpeichern(aSatz: Satz): Promise<number> {
-		return await this.SatzTable.put(aSatz.SatzDB);
+		return await DexieSvcService.SatzTable.put(aSatz.SatzDB);
 	}
 
 	public async SaetzeSpeichern(aSaetze: Array<Satz>) {
@@ -2099,7 +2110,7 @@ export class DexieSvcService extends Dexie {
 		aSaetze.forEach((mSatz) => {
 			mSaetzeDB.push(mSatz.SatzDB);
 		});
-		return this.SatzTable.bulkPut(mSaetzeDB);
+		return DexieSvcService.SatzTable.bulkPut(mSaetzeDB);
 	}
 
 	public async UebungSpeichern(aUebung: Uebung): Promise<number> {
@@ -2113,7 +2124,7 @@ export class DexieSvcService extends Dexie {
 			mSatzListe = aUebung.SatzListe.map(sz => sz);
 		
 		aUebung.SatzListe = [];
-		return await this.UebungTable.put(aUebung.UebungDB)
+		return await DexieSvcService.UebungTable.put(aUebung.UebungDB)
 			.then(async (mUebungID) => {
 				if (mSatzListe !== undefined) {
 					for (let index = 0; index < mSatzListe.length; index++) {
@@ -2140,7 +2151,7 @@ export class DexieSvcService extends Dexie {
 		if (aSession.Datum === undefined || aSession.Datum === null)
 			aSession.Datum = new Date;
 		
-		return await this.SessionTable.put(aSession.SessionDB).then((mID) => {
+		return await DexieSvcService.SessionTable.put(aSession.SessionDB).then((mID) => {
 			aSession.ID = mID;
 			aSession.UebungsListe.forEach(async (mUebung: Uebung) => {
 				mUebung.SessionID = aSession.ID;
@@ -2154,7 +2165,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async ProgrammSpeichern(aTrainingsProgramm: ITrainingsProgramm, aProgrammExtraParaDB?: ProgrammParaDB): Promise<ITrainingsProgramm> {
-		return await this.ProgrammTable.put(aTrainingsProgramm)
+		return await DexieSvcService.ProgrammTable.put(aTrainingsProgramm)
 			.then(async (mID) => {
 				aTrainingsProgramm.id = mID;
 				const mSessionListe: Array<Session> = aTrainingsProgramm.SessionListe as Array<Session>;
@@ -2200,8 +2211,8 @@ export class DexieSvcService extends Dexie {
 
 	//#region Sprache
 	private async InitSprache() {
-		this.SpracheTable = this.table(this.cSprache);
-		this.SpracheTable.mapToClass(Sprache);
+		DexieSvcService.SpracheTable = this.table(this.cSprache);
+		DexieSvcService.SpracheTable.mapToClass(Sprache);
 		await this.LadeAlleSprachen().then(async (mSprachen) => {
 			if (mSprachen.length === 0) {
 				await this.InsertSprache(Sprache.StaticNeueSprache(
@@ -2239,11 +2250,11 @@ export class DexieSvcService extends Dexie {
 	}
 
 	async InsertSprache(aSprache: Sprache) {
-		await this.SpracheTable.put(aSprache);
+		await DexieSvcService.SpracheTable.put(aSprache);
 	}
 
 	public async LadeAlleSprachen(): Promise<Array<Sprache>> {
-		return await this.SpracheTable
+		return await DexieSvcService.SpracheTable
 			.toArray()
 			.then(async (aSprachen: Array<Sprache>) => {
 				return aSprachen;
@@ -2251,7 +2262,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async LadeSpracheFromID(aID: number): Promise<Sprache> {
-		return await this.SpracheTable
+		return await DexieSvcService.SpracheTable
 			.where({ id: aID })
 			.first(async (aSprache: Sprache) => {
 				return aSprache;
@@ -2261,38 +2272,38 @@ export class DexieSvcService extends Dexie {
 
 	//#region  AppaData
 	private async InitAppData() {
-		this.AppDataTable = this.table(this.cAppData);
-		this.AppDataTable.mapToClass(AppData);
-		await this.LadeAppData().then((aAppRec) => (this.AppRec = aAppRec));
+		DexieSvcService.AppDataTable = this.table(this.cAppData);
+		DexieSvcService.AppDataTable.mapToClass(AppData);
+		await this.LadeAppData().then((aAppRec) => (DexieSvcService.AppRec = aAppRec));
 
-		if (!this.AppRec) {
-			this.AppRec = new AppData();
-			await this.AppDataTable.put(this.AppRec).catch((error) => {
+		if (!DexieSvcService.AppRec) {
+			DexieSvcService.AppRec = new AppData();
+			await DexieSvcService.AppDataTable.put(DexieSvcService.AppRec).catch((error) => {
 				console.error(error);
 			});
 		}
 		
-		if (this.AppRec.SprachID === undefined || this.AppRec.SprachID <= 0) {
+		if (DexieSvcService.AppRec.SprachID === undefined || DexieSvcService.AppRec.SprachID <= 0) {
 			this.LadeAlleSprachen().then(async (aSprachen) => {
 				// const mSprache = aSprachen.find((aSprache) => aSprache.Kuerzel === this.fTranslateService.getBrowserLang());
 				const mSprache = new Sprache();
-				this.AppRec.SprachID = mSprache.id;
-				this.AktuellSprache = mSprache;
-				await this.AppDataTable.put(this.AppRec).catch((error) => {
+				DexieSvcService.AppRec.SprachID = mSprache.id;
+				DexieSvcService.AktuellSprache = mSprache;
+				await DexieSvcService.AppDataTable.put(DexieSvcService.AppRec).catch((error) => {
 					console.error(error);
 				})
 			});
 		} else {
-			this.LadeSpracheFromID(this.AppRec.SprachID)
-				.then((aSprache) => this.AktuellSprache = aSprache);
+			this.LadeSpracheFromID(DexieSvcService.AppRec.SprachID)
+				.then((aSprache) => DexieSvcService.AktuellSprache = aSprache);
 		}// if
 	}
 
 	public async LadeAppData(): Promise<AppData> {
-		return await this.AppDataTable
+		return await DexieSvcService.AppDataTable
 			.limit(1)
 			.first((aAppRec) => {
-				this.AppRec = aAppRec;
+				DexieSvcService.AppRec = aAppRec;
 				DexieSvcService.GewichtsEinheitText = aAppRec.GewichtsEinheitText;
 				DexieSvcService.GewichtsEinheit = aAppRec.GewichtsEinheit;
 				return aAppRec;
@@ -2300,8 +2311,8 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async AppDataSpeichern(aAppData: AppData) {
-		this.AppRec = aAppData;
-		await this.AppDataTable.put(aAppData); //.then( () =>  this.LadeAppData().then ((aAppRec) => this.AppRec = aAppRec ));
+		DexieSvcService.AppRec = aAppData;
+		await DexieSvcService.AppDataTable.put(aAppData); //.then( () =>  this.LadeAppData().then ((aAppRec) => this.AppRec = aAppRec ));
 		
 	}
 	//#endregion
@@ -2321,7 +2332,7 @@ export class DexieSvcService extends Dexie {
 			let mProgress: Progress;
 			if (mQuellUebung.FkProgress !== undefined
 				&& mQuellUebung.FkProgress > 0) {
-				mProgress = this.ProgressListe.find((p) => p.ID === mQuellUebung.FkProgress);
+				mProgress = DexieSvcService.ProgressListe.find((p) => p.ID === mQuellUebung.FkProgress);
 				if (mProgress !== undefined
 					&& mProgress.ProgressSet === ProgressSet.First
 					&& mQuellUebung.SatzListe !== undefined
@@ -2491,7 +2502,7 @@ export class DexieSvcService extends Dexie {
 			}
 
 			if (aSession.Kategorie02 === SessionStatus.Loeschen)
-				this.SessionTable.delete(aSession.ID);
+				DexieSvcService.SessionTable.delete(aSession.ID);
 			
 			if ((aPara !== undefined) && (aPara.ExtraFn !== undefined))
 				aPara.ExtraFn(mNeueSession);
@@ -2506,10 +2517,10 @@ export class DexieSvcService extends Dexie {
 		DexieSvcService.ExamplesDone = true;
 
 		// Alle Sessions löschen 
-		await this.SessionTable.toArray(async (aSessionListe) => {
+		await DexieSvcService.SessionTable.toArray(async (aSessionListe) => {
 			aSessionListe.forEach((aSession: Session) => {
 				if (aSession.FK_VorlageProgramm > 0)
-					this.SessionTable.delete(aSession.ID);
+					DexieSvcService.SessionTable.delete(aSession.ID);
 			});
 
 			const mMaxWochen: number = 52;

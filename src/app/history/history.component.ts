@@ -139,7 +139,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 
 	get DateInputMask(): string{
-		return this.fDbModul.AktuellSprache.Kuerzel === cDeutschKuerzel ? cDeutschDateInputMask : cEnglishDateInputMask;
+		return DexieSvcService.AktuellSprache.Kuerzel === cDeutschKuerzel ? cDeutschDateInputMask : cEnglishDateInputMask;
 	}
 
 	ViewSession(aEvent: Event, aSession: ISession) {
@@ -435,7 +435,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		let mDelimiter = '/';
 		let mMonthColumnIndex = 0;	
 		let mDayColumnIndex = 1;	
-		if (this.fDbModul.AktuellSprache.Kuerzel === cDeutschKuerzel) {
+		if (DexieSvcService.AktuellSprache.Kuerzel === cDeutschKuerzel) {
 			mDelimiter = '.';
 			mMonthColumnIndex = 1;	
 			mDayColumnIndex = 0;	

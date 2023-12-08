@@ -39,11 +39,11 @@ export class ExerciseComponent implements OnInit {
 	}
 
 	public EditExercise(aUebung: Uebung): void {
-		this.fUebungService.EditUebung(aUebung, this.fDexieSvcService.StammUebungsListe);
+		this.fUebungService.EditUebung(aUebung, DexieSvcService.StammUebungsListe);
 	}
 
 	public NewExercise(): void {
-		this.fUebungService.EditUebung(new Uebung(), this.fDexieSvcService.StammUebungsListe);
+		this.fUebungService.EditUebung(new Uebung(), DexieSvcService.StammUebungsListe);
 	}
 
 	public DeleteExercise(aUebung: Uebung): void {

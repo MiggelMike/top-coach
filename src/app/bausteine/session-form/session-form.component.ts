@@ -60,7 +60,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 		const mNavigation = this.router.getCurrentNavigation()!;
 		const mState = mNavigation.extras.state as { programm: ITrainingsProgramm, sess: Session, ModulTyp: ProgramModulTyp };
 		
-		mState.sess.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
+		mState.sess.PruefeGewichtsEinheit(DexieSvcService.AppRec.GewichtsEinheit);
 		this.ModulTyp = mState.ModulTyp;
 		this.Programm = mState.programm;
 		DexieSvcService.ModulTyp = mState.ModulTyp;
@@ -400,7 +400,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 									}
 								
 									Session.StaticCheckMembers(mPtrSession);
-									mPtrSession.PruefeGewichtsEinheit(this.fDbModule.AppRec.GewichtsEinheit);
+									mPtrSession.PruefeGewichtsEinheit(DexieSvcService.AppRec.GewichtsEinheit);
 									this.fSavingDialog.fDialog.closeAll();
 									// this.router.navigate(['/']);
 									this.leave();
@@ -568,8 +568,8 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 
 										mProgressPara.ProgressID = mPtrUebung.FkProgress;
 										mProgressPara.AlteProgressID = mPtrUebung.FkProgress;
-										mProgressPara.ProgressListe = this.fDbModule.ProgressListe;
-										mProgressPara.Progress = this.fDbModule.ProgressListe.find((p) => p.ID === mProgressPara.AusgangsUebung.FkProgress);
+										mProgressPara.ProgressListe = DexieSvcService.ProgressListe;
+										mProgressPara.Progress = DexieSvcService.ProgressListe.find((p) => p.ID === mProgressPara.AusgangsUebung.FkProgress);
 
 										if ((mProgressPara.Progress !== undefined)
 											&& ((mProgressPara.Progress.ProgressSet !== undefined))

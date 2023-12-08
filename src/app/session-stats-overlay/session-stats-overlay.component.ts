@@ -40,7 +40,7 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit , ID
 		public fDexieService: DexieSvcService,
 		@Inject(cSessionStatsOverlayData) public sess: ISession
 	) {
-		sess.PruefeGewichtsEinheit(this.fDexieService.AppRec.GewichtsEinheit);
+		sess.PruefeGewichtsEinheit(DexieSvcService.AppRec.GewichtsEinheit);
 
 		this.fPopupPosition = {
 			left: -1000,

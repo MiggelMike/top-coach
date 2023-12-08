@@ -12,7 +12,7 @@ import { DialogData } from '../dialoge/hinweis/hinweis.component';
 })
 export class SettingsComponent implements OnInit {
     public get AppData() :AppData{
-        return this.fDbModule.AppRec;
+        return DexieSvcService.AppRec;
     }
 
     constructor(

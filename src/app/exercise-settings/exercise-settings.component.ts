@@ -144,7 +144,7 @@ export class ExerciseSettingsComponent {
 		mProgressPara.AusgangsSatz = this.SessUeb.ArbeitsSatzListe.length > 0 ? this.SessUeb.ArbeitsSatzListe[0] : undefined;
 		mProgressPara.SatzDone = this.SessUeb.ArbeitsSatzListe.length > 0 ? this.SessUeb.ArbeitsSatzListe[0].Status === SatzStatus.Fertig : false;
 		mProgressPara.ProgressHasChanged = (this.SessUeb.FkProgress !== this.SessUeb.FkAltProgress) && (this.SessUeb.ArbeitsSatzListe[0].Status === SatzStatus.Fertig);
-		mProgressPara.ProgressListe = this.fDbModule.ProgressListe;
+		mProgressPara.ProgressListe = DexieSvcService.ProgressListe;
 
 		Progress.StaticDoProgress(mProgressPara);
 		this.EvalSofortSpeichern();

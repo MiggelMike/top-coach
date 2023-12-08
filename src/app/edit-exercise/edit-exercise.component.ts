@@ -67,7 +67,7 @@ export class EditExerciseComponent implements OnInit {
 	}
 	
 	public get HantelListe(): Array<Hantel>{
-		return this.fDexieService.LangHantelListe;
+		return DexieSvcService.LangHantelListe;
 	}
 	
 	closeDialog() {

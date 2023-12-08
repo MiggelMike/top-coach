@@ -80,7 +80,7 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus {
 			});
         
         if (this.satz.FkHantel === undefined) {
-            const mStammUebung = this.fDbModule.StammUebungsListe.find((u) => u.ID === this.sessUebung.FkUebung);
+            const mStammUebung = DexieSvcService.StammUebungsListe.find((u) => u.ID === this.sessUebung.FkUebung);
             if ((mStammUebung !== undefined) && (mStammUebung.FkHantel !== undefined)) {
                 this.satz.FkHantel = mStammUebung.FkHantel;
             }
@@ -292,7 +292,7 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus {
         mProgressPara.DbModule = aClickSatzFertigPara.dbModul;
         mProgressPara.SatzDone = aClickSatzFertigPara.fertig;
         mProgressPara.ProgressHasChanged = false;
-        mProgressPara.ProgressListe = aClickSatzFertigPara.dbModul.ProgressListe;
+        mProgressPara.ProgressListe = DexieSvcService.ProgressListe;
         // Routine zum Starten der Stoppuhr.
         mProgressPara.NextProgressFn = (aNextProgress: NextProgress) => {
             let mStopUhrUebung: Uebung = aClickSatzFertigPara.uebung;

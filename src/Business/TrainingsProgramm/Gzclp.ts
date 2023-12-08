@@ -117,7 +117,7 @@ export class GzclpProgramm extends TrainingsProgramm {
 		mUebung.GewichtSteigerung = 1;
 		mUebung.GewichtReduzierung = 1;
 
-		const mProgress = this.pDbModule.ProgressListe.find((p) => p.Name === Progress.cStandardProgress);
+		const mProgress = DexieSvcService.ProgressListe.find((p) => p.Name === Progress.cStandardProgress);
 		if (mProgress !== undefined)
 			mUebung.FkProgress = mProgress.ID;
 		

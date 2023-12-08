@@ -252,7 +252,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 	}
 
 	public AddExercise(aSession: ISession) {
-		if (this.fDbModule.StammUebungsListe.length === 0) this.fDbModule.LadeStammUebungen();
+		if (DexieSvcService.StammUebungsListe.length === 0) this.fDbModule.LadeStammUebungen();
 		else this.fUebungService.UebungWaehlen(aSession as Session, this.SelectUebungDelegate);
 	}
 
