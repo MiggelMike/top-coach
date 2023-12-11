@@ -1361,9 +1361,8 @@ export class DexieSvcService extends Dexie {
 
 							if (mLoadAgain) {
 								return await this.LadeStandardProgramme()
-									.then((aProgrammListe) => { return DexieSvcService.StandardProgramme = aProgrammListe; });
+									.then(() => { return DexieSvcService.StandardProgramme; });
 							} else {
-								DexieSvcService.StandardProgramme = aProgrammListe
 								return DexieSvcService.StandardProgramme;
 							}
 							
@@ -2062,6 +2061,10 @@ export class DexieSvcService extends Dexie {
 
 		mProgrammPara.SessionParaDB.UebungParaDB = new UebungParaDB();
 		mProgrammPara.SessionParaDB.UebungParaDB.SaetzeBeachten = true;
+		mProgrammPara.SessionParaDB.UebungParaDB.WhereClause = "SessionID";
+		mProgrammPara.SessionParaDB.UebungParaDB.anyOf = (aSession) => {
+			return aSession.ID as any;
+		};		
 
 		return this.LadeProgrammeEx(mProgrammPara).then((aProgramme) => {
 			DexieSvcService.StandardProgramme = aProgramme;
