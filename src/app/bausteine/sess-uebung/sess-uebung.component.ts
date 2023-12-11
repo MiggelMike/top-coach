@@ -16,7 +16,7 @@ import { SatzEditComponent } from '../satz-edit/satz-edit.component';
     styleUrls: ["./sess-uebung.component.scss"],
 })
 export class SessUebungComponent implements OnInit, ISatzTyp {
-    @Input() satzType: SatzTyp;
+    @Input() satzArt: SatzTyp;
     @Input() programm: ITrainingsProgramm = null;
     @Input() programmModul: ProgramModulTyp = ProgramModulTyp.Kein;
     @Input() session: ISession = null;
@@ -75,7 +75,7 @@ export class SessUebungComponent implements OnInit, ISatzTyp {
         const mSatz: Satz = this.fGlobalService.SatzKopie.Copy();
         mSatz.UebungID = this.sessUebung.ID;
         
-        switch (this.satzType) {
+        switch (this.satzArt) {
             case SatzTyp.Aufwaermen:
                 mSatz.SatzTyp = SatzTyp.Aufwaermen;
                 break;
@@ -96,7 +96,7 @@ export class SessUebungComponent implements OnInit, ISatzTyp {
             aEvent.stopPropagation();
         
         let mSatz: Satz;
-        switch (this.satzType) {
+        switch (this.satzArt) {
             case SatzTyp.Aufwaermen:
                 mSatz = Satz.NeuerSatz(
                     SatzTyp.Aufwaermen,

@@ -25,6 +25,7 @@ import { ISatzTyp, Satz, SatzTyp } from 'src/Business/Satz/Satz';
 export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISaetzeStatus {
 	@Input() programm: ITrainingsProgramm;
 	@Input() session: ISession;
+	@Input() satzArt: SatzTyp;
 	@Input() cmpSession: ISession;
 	@Input() cmpSettingsSession: ISession;
 	@Input() SessUeb: Uebung;
