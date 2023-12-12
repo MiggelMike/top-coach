@@ -6,19 +6,20 @@ import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
 import { Satz, SatzTyp, LiftTyp, ISatzTyp } from "./../../../Business/Satz/Satz";
-import { ProgramModulTyp } from "./../../app.module";
+import { IProgramModul, ProgramModulTyp } from "./../../app.module";
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { SatzEditComponent } from '../satz-edit/satz-edit.component';
+import { DexieSvcService } from 'src/app/services/dexie-svc.service';
 
 @Component({
     selector: "app-sess-uebung",
     templateUrl: "./sess-uebung.component.html",
     styleUrls: ["./sess-uebung.component.scss"],
 })
-export class SessUebungComponent implements OnInit, ISatzTyp {
+export class SessUebungComponent implements OnInit, ISatzTyp, IProgramModul {
     @Input() satzArt: SatzTyp;
     @Input() programm: ITrainingsProgramm = null;
-    @Input() programmModul: ProgramModulTyp = ProgramModulTyp.Kein;
+    @Input() programmModulArt: ProgramModulTyp = ProgramModulTyp.Kein;
     @Input() session: ISession = null;
     @Input() sessUebung: Uebung;
     @Input() satzListe: Array<Satz>;
@@ -36,10 +37,13 @@ export class SessUebungComponent implements OnInit, ISatzTyp {
         private fGlobalService: GlobalService
     ) {
     }
+    get programModul(): typeof ProgramModulTyp {
+        return ProgramModulTyp;
+    }
     get satzTyp(): typeof SatzTyp {
         return SatzTyp;
     }
-    
+
     ngOnInit(): void {
         // this.satzListe = this.sessUebung.ArbeitsSatzListe;
     }

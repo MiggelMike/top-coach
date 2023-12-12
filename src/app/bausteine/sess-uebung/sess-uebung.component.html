@@ -1,45 +1,47 @@
 <ng-container *ngIf="session" >
-    <mat-accordion multi="true">
-        <mat-expansion-panel #ExpansionPanel [expanded]="true">
+    <div [ngClass]="{'width-450': programmModulArt  === programModul.SelectWorkout}" >
+        <mat-accordion multi="true">
+            <mat-expansion-panel #ExpansionPanel [expanded]="true">
 
-            <mat-expansion-panel-header>
-                <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutGap="2px" fxLayoutAlign="flex-start center"  >
-                    <span class="Satz-Typ-Text">{{satzArt}}</span>
+                <mat-expansion-panel-header>
+                    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutGap="2px" fxLayoutAlign="flex-start center"  >
+                        <span class="Satz-Typ-Text">{{satzArt}}</span>
 
-                    <ng-container *ngIf='bearbeitbar'>
-                        <a [ngClass]="['link-button-font','HG-01']" mat-flat-button (click)="AddSet($event)">Add Set</a>
-                        <a [ngClass]="['link-button-font','HG-01']" mat-flat-button (click)="PasteSet($event)">Paste Set</a>
-                    </ng-container>
-                </div>
-            </mat-expansion-panel-header>
-        
-            <ng-container *ngIf='bearbeitbar; then  BearbeitbarBlock else NurLesenBlock'>
-            </ng-container>
-            <!-- Nur Lesen -->
-            <ng-template #NurLesenBlock>
-                <div fxLayout="row" fxLayout.lt-sm="row" fxLayoutAlign="flex-start">
-                    <ng-container *ngFor="let satz of satzListe, index as i">
-                        <app-satz-simple [satz]="satz"></app-satz-simple>
-                    </ng-container>
-                </div>
-            </ng-template>
-            <!-- Bearbeitbar -->
-            <ng-template #BearbeitbarBlock>
-                <div fxLayout="column" fxLayout.lt-sm="column" fxLayoutAlign="flex-start">
-                    <ng-container *ngFor="let satz of satzListe, index as i">
-                        <app-satz-edit #AppSatzEdit 
-                                [rowNum]="i" 
-                                [programm]="programm" 
-                                [programmModul]="programmModul"
-                                [sessUebung]="sessUebung" 
-                                [satz]="satz" 
-                                [sess]="session" 
-                                [satzArt]="satzTyp"
-                                [DeletedSatzList]="DeletedSatzList" >
-                            </app-satz-edit>
+                        <ng-container *ngIf='bearbeitbar'>
+                            <a [ngClass]="['link-button-font','HG-01']" mat-flat-button (click)="AddSet($event)">Add Set</a>
+                            <a [ngClass]="['link-button-font','HG-01']" mat-flat-button (click)="PasteSet($event)">Paste Set</a>
                         </ng-container>
                     </div>
-            </ng-template>
-        </mat-expansion-panel>
-    </mat-accordion>
+                </mat-expansion-panel-header>
+            
+                <ng-container *ngIf='bearbeitbar; then  BearbeitbarBlock else NurLesenBlock'>
+                </ng-container>
+                <!-- Nur Lesen -->
+                <ng-template #NurLesenBlock>
+                    <div fxLayout="row" fxLayout.lt-sm="row" fxLayoutAlign="flex-start">
+                        <ng-container *ngFor="let satz of satzListe, index as i">
+                            <app-satz-simple [satz]="satz"></app-satz-simple>
+                        </ng-container>
+                    </div>
+                </ng-template>
+                <!-- Bearbeitbar -->
+                <ng-template #BearbeitbarBlock>
+                    <div fxLayout="column" fxLayout.lt-sm="column" fxLayoutAlign="flex-start">
+                        <ng-container *ngFor="let satz of satzListe, index as i">
+                            <app-satz-edit #AppSatzEdit 
+                                    [rowNum]="i" 
+                                    [programm]="programm" 
+                                    [programmModul]="programmModulArt"
+                                    [sessUebung]="sessUebung" 
+                                    [satz]="satz" 
+                                    [sess]="session" 
+                                    [satzArt]="satzTyp"
+                                    [DeletedSatzList]="DeletedSatzList" >
+                                </app-satz-edit>
+                            </ng-container>
+                        </div>
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
 </ng-container>

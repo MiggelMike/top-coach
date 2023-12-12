@@ -137,6 +137,20 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISa
 		return Uebung.StaticAlleSaetzeStatus(aSessUeb);
 	}
 
+	satzTypVisible(aSessUebung: Uebung, aSatzTyp: SatzTyp): boolean{
+        switch (aSatzTyp) {
+            case SatzTyp.Aufwaermen:
+                return (aSessUebung.WarmUpVisible && this.ModulTyp !== ProgramModulTyp.SelectWorkout);
+            
+            case SatzTyp.Abkuehlen:
+                return (aSessUebung.CooldownVisible && this.ModulTyp !== ProgramModulTyp.SelectWorkout);
+            
+            default:
+                return true;
+        }
+    }
+    
+
 	ngOnDestroy() {
 		if (this.fGlobalService.Comp03PanelUebungObserver != null) this.fGlobalService.Comp03PanelUebungObserver = null;
 	}

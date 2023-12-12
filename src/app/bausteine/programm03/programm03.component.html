@@ -66,7 +66,7 @@
                                 <div class="card-body">
                                     <ng-container *ngIf="SessUeb.Expanded === true" >
                                         <div fxLayout="column" fxLayoutGap="2px" fxFlex="auto">
-                                            <ng-container *ngIf="SessUeb.WarmUpVisible === true">
+                                            <ng-container *ngIf="satzTypVisible(SessUeb, satzTyp.Aufwaermen)">
                                                 <app-sess-uebung 
                                                     [panUebung1]="panUebung"
                                                     [rowNum]="i" 
@@ -75,7 +75,7 @@
                                                     [session]="session"
                                                     [DeletedSatzList]="DeletedSatzList"
                                                     [programm]="programm"
-                                                    [ModulTyp]="ModulTyp"
+                                                    [programmModulArt]="ModulTyp"
                                                     [sessUebung]="SessUeb" 
                                                     [bearbeitbar]="bearbeitbar">
                                                 </app-sess-uebung>
@@ -90,13 +90,13 @@
                                                     [session]="session"
                                                     [programm]="programm"
                                                     [DeletedSatzList]="DeletedSatzList"
-                                                    [ModulTyp]="ModulTyp"
+                                                    [programmModulArt]="ModulTyp"
                                                     [sessUebung]="SessUeb" 
                                                     [bearbeitbar]="bearbeitbar">
                                                 </app-sess-uebung>
                                             </ng-container>
             
-                                            <ng-container *ngIf="SessUeb.CooldownVisible === true">
+                                            <ng-container *ngIf="satzTypVisible(SessUeb, satzTyp.Abkuehlen)">
                                                 <app-sess-uebung 
                                                     [panUebung1]="panUebung"
                                                     [rowNum]="i"
@@ -105,7 +105,7 @@
                                                     [programm]="programm"
                                                     [DeletedSatzList]="DeletedSatzList"
                                                     [session]="session" 
-                                                    [ModulTyp]="ModulTyp"
+                                                    [programmModulArt]="ModulTyp"
                                                     [sessUebung]="SessUeb" 
                                                     [bearbeitbar]="bearbeitbar">
                                                 </app-sess-uebung>
