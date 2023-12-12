@@ -4,17 +4,17 @@
     <ng-container *ngFor="let iw of InitialWeightList, index as i">
         <div class="row-start-left-gap-3 height-65" [ngClass]="{'HG-01': i % 2 === 0}">            
                 <mat-label id="Name">{{iw.Name}}</mat-label>
-                <mat-form-field>
+                <!-- <mat-form-field> -->
                     <mat-label>Initial weight</mat-label>
                     <input matInput 
-                        class="align-right"
+                        class="align-right HG-Transparent"
                         mask="999.000" 
                         (focus)="OnFocus($event)"
                         (focusout)="SetWeight(iw,$event)" 
                         (click)="onInitialWeightClick($event)" 
                         [ngModel]="iw.Weight" type="text"
                         >
-                </mat-form-field>
+                <!-- </mat-form-field> -->
         </div>
     </ng-container>
     

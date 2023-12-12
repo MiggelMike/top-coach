@@ -26,7 +26,8 @@ export class InitialWeightComponent implements OnInit {
 	constructor(private router: Router,
 		public fDbModule: DexieSvcService,
 		private fLoadingDialog: DialogeService,
-		public fDialogService: DialogeService) {
+		public fDialogService: DialogeService)
+	{
 		const mNavigation = this.router.getCurrentNavigation()!;
 		const mState = mNavigation.extras.state as { Program: TrainingsProgramm };
 		this.Program = mState.Program;

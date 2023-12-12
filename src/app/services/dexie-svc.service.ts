@@ -1621,7 +1621,7 @@ export class DexieSvcService extends Dexie {
 
 				mResult.forEach((mPtrSession) => {
 					Session.StaticCheckMembers(mPtrSession);
-					mPtrSession.PruefeGewichtsEinheit(DexieSvcService.AppRec.GewichtsEinheit);
+					mPtrSession.PruefeGewichtsEinheit(DexieSvcService.GewichtsEinheit);
 				});
 
 				if (mHelpSessionParaDB !== undefined) {

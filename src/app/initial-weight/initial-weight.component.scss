@@ -7,4 +7,26 @@
     padding-top: 25px;
     padding-right: 5px;
     width:100px;
+    background: none;
 }
+
+input {
+    background: none;
+    border: none;
+    border: lightgrey;
+    color: black;
+    margin-left: 3px;
+    margin-right: 3px;
+    outline: none;
+}
+
+input:focus {
+    border: none;
+    border-width: 0;
+    outline: none;
+  }
+
+
+
+
+// mdc-text-field ng-tns-c926814666-0 mdc-text-field--filled

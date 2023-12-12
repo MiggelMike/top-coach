@@ -723,7 +723,14 @@ textarea:focus {
 }
 
 
+  .mat-form-field-appearance-fill .mat-form-field-flex {
+    border-radius: 4px;
+    padding: 0.75em 0.75em 0 0.75em;
+    border: 1px solid #f94747;
+	background: none;
+  }
 
+  
 
 
 // .mat-calendar  {
