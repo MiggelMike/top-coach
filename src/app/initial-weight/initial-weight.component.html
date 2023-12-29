@@ -8,11 +8,12 @@
                     <mat-label>Initial weight</mat-label>
                     <input matInput 
                         class="align-right HG-Transparent"
-                        mask="999.000" 
+                        mask="999.00" 
                         (focus)="OnFocus($event)"
                         (focusout)="SetWeight(iw,$event)" 
                         (click)="onInitialWeightClick($event)" 
-                        [ngModel]="iw.Weight" type="text"
+                        [ngModel]="iw.WeightText" 
+                        type="text"
                         >
                 <!-- </mat-form-field> -->
         </div>
