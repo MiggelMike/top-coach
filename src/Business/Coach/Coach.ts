@@ -6,7 +6,7 @@ export enum GewichtsEinheit {
 }
 
 export interface IAppData {
-    ID: number;
+    id: number;
     GewichtsEinheit: GewichtsEinheit;
     GewichtsEinheitText: string;
     MaxHistorySessions: number;
@@ -21,7 +21,7 @@ export interface IAppData {
 }
 
 export class AppData {
-    public ID: number;
+    public id: number;
     public SprachID: number = null;
     GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
     

@@ -712,8 +712,8 @@ export class DexieSvcService extends Dexie {
 
 		if (DexieSvcService.ModulTyp === null)
 			DexieSvcService.ModulTyp = ProgramModulTyp.Kein;
-
-		// Dexie.delete("ConceptCoach");
+		// 
+		//  Dexie.delete("ConceptCoach");
 		this.version(37).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
@@ -734,7 +734,7 @@ export class DexieSvcService extends Dexie {
 		this.InitDatenbank();
 	}
 			
-	InitDatenbank() {
+	async InitDatenbank() {
 		this.InitAll();
 		this.PruefeStandardProgress();
 		this.PruefeStandardLanghanteln();
@@ -819,7 +819,7 @@ export class DexieSvcService extends Dexie {
 		this.InitHantel();
 		this.InitProgress();
 		this.InitUebung();
-		this.InitSprache();
+		// this.InitSprache();
 		this.InitAppData();
 		this.InitHantelscheibe();
 		this.InitProgramm();
@@ -1348,7 +1348,7 @@ export class DexieSvcService extends Dexie {
 					// mProgrammParaDB.SessionParaDB.LadeUebungen
 					await this.LadeStandardProgramme()
 						.then(async (aProgrammListe) => {
-							let mLoadAgain: boolean = false; 
+							let mLoadAgain: boolean = false;
 							if (aProgrammListe.find((programm) => programm.ProgrammTyp === ProgrammTyp.Gzclp) === undefined) {
 								mLoadAgain = true;
 								await this.ProgrammSpeichern(GzclpProgramm.ErzeugeGzclpVorlage(this));
@@ -2064,7 +2064,7 @@ export class DexieSvcService extends Dexie {
 		mProgrammPara.SessionParaDB.UebungParaDB.WhereClause = "SessionID";
 		mProgrammPara.SessionParaDB.UebungParaDB.anyOf = (aSession) => {
 			return aSession.ID as any;
-		};		
+		};
 
 		return this.LadeProgrammeEx(mProgrammPara).then((aProgramme) => {
 			DexieSvcService.StandardProgramme = aProgramme;
@@ -2222,11 +2222,46 @@ export class DexieSvcService extends Dexie {
 
 
 	//#region Sprache
-	private InitSprache() {
+	private async InitSprache(): Promise<Array<Sprache>> {
 		if (DexieSvcService.SpracheTable === undefined) {
 			DexieSvcService.SpracheTable = this.table(this.cSprache);
 			DexieSvcService.SpracheTable.mapToClass(Sprache);
 		}
+
+		return await this.LadeAlleSprachen().then(async (mSprachen) => {
+			let mSprache: Sprache;
+			// Deutsch vorhanden?
+			if (mSprachen.find((aSprache) => aSprache.Name === cDeutsch) === undefined) {
+				// Nicht vorhanden
+				mSprache = Sprache.StaticNeueSprache(
+					cDeutsch,
+					cDeutschKuezel,
+					cDeutschDatumFormat,
+					cDeutschZeitFormat
+				);
+				await this.InsertSprache(mSprache)
+					.then((aSprache) => { return aSprache });
+				mSprachen.push(mSprache);
+			}
+				
+				
+			// Englisch vorhanden?
+			if (mSprachen.find((aSprache) => aSprache.Name === cEnglish) === undefined) {
+				// Nicht vorhanden
+				mSprache = Sprache.StaticNeueSprache(
+					cEnglish,
+					cEnglishKuerzel,
+					cEnglishDatumFormat,
+					cEnglishZeitFormat
+				);
+
+				await this.InsertSprache(mSprache)
+					.then((aSprache) => { return aSprache });
+				mSprachen.push(mSprache);
+			}
+
+			return mSprachen;
+		});
 	}
 
 	private LadeSprache() {
@@ -2267,8 +2302,12 @@ export class DexieSvcService extends Dexie {
 	}
 
 
-	async InsertSprache(aSprache: Sprache) {
-		await DexieSvcService.SpracheTable.put(aSprache);
+	async InsertSprache(aSprache: Sprache): Promise<Sprache> {
+		return await DexieSvcService.SpracheTable.put(aSprache).then(
+			(aID) => {
+				aSprache.id = aID;
+				return aSprache;
+			});
 	}
 
 	public async LadeAlleSprachen(): Promise<Array<Sprache>> {
@@ -2294,43 +2333,53 @@ export class DexieSvcService extends Dexie {
 			DexieSvcService.AppDataTable = this.table(this.cAppData);
 			DexieSvcService.AppDataTable.mapToClass(AppData);
 		}
+
+		await this.LadeAppData().then((aAppRec) => {
+			DexieSvcService.AppRec = aAppRec;
+		});
+
 	}
 
-	private SetAppData() {
-		this.LadeAppData().then((aAppRec) => (DexieSvcService.AppRec = aAppRec));
-
-		if (!DexieSvcService.AppRec) {
-			DexieSvcService.AppRec = new AppData();
-			DexieSvcService.AppDataTable.put(DexieSvcService.AppRec).catch((error) => {
+	private async SetAppData(aAppData: AppData): Promise<AppData> {
+		return DexieSvcService.AppDataTable.put(aAppData)
+			.then((aID) => {
+				aAppData.id = aID;
+				DexieSvcService.AppRec = aAppData;
+				return aAppData;
+			})
+			.catch((error) => {
 				console.error(error);
+				return null;
 			});
-		}
-		
-		if (DexieSvcService.AppRec.SprachID === undefined || DexieSvcService.AppRec.SprachID <= 0) {
-			this.LadeAlleSprachen().then(async (aSprachen) => {
-				// const mSprache = aSprachen.find((aSprache) => aSprache.Kuerzel === this.fTranslateService.getBrowserLang());
-				const mSprache = new Sprache();
-				DexieSvcService.AppRec.SprachID = mSprache.id;
-				DexieSvcService.AktuellSprache = mSprache;
-				await DexieSvcService.AppDataTable.put(DexieSvcService.AppRec).catch((error) => {
-					console.error(error);
-				})
-			});
-		} else {
-			this.LadeSpracheFromID(DexieSvcService.AppRec.SprachID)
-				.then((aSprache) => DexieSvcService.AktuellSprache = aSprache);
-		}// if
 	}
-
 
 	public async LadeAppData(): Promise<AppData> {
 		return await DexieSvcService.AppDataTable
 			.limit(1)
-			.first((aAppRec) => {
-				DexieSvcService.AppRec = aAppRec;
-				DexieSvcService.GewichtsEinheitText = aAppRec.GewichtsEinheitText;
-				DexieSvcService.GewichtsEinheit = aAppRec.GewichtsEinheit;
-				return aAppRec;
+			.first(async (aAppRec) => {
+				const mEnglisch: Sprache = await this.InitSprache().then((mSprachen) => {
+					const mFindEnglisch: Sprache = mSprachen.find((aSprache) => {
+						return (aSprache.Name === cEnglish);
+					});
+					return mFindEnglisch;
+				});
+
+				if (aAppRec) {
+					DexieSvcService.AppRec = aAppRec;
+					DexieSvcService.GewichtsEinheitText = aAppRec.GewichtsEinheitText;
+					DexieSvcService.GewichtsEinheit = aAppRec.GewichtsEinheit;
+
+					if ((DexieSvcService.AppRec.SprachID === undefined) || (DexieSvcService.AppRec.SprachID <= 0)) {
+						DexieSvcService.AppRec.SprachID = mEnglisch.id;
+						return await this.SetAppData(DexieSvcService.AppRec).then((aAppData) => { return aAppData; });
+					} else return DexieSvcService.AppRec;
+				} else {
+					DexieSvcService.AppRec = new AppData();
+					DexieSvcService.GewichtsEinheitText = 'KG';
+					DexieSvcService.GewichtsEinheit = GewichtsEinheit.KG;
+					DexieSvcService.AppRec.SprachID = mEnglisch.id;
+					return await this.SetAppData(DexieSvcService.AppRec).then((aAppData) => { return aAppData; });
+				}
 			});
 	}
 
