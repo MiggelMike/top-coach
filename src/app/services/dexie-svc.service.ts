@@ -1361,22 +1361,25 @@ export class DexieSvcService extends Dexie {
 
 							if (mLoadAgain) {
 								return await this.LadeStandardProgramme()
-									.then(() => { return DexieSvcService.StandardProgramme; });
+									.then(() => {
+										return DexieSvcService.StandardProgramme;
+									});
 							} else {
+								if (DexieSvcService.AktuellesProgramm === null) {
+									await this.LadeAktuellesProgramm()
+										.then(() => {
+											return DexieSvcService.StandardProgramme;
+											// if(DexieSvcService.ExamplesDone === false)
+											// this.MakeExample(aProgram)
+										});
+								}
+
+								if (DexieSvcService.HistorySessions.length <= 0)
+									this.LadeHistorySessions(null, null);
+								
 								return DexieSvcService.StandardProgramme;
 							}
 							
-							// await this.LadeStandardProgramme();
-							// if (DexieSvcService.AktuellesProgramm === null) {
-							// 	this.LadeAktuellesProgramm()
-							// 		.then((aProgram) => {
-							// 			// if(DexieSvcService.ExamplesDone === false)
-							// 			// this.MakeExample(aProgram)
-							// 		});
-							// }
-					
-							if (DexieSvcService.HistorySessions.length <= 0)
-								this.LadeHistorySessions(null, null);
 					
 						});
 					// this.LadeAktuellesProgramm();
