@@ -943,7 +943,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public LadeSessionBodyweight(aSession: Session): Promise<BodyWeight> {
-		const mDatum: Date = (aSession.GestartedWann !== undefined) ? aSession.GestartedWann : cMinDatum;
+		const mDatum: Date = (aSession.GestartedWann !== undefined) ? aSession.GestartedWann : cMaxDatum;
 		
 		return DexieSvcService.BodyweightTable
 			.where("Datum")
@@ -1376,7 +1376,7 @@ export class DexieSvcService extends Dexie {
 
 								if (DexieSvcService.HistorySessions.length <= 0)
 									this.LadeHistorySessions(null, null);
-								
+
 								return DexieSvcService.StandardProgramme;
 							}
 							

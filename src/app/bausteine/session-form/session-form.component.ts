@@ -19,7 +19,6 @@ import { ExerciseSettingSvcService } from 'src/app/services/exercise-setting-svc
 import { ExerciseSettingsComponent } from 'src/app/exercise-settings/exercise-settings.component';
 import { IProgramModul, ProgramModulTyp } from '../../app.module';
 import { BodyWeight } from 'src/Business/Bodyweight/Bodyweight';
-import { AnstehendeSessionsComponent } from 'src/app/anstehende-sessions/anstehende-sessions.component';
 
 @Component({
 	selector: "app-session-form",
@@ -148,7 +147,19 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 				break;
 		}//switch
 
-		this.fDbModule.SessionSpeichern(this.Session);
+		this.fDbModule.SessionSpeichern(this.Session)
+			.then((mSavedSession) => {
+				const mSuchSession: Session = DexieSvcService.AktuellesProgramm.SessionListe.find(
+					(mSession) => {
+						if (mSession.ID === mSavedSession.ID)
+							return mSession;
+						return null;
+
+					});
+				if (mSuchSession) {
+					mSuchSession.GestartedWann = mSavedSession.GestartedWann;
+				}
+			});
 		const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
 		mSessionCopyPara.Komplett = true;
 		mSessionCopyPara.CopySessionID = true;
@@ -599,7 +610,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 										.then((mPtrProgramm) => {
 											this.Programm = mPtrProgramm;
 											// this.fDbModule.LadeAktuellesProgramm();
-											// this.DoAfterDone(this);
+											this.DoAfterDone(this);
 											this.fDbModule.LadeHistorySessions(null, null);
 											this.fSavingDialog.fDialog.closeAll();
 											//this.location.back();
