@@ -26,7 +26,7 @@
                                                     <a [ngClass]="['link-button-font','HG-01']" mat-flat-button (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
 
                                                     <ng-container *ngIf="sess.Kategorie02 === sessionStatus.Laueft">
-                                                            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="ResetSession($event,sess)">Reset</a>
+                                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="ResetSession($event,sess)">Reset</a>
                                                     </ng-container>
                                                 </div>
 
