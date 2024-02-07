@@ -248,6 +248,7 @@ export class Uebung  {
     public UebungDB: UebungDB = new UebungDB();
     public StammUebung: Uebung;
     public SatzListe: Array<Satz> = [];
+
     //#region ID
     get ID(): number {
         return this.UebungDB.ID;

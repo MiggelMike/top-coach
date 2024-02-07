@@ -41,9 +41,9 @@ export interface ISession extends ISessionDB {
     LiftedWeightText: string;
     GestartedWannText(aDateFormatTyp: DateFormatTyp): string;
     BodyWeight: BodyWeight;
-    // BodyWeightSession: number;
     BodyWeightSessionText: string;
     Vollstaendig: boolean; 
+    Reset();
 }
 
 export class SessionCopyPara {

@@ -33,6 +33,13 @@
                                                         <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteSession($event,sess, i+1)">Delete</a>
                                                     </div>
                                                 </ng-container>
+
+                                                <ng-container *ngIf="sess.Kategorie02 === sessionStatus.Laueft">
+                                                    <div class="center-item" layout-align="center center" fxFlex="0 0 auto">
+                                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="ResetSession($event,sess)">Reset</a>
+                                                    </div>
+                                                </ng-container>
+
                                             </div>
                                         </mat-expansion-panel-header>
             

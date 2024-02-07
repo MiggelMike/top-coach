@@ -5,7 +5,7 @@ import { Session } from '../../Business/Session/Session';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData, cLoadingDefaultHeight } from '../dialoge/hinweis/hinweis.component';
 import { IProgramModul, ProgramModulTyp } from '../app.module';
-import { SessionStatus } from 'src/Business/SessionDB';
+import { ISessionStatus, SessionStatus } from 'src/Business/SessionDB';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Router } from '@angular/router';
 import { ISatzStatus, SatzStatus } from 'src/Business/Satz/Satz';
@@ -15,7 +15,7 @@ import { ISatzStatus, SatzStatus } from 'src/Business/Satz/Satz';
 	templateUrl: './anstehende-sessions.component.html',
 	styleUrls: ['./anstehende-sessions.component.scss'],
 })
-export class AnstehendeSessionsComponent implements OnInit, IProgramModul,  ISatzStatus  {
+export class AnstehendeSessionsComponent implements OnInit, IProgramModul,  ISatzStatus, ISessionStatus  {
 	public isCollapsed = false;
 	private worker: Worker;
 	// private fProgramm: ITrainingsProgramm;
@@ -25,7 +25,11 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul,  ISat
 		private fDialogService: DialogeService,
 		private fLoadingDialog: DialogeService,
 		private router: Router
-    ) { }
+	) { }
+	
+	get sessionStatus(): typeof SessionStatus {
+		return SessionStatus;
+	}
     
     get satzStatus(): typeof SatzStatus {
 		return SatzStatus;
@@ -90,6 +94,17 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul,  ISat
 
 	get SessionListe(): Array<Session> {
 		return this.AktuellesProgramm.SessionListe;
+	}
+
+	ResetSession(aEvent: Event,aSess: Session) {
+		aEvent.stopPropagation();
+		const mDialogData = new DialogData();
+		mDialogData.textZeilen.push(`Reset Session?`);
+		mDialogData.OkFn = () => { 
+			aSess.Reset();
+			this.fDbModule.SessionSpeichern(aSess);
+		};
+		this.fDialogService.JaNein(mDialogData);
 	}
 
 	panelOpened(aSess: Session) {}
