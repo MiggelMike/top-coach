@@ -642,9 +642,26 @@ textarea:focus {
 	overflow-y: auto;
 }
 
+input[type=text]  {
+	color: black;
+	font-size: 16px;
+	border-radius: 5px;
+	border-style: solid;
+	border-color: ghostwhite;
+	border-top-color: ghostwhite;
+}
+
+input[type=text]:focus  {
+	background-color: ghostwhite;;
+	outline: none;
+  }
+
+
+
 .border-radius-10 {
 	border-radius: 10px;
 }
+
 
 
 .cc-overlay {
