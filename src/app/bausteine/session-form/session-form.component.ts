@@ -41,7 +41,6 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 	public DeletedSatzList: Array<Satz> = [];
 	public fExerciseSettingSvcService: ExerciseSettingSvcService;
 	public fExerciseSettingsComponent: ExerciseSettingsComponent;
-	private AktuellesProgramm: ITrainingsProgramm = DexieSvcService.AktuellesProgramm;
 
 
 	constructor(
@@ -53,7 +52,6 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 		private fGlobalService: GlobalService,
 		private fUebungService: UebungService,
 		private fSessionOverlayServiceService: SessionOverlayServiceService,
-		private location: Location
 	) {
 		this.fExerciseSettingsComponent = null;
 		const mNavigation = this.router.getCurrentNavigation()!;
@@ -64,21 +62,32 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 		this.Programm = mState.programm;
 		DexieSvcService.ModulTyp = mState.ModulTyp;
 
-		this.fDbModule.LadeSessionBodyweight(mState.sess)
+		const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+		mSessionCopyPara.Komplett = true;
+		mSessionCopyPara.CopySessionID = true;
+		mSessionCopyPara.CopyUebungID = true;
+		mSessionCopyPara.CopySatzID = true;
+		this.Session = Session.StaticCopy(mState.sess, mSessionCopyPara);
+		this.InitSession();
+
+		this.fDbModule.LadeSessionBodyweight(this.Session)
 			.then((aBW) => {
 				if (aBW !== undefined) {
-					mState.sess.BodyWeight = aBW;
-					mState.sess.BodyWeightAtSessionStart = aBW.Weight;
+					this.Session.BodyWeight = aBW;
+					this.Session.BodyWeightAtSessionStart = aBW.Weight;
 				}
-				else mState.sess.BodyWeightAtSessionStart = 0;
+				else this.Session.BodyWeightAtSessionStart = 0;
 
-				mState.sess.BodyWeightSession = mState.sess.BodyWeightAtSessionStart;
-				const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
-				mSessionCopyPara.Komplett = true;
-				mSessionCopyPara.CopySessionID = true;
-				mSessionCopyPara.CopyUebungID = true;
-				mSessionCopyPara.CopySatzID = true;
-				this.Session = Session.StaticCopy(mState.sess, mSessionCopyPara);
+				mState.sess.BodyWeight = this.Session.BodyWeight;
+				mState.sess.BodyWeightAtSessionStart = this.Session.BodyWeightAtSessionStart;
+
+				//mState.sess.BodyWeightSession = mState.sess.BodyWeightAtSessionStart;
+				// const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+				// mSessionCopyPara.Komplett = true;
+				// mSessionCopyPara.CopySessionID = true;
+				// mSessionCopyPara.CopyUebungID = true;
+				// mSessionCopyPara.CopySatzID = true;
+				// this.Session = Session.StaticCopy(mState.sess, mSessionCopyPara);
 				if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length <= 0) {
 					const mDialogData = new DialogData();
 					mDialogData.height = cLoadingDefaultHeight;
@@ -270,7 +279,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 	PasteExcercise() {
 		if (this.fGlobalService.SessUebungKopie === null) {
 			const mDialoData = new DialogData();
-			mDialoData.textZeilen.push("No data to paste!");
+			mDialoData.textZeilen.push("Nothing to paste!");
 			this.fDialogService.Hinweis(mDialoData);
 			return;
 		}
@@ -344,15 +353,15 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 				}//if
 			});
 		
-		if (this.Session.BodyWeightSession !== this.Session.BodyWeightAtSessionStart) {
+		if (this.Session.BodyWeight.Weight !== this.Session.BodyWeightAtSessionStart) {
 			if (this.Session.BodyWeight === undefined || this.Session.BodyWeight.Datum.valueOf() !== this.Session.GestartedWann.valueOf()) {
 				const mNeuBodyWeight: BodyWeight = new BodyWeight();
 				mNeuBodyWeight.Datum = this.Session.GestartedWann;
-				mNeuBodyWeight.Weight = this.Session.BodyWeightSession;
+				mNeuBodyWeight.Weight = this.Session.BodyWeight.Weight;
 				this.fDbModule.BodyweightSpeichern(mNeuBodyWeight);
 			}
 			else if (this.Session.BodyWeight !== undefined || this.Session.BodyWeight.Datum.valueOf() === this.Session.GestartedWann.valueOf()) {
-				this.Session.BodyWeight.Weight = this.Session.BodyWeightSession;
+				// this.Session.BodyWeight.Weight = this.Session.BodyWeightSession;
 				this.fDbModule.BodyweightSpeichern(this.Session.BodyWeight);
 			}
 		}

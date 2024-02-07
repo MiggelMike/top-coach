@@ -88,7 +88,7 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit , ID
 	}
 
 	SetBodyweight(aEvent: any) {
-		this.sess.BodyWeightSession = Number(aEvent.target.value);
+		this.sess.BodyWeight.Weight = Number(aEvent.target.value);
 	}
 
     ngOnInit(): void { 

@@ -41,7 +41,7 @@ export interface ISession extends ISessionDB {
     LiftedWeightText: string;
     GestartedWannText(aDateFormatTyp: DateFormatTyp): string;
     BodyWeight: BodyWeight;
-    BodyWeightSession: number;
+    // BodyWeightSession: number;
     BodyWeightSessionText: string;
     Vollstaendig: boolean; 
 }
@@ -215,9 +215,9 @@ export class Session implements ISession {
     }
     //#endregion 
     //#region BodyWeight 
-    public BodyWeightSession: number = 0;
+    // public BodyWeightSession: number = 0;
     public get BodyWeightSessionText(): string{
-        return formatNumber(this.BodyWeightSession,'en-US',cWeightFormat);
+        return formatNumber(this.BodyWeight.Weight,'en-US',cWeightFormat);
     } 
     public BodyWeight: BodyWeight;
     //#endregion
