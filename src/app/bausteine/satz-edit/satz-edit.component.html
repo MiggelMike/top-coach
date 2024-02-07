@@ -38,7 +38,7 @@
     </div>
 
     <div fxLayout="row wrap" fxLayoutGap="2px" fxFlex="100%">
-        <div class="center-item align-right  pad-top-12" fxFlex="25px">
+        <div class="center-item align-right pad-top-12" fxFlex="25px">
             <mat-label>{{rowNum+1}}</mat-label>
         </div>
 
@@ -121,7 +121,7 @@
                 <div class="weight-column align-right">
                     <input  matInput 
                             mask="9999.000"
-                            class="align-right tc-font-size-smaller"
+                            class="align-right tc-font-size-smaller weight-column mg-top-12"
                             maxlength="8"
                             [ngModel]="satz.GewichtAusgefuehrtText" 
                             (focusout)="SetWeightAusgefuehrt($event)"
@@ -135,7 +135,7 @@
                 <div class="rep-column align-right">
                     <input  matInput 
                         mask="9999"
-                            class="align-right tc-font-size-smaller"
+                            class="align-right tc-font-size-smaller rep-column mg-top-12"
                             maxlength="4"
                             [ngModel]="satz.WdhVonVorgabeText" 
                             (focusout)="SetVonWdhVorgabe($event)" 
@@ -156,7 +156,7 @@
                 </mat-form-field> -->
 
                 <!-- AMRAP  -->
-                <div class="ml-10 center-item" layout-align="center center" fxFlex="35px">
+                <div class="ml-10 center-item mg-top-12" layout-align="center center" fxFlex="35px">
                     <mat-checkbox [(ngModel)]="satz.AMRAP"></mat-checkbox>
                 </div>
             </ng-template>

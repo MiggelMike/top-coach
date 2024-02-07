@@ -10,7 +10,7 @@ import { ISatzTyp, Satz, SatzStatus, SatzTyp } from "./../../../Business/Satz/Sa
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
-import { ProgramModulTyp as ProgramModulTyp } from './../../app.module';
+import { IProgramModul, ProgramModulTyp as ProgramModulTyp } from './../../app.module';
 import { PlateCalcComponent } from 'src/app/plate-calc/plate-calc.component';
 import { StoppuhrComponent } from 'src/app/stoppuhr/stoppuhr.component';
 import { StoppUhrOverlayConfig, StoppuhrSvcService } from 'src/app/services/stoppuhr-svc.service';
@@ -22,15 +22,18 @@ import { ISessionStatus, SessionStatus } from 'src/Business/SessionDB';
     templateUrl: "./satz-edit.component.html",
     styleUrls: ["./satz-edit.component.scss"],
 })
-export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus {
+export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IProgramModul  {
     @Input() programm: ITrainingsProgramm = null;
-    @Input() programmModul: ProgramModulTyp;
     @Input() sess: ISession;
     @Input() sessUebung: Uebung;
     @Input() satz: Satz;
     @Input() rowNum: number;
     @Input() SatzTyp:SatzTyp;
     @Input() DeletedSatzList: Array<Satz> = [];
+
+    get programModulArt(): ProgramModulTyp {
+        return DexieSvcService.ModulTyp;
+    }
     public plateCalcComponent: PlateCalcComponent;
     private plateCalcOverlayConfig: PlateCalcOverlayConfig;
     //private StoppUhrOverlayConfig: StoppUhrOverlayConfig;
@@ -61,6 +64,9 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus {
             .then((mAppData) => {
                 this.AppData = mAppData;
             });
+    }
+    get programModul(): typeof ProgramModulTyp {
+        return ProgramModulTyp;
     }
     get sessionStatus(): typeof SessionStatus {
         return SessionStatus;
