@@ -71,7 +71,7 @@ export class SessUebungComponent implements OnInit, ISatzTyp, IProgramModul {
         
         if (this.fGlobalService.SatzKopie === null) {
             const mDialoData = new DialogData();
-            mDialoData.textZeilen.push("No data to paste!");
+            mDialoData.textZeilen.push("Nothing to paste!");
             this.fDialogService.Hinweis(mDialoData);
             return;
         }

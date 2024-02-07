@@ -20,12 +20,14 @@
                                         class="HG-01">
                                         <mat-expansion-panel-header mat-tooltip-panel-below  matTooltip="Hold and drag">
                                             <div class="row-start-left-gap-3 mg-bottom-3">
-                                                <!-- <mat-form-field class="width-300"> -->
-                                                    <input class="tc-font-size-smaller width-400 HG-Transparent" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
-                                                <!-- </mat-form-field> -->
-                                                    
-                                            <div class="center-item" layout-align="center center" fxFlex="auto">
-                                                    <a [ngClass]="['ml-5','link-button-font', 'HG-01']" mat-flat-button (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
+                                                    <input class="tc-font-size-smaller width-350 HG-Transparent" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
+
+                                                <div class="row-start-left-gap-3">
+                                                    <a [ngClass]="['link-button-font','HG-01']" mat-flat-button (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
+
+                                                    <ng-container *ngIf="sess.Kategorie02 === sessionStatus.Laueft">
+                                                            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="ResetSession($event,sess)">Reset</a>
+                                                    </ng-container>
                                                 </div>
 
                                                 <ng-container *ngIf="sess.IstAusVorgabe === false">
@@ -34,11 +36,6 @@
                                                     </div>
                                                 </ng-container>
 
-                                                <ng-container *ngIf="sess.Kategorie02 === sessionStatus.Laueft">
-                                                    <div class="center-item" layout-align="center center" fxFlex="0 0 auto">
-                                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="ResetSession($event,sess)">Reset</a>
-                                                    </div>
-                                                </ng-container>
 
                                             </div>
                                         </mat-expansion-panel-header>

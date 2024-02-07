@@ -263,7 +263,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 	public PasteExcercise(aSession: ISession) {
 		if (this.fGlobalService.SessUebungKopie === null) {
 			const mDialoData = new DialogData();
-			mDialoData.textZeilen.push("No data to paste!");
+			mDialoData.textZeilen.push("Nothing to paste!");
 			this.fDialogService.Hinweis(mDialoData);
 			return;
 		}
