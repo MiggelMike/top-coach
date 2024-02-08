@@ -1,8 +1,4 @@
-// .mat-expansion-panel:not([class*='mat-elevation-z']) {
-//     box-shadow: none;
-// } 
 #History-Panel{
-    // position: fixed;
     width:  100% !important;
     height: 850px;
     overflow-y: hidden !important;
@@ -26,135 +22,122 @@
 }
 
 
-@media screen and (orientation: portrait){
-    @media screen and  (max-device-height: 2560){
-        #History-Panel {
-            height: 2400px;
-        }
-
-        // #History-Sub-Panel {
-        //     height: 2400px;
-        // }
-        
-    }   
+// @media screen and (orientation: portrait){
+//     @media screen and  (max-device-height: 2560){
+//         #History-Panel {
+//             height: 2400px;
+//         }
+//     }   
     
-    @media screen and (max-device-height: 1366px),  (max-device-height: 1368px){
-        #History-Panel {
-            height: 1200px;
-        }
+//     @media screen and (max-device-height: 1366px),  (max-device-height: 1368px){
+//         #History-Panel {
+//             height: 1200px;
+//         }
 
-        // #History-Sub-Panel {
-        //     height: 2250px;
-        // }
-    }   
+//         // #History-Sub-Panel {
+//         //     height: 2250px;
+//         // }
+//     }   
     
-    @media screen and (max-device-height: 1180px){
-        #History-Panel {
-            height: 1000px;
-        }
-    }   
+//     @media screen and (max-device-height: 1180px){
+//         #History-Panel {
+//             height: 1000px;
+//         }
+//     }   
 
-    @media screen and (max-device-height: 1138px){
-        #History-Panel {
-            height: 1000px;
-        }
-    }       
+//     @media screen and (max-device-height: 1138px){
+//         #History-Panel {
+//             height: 1000px;
+//         }
+//     }       
     
-    @media screen and (max-device-height: 1024px){
-        #History-Panel{
-            height: 900px;
-        }
-    }
+//     @media screen and (max-device-height: 1024px){
+//         #History-Panel{
+//             height: 900px;
+//         }
+//     }
 
-    @media screen and (max-device-height: 914px), (max-device-height: 915px){
-        #History-Panel{
-            height: 800px;
-        }
-    }
+//     @media screen and (max-device-height: 914px), (max-device-height: 915px){
+//         #History-Panel{
+//             height: 800px;
+//         }
+//     }
 
-    @media screen and (max-device-height: 740px){
-        #History-Panel{
-            height: 600px;
-        }
-    }    
-    @media screen and (max-device-height: 720px){
-        #History-Panel{
-            height: 600x;
-        }
-    }
-    @media screen and (max-device-height: 640px){
-        #History-Panel{
-            height: 500x;
-        }
-    }    
-}   
+//     @media screen and (max-device-height: 740px){
+//         #History-Panel{
+//             height: 600px;
+//         }
+//     }    
+//     @media screen and (max-device-height: 720px){
+//         #History-Panel{
+//             height: 600x;
+//         }
+//     }
+//     @media screen and (max-device-height: 640px){
+//         #History-Panel{
+//             height: 500x;
+//         }
+//     }    
+// }   
 
-@media screen and (orientation: landscape){
-    @media screen and (max-device-height: 1600px){
-        #History-Panel {
-            height: 1450px;
-        }
-    }   
+// @media screen and (orientation: landscape){
+//     @media screen and (max-device-height: 1600px){
+//         #History-Panel {
+//             height: 1450px;
+//         }
+//     }   
 
-    @media screen and (max-device-height: 1024px){
-        #History-Panel {
-            height: 930px;
-        }
-    }   
+//     @media screen and (max-device-height: 1024px){
+//         #History-Panel {
+//             height: 930px;
+//         }
+//     }   
 
-    @media screen and (max-device-height: 912px){
-        #History-Panel {
-            height: 820px;
-        }
-    } 
+//     @media screen and (max-device-height: 912px){
+//         #History-Panel {
+//             height: 820px;
+//         }
+//     } 
 
-    @media screen and (max-device-height: 820px){
-        #History-Panel {
-            height: 725px;
-        }
-    }    
+//     @media screen and (max-device-height: 820px){
+//         #History-Panel {
+//             height: 725px;
+//         }
+//     }    
 
-    @media screen and (max-device-height: 800px){
-        #History-Panel {
-            height: 700px;
-        }
-    }     
+//     @media screen and (max-device-height: 800px){
+//         #History-Panel {
+//             height: 700px;
+//         }
+//     }     
     
-    @media screen and (max-device-height: 768px){
-        #History-Panel {
-            height: 675px;
-        }
-    } 
+//     @media screen and (max-device-height: 768px){
+//         #History-Panel {
+//             height: 675px;
+//         }
+//     } 
 
-    @media screen and (max-device-height: 712px){
-        #History-Panel {
-            height: 620px;
-        }
-    }     
+//     @media screen and (max-device-height: 712px){
+//         #History-Panel {
+//             height: 620px;
+//         }
+//     }     
     
-    @media screen and (max-device-height: 600px){
-        #History-Panel {
-            height: 500px;
-        }
-    } 
+//     @media screen and (max-device-height: 600px){
+//         #History-Panel {
+//             height: 500px;
+//         }
+//     } 
 
-    @media screen and (max-device-height: 412px){
-        #History-Panel {
-            height: 315px;
-        }
-    }    
+//     @media screen and (max-device-height: 412px){
+//         #History-Panel {
+//             height: 315px;
+//         }
+//     }    
 
-    @media screen and (max-device-height: 360px){
-        #History-Panel {
-            height: 270px;
-        }
-    }    
-}
-
-
-// .tp-radio-group{
-//     padding: 10px;
-//     border-radius: 5px;
-// 	border: 1px;
-//     border-style: inset;
+//     @media screen and (max-device-height: 360px){
+//         #History-Panel {
+//             height: 270px;
+//         }
+//     }    
 // }

@@ -16,24 +16,28 @@
                     <!-- Zeilen-Hintergrundfarbe -> [ngClass]="{'HG-01': i % 2 === 0}" -->
                     <div class="row-start-left-gap-3 pad-right-5 height-80" [ngClass]="{'HG-01': i % 2 === 0}">
                             <!-- <mat-form-field class="align-right width-100 pd-l-5"> -->
+                                <div class="column-center">
                                 <mat-label>Bodyweight</mat-label>
-                                <input class="align-right pd-l-5 width-65" 
+                                <input class="align-right pd-l-5 width-85" 
                                        matInput 
                                        mask="999.00" 
                                        (focusout)="SetBodyweight($event, bw)" 
                                        [ngModel]="bw.WeightTxt" 
                                        type="text">
+                                </div>
                             <!-- </mat-form-field> -->
 
                             <!-- <mat-form-field class="align-items-right">  -->
-                                <mat-label>Choose a date</mat-label>
-                                <input matInput 
-                                type="text"
-                                [ngxMatDatetimePicker]="pickerWithActions" 
-                                [(ngModel)]="bw.Datum" 
-                                class="width-150 align-items-right" 
-                                disabled="false">
-                                    <ngx-mat-datetime-picker #pickerWithActions
+                                <div class="column-center">
+                                    <mat-label>Choose a date</mat-label>
+                                    <input matInput 
+                                    type="text"
+                                    [ngxMatDatetimePicker]="pickerWithActions" 
+                                    [(ngModel)]="bw.Datum" 
+                                    class="width-150 align-items-right" 
+                                    disabled="false">
+                                </div>
+                                <ngx-mat-datetime-picker #pickerWithActions
                                         [showSeconds]="true"
                                         [hideTime]="false">
                                         <ngx-mat-datepicker-actions>
