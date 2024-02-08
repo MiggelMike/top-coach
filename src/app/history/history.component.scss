@@ -1,6 +1,14 @@
-.mat-expansion-panel:not([class*='mat-elevation-z']) {
-    box-shadow: none;
-} 
+// .mat-expansion-panel:not([class*='mat-elevation-z']) {
+//     box-shadow: none;
+// } 
+#History-Panel{
+    // position: fixed;
+    width:  100% !important;
+    height: 850px;
+    overflow-y: hidden !important;
+    padding-left: 5px;
+    padding-right: 5px;
+}
 
 #History-Sub-Panel {
     height: 100%;
@@ -9,19 +17,12 @@
     padding-right: 10px;
 }
 
-#History-Panel{
-    position: fixed;
-    width: 100% !important;
-    height: 850px;
-    overflow-y: hidden !important;
-    padding-left: 5px;
-    padding-right: 5px;
-}
 
 
 .history-sessions{
     overflow-y: scroll;
     height: 100%;
+    width: 100%;
 }
 
 
