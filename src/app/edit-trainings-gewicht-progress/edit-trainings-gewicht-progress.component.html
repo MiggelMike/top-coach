@@ -6,9 +6,7 @@
         </div>
 
         <div class="column-center">
-                <mat-form-field class="align-left">
-                    <input #Name matInput [(ngModel)]="Progress.Name" maxlength="50" type="text">
-                </mat-form-field>
+            <input #Name matInput [(ngModel)]="Progress.Name" maxlength="50" type="text">
         </div>
 
          <div class="column-center">
@@ -36,11 +34,9 @@
         </div>
 
         <div class="column-center">
-            <mat-form-field class="width-150">
                 <mat-label>Additional reps</mat-label>
-                <input matInput  class="align-right" mask="99999" (focusout)="SetAdditionalReps($event)"
+                <input matInput  class="align-right width-75" mask="99999" (focusout)="SetAdditionalReps($event)"
                     [ngModel]="AdditionalReps" type="text">
-            </mat-form-field>
         </div>
     </div>
 </div>    
