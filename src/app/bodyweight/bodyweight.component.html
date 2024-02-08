@@ -17,13 +17,13 @@
                     <div class="row-start-left-gap-3 pad-right-5 height-80" [ngClass]="{'HG-01': i % 2 === 0}">
                             <!-- <mat-form-field class="align-right width-100 pd-l-5"> -->
                                 <div class="column-center">
-                                <mat-label>Bodyweight</mat-label>
-                                <input class="align-right pd-l-5 width-85" 
-                                       matInput 
-                                       mask="999.00" 
-                                       (focusout)="SetBodyweight($event, bw)" 
-                                       [ngModel]="bw.WeightTxt" 
-                                       type="text">
+                                    <mat-label>Bodyweight</mat-label>
+                                    <input class="align-right pd-l-5 width-85" 
+                                        matInput 
+                                        mask="999.00" 
+                                        (focusout)="SetBodyweight($event, bw)" 
+                                        [ngModel]="bw.WeightTxt" 
+                                        type="text">
                                 </div>
                             <!-- </mat-form-field> -->
 

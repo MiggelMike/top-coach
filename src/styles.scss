@@ -268,8 +268,8 @@ body {
 
 
 .colors-textarea {
+	@extend .input-HG;
 	border-color: transparent;
-	background-color: rgb(247, 247, 230);
 }
 
 .kreis {
@@ -666,15 +666,24 @@ textarea:focus {
 	overflow-y: auto;
 }
 
-input[type=text]  {
-	padding: 3px;
+.input-HG {
+background-color: #f7f4fa;
+}
+
+
+.input-standards {
+	@extend .input-HG;
 	height: 35px;
-	background-color: #f7f4fa;
-	color: black;
 	font-size: 16px;
 	border-radius: 6px;
 	border-style: none;
 	border-color: rgb(248, 244, 244);
+	padding: 3px;
+	color: black;
+}
+
+input[type=text]  {
+	@extend .input-standards;
 }
 
 input[type=text]:focus  {

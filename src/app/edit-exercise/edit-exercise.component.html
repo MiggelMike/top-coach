@@ -13,75 +13,68 @@
             <h4>New/edit exercise</h4>
         </div>
 
-        <div class="colum-center">
+        <!-- <div class="colum-center">  -->
+        <div> 
             <div  class="row-start-left">
-                <mat-form-field id="ExerciseName" class="align-left">
-                    <mat-label>Name</mat-label>
-                    <input #Name matInput [(ngModel)]="Uebung.Name" maxlength="30" type="text">
-                </mat-form-field>
+                <div class="colum-center">
+                    <div  class="row-start-left-gap-3">
+                        <mat-label>Name</mat-label>
+                    </div>
+                    <input matInput [(ngModel)]="Uebung.Name" maxlength="30" type="text">
+                </div>
             </div>
 
-            <div class="row-start-left width-100%-Prozent">                
-                <mat-form-field>
-                    <mat-label>Equipment type</mat-label>
-                    <mat-select [(ngModel)]="Uebung.EquipmentTyp">
-                        <mat-option [value]=""></mat-option>
-                        <mat-option *ngFor="let equip of EquipmentListe" [value]="equip"> {{ equip }}</mat-option>
-                    </mat-select>
-                </mat-form-field>
+            <div class="row-start-left-gap-3 width-100%-Prozent height-80">                
+                    <div class="colum-center width-200">
+                        <mat-label>Equipment type</mat-label>
+                        <mat-select [(ngModel)]="Uebung.EquipmentTyp" class="input-standards">
+                            <mat-option [value]=""></mat-option>
+                            <mat-option *ngFor="let equip of EquipmentListe" [value]="equip"> {{ equip }}</mat-option>
+                        </mat-select>
+                    </div>
 
                 <ng-container *ngIf="Uebung.EquipmentTyp === 'Barbell'">
-                    <mat-form-field>
+                    <div class="colum-center width-200">
                         <mat-label>Barbell</mat-label>
-                        <mat-select [(ngModel)]="Uebung.FkHantel">
+                        <mat-select [(ngModel)]="Uebung.FkHantel"  class="input-standards">
                             <mat-option [value]="0"></mat-option>
                             <mat-option *ngFor="let h of HantelListe" [value]="h.ID"> {{ h.Name }}</mat-option>
                         </mat-select>
-                    </mat-form-field>
+                    </div>
                 </ng-container>
             </div>
 
-            <mat-form-field>
                 <mat-label>Involved Muscle #1</mat-label>
-                <mat-select [(ngModel)]="Uebung.FkMuskel01">
+                <mat-select [(ngModel)]="Uebung.FkMuskel01"  class="input-standards">
                     <mat-option [value]="0"></mat-option>
                     <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
                 </mat-select>
-            </mat-form-field>
             
-            <mat-form-field>
                 <mat-label>Involved Muscle #2</mat-label>
-                <mat-select [(ngModel)]="Uebung.FkMuskel02">
+                <mat-select [(ngModel)]="Uebung.FkMuskel02" class="input-standards">
                     <mat-option [value]="0"></mat-option>
                     <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
                 </mat-select>
-            </mat-form-field>
             
-            <mat-form-field>
                 <mat-label>Involved Muscle #3</mat-label>
-                <mat-select [(ngModel)]="Uebung.FkMuskel03">
+                <mat-select [(ngModel)]="Uebung.FkMuskel03" class="input-standards">
                     <mat-option [value]="0"></mat-option>
                     <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
                 </mat-select>
-            </mat-form-field>
             
-            <mat-form-field>
                 <mat-label>Involved Muscle #4</mat-label>
-                <mat-select [(ngModel)]="Uebung.FkMuskel04">
+                <mat-select [(ngModel)]="Uebung.FkMuskel04" class="input-standards">
                     <mat-option [value]="0"></mat-option>
                     <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
                 </mat-select>
-            </mat-form-field>
             
-            <mat-form-field>
                 <mat-label>Involved Muscle #5</mat-label>
-                <mat-select [(ngModel)]="Uebung.FkMuskel05">
+                <mat-select [(ngModel)]="Uebung.FkMuskel05" class="input-standards">
                     <mat-option [value]="0"></mat-option>
                     <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
                 </mat-select>
-            </mat-form-field>
             
-            <div class="row-start-left width-100-Prozent">
+            <div class="row-start-left width-100-Prozent mg-top-5">
                     <textarea id="editExerciseDescription"  [(ngModel)]="Uebung.Beschreibung" mdInput placeholder="Notes" rows="3" 
                     maxlength="10000" ></textarea>
             </div>
