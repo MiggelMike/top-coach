@@ -2,19 +2,23 @@
 
     <div class="font-14-label">
         <div fxLayout="column" fxFlex="100%">
-
             <!-- Session-Name -->
             <div fxLayout="row wrap" fxFlex="100%">
-                <mat-form-field class="align-left" fxFlex="100%">
-                    <mat-label class="font-14-label">Session name</mat-label>
+                <div class="column-start-left">
+                    <div class="column-start-left">
+                        <mat-label class="font-14-label">Session name</mat-label>
+                    </div>
                     <input  class="font-14-data" #Name matInput [(ngModel)]="sess.Name" maxlength="30" type="text">
-                </mat-form-field>
+                </div>
             </div>
 
             <!-- GestartedWann -->
-            <div fxLayout="row wrap" fxFlex="100%">
-                <mat-form-field class="align-left" fxFlex="100%">
-                    <mat-label class="font-14-label">Start</mat-label>
+            <div fxLayout="row wrap" fxFlex="100%" class="mg-top-10">
+                <div class="column-start-left">
+                    <div class="column-start-left">
+                        <mat-label class="font-14-label">Start</mat-label>
+                    </div>
+
                     <input  
                     matInput 
                     type="text"  
@@ -22,14 +26,16 @@
                     class="font-14-data" 
                     [ngModel]="sess.GestartedWannText(dateFormatTyp.KomplettOhneSekunden)"
                     >
-                </mat-form-field>
+                </div>
             </div>
 
-            <div fxLayout="row wrap" fxLayoutGap="4px">
+            <div fxLayout="row wrap" fxLayoutGap="4px" class="mg-top-10">
                 <!-- Bodyweight -->
-                <div fxLayout="column" fxFlex="25%" >
-                    <mat-form-field class="align-right">
-                        <mat-label class="font-14-label">Bodyweight ({{GewichtsEinheit}})</mat-label>
+                    <div class="column-start-left">
+                        <div class="column-start-left">
+                            <mat-label class="font-14-label">Bodyweight ({{GewichtsEinheit}})</mat-label>
+                        </div>
+
                         <input matInput 
                               class="align-right"
                               [ngModel]="sess.BodyWeightSessionText"
@@ -37,26 +43,27 @@
                               (focus)="onFocusBodyweight($event)"
                               (focusout)="SetBodyweight($event)"
                                type="text">
-                    </mat-form-field>
-                </div>
+                    </div>                               
                 <!-- Lifted-Weight -->
-                <div fxLayout="column" fxFlex="33%" class="mg-left-5">
-                    <mat-form-field class="align-right">
-                        <mat-label class="font-14-label">Weight lifted ({{GewichtsEinheit}})</mat-label>
+                    <div class="column-start-left">    
+                        <div class="column-start-left">
+                            <mat-label class="font-14-label">Weight lifted ({{GewichtsEinheit}})</mat-label>
+                        </div>                    
+
                         <input  matInput type="text"  [disabled]="true" 
                         class="align-right font-14-data" 
                         [ngModel]="sess.LiftedWeightText"
                         mask="999.000">
-                    </mat-form-field>
-                </div>
+                    </div>
 
                 <!-- Duration -->
-                <div fxLayout="column" fxFlex="30%" class="align-right  mg-left-5">
-                    <mat-form-field class="align-right">
-                        <mat-label class="font-14-label">Duration</mat-label>
+                    <div class="column-start-left">
+                        <div class="column-start-left">
+                            <mat-label class="font-14-label">Duration</mat-label>
+                        </div>
+
                         <input  matInput type="text"  [disabled]="true" class="align-right font-14-data" value="{{sess.DauerFormatted}}">
-                    </mat-form-field>
-                </div>
+                    </div>
             </div>
         </div>
     </div>
