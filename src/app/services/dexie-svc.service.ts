@@ -228,7 +228,6 @@ export class DexieSvcService extends Dexie {
 	private static ProgrammTable: Dexie.Table<ITrainingsProgramm, number>;
 	private static SessionTable: Dexie.Table<SessionDB, number>;
 	private static MuskelGruppeTable: Dexie.Table<MuscleGroup, number>;
-	public static VorlageProgramme: Array<TrainingsProgramm> = [];
 	public static AppRec: AppData;
 	public static AktuellSprache: Sprache;
 	private static EquipmentTable: Dexie.Table<Equipment, number>;
@@ -1471,7 +1470,7 @@ export class DexieSvcService extends Dexie {
 	public PrepAkuellesProgramm(aProgramm: ITrainingsProgramm) {
 		let mDoneSessions: Array<SessionDB> = [];
 
-		DexieSvcService.VorlageProgramme.find((p) => {
+		DexieSvcService.StandardProgramme.find((p) => {
 			if (p.ProgrammTyp === aProgramm.ProgrammTyp) return p;
 			return null;
 		});

@@ -80,7 +80,6 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul,  ISat
 	}
 
 	public get AktuellesProgramm(): ITrainingsProgramm {
-		// const p: ITrainingsProgramm = DexieSvcService.AktuellesProgramm;
 		return DexieSvcService.AktuellesProgramm;
 	}
 

@@ -1,6 +1,6 @@
 import { DexieSvcService } from 'src/app/services/dexie-svc.service';
 import { Router } from '@angular/router';
-import { ITrainingsProgramm, TrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
+import { ITrainingsProgramm, ProgrammKategorie, TrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit } from "@angular/core";
 import { DialogeService } from 'src/app/services/dialoge.service';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
@@ -52,20 +52,28 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
 			mDialogData.textZeilen.push("Save changes?");
 			mDialogData.ShowAbbruch = true;
 		
-			mDialogData.OkFn = () => {
+            mDialogData.OkFn = () => {
 				this.leave();
 				this.SaveChangesPrim();
 			}
 	
-			mDialogData.CancelFn = (): void => {
+            mDialogData.CancelFn = (): void => {
+				if (this.programm.ProgrammKategorie === ProgrammKategorie.Vorlage) {
+					const mIndex = DexieSvcService.StandardProgramme.findIndex((p) => p.id === this.programm.id);
+					if (mIndex > -1) {
+						DexieSvcService.StandardProgramme[mIndex] = this.cmpProgramm;
+					}
+				}
+
 				this.leave();
-			}
+			};
 	
 			this.fDialogService.JaNein(mDialogData);
 		}
 	}
     SaveChangesPrim() {
         this.fDbModule.ProgrammSpeichern(this.programm);
+        this .cmpProgramm = this.programm.Copy();
     }
 
     CancelChanges() {

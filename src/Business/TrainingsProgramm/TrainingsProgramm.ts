@@ -66,8 +66,25 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
         // Object.defineProperty(this, "SessionListe", { enumerable: false });
     }
 
-    public static StaticIsEqual( aProgramm1: ITrainingsProgramm, aProgramm2: ITrainingsProgramm): boolean {
-        return isEqual(aProgramm1, aProgramm2);
+    public static StaticIsEqual(aProgramm1: ITrainingsProgramm, aProgramm2: ITrainingsProgramm): boolean {
+        const mCmpProgramm1: ITrainingsProgramm = aProgramm1.Copy();  
+        const mCmpProgramm2: ITrainingsProgramm = aProgramm2.Copy()  
+
+        if (mCmpProgramm1.SessionListe.length != mCmpProgramm2.SessionListe.length)
+            return false;
+
+        for (let index = 0; index < mCmpProgramm1.SessionListe.length; index++) {
+            const mSessionPtr1: Session = mCmpProgramm1.SessionListe[index];
+            const mSessionPtr2: Session = mCmpProgramm2.SessionListe[index];
+
+            if (mSessionPtr1.isEqual(mSessionPtr2) === false)
+                return false;
+            
+        }
+
+        mCmpProgramm1.SessionListe = [];
+        mCmpProgramm2.SessionListe = [];
+        return isEqual(mCmpProgramm1, mCmpProgramm2);
     }
 
     NummeriereSessions() {
