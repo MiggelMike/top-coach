@@ -62,16 +62,15 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 		this.Programm = mState.programm;
 		DexieSvcService.ModulTyp = mState.ModulTyp;
 
-		const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
-		mSessionCopyPara.Komplett = true;
-		mSessionCopyPara.CopySessionID = true;
-		mSessionCopyPara.CopyUebungID = true;
-		mSessionCopyPara.CopySatzID = true;
-		this.Session = Session.StaticCopy(mState.sess, mSessionCopyPara);
-		this.InitSession();
-
-		this.fDbModule.LadeSessionBodyweight(this.Session)
+		this.fDbModule.LadeSessionBodyweight(mState.sess)
 			.then((aBW) => {
+				const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+				mSessionCopyPara.Komplett = true;
+				mSessionCopyPara.CopySessionID = true;
+				mSessionCopyPara.CopyUebungID = true;
+				mSessionCopyPara.CopySatzID = true;
+				this.Session = Session.StaticCopy(mState.sess, mSessionCopyPara);
+
 				if (aBW !== undefined) {
 					this.Session.BodyWeight = aBW;
 					this.Session.BodyWeightAtSessionStart = aBW.Weight;
@@ -81,13 +80,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 				mState.sess.BodyWeight = this.Session.BodyWeight;
 				mState.sess.BodyWeightAtSessionStart = this.Session.BodyWeightAtSessionStart;
 
-				//mState.sess.BodyWeightSession = mState.sess.BodyWeightAtSessionStart;
-				// const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
-				// mSessionCopyPara.Komplett = true;
-				// mSessionCopyPara.CopySessionID = true;
-				// mSessionCopyPara.CopyUebungID = true;
-				// mSessionCopyPara.CopySatzID = true;
-				// this.Session = Session.StaticCopy(mState.sess, mSessionCopyPara);
+				// mState.sess.BodyWeightSession = mState.sess.BodyWeightAtSessionStart;
 				if (this.Session.UebungsListe === undefined || this.Session.UebungsListe.length <= 0) {
 					const mDialogData = new DialogData();
 					mDialogData.height = cLoadingDefaultHeight;

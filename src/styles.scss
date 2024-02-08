@@ -657,16 +657,18 @@ textarea:focus {
 }
 
 input[type=text]  {
-	background-color: transparent;
+	background-color: #edf5f8;
+	//background-color: rgb(248, 244, 244);;
+	// background-color: transparent;
 	color: black;
 	font-size: 16px;
 	border-radius: 3px;
-	border-style: solid;
+	border-style: none;
 	border-color: rgb(248, 244, 244);
 }
 
 input[type=text]:focus  {
-	background-color: rgb(248, 244, 244);;
+	color: blue;
 	outline: none;
   }
 
