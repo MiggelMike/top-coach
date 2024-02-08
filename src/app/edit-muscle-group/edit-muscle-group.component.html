@@ -1,9 +1,8 @@
 <mat-icon  (click)="back()">arrow_back</mat-icon>
 <div class="column-center"> 
-    <div id="EditMusclePanel" class="column-center"> 
+    <div id="EditMusclePanel"> 
         <h4>New/edit muscle</h4>
-
-        <mat-form-field class="column-start-left width-100-Prozent">
+        <div class="row-start-left-gap-3"> 
             <mat-label>Name</mat-label>
             <input 
                 #Name
@@ -12,11 +11,13 @@
                 maxlength="30"
                 type="text"
             >
-        </mat-form-field> 
+        </div>
 
-        <md-input-container class="width-100-Prozent">
-            <textarea id="EditMuscleDescripton" [(ngModel)]="Muskelgruppe.Bemerkung" mdInput placeholder="Notes" rows="3" maxlength="1000" class="colors-textarea width-100-Prozent"  ></textarea>
+        <div class="column-center"> 
+        <md-input-container class="width-100-Prozent mg-top-5">
+            <textarea id="EditMuscleDescripton" [(ngModel)]="Muskelgruppe.Bemerkung" mdInput placeholder="Notes" rows="10" maxlength="1000" class="input-standards width-100-Prozent height-200"  ></textarea>
         </md-input-container>
+        </div>
 
         <div class="row-center-gap10 pad-5">
             <a class='link-button-font' mat-flat-button (click)="SaveChanges()">Save</a>
