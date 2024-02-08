@@ -6,36 +6,43 @@
 
     <ng-container *ngIf="HantelscheibenListe">
         <ng-container *ngFor="let sch of HantelscheibenListe, index as i">
-                <div class="row-start-left" [ngClass]="{'HG-01': i % 2 === 0}">
-                    <mat-form-field id="Diameter" class="align-right">
-                        <mat-label>Diameter</mat-label>
+                <div class="row-start-left-gap-3 height-65"  [ngClass]="{'HG-01': i % 2 === 0}">
+                    <div class="colum-start-left">
+                        <div class="colum-start-left">
+                            <mat-label>Diameter</mat-label>
+                        </div>
                         <input matInput 
-                        class="align-right"
+                        class="align-right width-75"
                         mask="99" 
                         (focusout)="SetDiameter(sch,$event)"
                         [ngModel]="sch.Durchmesser" type="text">
-                    </mat-form-field>
-                    
-                    <mat-form-field id="Weight" class="align-right">
-                        <mat-label>Weight</mat-label>
+                    </div>
+                        
+                    <div class="colum-start-left">
+                        <div class="colum-start-left">
+                            <mat-label>Weight</mat-label>
+                        </div>
+
                         <input matInput 
-                        class="align-right"
+                        class="align-right width-75"
                         mask="999.00" 
                         (focusout)="SetWeight(sch,$event)"
                         [ngModel]="GetWeightText(sch)" type="text">
-                    </mat-form-field>
-                    
-                    <mat-form-field id="Anzahl" class="align-right">
-                    <mat-label>Count</mat-label>
-                    <input matInput 
-                        class="align-right"
+                    </div>                        
+
+                    <div class="colum-start-left">
+                        <div class="colum-start-left">
+                            <mat-label>Count</mat-label>
+                        </div>
+
+                        <input matInput 
+                        class="align-right width-75"
                         mask="9999" 
                         (focusout)="SetAnzahl(sch,$event)"
                         [ngModel]="sch.Anzahl" type="text">
-                </mat-form-field>
+                    </div>                
                 
-                
-                <a id="Delete" class="ref-button" (click)="Delete(sch)">Delete</a>
+                <!-- <a id="Delete" class="ref-button" (click)="Delete(sch)">Delete</a> -->
             </div>
     </ng-container>
     
