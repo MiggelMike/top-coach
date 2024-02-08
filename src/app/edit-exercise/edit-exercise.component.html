@@ -25,6 +25,8 @@
             </div>
 
             <div class="row-start-left-gap-3 width-100%-Prozent height-80">                
+                <ng-container *ngIf="Uebung.EquipmentTyp === 'Barbell'; then Barbell else NoBarbell"></ng-container>
+                <ng-template #Barbell>
                     <div class="colum-center width-200">
                         <mat-label>Equipment type</mat-label>
                         <mat-select [(ngModel)]="Uebung.EquipmentTyp" class="input-standards">
@@ -33,7 +35,6 @@
                         </mat-select>
                     </div>
 
-                <ng-container *ngIf="Uebung.EquipmentTyp === 'Barbell'">
                     <div class="colum-center width-200">
                         <mat-label>Barbell</mat-label>
                         <mat-select [(ngModel)]="Uebung.FkHantel"  class="input-standards">
@@ -41,7 +42,17 @@
                             <mat-option *ngFor="let h of HantelListe" [value]="h.ID"> {{ h.Name }}</mat-option>
                         </mat-select>
                     </div>
-                </ng-container>
+                </ng-template>
+
+                <ng-template #NoBarbell>
+                    <div class="colum-center width-200">
+                        <mat-label>Equipment type</mat-label>
+                        <mat-select [(ngModel)]="Uebung.EquipmentTyp" class="input-standards">
+                            <mat-option [value]=""></mat-option>
+                            <mat-option *ngFor="let equip of EquipmentListe" [value]="equip"> {{ equip }}</mat-option>
+                        </mat-select>
+                    </div>
+                </ng-template>
             </div>
 
                 <mat-label>Involved Muscle #1</mat-label>
