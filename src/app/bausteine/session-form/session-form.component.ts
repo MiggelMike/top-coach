@@ -300,7 +300,10 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 
 		// if (this.fSessionStatsOverlayComponent !== undefined && this.fSessionStatsOverlayComponent !== null) this.fSessionStatsOverlayComponent.close();
 
-		this.router.navigate(['/']);
+		if (this.ModulTyp === ProgramModulTyp.HistoryView)
+			this.router.navigate(['/history']);
+		else
+			this.router.navigate(['/']);
 	}
 
 	ngAfterViewInit() {
