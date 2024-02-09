@@ -83,6 +83,7 @@ body {
 }
 
 .height-55 {
+	min-height: 55px !important;
 	height: 55px;
 }
 
@@ -678,6 +679,7 @@ background-color:#fbfbfb
 
 .input-standards {
 	@extend .input-HG;
+	min-height: 35px !important;
 	height: 35px;
 	font-size: 16px;
 	border-radius: 6px;

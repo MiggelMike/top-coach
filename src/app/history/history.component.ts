@@ -1,5 +1,5 @@
-import { QueryList, ViewChildren } from '@angular/core';
-import { DiagramData } from './../bausteine/charts/charts.component';
+// import { QueryList, ViewChildren } from '@angular/core';
+// import { DiagramData } from './../bausteine/charts/charts.component';
 import { cDeutschKuezel as cDeutschKuerzel, cDeutschDateInputMask, cEnglishDateInputMask } from './../Sprache/Sprache';
 import { DexieSvcService, SessionParaDB, cMaxDatum, cMinDatum } from './../services/dexie-svc.service';
 import { DiaDatum, DiaUebung, DiaUebungSettings } from './../../Business/Diagramm/Diagramm';
@@ -11,13 +11,13 @@ import { LineChartComponent } from '@swimlane/ngx-charts';
 import { FormControl, FormGroup } from '@angular/forms';
 import { LOCALE_ID } from '@angular/core';
 import * as _moment from 'moment';
-import { HistorySession, ISession } from '../../Business/Session/Session';
+import { HistorySession, ISession, Session } from '../../Business/Session/Session';
 import { DateFormatTyp, Datum } from 'src/Business/Datum';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { Router } from '@angular/router';
 import { MatRadioGroup } from '@angular/material/radio';
-import {  MatExpansionPanelHeader, MatExpansionPanel } from '@angular/material/expansion';
-import { timeout } from 'rxjs';
+// import {  MatExpansionPanelHeader, MatExpansionPanel } from '@angular/material/expansion';
+// import { Session } from 'inspector';
 var cloneDeep = require('lodash.clonedeep');
 
 @Component({
@@ -155,6 +155,16 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		const mChartData: ChartData = this.ChartData[aEvent.currentIndex];
 		this.ChartData[aEvent.currentIndex] = this.ChartData[aEvent.previousIndex];
 		this.ChartData[aEvent.previousIndex] = mChartData;
+	}
+
+	NoSessionName(aSess: HistorySession): boolean{
+		return (aSess.ProgrammName === undefined || aSess.ProgrammName.trim() === '');
+	}
+
+	SessProgrammName(aSess: HistorySession): string{
+		if (this.NoSessionName(aSess))
+			return '?';
+		return aSess.ProgrammName;
 	}
 
 	onClickDiaUebung(aDiaUebung: DiaUebung, aChecked: boolean) {

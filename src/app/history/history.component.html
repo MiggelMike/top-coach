@@ -51,7 +51,7 @@
                         <div *ngFor="let sess of SessionListe, index as i" cdkDrag [cdkDragDisabled]="true">
                             <div class="row-start-left-gap-3 width-600 height-55 mg-bottom-10">
                                 <div class="column-start-left">
-                                    <mat-label>{{sess.ProgrammName}}</mat-label>
+                                    <mat-label [ngClass]="{'NoSessionName': NoSessionName(sess) === true }" >{{SessProgrammName(sess)}}</mat-label>
                                     <input class="tc-font-size-smaller width-300" disabled="true" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()">
                                 </div>
                                 <div class="column-start-left">
