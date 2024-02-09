@@ -55,26 +55,38 @@ export class UebungService {
         mDialogConfig.disableClose = false;
         mDialogConfig.autoFocus = true;
         mDialogConfig.hasBackdrop = true;
-
-        this.fDbModule.LadeStammUebungen().then(
-            (aUebungen: Array<Uebung>) => {
-                aUebungen = this.fDbModule.UebungListeSortedByName;
-                aUebungen.forEach(
+        this.Uebungen = this.fDbModule.UebungListeSortedByName;
+        this.Uebungen.forEach(
                     (mUebung) => {
                         if (!mUebung.Selected)
                             mUebung.Selected = false;
                     }
                 );
+        mDialogConfig.data = mUebungWaehlenData;
+        mUebungWaehlenData.fUebungsListe = this.Uebungen;
+        mUebungWaehlenData.OkClickFn = aSelectFn;
+        mUebungWaehlenData.fSession = aSession;
+        mUebungWaehlenData.fMatDialog = this.fDialog!.open(UebungWaehlenComponent, mDialogConfig);        
 
-                this.Uebungen = aUebungen;
-                mDialogConfig.data = mUebungWaehlenData;
-                mUebungWaehlenData.fUebungsListe = aUebungen;
-                mUebungWaehlenData.OkClickFn = aSelectFn;
-                mUebungWaehlenData.fSession = aSession;
-                mUebungWaehlenData.fMatDialog = this.fDialog!.open(UebungWaehlenComponent, mDialogConfig);
+        // this.fDbModule.LadeStammUebungen().then(
+        //     (aUebungen: Array<Uebung>) => {
+        //         aUebungen = this.fDbModule.UebungListeSortedByName;
+        //         aUebungen.forEach(
+        //             (mUebung) => {
+        //                 if (!mUebung.Selected)
+        //                     mUebung.Selected = false;
+        //             }
+        //         );
+
+        //         this.Uebungen = aUebungen;
+        //         mDialogConfig.data = mUebungWaehlenData;
+        //         mUebungWaehlenData.fUebungsListe = aUebungen;
+        //         mUebungWaehlenData.OkClickFn = aSelectFn;
+        //         mUebungWaehlenData.fSession = aSession;
+        //         mUebungWaehlenData.fMatDialog = this.fDialog!.open(UebungWaehlenComponent, mDialogConfig);
         
-            }
-        )
+        //     }
+        // )
         
 
     }
