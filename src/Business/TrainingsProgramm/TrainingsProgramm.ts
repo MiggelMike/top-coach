@@ -45,6 +45,11 @@ export interface IProgrammKategorie {
     get programmKategorie(): (typeof ProgrammKategorie);
 }
 
+export interface IProgrammTyp {
+    get programmTyp(): (typeof ProgrammTyp);
+}
+
+
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
 export abstract class TrainingsProgramm implements ITrainingsProgramm {
     // Wird in abgeleiteten Klassen gesetzt.

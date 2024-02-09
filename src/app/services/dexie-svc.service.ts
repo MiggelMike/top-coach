@@ -2049,7 +2049,7 @@ export class DexieSvcService extends Dexie {
 		const mProgrammPara: ProgrammParaDB = new ProgrammParaDB();
 		mProgrammPara.WhereClause = "ProgrammKategorie"
 		mProgrammPara.anyOf = () => {
-			return ProgrammKategorie.Vorlage.toString() as any;
+			return [ProgrammKategorie.Vorlage, ProgrammTyp.Custom];
 		};
 
 		mProgrammPara.SessionBeachten = true;

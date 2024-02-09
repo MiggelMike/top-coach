@@ -1,7 +1,7 @@
 import { SessionParaDB  } from 'src/app/services/dexie-svc.service';
 import { DexieSvcService, cSessionSelectLimit } from './../../services/dexie-svc.service';
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { TrainingsProgramm, ITrainingsProgramm } from "../../../Business/TrainingsProgramm/TrainingsProgramm";
+import { TrainingsProgramm, ITrainingsProgramm, IProgrammTyp, ProgrammTyp } from "../../../Business/TrainingsProgramm/TrainingsProgramm";
 import { DialogeService } from 'src/app/services/dialoge.service';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
 import { Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { IProgramModul, ProgramModulTyp } from 'src/app/app.module';
     templateUrl: "./programm01.component.html",
     styleUrls: ["./programm01.component.scss"],
 })
-export class Programm01Component implements OnInit, IProgramModul {
+export class Programm01Component implements OnInit, IProgramModul, IProgrammTyp {
     @Input() programm: ITrainingsProgramm;
     @Input() showButtons: boolean | false;
     @Input() showSaveButtons: boolean | false;
@@ -31,9 +31,28 @@ export class Programm01Component implements OnInit, IProgramModul {
     ) {
         this.ModulTyp = DexieSvcService.ModulTyp;
     }
+    get programmTyp(): typeof ProgrammTyp {
+        return ProgrammTyp;
+    }
 
     get programModul(): typeof ProgramModulTyp {
         return ProgramModulTyp;
+    }
+
+    DeleteProgramm(aEvent: Event,aProgramm: ITrainingsProgramm) {
+        aEvent.stopPropagation();
+        const mDialogData = new DialogData();
+        mDialogData.hasBackDrop = true;
+        mDialogData.textZeilen.push('Do you really want to delete "'+aProgramm.Name.trim()+ '"!');
+        mDialogData.OkFn = (): void => {
+            this.fDbModul.DeleteProgram(aProgramm as TrainingsProgramm)
+        }
+
+        mDialogData.CancelFn = (): void => {
+            this.SelectBtnDisabled = false;
+         }            
+
+        this.fDialogService.JaNein(mDialogData); 
     }
 
     ngOnInit() {

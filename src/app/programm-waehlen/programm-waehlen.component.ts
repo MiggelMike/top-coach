@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
     templateUrl: "./programm-waehlen.component.html",
     styleUrls: ["./programm-waehlen.component.scss"],
 })
-export class ProgrammWaehlenComponent implements OnInit, IProgramModul {
+export class ProgrammWaehlenComponent implements OnInit, IProgramModul  {
     public ProgrammListeObserver: Observable<ITrainingsProgramm[]>;
     ViewInitDone: boolean = false;
     get ProgrammListe(): Array<ITrainingsProgramm> {
@@ -40,7 +40,7 @@ export class ProgrammWaehlenComponent implements OnInit, IProgramModul {
         DexieSvcService.ModulTyp = ProgramModulTyp.CreateWorkout;
         const mNeuesProgram: ITrainingsProgramm = new EigenesTrainingsProgramm(
             ProgrammTyp.Custom,
-            ProgrammKategorie.Aktiv,
+            ProgrammKategorie.Vorlage,
             this.fDbModule
         );
 
