@@ -100,7 +100,11 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul,  ISat
 		const mDialogData = new DialogData();
 		mDialogData.textZeilen.push(`Reset Session?`);
 		mDialogData.OkFn = () => { 
-			aSess.Reset([NoResetTyp.GewichtAusgefuehrt,NoResetTyp.WdhAusgefuehrt]); 
+			aSess.Reset([
+				NoResetTyp.GewichtAusgefuehrt,
+				NoResetTyp.WdhAusgefuehrt,
+				NoResetTyp.SessionID
+			]); 
 			this.fDbModule.SessionSpeichern(aSess);
 		};
 		this.fDialogService.JaNein(mDialogData);

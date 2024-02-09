@@ -207,7 +207,6 @@ export class DexieSvcService extends Dexie {
 	public static ModulTyp: ProgramModulTyp = null;
 	public static GewichtsEinheitText: string = 'KG';
 	public static GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
-	public static StammUebungen: Array<Uebung> = [];
 	private static LanghantelTable: Dexie.Table<Hantel, number>;
 	private static HantelscheibenTable: Dexie.Table<Hantelscheibe, number>;
 	private static ProgressTable: Dexie.Table<Progress, number>;

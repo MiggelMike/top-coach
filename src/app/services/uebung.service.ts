@@ -67,27 +67,5 @@ export class UebungService {
         mUebungWaehlenData.OkClickFn = aSelectFn;
         mUebungWaehlenData.fSession = aSession;
         mUebungWaehlenData.fMatDialog = this.fDialog!.open(UebungWaehlenComponent, mDialogConfig);        
-
-        // this.fDbModule.LadeStammUebungen().then(
-        //     (aUebungen: Array<Uebung>) => {
-        //         aUebungen = this.fDbModule.UebungListeSortedByName;
-        //         aUebungen.forEach(
-        //             (mUebung) => {
-        //                 if (!mUebung.Selected)
-        //                     mUebung.Selected = false;
-        //             }
-        //         );
-
-        //         this.Uebungen = aUebungen;
-        //         mDialogConfig.data = mUebungWaehlenData;
-        //         mUebungWaehlenData.fUebungsListe = aUebungen;
-        //         mUebungWaehlenData.OkClickFn = aSelectFn;
-        //         mUebungWaehlenData.fSession = aSession;
-        //         mUebungWaehlenData.fMatDialog = this.fDialog!.open(UebungWaehlenComponent, mDialogConfig);
-        
-        //     }
-        // )
-        
-
     }
 }
