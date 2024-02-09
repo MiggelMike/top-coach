@@ -318,7 +318,6 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 
 	public SaveChanges(aPara: any) {
 		(aPara as SessionFormComponent).SaveChangesPrim();
-		// this.router.navigate(['/']);
 		this.leave();
 	}
 
@@ -340,9 +339,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 					DexieSvcService.AktuellesProgramm.SessionListe[mIndex] = this.Session;
 				return -1;
 			});
-			
 		}
-
 
 		await this.fDbModule.SessionSpeichern(this.Session)
 			.then(() => {
