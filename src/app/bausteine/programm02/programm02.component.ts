@@ -1,5 +1,5 @@
 import { DateFormatTyp, Datum } from './../../../Business/Datum';
-import { HistorySession, ISession, SessionCopyPara } from "src/Business/Session/Session";
+import { HistorySession, ISession, NoResetTyp, SessionCopyPara } from "src/Business/Session/Session";
 import { ISessionDB, SessionDB } from "./../../../Business/SessionDB";
 import { SessionStatus } from "../../../Business/SessionDB";
 import { UebungWaehlenData } from "./../../uebung-waehlen/uebung-waehlen.component";
@@ -275,7 +275,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 
 	public AdditionalSession(): void{
 		const mNewSession: Session = new Session();
-		mNewSession.init();
+		mNewSession.init([]); // [] -> Alles zurücksetzen
 		mNewSession.UebungsListe = [];
 		mNewSession.Name = 'Additional session';
 		mNewSession.Kategorie02 = SessionStatus.Wartet;
@@ -435,7 +435,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 		mDialogData.textZeilen.push(`All sets will be reset as well!`);
 		mDialogData.textZeilen.push(`Reset session "${aSession.Name}"?`);
 		mDialogData.OkFn = () => {
-			aSession.Reset();
+			aSession.Reset([NoResetTyp.GewichtAusgefuehrt,NoResetTyp.WdhAusgefuehrt]);  
 			this.fDbModule.SessionSpeichern(aSession as Session);
 		}
 		this.fDialogService.JaNein(mDialogData);

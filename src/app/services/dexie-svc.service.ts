@@ -2526,7 +2526,7 @@ export class DexieSvcService extends Dexie {
 			mSessionCopyPara.CopySatzID = false;
 			mSessionCopyPara.CopyUebungID = false;
 			const mNeueSession: Session = Session.StaticCopy(aSession, mSessionCopyPara);
-			mNeueSession.init();
+			mNeueSession.init([]); // [] -> Alles zurücksetzen
 			this.InitSessionSaetze(aSession, mNeueSession);
 			mNeueSession.FK_Programm = aSession.FK_Programm;
 			mNeueSession.FK_VorlageProgramm = aSession.FK_VorlageProgramm;
@@ -2618,7 +2618,7 @@ export class DexieSvcService extends Dexie {
 					mSessionCopyPara.CopyUebungID = false;
 					mSessionCopyPara.CopySatzID = false;
 					const mSession: Session = Session.StaticCopy(aProgram.SessionListe[mSessionIndex], mSessionCopyPara);
-					mSession.init();
+					mSession.init([]); // true-> SatzWdh auf 0 setzen
 					mSession.GestartedWann = mDatum;
 					// Übungen
 					for (let mUebungsIndex = 0; mUebungsIndex < mSession.UebungsListe.length; mUebungsIndex++) {

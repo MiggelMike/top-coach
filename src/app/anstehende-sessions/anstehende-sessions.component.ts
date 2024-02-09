@@ -1,7 +1,7 @@
 import { DexieSvcService, SessionParaDB, UebungParaDB, onDeleteFn } from './../services/dexie-svc.service';
 import {  ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Component, OnInit } from '@angular/core';
-import { Session } from '../../Business/Session/Session';
+import { NoResetTyp, Session } from '../../Business/Session/Session';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData, cLoadingDefaultHeight } from '../dialoge/hinweis/hinweis.component';
 import { IProgramModul, ProgramModulTyp } from '../app.module';
@@ -100,7 +100,7 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul,  ISat
 		const mDialogData = new DialogData();
 		mDialogData.textZeilen.push(`Reset Session?`);
 		mDialogData.OkFn = () => { 
-			aSess.Reset();
+			aSess.Reset([NoResetTyp.GewichtAusgefuehrt,NoResetTyp.WdhAusgefuehrt]); 
 			this.fDbModule.SessionSpeichern(aSess);
 		};
 		this.fDialogService.JaNein(mDialogData);

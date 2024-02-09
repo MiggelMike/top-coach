@@ -479,7 +479,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 					mSaveDialogData.textZeilen.push('Create new Session');
 					aSessionForm.Session.ListenIndex = -aSessionForm.Session.ListenIndex;
 					// Neue Session initialisieren
-					mNeueSession.init();
+					mNeueSession.init([]); // [] -> Alles zurücksetzen
 					// Die neue Session gehört zum gleichen Programm wie die Alte
 					mNeueSession.FK_Programm = aSessionForm.Session.FK_Programm;
 					// Die Neue Session hat das gleiche Vorlage-Programm wie die Alte.
@@ -615,7 +615,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 										.then((mPtrProgramm) => {
 											this.Programm = mPtrProgramm;
 											// this.fDbModule.LadeAktuellesProgramm();
-											this.DoAfterDone(this);
+											// this.DoAfterDone(this);
 											this.fDbModule.LadeHistorySessions(null, null);
 											this.fSavingDialog.fDialog.closeAll();
 											//this.location.back();

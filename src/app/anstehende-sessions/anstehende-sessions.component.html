@@ -20,15 +20,16 @@
                                         class="HG-01">
                                         <mat-expansion-panel-header mat-tooltip-panel-below  matTooltip="Hold and drag">
                                             <div class="row-start-left-gap-3 mg-bottom-3">
-                                                    <input class="tc-font-size-smaller width-350 HG-Transparent" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
-
-                                                <div class="row-start-left-gap-3">
+                                                <input class="tc-font-size-smaller width-350 HG-Transparent" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
+                                                
+                                                <ng-container *ngIf="sess.Kategorie02 === sessionStatus.Laueft; then Laeuft else LaeuftNicht"></ng-container>
+                                                <ng-template #Laeuft>
                                                     <a [ngClass]="['link-button-font','HG-01']" mat-flat-button (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
-
-                                                    <ng-container *ngIf="sess.Kategorie02 === sessionStatus.Laueft">
-                                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="ResetSession($event,sess)">Reset</a>
-                                                    </ng-container>
-                                                </div>
+                                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="ResetSession($event,sess)">Reset</a>
+                                                </ng-template>
+                                                <ng-template #LaeuftNicht>
+                                                    <a [ngClass]="['link-button-font','HG-01']" mat-flat-button (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
+                                                </ng-template>
 
                                                 <ng-container *ngIf="sess.IstAusVorgabe === false">
                                                     <div class="center-item" layout-align="center center" fxFlex="0 0 auto">

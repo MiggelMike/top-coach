@@ -11,6 +11,12 @@ import { DateFormatTyp, Datum } from '../Datum';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
 
+export enum NoResetTyp { 
+    SessionID,
+    GewichtAusgefuehrt,    
+    WdhAusgefuehrt
+};
+
 
 export interface ISession extends ISessionDB {
     SessionDB: SessionDB;
@@ -22,7 +28,7 @@ export interface ISession extends ISessionDB {
     addUebung(aUebung: Uebung);
     hasChanged(aCmpSession: ISessionDB): Boolean;
     resetSession(aQuellSession: ISessionDB): void;
-    init(): void;
+    init(aNoResetTyp: Array<NoResetTyp>): void;
     ExtractUebungen(aUebungen: Array<Uebung>);
     getFirstWaitingExercise(aFromIndex: number): Uebung;
     IstAusVorgabe: boolean;
@@ -32,7 +38,7 @@ export interface ISession extends ISessionDB {
     SetNextWeight(aWp: WeightProgress, aUebung: Uebung);
     isEqual(aOtherSession: Session): boolean;
     SucheSatz(aSatz: Satz): Satz;
-    Reset();
+    Reset(aNoResetTyp: Array<NoResetTyp>):void;
     isLetzteUebungInSession(aUebung: Uebung): boolean;
     NextExercise(aUebung: Uebung): Uebung;
     UebungsListe: Array<Uebung>;
@@ -43,7 +49,6 @@ export interface ISession extends ISessionDB {
     BodyWeight: BodyWeight;
     BodyWeightSessionText: string;
     Vollstaendig: boolean; 
-    Reset();
 }
 
 export class SessionCopyPara {
@@ -271,8 +276,8 @@ export class Session implements ISession {
             aUebungsListe[index].ListenIndex = index;
     }
 
-    public Reset() {
-        this.init(false);
+    public Reset(aNoResetTyp: Array<NoResetTyp> = []):void {
+        this.init(aNoResetTyp);
     };
 
     public SucheSatz(aSatz: Satz): Satz {
@@ -304,9 +309,10 @@ export class Session implements ISession {
         return undefined;
     }
 
-    public init(aResetID: boolean = true): void {
-        if (aResetID === true)
+    public init(aNoResetTyp: Array<NoResetTyp>): void {
+        if (aNoResetTyp.find((mResetTyp) => { return mResetTyp === NoResetTyp.SessionID}) === undefined)
             this.ID = undefined;
+
         this.PausenListe = [];
         this.Kategorie02 = SessionStatus.Wartet;
         this.DauerInSek = 0;
@@ -316,8 +322,12 @@ export class Session implements ISession {
             mPtrUebung.FailDatum = cMinDatum;
             mPtrUebung.WeightInitDate = cMinDatum;
             mPtrUebung.SatzListe.forEach(s => {
-                s.GewichtAusgefuehrt = 0;
-                s.WdhAusgefuehrt = 0;
+                if (aNoResetTyp.find((mResetTyp) => { return mResetTyp === NoResetTyp.GewichtAusgefuehrt}) === undefined)
+                    s.GewichtAusgefuehrt = 0;
+
+                if (aNoResetTyp.find((mResetTyp) => { return mResetTyp === NoResetTyp.WdhAusgefuehrt }) === undefined)
+                    s.WdhAusgefuehrt = 0;
+
                 s.Status = SatzStatus.Wartet;
             });
         }
