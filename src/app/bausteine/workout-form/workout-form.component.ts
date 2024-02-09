@@ -34,7 +34,6 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
     get programModul(): typeof ProgramModulTyp {
         return ProgramModulTyp;
     }
-
     
     CopyProgramm(aProgramm: ITrainingsProgramm) {
         this.cmpProgramm = aProgramm.Copy();    

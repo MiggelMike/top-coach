@@ -1,9 +1,12 @@
+import { EigenesTrainingsProgramm } from './../../Business/EigenesTrainingsProgramm/EigenesTrainingsProgramm';
+import { ProgrammKategorie, ProgrammTyp, TrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { ITrainingsProgramm } from './../../Business/TrainingsProgramm/TrainingsProgramm';
 import { DexieSvcService } from './../services/dexie-svc.service';
 import { Observable, of } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import {CdkDragDrop } from '@angular/cdk/drag-drop';
 import { IProgramModul, ProgramModulTyp } from '../app.module';
+import { Router } from '@angular/router';
 
 @Component({
     selector: "app-programm-waehlen",
@@ -19,7 +22,9 @@ export class ProgrammWaehlenComponent implements OnInit, IProgramModul {
     };
 
     constructor(
-        public fDbModule: DexieSvcService
+        public fDbModule: DexieSvcService,
+        private router: Router
+        
     ) {
         DexieSvcService.ModulTyp = ProgramModulTyp.SelectWorkout;
     }
@@ -29,6 +34,18 @@ export class ProgrammWaehlenComponent implements OnInit, IProgramModul {
         
     ngOnInit() {
    
+    }
+
+    createWorkOut() {
+        DexieSvcService.ModulTyp = ProgramModulTyp.CreateWorkout;
+        const mNeuesProgram: ITrainingsProgramm = new EigenesTrainingsProgramm(
+            ProgrammTyp.Custom,
+            ProgrammKategorie.Aktiv,
+            this.fDbModule
+        );
+
+        
+        this.router.navigate(["/workoutform"], { state: { programm: mNeuesProgram } });
     }
 
     // drop(event: any) {

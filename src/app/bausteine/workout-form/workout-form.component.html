@@ -3,7 +3,14 @@
         <div class="column-center">
             <div class="width-600">
                 <mat-icon (click)="back()">arrow_back</mat-icon>
-                <div><strong>{{programm.Name}}</strong></div>
+                <ng-container *ngIf="ModulTyp === programModul.CreateWorkout; then CreateWorkoutTemplate else NotCreateWorkoutTemplate"></ng-container>
+                <ng-template #CreateWorkoutTemplate>
+                    <span class="font-14-data">Neues Programm </span>
+                </ng-template>
+                <ng-template #NotCreateWorkoutTemplate>
+                    <div><strong>{{programm.Name}}</strong></div>
+                </ng-template>
+                
                 <ng-container *ngIf="programm.SessionListe">
                     <app-programm02 
                         [programm]="programm" 

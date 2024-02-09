@@ -152,6 +152,10 @@ export class Programm02Component implements OnInit, IProgramModul {
 	
 	panelOpened(aSess: ISession) {
 		aSess.Expanded = true;
+
+		if (DexieSvcService.ModulTyp === ProgramModulTyp.CreateWorkout)
+			return;
+
 		if (aSess.UebungsListe === undefined || aSess.UebungsListe.length <= 0) {
 			this.LadeUebungen(aSess);
 		}
@@ -295,7 +299,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 		if (this.isExpanded) {
 			this.accSession.forEach((acc) => acc.closeAll());
 			this.isExpanded = false;
-			this.ToggleButtonText = "Open all Sessions";
+			this.ToggleButtonText = "Open all sessions";
 		} else {
 			this.accSession.forEach((acc) => acc.openAll());
 			this.isExpanded = true;
