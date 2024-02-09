@@ -326,15 +326,23 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 		// In der Session gelöschte Übungen auch aus der DB löschen.
 		for (let index = 0; index < this.DeletedExerciseList.length; index++) {
 			const mDelUebung = this.DeletedExerciseList[index];
-			mDelUebung.SatzListe.forEach((mDelSatz) => this.fDbModule.DeleteSatz(mDelSatz));
 			await this.fDbModule.DeleteUebung(mDelUebung);
 		}
-
 
 		for (let index = 0; index < this.Session.UebungsListe.length; index++) {
 			const mPtrUebung = this.Session.UebungsListe[index];
 			mPtrUebung.ArbeitsSaetzeStatus = Uebung.StaticArbeitsSaetzeStatus(mPtrUebung);
 		}
+
+		if (DexieSvcService.ModulTyp === ProgramModulTyp.RunningSession) {
+			DexieSvcService.AktuellesProgramm.SessionListe.findIndex((mSuchSession, mIndex) => { 
+				if (mSuchSession.ID === this.Session.ID)
+					DexieSvcService.AktuellesProgramm.SessionListe[mIndex] = this.Session;
+				return -1;
+			});
+			
+		}
+
 
 		await this.fDbModule.SessionSpeichern(this.Session)
 			.then(() => {
@@ -361,6 +369,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 				this.fDbModule.BodyweightSpeichern(this.Session.BodyWeight);
 			}
 		}
+
 	}
 
 	public CancelChanges(aPara: SessionFormComponent, aNavRoute: string) {
