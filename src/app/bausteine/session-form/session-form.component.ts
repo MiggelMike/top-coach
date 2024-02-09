@@ -322,11 +322,23 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 	}
 
 	public async SaveChangesPrim(): Promise<void> {
+		const mUebungsListe: Array<Uebung> = [];
 		// In der Session gelöschte Übungen auch aus der DB löschen.
 		for (let index = 0; index < this.DeletedExerciseList.length; index++) {
 			const mDelUebung = this.DeletedExerciseList[index];
 			await this.fDbModule.DeleteUebung(mDelUebung);
 		}
+
+		if (this.DeletedExerciseList.length > 0) {
+			for (let index = 0; index < this.Session.UebungsListe.length; index++) {
+				const mUebungPtr: Uebung = this.Session.UebungsListe[index];
+
+				if (this.DeletedExerciseList.findIndex(
+					(mDelUebung) => { return  mDelUebung.ID === mUebungPtr.ID }) === -1 ) mUebungsListe.push(mUebungPtr);
+			}
+			Session.nummeriereUebungsListe(mUebungsListe);
+		}
+		else this.Session.UebungsListe;
 
 		for (let index = 0; index < this.Session.UebungsListe.length; index++) {
 			const mPtrUebung = this.Session.UebungsListe[index];
@@ -334,19 +346,18 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 		}
 
 		if (DexieSvcService.ModulTyp === ProgramModulTyp.RunningSession) {
-			DexieSvcService.AktuellesProgramm.SessionListe.findIndex((mSuchSession, mIndex) => { 
-				if (mSuchSession.ID === this.Session.ID)
-					DexieSvcService.AktuellesProgramm.SessionListe[mIndex] = this.Session;
-				return -1;
+			const mSuchIndex = DexieSvcService.AktuellesProgramm.SessionListe.findIndex((mSuchSession) => { 
+				return (mSuchSession.ID === this.Session.ID);
 			});
+
+			if(mSuchIndex > -1)
+				DexieSvcService.AktuellesProgramm.SessionListe[mSuchIndex] = this.Session;
 		}
 
 		await this.fDbModule.SessionSpeichern(this.Session)
 			.then(() => {
 				if (DexieSvcService.ModulTyp === ProgramModulTyp.HistoryView) {
-					const mHistorySessionIndex: number = DexieSvcService.HistorySessions.findIndex((aHistorySession) => {
-						return (aHistorySession.ID === this.Session.ID);
-					})
+					const mHistorySessionIndex: number = DexieSvcService.HistorySessions.findIndex((aHistorySession) => { return (aHistorySession.ID === this.Session.ID); });
 			
 					if (mHistorySessionIndex > -1) {
 						DexieSvcService.HistorySessions[mHistorySessionIndex] = this.Session as HistorySession;

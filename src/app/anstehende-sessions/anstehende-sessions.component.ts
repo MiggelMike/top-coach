@@ -92,6 +92,7 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul,  ISat
 	}
 
 	get SessionListe(): Array<Session> {
+		const s = this.AktuellesProgramm.SessionListe;
 		return this.AktuellesProgramm.SessionListe;
 	}
 
