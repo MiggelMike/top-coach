@@ -48,6 +48,10 @@
                                                 <div class="column-center"><a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteExercise(i+1,SessUeb,$event)">Delete Exercise</a></div>
                                             </ng-template>
 
+                                            <ng-container *ngIf="ModulTyp === programModul.SelectWorkoutEdit">
+                                                <div class="column-center"><a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteExercise(i+1,SessUeb,$event)">Delete Exercise</a></div>
+                                            </ng-container>
+
                                             <div class="column-center">Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} - Reps {{SessUeb.SummeWDH()}}</div>
                                             
                                             <ng-container *ngIf="AlleFertig(SessUeb)">
