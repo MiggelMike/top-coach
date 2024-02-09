@@ -48,7 +48,7 @@
                                                 <div class="column-center"><a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteExercise(i+1,SessUeb,$event)">Delete Exercise</a></div>
                                             </ng-template>
 
-                                            <ng-container *ngIf="ModulTyp === programModul.SelectWorkoutEdit">
+                                            <ng-container *ngIf="ModulTyp === programModul.SelectWorkoutEdit && programm.ProgrammKategorie !== programmKategorie.Vorlage">
                                                 <div class="column-center"><a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteExercise(i+1,SessUeb,$event)">Delete Exercise</a></div>
                                             </ng-container>
 

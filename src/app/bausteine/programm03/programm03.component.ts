@@ -4,7 +4,7 @@ import { Uebung, SaetzeStatus, ISaetzeStatus } from './../../../Business/Uebung/
 import { GlobalService } from 'src/app/services/global.service';
 import { MatAccordion, MatExpansionPanel } from '@angular/material/expansion';
 import { HistorySession, ISession, Session } from './../../../Business/Session/Session';
-import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
+import { IProgrammKategorie, ITrainingsProgramm, ProgrammKategorie } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, Output, EventEmitter, ChangeDetectionStrategy  } from "@angular/core";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
@@ -22,7 +22,7 @@ import { ISatzTyp, Satz, SatzTyp } from 'src/Business/Satz/Satz';
 	styleUrls: ['./programm03.component.scss'],
 	// changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISaetzeStatus {
+export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISaetzeStatus, IProgrammKategorie {
 	@Input() programm: ITrainingsProgramm;
 	@Input() session: ISession;
 	@Input() satzArt: SatzTyp;
@@ -84,6 +84,9 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISa
 	) {
 		this.LocaleID = localID;
 		this.ModulTyp = DexieSvcService.ModulTyp;
+	}
+	get programmKategorie(): typeof ProgrammKategorie {
+		return ProgrammKategorie;
 	}
 	get saetzeStatus(): typeof SaetzeStatus {
 		return SaetzeStatus;
