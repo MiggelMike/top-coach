@@ -1,3 +1,7 @@
+// Beim ersten Start des Programms werden einige Standards angelegt. (Z.B. Workouts)
+// Falls diese vom Anwender gelöscht werden, wird ein Eintrag in der Tabelle NoAutoCreateDB erzeugt.
+// Dadurch wird verhindert, dass beim nächsten Start des Programms dieser Standard erneut angelegt wird.
+
 export enum NoAutoCreateItem {
     GzclpProgram,
     HypertrophicSpecificProgram
