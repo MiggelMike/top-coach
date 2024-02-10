@@ -15,7 +15,21 @@
                             <ng-container *ngIf="ModulTyp === programModul.SelectWorkout; then AuswahlBlock"></ng-container>
 
                             <ng-template #AuswahlBlock>
-                                <ng-container *ngIf="programm.ProgrammTyp === programmTyp.Custom; then Custom else NotCustom"></ng-container>
+                                <div fxLayout="column" fxFlex="75px">
+                                    <a [ngClass]="['link-button-font', 'HG-01']" 
+                                    [disabled] = "SelectBtnDisabled"
+                                    mat-button (click)="SelectThisWorkoutClick(programm,$event)"><span class="tc-font-size-small">Select</span></a>
+                                </div>
+
+                                <div fxLayout="column" fxFlex="75px">                            
+                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-button (click)="EditThisWorkoutClick($event)"><span class="tc-font-size-small">Edit</span></a>
+                                </div>
+
+                                <div fxLayout="column" fxFlex="auto">                            
+                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-button (click)="DeleteProgramm($event,programm)" ><span class="tc-font-size-small">Delete</span></a>
+                                </div>
+
+                                <!-- <ng-container *ngIf="programm.ProgrammTyp === programmTyp.Custom; then Custom else NotCustom"></ng-container>
 
                                 <ng-template #Custom>
                                     <div fxLayout="column" fxFlex="75px">
@@ -38,12 +52,12 @@
                                         <a [ngClass]="['link-button-font', 'HG-01']" 
                                         [disabled] = "SelectBtnDisabled"
                                         mat-button (click)="SelectThisWorkoutClick(programm,$event)"><span class="tc-font-size-small">Select</span></a>
-                                    </div>
+                                    </div> 
 
                                     <div fxLayout="column" fxFlex="auto">                            
                                         <a [ngClass]="['link-button-font', 'HG-01']" mat-button (click)="EditThisWorkoutClick($event)"><span class="tc-font-size-small">Edit</span></a>
                                     </div>
-                                </ng-template>
+                                </ng-template> -->
                             </ng-template>
 
                         </div>

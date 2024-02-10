@@ -6,6 +6,7 @@ import { DialogeService } from 'src/app/services/dialoge.service';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
 import { Router } from '@angular/router';
 import { IProgramModul, ProgramModulTyp } from 'src/app/app.module';
+import { NoAutoCreate, NoAutoCreateItem } from 'src/Business/NoAutoCreate';
 
 
 @Component({
@@ -46,6 +47,16 @@ export class Programm01Component implements OnInit, IProgramModul, IProgrammTyp 
         mDialogData.textZeilen.push('Do you really want to delete "'+aProgramm.Name.trim()+ '"!');
         mDialogData.OkFn = (): void => {
             this.fDbModul.DeleteProgram(aProgramm as TrainingsProgramm)
+
+            switch (aProgramm.ProgrammTyp) {
+                case ProgrammTyp.Gzclp:
+                    this.fDbModul.NoAutoCreateItemSpeichern(NoAutoCreateItem.GzclpProgram);
+                    break;
+                
+                case ProgrammTyp.HypertrophicSpecific:
+                    this.fDbModul.NoAutoCreateItemSpeichern(NoAutoCreateItem.HypertrophicSpecificProgram);
+                    break;
+            }//switch
         }
 
         mDialogData.CancelFn = (): void => {

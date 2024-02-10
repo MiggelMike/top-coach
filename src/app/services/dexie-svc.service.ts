@@ -1,3 +1,4 @@
+import { NoAutoCreate, NoAutoCreateDB, NoAutoCreateItem } from '../../Business/NoAutoCreate';
 import { cDeutsch, cDeutschKuezel, cEnglish, cEnglishKuerzel, cEnglishDatumFormat, cEnglishZeitFormat, cDeutschDatumFormat, cDeutschZeitFormat } from './../Sprache/Sprache';
 import { BodyWeight, BodyWeightDB } from './../../Business/Bodyweight/Bodyweight';
 import { HistorySession, SessionCopyPara } from './../../Business/Session/Session';
@@ -196,6 +197,7 @@ export class DexieSvcService extends Dexie {
 	readonly cDiaUebungSettings: string = "DiaUebungSettings";
 	readonly cBodyweight: string = "BodyWeightDB";
 	readonly cSprache: string = "Sprache";
+	readonly cNoCreate: string = "NoCreateDB";
 
 	public HistorySessionsAfterLoadFn: AfterLoadFn = null;
 	public static HistorySessions: Array<HistorySession> = [];
@@ -220,6 +222,7 @@ export class DexieSvcService extends Dexie {
 	public static LangHantelListe: Array<Hantel> = [];
 	public static VerfuegbareProgramme: Array<ITrainingsProgramm> = [];
 	public static HantelscheibenListe: Array<Hantelscheibe> = [];
+	public static NoAutoCreateListe: Array<NoAutoCreate> = [];
 	public static ProgressListe: Array<Progress> = [];
 	public static AppDataTable: Dexie.Table<AppData, number>;
 	private static UebungTable: Dexie.Table<UebungDB, number>;
@@ -230,6 +233,8 @@ export class DexieSvcService extends Dexie {
 	public static AppRec: AppData;
 	public static AktuellSprache: Sprache;
 	private static EquipmentTable: Dexie.Table<Equipment, number>;
+	private static NoAutoCreateTable: Dexie.Table<NoAutoCreateDB, number>;
+
 	private get HantelTable(): Dexie.Table<Hantel, number> {
 		return this.table(this.cHantel);
 	};
@@ -712,7 +717,7 @@ export class DexieSvcService extends Dexie {
 			DexieSvcService.ModulTyp = ProgramModulTyp.Kein;
 		// 
 		// Dexie.delete("ConceptCoach");
-		this.version(37).stores({
+		this.version(38).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
 			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
@@ -725,7 +730,8 @@ export class DexieSvcService extends Dexie {
 			Progress: "++ID,&Name",
 			DiaUebungSettings: "++ID,&UebungID",
 			BodyWeightDB: "++ID,Datum",
-			Sprache: "++id"
+			Sprache: "++id",
+			NoCreateDB: "++id"
 			
 		});
 
@@ -813,6 +819,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	private async InitAll() {
+		this.InitNoAutoCreate();
 		this.InitEquipment();
 		this.InitHantel();
 		this.InitProgress();
@@ -925,6 +932,13 @@ export class DexieSvcService extends Dexie {
 		if (DexieSvcService.BodyweightTable === undefined) {
 			DexieSvcService.BodyweightTable = this.table(this.cBodyweight);
 			DexieSvcService.BodyweightTable.mapToClass(BodyWeightDB);
+		}
+	}
+
+	private InitNoAutoCreate() {
+		if (DexieSvcService.NoAutoCreateTable === undefined) {
+			DexieSvcService.NoAutoCreateTable = this.table(this.cNoCreate);
+			DexieSvcService.NoAutoCreateTable.mapToClass(NoAutoCreateDB);
 		}
 	}
 
@@ -1246,24 +1260,59 @@ export class DexieSvcService extends Dexie {
 			});
 	}
 
-	private async PruefeStandardProgress() {
-		await DexieSvcService.ProgressTable.orderBy("Name")
+	LadeNoAutoCreate(): PromiseExtended<Array<NoAutoCreate>>{
+		return DexieSvcService.NoAutoCreateTable
 			.toArray()
-			.then((mProgressListe) => {
-				DexieSvcService.ProgressListe = mProgressListe;
-				if (mProgressListe === undefined || mProgressListe.length === 0) {
-					const mNeuProgress = new Progress();
-					mNeuProgress.AdditionalReps = 0;
-					mNeuProgress.ProgressSet = ProgressSet.All;
-					mNeuProgress.ProgressTyp = ProgressTyp.BlockSet;
-					mNeuProgress.WeightCalculation = WeightCalculation.Sum;
-					mNeuProgress.WeightProgressTime = WeightProgressTime.NextSession;
-					mNeuProgress.Name = Progress.cStandardProgress;
-					this.ProgressSpeichern(mNeuProgress).then(
-						() => {
-							this.LadeProgress().then(() => this.LadeStammUebungen())
-						});
-				} else this.LadeStammUebungen();
+			.then((mNoCreateListe) => {
+				DexieSvcService.NoAutoCreateListe = [];
+				mNoCreateListe.forEach((mNoCreateDB) => {
+					const mNoCreate: NoAutoCreate = new NoAutoCreate();
+					mNoCreate.noAutoCreateDB = mNoCreateDB;
+					DexieSvcService.NoAutoCreateListe.push(mNoCreate); 
+				});
+				return DexieSvcService.NoAutoCreateListe;
+			});
+	}
+
+	NoAutoCreateSpeichern(aNoAutoCreate: NoAutoCreate) {
+		DexieSvcService.NoAutoCreateTable.put(aNoAutoCreate.noAutoCreateDB);
+	}
+
+	DeleteAutoNoCreate(aNoAutoCreate: NoAutoCreate) {
+		DexieSvcService.NoAutoCreateTable.delete(aNoAutoCreate.id);
+	}
+
+	NoAutoCreateItemSpeichern(aNoAutoCreateItem: NoAutoCreateItem) {
+// Beim ersten Start des Programms werden einige Standards angelegt. (Z.B. Workouts)
+// Falls diese vom Anwender gelöscht werden, wird ein Eintrag in der Tabelle NoAutoCreateDB erzeugt.
+// Dadurch wird verhindert, dass beim nächsten Start des Programms dieser Standard erneut angelegt wird.
+		const mNoAutoCreate: NoAutoCreate = new NoAutoCreate();
+		mNoAutoCreate.noCreateItem = aNoAutoCreateItem;
+		this.NoAutoCreateSpeichern(mNoAutoCreate);
+	}
+
+
+	private async PruefeStandardProgress() {
+		await this.LadeNoAutoCreate()
+			.then(async() => {
+				await DexieSvcService.ProgressTable.orderBy("Name")
+					.toArray()
+					.then((mProgressListe) => {
+						DexieSvcService.ProgressListe = mProgressListe;
+						if (mProgressListe === undefined || mProgressListe.length === 0) {
+							const mNeuProgress = new Progress();
+							mNeuProgress.AdditionalReps = 0;
+							mNeuProgress.ProgressSet = ProgressSet.All;
+							mNeuProgress.ProgressTyp = ProgressTyp.BlockSet;
+							mNeuProgress.WeightCalculation = WeightCalculation.Sum;
+							mNeuProgress.WeightProgressTime = WeightProgressTime.NextSession;
+							mNeuProgress.Name = Progress.cStandardProgress;
+							this.ProgressSpeichern(mNeuProgress).then(
+								() => {
+									this.LadeProgress().then(() => this.LadeStammUebungen())
+								});
+						} else this.LadeStammUebungen();
+					});
 			});
 	}
 
@@ -1347,12 +1396,14 @@ export class DexieSvcService extends Dexie {
 					await this.LadeVerfuegbareProgramme()
 						.then(async (aProgrammListe) => {
 							let mLoadAgain: boolean = false;
-							if (aProgrammListe.find((programm) => programm.ProgrammTyp === ProgrammTyp.Gzclp) === undefined) {
+							if ((DexieSvcService.NoAutoCreateListe.find((mSuchAutoCreate) => { return (mSuchAutoCreate.noCreateItem === NoAutoCreateItem.GzclpProgram); })  === undefined)
+							&&  (aProgrammListe.find((programm) => programm.ProgrammTyp === ProgrammTyp.Gzclp) === undefined)) {
 								mLoadAgain = true;
 								await this.ProgrammSpeichern(GzclpProgramm.ErzeugeGzclpVorlage(this));
 							}
 							
-							if (aProgrammListe.find((programm) => programm.ProgrammTyp === ProgrammTyp.HypertrophicSpecific) === undefined) {
+							if ((DexieSvcService.NoAutoCreateListe.find((mSuchAutoCreate) => { return (mSuchAutoCreate.noCreateItem === NoAutoCreateItem.HypertrophicSpecificProgram); })  === undefined)
+							&& (aProgrammListe.find((programm) => programm.ProgrammTyp === ProgrammTyp.HypertrophicSpecific) === undefined)) {
 								mLoadAgain = true;
 								await this.ProgrammSpeichern(HypertrophicProgramm.ErzeugeHypertrophicVorlage(this));
 							}
