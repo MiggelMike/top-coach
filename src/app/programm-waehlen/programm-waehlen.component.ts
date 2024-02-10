@@ -44,7 +44,7 @@ export class ProgrammWaehlenComponent implements OnInit, IProgramModul  {
             this.fDbModule
         );
 
-        
+        DexieSvcService.ModulTyp = ProgramModulTyp.CreateWorkout;
         this.router.navigate(["/workoutform"], { state: { programm: mNeuesProgram } });
     }
 

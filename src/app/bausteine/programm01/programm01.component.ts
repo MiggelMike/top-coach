@@ -6,7 +6,7 @@ import { DialogeService } from 'src/app/services/dialoge.service';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
 import { Router } from '@angular/router';
 import { IProgramModul, ProgramModulTyp } from 'src/app/app.module';
-import { NoAutoCreate, NoAutoCreateItem } from 'src/Business/NoAutoCreate';
+import { NoAutoCreateItem } from 'src/Business/NoAutoCreate';
 
 
 @Component({
@@ -20,8 +20,6 @@ export class Programm01Component implements OnInit, IProgramModul, IProgrammTyp 
     @Input() showSaveButtons: boolean | false;
     @Input() programmtext: { value: null };
     ModulTyp: ProgramModulTyp = ProgramModulTyp.Kein;
-
-   // StandardProgramme: Array<ITrainingsProgramm>;
 
     SelectBtnDisabled: boolean = false;
 
@@ -57,6 +55,12 @@ export class Programm01Component implements OnInit, IProgramModul, IProgrammTyp 
                     this.fDbModul.NoAutoCreateItemSpeichern(NoAutoCreateItem.HypertrophicSpecificProgram);
                     break;
             }//switch
+
+            const mIndex = DexieSvcService.VerfuegbareProgramme.findIndex((mSuchProgramm) => { return mSuchProgramm === aProgramm; });
+            
+            if (mIndex > -1)
+                DexieSvcService.VerfuegbareProgramme.splice(mIndex, 1);
+            
         }
 
         mDialogData.CancelFn = (): void => {
@@ -134,7 +138,7 @@ export class Programm01Component implements OnInit, IProgramModul, IProgrammTyp 
         if (DexieSvcService.ModulTyp === ProgramModulTyp.SelectWorkout)
             DexieSvcService.ModulTyp = ProgramModulTyp.SelectWorkoutEdit;
         else
-        DexieSvcService.ModulTyp = ProgramModulTyp.EditWorkout;
+            DexieSvcService.ModulTyp = ProgramModulTyp.EditWorkout;
 
         this.router.navigate(["/workoutform"], { state: { programm: this.programm } });
     }

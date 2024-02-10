@@ -717,10 +717,10 @@ export class DexieSvcService extends Dexie {
 			DexieSvcService.ModulTyp = ProgramModulTyp.Kein;
 		// 
 		// Dexie.delete("ConceptCoach");
-		this.version(38).stores({
+		this.version(42).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
-			Programm: "++id,Name,FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
+			Programm: "++id,&[Name+ProgrammKategorie],FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
 			SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02],[FK_Programm+Kategorie02],ListenIndex,GestartedWann",
 			SatzDB: "++ID,UebungID,Datum,[UebungID+Status]",
 			MuskelGruppe: "++ID,Name,MuscleGroupKategorie01",
@@ -2233,11 +2233,14 @@ export class DexieSvcService extends Dexie {
 			.then(async (mID) => {
 				aTrainingsProgramm.id = mID;
 				const mSessionListe: Array<Session> = aTrainingsProgramm.SessionListe as Array<Session>;
-				
+			
 				mSessionListe.forEach(async (mSession) => {
 					mSession.FK_Programm = mID;
 					await this.SessionSpeichern(mSession);
 				});
+
+				aProgrammExtraParaDB.OnAfterSaveFn(aTrainingsProgramm);
+				
 				//  aTrainingsProgramm.SessionListe = [];
 
 				// this.ProgrammTable.where({ id: mid })
@@ -2245,6 +2248,15 @@ export class DexieSvcService extends Dexie {
 				// 	.then((mTrainingsProgramm) => {
 				// 		const aTrainingsProgramm = mTrainingsProgramm[0];
 				// 	});
+				return aTrainingsProgramm;
+			})
+			.catch((err) => {
+				if (err.message.includes('Name+ProgrammKategorie')) {
+					const mDialogData = new DialogData();
+					mDialogData.textZeilen.push(`There is already a program with name "${aTrainingsProgramm.Name.trim()}"!`);
+					this.fDialogeService.Hinweis(mDialogData);
+				}
+			
 				return aTrainingsProgramm;
 			});
 	}

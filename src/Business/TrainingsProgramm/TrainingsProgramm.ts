@@ -140,6 +140,18 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
         return false;
     }
 
+     public static SortByName(aTrainingsProgrammListe: Array<ITrainingsProgramm>): void{
+        aTrainingsProgrammListe = aTrainingsProgrammListe.sort((t1, t2) => {
+            if (t1.Name > t2.Name)
+                return 1;
+
+            if (t1.Name < t2.Name)
+                return -1
+
+            return 0;
+         });
+    }
+
     public Copy(): ITrainingsProgramm {
         const mCopyofProgram: ITrainingsProgramm = cloneDeep(this);
         mCopyofProgram.SessionListe = [];

@@ -4,9 +4,9 @@ import { ISessionDB, SessionDB } from "./../../../Business/SessionDB";
 import { SessionStatus } from "../../../Business/SessionDB";
 import { UebungWaehlenData } from "./../../uebung-waehlen/uebung-waehlen.component";
 import { UebungsKategorie02 } from "./../../../Business/Uebung/Uebung";
-import { DexieSvcService, onDeleteFn, SatzParaDB, UebungParaDB } from "./../../services/dexie-svc.service";
+import { DexieSvcService, onDeleteFn, ProgrammParaDB, SatzParaDB, UebungParaDB } from "./../../services/dexie-svc.service";
 import { Session } from "./../../../Business/Session/Session";
-import { ITrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
+import { ITrainingsProgramm, TrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Output, EventEmitter, Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";
 import { MatAccordion, MatExpansionPanel } from "@angular/material/expansion";
 import { DialogeService } from "./../../services/dialoge.service";
@@ -455,9 +455,13 @@ export class Programm02Component implements OnInit, IProgramModul {
 
 		this.DelSessionListe = [];
 			
-		this.fDbModule.ProgrammSpeichern(this.programm);
-        if (this.ProgrammSavedEvent !== undefined)
-            this.ProgrammSavedEvent.emit(this.programm);
+        const mProgrammExtraParaDB: ProgrammParaDB = new ProgrammParaDB();
+		mProgrammExtraParaDB.OnAfterSaveFn = (aProgram: TrainingsProgramm) => { 
+			if (this.ProgrammSavedEvent !== undefined)
+				this.ProgrammSavedEvent.emit(aProgram);
+		};
+
+		this.fDbModule.ProgrammSpeichern(this.programm,mProgrammExtraParaDB);
 	}
 
 	public CancelChanges():void {}

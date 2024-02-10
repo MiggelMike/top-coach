@@ -1,4 +1,4 @@
-import { DexieSvcService } from 'src/app/services/dexie-svc.service';
+import { DexieSvcService, ProgrammParaDB } from 'src/app/services/dexie-svc.service';
 import { Router } from '@angular/router';
 import { ITrainingsProgramm, ProgrammKategorie, TrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Component, OnInit } from "@angular/core";
@@ -6,6 +6,7 @@ import { DialogeService } from 'src/app/services/dialoge.service';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
 import { IProgramModul, ProgramModulTyp } from 'src/app/app.module';
 import { Location } from "@angular/common";
+import { promises } from 'dns';
 
 
 @Component({
@@ -37,6 +38,10 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
     
     CopyProgramm(aProgramm: ITrainingsProgramm) {
         this.cmpProgramm = aProgramm.Copy();    
+        if  (DexieSvcService.VerfuegbareProgramme.find((aSuchProgram) => { return aSuchProgram === aProgramm; }) === undefined) {
+            DexieSvcService.VerfuegbareProgramme.push(aProgramm);
+            // TrainingsProgramm.SortByName(DexieSvcService.VerfuegbareProgramme);
+        }
     }
 
     ngOnInit() { 
@@ -52,8 +57,7 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
 			mDialogData.ShowAbbruch = true;
 		
             mDialogData.OkFn = () => {
-				this.leave();
-				this.SaveChangesPrim();
+                this.SaveChangesPrim(() => { this.leave(); });
 			}
 	
             mDialogData.CancelFn = (): void => {
@@ -69,10 +73,15 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
 	
 			this.fDialogService.JaNein(mDialogData);
 		}
-	}
-    SaveChangesPrim() {
-        this.fDbModule.ProgrammSpeichern(this.programm);
-        this .cmpProgramm = this.programm.Copy();
+    }
+    
+    SaveChangesPrim(aOkFn: any) {
+        const mProgrammExtraParaDB: ProgrammParaDB = new ProgrammParaDB();
+        mProgrammExtraParaDB.OnAfterSaveFn = (aProgram: TrainingsProgramm) => {
+            this.CopyProgramm(aProgram)
+            aOkFn();
+        };
+        return this.fDbModule.ProgrammSpeichern(this.programm, mProgrammExtraParaDB);
     }
 
     CheckProgramName() {
