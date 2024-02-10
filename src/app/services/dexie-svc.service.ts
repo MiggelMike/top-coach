@@ -218,7 +218,7 @@ export class DexieSvcService extends Dexie {
 	public static MuskelGruppenListe: Array<MuscleGroup> = [];
 	public static EquipmentListe: Array<Equipment> = [];
 	public static LangHantelListe: Array<Hantel> = [];
-	public static StandardProgramme: Array<ITrainingsProgramm> = [];
+	public static VerfuegbareProgramme: Array<ITrainingsProgramm> = [];
 	public static HantelscheibenListe: Array<Hantelscheibe> = [];
 	public static ProgressListe: Array<Progress> = [];
 	public static AppDataTable: Dexie.Table<AppData, number>;
@@ -1344,7 +1344,7 @@ export class DexieSvcService extends Dexie {
 					// mProgrammParaDB.LadeSession = true;
 					// mProgrammParaDB.SessionParaDB = new SessionParaDB();
 					// mProgrammParaDB.SessionParaDB.LadeUebungen
-					await this.LadeStandardProgramme()
+					await this.LadeVerfuegbareProgramme()
 						.then(async (aProgrammListe) => {
 							let mLoadAgain: boolean = false;
 							if (aProgrammListe.find((programm) => programm.ProgrammTyp === ProgrammTyp.Gzclp) === undefined) {
@@ -1358,15 +1358,15 @@ export class DexieSvcService extends Dexie {
 							}
 
 							if (mLoadAgain) {
-								return await this.LadeStandardProgramme()
+								return await this.LadeVerfuegbareProgramme()
 									.then(() => {
-										return DexieSvcService.StandardProgramme;
+										return DexieSvcService.VerfuegbareProgramme;
 									});
 							} else {
 								if (DexieSvcService.AktuellesProgramm === null) {
 									await this.LadeAktuellesProgramm()
 										.then(() => {
-											return DexieSvcService.StandardProgramme;
+											return DexieSvcService.VerfuegbareProgramme;
 											// if(DexieSvcService.ExamplesDone === false)
 											// this.MakeExample(aProgram)
 										});
@@ -1375,7 +1375,7 @@ export class DexieSvcService extends Dexie {
 								if (DexieSvcService.HistorySessions.length <= 0)
 									this.LadeHistorySessions(null, null);
 
-								return DexieSvcService.StandardProgramme;
+								return DexieSvcService.VerfuegbareProgramme;
 							}
 							
 					
@@ -1469,7 +1469,7 @@ export class DexieSvcService extends Dexie {
 	public PrepAkuellesProgramm(aProgramm: ITrainingsProgramm) {
 		let mDoneSessions: Array<SessionDB> = [];
 
-		DexieSvcService.StandardProgramme.find((p) => {
+		DexieSvcService.VerfuegbareProgramme.find((p) => {
 			if (p.ProgrammTyp === aProgramm.ProgrammTyp) return p;
 			return null;
 		});
@@ -2045,7 +2045,7 @@ export class DexieSvcService extends Dexie {
 		return await this.LadeProgrammeEx(mLadePara);
 	}
 
-	public async LadeStandardProgramme(): Promise<Array<ITrainingsProgramm>> {
+	public async LadeVerfuegbareProgramme(): Promise<Array<ITrainingsProgramm>> {
 		const mProgrammPara: ProgrammParaDB = new ProgrammParaDB();
 		mProgrammPara.WhereClause = "ProgrammKategorie"
 		mProgrammPara.anyOf = () => {
@@ -2068,7 +2068,7 @@ export class DexieSvcService extends Dexie {
 		};
 
 		return this.LadeProgrammeEx(mProgrammPara).then((aProgramme) => {
-			DexieSvcService.StandardProgramme = aProgramme;
+			DexieSvcService.VerfuegbareProgramme = aProgramme;
 			return aProgramme;
 		});
 	}

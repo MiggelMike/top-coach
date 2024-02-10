@@ -9,7 +9,7 @@
                     <mat-icon  (click)="closeDialog()">arrow_back</mat-icon>
             </ng-template>
         </div>
-        <div class="colum-center width-100%-Prozent">    
+        <div class="colum-center width-100-Prozent">    
             <h4>New/edit exercise</h4>
         </div>
 
@@ -24,7 +24,7 @@
                 </div>
             </div>
 
-            <div class="row-start-left-gap-3 width-100%-Prozent height-80">                
+            <div class="row-start-left-gap-3 width-100-Prozent height-80">                
                 <ng-container *ngIf="Uebung.EquipmentTyp === 'Barbell'; then Barbell else NoBarbell"></ng-container>
                 <ng-template #Barbell>
                     <div class="colum-center width-200">

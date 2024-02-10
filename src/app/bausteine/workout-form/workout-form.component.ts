@@ -58,9 +58,9 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
 	
             mDialogData.CancelFn = (): void => {
 				if (this.programm.ProgrammKategorie === ProgrammKategorie.Vorlage) {
-					const mIndex = DexieSvcService.StandardProgramme.findIndex((p) => p.id === this.programm.id);
+					const mIndex = DexieSvcService.VerfuegbareProgramme.findIndex((p) => p.id === this.programm.id);
 					if (mIndex > -1) {
-						DexieSvcService.StandardProgramme[mIndex] = this.cmpProgramm;
+						DexieSvcService.VerfuegbareProgramme[mIndex] = this.cmpProgramm;
 					}
 				}
 
@@ -73,6 +73,10 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
     SaveChangesPrim() {
         this.fDbModule.ProgrammSpeichern(this.programm);
         this .cmpProgramm = this.programm.Copy();
+    }
+
+    CheckProgramName() {
+        
     }
 
     CancelChanges() {

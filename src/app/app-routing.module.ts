@@ -24,7 +24,7 @@ import { HistorySession } from 'src/Business/Session/Session';
 
 
 export const LadeStandardProgramme: ResolveFn<ITrainingsProgramm[]> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-	return inject(DexieSvcService).LadeStandardProgramme();
+	return inject(DexieSvcService).LadeVerfuegbareProgramme();
 };
 
 export const LadeHistory: ResolveFn<HistorySession[]> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
