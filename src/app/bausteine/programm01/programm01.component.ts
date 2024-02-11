@@ -1,12 +1,13 @@
 import { SessionParaDB  } from 'src/app/services/dexie-svc.service';
 import { DexieSvcService, cSessionSelectLimit } from './../../services/dexie-svc.service';
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { TrainingsProgramm, ITrainingsProgramm, IProgrammTyp, ProgrammTyp } from "../../../Business/TrainingsProgramm/TrainingsProgramm";
+import { TrainingsProgramm, ITrainingsProgramm, IProgrammTyp, ProgrammTyp, ProgrammKategorie } from "../../../Business/TrainingsProgramm/TrainingsProgramm";
 import { DialogeService } from 'src/app/services/dialoge.service';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
 import { Router } from '@angular/router';
 import { IProgramModul, ProgramModulTyp } from 'src/app/app.module';
 import { NoAutoCreateItem } from 'src/Business/NoAutoCreate';
+import { AppRoutingModule } from 'src/app/app-routing.module';
 
 
 @Component({
@@ -36,6 +37,16 @@ export class Programm01Component implements OnInit, IProgramModul, IProgrammTyp 
 
     get programModul(): typeof ProgramModulTyp {
         return ProgramModulTyp;
+    }
+
+    CopyProgramm(aEvent: Event, aProgramm: ITrainingsProgramm){
+        aEvent.stopPropagation();
+        const aNewWorkOut: ITrainingsProgramm = aProgramm.Copy();
+        aNewWorkOut.id = undefined;
+        aNewWorkOut.Name = `Copy of "${aNewWorkOut.Name}"`; 
+        aNewWorkOut.ProgrammTyp = ProgrammTyp.Custom;
+        aNewWorkOut.ProgrammKategorie = ProgrammKategorie.Vorlage;
+        TrainingsProgramm.createWorkOut(this.fDbModul, aNewWorkOut);
     }
 
     DeleteProgramm(aEvent: Event,aProgramm: ITrainingsProgramm) {

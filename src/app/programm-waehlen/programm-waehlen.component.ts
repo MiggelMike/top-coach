@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 import {CdkDragDrop } from '@angular/cdk/drag-drop';
 import { IProgramModul, ProgramModulTyp } from '../app.module';
 import { Router } from '@angular/router';
+import { AppRoutingModule } from '../app-routing.module';
 
 @Component({
     selector: "app-programm-waehlen",
@@ -37,15 +38,13 @@ export class ProgrammWaehlenComponent implements OnInit, IProgramModul  {
     }
 
     createWorkOut() {
-        DexieSvcService.ModulTyp = ProgramModulTyp.CreateWorkout;
         const mNeuesProgram: ITrainingsProgramm = new EigenesTrainingsProgramm(
             ProgrammTyp.Custom,
             ProgrammKategorie.Vorlage,
             this.fDbModule
         );
 
-        DexieSvcService.ModulTyp = ProgramModulTyp.CreateWorkout;
-        this.router.navigate(["/workoutform"], { state: { programm: mNeuesProgram } });
+        TrainingsProgramm.createWorkOut(this.fDbModule, mNeuesProgram);
     }
 
     // drop(event: any) {

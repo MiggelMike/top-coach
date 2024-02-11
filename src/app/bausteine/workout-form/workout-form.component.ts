@@ -84,10 +84,6 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
         return this.fDbModule.ProgrammSpeichern(this.programm, mProgrammExtraParaDB);
     }
 
-    CheckProgramName() {
-        
-    }
-
     CancelChanges() {
         const mDialogData = new DialogData();
         mDialogData.textZeilen.push("Cancel unsaved changes?");

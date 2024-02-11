@@ -2,6 +2,9 @@ import { ISession, Session, SessionCopyPara } from 'src/Business/Session/Session
 import { DexieSvcService } from './../../app/services/dexie-svc.service';
 import { Satz } from '../Satz/Satz';
 import { SessionStatus } from '../SessionDB';
+import { ProgramModulTyp } from 'src/app/app.module';
+import { Router } from '@angular/router';
+import { AppRoutingModule } from 'src/app/app-routing.module';
 
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
@@ -163,6 +166,17 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
         for (let index = 0; index < this.SessionListe.length; index++) 
             mCopyofProgram.SessionListe.push(Session.StaticCopy(this.SessionListe[index],mSessionCopyPara));
         return mCopyofProgram;
+    }
+
+    static createWorkOut(aDbModul: DexieSvcService, aProgramm: ITrainingsProgramm) {
+        // const mNeuesProgram: ITrainingsProgramm = new EigenesTrainingsProgramm(
+        //     ProgrammTyp.Custom,
+        //     ProgrammKategorie.Vorlage,
+        // );
+
+        DexieSvcService.ModulTyp = ProgramModulTyp.CreateWorkout;
+        aDbModul.OpenWorkoutForm(aProgramm);
+        // this.router.navigate(["/workoutform"], { state: { programm: mNeuesProgram } });
     }
 
     public ErstelleSessionsAusVorlage(aProgrammKategorie : ProgrammKategorie): ITrainingsProgramm {

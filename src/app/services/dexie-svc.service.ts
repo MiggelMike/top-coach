@@ -24,6 +24,7 @@ import { MuscleGroup, MuscleGroupKategorie01, MuscleGroupKategorie02, StandardMu
 import { DiaDatum, DiaUebung, DiaUebungSettings } from 'src/Business/Diagramm/Diagramm';
 import { Sprache } from '../Sprache/Sprache';
 import { ProgramModulTyp } from '../app.module';
+import { Router } from '@angular/router';
 var cloneDeep = require('lodash.clonedeep');
 
 
@@ -705,9 +706,11 @@ export class DexieSvcService extends Dexie {
 
 	constructor(
 		private fDialogeService: DialogeService,
+		private router: Router,
 		// private fTranslateService: TranslateService,
 		@Optional() @SkipSelf()
-		parentModule?: DexieSvcService) {
+		parentModule?: DexieSvcService)
+	{
 		super("ConceptCoach");
 		if (parentModule) {
 			throw new Error("DexieSvcService is already loaded. Import it in the AppModule only");
@@ -2563,6 +2566,10 @@ export class DexieSvcService extends Dexie {
 				});
 		}
 		return aUebung.SatzListe;
+	}
+
+	OpenWorkoutForm(aProgramm: ITrainingsProgramm ) {
+		this.router.navigate(["/workoutform"], { state: { programm: aProgramm } });
 	}
 
 

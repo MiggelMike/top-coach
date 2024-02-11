@@ -25,8 +25,12 @@
                                     <a [ngClass]="['link-button-font', 'HG-01']" mat-button (click)="EditThisWorkoutClick($event)"><span class="tc-font-size-small">Edit</span></a>
                                 </div>
 
-                                <div fxLayout="column" fxFlex="auto">                            
+                                <div fxLayout="column" fxFlex="75px">                            
                                     <a [ngClass]="['link-button-font', 'HG-01']" mat-button (click)="DeleteProgramm($event,programm)" ><span class="tc-font-size-small">Delete</span></a>
+                                </div>
+
+                                <div fxLayout="column" fxFlex="auto">                            
+                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-button (click)="CopyProgramm($event,programm)" ><span class="tc-font-size-small">Copy</span></a>
                                 </div>
 
                                 <!-- <ng-container *ngIf="programm.ProgrammTyp === programmTyp.Custom; then Custom else NotCustom"></ng-container>

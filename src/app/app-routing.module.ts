@@ -1,9 +1,9 @@
 import { BodyweightComponent } from './bodyweight/bodyweight.component';
 import { ExerciseComponent } from './exercise/exercise.component';
 import { HistoryComponent } from './history/history.component';
-import { ITrainingsProgramm } from "./../Business/TrainingsProgramm/TrainingsProgramm";
+import { ITrainingsProgramm, TrainingsProgramm } from "./../Business/TrainingsProgramm/TrainingsProgramm";
 import { NgModule, inject } from "@angular/core";
-import { ActivatedRouteSnapshot, ResolveFn, RouterModule, RouterStateSnapshot, Routes } from "@angular/router";
+import { ActivatedRouteSnapshot, ResolveFn, Router, RouterModule, RouterStateSnapshot, Routes } from "@angular/router";
 import { DexieSvcService, ProgrammParaDB, SessionParaDB, UebungParaDB } from "./services/dexie-svc.service";
 import { WorkoutFormComponent } from "./bausteine/workout-form/workout-form.component";
 import { InitialWeightComponent } from './initial-weight/initial-weight.component';
