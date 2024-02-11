@@ -3,8 +3,6 @@ import { DexieSvcService } from './../../app/services/dexie-svc.service';
 import { Satz } from '../Satz/Satz';
 import { SessionStatus } from '../SessionDB';
 import { ProgramModulTyp } from 'src/app/app.module';
-import { Router } from '@angular/router';
-import { AppRoutingModule } from 'src/app/app-routing.module';
 
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
@@ -28,6 +26,7 @@ export interface ITrainingsProgramm {
     FkVorlageProgramm: number;
     MaxSessions: number;
     Name: string;
+    UpperCaseName: string;
     ProgrammKategorie: ProgrammKategorie;
     ProgrammTyp: ProgrammTyp;
     SessionListe: Array<ISession>;
@@ -53,13 +52,14 @@ export interface IProgrammTyp {
 }
 
 
-// Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
+// Beim Anfuegen neuer Felder Copy nicht vergessen!
 export abstract class TrainingsProgramm implements ITrainingsProgramm {
     // Wird in abgeleiteten Klassen gesetzt.
     public id: number;
     public FkVorlageProgramm: number = 0;
     public MaxSessions: number = 0;
     public Name: string = "";
+    public UpperCaseName: string = '';
     public ProgrammKategorie: ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
     public ProgrammTyp: ProgrammTyp = ProgrammTyp.Custom;
     public Bearbeitbar: Boolean = true;
@@ -169,14 +169,8 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
     }
 
     static createWorkOut(aDbModul: DexieSvcService, aProgramm: ITrainingsProgramm) {
-        // const mNeuesProgram: ITrainingsProgramm = new EigenesTrainingsProgramm(
-        //     ProgrammTyp.Custom,
-        //     ProgrammKategorie.Vorlage,
-        // );
-
         DexieSvcService.ModulTyp = ProgramModulTyp.CreateWorkout;
         aDbModul.OpenWorkoutForm(aProgramm);
-        // this.router.navigate(["/workoutform"], { state: { programm: mNeuesProgram } });
     }
 
     public ErstelleSessionsAusVorlage(aProgrammKategorie : ProgrammKategorie): ITrainingsProgramm {
