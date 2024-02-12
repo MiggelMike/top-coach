@@ -698,6 +698,11 @@ input[type=text]:focus  {
 	outline: none;
   }
 
+  input:disabled  {
+	color: gray;
+  }
+
+
 .border-radius-10 {
 	border-radius: 10px;
 }
