@@ -55,19 +55,24 @@ export class Programm02Component implements OnInit, IProgramModul {
 
 	drop(event: any) {
 		const mEvent = event as CdkDragDrop<ISession[]>;
-		
-		this.programm.SessionListe[event.previousIndex].ListenIndex = mEvent.currentIndex;
-		this.programm.SessionListe[event.currentIndex].ListenIndex = mEvent.previousIndex;
-		this.fDbModule.SessionSpeichern(this.programm.SessionListe[mEvent.previousIndex] as Session);
-		this.fDbModule.SessionSpeichern(this.programm.SessionListe[mEvent.currentIndex] as Session);		
-	}
+		if (mEvent.previousIndex === mEvent.currentIndex)
+			return;
 
-	// drop(event: CdkDragDrop<ISession[] | any>) {
-	// 	this.programm.SessionListe[event.previousIndex].ListenIndex = event.currentIndex;
-	// 	this.programm.SessionListe[event.currentIndex].ListenIndex = event.previousIndex;
-	// 	this.fDbModule.SessionSpeichern(this.programm.SessionListe[event.previousIndex] as Session);
-	// 	this.fDbModule.SessionSpeichern(this.programm.SessionListe[event.currentIndex] as Session);		
-	// }
+		let mSessionPtr: ISession = this.programm.SessionListe[mEvent.currentIndex];
+		
+		if (mEvent.currentIndex < mEvent.previousIndex) {
+			mSessionPtr = this.programm.SessionListe[mEvent.previousIndex];
+			this.programm.SessionListe = this.programm.SessionListe.copyWithin(mEvent.currentIndex + 1, mEvent.currentIndex, mEvent.previousIndex);
+			this.programm.SessionListe[mEvent.currentIndex] = mSessionPtr;
+		}
+		else {
+			mSessionPtr = this.programm.SessionListe[mEvent.currentIndex];
+			this.programm.SessionListe = this.programm.SessionListe.copyWithin(mEvent.currentIndex, mEvent.previousIndex, mEvent.currentIndex);
+			this.programm.SessionListe[mEvent.previousIndex] = mSessionPtr;
+		}
+		
+		this.programm.NummeriereSessions();
+	 }
 	
 	GestartedWann(aSess: Session): string{
 		return Datum.StaticFormatDate(aSess.GestartedWann, DateFormatTyp.KomplettOhneSekunden);
