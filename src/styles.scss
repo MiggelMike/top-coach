@@ -345,10 +345,14 @@ div.herz:after {
     color: black;
 }
 
-.font-14-data {
-	font-size: 14px;
+.blue-bold {
 	font-weight: bold;
-    color: blue;
+	color: blue;
+}
+
+.font-14-data {
+	@extend .blue-bold;
+	font-size: 14px;
 }
 
 .tc-font-size-small {
