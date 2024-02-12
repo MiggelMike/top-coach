@@ -9,98 +9,53 @@
                     <!-- <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleSessions()">{{ToggleButtonText}}</a>
                         <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="AdditionalSession()">Additional session</a> -->
                             
-                    <div cdkDropList (cdkDropListDropped)="drop($event)">
                         <ng-container *ngFor="let sess of SortedSessionListe, index as i">
-                            <div  class='mg-top-2'>
-                                <mat-accordion #accSession="matAccordion" multi="true">
-                                    <mat-expansion-panel 
-                                        #panSession='matExpansionPanel'                            
-                                        (opened) = "panelOpened(sess)"
-                                        (closed) = "panelClosed(sess)" 
-                                        class="HG-01">
-                                        <mat-expansion-panel-header mat-tooltip-panel-below  matTooltip="Hold and drag">
-                                            <div class="row-start-left-gap-3 mg-bottom-3">
-                                                <input class="tc-font-size-smaller width-350 HG-Transparent" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
-                                                
-                                                <ng-container *ngIf="sess.Kategorie02 === sessionStatus.Laueft; then Laeuft else LaeuftNicht"></ng-container>
-                                                <ng-template #Laeuft>
-                                                    <a [ngClass]="['link-button-font','HG-01']" mat-flat-button (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
-                                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="ResetSession($event,sess)">Reset</a>
-                                                </ng-template>
-                                                <ng-template #LaeuftNicht>
-                                                    <a [ngClass]="['link-button-font','HG-01']" mat-flat-button (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
-                                                </ng-template>
-
-                                                <ng-container *ngIf="sess.IstAusVorgabe === false">
-                                                    <div class="center-item" layout-align="center center" fxFlex="0 0 auto">
-                                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteSession($event,sess, i+1)">Delete</a>
-                                                    </div>
-                                                </ng-container>
-
-
-                                            </div>
-                                        </mat-expansion-panel-header>
-            
-                                        <ng-container *ngFor="let SessUeb of sess.UebungsListe, index as UebungIndex">
-                                            <div [id]="'collapseSession' + UebungIndex" aria-labelledby="headingOne">
-                                                <div class="card-body">
-                                                    <div class="row-start-left-gap-3">
-                                                        <span class="font-14-label">#{{UebungIndex+1}} {{SessUeb.Name}}</span>
-                                                        <div class="column-center tc-font-size-smaller">  --- Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} - Reps {{SessUeb.SummeWDH()}}</div>
-                                                    </div>
+                            <div  cdkDropList (cdkDropListDropped)="drop($event)">
+                                <!-- <div  class='mg-top-2'> -->
+                                    <mat-accordion #accSession="matAccordion" multi="true">
+                                        <mat-expansion-panel 
+                                            #panSession='matExpansionPanel'                            
+                                            (opened) = "panelOpened(sess)"
+                                            (closed) = "panelClosed(sess)" 
+                                            class="HG-01">
+                                            <mat-expansion-panel-header mat-tooltip-panel-below  matTooltip="Hold and drag">
+                                                <div class="row-start-left-gap-3 mg-bottom-3">
+                                                    <input class="tc-font-size-smaller width-350 HG-Transparent" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
                                                     
-                                                    <ng-container *ngIf="SessUeb.AufwaermSatzListe.length > 0">
-                                                        <div class="row-start-left-gap-3">
-                                                            <span class="tc-font-size-smaller">Warm up</span>
-                                                        </div>
-                                                    
-                                                        <div class="row-start-left-gap-3">
-                                                            <ng-container *ngFor="let satz of SessUeb.AufwaermSatzListe, index as satzIndex">
-                                                                <div class="colum-center">
-                                                                    <div class="column-center font-size-xsmall mg-right-3"  [ngClass]="{ 'kreisGruen': satz.Status === satzStatus.Fertig, 'kreisRot': satz.Status !== satzStatus.Fertig}" >
-                                                                        {{satz.WdhAusgefuehrtText}}
-                                                                        <ng-container *ngIf="satz.AMRAP">+</ng-container>
-                                                                    </div>
-                                                                    
-                                                                    <div class="font-size-xsmall column-center">
-                                                                        <mat-label>
-                                                                            {{satz.GewichtAusgefuehrtText}}
-                                                                        </mat-label>  
-                                                                    </div>
-                                                                </div>
-                                                            </ng-container>
+                                                    <ng-container *ngIf="sess.Kategorie02 === sessionStatus.Laueft; then Laeuft else LaeuftNicht"></ng-container>
+                                                    <ng-template #Laeuft>
+                                                        <a [ngClass]="['link-button-font','HG-01']" mat-flat-button (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
+                                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="ResetSession($event,sess)">Reset</a>
+                                                    </ng-template>
+                                                    <ng-template #LaeuftNicht>
+                                                        <a [ngClass]="['link-button-font','HG-01']" mat-flat-button (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
+                                                    </ng-template>
+
+                                                    <ng-container *ngIf="sess.IstAusVorgabe === false">
+                                                        <div class="center-item" layout-align="center center" fxFlex="0 0 auto">
+                                                            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteSession($event,sess, i+1)">Delete</a>
                                                         </div>
                                                     </ng-container>
 
-                                                    <ng-container *ngIf="SessUeb.ArbeitsSatzListe.length > 0">
-                                                        <div class="row-start-left-gap-3">
-                                                            <span class="tc-font-size-smaller">Work</span>
-                                                        </div>
-                                                        <div class="row-start-left-gap-3">
-                                                            <ng-container *ngFor="let satz of SessUeb.ArbeitsSatzListe, index as satzIndex">
-                                                                <div class="colum-center">
-                                                                    <div class="column-center font-size-xsmall mg-right-3"  [ngClass]="{ 'kreisGruen': satz.Status === satzStatus.Fertig, 'kreisRot': satz.Status !== satzStatus.Fertig}" >
-                                                                        {{satz.WdhAusgefuehrtText}}
-                                                                        <ng-container *ngIf="satz.AMRAP">+</ng-container>
-                                                                    </div>
-                                                                    
-                                                                    <div class="font-size-xsmall column-center">
-                                                                        <mat-label>
-                                                                            {{satz.GewichtAusgefuehrtText}}
-                                                                        </mat-label>  
-                                                                    </div>
-                                                                </div>
-                                                            </ng-container>
-                                                        </div>
-                                                    </ng-container>
 
-                                                    <ng-container *ngIf="SessUeb.AbwaermSatzListe.length > 0">
+                                                </div>
+                                            </mat-expansion-panel-header>
+                
+                                            <ng-container *ngFor="let SessUeb of sess.UebungsListe, index as UebungIndex">
+                                                <div [id]="'collapseSession' + UebungIndex" aria-labelledby="headingOne">
+                                                    <div class="card-body">
                                                         <div class="row-start-left-gap-3">
-                                                            <span class="tc-font-size-smaller">Cool down</span>
-                                                        </div>                                                            
-                                                        <div class="row-start-left-gap-3">                                                            
-                                                            <ng-container *ngFor="let satz of SessUeb.AbwaermSatzListe, index as satzIndex">
-                                                                <div class="row-start-left-gap-3">
+                                                            <span class="font-14-label">#{{UebungIndex+1}} {{SessUeb.Name}}</span>
+                                                            <div class="column-center tc-font-size-smaller">  --- Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} - Reps {{SessUeb.SummeWDH()}}</div>
+                                                        </div>
+                                                        
+                                                        <ng-container *ngIf="SessUeb.AufwaermSatzListe.length > 0">
+                                                            <div class="row-start-left-gap-3">
+                                                                <span class="tc-font-size-smaller">Warm up</span>
+                                                            </div>
+                                                        
+                                                            <div class="row-start-left-gap-3">
+                                                                <ng-container *ngFor="let satz of SessUeb.AufwaermSatzListe, index as satzIndex">
                                                                     <div class="colum-center">
                                                                         <div class="column-center font-size-xsmall mg-right-3"  [ngClass]="{ 'kreisGruen': satz.Status === satzStatus.Fertig, 'kreisRot': satz.Status !== satzStatus.Fertig}" >
                                                                             {{satz.WdhAusgefuehrtText}}
@@ -113,49 +68,94 @@
                                                                             </mat-label>  
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </ng-container>
-                                                        </div>
-                                                    </ng-container>
+                                                                </ng-container>
+                                                            </div>
+                                                        </ng-container>
 
-                                                    <!-- session an Sub-Komponente durchreichen -->
-                                                    <!-- <app-programm03 
-                                                        [session]="sess" 
-                                                        [cmpSession]="sess" 
-                                                        [programm]="programm"
-                                                        [cmpSettingsSession]="sess" 
-                                                        [bearbeitbar]="bearbeitbar" 
-                                                        [SofortSpeichern]="SofortSpeichern"
-                                                        [DeletedSatzList]="DeletedSatzList">
-                                                    </app-programm03> -->
+                                                        <ng-container *ngIf="SessUeb.ArbeitsSatzListe.length > 0">
+                                                            <div class="row-start-left-gap-3">
+                                                                <span class="tc-font-size-smaller">Work</span>
+                                                            </div>
+                                                            <div class="row-start-left-gap-3">
+                                                                <ng-container *ngFor="let satz of SessUeb.ArbeitsSatzListe, index as satzIndex">
+                                                                    <div class="colum-center">
+                                                                        <div class="column-center font-size-xsmall mg-right-3"  [ngClass]="{ 'kreisGruen': satz.Status === satzStatus.Fertig, 'kreisRot': satz.Status !== satzStatus.Fertig}" >
+                                                                            {{satz.WdhAusgefuehrtText}}
+                                                                            <ng-container *ngIf="satz.AMRAP">+</ng-container>
+                                                                        </div>
+                                                                        
+                                                                        <div class="font-size-xsmall column-center">
+                                                                            <mat-label>
+                                                                                {{satz.GewichtAusgefuehrtText}}
+                                                                            </mat-label>  
+                                                                        </div>
+                                                                    </div>
+                                                                </ng-container>
+                                                            </div>
+                                                        </ng-container>
+
+                                                        <ng-container *ngIf="SessUeb.AbwaermSatzListe.length > 0">
+                                                            <div class="row-start-left-gap-3">
+                                                                <span class="tc-font-size-smaller">Cool down</span>
+                                                            </div>                                                            
+                                                            <div class="row-start-left-gap-3">                                                            
+                                                                <ng-container *ngFor="let satz of SessUeb.AbwaermSatzListe, index as satzIndex">
+                                                                    <div class="row-start-left-gap-3">
+                                                                        <div class="colum-center">
+                                                                            <div class="column-center font-size-xsmall mg-right-3"  [ngClass]="{ 'kreisGruen': satz.Status === satzStatus.Fertig, 'kreisRot': satz.Status !== satzStatus.Fertig}" >
+                                                                                {{satz.WdhAusgefuehrtText}}
+                                                                                <ng-container *ngIf="satz.AMRAP">+</ng-container>
+                                                                            </div>
+                                                                            
+                                                                            <div class="font-size-xsmall column-center">
+                                                                                <mat-label>
+                                                                                    {{satz.GewichtAusgefuehrtText}}
+                                                                                </mat-label>  
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </ng-container>
+                                                            </div>
+                                                        </ng-container>
+
+                                                        <!-- session an Sub-Komponente durchreichen -->
+                                                        <!-- <app-programm03 
+                                                            [session]="sess" 
+                                                            [cmpSession]="sess" 
+                                                            [programm]="programm"
+                                                            [cmpSettingsSession]="sess" 
+                                                            [bearbeitbar]="bearbeitbar" 
+                                                            [SofortSpeichern]="SofortSpeichern"
+                                                            [DeletedSatzList]="DeletedSatzList">
+                                                        </app-programm03> -->
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </ng-container>
-            
-                                            <!-- <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
-                                                <div class="center-item" layout-align="center center">
-                                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="CopySession(sess)">Copy Session</a>
+                                            </ng-container>
+                
+                                                <!-- <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
+                                                    <div class="center-item" layout-align="center center">
+                                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="CopySession(sess)">Copy Session</a>
+                                                    </div>
+                
+                                                    <div class="center-item" layout-align="center center">
+                                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteSession($event, sess,i)">Delete Session</a>
+                                                    </div>
                                                 </div>
-            
-                                                <div class="center-item" layout-align="center center">
-                                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteSession($event, sess,i)">Delete Session</a>
-                                                </div>
-                                            </div>
-            
-                                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
-                                                <div class="center-item" layout-align="center center">
-                                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="AddExercise(sess)">Add exercise</a>
-                                                </div>
-            
-                                                <div class="center-item" layout-align="center center">
-                                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="PasteExcercise(sess)">Paste Exercise</a>
-                                                </div>
-                                            </div> -->
-                                    </mat-expansion-panel>
-                                </mat-accordion>
+                
+                                                <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
+                                                    <div class="center-item" layout-align="center center">
+                                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="AddExercise(sess)">Add exercise</a>
+                                                    </div>
+                
+                                                    <div class="center-item" layout-align="center center">
+                                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="PasteExcercise(sess)">Paste Exercise</a>
+                                                    </div>
+                                                </div> -->
+                                        </mat-expansion-panel>
+                                    </mat-accordion>
+                                <!-- </div> -->
                             </div>
                         </ng-container>
-                    </div>
                 </ng-container>
             </div>
                 <!-- <app-programm02 

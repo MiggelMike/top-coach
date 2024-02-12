@@ -1,32 +1,20 @@
     
-    <app-toolbar></app-toolbar>
-    <!-- <div class="container">
-        <ng-container *ngFor="let programm of ProgrammListe">
-            
-            <span>{{programm.Name}}</span> 
-        </ng-container>
-    </div> -->
+<app-toolbar></app-toolbar>
 
 <div class="column-center">
     <div class="width-600">
-        <!-- <p class="font-bold">Choose workout</p> -->
         <div class="colum-center center-item height-40">
-            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button  (click)="createWorkOut()">Create workout</a>
+            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="createWorkOut()">Create workout</a>
         </div>
         <ng-container *ngIf="ViewInitDone === true">
-            <!-- <div cdkDropList (cdkDropListDropped)="drop($event)"> -->
-                <ng-container *ngFor="let programm of ProgrammListe">
-                    <div  class="mg-top-1">
-                        <app-programm01
-                            [ModulTyp]="programModul.SelectWorkout"
-                            [programm]="programm" 
-                            [showButtons]="false" 
-                            [showSaveButtons]="false">
-                        </app-programm01>
-                    </div>
-                </ng-container>
-            <!-- </div> -->
-         </ng-container>
+            <ng-container *ngFor="let programm of ProgrammListe">
+                <div class="mg-top-1">
+                    <app-programm01 [ModulTyp]="programModul.SelectWorkout" [programm]="programm" [showButtons]="false"
+                        [showSaveButtons]="false">
+                    </app-programm01>
+                </div>
+            </ng-container>
+        </ng-container>
     </div>
 </div>
     
