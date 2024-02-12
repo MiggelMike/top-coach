@@ -58,11 +58,10 @@ export class Programm02Component implements OnInit, IProgramModul {
 		if (mEvent.previousIndex === mEvent.currentIndex)
 			return;
 
-		let mSessionPtr: ISession = this.programm.SessionListe[mEvent.currentIndex];
+		let mSessionPtr: ISession = this.programm.SessionListe[mEvent.previousIndex];
 		
 		if (mEvent.currentIndex < mEvent.previousIndex) {
 			// Nach oben schieben
-			mSessionPtr = this.programm.SessionListe[mEvent.previousIndex];
 			this.programm.SessionListe = this.programm.SessionListe.copyWithin(mEvent.currentIndex + 1, mEvent.currentIndex, mEvent.previousIndex);
 			this.programm.SessionListe[mEvent.currentIndex] = mSessionPtr;
 		}
