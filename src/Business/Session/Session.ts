@@ -538,6 +538,7 @@ export class Session implements ISession {
                         const mNeuerSatz = mPrtSatz.Copy();
                         mNeuerSatz.SessionID = 0;
                         mNeuerSatz.UebungID = 0;
+                        
                         if (aSessionCopyPara.CopySatzID === false)
                             mNeuerSatz.ID = undefined;
                         mNeueUebung.SatzListe.push(mNeuerSatz);

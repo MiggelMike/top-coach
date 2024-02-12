@@ -279,8 +279,12 @@ export class Programm02Component implements OnInit, IProgramModul {
 		else this.fUebungService.UebungWaehlen(aSession as Session, this.SelectUebungDelegate);
 	}
 
-	CopySession(sess) {
-		
+	CopySession(aSession: ISession) {
+		const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+		mSessionCopyPara.CopySatzID = false;
+		mSessionCopyPara.CopySessionID = false;
+		mSessionCopyPara.CopyUebungID = false;
+		DexieSvcService.SessionCopy = Session.StaticCopy(aSession, mSessionCopyPara);
 	}
 
 	public PasteExcercise(aSession: ISession) {
@@ -362,9 +366,9 @@ export class Programm02Component implements OnInit, IProgramModul {
 	}
 
 	public PasteSession() {
-		if (this.fGlobalService.SessionKopie === null) {
+		if (DexieSvcService.SessionCopy  === null) {
 			const mDialoData = new DialogData();
-			mDialoData.textZeilen.push("No data to paste!");
+			mDialoData.textZeilen.push("No session data to paste!");
 			this.fDialogService.Hinweis(mDialoData);
 			return;
 		}
@@ -374,9 +378,12 @@ export class Programm02Component implements OnInit, IProgramModul {
 		mSessionCopyPara.CopySessionID = false;
 		mSessionCopyPara.CopyUebungID = false;
 		mSessionCopyPara.CopySatzID = false;
-		const mSession: ISessionDB = Session.StaticCopy(this.fGlobalService.SessionKopie,mSessionCopyPara);
+		const mSessionDB: ISessionDB = Session.StaticCopy(DexieSvcService.SessionCopy,mSessionCopyPara);
 		//mSession.FK_Programm = this.programmID;
-		this.SessionListe.push(mSession as Session);
+		this.SessionListe.push(mSessionDB as Session);
+
+		if (DexieSvcService.ModulTyp === ProgramModulTyp.SelectWorkout) 
+			this.fDbModule.SessionSpeichern(new Session(mSessionDB));
 	}
 
 	private startSessionPrim(aSession: ISession, aRegularSession: boolean) {

@@ -72,7 +72,7 @@
                                 </div>
                             </ng-container>
 
-                            <ng-container *ngIf="showButtons">
+                            <!-- <ng-container *ngIf="showButtons"> -->
                                 <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
                                     <div class="center-item" layout-align="center center">
                                         <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="CopySession(sess)">Copy Session</a>
@@ -92,7 +92,7 @@
                                         <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="PasteExcercise(sess)">Paste Exercise</a>
                                     </div>
                                 </div>
-                            </ng-container>
+                            <!-- </ng-container> -->
                         </mat-expansion-panel>
                     </mat-accordion>
                 </div>
@@ -101,7 +101,7 @@
     </ng-container>
 
     <ng-container *ngIf="ModulTyp !== programModul.History">
-        <ng-container *ngIf="showButtons">
+        <!-- <ng-container *ngIf="showButtons"> -->
             <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center" [style.margin-top]="'5px'">
                 <div class="center-item" layout-align="center center">
                     <a class='link-button-font' mat-flat-button (click)="AddSession()">Add Session</a>
@@ -110,7 +110,7 @@
                 <a class='link-button-font' mat-flat-button (click)="PasteSession()">Paste Session</a>
             </div>
         </div>
-        </ng-container>
+        <!-- </ng-container> -->
 
         <ng-container *ngIf="showSaveButtons">
             <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center" [style.margin-top]="'5px'">
