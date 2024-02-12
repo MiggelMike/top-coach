@@ -763,6 +763,15 @@ export class DexieSvcService extends Dexie {
 
 		this.InitDatenbank();
 	}
+
+	static dropPrim(aListe: Array<any>, aCurrentIndex: number, aPreviousIndex: number) {
+		if (aCurrentIndex  < aPreviousIndex) 
+			// Nach oben schieben
+			aListe = aListe.copyWithin(aCurrentIndex + 1, aCurrentIndex, aPreviousIndex);
+		else 
+			// Nach unten schieben
+			aListe = aListe.copyWithin(aPreviousIndex, aPreviousIndex + 1, aCurrentIndex + 1);
+	 }
 			
 	async InitDatenbank() {
 		this.InitAll();

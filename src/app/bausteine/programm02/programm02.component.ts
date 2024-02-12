@@ -55,18 +55,12 @@ export class Programm02Component implements OnInit, IProgramModul {
 
 	drop(event: any) {
 		const mEvent = event as CdkDragDrop<ISession[]>;
+
 		if (mEvent.previousIndex === mEvent.currentIndex)
 			return;
 
 		let mSessionPtr: ISession = this.programm.SessionListe[mEvent.previousIndex];
-		
-		if (mEvent.currentIndex < mEvent.previousIndex) 
-			// Nach oben schieben
-			this.programm.SessionListe = this.programm.SessionListe.copyWithin(mEvent.currentIndex + 1, mEvent.currentIndex, mEvent.previousIndex);
-		else 
-			// Nach unten schieben
-			this.programm.SessionListe = this.programm.SessionListe.copyWithin(mEvent.previousIndex, mEvent.previousIndex + 1, mEvent.currentIndex + 1);
-		
+		DexieSvcService.dropPrim(this.programm.SessionListe, mEvent.currentIndex, mEvent.previousIndex);
 		this.programm.SessionListe[mEvent.currentIndex] = mSessionPtr;
 		this.programm.NummeriereSessions();
 		this.SaveChanges();
