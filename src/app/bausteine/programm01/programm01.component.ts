@@ -1,4 +1,4 @@
-import { SessionParaDB  } from 'src/app/services/dexie-svc.service';
+import { ProgramCopyPara, SessionParaDB  } from 'src/app/services/dexie-svc.service';
 import { DexieSvcService, cSessionSelectLimit } from './../../services/dexie-svc.service';
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { TrainingsProgramm, ITrainingsProgramm, IProgrammTyp, ProgrammTyp, ProgrammKategorie } from "../../../Business/TrainingsProgramm/TrainingsProgramm";
@@ -41,8 +41,12 @@ export class Programm01Component implements OnInit, IProgramModul, IProgrammTyp 
 
     CopyProgramm(aEvent: Event, aProgramm: ITrainingsProgramm){
         aEvent.stopPropagation();
-        const aNewWorkOut: ITrainingsProgramm = aProgramm.Copy();
-        aNewWorkOut.id = undefined;
+        const mProgramCopyPara: ProgramCopyPara = new ProgramCopyPara();
+        mProgramCopyPara.CopySatzID = false;
+        mProgramCopyPara.CopySessionID = false;
+        mProgramCopyPara.CopyUebungID = false;
+        mProgramCopyPara.CopySatzID = false;
+        const aNewWorkOut: ITrainingsProgramm = aProgramm.Copy(mProgramCopyPara);
         aNewWorkOut.Name = `Copy of "${aNewWorkOut.Name}"`; 
         aNewWorkOut.ProgrammTyp = ProgrammTyp.Custom;
         aNewWorkOut.ProgrammKategorie = ProgrammKategorie.Vorlage;

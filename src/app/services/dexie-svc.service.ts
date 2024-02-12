@@ -1,7 +1,7 @@
 import { NoAutoCreate, NoAutoCreateDB, NoAutoCreateItem } from '../../Business/NoAutoCreate';
 import { cDeutsch, cDeutschKuezel, cEnglish, cEnglishKuerzel, cEnglishDatumFormat, cEnglishZeitFormat, cDeutschDatumFormat, cDeutschZeitFormat } from './../Sprache/Sprache';
 import { BodyWeight, BodyWeightDB } from './../../Business/Bodyweight/Bodyweight';
-import { HistorySession, SessionCopyPara } from './../../Business/Session/Session';
+import { HistorySession  } from './../../Business/Session/Session';
 import { HypertrophicProgramm } from '../../Business/TrainingsProgramm/Hypertrophic';
 import { InUpcomingSessionSetzen, UebungDB } from './../../Business/Uebung/Uebung';
 import { InitialWeight } from './../../Business/Uebung/InitialWeight';
@@ -40,6 +40,17 @@ export const cWeightFormat = '1.2-2';
 export const cNumberFormat =  '1.0-0';
 export const cDateTimeFormat = 'MMMM d, y, h:mm';
 
+
+export class SessionCopyPara  {
+	Komplett: boolean = true;
+    CopySessionID: boolean = true;
+    CopyUebungID: boolean = true;
+    CopySatzID: boolean = true;
+}
+
+export class ProgramCopyPara extends SessionCopyPara {
+    CopyProgramID: boolean = true;
+}
 
 
 export enum WorkerAction {
@@ -618,8 +629,13 @@ export class DexieSvcService extends Dexie {
 					.then((mSessions) => aSelectedProgram.SessionListe = mSessions);
 			}
 			
-			const mProgramm = aSelectedProgram.Copy();
-			mProgramm.id = undefined;
+			const mProgramCopyPara: ProgramCopyPara = new ProgramCopyPara();
+			mProgramCopyPara.CopyProgramID = false;
+			mProgramCopyPara.CopySessionID = false;
+			mProgramCopyPara.CopyUebungID = false;
+			mProgramCopyPara.CopySatzID = false;
+			const mProgramm = aSelectedProgram.Copy(mProgramCopyPara);
+			
 			mProgramm.FkVorlageProgramm = aSelectedProgram.id;
 			// Die Kategorie des ausgewählten Programms wird auf "AktuellesProgramm" gesetzt
 			mProgramm.ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
@@ -719,11 +735,11 @@ export class DexieSvcService extends Dexie {
 		if (DexieSvcService.ModulTyp === null)
 			DexieSvcService.ModulTyp = ProgramModulTyp.Kein;
 		// 
-		// Dexie.delete("ConceptCoach");
-		this.version(43).stores({
+		//  Dexie.delete("ConceptCoach");
+		this.version(44).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
-			Programm: "++id,&[UpperCaseName+ProgrammKategorie],FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
+			Programm: "++id,&[Name+ProgrammKategorie],FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
 			SessionDB: "++ID,Name,Datum,ProgrammKategorie,FK_Programm,FK_VorlageProgramm,Kategorie02,[FK_VorlageProgramm+Kategorie02],[FK_Programm+Kategorie02],ListenIndex,GestartedWann",
 			SatzDB: "++ID,UebungID,Datum,[UebungID+Status]",
 			MuskelGruppe: "++ID,Name,MuscleGroupKategorie01",
@@ -1476,7 +1492,7 @@ export class DexieSvcService extends Dexie {
 				if (aProgramme.length > 0) {
 					DexieSvcService.AktuellesProgramm = aProgramme[0];
 					DexieSvcService.AktuellesProgramm.SessionListe.forEach((aSession) => aSession.Vollstaendig = true);
-					DexieSvcService.CmpAktuellesProgramm = DexieSvcService.AktuellesProgramm.Copy();
+					DexieSvcService.CmpAktuellesProgramm = DexieSvcService.AktuellesProgramm.Copy(new ProgramCopyPara());
 				}
 					
 				return DexieSvcService.AktuellesProgramm;
@@ -2232,7 +2248,6 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async ProgrammSpeichern(aTrainingsProgramm: ITrainingsProgramm, aProgrammExtraParaDB?: ProgrammParaDB): Promise<ITrainingsProgramm> {
-		aTrainingsProgramm.UpperCaseName = aTrainingsProgramm.Name.toUpperCase();
 		return await DexieSvcService.ProgrammTable.put(aTrainingsProgramm)
 			.then(async (mID) => {
 				aTrainingsProgramm.id = mID;

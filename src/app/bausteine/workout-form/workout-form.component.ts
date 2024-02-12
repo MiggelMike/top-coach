@@ -1,3 +1,4 @@
+import { ProgramCopyPara } from './../../services/dexie-svc.service';
 import { DexieSvcService, ProgrammParaDB } from 'src/app/services/dexie-svc.service';
 import { Router } from '@angular/router';
 import { ITrainingsProgramm, ProgrammKategorie, TrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
@@ -30,14 +31,15 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
         const mState = mNavigation.extras.state as { programm: ITrainingsProgramm };
         this.programm = mState.programm;
         this.fDbModule.CheckSessions(this.programm);
-        this.cmpProgramm = mState.programm.Copy();
+        this.cmpProgramm = mState.programm.Copy(new ProgramCopyPara());
     }
     get programModul(): typeof ProgramModulTyp {
         return ProgramModulTyp;
     }
     
     CopyProgramm(aProgramm: ITrainingsProgramm) {
-        this.cmpProgramm = aProgramm.Copy();    
+        const mProgramCopyPara: ProgramCopyPara = new ProgramCopyPara();
+        this.cmpProgramm = aProgramm.Copy(mProgramCopyPara);    
         if  (DexieSvcService.VerfuegbareProgramme.find((aSuchProgram) => { return aSuchProgram === aProgramm; }) === undefined) {
             DexieSvcService.VerfuegbareProgramme.push(aProgramm);
             // TrainingsProgramm.SortByName(DexieSvcService.VerfuegbareProgramme);

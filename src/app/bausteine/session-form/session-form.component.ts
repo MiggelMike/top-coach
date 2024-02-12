@@ -1,11 +1,11 @@
-import { HistorySession, Session, SessionCopyPara } from './../../../Business/Session/Session';
+import { HistorySession, Session  } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from './../../../Business/TrainingsProgramm/TrainingsProgramm';
 import { UebungService } from "./../../services/uebung.service";
 import { SessionStatus } from "./../../../Business/SessionDB";
 import { SessionStatsOverlayComponent } from "./../../session-stats-overlay/session-stats-overlay.component";
 import { SessionOverlayServiceService, SessionOverlayConfig } from "./../../services/session-overlay-service.service";
 import { DialogeService } from "./../../services/dialoge.service";
-import { DexieSvcService, cMinDatum, ProgrammParaDB, SessionParaDB, UebungParaDB } from "./../../services/dexie-svc.service";
+import { DexieSvcService, cMinDatum, ProgrammParaDB, SessionParaDB, UebungParaDB, SessionCopyPara, ProgramCopyPara } from "./../../services/dexie-svc.service";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { cLoadingDefaultHeight, DialogData } from "src/app/dialoge/hinweis/hinweis.component";
@@ -98,7 +98,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 										if (aUebungsListe.length > 0)
 											this.Session.UebungsListe = aUebungsListe;
 										else
-											DexieSvcService.CmpAktuellesProgramm = DexieSvcService.AktuellesProgramm.Copy();
+											DexieSvcService.CmpAktuellesProgramm = DexieSvcService.AktuellesProgramm.Copy(new ProgramCopyPara());
 							
 										if (this.Session.UebungsListe !== undefined) {
 											this.Session.UebungsListe.forEach((mPtrUebung) => {
@@ -212,7 +212,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 	}
 
 	ngOnDestroy() {
-		DexieSvcService.CmpAktuellesProgramm = DexieSvcService.AktuellesProgramm.Copy();
+		DexieSvcService.CmpAktuellesProgramm = DexieSvcService.AktuellesProgramm.Copy(new ProgramCopyPara());
 		if (this.fSessionStatsOverlayComponent) this.fSessionStatsOverlayComponent.close();
 	}
 

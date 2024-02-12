@@ -1,11 +1,12 @@
-import { ISession, Session, SessionCopyPara } from 'src/Business/Session/Session';
-import { DexieSvcService } from './../../app/services/dexie-svc.service';
+import { ISession, Session } from 'src/Business/Session/Session';
+import { DexieSvcService, ProgramCopyPara, SessionCopyPara } from './../../app/services/dexie-svc.service';
 import { Satz } from '../Satz/Satz';
 import { SessionStatus } from '../SessionDB';
 import { ProgramModulTyp } from 'src/app/app.module';
 
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
+
 
 
 export enum ProgrammTyp {
@@ -26,7 +27,6 @@ export interface ITrainingsProgramm {
     FkVorlageProgramm: number;
     MaxSessions: number;
     Name: string;
-    UpperCaseName: string;
     ProgrammKategorie: ProgrammKategorie;
     ProgrammTyp: ProgrammTyp;
     SessionListe: Array<ISession>;
@@ -34,7 +34,7 @@ export interface ITrainingsProgramm {
     Zyklen: number;
     Expanded: boolean;
     Init(aSessions: Array<ISession>): void;
-    Copy(): ITrainingsProgramm;
+    Copy(aProgramCopyPara: ProgramCopyPara): ITrainingsProgramm;
     ErstelleSessionsAusVorlage(aProgrammKategorie: ProgrammKategorie): ITrainingsProgramm;
     DeserializeProgramm(aJsonData: Object): ITrainingsProgramm;
     hasChanged(aCmpProgramm: ITrainingsProgramm): Boolean;
@@ -59,7 +59,7 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
     public FkVorlageProgramm: number = 0;
     public MaxSessions: number = 0;
     public Name: string = "";
-    public UpperCaseName: string = '';
+    public CaseName: string = '';
     public ProgrammKategorie: ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
     public ProgrammTyp: ProgrammTyp = ProgrammTyp.Custom;
     public Bearbeitbar: Boolean = true;
@@ -79,8 +79,8 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
     }
 
     public static StaticIsEqual(aProgramm1: ITrainingsProgramm, aProgramm2: ITrainingsProgramm): boolean {
-        const mCmpProgramm1: ITrainingsProgramm = aProgramm1.Copy();  
-        const mCmpProgramm2: ITrainingsProgramm = aProgramm2.Copy()  
+        const mCmpProgramm1: ITrainingsProgramm = aProgramm1.Copy(new ProgramCopyPara());  
+        const mCmpProgramm2: ITrainingsProgramm = aProgramm2.Copy(new ProgramCopyPara());  
 
         if (mCmpProgramm1.SessionListe.length != mCmpProgramm2.SessionListe.length)
             return false;
@@ -155,17 +155,21 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
          });
     }
 
-    public Copy(): ITrainingsProgramm {
-        const mCopyofProgram: ITrainingsProgramm = cloneDeep(this);
-        mCopyofProgram.SessionListe = [];
-        const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
-		mSessionCopyPara.Komplett = true;
-		mSessionCopyPara.CopySessionID = true;
-		mSessionCopyPara.CopyUebungID = true;
-		mSessionCopyPara.CopySatzID = true;
+    public Copy(aProgramCopyPara: ProgramCopyPara): ITrainingsProgramm {
+        const mCopyOfProgram: ITrainingsProgramm = cloneDeep(this);
+        
+        if (aProgramCopyPara.CopyProgramID === false)
+            mCopyOfProgram.id = undefined;
+            
+        mCopyOfProgram.SessionListe = [];
+        // const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+		// mSessionCopyPara.Komplett = true;
+		// mSessionCopyPara.CopySessionID = true;
+		// mSessionCopyPara.CopyUebungID = true;
+		// mSessionCopyPara.CopySatzID = true;
         for (let index = 0; index < this.SessionListe.length; index++) 
-            mCopyofProgram.SessionListe.push(Session.StaticCopy(this.SessionListe[index],mSessionCopyPara));
-        return mCopyofProgram;
+            mCopyOfProgram.SessionListe.push(Session.StaticCopy(this.SessionListe[index],aProgramCopyPara));
+        return mCopyOfProgram;
     }
 
     static createWorkOut(aDbModul: DexieSvcService, aProgramm: ITrainingsProgramm) {
@@ -173,8 +177,8 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
         aDbModul.OpenWorkoutForm(aProgramm);
     }
 
-    public ErstelleSessionsAusVorlage(aProgrammKategorie : ProgrammKategorie): ITrainingsProgramm {
-        const mResult: ITrainingsProgramm = this.Copy();
+    public ErstelleSessionsAusVorlage(aProgrammKategorie: ProgrammKategorie): ITrainingsProgramm {
+        const mResult: ITrainingsProgramm = this.Copy(new ProgramCopyPara());
         if (this.ProgrammKategorie === ProgrammKategorie.Vorlage)
             mResult.FkVorlageProgramm = this.id;
         else

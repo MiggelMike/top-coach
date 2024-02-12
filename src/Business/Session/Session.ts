@@ -1,4 +1,4 @@
-import { cMinDatum, cWeightFormat } from './../../app/services/dexie-svc.service';
+import { SessionCopyPara, cMinDatum, cWeightFormat } from './../../app/services/dexie-svc.service';
 import { SessionDB, Pause, ISessionDB, SessionStatus } from './../SessionDB';
 import { Zeitraum, MaxZeitraum } from './../Dauer';
 import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
@@ -51,12 +51,7 @@ export interface ISession extends ISessionDB {
     Vollstaendig: boolean; 
 }
 
-export class SessionCopyPara {
-    Komplett: boolean = true;
-    CopySessionID: boolean = true;
-    CopyUebungID: boolean = true;
-    CopySatzID: boolean = true;
-}
+
 
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
 export class Session implements ISession {

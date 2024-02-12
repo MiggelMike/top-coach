@@ -1,10 +1,10 @@
 import { DateFormatTyp, Datum } from './../../../Business/Datum';
-import { HistorySession, ISession, NoResetTyp, SessionCopyPara } from "src/Business/Session/Session";
+import { HistorySession, ISession, NoResetTyp } from "src/Business/Session/Session";
 import { ISessionDB, SessionDB } from "./../../../Business/SessionDB";
 import { SessionStatus } from "../../../Business/SessionDB";
 import { UebungWaehlenData } from "./../../uebung-waehlen/uebung-waehlen.component";
 import { UebungsKategorie02 } from "./../../../Business/Uebung/Uebung";
-import { DexieSvcService, onDeleteFn, ProgrammParaDB, SatzParaDB, UebungParaDB } from "./../../services/dexie-svc.service";
+import { DexieSvcService, onDeleteFn, ProgrammParaDB, SatzParaDB, SessionCopyPara, UebungParaDB } from "./../../services/dexie-svc.service";
 import { Session } from "./../../../Business/Session/Session";
 import { ITrainingsProgramm, TrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
 import { Output, EventEmitter, Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";

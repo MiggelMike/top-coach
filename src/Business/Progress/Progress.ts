@@ -1,12 +1,10 @@
-import { ParaDB, cMinDatum, SortOrder } from './../../app/services/dexie-svc.service';
 import { GewichtDiff } from './../Satz/Satz';
 import { AfterLoadFn, DexieSvcService  } from 'src/app/services/dexie-svc.service';
 import { ITrainingsProgramm, TrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
-import { ISession, Session, SessionCopyPara } from './../Session/Session';
+import { ISession, Session  } from './../Session/Session';
 import { SessionStatus } from 'src/Business/SessionDB';
 import { SaetzeStatus, Uebung, WdhVorgabeStatus } from "../Uebung/Uebung";
 import { Satz, SatzStatus } from '../Satz/Satz';
-import { retry } from 'rxjs';
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual')
 
