@@ -742,7 +742,7 @@ export class DexieSvcService extends Dexie {
 		if (DexieSvcService.ModulTyp === null)
 			DexieSvcService.ModulTyp = ProgramModulTyp.Kein;
 		// 
-		    //  Dexie.delete("ConceptCoach");
+		    //   Dexie.delete("ConceptCoach");
 		this.version(44).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
@@ -1463,45 +1463,55 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async LadeAktuellesProgramm(aProgrammParaDB?: ProgrammParaDB): Promise<ITrainingsProgramm> {
-		DexieSvcService.AktuellesProgramm = null;
-		DexieSvcService.CmpAktuellesProgramm = null;
-		let mHelpProgrammParaDB: ProgrammParaDB;
-		// Wenn keine Übergabe-Parameter vorhanden sind, hier lokale erzeugen. 
-		if (mHelpProgrammParaDB === undefined) {
-			mHelpProgrammParaDB = new ProgrammParaDB();
-			mHelpProgrammParaDB.WhereClause = "ProgrammKategorie";
-			mHelpProgrammParaDB.anyOf = () => {
-				return ProgrammKategorie.AktuellesProgramm as any;
-			};
-			// Sessions laden
-			mHelpProgrammParaDB.SessionBeachten = true;
-			mHelpProgrammParaDB.SessionParaDB = new SessionParaDB();
-			mHelpProgrammParaDB.SessionParaDB.WhereClause = "[FK_Programm+Kategorie02]";
-			mHelpProgrammParaDB.SessionParaDB.anyOf = (aProgramm: ITrainingsProgramm) => {
-				return [[aProgramm.id, SessionStatus.Laueft], [aProgramm.id, SessionStatus.Pause], [aProgramm.id, SessionStatus.Wartet]];
-			};
-			// Übungen laden
-			mHelpProgrammParaDB.SessionParaDB.UebungenBeachten = true;
-			mHelpProgrammParaDB.SessionParaDB.UebungParaDB = new UebungParaDB();
-			mHelpProgrammParaDB.SessionParaDB.UebungParaDB.WhereClause = "SessionID";
-			mHelpProgrammParaDB.SessionParaDB.UebungParaDB.anyOf = (aSession) => {
-				return aSession.ID;
-			};
-			mHelpProgrammParaDB.SessionParaDB.UebungParaDB.SaetzeBeachten = true;
-		}
-		else mHelpProgrammParaDB = aProgrammParaDB;
+		const mDialogData = new DialogData();
+		mDialogData.height = '100px';
+		mDialogData.ShowOk = false;
+		mDialogData.textZeilen.push(`Loading current workout!`);
+		this.fDialogeService.Loading(mDialogData);
+		try {
+			DexieSvcService.AktuellesProgramm = null;
+			DexieSvcService.CmpAktuellesProgramm = null;
+			let mHelpProgrammParaDB: ProgrammParaDB;
+			// Wenn keine Übergabe-Parameter vorhanden sind, hier lokale erzeugen. 
+			if (mHelpProgrammParaDB === undefined) {
+				mHelpProgrammParaDB = new ProgrammParaDB();
+				mHelpProgrammParaDB.WhereClause = "ProgrammKategorie";
+				mHelpProgrammParaDB.anyOf = () => {
+					return ProgrammKategorie.AktuellesProgramm as any;
+				};
+				// Sessions laden
+				mHelpProgrammParaDB.SessionBeachten = true;
+				mHelpProgrammParaDB.SessionParaDB = new SessionParaDB();
+				mHelpProgrammParaDB.SessionParaDB.WhereClause = "[FK_Programm+Kategorie02]";
+				mHelpProgrammParaDB.SessionParaDB.anyOf = (aProgramm: ITrainingsProgramm) => {
+					return [[aProgramm.id, SessionStatus.Laueft], [aProgramm.id, SessionStatus.Pause], [aProgramm.id, SessionStatus.Wartet]];
+				};
+				// Übungen laden
+				mHelpProgrammParaDB.SessionParaDB.UebungenBeachten = true;
+				mHelpProgrammParaDB.SessionParaDB.UebungParaDB = new UebungParaDB();
+				mHelpProgrammParaDB.SessionParaDB.UebungParaDB.WhereClause = "SessionID";
+				mHelpProgrammParaDB.SessionParaDB.UebungParaDB.anyOf = (aSession) => {
+					return aSession.ID;
+				};
+				mHelpProgrammParaDB.SessionParaDB.UebungParaDB.SaetzeBeachten = true;
+			}
+			else mHelpProgrammParaDB = aProgrammParaDB;
 		
-		return this.LadeProgrammeEx(mHelpProgrammParaDB)
-			.then((aProgramme) => {
-				DexieSvcService.AktuellesProgramm = null;
-				if (aProgramme.length > 0) {
-					DexieSvcService.AktuellesProgramm = aProgramme[0];
-					DexieSvcService.AktuellesProgramm.SessionListe.forEach((aSession) => aSession.Vollstaendig = true);
-					DexieSvcService.CmpAktuellesProgramm = DexieSvcService.AktuellesProgramm.Copy(new ProgramCopyPara());
-				}
-					
-				return DexieSvcService.AktuellesProgramm;
-			});
+			return this.LadeProgrammeEx(mHelpProgrammParaDB)
+				.then((aProgramme) => {
+					DexieSvcService.AktuellesProgramm = null;
+					if (aProgramme.length > 0) {
+						DexieSvcService.AktuellesProgramm = aProgramme[0];
+						DexieSvcService.AktuellesProgramm.SessionListe.forEach((aSession) => aSession.Vollstaendig = true);
+						DexieSvcService.CmpAktuellesProgramm = DexieSvcService.AktuellesProgramm.Copy(new ProgramCopyPara());
+					}
+					this.fDialogeService.fDialog.closeAll();		
+					return DexieSvcService.AktuellesProgramm;
+				});
+		} catch (err) {
+			this.fDialogeService.fDialog.closeAll();
+			return DexieSvcService.AktuellesProgramm;
+		}
 	}
 
 	public LadeAktuellesProgrammEx() {
