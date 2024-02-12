@@ -68,12 +68,24 @@ export class Programm02Component implements OnInit, IProgramModul {
 		}
 		else {
 			// Nach unten schieben
-			mSessionPtr = this.programm.SessionListe[mEvent.currentIndex];
-			this.programm.SessionListe = this.programm.SessionListe.copyWithin(mEvent.currentIndex, mEvent.previousIndex, mEvent.currentIndex);
-			this.programm.SessionListe[mEvent.previousIndex] = mSessionPtr;
+			mSessionPtr = this.programm.SessionListe[mEvent.previousIndex];
+
+			const mVorCurrentListe: Array<ISession> = [];
+			for (let index = mEvent.previousIndex + 1; index <= mEvent.currentIndex; index++) 
+				mVorCurrentListe.push(this.programm.SessionListe[index]);
+
+			mVorCurrentListe.push(mSessionPtr);
+			
+			const mNachCurrentListe: Array<ISession> = [];
+			for (let index = mEvent.currentIndex + 1; index < this.programm.SessionListe.length; index++)
+				mNachCurrentListe.push(this.programm.SessionListe[index]);
+
+			this.programm.SessionListe = mVorCurrentListe;
+			this.programm.SessionListe = this.programm.SessionListe.concat(mNachCurrentListe);
 		}
 		
 		this.programm.NummeriereSessions();
+		this.SaveChanges();
 	 }
 	
 	GestartedWann(aSess: Session): string{
