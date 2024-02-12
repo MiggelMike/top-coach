@@ -641,28 +641,28 @@ export class DexieSvcService extends Dexie {
 			mProgramm.ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
 
 			if (mProgramm.SessionListe) {
-				mProgramm.SessionListe = [];
-				for (let index = 0; index < aSelectedProgram.SessionListe.length; index++) {
-					const mPrtSession = aSelectedProgram.SessionListe[index];
+				// mProgramm.SessionListe = [];
+				for (let index = 0; index < mProgramm.SessionListe.length; index++) {
+					const mNeueSessionPtr = mProgramm.SessionListe[index];
 
-					const mSessionCopyPara = new SessionCopyPara();
-					mSessionCopyPara.Komplett = true;
-					mSessionCopyPara.CopySessionID = false;
-					mSessionCopyPara.CopyUebungID = false;
-					mSessionCopyPara.CopySatzID = false;
-					const mNeueSession = Session.StaticCopy(mPrtSession as Session, mSessionCopyPara);
-					mNeueSession.ListenIndex = index;
-					mNeueSession.FK_VorlageProgramm = aSelectedProgram.id;
+					// const mSessionCopyPara = new SessionCopyPara();
+					// mSessionCopyPara.Komplett = true;
+					// mSessionCopyPara.CopySessionID = false;
+					// mSessionCopyPara.CopyUebungID = false;
+					// mSessionCopyPara.CopySatzID = false;
+					// const mNeueSession = Session.StaticCopy(mPrtSession as Session, mSessionCopyPara);
+					// mNeueSession.ListenIndex = index;
+					mNeueSessionPtr.FK_VorlageProgramm = aSelectedProgram.id;
 
-					mNeueSession.UebungsListe.forEach((mUebung) => {
-						mUebung.WarmUpVisible = (mUebung.AufwaermSatzListe !== undefined) && (mUebung.AufwaermSatzListe.length > 0);
-						mUebung.CooldownVisible = (mUebung.AbwaermSatzListe !== undefined) && (mUebung.AbwaermSatzListe.length > 0);
-					});
+					// mNeueSession.UebungsListe.forEach((mUebung) => {
+					// 	mUebung.WarmUpVisible = (mUebung.AufwaermSatzListe !== undefined) && (mUebung.AufwaermSatzListe.length > 0);
+					// 	mUebung.CooldownVisible = (mUebung.AbwaermSatzListe !== undefined) && (mUebung.AbwaermSatzListe.length > 0);
+					// });
 
 
 					if (aInitialWeightList !== undefined) {
 						aInitialWeightList.forEach((iw) => {
-							const mUebung = mNeueSession.UebungsListe.find((u) => u.FkUebung === iw.UebungID);
+							const mUebung = mNeueSessionPtr.UebungsListe.find((u) => u.FkUebung === iw.UebungID);
 							if (mUebung !== undefined) {
 								mUebung.ArbeitsSatzListe.forEach((sz) => {
 									sz.GewichtVorgabe = iw.Weight;
@@ -672,7 +672,7 @@ export class DexieSvcService extends Dexie {
 							}
 						});
 					}
-					mProgramm.SessionListe.push(mNeueSession);
+					// mProgramm.SessionListe.push(mNeueSession);
 				}
 
 				DexieSvcService.AktuellesProgramm = mProgramm;
@@ -2270,13 +2270,14 @@ export class DexieSvcService extends Dexie {
 				return aTrainingsProgramm;
 			})
 			.catch((err) => {
-				if (err.message.includes('Name+ProgrammKategorie')) {
-					const mDialogData = new DialogData();
-					mDialogData.textZeilen.push(`There is already a program with name "${aTrainingsProgramm.Name.trim().toUpperCase()}"!`);
-					mDialogData.textZeilen.push(`Progam names are saved case insensitive!`);
-					this.fDialogeService.Hinweis(mDialogData);
-				}
-			
+				const mDialogData = new DialogData();
+				
+				if (err.message.includes('Name+ProgrammKategorie')) 
+					mDialogData.textZeilen.push(`There is already a program with name "${aTrainingsProgramm.Name.trim()}"!`);
+				else
+					mDialogData.textZeilen.push(err.message);
+				
+				this.fDialogeService.Hinweis(mDialogData);
 				return aTrainingsProgramm;
 			});
 	}

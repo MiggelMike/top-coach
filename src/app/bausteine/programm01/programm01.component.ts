@@ -42,6 +42,7 @@ export class Programm01Component implements OnInit, IProgramModul, IProgrammTyp 
     CopyProgramm(aEvent: Event, aProgramm: ITrainingsProgramm){
         aEvent.stopPropagation();
         const mProgramCopyPara: ProgramCopyPara = new ProgramCopyPara();
+        mProgramCopyPara.CopyProgramID = false;
         mProgramCopyPara.CopySatzID = false;
         mProgramCopyPara.CopySessionID = false;
         mProgramCopyPara.CopyUebungID = false;
