@@ -56,6 +56,7 @@ export class BodyWeight {
         if (this.GewichtsEinheit !== DexieSvcService.GewichtsEinheit)
             aVal = AppData.StaticConvertWeight(this.BodyWeightDB.Weight, DexieSvcService.GewichtsEinheit);
 
+        this.GewichtsEinheit = DexieSvcService.GewichtsEinheit;
         this.BodyWeightDB.Weight = Number(aVal);
     }
 
