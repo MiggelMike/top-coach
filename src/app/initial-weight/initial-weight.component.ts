@@ -52,7 +52,12 @@ export class InitialWeightComponent implements OnInit {
 					const mInitialWeight = new InitialWeight();
 					mInitialWeight.Name = u.Name;
 					mInitialWeight.UebungID = u.FkUebung;
-					mInitialWeight.Weight = 0;
+					
+					if (u.ArbeitsSatzListe.length > 0)
+						mInitialWeight.Weight = u.ArbeitsSatzListe[0].GewichtAusgefuehrt;
+					else
+						mInitialWeight.Weight = 0;
+					
 					this.InitialWeightList.push(mInitialWeight);
 				});
 					
