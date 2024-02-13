@@ -164,6 +164,10 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
         //satz.getBodyWeightText('+ ')
     //}
 
+    isVisible(): boolean{
+        return DexieSvcService.ModulTyp !== ProgramModulTyp.SelectWorkoutEdit;
+    }
+
     public MouseDown(aSatz: Satz, aEvent: any) {
         aEvent.stopPropagation();
         if (this.Disabled(aSatz))
@@ -187,13 +191,21 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
         
     }    
     
-    DoPlateCalc(aSatz: Satz, aUebung: Uebung, aSess: ISession, aProgram: ITrainingsProgramm, aDbModul: DexieSvcService, aLeft: number, aTop: number,
+    DoPlateCalc(
+        aSatz: Satz,
+        aUebung: Uebung,
+        aSess: ISession,
+        aProgram: ITrainingsProgramm,
+        aDbModul: DexieSvcService,
+        aLeft: number,
+        aTop: number,
         aDialogService: DialogeService,
         aGewichtEinheitsText: string,
         aStoppUhrFn: StoppUhrFn,
         aStoppUhrService: StoppuhrSvcService,
         aRowNumber: number,
-        aSatzDone?: boolean, aFormCloseFn?: onFormCloseFn): void
+        aSatzDone?: boolean,
+        aFormCloseFn?: onFormCloseFn): void
     {
         this.interval = setInterval(() => {
             clearInterval(this.interval);

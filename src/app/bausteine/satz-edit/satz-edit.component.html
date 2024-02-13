@@ -40,126 +40,88 @@
     <div class="row-start-left-gap-3">
         <div class="center-item align-right NumberLabel" fxFlex="25px">
             <mat-label>{{rowNum+1}}</mat-label>
+    </div>
+
+    <!-- Ausgefuehrtes-Gewicht -->
+    <div class="weight-column">
+        <div class="align-right label">{{satz.GewichtVorgabeText}}</div> 
+        <input  matInput 
+                mask="9999.00"
+                matTooltip="Hold to open details"
+                matTooltipPosition="above"
+                [matTooltipDisabled]="false"
+                class="align-right tc-font-size-smaller weight-column"
+                [ngModel]="satz.GewichtAusgefuehrtText" 
+                (ngModelChange)="CalcPlates($event)"
+                (focusout)="SetWeightAusgefuehrt($event)"
+                (mousedown)="MouseDown(satz,$event)"
+                (mouseup)="MouseUp($event)"
+                (touchstart)="MouseDown(satz,$event)"
+                (touchend)="MouseUp($event)"
+                [disabled]="Disabled(satz)"
+                type="text">
+    </div>
+
+    <ng-container *ngIf="  (SatzTyp === satzTyp.Aufwaermen && sessUebung.checkWarmUpSatzIncludedBodyWeight())
+                            ||(SatzTyp === satzTyp.Training && sessUebung.checkArbeitsSatzIncludedBodyWeight())
+                            ||(SatzTyp === satzTyp.Abkuehlen && sessUebung.checkCoolDownSatzIncludedBodyWeight())
+                            ">
+        <div  class="align-right">
+            <mat-label>Bodyweight</mat-label>
+            <input matInput  [disabled]="true" 
+            [value]="satz.getBodyWeightText('+ ')"
+            type="text">
         </div>
+    </ng-container>
 
-        <ng-container *ngIf="(   sess.Kategorie02 === sessionStatus.Pause 
-                              || sess.Kategorie02 === sessionStatus.Laueft 
-                              || sess.Kategorie02 === sessionStatus.Fertig); then noShowPlan else showPlan"></ng-container>
-            <!-- Training laeuft -->
-            <ng-template #noShowPlan>
-                    <!-- Ausgefuehrtes-Gewicht -->
-                    <div class="weight-column">
-                        <div class="align-right label">{{satz.GewichtVorgabeText}}</div> 
-                        <input  matInput 
-                                mask="9999.00"
-                                matTooltip="Hold to open details"
-                                matTooltipPosition="above"
-                                [matTooltipDisabled]="false"
-                                class="align-right tc-font-size-smaller weight-column"
-                                [ngModel]="satz.GewichtAusgefuehrtText" 
-                                (ngModelChange)="CalcPlates($event)"
-                                (focusout)="SetWeightAusgefuehrt($event)"
-                                (mousedown)="MouseDown(satz,$event)"
-                                (mouseup)="MouseUp($event)"
-                                (touchstart)="MouseDown(satz,$event)"
-                                (touchend)="MouseUp($event)"
-                                [disabled]="Disabled(satz)"
-                                type="text">
-                    </div>
+    <!-- Ausgefuerte Wdh. -->
+    <div class="rep-column">
+        <div class="align-right label">{{satz.WdhVonVorgabe}}</div> 
+        <input matInput 
+                class="align-right tc-font-size-smaller rep-column"
+                matTooltip="Hold to open details"
+                matTooltipPosition="above"
+                [matTooltipDisabled]="false"
+                mask="9999"
+                [ngModel]="satz.WdhAusgefuehrtText" 
+                [disabled]="Disabled(satz)"
+                (click)="onClickWdhAusgefuehrt($event)" 
+                (focusout)="SetWdhAusgefuehrt($event)" 
+                (mousedown)="MouseDown(satz,$event)"
+                (mouseup)="MouseUp($event)"
+                (touchstart)="MouseDown(satz,$event)"
+                (touchend)="MouseUp($event)"
+                type="text">
+    </div>
+    
+    <ng-container *ngIf="isVisible() === true; then running else planning"></ng-container>
 
-                    <ng-container *ngIf="  (SatzTyp === satzTyp.Aufwaermen && sessUebung.checkWarmUpSatzIncludedBodyWeight())
-                                         ||(SatzTyp === satzTyp.Training && sessUebung.checkArbeitsSatzIncludedBodyWeight())
-                                         ||(SatzTyp === satzTyp.Abkuehlen && sessUebung.checkCoolDownSatzIncludedBodyWeight())
-                                          ">
-                        <div  class="align-right">
-                            <mat-label>Bodyweight</mat-label>
-                            <input matInput  [disabled]="true" 
-                            [value]="satz.getBodyWeightText('+ ')"
-                            type="text">
-                        </div>
-                    </ng-container>
+    <ng-template #running>
+        <!-- AMRAP  -->
+        <div class="ml-10 center-item pad-top-12" fxFlex="30px">
+            <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP" 
+            ></mat-checkbox>
+        </div>
+        <!-- Satz Include Bodyweight-Flag -->
+        <div class="ml-5 center-item pad-top-12" fxFlex="25px" >
+            <mat-checkbox  [disabled]="Disabled(satz)" [(ngModel)]="satz.IncludeBodyweight"></mat-checkbox>
+        </div>
+        <!-- Satz Fertig-Flag -->
+        <div class="ml-5 center-item pad-top-12" fxFlex="25px">
+            <mat-checkbox [(ngModel)]="SatzFertig"
+            (change)="onClickSatzFertig(satz, $event)"
+            ></mat-checkbox>
+        </div>
+    </ng-template>
 
-                <!-- Ausgefuerte Wdh. -->
-                <div class="rep-column">
-                    <div class="align-right label">{{satz.WdhVonVorgabe}}</div> 
-                    <input matInput 
-                           class="align-right tc-font-size-smaller rep-column"
-                           matTooltip="Hold to open details"
-                           matTooltipPosition="above"
-                           [matTooltipDisabled]="false"
-                           mask="9999"
-                           [ngModel]="satz.WdhAusgefuehrtText" 
-                           [disabled]="Disabled(satz)"
-                           (click)="onClickWdhAusgefuehrt($event)" 
-                           (focusout)="SetWdhAusgefuehrt($event)" 
-                           (mousedown)="MouseDown(satz,$event)"
-                           (mouseup)="MouseUp($event)"
-                           (touchstart)="MouseDown(satz,$event)"
-                           (touchend)="MouseUp($event)"
-                           type="text">
-                </div>
-                <!-- AMRAP  -->
-                <div class="ml-10 center-item pad-top-12" fxFlex="30px">
-                    <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP" 
-                    ></mat-checkbox>
-                </div>
-                <!-- Satz Include Bodyweight-Flag -->
-                <div class="ml-5 center-item pad-top-12" fxFlex="25px">
-                    <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.IncludeBodyweight"></mat-checkbox>
-                </div>
-                <!-- Satz Fertig-Flag -->
-                <div class="ml-5 center-item pad-top-12" fxFlex="25px">
-                    <mat-checkbox [(ngModel)]="SatzFertig"
-                    (change)="onClickSatzFertig(satz, $event)"
-                    ></mat-checkbox>
-                </div>
-            </ng-template>
+    <ng-template #planning>
+        <!-- AMRAP  -->
+        <div class="ml-10 center-item pad-top-12" fxFlex="30px">
+            <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP" 
+            ></mat-checkbox>
+        </div>
+    </ng-template>
 
-            <!-- Training laeuft nicht -->
-            <ng-template #showPlan>
-                <!-- Geplantes Vorgabe-Gewicht -->
-                <div class="weight-column align-right">
-                    <input  matInput 
-                            mask="9999.000"
-                            class="align-right tc-font-size-smaller weight-column mg-top-12"
-                            maxlength="8"
-                            [ngModel]="satz.GewichtAusgefuehrtText" 
-                            (focusout)="SetWeightAusgefuehrt($event)"
-                            (click)="WeightAusgefuehrtClick($event)"
-                            (ngModelChange)="CalcPlates($event)"
-                            type="text"
-                    >
-                </div>
-
-                <!-- Geplante Von-Vorgabe-Wdh. -->
-                <div class="rep-column align-right">
-                    <input  matInput 
-                        mask="9999"
-                            class="align-right tc-font-size-smaller rep-column mg-top-12"
-                            maxlength="4"
-                            [ngModel]="satz.WdhVonVorgabeText" 
-                            (focusout)="SetVonWdhVorgabe($event)" 
-                            (click)="onClickWdhVonVorgabe($event)" 
-                            type="text"
-                    >
-                </div>
-
-                <!-- Geplante Bis-Vorgabe-Wdh. -->
-                <!-- <mat-form-field class="align-right" fxFlex="30px">
-                    <mat-label>To</mat-label>
-                    <input  matInput [textMask]="{mask: repMask, guide: false}" 
-                            [ngModel]="satz.WdhBisVorgabe" 
-                            (focusout)="SetBisWdhVorgabe($event)" 
-                            (click)="onClickWdhBisVorgab($event)" 
-                            type="text"
-                    >
-                </mat-form-field> -->
-
-                <!-- AMRAP  -->
-                <div class="ml-10 center-item mg-top-12" layout-align="center center" fxFlex="35px">
-                    <mat-checkbox [(ngModel)]="satz.AMRAP"></mat-checkbox>
-                </div>
-            </ng-template>
 
         <div class="ml-10 center-item mg-top-20" layout-align="center center">
             <a [ngClass]="['link-button-font']" mat-flat-button (click)="DeleteSet()">Delete</a>
