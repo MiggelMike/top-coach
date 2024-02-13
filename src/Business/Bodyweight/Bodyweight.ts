@@ -1,7 +1,7 @@
-import { GlobalService } from 'src/app/services/global.service';
 import { formatNumber } from "@angular/common";
 import { DexieSvcService, cWeightFormat } from "src/app/services/dexie-svc.service";
 import { Datum } from '../Datum';
+import { AppData, GewichtsEinheit } from "../Coach/Coach";
 
 
 var cloneDeep = require('lodash.clonedeep');
@@ -11,13 +11,14 @@ export class BodyWeightDB {
     ID: number;
     Datum: Date;
     Weight: number = 0;
+    GewichtsEinheit: GewichtsEinheit = DexieSvcService.GewichtsEinheit;
 }
 
 export class BodyWeight {
     BodyWeightDB: BodyWeightDB;
     
     constructor(aBodyWeightDB: BodyWeightDB = undefined) {
-        if (aBodyWeightDB === undefined)
+        if (aBodyWeightDB === undefined) 
             this.BodyWeightDB = new BodyWeightDB();
         else
             this.BodyWeightDB = aBodyWeightDB;
@@ -46,9 +47,15 @@ export class BodyWeight {
     //#endregion
     //#region Weight 
     get Weight(): number {
+        if (this.GewichtsEinheit !== DexieSvcService.GewichtsEinheit)
+            return AppData.StaticConvertWeight(this.BodyWeightDB.Weight, DexieSvcService.GewichtsEinheit);
+        
         return Number(this.BodyWeightDB.Weight);
     }
     set Weight(aVal: number) {
+        if (this.GewichtsEinheit !== DexieSvcService.GewichtsEinheit)
+            aVal = AppData.StaticConvertWeight(this.BodyWeightDB.Weight, DexieSvcService.GewichtsEinheit);
+
         this.BodyWeightDB.Weight = Number(aVal);
     }
 
@@ -56,6 +63,16 @@ export class BodyWeight {
         return formatNumber(this.Weight,'en-US',cWeightFormat);
     }
     //#endregion
+
+    //#region GewichtsEinheit
+    get GewichtsEinheit(): GewichtsEinheit {
+        return this.BodyWeightDB.GewichtsEinheit;
+    }
+    set GewichtsEinheit(value: GewichtsEinheit) {
+        this.BodyWeightDB.GewichtsEinheit = value;;
+    }
+    //#endregion
+
 
     public Copy(): BodyWeight {
         return cloneDeep(this);

@@ -370,6 +370,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 				const mNeuBodyWeight: BodyWeight = new BodyWeight();
 				mNeuBodyWeight.Datum = this.Session.GestartedWann;
 				mNeuBodyWeight.Weight = this.Session.BodyWeight.Weight;
+				mNeuBodyWeight.GewichtsEinheit = DexieSvcService.GewichtsEinheit;
 				this.fDbModule.BodyweightSpeichern(mNeuBodyWeight);
 			}
 			else if (this.Session.BodyWeight !== undefined || this.Session.BodyWeight.Datum.valueOf() === this.Session.GestartedWann.valueOf()) {

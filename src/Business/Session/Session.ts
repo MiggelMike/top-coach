@@ -1,10 +1,10 @@
-import { SessionCopyPara, cMinDatum, cWeightFormat } from './../../app/services/dexie-svc.service';
+import { DexieSvcService, SessionCopyPara, cMinDatum, cWeightFormat } from './../../app/services/dexie-svc.service';
 import { SessionDB, Pause, ISessionDB, SessionStatus } from './../SessionDB';
 import { Zeitraum, MaxZeitraum } from './../Dauer';
 import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
 import { Satz, SatzStatus, SatzTyp } from '../Satz/Satz';
 import { WeightProgress } from '../Progress/Progress';
-import { GewichtsEinheit } from '../Coach/Coach';
+import { AppData, GewichtsEinheit } from '../Coach/Coach';
 import { BodyWeight } from '../Bodyweight/Bodyweight';
 import { formatNumber } from '@angular/common';
 import { DateFormatTyp, Datum } from '../Datum';
@@ -490,6 +490,10 @@ export class Session implements ISession {
                 mResult = mResult + mUebung.LiftedWeight;
             }
         }
+
+        if (this.GewichtsEinheit !== DexieSvcService.GewichtsEinheit)
+            mResult = AppData.StaticConvertWeight(mResult, DexieSvcService.GewichtsEinheit);
+
         return mResult;
     }
 

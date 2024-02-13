@@ -113,7 +113,7 @@ export class SatzDB implements ISatz {
     public SatzTyp: SatzTyp = SatzTyp.Training;
     public Prozent: number = 0;
     public GewichtNaechsteSession: number = 0;
-    public GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
+    public GewichtsEinheit: GewichtsEinheit = DexieSvcService.GewichtsEinheit;;
     public Datum: Date;
     public GewichtAusgefuehrt: number = 0;    
     public WdhAusgefuehrt: number = 0;
@@ -152,6 +152,7 @@ export class SatzDB implements ISatz {
             : SatzPausen.Standard_Max;
         this.Status = aPara.Status ? aPara.Status : SatzStatus.Wartet;
         this.AMRAP = aPara.AMRAP ? aPara.AMRAP : false;
+        this.GewichtsEinheit = DexieSvcService.GewichtsEinheit;
         Satz.StaticCheckMembers(this);
     }
 }
@@ -216,10 +217,15 @@ export class Satz implements ISatz {
     //#endregion GewichtsEinheit
     //#region GewichtNaechsteSession 
     get GewichtNaechsteSession(): number {
+        if (this.GewichtsEinheit !== DexieSvcService.GewichtsEinheit)
+            return AppData.StaticConvertWeight(this.SatzDB.GewichtNaechsteSession, DexieSvcService.GewichtsEinheit);
         return this.SatzDB.GewichtNaechsteSession;
     }
 
     set GewichtNaechsteSession(aGewicht: number) {
+        if (this.GewichtsEinheit !== DexieSvcService.GewichtsEinheit)
+            aGewicht = AppData.StaticConvertWeight(aGewicht, DexieSvcService.GewichtsEinheit);
+
         this.SatzDB.GewichtNaechsteSession = AppData.StaticRoundTo(aGewicht, cWeightDigits);
     }
     //#endregion
@@ -248,6 +254,9 @@ export class Satz implements ISatz {
 
     set GewichtAusgefuehrt(aValue: number)
     {
+        if(this.GewichtsEinheit !== DexieSvcService.GewichtsEinheit)
+            aValue = AppData.StaticConvertWeight(aValue, DexieSvcService.GewichtsEinheit);
+
         this.SatzDB.GewichtAusgefuehrt = AppData.StaticRoundTo(aValue,cWeightDigits);
     }
     //#endregion
@@ -269,6 +278,7 @@ export class Satz implements ISatz {
     get GewichtVorgabe(): number {
         if (this.GewichtsEinheit !== DexieSvcService.GewichtsEinheit)
             return AppData.StaticConvertWeight(this.SatzDB.GewichtVorgabe, DexieSvcService.GewichtsEinheit);
+        
         return AppData.StaticRoundTo(this.SatzDB.GewichtVorgabe,cWeightDigits); 
     }
 
@@ -278,6 +288,9 @@ export class Satz implements ISatz {
 
     
     set GewichtVorgabe(aValue: number) {
+        if (this.GewichtsEinheit !== DexieSvcService.GewichtsEinheit)
+            aValue = AppData.StaticConvertWeight(aValue, DexieSvcService.GewichtsEinheit);
+
         this.SatzDB.GewichtVorgabe = AppData.StaticRoundTo(aValue,cWeightDigits); 
     }
     //#endregion
@@ -386,6 +399,9 @@ export class Satz implements ISatz {
         return AppData.StaticRoundTo(this.SatzDB.BodyWeight, cWeightDigits);
     }
     set BodyWeight(aValue: number) {
+        if (this.GewichtsEinheit !== DexieSvcService.GewichtsEinheit)
+            aValue = AppData.StaticConvertWeight(aValue, DexieSvcService.GewichtsEinheit);
+
         if (Number.isNaN(aValue) === true)
             this.SatzDB.BodyWeight = 0;
         else

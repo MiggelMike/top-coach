@@ -1011,6 +1011,7 @@ export class DexieSvcService extends Dexie {
 					const mBwDB: BodyWeightDB = new BodyWeightDB();
 					mBwDB.Datum = cMinDatum;
 					mBwDB.Weight = 0;
+					mBwDB.GewichtsEinheit = DexieSvcService.GewichtsEinheit;
 					return new BodyWeight(mBwDB);
 				}
 			})

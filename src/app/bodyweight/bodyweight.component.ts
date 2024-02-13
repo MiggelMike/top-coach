@@ -39,7 +39,8 @@ SetDatum(aBodyWeight: BodyWeight, aEvent: any) {
   
   NewBodyweight() {
     const mBodyweight: BodyWeight = new BodyWeight();
-    mBodyweight.Datum = new Date();
+	  mBodyweight.Datum = new Date();
+	  mBodyweight.GewichtsEinheit = DexieSvcService.GewichtsEinheit;
     this.BodyweightList.unshift(mBodyweight);
   }
 
