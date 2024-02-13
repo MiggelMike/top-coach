@@ -235,12 +235,14 @@ export class Satz implements ISatz {
     //#region GewichtAusgefuehrt 
     get GewichtAusgefuehrt():number
     {
+        if(this.GewichtsEinheit !== DexieSvcService.GewichtsEinheit)
+            return AppData.StaticConvertWeight(this.SatzDB.GewichtAusgefuehrt, DexieSvcService.GewichtsEinheit);
         return AppData.StaticRoundTo(this.SatzDB.GewichtAusgefuehrt,cWeightDigits);
     }
 
     get GewichtAusgefuehrtText():string
     {
-        return formatNumber(this.SatzDB.GewichtAusgefuehrt,'en-US',cWeightFormat);
+        return formatNumber(this.GewichtAusgefuehrt,'en-US',cWeightFormat);
     }
 
 
@@ -265,11 +267,13 @@ export class Satz implements ISatz {
     //#endregion
     //#region GewichtVorgabe 
     get GewichtVorgabe(): number {
+        if (this.GewichtsEinheit !== DexieSvcService.GewichtsEinheit)
+            return AppData.StaticConvertWeight(this.SatzDB.GewichtVorgabe, DexieSvcService.GewichtsEinheit);
         return AppData.StaticRoundTo(this.SatzDB.GewichtVorgabe,cWeightDigits); 
     }
 
     get GewichtVorgabeText(): string {
-        return formatNumber(this.SatzDB.GewichtVorgabe,'en-US',cWeightFormat); 
+        return formatNumber(this.GewichtVorgabe,'en-US',cWeightFormat); 
     }
 
     

@@ -160,6 +160,10 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
         this.SetWeightAusgefuehrt($event); 
     }
 
+    //getBodyWeight():string {
+        //satz.getBodyWeightText('+ ')
+    //}
+
     public MouseDown(aSatz: Satz, aEvent: any) {
         aEvent.stopPropagation();
         if (this.Disabled(aSatz))
