@@ -49,7 +49,7 @@ export class BodyWeight {
     get Weight(): number {
         if (this.GewichtsEinheit !== DexieSvcService.GewichtsEinheit)
             return AppData.StaticConvertWeight(this.BodyWeightDB.Weight, DexieSvcService.GewichtsEinheit);
-        
+
         return Number(this.BodyWeightDB.Weight);
     }
     set Weight(aVal: number) {

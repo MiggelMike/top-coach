@@ -4,6 +4,7 @@ import { BodyWeight } from '../../Business/Bodyweight/Bodyweight';
 import { Location } from "@angular/common";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { DialogeService } from '../services/dialoge.service';
+import { GewichtsEinheit } from 'src/Business/Coach/Coach';
 
 @Component({
 	selector: 'app-bodyweight',
@@ -33,7 +34,13 @@ export class BodyweightComponent implements OnInit {
 
 SetDatum(aBodyWeight: BodyWeight, aEvent: any) {
 	aBodyWeight.Datum = aEvent.target.value;
-}
+	}
+	
+	get GewichtsEinheit(): string {
+		if(DexieSvcService.GewichtsEinheit === GewichtsEinheit.KG)
+			return ` (${GewichtsEinheit[GewichtsEinheit.KG]})`;
+		return ` (${GewichtsEinheit[GewichtsEinheit.LBS]})`;
+	}
 	
   ngOnInit(): void { }
   
