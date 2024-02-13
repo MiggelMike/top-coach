@@ -2504,6 +2504,7 @@ export class DexieSvcService extends Dexie {
 
 	public async AppDataSpeichern(aAppData: AppData) {
 		DexieSvcService.AppRec = aAppData;
+		DexieSvcService.GewichtsEinheit = aAppData.GewichtsEinheit;
 		await DexieSvcService.AppDataTable.put(aAppData); //.then( () =>  this.LadeAppData().then ((aAppRec) => this.AppRec = aAppRec ));
 		
 	}

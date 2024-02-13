@@ -35,7 +35,8 @@ export class SettingsComponent implements OnInit {
             this.AppData.GewichtsEinheit = GewichtsEinheit.KG;
         else 
             this.AppData.GewichtsEinheit = GewichtsEinheit.LBS;
-        
+
+        DexieSvcService.GewichtsEinheit = this.AppData.GewichtsEinheit;
         this.fDbModule.AppDataSpeichern(this.AppData);
     }
     //#endregion
@@ -50,6 +51,7 @@ export class SettingsComponent implements OnInit {
         else
             this.AppData.GewichtsEinheit = GewichtsEinheit.KG;
         
+        DexieSvcService.GewichtsEinheit = this.AppData.GewichtsEinheit;
         this.fDbModule.AppDataSpeichern(this.AppData);
 
     }
