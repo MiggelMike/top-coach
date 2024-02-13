@@ -40,88 +40,87 @@
     <div class="row-start-left-gap-3">
         <div class="center-item align-right NumberLabel" fxFlex="25px">
             <mat-label>{{rowNum+1}}</mat-label>
-    </div>
+        </div>
 
-    <!-- Ausgefuehrtes-Gewicht -->
-    <div class="weight-column">
-        <div class="align-right label">{{satz.GewichtVorgabeText}}</div> 
-        <input  matInput 
-                mask="9999.00"
-                matTooltip="Hold to open details"
-                matTooltipPosition="above"
-                [matTooltipDisabled]="false"
-                class="align-right tc-font-size-smaller weight-column"
-                [ngModel]="satz.GewichtAusgefuehrtText" 
-                (ngModelChange)="CalcPlates($event)"
-                (focusout)="SetWeightAusgefuehrt($event)"
-                (mousedown)="MouseDown(satz,$event)"
-                (mouseup)="MouseUp($event)"
-                (touchstart)="MouseDown(satz,$event)"
-                (touchend)="MouseUp($event)"
-                [disabled]="Disabled(satz)"
+        <!-- Ausgefuehrtes-Gewicht -->
+        <div class="weight-column">
+            <div class="align-right label">{{satz.GewichtVorgabeText}}</div> 
+            <input  matInput 
+                    mask="9999.00"
+                    matTooltip="Hold to open details"
+                    matTooltipPosition="above"
+                    [matTooltipDisabled]="false"
+                    class="align-right tc-font-size-smaller weight-column"
+                    [ngModel]="satz.GewichtAusgefuehrtText" 
+                    (ngModelChange)="CalcPlates($event)"
+                    (focusout)="SetWeightAusgefuehrt($event)"
+                    (mousedown)="MouseDown(satz,$event)"
+                    (mouseup)="MouseUp($event)"
+                    (touchstart)="MouseDown(satz,$event)"
+                    (touchend)="MouseUp($event)"
+                    [disabled]="Disabled(satz)"
+                    type="text">
+        </div>
+
+        <ng-container *ngIf="  (SatzTyp === satzTyp.Aufwaermen && sessUebung.checkWarmUpSatzIncludedBodyWeight())
+                                ||(SatzTyp === satzTyp.Training && sessUebung.checkArbeitsSatzIncludedBodyWeight())
+                                ||(SatzTyp === satzTyp.Abkuehlen && sessUebung.checkCoolDownSatzIncludedBodyWeight())
+                                ">
+            <div  class="align-right">
+                <mat-label>Bodyweight</mat-label>
+                <input matInput  [disabled]="true" 
+                [value]="satz.getBodyWeightText('+ ')"
                 type="text">
-    </div>
+            </div>
+        </ng-container>
 
-    <ng-container *ngIf="  (SatzTyp === satzTyp.Aufwaermen && sessUebung.checkWarmUpSatzIncludedBodyWeight())
-                            ||(SatzTyp === satzTyp.Training && sessUebung.checkArbeitsSatzIncludedBodyWeight())
-                            ||(SatzTyp === satzTyp.Abkuehlen && sessUebung.checkCoolDownSatzIncludedBodyWeight())
-                            ">
-        <div  class="align-right">
-            <mat-label>Bodyweight</mat-label>
-            <input matInput  [disabled]="true" 
-            [value]="satz.getBodyWeightText('+ ')"
-            type="text">
+        <!-- Ausgefuerte Wdh. -->
+        <div class="rep-column">
+            <div class="align-right label">{{satz.WdhVonVorgabe}}</div> 
+            <input matInput 
+                    class="align-right tc-font-size-smaller rep-column"
+                    matTooltip="Hold to open details"
+                    matTooltipPosition="above"
+                    [matTooltipDisabled]="false"
+                    mask="9999"
+                    [ngModel]="satz.WdhAusgefuehrtText" 
+                    [disabled]="Disabled(satz)"
+                    (click)="onClickWdhAusgefuehrt($event)" 
+                    (focusout)="SetWdhAusgefuehrt($event)" 
+                    (mousedown)="MouseDown(satz,$event)"
+                    (mouseup)="MouseUp($event)"
+                    (touchstart)="MouseDown(satz,$event)"
+                    (touchend)="MouseUp($event)"
+                    type="text">
         </div>
-    </ng-container>
+        
+        <ng-container *ngIf="isVisible() === true; then running else planning"></ng-container>
 
-    <!-- Ausgefuerte Wdh. -->
-    <div class="rep-column">
-        <div class="align-right label">{{satz.WdhVonVorgabe}}</div> 
-        <input matInput 
-                class="align-right tc-font-size-smaller rep-column"
-                matTooltip="Hold to open details"
-                matTooltipPosition="above"
-                [matTooltipDisabled]="false"
-                mask="9999"
-                [ngModel]="satz.WdhAusgefuehrtText" 
-                [disabled]="Disabled(satz)"
-                (click)="onClickWdhAusgefuehrt($event)" 
-                (focusout)="SetWdhAusgefuehrt($event)" 
-                (mousedown)="MouseDown(satz,$event)"
-                (mouseup)="MouseUp($event)"
-                (touchstart)="MouseDown(satz,$event)"
-                (touchend)="MouseUp($event)"
-                type="text">
-    </div>
-    
-    <ng-container *ngIf="isVisible() === true; then running else planning"></ng-container>
+        <ng-template #running>
+            <!-- AMRAP  -->
+            <div class="ml-10 center-item pad-top-12" fxFlex="30px">
+                <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP" 
+                ></mat-checkbox>
+            </div>
+            <!-- Satz Include Bodyweight-Flag -->
+            <div class="ml-5 center-item pad-top-12" fxFlex="25px" >
+                <mat-checkbox  [disabled]="Disabled(satz)" [(ngModel)]="satz.IncludeBodyweight"></mat-checkbox>
+            </div>
+            <!-- Satz Fertig-Flag -->
+            <div class="ml-5 center-item pad-top-12" fxFlex="25px">
+                <mat-checkbox [(ngModel)]="SatzFertig"
+                (change)="onClickSatzFertig(satz, $event)"
+                ></mat-checkbox>
+            </div>
+        </ng-template>
 
-    <ng-template #running>
-        <!-- AMRAP  -->
-        <div class="ml-10 center-item pad-top-12" fxFlex="30px">
-            <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP" 
-            ></mat-checkbox>
-        </div>
-        <!-- Satz Include Bodyweight-Flag -->
-        <div class="ml-5 center-item pad-top-12" fxFlex="25px" >
-            <mat-checkbox  [disabled]="Disabled(satz)" [(ngModel)]="satz.IncludeBodyweight"></mat-checkbox>
-        </div>
-        <!-- Satz Fertig-Flag -->
-        <div class="ml-5 center-item pad-top-12" fxFlex="25px">
-            <mat-checkbox [(ngModel)]="SatzFertig"
-            (change)="onClickSatzFertig(satz, $event)"
-            ></mat-checkbox>
-        </div>
-    </ng-template>
-
-    <ng-template #planning>
-        <!-- AMRAP  -->
-        <div class="ml-10 center-item pad-top-12" fxFlex="30px">
-            <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP" 
-            ></mat-checkbox>
-        </div>
-    </ng-template>
-
+        <ng-template #planning>
+            <!-- AMRAP  -->
+            <div class="ml-10 center-item pad-top-12" fxFlex="30px">
+                <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP" 
+                ></mat-checkbox>
+            </div>
+        </ng-template>
 
         <div class="ml-10 center-item mg-top-20" layout-align="center center">
             <a [ngClass]="['link-button-font']" mat-flat-button (click)="DeleteSet()">Delete</a>
@@ -130,7 +129,5 @@
         <div class="center-item mg-top-20" layout-align="center center">
             <a [ngClass]="['link-button-font']" mat-flat-button (click)="CopySet()">Copy</a>
         </div>
-
-        
     </div>
 </div>
