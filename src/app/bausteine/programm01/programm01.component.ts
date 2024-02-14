@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { IProgramModul, ProgramModulTyp } from 'src/app/app.module';
 import { NoAutoCreateItem } from 'src/Business/NoAutoCreate';
 import { AppRoutingModule } from 'src/app/app-routing.module';
+import { ToolbarComponent } from '../toolbar/toolbar.component';
 
 
 @Component({
@@ -104,9 +105,10 @@ export class Programm01Component implements OnInit, IProgramModul, IProgrammTyp 
 		mDialogData.textZeilen.push('Preparing program');
 		this.fDialogService.Loading(mDialogData);
 		try {
-			this.fDbModul.SetAktuellesProgramm(this.programm as TrainingsProgramm).then(() => {
+            this.fDbModul.SetAktuellesProgramm(this.programm as TrainingsProgramm).then(() => {
+                ToolbarComponent.StaticNavHome(this.router);
+                // mDialogData.textZeilen[0] = 'program is ready to use';
 				this.fDialogService.fDialog.closeAll();
-				this.router.navigate([''])
 			});
 		} catch (error) {
 			this.fDialogService.fDialog.closeAll();

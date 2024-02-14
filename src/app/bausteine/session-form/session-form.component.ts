@@ -1,3 +1,4 @@
+import { ToolbarComponent } from './../toolbar/toolbar.component';
 import { HistorySession, Session  } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from './../../../Business/TrainingsProgramm/TrainingsProgramm';
 import { UebungService } from "./../../services/uebung.service";
@@ -301,9 +302,9 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 		// if (this.fSessionStatsOverlayComponent !== undefined && this.fSessionStatsOverlayComponent !== null) this.fSessionStatsOverlayComponent.close();
 
 		if (this.ModulTyp === ProgramModulTyp.HistoryView)
-			this.router.navigate(['/history']);
+			ToolbarComponent.StaticNavHistory(this.router);
 		else
-			this.router.navigate(['/']);
+			ToolbarComponent.StaticNavHome(this.router);
 	}
 
 	ngAfterViewInit() {

@@ -44,26 +44,49 @@ export class ToolbarComponent implements OnInit, IActiveItem {
         return ToolbarComponent.activeItem;
     }
     
+    //#region Home
     NavHome() {
+        ToolbarComponent.StaticNavHome(this.router);
+    }
+
+    static StaticNavHome(aRouter: Router) {
         ToolbarComponent.activeItem = ActiveItem.Home;
-        this.router.navigate(['']);
+        aRouter.navigate(['']);
     }
+    //#endregion
 
+    //#region NavProgrammWaehlen
     NavProgrammWaehlen() {
-        ToolbarComponent.activeItem = ActiveItem.Programmwaehlen;
-        this.router.navigate(['/programmwaehlen']);
-    }
-    
-    NavSettings() {
-        ToolbarComponent.activeItem = ActiveItem.Settings;
-        this.router.navigate(['/settings']);
+        ToolbarComponent.StaticNavProgrammWaehlen(this.router)
     }
 
+    static StaticNavProgrammWaehlen(aRouter: Router) {
+        ToolbarComponent.activeItem = ActiveItem.Programmwaehlen;
+        aRouter.navigate(['/programmwaehlen']);
+    }
+
+    //#endregion
+    
+    //#region NavSettings
+    NavSettings() {
+        ToolbarComponent.StaticNavSettings(this.router)
+    }
+    static StaticNavSettings(aRouter: Router) {
+        ToolbarComponent.activeItem = ActiveItem.Settings;
+        aRouter.navigate(['/settings']);
+    }
+    //#endregion
+
+    //#region NavHistory
     NavHistory() {
         ToolbarComponent.activeItem = ActiveItem.History;
         this.router.navigate(['/history']);
     }
-
+    static StaticNavHistory(aRouter: Router) {
+        ToolbarComponent.activeItem = ActiveItem.History;
+        aRouter.navigate(['/history']);
+    }    
+    //#endregion
 
 }
 
