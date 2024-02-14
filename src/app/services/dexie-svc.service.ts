@@ -4,7 +4,6 @@ import { BodyWeight, BodyWeightDB } from './../../Business/Bodyweight/Bodyweight
 import { HistorySession  } from './../../Business/Session/Session';
 import { HypertrophicProgramm } from '../../Business/TrainingsProgramm/Hypertrophic';
 import { InUpcomingSessionSetzen, UebungDB } from './../../Business/Uebung/Uebung';
-import { InitialWeight } from './../../Business/Uebung/InitialWeight';
 import { Progress, ProgressSet, ProgressTyp, WeightCalculation, WeightProgressTime, ProgressPara } from './../../Business/Progress/Progress';
 import { Hantelscheibe } from 'src/Business/Hantelscheibe/Hantelscheibe';
 import { Hantel, HantelTyp } from './../../Business/Hantel/Hantel';
@@ -259,38 +258,6 @@ export class DexieSvcService extends Dexie {
 	public MustLoadDiagramData: boolean = true;
 	private ProgramLadeStandardPara: ProgrammParaDB;
 
-	// private async LadeSessionsInWorker(aOffSet: number = 0): Promise<void> {
-	// 	const mSessionParaDB: SessionParaDB = new SessionParaDB();
-	// 	mSessionParaDB.Limit = 1;
-	// 	mSessionParaDB.OffSet = aOffSet;
-	// 	this.LadeUpcomingSessions(this.AktuellesProgramm.id, mSessionParaDB)
-	// 		.then((aSessionListeDB) => {
-	// 			const mSessionListe: Array<Session> = [];
-	// 			aSessionListeDB.map((aSessionDB) => mSessionListe.push(new Session(aSessionDB)));
-
-	// 			if (mSessionListe.length > 0) {
-	// 				mSessionListe.forEach((mPtrSession) => {
-	// 					// if (mPtrSession.Kategorie02 !== SessionStatus.Wartet) {                            
-	// 					const mUebungParaDB = new UebungParaDB();
-	// 					mUebungParaDB.SaetzeBeachten = true;
-	// 					mUebungParaDB.
-	// 					this.LadeSessionUebungen(mUebungParaDB, mPtrSession.ID).then(
-	// 						(aUebungsListe) => {
-	// 							if (aUebungsListe.length > 0)
-	// 								mPtrSession.UebungsListe = aUebungsListe;
-	// 						});
-	// 					// }
-                        
-	// 					Session.StaticCheckMembers(mPtrSession);
-	// 					mPtrSession.PruefeGewichtsEinheit(this.AppRec.GewichtsEinheit);
-	// 					this.AktuellesProgramm.SessionListe.push(mPtrSession);
-	// 					this.LadeSessionsInWorker(this.AktuellesProgramm.SessionListe.length);
-                    
-	// 				});
-	// 			}
-	// 		});
-	// }
-
 	public LadeDiagrammData(aVonDatum: Date, aBisDatum: Date, aSessionListe: Array<Session>, aDiagrammDatenListe: Array<DiaDatum>) {
 		let mBisDatum: Date = aBisDatum;
 		if (aBisDatum < cMaxDatum)
@@ -301,26 +268,7 @@ export class DexieSvcService extends Dexie {
 		aBisDatum.setHours(0, 0, 0, 0);
 		aVonDatum.setHours(0, 0, 0, 0);
 		try {
-			// return await this.SessionTable
-			// 	.where("Kategorie02")
-			// 	.anyOf([SessionStatus.Fertig, SessionStatus.FertigTimeOut])
-			// 	.and((mSession) => {
-			// 		try {
-			// 			return (
-			// 				(mSession.Datum !== undefined)
-			// 				&& (mSession.Datum !== null)
-			// 				&& (mSession.Datum.valueOf() >= aVonDatum.valueOf())
-			// 				&& (mSession.Datum.valueOf() < mBisDatum.valueOf()));
-						
-			// 		} catch (error) {
-			// 			console.error(error);
-			// 			return false;
-			// 		}
-			// 	})
-			// 	.sortBy("Datum")
-			// 	.then(async (aSessionListe) => {
 			let mResult: Array<Session> = aSessionListe;
-			//aSessionListe.map((aSessionDB) => mResult.push(new Session(aSessionDB)));
 
 			for (let mSessionIndex = 0; mSessionIndex < mResult.length; mSessionIndex++) {
 				const mPtrSession: Session = mResult[mSessionIndex];
@@ -493,40 +441,6 @@ export class DexieSvcService extends Dexie {
 		// 	});//then
 	}
 	
-	// public DoWorker(aAction: WorkerAction, aExtraFn?: ExtraFn) {
-	// 	// const that: AnstehendeSessionsComponent = this;
-	// 	if (typeof Worker !== 'undefined') {
-	// 		this.worker = new Worker(new URL('./dexie-svc.worker', import.meta.url));
-	// 		this.worker.addEventListener('message', ({ data }) => {
-	// 			switch (aAction) {
-	// 				case WorkerAction.LadeAktuellesProgramm:
-	// 					this.LadeAktuellesProgramm()
-	// 						.then(async (aProgramm) => {
-	// 							if (aProgramm !== undefined) {
-	// 								const mDialogData = new DialogData();
-	// 								mDialogData.ShowAbbruch = false;
-	// 								mDialogData.ShowOk = false;
-	// 								mDialogData.hasBackDrop = false;
-	// 								this.AktuellesProgramm.SessionListe = [];
-	// 								this.LadeSessionsInWorker();
-	// 							}
-	// 						});// then
-	// 					break;
-					
-	// 				case WorkerAction.LadeDiagrammDaten:
-	// 					// if (this.MustLoadDiagramData === true) {
-	// 					// 	this.LadeAppData().then((aAppRec) => {
-	// 					// 		this.AppRec = aAppRec;
-	// 					// 		this.LadeDiagrammData(this.DiagrammDatenListe, aAppRec.MaxHistorySessions, aExtraFn);
-	// 					// 	});
-	// 					// }
-	// 					break;
-	// 			}//switch
-	// 		});
-	// 		this.worker.postMessage(aAction);
-	// 	}
-	// }
-
 	public UpComingSessionList(): Array<Session> {
 		if ((DexieSvcService.AktuellesProgramm) && (DexieSvcService.AktuellesProgramm.SessionListe)) {
 			DexieSvcService.AktuellesProgramm.SessionListe =
@@ -1450,14 +1364,15 @@ export class DexieSvcService extends Dexie {
 									await this.LadeAktuellesProgramm()
 										.then(() => {
 											return DexieSvcService.VerfuegbareProgramme;
-											// if(DexieSvcService.ExamplesDone === false)
-											// this.MakeExample(aProgram)
 										});
 								}
 
 								if (DexieSvcService.HistorySessions.length <= 0)
 									this.LadeHistorySessions(null, null);
 
+								if (DexieSvcService.ExamplesDone === false)
+									this.MakeExample(DexieSvcService.VerfuegbareProgramme[0]);
+					
 								return DexieSvcService.VerfuegbareProgramme;
 							}
 						});
@@ -2802,8 +2717,6 @@ export class DexieSvcService extends Dexie {
 		});
 	}
 }
-// if (typeof Worker !== 'undefined') {
-//   // Create a new
 //   const worker = new Worker(new URL('./dexie-svc.worker', import.meta.url));
 //   worker.onmessage = ({ data }) => {
 //     console.log(`page got message: ${data}`);
