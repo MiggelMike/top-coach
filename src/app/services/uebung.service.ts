@@ -58,7 +58,7 @@ export class UebungService {
         this.Uebungen = this.fDbModule.UebungListeSortedByName;
         this.Uebungen.forEach(
                     (mUebung) => {
-                        if (!mUebung.Selected)
+                        // if (!mUebung.Selected)
                             mUebung.Selected = false;
                     }
                 );
