@@ -44,7 +44,7 @@
 
         <!-- Ausgefuehrtes-Gewicht -->
         <div class="weight-column">
-            <div class="align-right label">{{satz.GewichtVorgabeText}}</div> 
+            <div [ngClass]="{'invisible': isVisible() === false}" class="align-right label">{{satz.GewichtVorgabeText}}</div> 
             <input  matInput 
                     mask="9999.00"
                     matTooltip="Hold to open details"
@@ -76,7 +76,7 @@
 
         <!-- Ausgefuerte Wdh. -->
         <div class="rep-column">
-            <div class="align-right label">{{satz.WdhVonVorgabe}}</div> 
+            <div [ngClass]="{'invisible': isVisible() === false}" class="align-right label">{{satz.WdhVonVorgabe}}</div> 
             <input matInput 
                     class="align-right tc-font-size-smaller rep-column"
                     matTooltip="Hold to open details"
@@ -116,17 +116,17 @@
 
         <ng-template #planning>
             <!-- AMRAP  -->
-            <div class="ml-10 center-item pad-top-12" fxFlex="30px">
+            <div class="ml-10 center-item" fxFlex="30px">
                 <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP" 
                 ></mat-checkbox>
             </div>
         </ng-template>
 
-        <div class="ml-10 center-item mg-top-20" layout-align="center center">
+        <div class="ml-10 center-item" layout-align="center center">
             <a [ngClass]="['link-button-font']" mat-flat-button (click)="DeleteSet()">Delete</a>
         </div>
 
-        <div class="center-item mg-top-20" layout-align="center center">
+        <div class="center-item" layout-align="center center">
             <a [ngClass]="['link-button-font']" mat-flat-button (click)="CopySet()">Copy</a>
         </div>
     </div>
