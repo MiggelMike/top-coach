@@ -28,7 +28,7 @@ var cloneDeep = require('lodash.clonedeep');
 export class HistoryComponent implements OnInit, IProgramModul {
 	public get SessionListe(): Array<HistorySession> {
 		return  DexieSvcService.HistorySessions.filter((sess) => { 
-			return (sess.GestartedWann >= this.fromDate && sess.GestartedWann <= this.toDate)
+			return (sess.GestartedWann.valueOf() >= this.fromDate.valueOf() && sess.GestartedWann.valueOf() <= this.toDate.valueOf())
 		});
 	}
 	
@@ -62,20 +62,10 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	public stepSecond = 1;
 	ViewInitDone: boolean = false;
 	//#region fromDate
-	get fromDate(): Date {
-		return DexieSvcService.HistoryVonDatum;
-	}
-	set fromDate(value: Date) {
-		DexieSvcService.HistoryVonDatum = value;
-	}
+	fromDate: Date;
 	//#endregion
 	//#region toData
-	get toDate(): Date {
-		return DexieSvcService.HistoryBisDatum; 
-	}
-	set toDate(value: Date) {
-		DexieSvcService.HistoryBisDatum = value;
-	}
+	toDate: Date; 
 	//#endregion
 
 	ChartData: Array<ChartData> = [];
@@ -105,17 +95,21 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		private router: Router
 	) {
 		DexieSvcService.ModulTyp = ProgramModulTyp.History;
-		if (DexieSvcService.HistoryBisDatum === null) {
+
+		if ((DexieSvcService.HistoryBisDatum === null) || (DexieSvcService.HistoryBisDatum === undefined)) {
 			DexieSvcService.HistoryBisDatum = new Date();
 		}
 
-		if (DexieSvcService.HistoryVonDatum === null) {
+		if ((DexieSvcService.HistoryVonDatum === null)||(DexieSvcService.HistoryVonDatum === undefined)) {
 			DexieSvcService.HistoryVonDatum = new Date();
 			DexieSvcService.HistoryVonDatum.setDate(DexieSvcService.HistoryBisDatum.getDate() - 90);
 		}
 
-		this.toDate = DexieSvcService.HistoryBisDatum;
-		this.fromDate = DexieSvcService.HistoryVonDatum;
+		this.toDate = new Date();
+		this.fromDate = new Date();
+		this.fromDate.setDate(this.toDate.getDate());
+		this.fromDate.setTime(this.fromDate.getTime() + (-90 * 24 * 60 * 60 * 1000));
+
 		this.range.controls['start'].setValue(this.fromDate);
 		this.range.controls['end'].setValue(this.toDate);
 		this.CreatingChartsDialogData.ShowAbbruch = false;
@@ -152,9 +146,10 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 
 	drop(aEvent: any) {
-		const mChartData: ChartData = this.ChartData[aEvent.currentIndex];
-		this.ChartData[aEvent.currentIndex] = this.ChartData[aEvent.previousIndex];
-		this.ChartData[aEvent.previousIndex] = mChartData;
+		DexieSvcService.CalcPosAfterDragAndDrop(this.ChartData, aEvent.currentIndex, aEvent.previousIndex);
+		// const mChartData: ChartData = this.ChartData[aEvent.currentIndex];
+		// this.ChartData[aEvent.currentIndex] = this.ChartData[aEvent.previousIndex];
+		// this.ChartData[aEvent.previousIndex] = mChartData;
 	}
 
 	NoSessionName(aSess: HistorySession): boolean{
@@ -186,7 +181,12 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 
 	onClose() {
+		//new Date(dateString);
 
+		// const s1 = this.toDate.toDateString();
+		// const s2 = this.fromDate.toDateString();
+		// DexieSvcService.HistoryBisDatum = this.toDate;
+		// DexieSvcService.HistoryVonDatum = this.fromDate;
 		this.Draw(true);
 	}
 
@@ -201,11 +201,20 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		this.ChartData = [];
 		this.fDiaUebungsListe = [];
 		let mUebungsNamen = [];
-		const mVonDatum: Date = DexieSvcService.HistoryVonDatum;
-		const mBisDatum: Date = DexieSvcService.HistoryBisDatum;
+		
+		let mVonDatum: Date = this.fromDate; // DexieSvcService.HistoryVonDatum;
+		mVonDatum.setHours(0,0,0,0);
+
+		let mBisDatum: Date = this.toDate; // DexieSvcService.HistoryBisDatum;
+		mBisDatum.setHours(23,59,59,999);
 		try {
-			const aDiagrammData: Array<DiaDatum> = [];
-			this.fDbModul.LadeDiagrammData(mVonDatum, mBisDatum, this.SessionListe, aDiagrammData);
+			const t = DexieSvcService.DiagrammDatenListe;
+			const aDiagrammData: Array<DiaDatum> = DexieSvcService.DiagrammDatenListe.filter(
+				(mDiaData) => {
+					return (mDiaData.Datum.valueOf() >= mVonDatum.valueOf() && mDiaData.Datum.valueOf() <= mBisDatum.valueOf());
+				});
+			
+			//this.fDbModul.LadeDiagrammData(mVonDatum, mBisDatum, this.SessionListe, aDiagrammData);
 			for (let index = 0; index < aDiagrammData.length; index++) {
 				const mPtrDiaDatum: DiaDatum = aDiagrammData[index];
 					

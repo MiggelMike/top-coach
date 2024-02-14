@@ -4,7 +4,8 @@
 
 export enum NoAutoCreateItem {
     GzclpProgram,
-    HypertrophicSpecificProgram
+    HypertrophicSpecificProgram,
+    ExamplePrograms
     
 }
 

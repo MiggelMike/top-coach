@@ -47,6 +47,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatSortModule} from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { ReactiveFormsModule } from '@angular/forms';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 
 const routes: Routes = [{ path: 'history', component: HistoryComponent }];
 
@@ -119,7 +121,10 @@ const routes: Routes = [{ path: 'history', component: HistoryComponent }];
     MatTooltipModule,
     MatTreeModule,
     ScrollingModule,
-        
+    DragDropModule,
+    NgxMaskDirective,
+    NgxMaskPipe
+
     
 
     

@@ -246,6 +246,7 @@ export class DexieSvcService extends Dexie {
 	public static AktuellSprache: Sprache;
 	private static EquipmentTable: Dexie.Table<Equipment, number>;
 	private static NoAutoCreateTable: Dexie.Table<NoAutoCreateDB, number>;
+	public static DiagrammDatenListe: Array<DiaDatum> = [];
 
 	private get HantelTable(): Dexie.Table<Hantel, number> {
 		return this.table(this.cHantel);
@@ -253,8 +254,6 @@ export class DexieSvcService extends Dexie {
 
 	RefreshAktuellesProgramm: boolean = false;
 	// Siehe Anstehende-Sessions
-	private worker: Worker;
-	// public DiagrammDatenListe: Array<DiaDatum> = [];
 	public MustLoadDiagramData: boolean = true;
 	private ProgramLadeStandardPara: ProgrammParaDB;
 
@@ -265,6 +264,7 @@ export class DexieSvcService extends Dexie {
 		else
 			mBisDatum = cMinDatum;
 		
+		DexieSvcService.DiagrammDatenListe = [];
 		aBisDatum.setHours(0, 0, 0, 0);
 		aVonDatum.setHours(0, 0, 0, 0);
 		try {
@@ -341,16 +341,18 @@ export class DexieSvcService extends Dexie {
 					} //for
 				}
 								
-				aDiagrammDatenListe.sort((d1, d2) => {
-					if (d1.Datum.valueOf() < d2.Datum.valueOf())
-						return -1;
-	
-					if (d1.Datum.valueOf() > d2.Datum.valueOf())
-						return 1;
-	
-					return 0;
-				});
 			}
+			aDiagrammDatenListe.sort((d1, d2) => {
+				if (d1.Datum.valueOf() < d2.Datum.valueOf())
+					return -1;
+
+				if (d1.Datum.valueOf() > d2.Datum.valueOf())
+					return 1;
+
+				return 0;
+			});
+
+			DexieSvcService.DiagrammDatenListe = aDiagrammDatenListe;
 		} catch (err) {
 			console.error(err);
 			return null;
@@ -644,7 +646,7 @@ export class DexieSvcService extends Dexie {
 		if (DexieSvcService.ModulTyp === null)
 			DexieSvcService.ModulTyp = ProgramModulTyp.Kein;
 		// 
-		    //   Dexie.delete("ConceptCoach");
+		        //Dexie.delete("ConceptCoach");
 		this.version(44).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
@@ -1346,12 +1348,14 @@ export class DexieSvcService extends Dexie {
 							&&  (aProgrammListe.find((programm) => programm.ProgrammTyp === ProgrammTyp.Gzclp) === undefined)) {
 								mLoadAgain = true;
 								await this.ProgrammSpeichern(GzclpProgramm.ErzeugeGzclpVorlage(this));
+								this.NoAutoCreateItemSpeichern(NoAutoCreateItem.GzclpProgram);
 							}
 							
 							if ((DexieSvcService.NoAutoCreateListe.find((mSuchAutoCreate) => { return (mSuchAutoCreate.noCreateItem === NoAutoCreateItem.HypertrophicSpecificProgram); })  === undefined)
 							&& (aProgrammListe.find((programm) => programm.ProgrammTyp === ProgrammTyp.HypertrophicSpecific) === undefined)) {
 								mLoadAgain = true;
 								await this.ProgrammSpeichern(HypertrophicProgramm.ErzeugeHypertrophicVorlage(this));
+								this.NoAutoCreateItemSpeichern(NoAutoCreateItem.HypertrophicSpecificProgram);
 							}
 
 							if (mLoadAgain) {
@@ -1367,12 +1371,12 @@ export class DexieSvcService extends Dexie {
 										});
 								}
 
-								if (DexieSvcService.HistorySessions.length <= 0)
+								if (    (DexieSvcService.ExamplesDone === false) 
+								    &&  (DexieSvcService.NoAutoCreateListe.find((mNoCreate) => mNoCreate.noCreateItem === NoAutoCreateItem.ExamplePrograms) === undefined))
+									this.MakeExample(DexieSvcService.VerfuegbareProgramme[0]);
+								else if (DexieSvcService.HistorySessions.length <= 0)
 									this.LadeHistorySessions(null, null);
 
-								if (DexieSvcService.ExamplesDone === false)
-									this.MakeExample(DexieSvcService.VerfuegbareProgramme[0]);
-					
 								return DexieSvcService.VerfuegbareProgramme;
 							}
 						});
@@ -1610,15 +1614,15 @@ export class DexieSvcService extends Dexie {
 		if (aSessionParaDB === undefined) {
 			mHelpSessionParaDB = new SessionParaDB();
 			mHelpSessionParaDB.WhereClause = "FK_Programm";
-			mHelpSessionParaDB.anyOf = () => { return aProgrammID as any };
+			mHelpSessionParaDB.anyOf = () => {
+				return aProgrammID as any
+			};
 		}
 		else mHelpSessionParaDB = aSessionParaDB;
 
 		return await DexieSvcService.SessionTable
-			//.where("FK_Programm")
 			.where(mHelpSessionParaDB.WhereClause)
 			.anyOf(mHelpSessionParaDB.anyOf())
-			//.equals(aProgrammID)
 			.offset(mHelpSessionParaDB !== undefined && mHelpSessionParaDB.OffSet !== undefined ? mHelpSessionParaDB.OffSet : 0)
 			.limit(mHelpSessionParaDB !== undefined && mHelpSessionParaDB.Limit !== undefined ? mHelpSessionParaDB.Limit : cMaxLimnit)
 			.sortBy("ListenIndex")
@@ -1660,6 +1664,7 @@ export class DexieSvcService extends Dexie {
 		return DexieSvcService.SessionTable
 			.where("GestartedWann")
 			.between(aVonDatum, aBisDatum, true, true)
+			//.and((aSession: Session) => aSession.FK_VorlageProgramm > 0)
 			.and((aSession: Session) => aSession.Kategorie02 === SessionStatus.Fertig || aSession.Kategorie02 === SessionStatus.FertigTimeOut)
 			.reverse()
 			.sortBy("GestartetWann")
@@ -1716,6 +1721,13 @@ export class DexieSvcService extends Dexie {
 				if (this.HistorySessionsAfterLoadFn !== null) {
 					this.HistorySessionsAfterLoadFn();
 				}
+
+				this.LadeDiagrammData(
+					cMinDatum, //aVonDatum: Date, 
+					cMinDatum, // aBisDatum: Date,
+					DexieSvcService.HistorySessions,
+					DexieSvcService.DiagrammDatenListe);
+				
 				return DexieSvcService.HistorySessions;
 			});
 	}
@@ -2617,104 +2629,110 @@ export class DexieSvcService extends Dexie {
 		DexieSvcService.ExamplesDone = true;
 
 		// Alle Sessions löschen 
-		await DexieSvcService.SessionTable.toArray(async (aSessionListe) => {
-			aSessionListe.forEach((aSession: Session) => {
-				if (aSession.FK_VorlageProgramm > 0)
-					DexieSvcService.SessionTable.delete(aSession.ID);
-			});
+		await DexieSvcService.SessionTable.
+			toArray(async (aSessionListe) => {
+				aSessionListe.forEach((aSession: Session) => {
+					if (aSession.FK_VorlageProgramm > 0)
+						DexieSvcService.SessionTable.delete(aSession.ID);
+				});
 
-			const mMaxWochen: number = 52;
-			const mSessionsProWoche = 4;
-			let mMaxSessions: number = mMaxWochen * mSessionsProWoche;
-			let mDatum: Date = new Date();
-			mDatum.setDate(-((mMaxSessions / mSessionsProWoche) * 7));
-			let mMontag: number = mDatum.getDay();
-			// Mit Montag als ersten Trainingstag beginnen. 
-			while (mMontag > 1) {
-				mDatum.setDate(mDatum.getDate() - 1);
-				mMontag = mDatum.getDay();
-			}
+				const mMaxWochen: number = 52;
+				const mSessionsProWoche = 4;
+				let mMaxSessions: number = mMaxWochen * mSessionsProWoche;
+				let mDatum: Date = new Date();
+				mDatum.setDate(-((mMaxSessions / mSessionsProWoche) * 7));
+				let mMontag: number = mDatum.getDay();
+				// Mit Montag als ersten Trainingstag beginnen. 
+				while (mMontag > 1) {
+					mDatum.setDate(mDatum.getDate() - 1);
+					mMontag = mDatum.getDay();
+				}
 
-			let mStartGewicht: number = 10;
-			// Sessions
-			while (mMaxSessions > 0) {
-				for (let mSessionIndex = 0; mSessionIndex < aProgram.SessionListe.length; mSessionIndex++) {
-					const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
-					mSessionCopyPara.CopyUebungID = false;
-					mSessionCopyPara.CopySatzID = false;
-					const mSession: Session = Session.StaticCopy(aProgram.SessionListe[mSessionIndex], mSessionCopyPara);
-					mSession.init([]); // true-> SatzWdh auf 0 setzen
-					mSession.GestartedWann = mDatum;
-					// Übungen
-					for (let mUebungsIndex = 0; mUebungsIndex < mSession.UebungsListe.length; mUebungsIndex++) {
-						const mUebung: Uebung = mSession.UebungsListe[mUebungsIndex];
-						// Sätze
-						for (let mSatzIndex = 0; mSatzIndex < mUebung.ArbeitsSatzListe.length; mSatzIndex++) {
-							const mSatz: Satz = mUebung.ArbeitsSatzListe[mSatzIndex];
-							mSatz.GewichtAusgefuehrt = mStartGewicht;
-							mSatz.WdhAusgefuehrt = 10;
-							mSatz.Status = SatzStatus.Fertig;
-						}
-					}// <<< Uebung
-					// Session-Status auf fertig setzen
-					mSession.SetSessionFertig();
-					await this.SessionSpeichern(mSession);
+				let mStartGewicht: number = 10;
+				// Sessions
+				while (mMaxSessions > 0) {
+					for (let mSessionIndex = 0; mSessionIndex < aProgram.SessionListe.length; mSessionIndex++) {
+						const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+						mSessionCopyPara.CopyUebungID = false;
+						mSessionCopyPara.CopySatzID = false;
+						const mSession: Session = Session.StaticCopy(aProgram.SessionListe[mSessionIndex], mSessionCopyPara);
+						mSession.init([]); // true-> SatzWdh auf 0 setzen
+						mSession.GestartedWann = mDatum;
+						// Übungen
+						for (let mUebungsIndex = 0; mUebungsIndex < mSession.UebungsListe.length; mUebungsIndex++) {
+							const mUebung: Uebung = mSession.UebungsListe[mUebungsIndex];
+							// Sätze
+							for (let mSatzIndex = 0; mSatzIndex < mUebung.ArbeitsSatzListe.length; mSatzIndex++) {
+								const mSatz: Satz = mUebung.ArbeitsSatzListe[mSatzIndex];
+								mSatz.GewichtAusgefuehrt = mStartGewicht;
+								mSatz.WdhAusgefuehrt = 10;
+								mSatz.Status = SatzStatus.Fertig;
+							}
+						}// <<< Uebung
+						// Session-Status auf fertig setzen
+						mSession.SetSessionFertig();
+						await this.SessionSpeichern(mSession);
 
-					// const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
-					// mSessionCopyPara.CopyUebungID = false;
-					// mSessionCopyPara.CopySatzID = false;
-					// // Mit den Daten der gespeicherten Session eine neue erstellen
-					// const mNeueSession: Session = Session.StaticCopy(mSession, mSessionCopyPara);
-					// mSession.ListenIndex = -mSession.ListenIndex;
-					// // Neue Session initialisieren
-					// mNeueSession.init();
-					// // Die neue Session gehört zum gleichen Programm wie die Alte
-					// mNeueSession.FK_Programm = mSession.FK_Programm;
-					// // Die Neue Session hat das gleiche Vorlage-Programm wie die Alte.
-					// mNeueSession.FK_VorlageProgramm = mSession.FK_VorlageProgramm;
-					// this.InitSessionSaetze(mSession, mNeueSession as Session);
-					// // Satzvorgaben für Sätze der neuen Übung setzen
-					// mNeueSession.UebungsListe.forEach((mNeueUebung) => {
-					// 	mNeueUebung.SatzListe.forEach((mNeuerSatz) => {
-					// 		mNeuerSatz.GewichtVorgabe = mNeuerSatz.GewichtNaechsteSession;
-					// 		mNeuerSatz.GewichtAusgefuehrt = mNeuerSatz.GewichtNaechsteSession;
-					// 	});
-					// });
+						// const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+						// mSessionCopyPara.CopyUebungID = false;
+						// mSessionCopyPara.CopySatzID = false;
+						// // Mit den Daten der gespeicherten Session eine neue erstellen
+						// const mNeueSession: Session = Session.StaticCopy(mSession, mSessionCopyPara);
+						// mSession.ListenIndex = -mSession.ListenIndex;
+						// // Neue Session initialisieren
+						// mNeueSession.init();
+						// // Die neue Session gehört zum gleichen Programm wie die Alte
+						// mNeueSession.FK_Programm = mSession.FK_Programm;
+						// // Die Neue Session hat das gleiche Vorlage-Programm wie die Alte.
+						// mNeueSession.FK_VorlageProgramm = mSession.FK_VorlageProgramm;
+						// this.InitSessionSaetze(mSession, mNeueSession as Session);
+						// // Satzvorgaben für Sätze der neuen Übung setzen
+						// mNeueSession.UebungsListe.forEach((mNeueUebung) => {
+						// 	mNeueUebung.SatzListe.forEach((mNeuerSatz) => {
+						// 		mNeuerSatz.GewichtVorgabe = mNeuerSatz.GewichtNaechsteSession;
+						// 		mNeuerSatz.GewichtAusgefuehrt = mNeuerSatz.GewichtNaechsteSession;
+						// 	});
+						// });
 
-					let mTag = mDatum.getDay();
-					switch (mTag) {
-						// Montag?
-						case 1:
-						// Donnerstag?
-						case 4:
-							// Auf kommenden Dienstag oder kommenden  Freitag setzen
-							mDatum.setDate(mDatum.getDate() + 1);
-							break;
-						// Dienstag?
-						case 2:
-							// Auf kommenden Donnerstag setzen
-							mDatum.setDate(mDatum.getDate() + 2);
-							break;
-						// Freitag?
-						case 5:
-							// Auf kommenden Montag setzen
-							mDatum.setDate(mDatum.getDate() + 3);
-							break;
-					}//switch
-					// await this.SessionSpeichern(mNeueSession).then(
-					// 	async () => {
-					// 		aProgram.SessionListe.push(mNeueSession);
-					// 		aProgram.NummeriereSessions();
-					// 		await this.ProgrammSpeichern(aProgram).then(() => {
-					// 		});
-					// 	});
+						let mTag = mDatum.getDay();
+						switch (mTag) {
+							// Montag?
+							case 1:
+							// Donnerstag?
+							case 4:
+								// Auf kommenden Dienstag oder kommenden  Freitag setzen
+								mDatum.setDate(mDatum.getDate() + 1);
+								break;
+							// Dienstag?
+							case 2:
+								// Auf kommenden Donnerstag setzen
+								mDatum.setDate(mDatum.getDate() + 2);
+								break;
+							// Freitag?
+							case 5:
+								// Auf kommenden Montag setzen
+								mDatum.setDate(mDatum.getDate() + 3);
+								break;
+						}//switch
+						// await this.SessionSpeichern(mNeueSession).then(
+						// 	async () => {
+						// 		aProgram.SessionListe.push(mNeueSession);
+						// 		aProgram.NummeriereSessions();
+						// 		await this.ProgrammSpeichern(aProgram).then(() => {
+						// 		});
+						// 	});
 			
-					if (--mMaxSessions <= 0)
-						break;
-				}//for <<< Session
-				mStartGewicht += 2.5;
-			}// while
-		});
+						if (--mMaxSessions <= 0)
+							break;
+					}//for <<< Session
+					mStartGewicht += 2.5;
+				}// while
+
+				this.NoAutoCreateItemSpeichern(NoAutoCreateItem.ExamplePrograms);
+
+				if (DexieSvcService.HistorySessions.length <= 0)
+					this.LadeHistorySessions(null, null);
+			});
 	}
 }
 //   const worker = new Worker(new URL('./dexie-svc.worker', import.meta.url));
