@@ -601,7 +601,7 @@ export class DexieSvcService extends Dexie {
 		return;
 	}
 
-	public SetAktuellesProgramm(aSelectedProgram: TrainingsProgramm, aInitialWeightList?: Array<InitialWeight>): Promise<ITrainingsProgramm> {
+	public SetAktuellesProgramm(aSelectedProgram: TrainingsProgramm): Promise<ITrainingsProgramm> {
 		return this.FindAktuellesProgramm().then(async (mAktuellesProgramm) => {
 			if (mAktuellesProgramm) {
 				for (let index = 0; index < mAktuellesProgramm.length; index++) {
@@ -634,48 +634,38 @@ export class DexieSvcService extends Dexie {
 			mProgramCopyPara.CopySessionID = false;
 			mProgramCopyPara.CopyUebungID = false;
 			mProgramCopyPara.CopySatzID = false;
-			const mProgramm = aSelectedProgram.Copy(mProgramCopyPara);
+			const mNeuProgramm = aSelectedProgram.Copy(mProgramCopyPara);
 			
-			mProgramm.FkVorlageProgramm = aSelectedProgram.id;
+			mNeuProgramm.FkVorlageProgramm = aSelectedProgram.id;
 			// Die Kategorie des ausgewählten Programms wird auf "AktuellesProgramm" gesetzt
-			mProgramm.ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
+			mNeuProgramm.ProgrammKategorie = ProgrammKategorie.AktuellesProgramm;
 
-			if (mProgramm.SessionListe) {
-				// mProgramm.SessionListe = [];
-				for (let index = 0; index < mProgramm.SessionListe.length; index++) {
-					const mNeueSessionPtr = mProgramm.SessionListe[index];
-
-					// const mSessionCopyPara = new SessionCopyPara();
-					// mSessionCopyPara.Komplett = true;
-					// mSessionCopyPara.CopySessionID = false;
-					// mSessionCopyPara.CopyUebungID = false;
-					// mSessionCopyPara.CopySatzID = false;
-					// const mNeueSession = Session.StaticCopy(mPrtSession as Session, mSessionCopyPara);
-					// mNeueSession.ListenIndex = index;
+			if (mNeuProgramm.SessionListe) {
+				for (let index = 0; index < mNeuProgramm.SessionListe.length; index++) {
+					// Session aus dem Quell-Programm
+					const mQuellSessionPtr = aSelectedProgram.SessionListe[index];
+					const mNeueSessionPtr = mNeuProgramm.SessionListe[index];
 					mNeueSessionPtr.FK_VorlageProgramm = aSelectedProgram.id;
-
-					// mNeueSession.UebungsListe.forEach((mUebung) => {
-					// 	mUebung.WarmUpVisible = (mUebung.AufwaermSatzListe !== undefined) && (mUebung.AufwaermSatzListe.length > 0);
-					// 	mUebung.CooldownVisible = (mUebung.AbwaermSatzListe !== undefined) && (mUebung.AbwaermSatzListe.length > 0);
-					// });
-
-
-					if (aInitialWeightList !== undefined) {
-						aInitialWeightList.forEach((iw) => {
-							const mUebung = mNeueSessionPtr.UebungsListe.find((u) => u.FkUebung === iw.UebungID);
-							if (mUebung !== undefined) {
-								mUebung.ArbeitsSatzListe.forEach((sz) => {
-									sz.GewichtVorgabe = iw.Weight;
-									sz.GewichtAusgefuehrt = iw.Weight;
-									sz.WdhAusgefuehrt = sz.WdhBisVorgabe;
-								});
-							}
-						});
-					}
-					// mProgramm.SessionListe.push(mNeueSession);
+					if (mNeueSessionPtr.UebungsListe) {
+						for (let mUebungIndex = 0; mUebungIndex < mNeueSessionPtr.UebungsListe.length; mUebungIndex++) {
+							// Uebung aus der Quell-Session
+							const mQuellUebungPtr = mQuellSessionPtr.UebungsListe[mUebungIndex];
+							const mNeueUebungPtr = mNeueSessionPtr.UebungsListe[mUebungIndex];
+							if (mNeueUebungPtr.SatzListe) {
+								for (let mSatzIndex = 0; mSatzIndex < mNeueUebungPtr.SatzListe.length; mSatzIndex++) {
+									// Satz aus der Quell-Uebung
+									const mQuellSatzPtr: Satz = mQuellUebungPtr.SatzListe[mSatzIndex];
+									const mNeueSatzPtr: Satz = mNeueUebungPtr.SatzListe[mSatzIndex];
+									mNeueSatzPtr.GewichtVorgabe = mQuellSatzPtr.GewichtAusgefuehrt;
+									mNeueSatzPtr.WdhVonVorgabe = mQuellSatzPtr.WdhAusgefuehrt;
+								}//for
+							}//for
+						}
+					}//for
 				}
+			}//if
 
-				return this.ProgrammSpeichern(mProgramm)
+			return await this.ProgrammSpeichern(mNeuProgramm)
 				.then((mSavedProgram) => {
 						DexieSvcService.AktuellesProgramm = mSavedProgram;
 						mProgramCopyPara.CopyProgramID = true;
@@ -683,10 +673,8 @@ export class DexieSvcService extends Dexie {
 						mProgramCopyPara.CopyUebungID = true;
 						mProgramCopyPara.CopySatzID = true;
 						DexieSvcService.CmpAktuellesProgramm = mSavedProgram.Copy(mProgramCopyPara);
-					    return DexieSvcService.AktuellesProgramm;
+						return DexieSvcService.AktuellesProgramm;
 					});
-			}//if
-			return null;
 		});
 	}
 

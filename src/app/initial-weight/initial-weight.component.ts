@@ -91,7 +91,7 @@ export class InitialWeightComponent implements OnInit {
 		mDialogData.textZeilen.push('Preparing program');
 		this.fLoadingDialog.Loading(mDialogData);
 		try {
-			this.fDbModule.SetAktuellesProgramm(this.Program, this.InitialWeightList).then(() => {
+			this.fDbModule.SetAktuellesProgramm(this.Program).then(() => {
 				this.fLoadingDialog.fDialog.closeAll();
 				this.router.navigate([''])
 			});

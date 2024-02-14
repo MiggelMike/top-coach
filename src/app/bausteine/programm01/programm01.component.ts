@@ -3,7 +3,7 @@ import { DexieSvcService, cSessionSelectLimit } from './../../services/dexie-svc
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { TrainingsProgramm, ITrainingsProgramm, IProgrammTyp, ProgrammTyp, ProgrammKategorie } from "../../../Business/TrainingsProgramm/TrainingsProgramm";
 import { DialogeService } from 'src/app/services/dialoge.service';
-import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
+import { DialogData, cLoadingDefaultHeight } from 'src/app/dialoge/hinweis/hinweis.component';
 import { Router } from '@angular/router';
 import { IProgramModul, ProgramModulTyp } from 'src/app/app.module';
 import { NoAutoCreateItem } from 'src/Business/NoAutoCreate';
@@ -94,8 +94,23 @@ export class Programm01Component implements OnInit, IProgramModul, IProgrammTyp 
     }
     
     private SelectWorkout(aSelectedProgram: ITrainingsProgramm) {
-        this.fDbModul.RefreshAktuellesProgramm = true;
-        this.router.navigate(["app-initial-weight"], { state: { Program: aSelectedProgram } });
+        // this.fDbModul.RefreshAktuellesProgramm = true;
+        // this.router.navigate(["app-initial-weight"], { state: { Program: aSelectedProgram } });
+
+        const mDialogData = new DialogData();
+		mDialogData.height = cLoadingDefaultHeight;
+		mDialogData.ShowAbbruch = false;
+		mDialogData.ShowOk = false;
+		mDialogData.textZeilen.push('Preparing program');
+		this.fDialogService.Loading(mDialogData);
+		try {
+			this.fDbModul.SetAktuellesProgramm(this.programm as TrainingsProgramm).then(() => {
+				this.fDialogService.fDialog.closeAll();
+				this.router.navigate([''])
+			});
+		} catch (error) {
+			this.fDialogService.fDialog.closeAll();
+		}
     }
 
     private LadeSessions(aSessionLadePara?: SessionParaDB) : Promise<void> {
