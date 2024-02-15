@@ -212,11 +212,11 @@ export class DexieSvcService extends Dexie {
 
 	public HistorySessionsAfterLoadFn: AfterLoadFn = null;
 	public static HistorySessions: Array<HistorySession> = [];
-	public static HistoryBisDatum: Date = null;
-	public static HistoryVonDatum: Date = null;
+	// public static HistoryBisDatum: Date = null;
+	// public static HistoryVonDatum: Date = null;
 	public static AktuellesProgramm: ITrainingsProgramm = null;
 	public static CmpAktuellesProgramm: ITrainingsProgramm = null;
-	public static ExamplesDone: boolean = false;
+	public static NoExamples: boolean = true;
 	public static ModulTyp: ProgramModulTyp = null;
 	public static GewichtsEinheitText: string = 'KG';
 	public static GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
@@ -691,7 +691,20 @@ export class DexieSvcService extends Dexie {
 		this.PruefeStandardLanghanteln();
 		this.PruefeStandardEquipment();
 		this.PruefeStandardMuskelGruppen();
-		// this.LadeStammUebungen();
+
+		if (DexieSvcService.AktuellesProgramm === null) {
+			await this.LadeAktuellesProgramm()
+				.then(() => {
+					return DexieSvcService.VerfuegbareProgramme;
+				});
+		}
+
+		// Falls Beispiel-Daten erzeugt werden nsollen, darf die Historie erst später erzeugt werden! 
+		if ((DexieSvcService.NoExamples === true)
+			// Sind schon Beispiel-Daten erzeugt?	
+			|| (DexieSvcService.NoAutoCreateListe.find((mNoCreate) => mNoCreate.noCreateItem === NoAutoCreateItem.ExamplePrograms) !== undefined))
+			// Das Erzeugen von Beispieldaten ist erlaubt und es sind noch Beispiel-Daten erzeugt	
+			this.LadeHistorySessions(null, null);
 	}
 
 	ResetDatenbank() {
@@ -1364,14 +1377,14 @@ export class DexieSvcService extends Dexie {
 										return DexieSvcService.VerfuegbareProgramme;
 									});
 							} else {
-								if (DexieSvcService.AktuellesProgramm === null) {
-									await this.LadeAktuellesProgramm()
-										.then(() => {
-											return DexieSvcService.VerfuegbareProgramme;
-										});
-								}
+								// if (DexieSvcService.AktuellesProgramm === null) {
+								// 	await this.LadeAktuellesProgramm()
+								// 		.then(() => {
+								// 			return DexieSvcService.VerfuegbareProgramme;
+								// 		});
+								// }
 
-								if (    (DexieSvcService.ExamplesDone === false) 
+								if (    (DexieSvcService.NoExamples === false) 
 								    &&  (DexieSvcService.NoAutoCreateListe.find((mNoCreate) => mNoCreate.noCreateItem === NoAutoCreateItem.ExamplePrograms) === undefined))
 									this.MakeExample(DexieSvcService.VerfuegbareProgramme[0]);
 								else if (DexieSvcService.HistorySessions.length <= 0)
@@ -2625,8 +2638,6 @@ export class DexieSvcService extends Dexie {
 	public async MakeExample(aProgram: ITrainingsProgramm) {
 		if (aProgram === undefined || aProgram.SessionListe.length <= 0)
 			return;
-
-		DexieSvcService.ExamplesDone = true;
 
 		// Alle Sessions löschen 
 		await DexieSvcService.SessionTable.

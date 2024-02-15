@@ -96,14 +96,14 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	) {
 		DexieSvcService.ModulTyp = ProgramModulTyp.History;
 
-		if ((DexieSvcService.HistoryBisDatum === null) || (DexieSvcService.HistoryBisDatum === undefined)) {
-			DexieSvcService.HistoryBisDatum = new Date();
-		}
+		// if ((DexieSvcService.HistoryBisDatum === null) || (DexieSvcService.HistoryBisDatum === undefined)) {
+		// 	DexieSvcService.HistoryBisDatum = new Date();
+		// }
 
-		if ((DexieSvcService.HistoryVonDatum === null)||(DexieSvcService.HistoryVonDatum === undefined)) {
-			DexieSvcService.HistoryVonDatum = new Date();
-			DexieSvcService.HistoryVonDatum.setDate(DexieSvcService.HistoryBisDatum.getDate() - 90);
-		}
+		// if ((DexieSvcService.HistoryVonDatum === null)||(DexieSvcService.HistoryVonDatum === undefined)) {
+		// 	DexieSvcService.HistoryVonDatum = new Date();
+		// 	DexieSvcService.HistoryVonDatum.setDate(DexieSvcService.HistoryBisDatum.getDate() - 90);
+		// }
 
 		this.toDate = new Date();
 		this.fromDate = new Date();
