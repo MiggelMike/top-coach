@@ -42,7 +42,7 @@
         </div>
 
 
-        <div class="history-sessions">
+        <div id='history-sessions'>
             <ng-container *ngIf="(Auswahl === 0); then Sessions; else Charts"></ng-container>  
             <ng-template #Sessions>
                 <!-- *ngIf="isLoggedIn; then loggedIn; else loggedOut" -->
@@ -68,7 +68,7 @@
                 </div>
             </ng-template>
             <ng-template #Charts>
-                <div cdkDropList (cdkDropListDropped)="drop($event)" >
+                <div cdkDropList (cdkDropListDropped)="drop($event)">
                     <mat-accordion #accSession="matAccordion" multi="true">
                         <mat-expansion-panel #ExercisesInChart class="HG-01" [expanded]="false">
                             <mat-expansion-panel-header>
@@ -107,22 +107,22 @@
                         <ng-container *ngIf="(ChartData.length !== undefined && ChartData.length > 0)">
                             <div cdkDropList  (cdkDropListDropped)="drop($event)">
                                 <ng-container *ngFor="let mChartData of ChartData; index as i">
-                                    <div class="mg-top-2">
-                                        <mat-accordion #accSession="matAccordion" multi="true"  cdkDrag>
-                                            <mat-expansion-panel 
-                                            class="HG-01" 
-                                            (opened)="OnBarChartExpanded(mChartData)"
-                                            (closed)="OnBarChartClosed(mChartData)"
-                                            [expanded]="false"
-                                            >
-                                            <mat-expansion-panel-header mat-tooltip-panel-below  matTooltip="Hold and drag">
-                                                <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"
-                                                fxLayoutAlign="flex-start center">
-                                                <div class="ml-10" fxLayout="column" fxFlex="155px">
-                                                    <span>{{mChartData.UebungName}}</span>
-                                                </div>
-                                            </div>
-                                        </mat-expansion-panel-header>
+                                    <div class="width-100-Prozent">
+                                            <div class="mg-top-2">
+                                                <mat-accordion #accSession="matAccordion" multi="true"  cdkDrag>
+                                                    <mat-expansion-panel 
+                                                        class="HG-01" 
+                                                        (opened)="OnBarChartExpanded(mChartData)"
+                                                        (closed)="OnBarChartClosed(mChartData)"
+                                                        [expanded]="false">
+                                                        <mat-expansion-panel-header mat-tooltip-panel-below  matTooltip="Hold and drag">
+                                                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"
+                                                            fxLayoutAlign="flex-start center">
+                                                                <div class="ml-10" fxLayout="column" fxFlex="155px">
+                                                                    <span>{{mChartData.UebungName}}</span>
+                                                                </div>
+                                                            </div>
+                                                </mat-expansion-panel-header>
                                         
                                         <ng-container *ngIf="ChartAuswahl === 0; then linechart; else barchart">
                                         </ng-container>
@@ -137,8 +137,8 @@
                                                 [customColors]="mChartData.colors"
                                                 [gradient]="false">
                                             </ngx-charts-line-chart> 
-                                                    </div>
-                                                </ng-template>
+                                        </div>
+                                        </ng-template>
                                                 <ng-template #barchart>
                                                     <div class="pad-10 height-500">
                                                         <ngx-charts-bar-vertical #BarChart (window:resize)="onResize(ChartContainer)"
@@ -155,6 +155,7 @@
                                             </ng-template>                                                
                                         </mat-expansion-panel>
                                     </mat-accordion>
+                                    </div>
                                 </div>
                                 </ng-container>
                             </div>

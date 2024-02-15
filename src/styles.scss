@@ -139,6 +139,7 @@ body {
 }
 
 .height-80-Prozent {
+	min-height: 80% !important;
 	height: 80% !important;
 }
 
@@ -146,13 +147,16 @@ body {
 	height: 100%;
 }
 
+.width-30 {
+	width: 30px !important;
+}
 
 .width-65 {
-	width: 65px;
+	width: 65px !important;
 }
 
 .width-75 {
-	width: 75px;
+	width: 75px !important;
 }
 
 .width-85 {
