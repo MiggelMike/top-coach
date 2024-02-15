@@ -108,54 +108,54 @@
                             <div cdkDropList  (cdkDropListDropped)="drop($event)">
                                 <ng-container *ngFor="let mChartData of ChartData; index as i">
                                     <div class="width-100-Prozent">
-                                            <div class="mg-top-2">
-                                                <mat-accordion #accSession="matAccordion" multi="true"  cdkDrag>
-                                                    <mat-expansion-panel 
-                                                        class="HG-01" 
-                                                        (opened)="OnBarChartExpanded(mChartData)"
-                                                        (closed)="OnBarChartClosed(mChartData)"
-                                                        [expanded]="false">
-                                                        <mat-expansion-panel-header mat-tooltip-panel-below  matTooltip="Hold and drag">
-                                                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"
-                                                            fxLayoutAlign="flex-start center">
-                                                                <div class="ml-10" fxLayout="column" fxFlex="155px">
-                                                                    <span>{{mChartData.UebungName}}</span>
-                                                                </div>
+                                        <div class="mg-top-2">
+                                            <mat-accordion #accSession="matAccordion" multi="true"  cdkDrag>
+                                                <mat-expansion-panel 
+                                                    class="HG-01" 
+                                                    (opened)="OnBarChartExpanded(mChartData)"
+                                                    (closed)="OnBarChartClosed(mChartData)"
+                                                    [expanded]="false">
+                                                    <mat-expansion-panel-header mat-tooltip-panel-below  matTooltip="Hold and drag">
+                                                        <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"
+                                                        fxLayoutAlign="flex-start center">
+                                                            <div class="ml-10" fxLayout="column" fxFlex="155px">
+                                                                <span>{{mChartData.UebungName}}</span>
                                                             </div>
-                                                </mat-expansion-panel-header>
-                                        
-                                        <ng-container *ngIf='ChartAuswahl === 0; then linechart; else barchart'></ng-container>
-                                        
-                                        <ng-template #linechart>
-                                            <div class="pad-10 height-500">
-                                                <ngx-charts-line-chart
-                                                    #LineChart (window:resize)="onResize(ChartContainer)" 
-                                                    height="100vh"   
-                                                    [results]="mChartData.LineChartListe" [xAxisLabel]="'Date'" [legendTitle]="'Exercises'" [yAxisLabel]="'Weight'"
-                                                    [legend]="false" [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
-                                                    [customColors]="mChartData.colors"
-                                                    [gradient]="false">
-                                                </ngx-charts-line-chart> 
-                                            </div>
-                                        </ng-template>
-                                        <ng-template #barchart>
-                                            <div class="pad-10 height-500">
-                                                <ngx-charts-bar-vertical #BarChart (window:resize)="onResize(ChartContainer)"
-                                                    [height]="100"
-                                                    [results]="mChartData.BarChartListe" [xAxisLabel]=""
-                                                    [legendTitle]="" [yAxisLabel]="'Weight'" [legend]="false"
-                                                    [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
-                                                    [customColors]="mChartData.colors" [gradient]="true">
-                                                    <ng-template #tooltipTemplate let-model="model">
-                                                        {{ToolTip(mChartData,model)}}
+                                                        </div>
+                                                    </mat-expansion-panel-header>
+                                    
+                                                    <ng-container *ngIf='ChartAuswahl === 0; then linechart; else barchart'></ng-container>
+                                                    
+                                                    <ng-template #linechart>
+                                                        <div class="pad-10 height-500">
+                                                            <ngx-charts-line-chart
+                                                                #LineChart (window:resize)="onResize(ChartContainer)" 
+                                                                height="100vh"   
+                                                                [results]="mChartData.LineChartListe" [xAxisLabel]="'Date'" [legendTitle]="'Exercises'" [yAxisLabel]="'Weight'"
+                                                                [legend]="false" [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
+                                                                [customColors]="mChartData.colors"
+                                                                [gradient]="false">
+                                                            </ngx-charts-line-chart> 
+                                                        </div>
                                                     </ng-template>
-                                                </ngx-charts-bar-vertical>
-                                            </div>
-                                        </ng-template>                                                
-                                        </mat-expansion-panel>
-                                    </mat-accordion>
+                                                    <ng-template #barchart>
+                                                        <div class="pad-10 height-500">
+                                                            <ngx-charts-bar-vertical #BarChart (window:resize)="onResize(ChartContainer)"
+                                                                [height]="100"
+                                                                [results]="mChartData.BarChartListe" [xAxisLabel]=""
+                                                                [legendTitle]="" [yAxisLabel]="'Weight'" [legend]="false"
+                                                                [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
+                                                                [customColors]="mChartData.colors" [gradient]="true">
+                                                                <ng-template #tooltipTemplate let-model="model">
+                                                                    {{ToolTip(mChartData,model)}}
+                                                                </ng-template>
+                                                            </ngx-charts-bar-vertical>
+                                                        </div>
+                                                    </ng-template>                                                
+                                                    </mat-expansion-panel>
+                                                </mat-accordion>
+                                        </div>
                                     </div>
-                                </div>
                                 </ng-container>
                             </div>
                         </ng-container>
