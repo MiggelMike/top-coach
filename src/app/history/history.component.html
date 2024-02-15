@@ -130,29 +130,29 @@
                                         <ng-template #linechart>
                                             <div class="pad-10 height-500">
                                                 <ngx-charts-line-chart
-                                                #LineChart (window:resize)="onResize(ChartContainer)" 
-                                                height="100vh"   
-                                                [results]="mChartData.LineChartListe" [xAxisLabel]="'Date'" [legendTitle]="'Exercises'" [yAxisLabel]="'Weight'"
-                                                [legend]="false" [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
-                                                [customColors]="mChartData.colors"
-                                                [gradient]="false">
-                                            </ngx-charts-line-chart> 
-                                        </div>
+                                                    #LineChart (window:resize)="onResize(ChartContainer)" 
+                                                    height="100vh"   
+                                                    [results]="mChartData.LineChartListe" [xAxisLabel]="'Date'" [legendTitle]="'Exercises'" [yAxisLabel]="'Weight'"
+                                                    [legend]="false" [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
+                                                    [customColors]="mChartData.colors"
+                                                    [gradient]="false">
+                                                </ngx-charts-line-chart> 
+                                            </div>
                                         </ng-template>
-                                                <ng-template #barchart>
-                                                    <div class="pad-10 height-500">
-                                                        <ngx-charts-bar-vertical #BarChart (window:resize)="onResize(ChartContainer)"
-                                                        [height]="100"
-                                                        [results]="mChartData.BarChartListe" [xAxisLabel]=""
-                                                        [legendTitle]="" [yAxisLabel]="'Weight'" [legend]="false"
-                                                        [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
-                                                        [customColors]="mChartData.colors" [gradient]="true">
-                                                        <ng-template #tooltipTemplate let-model="model">
-                                                            {{ToolTip(mChartData,model)}}
-                                                        </ng-template>
-                                                    </ngx-charts-bar-vertical>
-                                                </div>
-                                            </ng-template>                                                
+                                        <ng-template #barchart>
+                                            <div class="pad-10 height-500">
+                                                <ngx-charts-bar-vertical #BarChart (window:resize)="onResize(ChartContainer)"
+                                                    [height]="100"
+                                                    [results]="mChartData.BarChartListe" [xAxisLabel]=""
+                                                    [legendTitle]="" [yAxisLabel]="'Weight'" [legend]="false"
+                                                    [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
+                                                    [customColors]="mChartData.colors" [gradient]="true">
+                                                    <ng-template #tooltipTemplate let-model="model">
+                                                        {{ToolTip(mChartData,model)}}
+                                                    </ng-template>
+                                                </ngx-charts-bar-vertical>
+                                            </div>
+                                        </ng-template>                                                
                                         </mat-expansion-panel>
                                     </mat-accordion>
                                     </div>
