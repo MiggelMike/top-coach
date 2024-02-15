@@ -68,7 +68,7 @@
                 </div>
             </ng-template>
             <ng-template #Charts>
-                <div cdkDropListGroup (cdkDropGroupDropped)="drop($event)" >
+                <div cdkDropListGroup>
                     <div cdkDrag id="chart-settings" class="box-shadow-ex" mat-tooltip-panel-above matTooltip="Drag me">
                         <mat-accordion #accSession="matAccordion" multi="true" >
                             <mat-expansion-panel #ExercisesInChart [expanded]="false">
