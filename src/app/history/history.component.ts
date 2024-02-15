@@ -137,7 +137,12 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 
 	drop(aEvent: any) {
-		DexieSvcService.CalcPosAfterDragAndDrop(this.ChartData, aEvent);
+		const s = aEvent;
+		// DexieSvcService.CalcPosAfterDragAndDrop(this.ChartData, aEvent);
+	}
+
+	chartSettingsClick(aEvent: any) {
+		aEvent.stopPropagation();
 	}
 
 	NoSessionName(aSess: HistorySession): boolean{

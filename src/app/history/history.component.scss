@@ -25,6 +25,12 @@
     color: lightgray;
 }
 
+#chart-settings {
+    overflow-y: hidden !important;
+    position: absolute;
+    // width: 90%;
+}
+
 
 // @media screen and (orientation: portrait){
 //     @media screen and  (max-device-height: 2560){

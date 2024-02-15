@@ -68,83 +68,85 @@
                 </div>
             </ng-template>
             <ng-template #Charts>
-                <div cdkDropList (cdkDropListDropped)="drop($event)">
-                    <mat-accordion #accSession="matAccordion" multi="true">
-                        <mat-expansion-panel #ExercisesInChart class="HG-01" [expanded]="false">
-                            <mat-expansion-panel-header>
-                                <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start center">
-                                    <div class="ml-10 font-14-data" fxLayout="column" fxFlex="155px">
-                                        <span>Chart settings</span>
-                                    </div>
-                                </div>
-                            </mat-expansion-panel-header>
-                            
-                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start center">
-                                <ng-container *ngFor="let DiaUebung of DiaUebungsListe">
-                                    <div fxLayout="column" fxLayoutGap="2px" fxFlex="50">
-                                        <ng-container *ngIf="DiaUebung.Relevant">
-                                            <mat-checkbox [(ngModel)]="DiaUebung.Visible"
-                                            (change)="onClickDiaUebung(DiaUebung, $event.checked)">{{DiaUebung.UebungName}}</mat-checkbox>
-                                        </ng-container>
-                                        
-                                    </div>
-                                </ng-container>
-                            </div>
-                            
-                            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center center">
-                                
-                                <div class="center-item" layout-align="center center">
-                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="Draw(true)">Create charts</a>
-                                </div>
-                                <div class="center-item" layout-align="center center">
-                                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="Save()">Save</a>
-                                </div>
-                            </div>
-                        </mat-expansion-panel>
-                    </mat-accordion>
-                    
-                    <div #ChartContainer class="width-100-Prozent height-80-Prozent">
-                        <ng-container *ngIf="(ChartData.length !== undefined && ChartData.length > 0)">
-                            <div cdkDropList  (cdkDropListDropped)="drop($event)">
-                                <ng-container *ngFor="let mChartData of ChartData; index as i">
-                                    <div  class="width-100-Prozent" >
-                                        <div class="mg-top-5" [ngClass]="{'HG-01' : i % 2 === 0}">
-                                            <span class="font-14-label">{{mChartData.UebungName}}</span>
-                                                    <ng-container *ngIf='ChartAuswahl === 0; then linechart; else barchart'></ng-container>
-                                                   
-                                                    <ng-template #linechart>
-                                                        <div class="pad-10 height-500">
-                                                            <ngx-charts-line-chart
-                                                                #LineChart (window:resize)="onResize(ChartContainer)" 
-                                                                height="100vh"   
-                                                                [results]="mChartData.LineChartListe" [xAxisLabel]="'Date'" [legendTitle]="'Exercises'" [yAxisLabel]="'Weight'"
-                                                                [legend]="false" [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
-                                                                [customColors]="mChartData.colors"
-                                                                [gradient]="false">
-                                                            </ngx-charts-line-chart> 
-                                                        </div>
-                                                    </ng-template>
-                                                    <ng-template #barchart>
-                                                        <div class="pad-10 height-500">
-                                                            <ngx-charts-bar-vertical #BarChart (window:resize)="onResize(ChartContainer)"
-                                                                [height]="100"
-                                                                [results]="mChartData.BarChartListe" [xAxisLabel]=""
-                                                                [legendTitle]="" [yAxisLabel]="'Weight'" [legend]="false"
-                                                                [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
-                                                                [customColors]="mChartData.colors" [gradient]="true">
-                                                                <ng-template #tooltipTemplate let-model="model">
-                                                                    {{ToolTip(mChartData,model)}}
-                                                                </ng-template>
-                                                            </ngx-charts-bar-vertical>
-                                                        </div>
-                                                    </ng-template>                                                
+                <div cdkDropListGroup (cdkDropGroupDropped)="drop($event)" >
+                    <div cdkDrag id="chart-settings" class="box-shadow-ex" mat-tooltip-panel-above matTooltip="Drag me">
+                        <mat-accordion #accSession="matAccordion" multi="true" >
+                            <mat-expansion-panel #ExercisesInChart [expanded]="false">
+                                <mat-expansion-panel-header (click)="chartSettingsClick($event)">
+                                    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start center">
+                                        <div class="ml-10 font-14-data" fxLayout="column" fxFlex="155px">
+                                            <span>Chart settings</span>
                                         </div>
                                     </div>
-                                </ng-container>
-                            </div>
-                        </ng-container>
-                    </div>
+                                </mat-expansion-panel-header>
+                                
+                                <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="flex-start center">
+                                    <ng-container *ngFor="let DiaUebung of DiaUebungsListe">
+                                        <div fxLayout="column" fxLayoutGap="2px" fxFlex="50">
+                                            <ng-container *ngIf="DiaUebung.Relevant">
+                                                <mat-checkbox [(ngModel)]="DiaUebung.Visible"
+                                                (change)="onClickDiaUebung(DiaUebung, $event.checked)">{{DiaUebung.UebungName}}</mat-checkbox>
+                                            </ng-container>
+                                            
+                                        </div>
+                                    </ng-container>
+                                </div>
+                                
+                                <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center center">
+                                    <div class="center-item" layout-align="center center">
+                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="Draw(true)">Create charts</a>
+                                    </div>
+                                    <div class="center-item" layout-align="center center">
+                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="Save()">Save</a>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div> 
                 </div>
+                    <div class="scroll-Vert">
+                        <div #ChartContainer class="width-100-Prozent">
+                            <ng-container *ngIf="(ChartData.length !== undefined && ChartData.length > 0)">
+                                <div cdkDropList  (cdkDropListDropped)="drop($event)">
+                                    <ng-container *ngFor="let mChartData of ChartData; index as i">
+                                        <div  class="width-100-Prozent" >
+                                            <div class="mg-top-10" [ngClass]="{'HG-01' : i % 2 === 0}">
+                                                <span class="font-14-label">{{mChartData.UebungName}}</span>
+                                                        <ng-container *ngIf='ChartAuswahl === 0; then linechart; else barchart'></ng-container>
+                                                        
+                                                        <ng-template #linechart>
+                                                            <div class="pad-10 height-500">
+                                                                <ngx-charts-line-chart
+                                                                    #LineChart (window:resize)="onResize(ChartContainer)" 
+                                                                    height="100vh"   
+                                                                    [results]="mChartData.LineChartListe" [xAxisLabel]="'Date'" [legendTitle]="'Exercises'" [yAxisLabel]="'Weight'"
+                                                                    [legend]="false" [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
+                                                                    [customColors]="mChartData.colors"
+                                                                    [gradient]="false">
+                                                                </ngx-charts-line-chart> 
+                                                            </div>
+                                                        </ng-template>
+                                                        <ng-template #barchart>
+                                                            <div class="pad-10 height-500">
+                                                                <ngx-charts-bar-vertical #BarChart (window:resize)="onResize(ChartContainer)"
+                                                                    [height]="100"
+                                                                    [results]="mChartData.BarChartListe" [xAxisLabel]=""
+                                                                    [legendTitle]="" [yAxisLabel]="'Weight'" [legend]="false"
+                                                                    [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
+                                                                    [customColors]="mChartData.colors" [gradient]="true">
+                                                                    <ng-template #tooltipTemplate let-model="model">
+                                                                        {{ToolTip(mChartData,model)}}
+                                                                    </ng-template>
+                                                                </ngx-charts-bar-vertical>
+                                                            </div>
+                                                        </ng-template>                                                
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>                
             </ng-template>
         </div>
     </div>
