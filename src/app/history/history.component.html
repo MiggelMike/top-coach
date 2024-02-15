@@ -124,8 +124,7 @@
                                                             </div>
                                                 </mat-expansion-panel-header>
                                         
-                                        <ng-container *ngIf="ChartAuswahl === 0; then linechart; else barchart">
-                                        </ng-container>
+                                        <ng-container *ngIf='ChartAuswahl === 0; then linechart; else barchart'></ng-container>
                                         
                                         <ng-template #linechart>
                                             <div class="pad-10 height-500">
