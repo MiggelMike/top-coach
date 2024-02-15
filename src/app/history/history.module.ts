@@ -50,6 +50,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 
+
 const routes: Routes = [{ path: 'history', component: HistoryComponent }];
 
 @NgModule({
@@ -82,7 +83,6 @@ const routes: Routes = [{ path: 'history', component: HistoryComponent }];
     MatIconModule,
     NgxChartsModule,
     BrowserAnimationsModule,
-    
     MatTooltipModule,
     MatTreeModule,
 

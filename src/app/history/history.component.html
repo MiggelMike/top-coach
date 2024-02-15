@@ -107,25 +107,11 @@
                         <ng-container *ngIf="(ChartData.length !== undefined && ChartData.length > 0)">
                             <div cdkDropList  (cdkDropListDropped)="drop($event)">
                                 <ng-container *ngFor="let mChartData of ChartData; index as i">
-                                    <div class="width-100-Prozent">
-                                        <div class="mg-top-2">
-                                            <mat-accordion #accSession="matAccordion" multi="true"  cdkDrag>
-                                                <mat-expansion-panel 
-                                                    class="HG-01" 
-                                                    (opened)="OnBarChartExpanded(mChartData)"
-                                                    (closed)="OnBarChartClosed(mChartData)"
-                                                    [expanded]="false">
-                                                    <mat-expansion-panel-header mat-tooltip-panel-below  matTooltip="Hold and drag">
-                                                        <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"
-                                                        fxLayoutAlign="flex-start center">
-                                                            <div class="ml-10" fxLayout="column" fxFlex="155px">
-                                                                <span>{{mChartData.UebungName}}</span>
-                                                            </div>
-                                                        </div>
-                                                    </mat-expansion-panel-header>
-                                    
+                                    <div  class="width-100-Prozent" >
+                                        <div class="mg-top-5" [ngClass]="{'HG-01' : i % 2 === 0}">
+                                            <span class="font-14-label">{{mChartData.UebungName}}</span>
                                                     <ng-container *ngIf='ChartAuswahl === 0; then linechart; else barchart'></ng-container>
-                                                    
+                                                   
                                                     <ng-template #linechart>
                                                         <div class="pad-10 height-500">
                                                             <ngx-charts-line-chart
@@ -152,8 +138,6 @@
                                                             </ngx-charts-bar-vertical>
                                                         </div>
                                                     </ng-template>                                                
-                                                    </mat-expansion-panel>
-                                                </mat-accordion>
                                         </div>
                                     </div>
                                 </ng-container>

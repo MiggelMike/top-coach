@@ -16,12 +16,14 @@ import { DateFormatTyp, Datum } from 'src/Business/Datum';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { Router } from '@angular/router';
 import { MatRadioGroup } from '@angular/material/radio';
+import {ChangeDetectionStrategy } from '@angular/core';
 // import {  MatExpansionPanelHeader, MatExpansionPanel } from '@angular/material/expansion';
 // import { Session } from 'inspector';
 var cloneDeep = require('lodash.clonedeep');
 
 @Component({
 	selector: 'app-history',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	templateUrl: './history.component.html',
 	styleUrls: ['./history.component.scss']
 })
