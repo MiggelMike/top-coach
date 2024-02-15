@@ -97,9 +97,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		DexieSvcService.ModulTyp = ProgramModulTyp.History;
 
 		this.toDate = new Date();
-		this.fromDate = new Date();
-		this.fromDate.setDate(this.toDate.getDate());
-		this.fromDate.setTime(this.fromDate.getTime() + (-90 * 24 * 60 * 60 * 1000));
+		this.fromDate = Datum.StaticAddDays(this.toDate, -90);
 
 		this.range.controls['start'].setValue(this.fromDate);
 		this.range.controls['end'].setValue(this.toDate);

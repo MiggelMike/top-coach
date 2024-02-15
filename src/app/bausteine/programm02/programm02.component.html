@@ -10,6 +10,7 @@
                 <div  class='mg-top-1'>
                     <mat-accordion #accSession="matAccordion" multi="true">
                         <mat-expansion-panel 
+                            [expanded]="false"
                             #panSession='matExpansionPanel'                            
                             (opened) = "panelOpened(sess)"
                             (closed) = "panelClosed(sess)" 

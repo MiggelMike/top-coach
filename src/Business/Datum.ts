@@ -38,4 +38,9 @@ export class Datum{
             }
         }
     }
+
+    public static StaticAddDays(aDatum: Date, aTage: number): Date {
+        return new Date(aDatum.getTime() + aTage * 24 * 60 * 60 * 1000);
+    }
+
 }
