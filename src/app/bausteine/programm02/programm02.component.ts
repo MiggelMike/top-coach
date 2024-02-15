@@ -54,8 +54,8 @@ export class Programm02Component implements OnInit, IProgramModul {
 	
 
 	drop(event: any) {
-		const mEvent = event as CdkDragDrop<ISession[]>;
-		if (DexieSvcService.CalcPosAfterDragAndDrop(this.programm.SessionListe, mEvent.currentIndex, mEvent.previousIndex) === true) {
+		//const mEvent = event as CdkDragDrop<ISession[]>;
+		if (DexieSvcService.CalcPosAfterDragAndDrop(this.programm.SessionListe, event) === true) {
 			this.programm.NummeriereSessions();
 			this.SaveChanges();
 		}

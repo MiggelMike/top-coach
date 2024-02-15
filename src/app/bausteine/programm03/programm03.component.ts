@@ -127,9 +127,7 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISa
 	}
 
 	drop(event: any) {
-		const mEvent = event as CdkDragDrop<Uebung[]>;
-
-		if(DexieSvcService.CalcPosAfterDragAndDrop(this.session.UebungsListe, mEvent.currentIndex,mEvent.previousIndex) === true)
+		if(DexieSvcService.CalcPosAfterDragAndDrop(this.session.UebungsListe, event) === true)
 			Session.nummeriereUebungsListe(this.session.UebungsListe);
 	}
 

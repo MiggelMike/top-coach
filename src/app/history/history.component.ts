@@ -96,15 +96,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	) {
 		DexieSvcService.ModulTyp = ProgramModulTyp.History;
 
-		// if ((DexieSvcService.HistoryBisDatum === null) || (DexieSvcService.HistoryBisDatum === undefined)) {
-		// 	DexieSvcService.HistoryBisDatum = new Date();
-		// }
-
-		// if ((DexieSvcService.HistoryVonDatum === null)||(DexieSvcService.HistoryVonDatum === undefined)) {
-		// 	DexieSvcService.HistoryVonDatum = new Date();
-		// 	DexieSvcService.HistoryVonDatum.setDate(DexieSvcService.HistoryBisDatum.getDate() - 90);
-		// }
-
 		this.toDate = new Date();
 		this.fromDate = new Date();
 		this.fromDate.setDate(this.toDate.getDate());
@@ -146,10 +137,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 
 	drop(aEvent: any) {
-		DexieSvcService.CalcPosAfterDragAndDrop(this.ChartData, aEvent.currentIndex, aEvent.previousIndex);
-		// const mChartData: ChartData = this.ChartData[aEvent.currentIndex];
-		// this.ChartData[aEvent.currentIndex] = this.ChartData[aEvent.previousIndex];
-		// this.ChartData[aEvent.previousIndex] = mChartData;
+		DexieSvcService.CalcPosAfterDragAndDrop(this.ChartData, aEvent);
 	}
 
 	NoSessionName(aSess: HistorySession): boolean{
