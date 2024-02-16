@@ -29,7 +29,7 @@ var cloneDeep = require('lodash.clonedeep');
 })
 export class HistoryComponent implements OnInit, IProgramModul {
 	public get SessionListe(): Array<HistorySession> {
-		return  DexieSvcService.HistorySessions.filter((sess) => { 
+		return DexieSvcService.HistorySessions.filter((sess) => {
 			return (sess.GestartedWann.valueOf() >= this.fromDate.valueOf() && sess.GestartedWann.valueOf() <= this.toDate.valueOf())
 		});
 	}
@@ -67,7 +67,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	fromDate: Date;
 	//#endregion
 	//#region toData
-	toDate: Date; 
+	toDate: Date;
 	//#endregion
 
 	ChartData: Array<ChartData> = [];
@@ -87,7 +87,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	range = new FormGroup({
 		start: new FormControl(),
 		end: new FormControl()
-	  });
+	});
 	
 
 	constructor(
@@ -113,13 +113,13 @@ export class HistoryComponent implements OnInit, IProgramModul {
 			const mDialogData: DialogData = new DialogData();
 			mDialogData.height = cLoadingDefaultHeight;
 			mDialogData.width = '200px';
-			mDialogData.textZeilen.push('Loading history'); 
+			mDialogData.textZeilen.push('Loading history');
 			mDialogData.ShowOk = false;
 			this.fDbModul.fDialogHistoryService.Loading(mDialogData);
 		}
 
 		this.fDbModul.LadeDiaUebungen()
-			.then((mData) =>  this.DiaUebungSettingsListe = mData);
+			.then((mData) => this.DiaUebungSettingsListe = mData);
 	}
 
 	ngOnDestroy() {
@@ -133,7 +133,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		return ProgramModulTyp;
 	}
 
-	get DateInputMask(): string{
+	get DateInputMask(): string {
 		return DexieSvcService.AktuellSprache.Kuerzel === cDeutschKuerzel ? cDeutschDateInputMask : cEnglishDateInputMask;
 	}
 
@@ -142,7 +142,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		this.router.navigate(["sessionFormComponent"], { state: { programm: undefined, sess: aSession, ModulTyp: ProgramModulTyp.HistoryView } });
 	}
 		
-	GestartedWann(aSess: ISession): string{
+	GestartedWann(aSess: ISession): string {
 		return Datum.StaticFormatDate(aSess.GestartedWann, DateFormatTyp.KomplettOhneSekunden);
 	}
 
@@ -154,11 +154,11 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		aEvent.stopPropagation();
 	}
 
-	NoSessionName(aSess: HistorySession): boolean{
+	NoSessionName(aSess: HistorySession): boolean {
 		return (aSess.ProgrammName === undefined || aSess.ProgrammName.trim() === '');
 	}
 
-	SessProgrammName(aSess: HistorySession): string{
+	SessProgrammName(aSess: HistorySession): string {
 		if (this.NoSessionName(aSess))
 			return '?';
 		return aSess.ProgrammName;
@@ -190,6 +190,22 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		// DexieSvcService.HistoryBisDatum = this.toDate;
 		// DexieSvcService.HistoryVonDatum = this.fromDate;
 		this.Draw(true);
+	}
+
+	ChartSettingsVisible: boolean = true;
+	
+	get ChartSettingsText(): string {
+		if (this.ChartSettingsVisible === true)
+			return 'Close chart settings';
+		return 'Open chart settings';
+	}
+
+	CloseChartSettings() {
+		this.ChartSettingsVisible = false;
+	}
+
+	OpenChartSettings() {
+		this.ChartSettingsVisible = !this.ChartSettingsVisible;		
 	}
 
 	public Draw(aDialogOn: boolean): void {
