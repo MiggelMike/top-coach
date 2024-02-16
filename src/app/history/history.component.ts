@@ -6,7 +6,7 @@ import { DiaDatum, DiaUebung, DiaUebungSettings } from './../../Business/Diagram
 import { Component, ContentChild, Inject, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { IProgramModul, ProgramModulTyp } from './../../app/app.module';
 import { DialogeService } from '../services/dialoge.service';
-import { DialogData } from '../dialoge/hinweis/hinweis.component';
+import { DialogData, cLoadingDefaultHeight } from '../dialoge/hinweis/hinweis.component';
 import { LineChartComponent } from '@swimlane/ngx-charts';
 import { FormControl, FormGroup } from '@angular/forms';
 import { LOCALE_ID } from '@angular/core';
@@ -108,6 +108,16 @@ export class HistoryComponent implements OnInit, IProgramModul {
 		this.CreatingChartsDialogData.hasBackDrop = false;
 		this.CreatingChartsDialogData.height = '150px';
 		this.CreatingChartsDialogData.textZeilen[0] = 'Creating charts';
+		
+		if (DexieSvcService.HistoryWirdGeladen === true) {
+			const mDialogData: DialogData = new DialogData();
+			mDialogData.height = cLoadingDefaultHeight;
+			mDialogData.width = '200px';
+			mDialogData.textZeilen.push('Loading history'); 
+			mDialogData.ShowOk = false;
+			this.fDbModul.fDialogHistoryService.Loading(mDialogData);
+		}
+
 		this.fDbModul.LadeDiaUebungen()
 			.then((mData) =>  this.DiaUebungSettingsListe = mData);
 	}
@@ -185,6 +195,15 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	public Draw(aDialogOn: boolean): void {
 		// if (this.Auswahl === 0)
 		// 	return;
+
+		if (DexieSvcService.DiagrammeWerdenErstellt === true) {
+			const mDialogData: DialogData = new DialogData();
+			mDialogData.height = cLoadingDefaultHeight;
+			mDialogData.width = '200px';
+			mDialogData.textZeilen.push('Processing charts'); 
+			mDialogData.ShowOk = false;
+			this.fDbModul.fDialogHistoryService.Loading(mDialogData);
+		}		
 
 		if (aDialogOn)
 			this.fLoadingDialog.Loading(this.CreatingChartsDialogData);

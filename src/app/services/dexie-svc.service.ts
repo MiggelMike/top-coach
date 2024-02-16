@@ -25,6 +25,7 @@ import { Sprache } from '../Sprache/Sprache';
 import { ProgramModulTyp } from '../app.module';
 import { Router } from '@angular/router';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { error } from 'console';
 var cloneDeep = require('lodash.clonedeep');
 
 
@@ -213,8 +214,8 @@ export class DexieSvcService extends Dexie {
 
 	public HistorySessionsAfterLoadFn: AfterLoadFn = null;
 	public static HistorySessions: Array<HistorySession> = [];
-	// public static HistoryBisDatum: Date = null;
-	// public static HistoryVonDatum: Date = null;
+	public static HistoryWirdGeladen: boolean = false;
+	public static DiagrammeWerdenErstellt: boolean = false;
 	public static AktuellesProgramm: ITrainingsProgramm = null;
 	public static CmpAktuellesProgramm: ITrainingsProgramm = null;
 	public static AllowExamples: boolean = true;
@@ -257,8 +258,11 @@ export class DexieSvcService extends Dexie {
 	// Siehe Anstehende-Sessions
 	public MustLoadDiagramData: boolean = true;
 	private ProgramLadeStandardPara: ProgrammParaDB;
+//	private DialogData = new DialogData();
+	private InitDialogData = new DialogData();
 
 	public LadeDiagrammData(aVonDatum: Date, aBisDatum: Date, aSessionListe: Array<Session>, aDiagrammDatenListe: Array<DiaDatum>) {
+		DexieSvcService.DiagrammeWerdenErstellt = true;
 		let mBisDatum: Date = aBisDatum;
 		if (aBisDatum < cMaxDatum)
 			mBisDatum.setDate(aBisDatum.getDate() + 1);
@@ -354,7 +358,11 @@ export class DexieSvcService extends Dexie {
 			});
 
 			DexieSvcService.DiagrammDatenListe = aDiagrammDatenListe;
+			DexieSvcService.DiagrammeWerdenErstellt = false;
+			this.fDialogHistoryService.fDialog.closeAll();
 		} catch (err) {
+			DexieSvcService.DiagrammeWerdenErstellt = false;
+			this.fDialogHistoryService.fDialog.closeAll();
 			console.error(err);
 			return null;
 		}
@@ -634,6 +642,8 @@ export class DexieSvcService extends Dexie {
 
 	constructor(
 		private fDialogeService: DialogeService,
+		public fDialogHistoryService: DialogeService,
+		private fDialogInitService: DialogeService,
 		private router: Router,
 		// private fTranslateService: TranslateService,
 		@Optional() @SkipSelf()
@@ -685,20 +695,31 @@ export class DexieSvcService extends Dexie {
 		aListe[aEvent.currentIndex] = mPtr;
 		return true;
 	}
-	
-
 			
 	async InitDatenbank() {
-		this.InitAll();
-		this.PruefeStandardProgress();
-		this.PruefeStandardLanghanteln();
-		this.PruefeStandardEquipment();
-		this.PruefeStandardMuskelGruppen();
+		try {
+			this.InitDialogData.height = '100px';
+			this.InitDialogData.ShowOk = false;
+			this.InitDialogData.textZeilen.push(`Initializing...`);
+			this.fDialogInitService.Loading(this.InitDialogData);
+			this.InitAll();
+			this.PruefeStandardProgress();
+			this.PruefeStandardLanghanteln();
+			this.PruefeStandardEquipment();
+			this.PruefeStandardMuskelGruppen();
+		} catch (err) {
+			this.fDialogeService.fDialog.closeAll();
+			this.InitDialogData.height = '100px';
+			this.InitDialogData.ShowOk = true;
+			this.InitDialogData.textZeilen = [];
+			this.InitDialogData.textZeilen.push(err);
+			this.fDialogInitService.Hinweis(this.InitDialogData);
+		}
 
 		if (DexieSvcService.AktuellesProgramm === null) {
 			await this.LadeAktuellesProgramm()
 				.then(() => {
-					return DexieSvcService.VerfuegbareProgramme;
+					return DexieSvcService.AktuellesProgramm;
 				});
 		}
 
@@ -1128,7 +1149,7 @@ export class DexieSvcService extends Dexie {
 			.toArray()
 			.then((mMuskelgruppenListe) => {
 				DexieSvcService.MuskelGruppenListe = mMuskelgruppenListe;
-
+				this.fDialogInitService.fDialog.closeAll();
 				if (aAfterLoadFn !== undefined) aAfterLoadFn();
 			});
 	}
@@ -1678,6 +1699,8 @@ export class DexieSvcService extends Dexie {
 
 
 	public LadeHistorySessions(aVonDatum: Date, aBisDatum: Date): Promise<Array<HistorySession>> {
+		DexieSvcService.HistoryWirdGeladen = true;
+		DexieSvcService.HistorySessions = [];
 		if (aVonDatum === null)
 			aVonDatum = new Date('01.01.2020');
 
@@ -1685,7 +1708,6 @@ export class DexieSvcService extends Dexie {
 			aBisDatum = new Date('01.01.2099');
 
 		const mProgramNamen: Array<{ ID: number, Name: string }> = [];
-
 		return DexieSvcService.SessionTable
 			.where("GestartedWann")
 			.between(aVonDatum, aBisDatum, true, true)
@@ -1694,8 +1716,6 @@ export class DexieSvcService extends Dexie {
 			.reverse()
 			.sortBy("GestartetWann")
 			.then(async (aSessionListe) => {
-				//let mResult: Array<HistorySession> = [];
-				DexieSvcService.HistorySessions = [];
 				aSessionListe.map((aSessionDB) => DexieSvcService.HistorySessions.push(new HistorySession(aSessionDB)));
 
 				
@@ -1747,12 +1767,17 @@ export class DexieSvcService extends Dexie {
 					this.HistorySessionsAfterLoadFn();
 				}
 
+				DexieSvcService.HistoryWirdGeladen = false;
 				this.LadeDiagrammData(
 					cMinDatum, //aVonDatum: Date, 
 					cMinDatum, // aBisDatum: Date,
 					DexieSvcService.HistorySessions,
 					DexieSvcService.DiagrammDatenListe);
 				
+				return DexieSvcService.HistorySessions;
+			}).catch((error) => {
+				this.fDialogHistoryService.fDialog.closeAll();
+				DexieSvcService.HistoryWirdGeladen = false;
 				return DexieSvcService.HistorySessions;
 			});
 	}

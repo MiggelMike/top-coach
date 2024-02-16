@@ -79,6 +79,7 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul,  ISat
 		DexieSvcService.ModulTyp = ProgramModulTyp.AnstehendeSessions;
 	}
 
+
 	public get AktuellesProgramm(): ITrainingsProgramm {
 		return DexieSvcService.AktuellesProgramm;
 	}
