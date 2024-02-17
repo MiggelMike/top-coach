@@ -496,6 +496,11 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 				mHistorySession = aSessionForm.Session as HistorySession;
 				mHistorySession.ProgrammName = this.Programm.Name;
 				DexieSvcService.HistorySessions.unshift(mHistorySession);
+				this.fDbModule.ErstelleDiagrammData(
+					cMinDatum, //aVonDatum: Date, 
+					cMinDatum, // aBisDatum: Date,
+					DexieSvcService.HistorySessions,
+					DexieSvcService.DiagrammDatenListe);
 					
 				const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
 				// UebungID nicht kopieren

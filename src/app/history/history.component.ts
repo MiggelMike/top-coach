@@ -51,7 +51,6 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 	public DiaUebungSettingsListe: Array<DiaUebungSettings> = [];
 	public Diagramme: Array<Chart> = [];
 	private CreatingChartsDialogData: DialogData = new DialogData();
-	private Interval: any;
 	group: FormGroup;
 	public date: moment.Moment;
 	public disabled = false;
@@ -556,17 +555,6 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 	}
 
 	AuswahlChanged(event:any ) {
-		if (event.value === 1) {
-			if (this.Interval !== undefined) {
-				clearInterval(this.Interval);
-				this.Interval = undefined;
-			}
-
-			// setTimeout(() => {
-			//  	this.ChartType.value = this.aktuellerDiaTyp;
-			//  	this.Draw(true);
-			// }, 100);
-		}//if
 		this.Auswahl = event.value;
 	}
 	

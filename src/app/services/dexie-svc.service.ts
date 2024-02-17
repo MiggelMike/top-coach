@@ -261,7 +261,7 @@ export class DexieSvcService extends Dexie {
 //	private DialogData = new DialogData();
 	private InitDialogData = new DialogData();
 
-	public LadeDiagrammData(aVonDatum: Date, aBisDatum: Date, aSessionListe: Array<Session>, aDiagrammDatenListe: Array<DiaDatum>) {
+	public ErstelleDiagrammData(aVonDatum: Date, aBisDatum: Date, aSessionListe: Array<Session>, aDiagrammDatenListe: Array<DiaDatum>) {
 		DexieSvcService.DiagrammeWerdenErstellt = true;
 		let mBisDatum: Date = aBisDatum;
 		if (aBisDatum < cMaxDatum)
@@ -1768,7 +1768,7 @@ export class DexieSvcService extends Dexie {
 				}
 
 				DexieSvcService.HistoryWirdGeladen = false;
-				this.LadeDiagrammData(
+				this.ErstelleDiagrammData(
 					cMinDatum, //aVonDatum: Date, 
 					cMinDatum, // aBisDatum: Date,
 					DexieSvcService.HistorySessions,
