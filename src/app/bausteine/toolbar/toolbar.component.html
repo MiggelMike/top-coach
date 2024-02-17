@@ -1,5 +1,5 @@
 <ng-container *ngIf="isVisible">
-    <mat-toolbar [ngClass]="['link-button-font', 'HG-01']">
+    <mat-toolbar>
         <mat-toolbar-row>
                 <div>
                     <a mat-button (click)="NavCheckFn? NavCheckFn('',Data) : NavHome()"  [ngClass]="{ 'font-bold': getActiveItem === activeItem.Home}">Home</a>

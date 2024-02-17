@@ -1,11 +1,17 @@
     
-<app-toolbar></app-toolbar>
-
-<div class="column-center">
-    <div class="width-600">
-        <div class="colum-center center-item height-40">
-            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="createWorkOut()">Create workout</a>
+<div class="header-box">
+    <app-toolbar></app-toolbar>
+    <div class="row-center">
+        <div class="column-center width-600">
+            <div class="colum-center center-item height-40">
+                <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="createWorkOut()">Create workout</a>
+            </div>
         </div>
+    </div>
+</div>
+
+<div id="main-panel" class="column-center">
+    <div class="width-600">
         <ng-container *ngIf="ViewInitDone === true">
             <ng-container *ngFor="let programm of ProgrammListe">
                 <div class="mg-top-1">

@@ -1,9 +1,17 @@
-<app-toolbar></app-toolbar>
-<div class="column-center">
+<div class="header-box">
+    <app-toolbar></app-toolbar>
+    <div class="row-center">
+        <div class="column-center width-600">
+            <p class="font-bold">Upcoming sessions</p>
+            <ng-container  *ngIf="AktuellesProgramm">
+                <h4>{{AktuellesProgramm.Name}}</h4>
+            </ng-container>
+        </div>
+    </div>
+</div>
+<div id="main-panel" class="column-center">
     <div class="width-600">
-        <p class="font-bold">Upcoming sessions</p>
         <ng-container  *ngIf="AktuellesProgramm">
-            <h4>{{AktuellesProgramm.Name}}</h4>
             <div class="colum-center">
                 <ng-container *ngIf="SessionListe && (SessionListe.length > 0)">
                     <!-- <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleSessions()">{{ToggleButtonText}}</a>

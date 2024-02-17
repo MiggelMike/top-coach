@@ -1,51 +1,48 @@
-<app-toolbar></app-toolbar>
+<div class="header-box">
+    <app-toolbar></app-toolbar>
+    <div id="historyHeader">
+        <div class="column-center">
+            <div class="row-center">
+                <mat-form-field appearance="outline">
+                    <mat-label>Select Date Range</mat-label>
+                    <mat-date-range-input [rangePicker]="picker" [formGroup]="range">
+                    <input  matStartDate 
+                            placeholder="Start Date" 
+                            formControlName="start" 
+                            [(ngModel)]="fromDate"
+                            >
+                    <input matEndDate 
+                        placeholder="End Date" 
+                        formControlName="end"
+                        [(ngModel)]="toDate">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker (closed)="onClose()"></mat-date-range-picker>
+                </mat-form-field>
+                
+                
+                <mat-radio-group #AuswahlRadio class="tp-radio-group" [(ngModel)]="Auswahl" (change)="AuswahlChanged($event)">
+                    <div class="row-start-left-gap-3 height-30">
+                        <mat-radio-button class="tp-radio-button" [value]="0">Sessions</mat-radio-button>
+                    </div>
+                    <div class="row-start-left-gap-3 height-30">
+                        <mat-radio-button class="tp-radio-button" [value]="1">Charts</mat-radio-button>
+                    </div>
+                </mat-radio-group>
+
+                <ng-container *ngIf="Auswahl === 1">
+                    <div class="column-center width-200">
+                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="OpenChartSettings()">{{ChartSettingsText}}</a>
+                    </div>
+                </ng-container>
+            </div>
+
+        </div>        
+    </div>
+</div>
 
 <div id="History-Panel">
     <div id="History-Sub-Panel">
-        <div class="column-center">
-            <div class="column-start-left width-600">
-                <!-- <div class="row-start-left-gap-3">
-                    <p class="font-bold">History</p>
-                </div> -->
-                <div class="row-start-left-gap-3">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Select Date Range</mat-label>
-                        <mat-date-range-input [rangePicker]="picker" [formGroup]="range">
-                        <input  matStartDate 
-                                placeholder="Start Date" 
-                                formControlName="start" 
-                                [(ngModel)]="fromDate"
-                                >
-                        <input matEndDate 
-                            placeholder="End Date" 
-                            formControlName="end"
-                            [(ngModel)]="toDate">
-                        </mat-date-range-input>
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-date-range-picker #picker (closed)="onClose()"></mat-date-range-picker>
-                    </mat-form-field>
-                    
-                    
-                    <mat-radio-group #AuswahlRadio class="tp-radio-group" [(ngModel)]="Auswahl" (change)="AuswahlChanged($event)">
-                        <mat-radio-button class="tp-radio-button" [value]="0">Sessions</mat-radio-button>
-                        <mat-radio-button class="tp-radio-button" [value]="1">Charts</mat-radio-button>
-                    </mat-radio-group>
-                    
-                    <ng-container *ngIf="(Auswahl === 1)">
-                        <mat-radio-group #ChartType class="tp-radio-group" [(ngModel)]="ChartAuswahl" (change)="ChartChanged($event)">
-                            <mat-radio-button class="tp-radio-button" [value]="0">Line</mat-radio-button>
-                            <mat-radio-button class="tp-radio-button" [value]="1">Bar</mat-radio-button>
-                        </mat-radio-group>
-
-                        <div class="column-center width-300">
-                            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="OpenChartSettings()">{{ChartSettingsText}}</a>
-                        </div>
-                    </ng-container>
-                </div>
-            </div>        
-        </div>
-
-
         <div id='history-sessions'>
             <ng-container *ngIf="(Auswahl === 0); then Sessions; else Charts"></ng-container>  
             <ng-template #Sessions>
@@ -79,6 +76,14 @@
                                 <span>Chart settings</span>
                             </div>
                         </div>
+
+                        <div class="row-center-gap-10">
+                            <mat-radio-group #ChartType class="tp-radio-group" [(ngModel)]="ChartAuswahl" (change)="ChartChanged($event)">
+                                <mat-radio-button class="tp-radio-button" [value]="0">Line</mat-radio-button>
+                                <mat-radio-button class="tp-radio-button" [value]="1">Bar</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+
 
                         <div class="row-start-left-gap-3 wrap">
                             <ng-container *ngFor="let DiaUebung of DiaUebungsListe">

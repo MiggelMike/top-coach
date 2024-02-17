@@ -808,7 +808,16 @@ input[type=text]:focus  {
 	background: none;
   }
 
-  
+  .header-box {
+     position:fixed;
+	 top:0;   
+	 width: 100%;  
+	 z-index: 1000;
+	 background-color: white;  
+	//  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
+  }
+
+
 
 
 // .mat-calendar  {
