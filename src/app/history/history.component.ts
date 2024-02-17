@@ -73,6 +73,7 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 	//#endregion
 
 	ChartData: Array<ChartData> = [];
+	CmpAuswahl:number = 0;
 	Auswahl: number = 0;
 	BarChartDataHelperList: Array<ChartData> = [];
 	aktuellerDiaTyp: DiaTyp;
@@ -207,7 +208,7 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 		this.Draw(true);
 	}
 
-	ChartSettingsVisible: boolean = true;
+	ChartSettingsVisible: boolean = false;
 	
 	get ChartSettingsText(): string {
 		if (this.ChartSettingsVisible === true)
@@ -326,6 +327,7 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 						if (mWorkChartData === undefined) {
 							mWorkChartData = new ChartData();
 							mWorkChartData.UebungName = mPtrDiaUebung.UebungName;
+							mWorkChartData.ActiveDiaType = 'bar';
 							this.ChartData.push(mWorkChartData);
 						}
 						mPtrDiaUebung.Relevant = true;
@@ -340,6 +342,7 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 								if (mLineChartData === undefined) {
 									mLineChartData = new LineChartData();
 									mLineChartData.name = mPtrDiaUebung.UebungName;
+									mWorkChartData.ActiveDiaType = 'line';
 									mWorkChartData.LineChartListe.push(mLineChartData);
 									mWorkChartData.colors.push({ "name": mPtrDiaUebung.UebungName, "value": "#63B8FF" });
 								}
@@ -386,11 +389,11 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 				}
 			}//for
 
-			if (this.ChartType !== undefined) {
-				if(this.ChartType.value === DiaTyp.bar)
-					this.ChartData.forEach((mChar) => mChar.ActiveDiaType = 'bar');
+			// if (this.ChartType !== undefined) {
+			// 	if(this.ChartType.value === DiaTyp.bar)
+			// 		this.ChartData.forEach((mChar) => mChar.ActiveDiaType = 'bar');
 				
-			}
+			// }
 
 			this.ChartData = this.ChartData.sort((c1, c2) => { 
 				if (c1.UebungName > c2.UebungName) 
@@ -559,15 +562,29 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 				this.Interval = undefined;
 			}
 
-			setTimeout(() => {
-			 	this.ChartType.value = this.aktuellerDiaTyp;
-			 	this.Draw(true);
-			}, 100);
+			// setTimeout(() => {
+			//  	this.ChartType.value = this.aktuellerDiaTyp;
+			//  	this.Draw(true);
+			// }, 100);
 		}//if
+		this.Auswahl = event.value;
 	}
 	
+	ngDoCheck() {
+		if  (this.CmpAuswahl != this.Auswahl && this.ChartType != undefined) {
+			if (this.Auswahl === 1) {
+				this.ChartType.value = this.aktuellerDiaTyp;
+				this.Draw(true);
+			}
+			this.CmpAuswahl = this.Auswahl;
+			
+		}
+	}
+
 	onResize(event:any) {
 	}
+
+
 	
 	CalcChartSize(aChartContainer: any) {
 	}
