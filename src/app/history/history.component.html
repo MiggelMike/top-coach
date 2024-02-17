@@ -21,7 +21,7 @@
                 </mat-form-field>
                 
                 
-                <mat-radio-group #AuswahlRadio class="tp-radio-group" [(ngModel)]="Auswahl" (change)="AuswahlChanged($event)">
+                <mat-radio-group #AuswahlRadio class="tp-radio-group" [(ngModel)]="Auswahl" (change)="AuswahlChanged($event)" >
                     <div class="row-start-left-gap-3 height-30">
                         <mat-radio-button class="tp-radio-button" [value]="0">Sessions</mat-radio-button>
                     </div>
@@ -78,9 +78,9 @@
                         </div>
 
                         <div class="row-center-gap-10">
-                            <mat-radio-group #ChartType class="tp-radio-group" [(ngModel)]="ChartAuswahl" (change)="ChartChanged($event)">
-                                <mat-radio-button class="tp-radio-button" [value]="0">Line</mat-radio-button>
-                                <mat-radio-button class="tp-radio-button" [value]="1">Bar</mat-radio-button>
+                            <mat-radio-group #ChartType class="tp-radio-group" [(ngModel)]="aktuellerDiaTyp" (change)="ChartChanged($event)">
+                                <mat-radio-button class="tp-radio-button" [value]="0" >Line</mat-radio-button>
+                                <mat-radio-button class="tp-radio-button" [value]="1" >Bar</mat-radio-button>
                             </mat-radio-group>
                         </div>
 
@@ -130,7 +130,7 @@
                                         <div  class="width-100-Prozent" >
                                             <div class="mg-top-10" [ngClass]="{'HG-01' : i % 2 === 0}">
                                                 <span class="font-14-label">{{mChartData.UebungName}}</span>
-                                                        <ng-container *ngIf='ChartAuswahl === 0; then linechart; else barchart'></ng-container>
+                                                        <ng-container *ngIf='aktuellerDiaTyp === diaTyp().line; then linechart; else barchart'></ng-container>
                                                         
                                                         <ng-template #linechart>
                                                             <div class="pad-10 height-500">

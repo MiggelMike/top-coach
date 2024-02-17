@@ -477,20 +477,25 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 		const that = this;
 		// Der Benutzer will speichern und schließen.
 		mDialogData.OkFn = async (aSessionForm: SessionFormComponent) => {
-		const mSaveDialogData = new DialogData();
-		mSaveDialogData.height = '175px';
-		mSaveDialogData.width = '300px';
-		mSaveDialogData.ShowAbbruch = false;
-		mSaveDialogData.ShowOk = false;
-		mSaveDialogData.textZeilen.push('Saving');
-		try {
-			// Dem Benutzer zeigen, dass gespeichert wird.
-			this.fSavingDialog.Loading(mSaveDialogData);
+			const mSaveDialogData = new DialogData();
+			mSaveDialogData.height = '175px';
+			mSaveDialogData.width = '300px';
+			mSaveDialogData.ShowAbbruch = false;
+			mSaveDialogData.ShowOk = false;
+			mSaveDialogData.textZeilen.push('Saving');
+			try {
+				// Dem Benutzer zeigen, dass gespeichert wird.
+				this.fSavingDialog.Loading(mSaveDialogData);
 				// Session aus Sessionliste entfernen.
 				DexieSvcService.AktuellesProgramm.SessionListe.splice(aSessionForm.Session.ListenIndex, 1);
 				// Session-Status auf fertig setzen
 				aSessionForm.Session.SetSessionFertig();
 				this.fDbModule.SessionSpeichern(aSessionForm.Session);
+				let mHistorySession: HistorySession = new HistorySession(); 
+				// mHistorySession.ID = undefined;
+				mHistorySession = aSessionForm.Session as HistorySession;
+				mHistorySession.ProgrammName = this.Programm.Name;
+				DexieSvcService.HistorySessions.unshift(mHistorySession);
 					
 				const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
 				// UebungID nicht kopieren
@@ -566,8 +571,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 													// Ist der Progress aus dem Programm der gleiche wie der, der neuen Uebung?
 													mProgrammSessionUebung.FkProgress === mNeueUebung.FkProgress &&
 													// Ist die Progress-Gruppe aus dem Programm die gleiche wie die, der neuen Uebung?
-													mProgrammSessionUebung.ProgressGroup === mNeueUebung.ProgressGroup)
-												{
+													mProgrammSessionUebung.ProgressGroup === mNeueUebung.ProgressGroup) {
 													await this.fDbModule.CheckUebungSaetze(mProgrammSessionUebung).then(() => {
 														// if (mProgrammSessionUebung.SatzListe.length <= 0)
 														// 	alert("Keine Sätze");
@@ -639,7 +643,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 										this.Programm = mPtrProgramm;
 										// this.fDbModule.LadeAktuellesProgramm();
 										// this.DoAfterDone(this);
-										this.fDbModule.LadeHistorySessions(null, null);
+										//this.fDbModule.LadeHistorySessions(null, null);
 										this.fSavingDialog.fDialog.closeAll();
 										//this.location.back();
 										// this.router.navigate(['/']);
@@ -647,7 +651,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 
 									});
 									
-								});
+							});
 					} catch (err) {
 						console.error(err);
 					}
@@ -656,7 +660,6 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 				this.fSavingDialog.fDialog.closeAll();
 				console.error(err);
 			}
-			
 		} // <= mDialogData.OkFn
 		// Den Benutzer fragen, ob er speichern und schliessen möchte
 		this.fDialogService.JaNein(mDialogData);

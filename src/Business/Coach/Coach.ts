@@ -4,6 +4,15 @@ export enum GewichtsEinheit {
     LBS
 }
 
+export enum DiaTyp {
+    line,
+    bar
+} 
+
+export interface IDiaTyp {
+    diaTyp(): typeof DiaTyp;
+}
+
 export interface IAppData {
     id: number;
     GewichtsEinheit: GewichtsEinheit;
@@ -22,6 +31,7 @@ export interface IAppData {
 export class AppData {
     public id: number;
     public SprachID: number = null;
+    public DiaChartTyp: DiaTyp = DiaTyp.line;
     GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
     
     private fMaxHistorySessions: number = 10;

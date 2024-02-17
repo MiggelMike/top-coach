@@ -1,7 +1,7 @@
 // import { QueryList, ViewChildren } from '@angular/core';
 // import { DiagramData } from './../bausteine/charts/charts.component';
 import { cDeutschKuezel as cDeutschKuerzel, cDeutschDateInputMask, cEnglishDateInputMask } from './../Sprache/Sprache';
-import { DexieSvcService, SessionParaDB, cMaxDatum, cMinDatum } from './../services/dexie-svc.service';
+import { DexieSvcService } from './../services/dexie-svc.service';
 import { DiaDatum, DiaUebung, DiaUebungSettings } from './../../Business/Diagramm/Diagramm';
 import { Component, ContentChild, Inject, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { IProgramModul, ProgramModulTyp } from './../../app/app.module';
@@ -13,10 +13,11 @@ import { LOCALE_ID } from '@angular/core';
 import * as _moment from 'moment';
 import { HistorySession, ISession, Session } from '../../Business/Session/Session';
 import { DateFormatTyp, Datum } from 'src/Business/Datum';
-import { MatTab, MatTabGroup } from '@angular/material/tabs';
+import { MatTab  } from '@angular/material/tabs';
 import { Router } from '@angular/router';
 import { MatRadioGroup } from '@angular/material/radio';
 import {ChangeDetectionStrategy } from '@angular/core';
+import { DiaTyp, IDiaTyp } from 'src/Business/Coach/Coach';
 // import {  MatExpansionPanelHeader, MatExpansionPanel } from '@angular/material/expansion';
 // import { Session } from 'inspector';
 var cloneDeep = require('lodash.clonedeep');
@@ -27,11 +28,12 @@ var cloneDeep = require('lodash.clonedeep');
 	templateUrl: './history.component.html',
 	styleUrls: ['./history.component.scss']
 })
-export class HistoryComponent implements OnInit, IProgramModul {
+export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 	public get SessionListe(): Array<HistorySession> {
-		return DexieSvcService.HistorySessions.filter((sess) => {
+		const l = DexieSvcService.HistorySessions.filter((sess) => {
 			return (sess.GestartedWann.valueOf() >= this.fromDate.valueOf() && sess.GestartedWann.valueOf() <= this.toDate.valueOf())
 		});
+		return l;
 	}
 	
 	// public DiaTyp: string = 'line';
@@ -72,8 +74,9 @@ export class HistoryComponent implements OnInit, IProgramModul {
 
 	ChartData: Array<ChartData> = [];
 	Auswahl: number = 0;
-	ChartAuswahl: number = 0;
 	BarChartDataHelperList: Array<ChartData> = [];
+	aktuellerDiaTyp: DiaTyp;
+
 	@ContentChild('legendEntryTemplate') legendEntryTemplate: TemplateRef<any>;
 	@ViewChild('LineChart') LineChart: LineChartComponent;
 	@ViewChild('BarChart') BarChart: any;
@@ -120,13 +123,25 @@ export class HistoryComponent implements OnInit, IProgramModul {
 
 		this.fDbModul.LadeDiaUebungen()
 			.then((mData) => this.DiaUebungSettingsListe = mData);
+		
+		this.aktuellerDiaTyp = DexieSvcService.AppRec.DiaChartTyp;
 	}
+
+	diaTyp(): typeof DiaTyp {
+		return DiaTyp;
+	}
+
 
 	ngOnDestroy() {
 	}
 
 	ngAfterViewInit() {
 		this.ViewInitDone = true;
+
+	}
+
+	checkAktivDia(aDiaTyp: DiaTyp): boolean{
+		return (this.aktuellerDiaTyp === aDiaTyp);
 	}
 	
 	get programModul(): typeof ProgramModulTyp {
@@ -202,6 +217,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 
 	CloseChartSettings() {
 		this.ChartSettingsVisible = false;
+		this.Save();
 	}
 
 	OpenChartSettings() {
@@ -211,7 +227,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	public Draw(aDialogOn: boolean): void {
 		// if (this.Auswahl === 0)
 		// 	return;
-
 		if (DexieSvcService.DiagrammeWerdenErstellt === true) {
 			const mDialogData: DialogData = new DialogData();
 			mDialogData.height = cLoadingDefaultHeight;
@@ -371,11 +386,10 @@ export class HistoryComponent implements OnInit, IProgramModul {
 				}
 			}//for
 
-			let mAktiveIndex = 0;
 			if (this.ChartType !== undefined) {
-				mAktiveIndex = this.AuswahlRadio.value;
-				if(this.AuswahlRadio.value === 1)
-				this.ChartData.forEach((mChar) => mChar.ActiveDiaType = 'bar');
+				if(this.ChartType.value === DiaTyp.bar)
+					this.ChartData.forEach((mChar) => mChar.ActiveDiaType = 'bar');
+				
 			}
 
 			this.ChartData = this.ChartData.sort((c1, c2) => { 
@@ -387,8 +401,6 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	
 				return 0;
 			});
-			this.AuswahlRadio.value = mAktiveIndex;
-
 			this.fLoadingDialog.fDialog.closeAll();
 		} catch (error) {
 			console.error(error);
@@ -437,6 +449,8 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	
 	Save() {
 		this.fDbModul.InsertDiaUebungen(this.DiaUebungSettingsListe);
+		DexieSvcService.AppRec.DiaChartTyp = this.aktuellerDiaTyp; 
+		this.fDbModul.AppDataSpeichern(DexieSvcService.AppRec);
 	}
 
 	Load(aEvent: any) {
@@ -534,6 +548,7 @@ export class HistoryComponent implements OnInit, IProgramModul {
 	}
 
 	ChartChanged(event: any) {
+		this.aktuellerDiaTyp = event.value;
 		this.Draw(true);
 	}
 
@@ -543,7 +558,11 @@ export class HistoryComponent implements OnInit, IProgramModul {
 				clearInterval(this.Interval);
 				this.Interval = undefined;
 			}
-			this.Draw(true);
+
+			setTimeout(() => {
+			 	this.ChartType.value = this.aktuellerDiaTyp;
+			 	this.Draw(true);
+			}, 100);
 		}//if
 	}
 	
