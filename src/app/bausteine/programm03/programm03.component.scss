@@ -13,7 +13,22 @@
 
 #programm03 {
     min-width: 600px !important;
+    background-color: white;
     padding-left: 5px;
     padding-right: 5px;
+
 }
 
+#header {
+    position: fixed; 
+    height: 100px !important; 
+    top: 28px; 
+    z-index: 1000;
+    background-color: white;
+}
+
+#programm03Body {
+    top:100px;
+    position: relative; 
+    z-index: 1;
+}
