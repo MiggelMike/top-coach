@@ -732,6 +732,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	ResetDatenbank() {
+		DexieSvcService.NoAutoCreateTable.clear();
 		DexieSvcService.ProgrammTable.clear()
 			.then(() => {
 				DexieSvcService.SessionTable.clear()

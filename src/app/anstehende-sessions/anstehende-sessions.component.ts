@@ -140,13 +140,12 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul,  ISat
 
 		switch (aSess.Kategorie02) {
 			case SessionStatus.Wartet:
-				return 'Start';
+				case SessionStatus.Fertig:
+				case SessionStatus.FertigTimeOut:
+				return 'Enter';
 			case SessionStatus.Laueft:
 			case SessionStatus.Pause:
 				return 'Go ahead';
-			case SessionStatus.Fertig:
-			case SessionStatus.FertigTimeOut:
-				return 'View';
 			default:
 				return '?';
 		}

@@ -113,7 +113,7 @@ export class SatzDB implements ISatz {
     public SatzTyp: SatzTyp = SatzTyp.Training;
     public Prozent: number = 0;
     public GewichtNaechsteSession: number = 0;
-    public GewichtsEinheit: GewichtsEinheit = DexieSvcService.GewichtsEinheit;;
+    public GewichtsEinheit: GewichtsEinheit = DexieSvcService.GewichtsEinheit;
     public Datum: Date;
     public GewichtAusgefuehrt: number = 0;    
     public WdhAusgefuehrt: number = 0;
@@ -215,10 +215,12 @@ export class Satz implements ISatz {
         this.SatzDB.GewichtsEinheit = aValue;
     }
     //#endregion GewichtsEinheit
+
     //#region GewichtNaechsteSession 
     get GewichtNaechsteSession(): number {
-        if (this.GewichtsEinheit !== DexieSvcService.GewichtsEinheit)
+        if (this.GewichtsEinheit !== DexieSvcService.GewichtsEinheit) {
             return AppData.StaticConvertWeight(this.SatzDB.GewichtNaechsteSession, DexieSvcService.GewichtsEinheit);
+        }
         return this.SatzDB.GewichtNaechsteSession;
     }
 

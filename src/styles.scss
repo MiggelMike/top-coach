@@ -285,9 +285,10 @@ body {
 }
 
 .kreis {
-	width: 48px;
-	height: 48px;
-	border-radius: 24px;
+	--diameter: 32px;
+	width: var(--diameter);
+	height: var(--diameter);
+	border-radius: calc(var(--diameter)/2);
 	color: black;
 }
 
