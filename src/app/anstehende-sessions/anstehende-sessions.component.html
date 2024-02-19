@@ -27,6 +27,10 @@
                                         <div class="column-start-left">
                                             <a [ngClass]="['link-button-font']"  (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
                                         </div>
+
+                                        <div class="column-start-left">
+                                            <a [ngClass]="['link-button-font']"  (click)="DeleteSession($event, sess, i+1)">Delete session</a>
+                                        </div>
                                     </div>
                                 </div>
                         

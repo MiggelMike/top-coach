@@ -11,6 +11,9 @@ export interface IDateFormatTyp {
 
 export class Datum{
     public static StaticFormatDate(aDate: Date, aDateFormatTyp: DateFormatTyp = DateFormatTyp.Komplett): string {
+        if (aDate === undefined)
+            return '';
+        
         switch (aDateFormatTyp) {
             case DateFormatTyp.Zeit:
                 return aDate.toLocaleTimeString();

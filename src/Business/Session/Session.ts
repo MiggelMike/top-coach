@@ -203,7 +203,7 @@ export class Session implements ISession {
         return this.SessionDB.DauerTimer;
     }
     set DauerTimer(aVal: any) {
-        this.SessionDB.SessionDauer = aVal;
+        this.SessionDB.DauerTimer = aVal;
     }
     //#endregion
     //#region BodyWeightAtSessionStart 

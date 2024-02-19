@@ -135,7 +135,8 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 	
 
 	public StartButtonText(): string {
-		if (this.Session.Kategorie02 === undefined) this.Session.Kategorie02 = SessionStatus.Wartet;
+		if (this.Session === undefined)
+			return '?';
 
 		switch (this.Session.Kategorie02) {
 			case SessionStatus.Wartet: 
@@ -411,6 +412,9 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 	}
 
 	get ResetButtonVisible(): boolean{
+		if (this.Session === undefined)
+			return false;
+
 		return (this.Session.Kategorie02 === SessionStatus.Laueft) || (this.Session.Kategorie02 === SessionStatus.Pause);
 	}
 
@@ -500,6 +504,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 	public StartButtonClick() {
 		switch (this.Session.Kategorie02) {
 			case SessionStatus.Wartet:
+				this.Session.GestartedWann = new Date();
 				this.EvalStart();
 				break;
 			case SessionStatus.Laueft:
@@ -719,6 +724,9 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 	}
 	
 	public PauseButtonVisible(): boolean {
+		if (this.Session === undefined)
+			return false;
+		
 		return this.Session.Kategorie02 !== SessionStatus.Fertig && this.Session.Kategorie02 !== SessionStatus.FertigTimeOut;
 	}
 }

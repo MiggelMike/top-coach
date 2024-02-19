@@ -1,35 +1,31 @@
-<div #anchorRef  width-600 cdkDragRootElement=".cdk-overlay-pane">
+<div #anchorRef cdkDrag  cdkDragRootElement=".cdk-overlay-pane">
 
-    <div class="font-14-label">
-        <div class="column-center  width-600">
+    <div   class="font-14-label pad-10">
+        <div class="column-center width-600">
             <!-- Session-Name -->
-            <div fxLayout="row wrap" fxFlex="100%">
+            
+            <div class="row-start-left-gap-3 width-100-Prozent">
                 <div class="column-start-left">
-                    <div class="column-start-left">
-                        <mat-label class="font-14-label">Session name</mat-label>
-                    </div>
-                    <input  class="font-14-data" #Name matInput [(ngModel)]="sess.Name" maxlength="30" type="text">
+                    <mat-label class="font-14-label">Session name</mat-label>
                 </div>
+                <input  class="font-14-data" #Name matInput [(ngModel)]="sess.Name" maxlength="30" type="text">
             </div>
+            
 
             <!-- GestartedWann -->
-            <div fxLayout="row wrap" fxFlex="100%" class="mg-top-10">
+            <div class="row-start-left-gap-3 width-100-Prozent mg-top-10">
                 <div class="column-start-left">
                     <div class="column-start-left">
                         <mat-label class="font-14-label">Start</mat-label>
                     </div>
-
-                    <input  
-                    matInput 
-                    type="text"  
-                    [disabled]="true" 
-                    class="font-14-data" 
-                    [ngModel]="sess.GestartedWannText(dateFormatTyp.KomplettOhneSekunden)"
-                    >
+            
+                    <input matInput type="text" [disabled]="true" class="font-14-data"
+                        [ngModel]="sess.GestartedWannText(dateFormatTyp.KomplettOhneSekunden)">
                 </div>
             </div>
+                
 
-            <div fxLayout="row wrap" fxLayoutGap="4px" class="mg-top-10">
+            <div class="row-start-left-gap-3 width-100-Prozent mg-top-10">                
                 <!-- Bodyweight -->
                     <div class="column-start-left">
                         <div class="column-start-left">
