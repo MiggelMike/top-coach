@@ -4,10 +4,7 @@ import { ITrainingsProgramm } from './../../Business/TrainingsProgramm/Trainings
 import { DexieSvcService } from './../services/dexie-svc.service';
 import { Observable, of } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
-import {CdkDragDrop } from '@angular/cdk/drag-drop';
 import { IProgramModul, ProgramModulTyp } from '../app.module';
-import { Router } from '@angular/router';
-import { AppRoutingModule } from '../app-routing.module';
 
 @Component({
     selector: "app-programm-waehlen",
@@ -23,8 +20,7 @@ export class ProgrammWaehlenComponent implements OnInit, IProgramModul  {
     };
 
     constructor(
-        public fDbModule: DexieSvcService,
-        private router: Router
+        public fDbModule: DexieSvcService
         
     ) {
         DexieSvcService.ModulTyp = ProgramModulTyp.SelectWorkout;

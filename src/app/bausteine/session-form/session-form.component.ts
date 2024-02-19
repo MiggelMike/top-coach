@@ -133,15 +133,31 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 		return ProgramModulTyp;
 	}
 	
+
+	public StartButtonText(): string {
+		if (this.Session.Kategorie02 === undefined) this.Session.Kategorie02 = SessionStatus.Wartet;
+
+		switch (this.Session.Kategorie02) {
+			case SessionStatus.Wartet: 
+				return "Start";
+			case SessionStatus.Laueft:
+			case SessionStatus.Pause:
+				return "Done";
+			default:
+				return "?";
+		}
+	}
+
+
 		
 	private InitSession() {
 		//
 		switch (this.Session.Kategorie02) {
 			case SessionStatus.Wartet:
-				this.Session.GestartedWann = new Date();
-				this.Session.Datum = this.Session.GestartedWann;
-				this.Session.Kategorie02 = SessionStatus.Laueft;
-				this.EvalStart();
+				// this.Session.GestartedWann = new Date();
+				// this.Session.Datum = this.Session.GestartedWann;
+				// this.Session.Kategorie02 = SessionStatus.Laueft;
+				// this.EvalStart();
 				break;
 				
 			case SessionStatus.Pause:
@@ -462,6 +478,21 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 			mZielSatzPtr.GewichtAusgefuehrt = mQuellSatzPtr.GewichtNaechsteSession;
 			mZielSatzPtr.GewichtVorgabe = mQuellSatzPtr.GewichtNaechsteSession;
 		} //for
+	}
+
+	public StartButtonClick() {
+		switch (this.Session.Kategorie02) {
+			case SessionStatus.Wartet:
+				this.EvalStart();
+				break;
+			case SessionStatus.Laueft:
+				this.SetDone();
+				break;
+			case SessionStatus.Pause:
+				this.Session.Kategorie02 = SessionStatus.Laueft;
+				this.EvalStart();
+				break;
+		}
 	}
 
 	public async SetDone(): Promise<void> {

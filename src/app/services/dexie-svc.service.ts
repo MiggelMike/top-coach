@@ -551,7 +551,9 @@ export class DexieSvcService extends Dexie {
 				mSessionLadePara.UebungParaDB = new UebungParaDB();
 				mSessionLadePara.UebungParaDB.SaetzeBeachten = true;
 				await this.LadeProgrammSessions(aSelectedProgram.id, mSessionLadePara)
-					.then((mSessions) => aSelectedProgram.SessionListe = mSessions);
+					.then((mSessions) => {
+						aSelectedProgram.SessionListe = mSessions;
+					});
 			}
 			
 			const mProgramCopyPara: ProgramCopyPara = new ProgramCopyPara();
@@ -657,7 +659,7 @@ export class DexieSvcService extends Dexie {
 		if (DexieSvcService.ModulTyp === null)
 			DexieSvcService.ModulTyp = ProgramModulTyp.Kein;
 		// 
-		        //  Dexie.delete("ConceptCoach");
+		        //   Dexie.delete("ConceptCoach");
 		this.version(45).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
@@ -732,6 +734,8 @@ export class DexieSvcService extends Dexie {
 	}
 
 	ResetDatenbank() {
+		DexieSvcService.AktuellesProgramm = null;
+		DexieSvcService.NoAutoCreateListe = [];
 		DexieSvcService.NoAutoCreateTable.clear();
 		DexieSvcService.ProgrammTable.clear()
 			.then(() => {
@@ -1412,14 +1416,14 @@ export class DexieSvcService extends Dexie {
 								if (    (DexieSvcService.AllowExamples === true) 
 									&& (DexieSvcService.NoAutoCreateListe.find((mNoCreate) => mNoCreate.noCreateItem === NoAutoCreateItem.ExamplePrograms) === undefined))
 								{
-									const mExampleProgram: ITrainingsProgramm = DexieSvcService.VerfuegbareProgramme.find(
-										(mSuchProgram) => { 
-											return (mSuchProgram.ProgrammTyp === ProgrammTyp.Gzclp && mSuchProgram.FkVorlageProgramm === 0);
+									// const mExampleProgram: ITrainingsProgramm = DexieSvcService.VerfuegbareProgramme.find(
+									// 	(mSuchProgram) => { 
+									// 		return (mSuchProgram.ProgrammTyp === ProgrammTyp.Gzclp && mSuchProgram.FkVorlageProgramm === 0);
 
-										});
+									// 	});
 									
-									if(mExampleProgram)
-										this.MakeExample(mExampleProgram);
+									// if(mExampleProgram)
+									// 	this.MakeExample(mExampleProgram);
 								}
 								else if (DexieSvcService.HistorySessions.length <= 0)
 									this.LadeHistorySessions(null, null);
@@ -2252,13 +2256,17 @@ export class DexieSvcService extends Dexie {
 				aTrainingsProgramm.id = mID;
 				const mSessionListe: Array<Session> = aTrainingsProgramm.SessionListe as Array<Session>;
 			
-				mSessionListe.forEach(async (mSession) => {
+				for (let index = 0; index < mSessionListe.length; index++) {
+					const mSession:Session = mSessionListe[index];
 					mSession.FK_Programm = mID;
-					await this.SessionSpeichern(mSession);
-				});
+					await this.SessionSpeichern(mSession).then(
+						(mSavedSession) => {
+							if(aProgrammExtraParaDB !== undefined && aProgrammExtraParaDB.OnAfterSaveFn !== undefined )
+								aProgrammExtraParaDB.OnAfterSaveFn(aTrainingsProgramm);
+						});
+				}
 
-				if(aProgrammExtraParaDB !== undefined && aProgrammExtraParaDB.OnAfterSaveFn !== undefined )
-					aProgrammExtraParaDB.OnAfterSaveFn(aTrainingsProgramm);
+				return aTrainingsProgramm;
 				
 				//  aTrainingsProgramm.SessionListe = [];
 
@@ -2267,7 +2275,6 @@ export class DexieSvcService extends Dexie {
 				// 	.then((mTrainingsProgramm) => {
 				// 		const aTrainingsProgramm = mTrainingsProgramm[0];
 				// 	});
-				return aTrainingsProgramm;
 			})
 			.catch((err) => {
 				const mDialogData = new DialogData();
