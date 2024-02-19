@@ -30,8 +30,17 @@
             [DeletedSatzList]="DeletedSatzList">
         </app-programm03>
     
-        <ng-container *ngIf="ready">
-            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center" [style.margin-top]="'5px'">
+        <div cdkDropListGroup>
+            <div id="footer" class="cc-overlay height-70" cdkDrag fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
+
+                <ng-container *ngIf="ResetButtonVisible === true">
+                    <div class="center-item" layout-align="center center" fxFlex="auto">
+                        <a [ngClass]="['ml-5', 'link-button-font', 'HG-01']" 
+                        mat-flat-button
+                        (click)="resetSession($event)">Reset Session</a>
+                    </div>
+                </ng-container>
+
                 <ng-container *ngIf="PauseButtonVisible()">
                     <ng-container *ngIf="Paused; then unpauseBlock else pauseBlock"></ng-container>
             
@@ -62,6 +71,6 @@
                     </div>
                 </ng-container>
             </div>
-        </ng-container>
+        </div>
     </div>
 </div>

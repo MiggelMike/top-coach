@@ -24,6 +24,7 @@ import { Programm02Module } from '../programm02/programm02Md/programm02.module';
 import { Programm03Module } from '../programm03/programm03Md/programm03.module';
 import { ToolBarModule } from '../toolbar/tool-bar-module/tool-bar-module.module';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 
@@ -58,7 +59,8 @@ const routes: Routes = [{ path: 'sessionFormComponent', component: SessionFormCo
     MatToolbarModule,
     MatIconModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    DragDropModule,
     
   ],
   exports: [RouterModule],

@@ -1,5 +1,5 @@
 import { ToolbarComponent } from './../toolbar/toolbar.component';
-import { HistorySession, Session  } from './../../../Business/Session/Session';
+import { HistorySession, NoResetTyp, Session  } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from './../../../Business/TrainingsProgramm/TrainingsProgramm';
 import { UebungService } from "./../../services/uebung.service";
 import { SessionStatus } from "./../../../Business/SessionDB";
@@ -409,6 +409,23 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 
 		this.fDialogService.JaNein(mDialogData);
 	}
+
+	get ResetButtonVisible(): boolean{
+		return (this.Session.Kategorie02 === SessionStatus.Laueft) || (this.Session.Kategorie02 === SessionStatus.Pause);
+	}
+
+	public resetSession(aEvent: Event) {
+		aEvent.stopPropagation();
+		const mDialogData = new DialogData();
+		mDialogData.textZeilen.push(`All sets will be reset as well!`);
+		mDialogData.textZeilen.push(`Reset session "${this.Session.Name}"?`);
+		mDialogData.OkFn = () => {
+			this.Session.Reset([NoResetTyp.GewichtAusgefuehrt,NoResetTyp.WdhAusgefuehrt]);  
+			this.fDbModule.SessionSpeichern(this.Session as Session);
+		}
+		this.fDialogService.JaNein(mDialogData);
+	}
+
 
 	public get Paused(): boolean {
 		return this.Session.Kategorie02 === SessionStatus.Pause;

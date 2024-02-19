@@ -99,6 +99,11 @@ body {
 	height: 65px;
 }
 
+.height-70 {
+	height: 70px;
+}
+
+
 .height-75 {
 	height: 75px;
 }
@@ -285,7 +290,7 @@ body {
 }
 
 .kreis {
-	--diameter: 32px;
+	--diameter: 40px;
 	width: var(--diameter);
 	height: var(--diameter);
 	border-radius: calc(var(--diameter)/2);
