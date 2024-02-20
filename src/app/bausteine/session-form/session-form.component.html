@@ -23,6 +23,10 @@
 
                     <ng-template #pauseBlock>
                         <div class="center-item" layout-align="center center">
+                            <a ngClass="link-button-font" (click)="doStats()">Info</a>
+                        </div>
+
+                        <div class="center-item" layout-align="center center">
                             <a class='link-button-font' (click)="SetPause()">Pause</a>
                         </div>
                     </ng-template>
@@ -35,8 +39,7 @@
                 </ng-container>
 
                 <ng-container *ngIf="ModulTyp !== programModul.History && Session !== undefined">
-                    <ng-container
-                        *ngIf="Session.Kategorie02 !== sessionStatus.Fertig && Session.Kategorie02 !== sessionStatus.FertigTimeOut; then ShowStartButton else dontShowStartButton;"></ng-container>
+                    <ng-container *ngIf="Session.Kategorie02 !== sessionStatus.Fertig && Session.Kategorie02 !== sessionStatus.FertigTimeOut; then ShowStartButton else dontShowStartButton;"></ng-container>
 
                     <ng-template #ShowStartButton>
                         <div class="center-item" layout-align="center center">
@@ -53,6 +56,10 @@
                     </ng-template>
 
                     <ng-template #dontShowStartButton>
+                        <div class="center-item" layout-align="center center">
+                            <a ngClass="link-button-font" (click)="doStats()">Info</a>
+                        </div>
+
                         <div class="center-item" layout-align="center center">
                             <a [ngClass]="'link-button-font'" (click)="AddExercise()">Add exercise</a>
                         </div>
