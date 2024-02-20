@@ -72,29 +72,23 @@
                                 </div>
                             </ng-container>
 
-                            <!-- <ng-container *ngIf="showButtons"> -->
-                                <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
-                                    <div class="center-item" layout-align="center center">
-                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="CopySession(sess)">Copy Session</a>
-                                    </div>
-
-                                    <div class="center-item" layout-align="center center">
-                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteSession($event, sess,i)">Delete Session</a>
-                                    </div>
-
-
+                            <div class="row-center-gap-5 mg-top-5">
+                                <div class="center-item">
+                                    <a [ngClass]="['link-button-font']"  (click)="CopySession(sess)">Copy Session</a>
                                 </div>
 
-                                <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
-                                    <div class="center-item" layout-align="center center">
-                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="AddExercise(sess)">Add exercise</a>
-                                    </div>
-
-                                    <div class="center-item" layout-align="center center">
-                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="PasteExcercise(sess)">Paste Exercise</a>
-                                    </div>
+                                <div class="center-item">
+                                    <a [ngClass]="['link-button-font']"  (click)="DeleteSession($event, sess,i)">Delete Session</a>
                                 </div>
-                            <!-- </ng-container> -->
+
+                                <div class="center-item">
+                                    <a [ngClass]="['link-button-font']"  (click)="AddExercise(sess)">Add exercise</a>
+                                </div>
+
+                                <div class="center-item">
+                                    <a [ngClass]="['link-button-font']"  (click)="PasteExcercise(sess)">Paste Exercise</a>
+                                </div>
+                            </div>
                         </mat-expansion-panel>
                     </mat-accordion>
                 </div>

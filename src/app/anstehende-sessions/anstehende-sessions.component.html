@@ -13,9 +13,6 @@
         <ng-container  *ngIf="AktuellesProgramm">
             <div class="colum-center">
                 <ng-container *ngIf="SessionListe && (SessionListe.length > 0)">
-                    <!-- <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleSessions()">{{ToggleButtonText}}</a>
-                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="AdditionalSession()">Additional session</a> -->
-                            
                         <div  cdkDropList (cdkDropListDropped)="drop($event)">
                             <ng-container *ngFor="let sess of SortedSessionListe, index as i">
                                     <mat-accordion #accUebung='matAccordion' multi="true" class="width-100-Prozent">

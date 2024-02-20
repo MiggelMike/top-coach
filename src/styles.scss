@@ -434,10 +434,15 @@ div.herz:after {
 	flex-direction: row;
 }
 
+.row-center-gap-5 {
+	@extend .row-center;
+	row-gap: 5px;
+}
+
+
 .row-center-gap-10 {
 	@extend .row-center;
 	row-gap: 10px;
-	
 }
 
 .wrap {
