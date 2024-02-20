@@ -1413,9 +1413,9 @@ export class DexieSvcService extends Dexie {
 								// 		});
 								// }
 
-								if (    (DexieSvcService.AllowExamples === true) 
-									&& (DexieSvcService.NoAutoCreateListe.find((mNoCreate) => mNoCreate.noCreateItem === NoAutoCreateItem.ExamplePrograms) === undefined))
-								{
+								// if (    (DexieSvcService.AllowExamples === true) 
+								// 	&& (DexieSvcService.NoAutoCreateListe.find((mNoCreate) => mNoCreate.noCreateItem === NoAutoCreateItem.ExamplePrograms) === undefined))
+								// {
 									// const mExampleProgram: ITrainingsProgramm = DexieSvcService.VerfuegbareProgramme.find(
 									// 	(mSuchProgram) => { 
 									// 		return (mSuchProgram.ProgrammTyp === ProgrammTyp.Gzclp && mSuchProgram.FkVorlageProgramm === 0);
@@ -1424,8 +1424,9 @@ export class DexieSvcService extends Dexie {
 									
 									// if(mExampleProgram)
 									// 	this.MakeExample(mExampleProgram);
-								}
-								else if (DexieSvcService.HistorySessions.length <= 0)
+								// }
+								// else
+								if (DexieSvcService.HistorySessions.length <= 0)
 									this.LadeHistorySessions(null, null);
 
 								return DexieSvcService.VerfuegbareProgramme;
