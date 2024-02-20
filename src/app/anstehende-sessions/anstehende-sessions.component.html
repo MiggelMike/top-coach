@@ -8,6 +8,8 @@
         </div>
     </div>
 </div>
+
+
 <div id="main-panel" class="column-center">
     <div class="width-600">
         <ng-container  *ngIf="AktuellesProgramm">
@@ -17,7 +19,7 @@
                             <ng-container *ngFor="let sess of SortedSessionListe, index as i">
                                     <mat-accordion #accUebung='matAccordion' multi="true" class="width-100-Prozent">
                                         <mat-expansion-panel class="mg-bottom-3">
-                                            <mat-expansion-panel-header>
+                                            <mat-expansion-panel-header class="disable_ripple">
                                                 <div  class='row-start-left-gap-3 HG-01'> 
                                                     <ng-container *ngIf="sess.Kategorie02 === sessionStatus.Laeuft || sess.Kategorie02 === sessionStatus.Pause; then MitReset else OhneReset"></ng-container>
 

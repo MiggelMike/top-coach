@@ -7,7 +7,7 @@
                     class="HG-01"
                     (opened) = "panelOpened()"
                     (closed) = "panelClosed()">
-                    <mat-expansion-panel-header (click)="$event.stopPropagation()">
+                    <mat-expansion-panel-header  class="disable_ripple" (click)="$event.stopPropagation()">
                         <div fxLayout="row wrap" fxLayoutGap="2x" fxLayoutAlign="center center">
 
                             <div fxLayout="column" fxFlex="200px">{{programm.Name}}</div>

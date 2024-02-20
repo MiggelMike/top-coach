@@ -829,7 +829,13 @@ input[type=text]:focus  {
   }
 
 
+  .disable_ripple:hover{
+	background: transparent !important;
+	}
 
+mat-expansion-panel-header:hover {
+		background-color: transparent;
+	}
 
 // .mat-calendar  {
 // 	background-color: #bdd2e9;

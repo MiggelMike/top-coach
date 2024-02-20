@@ -21,7 +21,7 @@
                             (opened) = "panelOpened(sess)"
                             (closed) = "panelClosed(sess)" 
                             class="HG-01">
-                            <mat-expansion-panel-header [matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag">
+                            <mat-expansion-panel-header  class="disable_ripple" [matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag">
                                 <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="flex-start center">
                                     <ng-container *ngIf="ModulTyp === programModul.History">
                                             <mat-label>{{ProgrammName(sess)}}</mat-label>
