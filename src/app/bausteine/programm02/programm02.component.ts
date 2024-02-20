@@ -77,7 +77,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 		switch (aSess.Kategorie02) {
 			case SessionStatus.Wartet: 
 				return "Start";
-			case SessionStatus.Laueft:
+			case SessionStatus.Laeuft:
 			case SessionStatus.Pause:
 				return "Go ahead";
 			case SessionStatus.Fertig:
@@ -373,7 +373,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 		// 		switch (aLoadedSession.Kategorie02) {
 		// 			case SessionStatus.Wartet:
 		// 				aLoadedSession.GestartedWann = new Date();
-		// 				aLoadedSession.Kategorie02 = SessionStatus.Laueft;
+		// 				aLoadedSession.Kategorie02 = SessionStatus.Laeuft;
 		// 				aLoadedSession.Datum = new Date();
 		// 				break;
 		

@@ -466,7 +466,7 @@ export class Session implements ISession {
             && (this.Kategorie02 === SessionStatus.Pause)) {
             this.PausenListe[this.PausenListe.length - 1].Bis = new Date();
         }
-        this.Kategorie02 = SessionStatus.Laueft;
+        this.Kategorie02 = SessionStatus.Laeuft;
         this.DauerTimer = setInterval(() => this.CalcDauer(), 450);
     }
 

@@ -149,7 +149,7 @@ export class Progress implements IProgress {
 
 	public FailCheck(aDb: DexieSvcService, aSession: Session, aSessUebung: Uebung, aReduceUebung: Uebung, aSatzIndex: number): WeightProgress {
 		if (   this.ProgressSet === ProgressSet.First
-			&& (aSession.Kategorie02 === SessionStatus.Laueft || Uebung.StaticArbeitsSaetzeStatus(aSessUebung) === SaetzeStatus.AlleFertig)
+			&& (aSession.Kategorie02 === SessionStatus.Laeuft || Uebung.StaticArbeitsSaetzeStatus(aSessUebung) === SaetzeStatus.AlleFertig)
 			&& aSatzIndex === 0)
 		{
 			// Der erste Satz der Übung ist maßgebend.
@@ -379,7 +379,7 @@ export class Progress implements IProgress {
 		let mSatzListe: Array<Satz> = aWarteSatzListe.map( (sz) => sz);
 		aUebung.nummeriereSatzListe(aUebung.ArbeitsSatzListe);
 		// Läuft die Session?
-		if (aAusgangsSession.Kategorie02 === SessionStatus.Laueft) {
+		if (aAusgangsSession.Kategorie02 === SessionStatus.Laeuft) {
 			// Die Session läuft
 			// Bei ProgressSet.First sofort in der aktuellen Übung für alle folgenden Sätze das Gewicht erhöht.
 			if (aProgressSet === ProgressSet.First) {
@@ -414,7 +414,7 @@ export class Progress implements IProgress {
 				
 			}
 		} else {
-			// Session läuft nicht -> aAusgangsSession.Kategorie02 != SessionStatus.Laueft
+			// Session läuft nicht -> aAusgangsSession.Kategorie02 != SessionStatus.Laeuft
 			// Sessions mit der gleichen Übung heraussuchen.
 			const mSessionListe: Array<Session> = aUpComingSessionListe.filter(
 				(s) => {
@@ -691,7 +691,7 @@ export class Progress implements IProgress {
 	}
 
 	private static StaticSessionLaeuft(aSession: ISession): boolean{
-		return (aSession.Kategorie02 === SessionStatus.Laueft);
+		return (aSession.Kategorie02 === SessionStatus.Laeuft);
 	}
 
 	private static StaticSetWeight(aGewichtDiff: GewichtDiff, aSatz: Satz, aArithmetik: Arithmetik, aRemoveGewichtDiff: boolean): void {
@@ -823,7 +823,7 @@ export class Progress implements IProgress {
 				((
 					// 1. Wenn die Ausgangs - Session läuft, ist es okay, dass die Übungen auch dieser Session untersucht werden, wenn in aProgress der ProgressSet = First ist.
 					// 2. Wenn die Ausgangssession nicht läuft, 
-					aProgressPara.AusgangsSession.Kategorie02 === SessionStatus.Laueft
+					aProgressPara.AusgangsSession.Kategorie02 === SessionStatus.Laeuft
 					// && aProgress !== undefined && aProgress.ProgressSet === ProgressSet.First
 					||
 					// 1. Die Session aus der Liste ist nicht die Ausgangs-Session.  

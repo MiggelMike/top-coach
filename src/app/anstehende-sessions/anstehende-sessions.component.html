@@ -19,20 +19,38 @@
                                         <mat-expansion-panel class="mg-bottom-3">
                                             <mat-expansion-panel-header>
                                                 <div  class='row-start-left-gap-3 HG-01'> 
-                                                    <div class="column-start-left width-300">
-                                                        <input class="tc-font-size-smaller width-350" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
-                                                    </div>
-                                                    <div class="column-start-left">
-                                                        <a [ngClass]="['link-button-font']"  (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
-                                                    </div>
-            
-                                                    <div class="column-start-left">
-                                                        <a [ngClass]="['link-button-font']"  (click)="DeleteSession($event, sess, i+1)">Delete session</a>
-                                                    </div>
-            
-                                                    <div class="center-item" layout-align="center center">
-                                                        <a [ngClass]="['link-button-font', 'HG-01']" (click)="resetSession($event, sess,i)">Reset Session</a>
-                                                    </div>
+                                                    <ng-container *ngIf="sess.Kategorie02 === sessionStatus.Laeuft || sess.Kategorie02 === sessionStatus.Pause; then MitReset else OhneReset"></ng-container>
+
+                                                    <ng-template #MitReset>
+                                                        <div class="column-start-left width-350">
+                                                            <input class="tc-font-size-smaller width-350" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
+                                                        </div>
+                                                        <div class="column-start-left">
+                                                            <a [ngClass]="['link-button-font']"  (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
+                                                        </div>
+                
+                                                        <div class="column-start-left">
+                                                            <a [ngClass]="['link-button-font']"  (click)="DeleteSession($event, sess, i+1)">Delete</a>
+                                                        </div>
+                
+                                                        <div class="center-item" layout-align="center center">
+                                                            <a [ngClass]="['link-button-font', 'HG-01']" (click)="resetSession($event, sess)">Reset</a>
+                                                        </div>
+                                                    </ng-template>
+
+                                                    <ng-template #OhneReset>
+                                                        <div class="column-start-left width-350">
+                                                            <input class="tc-font-size-smaller width-350" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
+                                                        </div>
+                                                        <div class="column-start-left">
+                                                            <a [ngClass]="['link-button-font']"  (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
+                                                        </div>
+                
+                                                        <div class="column-start-left">
+                                                            <a [ngClass]="['link-button-font']"  (click)="DeleteSession($event, sess, i+1)">Delete</a>
+                                                        </div>
+                                                    </ng-template>
+
                                                 </div>
                                             </mat-expansion-panel-header>
 

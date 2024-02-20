@@ -144,7 +144,7 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 		switch (this.Session.Kategorie02) {
 			case SessionStatus.Wartet: 
 				return "Start";
-			case SessionStatus.Laueft:
+			case SessionStatus.Laeuft:
 			case SessionStatus.Pause:
 				return "Done";
 			default:
@@ -160,12 +160,12 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 			case SessionStatus.Wartet:
 				// this.Session.GestartedWann = new Date();
 				// this.Session.Datum = this.Session.GestartedWann;
-				// this.Session.Kategorie02 = SessionStatus.Laueft;
+				// this.Session.Kategorie02 = SessionStatus.Laeuft;
 				// this.EvalStart();
 				break;
 				
 			case SessionStatus.Pause:
-			case SessionStatus.Laueft:
+			case SessionStatus.Laeuft:
 				this.EvalStart();
 				break;
 		}//switch
@@ -418,7 +418,7 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 		if (this.Session === undefined)
 			return false;
 
-		return (this.Session.Kategorie02 === SessionStatus.Laueft) || (this.Session.Kategorie02 === SessionStatus.Pause);
+		return (this.Session.Kategorie02 === SessionStatus.Laeuft) || (this.Session.Kategorie02 === SessionStatus.Pause);
 	}
 
 	// 
@@ -500,11 +500,11 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 				this.Session.GestartedWann = new Date();
 				this.EvalStart();
 				break;
-			case SessionStatus.Laueft:
+			case SessionStatus.Laeuft:
 				this.SetDone();
 				break;
 			case SessionStatus.Pause:
-				this.Session.Kategorie02 = SessionStatus.Laueft;
+				this.Session.Kategorie02 = SessionStatus.Laeuft;
 				this.EvalStart();
 				break;
 		}

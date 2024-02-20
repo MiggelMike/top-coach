@@ -1461,7 +1461,7 @@ export class DexieSvcService extends Dexie {
 				mHelpProgrammParaDB.SessionParaDB = new SessionParaDB();
 				mHelpProgrammParaDB.SessionParaDB.WhereClause = "[FK_Programm+Kategorie02]";
 				mHelpProgrammParaDB.SessionParaDB.anyOf = (aProgramm: ITrainingsProgramm) => {
-					return [[aProgramm.id, SessionStatus.Laueft], [aProgramm.id, SessionStatus.Pause], [aProgramm.id, SessionStatus.Wartet]];
+					return [[aProgramm.id, SessionStatus.Laeuft], [aProgramm.id, SessionStatus.Pause], [aProgramm.id, SessionStatus.Wartet]];
 				};
 				// Übungen laden
 				mHelpProgrammParaDB.SessionParaDB.UebungenBeachten = true;
@@ -1512,7 +1512,7 @@ export class DexieSvcService extends Dexie {
 
 				mSessionPara.Filter = (aSession: Session) => {
 					return aSession.Kategorie02 === SessionStatus.Wartet
-						|| aSession.Kategorie02 === SessionStatus.Laueft
+						|| aSession.Kategorie02 === SessionStatus.Laeuft
 						|| aSession.Kategorie02 === SessionStatus.Pause;
 				};
 
@@ -1567,7 +1567,7 @@ export class DexieSvcService extends Dexie {
 	public async LadeUpcomingSessions(aProgrammID: number, aSessionParaDB?: SessionParaDB): Promise<Array<Session>> {
 		return await DexieSvcService.SessionTable
 			.where("[FK_Programm+Kategorie02]")
-			.anyOf([[aProgrammID, SessionStatus.Laueft], [aProgrammID, SessionStatus.Pause], [aProgrammID, SessionStatus.Wartet]])
+			.anyOf([[aProgrammID, SessionStatus.Laeuft], [aProgrammID, SessionStatus.Pause], [aProgrammID, SessionStatus.Wartet]])
 			.offset(aSessionParaDB !== undefined && aSessionParaDB.OffSet !== undefined ? aSessionParaDB.OffSet : 0)
 			.limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : cMaxLimnit)
 			.sortBy("ListenIndex")
@@ -1603,7 +1603,7 @@ export class DexieSvcService extends Dexie {
 	// public async LadeUpcomingSessions(aProgrammID: number, aSessionParaDB?: SessionParaDB): Promise<Array<Session>> {
 	// 	return await this.SessionTable
 	// 		.where("[FK_Programm+Kategorie02]")
-	// 		.anyOf([[aProgrammID, SessionStatus.Laueft], [aProgrammID, SessionStatus.Pause], [aProgrammID, SessionStatus.Wartet]])
+	// 		.anyOf([[aProgrammID, SessionStatus.Laeuft], [aProgrammID, SessionStatus.Pause], [aProgrammID, SessionStatus.Wartet]])
 	// 		.offset(aSessionParaDB !== undefined && aSessionParaDB.OffSet !== undefined ? aSessionParaDB.OffSet : 0)
 	// 		.limit(aSessionParaDB !== undefined && aSessionParaDB.Limit !== undefined ? aSessionParaDB.Limit : cMaxLimnit)
 	// 		.sortBy("ListenIndex")
@@ -2633,7 +2633,7 @@ export class DexieSvcService extends Dexie {
 			// 	Bearbeitbar,
 			// 	Wartet,
 			// 	Pause,
-			// 	Laueft,
+			// 	Laeuft,
 			// 	Fertig,
 			// 	FertigTimeOut,
 			// 	Loeschen

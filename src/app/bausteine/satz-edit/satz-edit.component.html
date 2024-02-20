@@ -3,7 +3,7 @@
     <div fxLayout="row" fxLayoutGap="5px" fxFlex="100%">
         <ng-container *ngIf="rowNum === 0">
             <ng-container *ngIf="(   sess.Kategorie02 === sessionStatus.Pause 
-                                  || sess.Kategorie02 === sessionStatus.Laueft 
+                                  || sess.Kategorie02 === sessionStatus.Laeuft 
                                   || sess.Kategorie02 === sessionStatus.Fertig); then TitelNoShowPlan else TitelShowPlan"></ng-container>
                 <!-- Spalten-Titel waehrend des Trainings  -->
                 <ng-template #TitelNoShowPlan> 

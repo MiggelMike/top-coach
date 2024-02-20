@@ -97,7 +97,7 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul,  ISat
 		return this.AktuellesProgramm.SessionListe;
 	}
 
-	ResetSession(aEvent: Event,aSess: Session) {
+	resetSession(aEvent: Event,aSess: Session) {
 		aEvent.stopPropagation();
 		const mDialogData = new DialogData();
 		mDialogData.textZeilen.push(`Reset Session?`);
@@ -143,7 +143,7 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul,  ISat
 				case SessionStatus.Fertig:
 				case SessionStatus.FertigTimeOut:
 				return 'Enter';
-			case SessionStatus.Laueft:
+			case SessionStatus.Laeuft:
 			case SessionStatus.Pause:
 				return 'Go ahead';
 			default:
@@ -171,18 +171,18 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul,  ISat
 	}
 
 	
-	public resetSession(aEvent: Event,aSession: Session, aRowNum: number) {
-		aEvent.stopPropagation();
-		const mDialogData = new DialogData();
-		mDialogData.textZeilen.push(`All sets will be reset as well!`);
-		mDialogData.textZeilen.push(`Reset session "${aSession.Name}"?`);
-		mDialogData.OkFn = () => {
-			aSession.Reset([NoResetTyp.GewichtAusgefuehrt,NoResetTyp.WdhAusgefuehrt]);  
-			this.fDbModule.SessionSpeichern(aSession as Session);
-		}
-		this.fDialogService.JaNein(mDialogData);
+	// public resetSession(aEvent: Event,aSession: Session, aRowNum: number) {
+	// 	aEvent.stopPropagation();
+	// 	const mDialogData = new DialogData();
+	// 	mDialogData.textZeilen.push(`All sets will be reset as well!`);
+	// 	mDialogData.textZeilen.push(`Reset session "${aSession.Name}"?`);
+	// 	mDialogData.OkFn = () => {
+	// 		aSession.Reset([NoResetTyp.GewichtAusgefuehrt,NoResetTyp.WdhAusgefuehrt]);  
+	// 		this.fDbModule.SessionSpeichern(aSession as Session);
+	// 	}
+	// 	this.fDialogService.JaNein(mDialogData);
 
-	}
+	// }
 
     get SortedSessionListe(): Array<Session> {
         return (this.AktuellesProgramm.SessionListe).sort((s1, s2) => {

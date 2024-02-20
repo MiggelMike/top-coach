@@ -7,7 +7,7 @@ export enum SessionStatus {
     Bearbeitbar,
     Wartet,
     Pause,
-    Laueft,
+    Laeuft,
     Fertig,
     FertigTimeOut,
     Loeschen
