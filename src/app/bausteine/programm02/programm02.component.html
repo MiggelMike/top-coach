@@ -1,8 +1,14 @@
 <div class="colum-center">
     <ng-container *ngIf="SessionListe && (SessionListe.length > 0)">
-        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleSessions()">{{ToggleButtonText}}</a>
         <ng-container *ngIf="ModulTyp !== programModul.History">
-            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="AdditionalSession()">Additional session</a>
+            <div class="row-start-left-gap-3 mg-top-5">
+                <a class='link-button-font' (click)="toggleSessions()">{{ToggleButtonText}}</a>
+                <a class='link-button-font' (click)="AdditionalSession()">Additional session</a>
+                <a class='link-button-font' (click)="AddSession()">Add Session</a>
+                <a class='link-button-font' (click)="PasteSession()">Paste Session</a>
+                <a class='link-button-font' (click)="SaveChanges()">Save</a>
+                <a class='link-button-font' (click)="CancelChanges()">Cancel</a>
+            </div>
         </ng-container>
                 
         <div cdkDropList (cdkDropListDropped)="drop($event)">
@@ -38,13 +44,6 @@
                                             mat-flat-button
                                                 (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
                                         </div>
-    <!-- 
-                                        <div class="center-item" layout-align="center center" fxFlex="auto">
-                                            <a [ngClass]="['ml-5', 'link-button-font', 'HG-01']" 
-                                            mat-flat-button
-                                                (click)="resetSession($event, sess, i+1)">Reset Session</a>
-                                        </div> -->
-
 
                                         <ng-container *ngIf="sess.IstAusVorgabe === false && ModulTyp !== programModul.History">
                                             <div class="center-item" layout-align="center center" fxFlex="0 0 auto">
@@ -103,27 +102,5 @@
         </div>
     </ng-container>
 
-    <ng-container *ngIf="ModulTyp !== programModul.History">
-        <!-- <ng-container *ngIf="showButtons"> -->
-            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center" [style.margin-top]="'5px'">
-                <div class="center-item" layout-align="center center">
-                    <a class='link-button-font' mat-flat-button (click)="AddSession()">Add Session</a>
-                </div>
-            <div class="center-item" layout-align="center center">
-                <a class='link-button-font' mat-flat-button (click)="PasteSession()">Paste Session</a>
-            </div>
-        </div>
-        <!-- </ng-container> -->
-
-        <ng-container *ngIf="showSaveButtons">
-            <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center" [style.margin-top]="'5px'">
-                <div class="center-item" layout-align="center center">
-                    <a class='link-button-font' mat-flat-button (click)="SaveChanges()">Save</a>
-                </div>
-                <div class="center-item" layout-align="center center">
-                    <a class='link-button-font' mat-flat-button (click)="CancelChanges()">Cancel</a>
-                </div>
-            </div>
-        </ng-container>
-    </ng-container>
+  
 </div>
