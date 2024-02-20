@@ -18,66 +18,58 @@
                             
                         <div  cdkDropList (cdkDropListDropped)="drop($event)">
                             <ng-container *ngFor="let sess of SortedSessionListe, index as i">
-                                <div  class='mg-top-2'> 
-                                   
-                                    <div  class='row-start-left-gap-3 HG-01'> 
-                                        <div class="column-start-left">
-                                            <input class="tc-font-size-smaller width-350" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
-                                        </div>
-                                        <div class="column-start-left">
-                                            <a [ngClass]="['link-button-font']"  (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
-                                        </div>
+                                    <mat-accordion #accUebung='matAccordion' multi="true" class="width-100-Prozent">
+                                        <mat-expansion-panel class="mg-bottom-3">
+                                            <mat-expansion-panel-header>
+                                                <div  class='row-start-left-gap-3 HG-01'> 
+                                                    <div class="column-start-left width-300">
+                                                        <input class="tc-font-size-smaller width-350" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
+                                                    </div>
+                                                    <div class="column-start-left">
+                                                        <a [ngClass]="['link-button-font']"  (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
+                                                    </div>
+            
+                                                    <div class="column-start-left">
+                                                        <a [ngClass]="['link-button-font']"  (click)="DeleteSession($event, sess, i+1)">Delete session</a>
+                                                    </div>
+            
+                                                    <div class="center-item" layout-align="center center">
+                                                        <a [ngClass]="['link-button-font', 'HG-01']" (click)="resetSession($event, sess,i)">Reset Session</a>
+                                                    </div>
+                                                </div>
+                                            </mat-expansion-panel-header>
 
-                                        <div class="column-start-left">
-                                            <a [ngClass]="['link-button-font']"  (click)="DeleteSession($event, sess, i+1)">Delete session</a>
-                                        </div>
-
-                                        <div class="center-item" layout-align="center center">
-                                            <a [ngClass]="['link-button-font', 'HG-01']" (click)="resetSession($event, sess,i)">Reset Session</a>
-                                        </div>
-                                    </div>
-                                </div>
-                        
-                                    <ng-container *ngFor="let SessUeb of sess.UebungsListe, index as UebungIndex">
-                                        <div class="row-start-left-gap-3">
-                                            <span class="font-14-label">#{{UebungIndex+1}} {{SessUeb.Name}}</span>
-                                            <div class="column-center tc-font-size-smaller">  --- Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} - Reps {{SessUeb.SummeWDH()}}</div>
-                                        </div>
-
-                                        <ng-container *ngIf="SessUeb.ArbeitsSatzListe.length > 0">
-                                            <div class="row-start-left-gap-3">
-                                                <ng-container *ngFor="let satz of SessUeb.ArbeitsSatzListe, index as satzIndex">
-                                                    <div class="colum-center">
-                                                        <div class="column-center font-size-xsmall mg-right-3"  [ngClass]="{ 'kreisGruen': satz.Status === satzStatus.Fertig, 'kreisRot': satz.Status !== satzStatus.Fertig}" >
-                                                            {{satz.WdhAusgefuehrtText}}
-                                                            <ng-container *ngIf="satz.AMRAP">+</ng-container>
-                                                        </div>
-                                                        
-                                                        <div class="font-size-xsmall column-center">
-                                                            <mat-label>
-                                                                {{satz.GewichtAusgefuehrtText}}
-                                                            </mat-label>  
-                                                        </div>
+                                            <ng-container *ngFor="let SessUeb of sess.UebungsListe, index as UebungIndex">
+                                                <div class="row-start-left-gap-3">
+                                                    <span class="font-14-label">#{{UebungIndex+1}} {{SessUeb.Name}}</span>
+                                                    <div class="column-center tc-font-size-smaller">  --- Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} - Reps {{SessUeb.SummeWDH()}}</div>
+                                                </div>
+        
+                                                <ng-container *ngIf="SessUeb.ArbeitsSatzListe.length > 0">
+                                                    <div class="row-start-left-gap-3">
+                                                        <ng-container *ngFor="let satz of SessUeb.ArbeitsSatzListe, index as satzIndex">
+                                                            <div class="colum-center">
+                                                                <div class="column-center font-size-xsmall mg-right-3"  [ngClass]="{ 'kreisGruen': satz.Status === satzStatus.Fertig, 'kreisRot': satz.Status !== satzStatus.Fertig}" >
+                                                                    {{satz.WdhAusgefuehrtText}}
+                                                                    <ng-container *ngIf="satz.AMRAP">+</ng-container>
+                                                                </div>
+                                                                
+                                                                <div class="font-size-xsmall column-center">
+                                                                    <mat-label>
+                                                                        {{satz.GewichtAusgefuehrtText}}
+                                                                    </mat-label>  
+                                                                </div>
+                                                            </div>
+                                                        </ng-container>
                                                     </div>
                                                 </ng-container>
-                                            </div>
-                                        </ng-container>
-                                </ng-container>            
+                                            </ng-container>            
+                                        </mat-expansion-panel> 
+                                    </mat-accordion>
                             </ng-container>            
                         </div>
-                        
                 </ng-container>
             </div>
-                <!-- <app-programm02 
-                    [showButtons]="false"
-                    [showSaveButtons] = "false" 
-                    [ModulTyp] = "programModul.AnstehendeSessions"
-                    [programm]="AktuellesProgramm" 
-                    [SessionListe] = "AktuellesProgramm.SessionListe"
-                    [bearbeitbar]="false"
-                    [StartButtonVisible]= "true"
-                    [SofortSpeichern]= "true">
-                </app-programm02> -->
         </ng-container>
     </div>
 </div>
