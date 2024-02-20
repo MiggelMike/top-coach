@@ -20,7 +20,9 @@
             </div> -->
 
 
-            <div id="programm03Body" class="colum-center">        
+            <div class="colum-center" 
+                 [ngClass]="{'top-70': ModulTyp === programModul.RunningSession}"
+                 >        
                 <div cdkDropList (cdkDropListDropped)="drop($event)">
                     <ng-container *ngFor="let SessUeb of  UebungsListe, index as i; let isOdd=odd">
                         <div  cdkDrag [cdkDragDisabled]="ModulTyp === programModul.History">

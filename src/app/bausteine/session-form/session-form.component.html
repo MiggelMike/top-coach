@@ -13,7 +13,9 @@
 
             <div class="row-start-left-gap-3">
                 <div class="column-start-left  mg-top-5">
-                    <span class="font-14-data">{{Programm.Name}}</span>
+                    <ng-container *ngIf="Programm !== undefined && Programm.Name !== undefined">
+                        <span class="font-14-data">{{Programm.Name}}</span>
+                    </ng-container>
                 </div>
 
                 <ng-container *ngIf="PauseButtonVisible()">
@@ -21,13 +23,13 @@
 
                     <ng-template #pauseBlock>
                         <div class="center-item" layout-align="center center">
-                            <a class='link-button-font' mat-flat-button (click)="SetPause()">Pause</a>
+                            <a class='link-button-font' (click)="SetPause()">Pause</a>
                         </div>
                     </ng-template>
 
                     <ng-template #unpauseBlock>
                         <div class="center-item">
-                            <a class='link-button-font' mat-flat-button (click)="GoAhead()">Go ahead</a>
+                            <a class='link-button-font' (click)="GoAhead()">Go ahead</a>
                         </div>
                     </ng-template>
                 </ng-container>
@@ -38,26 +40,25 @@
 
                     <ng-template #ShowStartButton>
                         <div class="center-item" layout-align="center center">
-                            <a class='link-button-font' mat-flat-button
-                                (click)="StartButtonClick()">{{StartButtonText()}}</a>
+                            <a class='link-button-font' (click)="StartButtonClick()">{{StartButtonText()}}</a>
                         </div>
                         <div class="center-item" layout-align="center center">
-                            <a [ngClass]="'link-button-font'" mat-flat-button (click)="AddExercise()">Add exercise</a>
+                            <a [ngClass]="'link-button-font'" (click)="AddExercise()">Add exercise</a>
                         </div>
 
                         <div class="center-item" layout-align="center center">
-                            <a [ngClass]="'link-button-font'" mat-flat-button (click)="PasteExcercise()">Paste
+                            <a [ngClass]="'link-button-font'" (click)="PasteExcercise()">Paste
                                 Exercise</a>
                         </div>
                     </ng-template>
 
                     <ng-template #dontShowStartButton>
                         <div class="center-item" layout-align="center center">
-                            <a [ngClass]="'link-button-font'" mat-flat-button (click)="AddExercise()">Add exercise</a>
+                            <a [ngClass]="'link-button-font'" (click)="AddExercise()">Add exercise</a>
                         </div>
 
                         <div class="center-item" layout-align="center center">
-                            <a [ngClass]="'link-button-font'" mat-flat-button (click)="PasteExcercise()">Paste
+                            <a [ngClass]="'link-button-font'" (click)="PasteExcercise()">Paste
                                 Exercise</a>
                         </div>
                     </ng-template>

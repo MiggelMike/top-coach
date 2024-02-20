@@ -27,8 +27,12 @@
     background-color: white;
 }
 
-#programm03Body {
-    top:70px;
+.programm03Body {
     position: relative; 
     z-index: 1;
+}
+
+.top-70 {
+    @extend .programm03Body;
+    top:70px;
 }
