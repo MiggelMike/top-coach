@@ -170,6 +170,20 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul,  ISat
 		});
 	}
 
+	
+	public resetSession(aEvent: Event,aSession: Session, aRowNum: number) {
+		aEvent.stopPropagation();
+		const mDialogData = new DialogData();
+		mDialogData.textZeilen.push(`All sets will be reset as well!`);
+		mDialogData.textZeilen.push(`Reset session "${aSession.Name}"?`);
+		mDialogData.OkFn = () => {
+			aSession.Reset([NoResetTyp.GewichtAusgefuehrt,NoResetTyp.WdhAusgefuehrt]);  
+			this.fDbModule.SessionSpeichern(aSession as Session);
+		}
+		this.fDialogService.JaNein(mDialogData);
+
+	}
+
     get SortedSessionListe(): Array<Session> {
         return (this.AktuellesProgramm.SessionListe).sort((s1, s2) => {
 			if (s1.ListenIndex > s2.ListenIndex) return 1;

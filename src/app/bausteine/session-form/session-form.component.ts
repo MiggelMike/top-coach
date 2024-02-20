@@ -2,7 +2,7 @@ import { ToolbarComponent } from './../toolbar/toolbar.component';
 import { HistorySession, NoResetTyp, Session  } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from './../../../Business/TrainingsProgramm/TrainingsProgramm';
 import { UebungService } from "./../../services/uebung.service";
-import { SessionStatus } from "./../../../Business/SessionDB";
+import { ISessionStatus, SessionStatus } from "./../../../Business/SessionDB";
 import { SessionStatsOverlayComponent } from "./../../session-stats-overlay/session-stats-overlay.component";
 import { SessionOverlayServiceService, SessionOverlayConfig } from "./../../services/session-overlay-service.service";
 import { DialogeService } from "./../../services/dialoge.service";
@@ -26,7 +26,7 @@ import { BodyWeight } from 'src/Business/Bodyweight/Bodyweight';
 	templateUrl: "./session-form.component.html",
 	styleUrls: ["./session-form.component.scss"],
 })
-export class SessionFormComponent implements OnInit, IProgramModul {
+export class SessionFormComponent implements OnInit, IProgramModul, ISessionStatus {
 	private worker: Worker;
 	public ready: boolean = false;
 	public Session: Session;
@@ -127,6 +127,9 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 					}
 				} else this.InitSession();
 			});
+	}
+	get sessionStatus(): typeof SessionStatus {
+		return SessionStatus;
 	}
 
 	get programModul(): typeof ProgramModulTyp {
@@ -418,17 +421,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 		return (this.Session.Kategorie02 === SessionStatus.Laueft) || (this.Session.Kategorie02 === SessionStatus.Pause);
 	}
 
-	public resetSession(aEvent: Event) {
-		aEvent.stopPropagation();
-		const mDialogData = new DialogData();
-		mDialogData.textZeilen.push(`All sets will be reset as well!`);
-		mDialogData.textZeilen.push(`Reset session "${this.Session.Name}"?`);
-		mDialogData.OkFn = () => {
-			this.Session.Reset([NoResetTyp.GewichtAusgefuehrt,NoResetTyp.WdhAusgefuehrt]);  
-			this.fDbModule.SessionSpeichern(this.Session as Session);
-		}
-		this.fDialogService.JaNein(mDialogData);
-	}
+	// 
 
 
 	public get Paused(): boolean {
@@ -726,7 +719,7 @@ export class SessionFormComponent implements OnInit, IProgramModul {
 	public PauseButtonVisible(): boolean {
 		if (this.Session === undefined)
 			return false;
-		
+
 		return this.Session.Kategorie02 !== SessionStatus.Fertig && this.Session.Kategorie02 !== SessionStatus.FertigTimeOut;
 	}
 }

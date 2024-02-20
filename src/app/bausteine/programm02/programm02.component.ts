@@ -432,18 +432,6 @@ export class Programm02Component implements OnInit, IProgramModul {
 			this.startSessionPrim(aSession, true);
 	}
 
-	public resetSession(aEvent: Event,aSession: ISession, aRowNum: number) {
-		aEvent.stopPropagation();
-		const mDialogData = new DialogData();
-		mDialogData.textZeilen.push(`All sets will be reset as well!`);
-		mDialogData.textZeilen.push(`Reset session "${aSession.Name}"?`);
-		mDialogData.OkFn = () => {
-			aSession.Reset([NoResetTyp.GewichtAusgefuehrt,NoResetTyp.WdhAusgefuehrt]);  
-			this.fDbModule.SessionSpeichern(aSession as Session);
-		}
-		this.fDialogService.JaNein(mDialogData);
-
-	}
 
 
 	public SaveChanges():void {

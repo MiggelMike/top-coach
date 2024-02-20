@@ -31,6 +31,10 @@
                                         <div class="column-start-left">
                                             <a [ngClass]="['link-button-font']"  (click)="DeleteSession($event, sess, i+1)">Delete session</a>
                                         </div>
+
+                                        <div class="center-item" layout-align="center center">
+                                            <a [ngClass]="['link-button-font', 'HG-01']" (click)="resetSession($event, sess,i)">Reset Session</a>
+                                        </div>
                                     </div>
                                 </div>
                         
