@@ -43,7 +43,6 @@ export class Programm02Component implements OnInit, IProgramModul {
 	@ViewChildren("accSession") accSession: QueryList<MatAccordion>;
 	@ViewChildren("panSession") panUebung: QueryList<MatExpansionPanel>;
 	
-	ModulTyp: ProgramModulTyp = ProgramModulTyp.Kein;
 	private CmpSessionListe: Array<ISession> = [];
 	private isExpanded: Boolean = true;
 	private DelSessionListe: Array<ISession> = [];
@@ -104,6 +103,10 @@ export class Programm02Component implements OnInit, IProgramModul {
 
 	get programModul(): typeof ProgramModulTyp {
 		return ProgramModulTyp;
+	}
+
+	get ModulTyp(): ProgramModulTyp {
+		return DexieSvcService.ModulTyp;
 	}
 
 	ProgrammName(aSess: Session): string{
@@ -182,7 +185,6 @@ export class Programm02Component implements OnInit, IProgramModul {
 	}
 
 	ngOnInit() {
-		this.ModulTyp = DexieSvcService.ModulTyp;
 		this.SessionListObserver = of(this.SessionListe);
 		this.CmpSessionListe = this.SessionListe;
 	}

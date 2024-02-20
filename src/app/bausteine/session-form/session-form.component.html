@@ -18,13 +18,14 @@
                     </ng-container>
                 </div>
 
+                <div class="center-item mg-top-5" layout-align="center center">
+                    <a ngClass="link-button-font" (click)="doStats()">Info</a>
+                </div>
+
                 <ng-container *ngIf="PauseButtonVisible()">
                     <ng-container *ngIf="Paused; then unpauseBlock else pauseBlock"></ng-container>
 
                     <ng-template #pauseBlock>
-                        <div class="center-item" layout-align="center center">
-                            <a ngClass="link-button-font" (click)="doStats()">Info</a>
-                        </div>
 
                         <div class="center-item" layout-align="center center">
                             <a class='link-button-font' (click)="SetPause()">Pause</a>
@@ -56,10 +57,6 @@
                     </ng-template>
 
                     <ng-template #dontShowStartButton>
-                        <div class="center-item" layout-align="center center">
-                            <a ngClass="link-button-font" (click)="doStats()">Info</a>
-                        </div>
-
                         <div class="center-item" layout-align="center center">
                             <a [ngClass]="'link-button-font'" (click)="AddExercise()">Add exercise</a>
                         </div>

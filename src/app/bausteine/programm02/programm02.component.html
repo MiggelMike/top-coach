@@ -1,9 +1,9 @@
 <div class="colum-center">
-    <ng-container *ngIf="SessionListe && (SessionListe.length > 0)">
+    <ng-container *ngIf="SessionListe">
         <ng-container *ngIf="ModulTyp !== programModul.History">
             <div class="row-start-left-gap-3 mg-top-5">
                 <a class='link-button-font' (click)="toggleSessions()">{{ToggleButtonText}}</a>
-                <a class='link-button-font' (click)="AdditionalSession()">Additional session</a>
+                <!-- <a class='link-button-font' (click)="AdditionalSession()">Additional session</a> -->
                 <a class='link-button-font' (click)="AddSession()">Add Session</a>
                 <a class='link-button-font' (click)="PasteSession()">Paste Session</a>
                 <a class='link-button-font' (click)="SaveChanges()">Save</a>
@@ -72,23 +72,31 @@
                                 </div>
                             </ng-container>
 
-                            <div class="row-center-gap-5 mg-top-5">
-                                <div class="center-item">
-                                    <a [ngClass]="['link-button-font']"  (click)="CopySession(sess)">Copy Session</a>
+                            <ng-container *ngIf="
+                                   ModulTyp === programModul.EditWorkout 
+                                || ModulTyp === programModul.HistoryView 
+                                || ModulTyp === programModul.RunningSession 
+                                || ModulTyp === programModul.SelectWorkoutEdit
+                                || ModulTyp === programModul.CreateWorkout"
+                                >
+                                <div class="row-center-gap-5 mg-top-5">
+                                    <div class="center-item">
+                                        <a [ngClass]="['link-button-font']" (click)="CopySession(sess)">Copy Session</a>
+                                    </div>
+                            
+                                    <div class="center-item">
+                                        <a [ngClass]="['link-button-font']" (click)="DeleteSession($event, sess,i)">Delete Session</a>
+                                    </div>
+                            
+                                    <div class="center-item">
+                                        <a [ngClass]="['link-button-font']" (click)="AddExercise(sess)">Add exercise</a>
+                                    </div>
+                            
+                                    <div class="center-item">
+                                        <a [ngClass]="['link-button-font']" (click)="PasteExcercise(sess)">Paste Exercise</a>
+                                    </div>
                                 </div>
-
-                                <div class="center-item">
-                                    <a [ngClass]="['link-button-font']"  (click)="DeleteSession($event, sess,i)">Delete Session</a>
-                                </div>
-
-                                <div class="center-item">
-                                    <a [ngClass]="['link-button-font']"  (click)="AddExercise(sess)">Add exercise</a>
-                                </div>
-
-                                <div class="center-item">
-                                    <a [ngClass]="['link-button-font']"  (click)="PasteExcercise(sess)">Paste Exercise</a>
-                                </div>
-                            </div>
+                            </ng-container>
                         </mat-expansion-panel>
                     </mat-accordion>
                 </div>

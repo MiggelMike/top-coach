@@ -173,7 +173,7 @@ export enum ProgramModulTyp {
 	SelectWorkoutEdit = 'SelectWorkoutEdit',
 	RunningSession = 'RunningSession',
 	EditWorkout = 'EditWorkout',
-	CreateWorkout = 'EditWorkout'
+	CreateWorkout = 'CreateWorkout'
 }
  
 

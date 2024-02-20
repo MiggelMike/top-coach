@@ -16,7 +16,7 @@
                     </div>                                    
                 </div>
                 
-                <ng-container *ngIf="programm.SessionListe">
+                <!-- <ng-container *ngIf="programm.SessionListe"> -->
                     <app-programm02 
                         [programm]="programm" 
                         [SessionListe]="programm.SessionListe" 
@@ -26,7 +26,7 @@
                         [bearbeitbar]="true"
                         (ProgrammSavedEvent)="CopyProgramm($event)">
                     </app-programm02>
-                </ng-container>
+                <!-- </ng-container> -->
             </div>
         </div>
     </ng-container>
