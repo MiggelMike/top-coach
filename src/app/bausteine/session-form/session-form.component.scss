@@ -1,12 +1,15 @@
-#back-button-row {
+.header {
     position: fixed;
+    top: 0px;
     z-index: 1000; 
     background-color: white;
+    max-height: 80px !important;
+    height: 80px !important;
 }
 
-#footer {
-    top: 150px;
-    z-index: 2000;
+// #footer {
+    // top: 150px;
+    // z-index: 2000;
     // position: relative;
-    position: fixed;
-}
+    // position: fixed;
+// }

@@ -1,20 +1,72 @@
- 
 <div class="column-center">
-    <div class="column-center">
-        <div id="back-button-row" class="row-start-left width-600" >
-            <div class="column-start-left width-600 mg-top-10">
+        <div class="column-start-left width-600 header">
+            <div class="row-start-left">
                 <ng-container *ngIf="BackButtonVisible === true">
                     <mat-icon (click)="back()">arrow_back</mat-icon>
                 </ng-container>
-                
+
                 <ng-container *ngIf="BackButtonVisible === false">
                     <mat-icon>pan_tool</mat-icon>
-                </ng-container> 
-            </div>
-        </div>    
-    </div>    
+                </ng-container>
 
-    <div class="width-600" style="position: relative; top: 30px; z-index: 1;">
+            </div>
+
+            <div class="row-start-left-gap-3">
+                <div class="column-start-left  mg-top-5">
+                    <span class="font-14-data">{{Programm.Name}}</span>
+                </div>
+
+                <ng-container *ngIf="PauseButtonVisible()">
+                    <ng-container *ngIf="Paused; then unpauseBlock else pauseBlock"></ng-container>
+
+                    <ng-template #pauseBlock>
+                        <div class="center-item" layout-align="center center">
+                            <a class='link-button-font' mat-flat-button (click)="SetPause()">Pause</a>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #unpauseBlock>
+                        <div class="center-item">
+                            <a class='link-button-font' mat-flat-button (click)="GoAhead()">Go ahead</a>
+                        </div>
+                    </ng-template>
+                </ng-container>
+
+                <ng-container *ngIf="ModulTyp !== programModul.History && Session !== undefined">
+                    <ng-container
+                        *ngIf="Session.Kategorie02 !== sessionStatus.Fertig && Session.Kategorie02 !== sessionStatus.FertigTimeOut; then ShowStartButton else dontShowStartButton;"></ng-container>
+
+                    <ng-template #ShowStartButton>
+                        <div class="center-item" layout-align="center center">
+                            <a class='link-button-font' mat-flat-button
+                                (click)="StartButtonClick()">{{StartButtonText()}}</a>
+                        </div>
+                        <div class="center-item" layout-align="center center">
+                            <a [ngClass]="'link-button-font'" mat-flat-button (click)="AddExercise()">Add exercise</a>
+                        </div>
+
+                        <div class="center-item" layout-align="center center">
+                            <a [ngClass]="'link-button-font'" mat-flat-button (click)="PasteExcercise()">Paste
+                                Exercise</a>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #dontShowStartButton>
+                        <div class="center-item" layout-align="center center">
+                            <a [ngClass]="'link-button-font'" mat-flat-button (click)="AddExercise()">Add exercise</a>
+                        </div>
+
+                        <div class="center-item" layout-align="center center">
+                            <a [ngClass]="'link-button-font'" mat-flat-button (click)="PasteExcercise()">Paste
+                                Exercise</a>
+                        </div>
+                    </ng-template>
+                </ng-container>
+            </div>
+            
+    </div>
+
+    <div class="width-600" style="position: relative; top: 0px; z-index: 1;">
         <app-programm03 #appProgramm03
             [session]="Session" 
             [cmpSession]="cmpSession" 
@@ -30,51 +82,5 @@
             [DeletedSatzList]="DeletedSatzList">
         </app-programm03>
     
-        <div cdkDropListGroup>
-            <div id="footer" class="cc-overlay height-70" cdkDrag fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutAlign="center">
-                <ng-container *ngIf="PauseButtonVisible()">
-                    <ng-container *ngIf="Paused; then unpauseBlock else pauseBlock"></ng-container>
-            
-                    <ng-template #pauseBlock>
-                        <div class="center-item" layout-align="center center">
-                            <a class='link-button-font' mat-flat-button (click)="SetPause()">Pause</a>
-                        </div>
-                    </ng-template>
-            
-                    <ng-template #unpauseBlock>
-                        <div class="center-item">
-                            <a class='link-button-font' mat-flat-button (click)="GoAhead()">Go ahead</a>
-                        </div>
-                    </ng-template>
-                </ng-container>
-        
-                <ng-container *ngIf="ModulTyp !== programModul.History && Session !== undefined">
-                    <ng-container *ngIf="Session.Kategorie02 !== sessionStatus.Fertig && Session.Kategorie02 !== sessionStatus.FertigTimeOut; then ShowStartButton else dontShowStartButton;"></ng-container>
-
-                    <ng-template #ShowStartButton>
-                        <div class="center-item" layout-align="center center">
-                            <a class='link-button-font' mat-flat-button (click)="StartButtonClick()">{{StartButtonText()}}</a>
-                        </div>
-                        <div class="center-item" layout-align="center center">
-                            <a [ngClass]="'link-button-font'" mat-flat-button (click)="AddExercise()">Add exercise</a>
-                        </div>
-                        
-                        <div class="center-item" layout-align="center center">
-                            <a [ngClass]="'link-button-font'" mat-flat-button (click)="PasteExcercise()">Paste Exercise</a>
-                        </div>
-                    </ng-template>
-
-                    <ng-template #dontShowStartButton>
-                        <div class="center-item" layout-align="center center">
-                            <a [ngClass]="'link-button-font'" mat-flat-button (click)="AddExercise()">Add exercise</a>
-                        </div>
-                        
-                        <div class="center-item" layout-align="center center">
-                            <a [ngClass]="'link-button-font'" mat-flat-button (click)="PasteExcercise()">Paste Exercise</a>
-                        </div>
-                    </ng-template>
-                </ng-container>
-            </div>
-        </div>
     </div>
 </div>
