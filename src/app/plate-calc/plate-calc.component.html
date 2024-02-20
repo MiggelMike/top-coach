@@ -1,5 +1,5 @@
 <div #anchorRef cdkDrag cdkDragRootElement=".cdk-overlay-pane">
-        <div class="column-center cc-overlay pad-5">
+        <div class="column-center cc-overlay">
                 <div class="font-14-label">{{Uebung.Name}} {{SatzNr}}</div>
                 <div class="row-start-left">
                     <div class="column-start-left">
@@ -72,12 +72,12 @@
                     </div>
                 </div>    
 
-            <mat-label class="font-14-label">Done reps</mat-label>
+            <span class="font-14-label">Done reps</span>
             <div class="row-start-left">
                 <div class="column-start-left">
                     <div class="row-start-left">
                         <!-- Geplante Von-Vorgabe-Wdh. -->
-                        <mat-label>Reps</mat-label>
+                        <mat-label [ngClass]="{'blink font-14-label': isAMRAP === true}">{{DoneRepsText}}</mat-label>
                     </div>
                     <div class="row-start-left">
             

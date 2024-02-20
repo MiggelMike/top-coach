@@ -77,6 +77,16 @@ export class PlateCalcComponent implements OnInit {
 		return aSatz1.SatzListIndex === aSatz2.SatzListIndex;
 	}
 
+	get DoneRepsText(): string {
+		if (this.isAMRAP)
+			return 'AMRAP';
+		return 'Reps';
+	}
+
+	get isAMRAP(): boolean {
+		return this.fPlateCalcOverlayConfig.amrap;
+	}
+
 	public DoWeightAllSets(aEvent: any) {
 		const mChecked = aEvent.checked;
 		if (this.Uebung && this.Satz && mChecked) {

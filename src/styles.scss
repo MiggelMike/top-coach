@@ -738,7 +738,7 @@ input[type=text]:focus  {
 
 .cc-overlay {
 	@extend .box-shadow-ex;
-	padding: 5px;	
+	padding: 10px;	
 	border-style: inset;
 	border-radius: 10px;
 	border-color:  rgba(0, 0, 0, 0.2);
@@ -828,6 +828,18 @@ input[type=text]:focus  {
 	//  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
   }
 
+ .blink {
+    animation-name: animation_blink;
+    animation-timing-function: ease-in;
+    animation-duration: 2s; 
+	animation-iteration-count: 3;  
+}
+
+@keyframes animation_blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.1; }
+    100% { opacity: 1; }    
+}
 
   .disable_ripple:hover{
 	background: transparent !important;

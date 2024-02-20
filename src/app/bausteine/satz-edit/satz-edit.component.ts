@@ -186,7 +186,8 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
             this.AppData.GewichtsEinheitText,
             this.DoStoppUhr,
             this.fStoppUhrService,
-            this.rowNum
+            this.rowNum,
+            false // Kein AMRAP 
         ); 
         
     }    
@@ -204,8 +205,10 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
         aStoppUhrFn: StoppUhrFn,
         aStoppUhrService: StoppuhrSvcService,
         aRowNumber: number,
+        aAmrap: boolean,
         aSatzDone?: boolean,
-        aFormCloseFn?: onFormCloseFn): void
+        aFormCloseFn?: onFormCloseFn
+         ): void
     {
         this.interval = setInterval(() => {
             clearInterval(this.interval);
@@ -223,7 +226,8 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
                 gewichtEinheitsText: aGewichtEinheitsText,
                 stoppUhrFn: aStoppUhrFn,
                 stoppUhrService: aStoppUhrService,
-                rowNumber: aRowNumber
+                rowNumber: aRowNumber,
+                amrap: aAmrap
 			} as PlateCalcOverlayConfig;
         
             
@@ -280,6 +284,7 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
                 this.DoStoppUhr,
                 this.fStoppUhrService,
                 this.rowNum,
+                true, // AMRAP
                 mChecked,
                 this.DoClickSatzFertig
                 

@@ -23,7 +23,7 @@
 
                     <div class="center-item rep-column" fxLayout="column" matTooltip="Reps">RP.</div>
                     <div class="center-item" fxLayout="column" fxFlex="33px"  matTooltip="As many reps as possible">AR.</div>
-                    <div class="center-item" fxLayout="column" fxFlex="22px"  matTooltip="Bodyweight">BW</div>
+                    <!-- <div class="center-item" fxLayout="column" fxFlex="22px"  matTooltip="Bodyweight">BW</div> -->
                     <div class="center-item" fxLayout="column" fxFlex="30px">Ok</div>
                 </ng-template>
 
@@ -103,9 +103,9 @@
                 ></mat-checkbox>
             </div>
             <!-- Satz Include Bodyweight-Flag -->
-            <div class="ml-5 center-item pad-top-12" fxFlex="25px" >
+            <!-- <div class="ml-5 center-item pad-top-12" fxFlex="25px" >
                 <mat-checkbox  [disabled]="Disabled(satz)" [(ngModel)]="satz.IncludeBodyweight"></mat-checkbox>
-            </div>
+            </div> -->
             <!-- Satz Fertig-Flag -->
             <div class="ml-5 center-item pad-top-12" fxFlex="25px">
                 <mat-checkbox [(ngModel)]="SatzFertig"

@@ -36,7 +36,8 @@ export interface PlateCalcOverlayConfig {
 	gewichtEinheitsText?: string;
 	stoppUhrFn?: StoppUhrFn;
 	rowNumber?: number;
-    stoppUhrService?: StoppuhrSvcService;
+	stoppUhrService?: StoppuhrSvcService;
+	amrap?: boolean;
 }
 
 export const cPlateCalcOverlayData = new InjectionToken<Satz>("PlateCalc_Overlay_Component");
