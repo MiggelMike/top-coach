@@ -2,12 +2,9 @@
     <!-- Spalten-Titel -->
     <div fxLayout="row" fxLayoutGap="5px" fxFlex="100%">
         <ng-container *ngIf="rowNum === 0">
-            <ng-container *ngIf="(   sess.Kategorie02 === sessionStatus.Pause 
-                                  || sess.Kategorie02 === sessionStatus.Laeuft 
-                                  || sess.Kategorie02 === sessionStatus.Fertig
-                                  || sess.Kategorie02 === sessionStatus.Wartet); then TitelNoShowPlan else TitelShowPlan"></ng-container>
+            <ng-container *ngIf="(isVisible() === true); then SessionRunning else NotSessionRunning"></ng-container>
                 <!-- Spalten-Titel waehrend des Trainings  -->
-                <ng-template #TitelNoShowPlan> 
+                <ng-template #SessionRunning> 
                     <div class="column-start-left number-column-titel align-right">#</div>
                     <div class="column-start-left weight-column align-right">Weight</div>
                     <div class="column-start-left rep-column-titel align-right"  matTooltip="Reps">RP.</div>
@@ -16,12 +13,12 @@
                 </ng-template>
 
                 <!-- Spalten-Titel, wenn kein Training laeuft  -->
-                <ng-template #TitelShowPlan> 
+                <ng-template #NotSessionRunning> 
                     <div class="column-start-left number-column-titel align-right">#</div>
                     <div class="column-start-left weight-column align-right">Weight</div>
                     <div class="column-start-left rep-column-titel align-right"  matTooltip="Reps">RP.</div>
                     <div class="column-start-left amrap-column-titel align-right"  matTooltip="As many reps as possible">AR.</div>
-                    <div class="column-start-left ok-column-titel align-right">Ok</div>
+                    <!-- <div class="column-start-left ok-column-titel align-right">Ok</div> -->
                 </ng-template>
         </ng-container>
     </div>
