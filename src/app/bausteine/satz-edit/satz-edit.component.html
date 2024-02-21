@@ -5,6 +5,7 @@
             <div class="column-start-left number-column-titel align-right">#</div>
             <div class="column-start-left weight-column align-right">Weight</div>
             <div class="column-start-left rep-column-titel align-right"  matTooltip="Reps">RP.</div>
+            <div class="column-start-left timer-column-titel align-right"  matTooltip="Count down secondes">Timer</div>
             <div class="column-start-left amrap-column-titel align-right"  matTooltip="As many reps as possible">AR.</div>
             
             <!-- Spalten-Titel waehrend des Trainings  -->
@@ -40,18 +41,6 @@
                     type="text">
         </div>
 
-        <!-- <ng-container *ngIf="  (SatzTyp === satzTyp.Aufwaermen && sessUebung.checkWarmUpSatzIncludedBodyWeight())
-                                ||(SatzTyp === satzTyp.Training && sessUebung.checkArbeitsSatzIncludedBodyWeight())
-                                ||(SatzTyp === satzTyp.Abkuehlen && sessUebung.checkCoolDownSatzIncludedBodyWeight())
-                                ">
-            <div  class="align-right">
-                <mat-label>Bodyweight</mat-label>
-                <input matInput  [disabled]="true" 
-                [value]="satz.getBodyWeightText('+ ')"
-                type="text">
-            </div>
-        </ng-container> -->
-
         <!-- Ausgefuerte Wdh. -->
         <div class="rep-column">
             <div [ngClass]="{'invisible': isVisible() === false}" class="align-right label">{{satz.WdhVonVorgabe}}</div> 
@@ -71,31 +60,40 @@
                     (touchend)="MouseUp($event)"
                     type="text">
         </div>
+
+           <!-- Timer -->
+           <div class="rep-column">
+            <div [ngClass]="{'invisible': isVisible() === false}" class="align-right label">{{satz.WdhVonVorgabe}}</div> 
+            <input matInput 
+                    class="align-right tc-font-size-smaller rep-column"
+                    matTooltip="Hold to open details"
+                    matTooltipPosition="above"
+                    [matTooltipDisabled]="false"
+                    mask="999999"
+                    [ngModel]="satz.WdhAusgefuehrtText" 
+                    [disabled]="Disabled(satz)"
+                    (click)="onClickWdhAusgefuehrt($event)" 
+                    (focusout)="SetWdhAusgefuehrt($event)" 
+                    (mousedown)="MouseDown(satz,$event)"
+                    (mouseup)="MouseUp($event)"
+                    (touchstart)="MouseDown(satz,$event)"
+                    (touchend)="MouseUp($event)"
+                    type="text">
+        </div>
         
-        <ng-container *ngIf="isVisible() === true; then running else planning"></ng-container>
+        <!-- AMRAP  -->
+        <div class="column-start-left ml-10 center-item" [ngClass]="{'mg-top-18': isVisible() === true}" >
+            <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP" 
+            ></mat-checkbox>
+        </div>
+
+        <ng-container *ngIf="isVisible() === true; then running"></ng-container>
 
         <ng-template #running>
-            <!-- AMRAP  -->
-            <div class="ml-10 center-item pad-top-12" fxFlex="30px">
-                <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP" 
-                ></mat-checkbox>
-            </div>
-            <!-- Satz Include Bodyweight-Flag -->
-            <!-- <div class="ml-5 center-item pad-top-12" fxFlex="25px" >
-                <mat-checkbox  [disabled]="Disabled(satz)" [(ngModel)]="satz.IncludeBodyweight"></mat-checkbox>
-            </div> -->
             <!-- Satz Fertig-Flag -->
             <div class="ml-5 center-item pad-top-12" fxFlex="25px">
                 <mat-checkbox [(ngModel)]="SatzFertig"
                 (change)="onClickSatzFertig(satz, $event)"
-                ></mat-checkbox>
-            </div>
-        </ng-template>
-
-        <ng-template #planning>
-            <!-- AMRAP  -->
-            <div class="ml-10 center-item" fxFlex="30px">
-                <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP" 
                 ></mat-checkbox>
             </div>
         </ng-template>

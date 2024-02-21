@@ -27,8 +27,12 @@
 }
 
 .amrap-column-titel {
-    width: 38px;
+    width: 32px;
     text-align: right;
+}
+
+.amrap-check-box {
+    margin-top: 18px;
 }
 
 .ok-column-titel {
@@ -39,6 +43,11 @@
 .number-column-titel {
     width: 15px;
 }
+
+.timer-column-titel {
+    width: 80px;
+}
+
 
 
 .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
