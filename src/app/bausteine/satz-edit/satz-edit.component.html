@@ -4,35 +4,24 @@
         <ng-container *ngIf="rowNum === 0">
             <ng-container *ngIf="(   sess.Kategorie02 === sessionStatus.Pause 
                                   || sess.Kategorie02 === sessionStatus.Laeuft 
-                                  || sess.Kategorie02 === sessionStatus.Fertig); then TitelNoShowPlan else TitelShowPlan"></ng-container>
+                                  || sess.Kategorie02 === sessionStatus.Fertig
+                                  || sess.Kategorie02 === sessionStatus.Wartet); then TitelNoShowPlan else TitelShowPlan"></ng-container>
                 <!-- Spalten-Titel waehrend des Trainings  -->
                 <ng-template #TitelNoShowPlan> 
-                    <div class="center-item align-right" fxLayout="column" fxFlex="25px">
-                        #
-                    </div>
-                    <div class="center-item weight-column align-right" fxLayout="column">
-                        Weight
-                    </div>
-
-                    <ng-container *ngIf="  (SatzTyp === satzTyp.Aufwaermen && sessUebung.checkWarmUpSatzIncludedBodyWeight())
-                                         ||(SatzTyp === satzTyp.Training && sessUebung.checkArbeitsSatzIncludedBodyWeight())
-                                         ||(SatzTyp === satzTyp.Abkuehlen && sessUebung.checkCoolDownSatzIncludedBodyWeight())
-                                         ">
-                        <div class="align-right" fxLayout="column" fxFlex="60px"></div>
-                    </ng-container>
-
-                    <div class="center-item rep-column" fxLayout="column" matTooltip="Reps">RP.</div>
-                    <div class="center-item" fxLayout="column" fxFlex="33px"  matTooltip="As many reps as possible">AR.</div>
-                    <!-- <div class="center-item" fxLayout="column" fxFlex="22px"  matTooltip="Bodyweight">BW</div> -->
-                    <div class="center-item" fxLayout="column" fxFlex="30px">Ok</div>
+                    <div class="column-start-left number-column-titel align-right">#</div>
+                    <div class="column-start-left weight-column align-right">Weight</div>
+                    <div class="column-start-left rep-column-titel align-right"  matTooltip="Reps">RP.</div>
+                    <div class="column-start-left amrap-column-titel align-right"  matTooltip="As many reps as possible">AR.</div>
+                    <div class="column-start-left ok-column-titel align-right">Ok</div>
                 </ng-template>
 
                 <!-- Spalten-Titel, wenn kein Training laeuft  -->
                 <ng-template #TitelShowPlan> 
-                    <div class="center-item align-right"  fxFlex="30px" fxLayout="column">#</div>
-                    <div class="center-item weight-column align-right" fxFlex="85px" fxLayout="column">Weight</div>
-                    <div class="center-item" fxLayout="column"  fxFlex="75px" matTooltip="Reps">RP.</div>
-                    <div class="center-item" fxLayout="column" fxFlex="15px"  matTooltip="As many reps as possible">AR.</div>
+                    <div class="column-start-left number-column-titel align-right">#</div>
+                    <div class="column-start-left weight-column align-right">Weight</div>
+                    <div class="column-start-left rep-column-titel align-right"  matTooltip="Reps">RP.</div>
+                    <div class="column-start-left amrap-column-titel align-right"  matTooltip="As many reps as possible">AR.</div>
+                    <div class="column-start-left ok-column-titel align-right">Ok</div>
                 </ng-template>
         </ng-container>
     </div>
@@ -62,7 +51,7 @@
                     type="text">
         </div>
 
-        <ng-container *ngIf="  (SatzTyp === satzTyp.Aufwaermen && sessUebung.checkWarmUpSatzIncludedBodyWeight())
+        <!-- <ng-container *ngIf="  (SatzTyp === satzTyp.Aufwaermen && sessUebung.checkWarmUpSatzIncludedBodyWeight())
                                 ||(SatzTyp === satzTyp.Training && sessUebung.checkArbeitsSatzIncludedBodyWeight())
                                 ||(SatzTyp === satzTyp.Abkuehlen && sessUebung.checkCoolDownSatzIncludedBodyWeight())
                                 ">
@@ -72,7 +61,7 @@
                 [value]="satz.getBodyWeightText('+ ')"
                 type="text">
             </div>
-        </ng-container>
+        </ng-container> -->
 
         <!-- Ausgefuerte Wdh. -->
         <div class="rep-column">
