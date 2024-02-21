@@ -275,21 +275,6 @@ export class Programm02Component implements OnInit, IProgramModul {
 		aSession.addUebung(mSessUebung);
 	}
 
-	public AdditionalSession(): void{
-		const mNewSession: Session = new Session();
-		mNewSession.init([]); // [] -> Alles zurücksetzen
-		mNewSession.UebungsListe = [];
-		mNewSession.Name = 'Additional session';
-		mNewSession.Kategorie02 = SessionStatus.Wartet;
-		mNewSession.FK_VorlageProgramm = 0;
-		mNewSession.FK_Programm = this.programm.id;
-		mNewSession.ListenIndex = this.SessionListe.length + 1;
-		this.SessionListe.push(mNewSession);
-		this.startSessionPrim(mNewSession, false);
-		// this.fDbModule.SessionSpeichern(mNewSession).then(
-		// 	() => this.fDbModule.LadeAktuellesProgramm()
-		// )
-	}
 
 	public toggleSessions(): void {
 		if (!this.accSession) return;

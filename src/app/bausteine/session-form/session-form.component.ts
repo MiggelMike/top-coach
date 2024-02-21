@@ -215,6 +215,8 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 		this.fExerciseSettingSvcService = aExerciseSettingSvcService;
 	}
 
+	
+
 	doStats() {
 		if (this.fSessionStatsOverlayComponent === undefined
 			|| this.fSessionStatsOverlayComponent !== undefined && this.fSessionStatsOverlayComponent.overlayRef === null) {

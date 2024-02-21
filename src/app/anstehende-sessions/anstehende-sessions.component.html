@@ -2,6 +2,9 @@
     <app-toolbar></app-toolbar>
     <div class="row-center">
         <div class="column-center width-600">
+            <div class="row-center">
+                <a class='link-button-font' (click)="AdditionalSession()">Additional session</a>
+            </div>
             <ng-container  *ngIf="AktuellesProgramm">
                 <h4>{{AktuellesProgramm.Name}}</h4>
             </ng-container>

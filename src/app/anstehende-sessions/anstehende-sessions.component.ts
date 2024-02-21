@@ -196,6 +196,24 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul,  ISat
 		return DexieSvcService.GewichtsEinheitText;
 	}
 
+	public AdditionalSession(): void{
+		const mNewSession: Session = new Session();
+		mNewSession.init([]); // [] -> Alles zurücksetzen
+		mNewSession.UebungsListe = [];
+		mNewSession.Name = 'Additional session';
+		mNewSession.Kategorie02 = SessionStatus.Wartet;
+		mNewSession.FK_VorlageProgramm = 0;
+		mNewSession.FK_Programm = this.AktuellesProgramm.id;
+		mNewSession.ListenIndex = this.AktuellesProgramm.SessionListe.length + 1;
+		this.AktuellesProgramm.SessionListe.push(mNewSession);
+		// this.startSessionPrim(mNewSession, false);
+		this.fDbModule.SessionSpeichern(mNewSession);
+			//.then(
+		// 	() => this.fDbModule.LadeAktuellesProgramm()
+		// )
+	}
+
+
 	DoWorker() {
 		const that: AnstehendeSessionsComponent = this;
 		if (typeof Worker !== 'undefined') {
