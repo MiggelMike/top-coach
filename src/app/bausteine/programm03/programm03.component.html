@@ -38,7 +38,7 @@
                                             </div>
                                             
                                             <div class="row-start-left">
-                                                <ng-container *ngIf="ModulTyp === programModul.RunningSession || ModulTyp === programModul.EditWorkout; then RunningOrEdit"></ng-container>
+                                                <ng-container *ngIf="ModulTyp === programModul.RunningSession || ModulTyp === programModul.EditWorkout || ModulTyp === programModul.SelectWorkoutEdit ; then RunningOrEdit"></ng-container>
                                                 
                                                 <ng-template #RunningOrEdit>
                                                     <div class="column-center"><a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="60px" (click)="DoSettings(SessUeb, $event)">Settings</a></div>

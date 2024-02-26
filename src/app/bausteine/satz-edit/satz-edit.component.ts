@@ -16,6 +16,8 @@ import { StoppuhrComponent } from 'src/app/stoppuhr/stoppuhr.component';
 import { StoppUhrOverlayConfig, StoppuhrSvcService } from 'src/app/services/stoppuhr-svc.service';
 import { AppData } from 'src/Business/Coach/Coach';
 import { ISessionStatus, SessionStatus } from 'src/Business/SessionDB';
+import { Zeitraum } from 'src/Business/Dauer';
+import { Datum } from 'src/Business/Datum';
 
 @Component({
     selector: "app-satz-edit",
@@ -43,7 +45,9 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
     private readonly cDelayMilliSeconds: number = 500;
     private AppData: AppData;
 
-
+    fZeitraum: Zeitraum;
+    CmpSessionStatus: SessionStatus;
+    fGong = new Audio();
 
     constructor(
         private fDialogService: DialogeService,
@@ -64,7 +68,13 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
             .then((mAppData) => {
                 this.AppData = mAppData;
             });
+
+        this.fGong.src = "../../assets/sounds/Gong.mp3";
+        this.fGong.load();
+        
+                       
     }
+
     get programModul(): typeof ProgramModulTyp {
         return ProgramModulTyp;
     }
@@ -77,6 +87,9 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
     }
     
     ngOnInit() {
+        this.satz.CmpTimerSeconds = this.satz.TimerSeconds;
+        this.CmpSessionStatus = this.sess.Kategorie02;
+        
 		this.fDbModule.LadeSessionBodyweight(this.sess)
 			.then((aBw) => {
                 if (aBw !== undefined)
@@ -91,6 +104,8 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
                 this.satz.FkHantel = mStammUebung.FkHantel;
             }
         }
+       
+      
 
         // this.programm.SessionListe.forEach((aSession) => {
         //     if ((aSession.UebungsListe === undefined) || (aSession.UebungsListe.length <= 0)) {
@@ -254,15 +269,17 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
     }
 
     async onClickSatzFertig(aSatz: Satz, aEvent: any) {
+        clearInterval(this.SatzTimer);
+        this.SatzTimerStatus = SatzStatus.Wartet;
+
         const mChecked = aEvent.checked;
         if (DexieSvcService.ModulTyp === ProgramModulTyp.History || DexieSvcService.ModulTyp === ProgramModulTyp.HistoryView)
-            return;
-
+        return;
+    
         if (this.fStoppUhrService.StoppuhrComponent) {
             this.fStoppUhrService.StoppuhrComponent.close();
             this.StoppuhrComponent = undefined;
         }
-        
             
         let mHeader: string = '';
         if (mChecked) {
@@ -485,9 +502,58 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
         aEvent.stopPropagation();
         this.satz.WdhAusgefuehrt = Number(aEvent.target.value);
     }
-    
-    onClickWdhAusgefuehrt(aEvent: any) {
+
+    public SetTimerSeconds(aEvent: any) {
+        aEvent.stopPropagation();
+        this.satz.TimerSeconds = Number(aEvent.target.value);
+        this.satz.CmpTimerSeconds = Number(aEvent.target.value);
+    }
+
+    onSelect(aEvent: any) {
         aEvent.target.select();
+    }
+
+    SatzTimer: any;
+    SatzTimerStatus: SatzStatus = SatzStatus.Wartet;
+
+    public CalcSatzDauer(): void {
+        if (this.SatzTimerStatus !== SatzStatus.Laeuft)
+            return;
+
+        this.satz.TimerSeconds--;
+
+        if ((this.satz.TimerSeconds <= 0) || (this.satz.Status === SatzStatus.Fertig) || (this.sess.Kategorie02 !== SessionStatus.Laeuft)) {
+            
+            clearInterval(this.SatzTimer);
+            if (this.satz.TimerSeconds <= 0) {
+                this.fGong.play();
+            }
+
+            if ((this.satz.TimerSeconds <= 0) || (this.satz.Status === SatzStatus.Fertig)) 
+                this.SatzTimerStatus = SatzStatus.Wartet;
+            else 
+                this.SatzTimerStatus = SatzStatus.Pause;
+        }
+    }
+
+
+    StartTimer(aSatz: Satz) {
+        if ((this.SatzTimerStatus === SatzStatus.Wartet)||(this.SatzTimerStatus === SatzStatus.Pause)) {
+            const mNow = new Date();
+            const mBis = Datum.StaticAddSeconds(mNow, aSatz.TimerSeconds);
+            this.fZeitraum = new Zeitraum(mNow, mBis);
+            this.SatzTimerStatus = SatzStatus.Laeuft;
+            this.SatzTimer = setInterval(() => this.CalcSatzDauer(), 1000);
+        }
+        else {
+            clearInterval(this.SatzTimer);
+            this.SatzTimerStatus = SatzStatus.Pause;
+        }
+
+    }
+
+    TimerDisabled(aSatz: Satz): boolean{
+        return this.Disabled(aSatz) || (aSatz.TimerSeconds <= 0)  ||  (this.sess.Kategorie02 !== SessionStatus.Laeuft);
     }
 
     public CopySet() {
@@ -495,7 +561,38 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
         this.fGlobalService.SatzKopie.ID = undefined;
     }
 
+    get StartTimerText(): string{
+        if (this.SatzTimerStatus === SatzStatus.Pause)
+            return 'Paused';
+        else if (this.SatzTimerStatus === SatzStatus.Laeuft)
+            return 'Stop';
+        return 'Start';
+    }
+    
     ngDoCheck() {
+        if (this.sess.Kategorie02 !== this.CmpSessionStatus) {
+            this.CmpSessionStatus = this.sess.Kategorie02;
+
+            if (this.sess.Kategorie02 !== SessionStatus.Laeuft) {
+                clearInterval(this.SatzTimer);
+
+                if (this.SatzTimerStatus !== SatzStatus.Wartet) {
+                    if ((this.sess.Kategorie02 === SessionStatus.Fertig)
+                        || (this.sess.Kategorie02 === SessionStatus.FertigTimeOut)
+                        || (this.sess.Kategorie02 === SessionStatus.Wartet)
+                    )
+                        this.SatzTimerStatus = SatzStatus.Wartet;
+
+                    if (this.sess.Kategorie02 === SessionStatus.Pause)
+                        this.SatzTimerStatus = SatzStatus.Pause;
+                }
+                
+            }
+            else if (this.sess.Kategorie02 === SessionStatus.Laeuft) {
+                if (this.SatzTimerStatus === SatzStatus.Pause)
+                    this.StartTimer(this.satz);
+            }
+        }
     }
 }
 

@@ -104,6 +104,7 @@ export interface ISatz{
     FkHantel: number;
     Vorgabe: boolean;
     BodyWeight: number;
+    TimerSeconds: number;
 }
 
 export class SatzDB implements ISatz {
@@ -131,6 +132,7 @@ export class SatzDB implements ISatz {
     public FkHantel: number = 0;
     public Vorgabe: boolean = false;
     public BodyWeight: number = 0;
+    public TimerSeconds: number = 0;
 
     constructor(aPara: Satz = {} as Satz) {
         this.SessionID = aPara.SessionID ? aPara.SessionID : 0;
@@ -161,6 +163,17 @@ export class SatzDB implements ISatz {
 // Beim Anfuegen neuer Felder Copy und Compare nicht vergessen!
 export class Satz implements ISatz {
     public SatzDB: SatzDB = new SatzDB();
+    
+    //#region TimerSeconds
+    public CmpTimerSeconds: number = 0;
+    get TimerSeconds(): number {
+        return this.SatzDB.TimerSeconds;
+    }
+
+    set TimerSeconds( aVal: number) {
+        this.SatzDB.TimerSeconds = aVal;
+    }
+    //#endregion
     //#region ID
     get ID(): number {
         return this.SatzDB.ID;

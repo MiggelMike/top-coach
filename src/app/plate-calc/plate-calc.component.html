@@ -95,6 +95,29 @@
                 </div>
             </div>
 
+            <span class="font-14-label">Timer seconds</span>
+            <div class="row-start-left">
+                <div class="column-start-left">
+                    <div class="row-start-left">
+                        <!-- Geplante Dauer in Sekunden -->
+                        <mat-label>Timer seconds</mat-label>
+                    </div>
+                    <div class="row-start-left">
+            
+                        <div class="column-start-left">
+                            <input matInput class="align-right width-200" (click)="onInitOnClick($event)" [ngModel]="Satz.TimerSeconds"
+                                (focusout)="SetTimerSeconds($event)" type="text">
+                        </div>
+            
+                        <div class="column-start-left">
+                            <mat-checkbox [(ngModel)]="TimerSecondsForAllSets" (click)="$event.stopPropagation()"
+                                (change)="DoTimerSecondsAllSets($event)">All sets
+                            </mat-checkbox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <ng-container *ngIf="PlateList.length > 0">
                 <div fxLayout="row" fxFlex="100%">
                     <mat-label>Plates per side</mat-label>

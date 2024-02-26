@@ -439,7 +439,7 @@ export class Session implements ISession {
             return;
         }
             
-        const mDauer = Zeitraum.CalcDauer(this.GestartedWann, new Date());
+        const mDauer = Zeitraum.StaticCalcDauer(this.GestartedWann, new Date());
         const mPause = this.CalcPause();
         const mDauerMinusPause = mDauer - mPause;
         if (mDauerMinusPause >= this.SessionDauer.MaxDauer) {
@@ -453,7 +453,7 @@ export class Session implements ISession {
         let mPauseInSek = 0;
         
         this.PausenListe.forEach(p => {
-            mPauseInSek += Zeitraum.CalcDauer(p.Von, p.Bis);
+            mPauseInSek += Zeitraum.StaticCalcDauer(p.Von, p.Bis);
         });
         return mPauseInSek;
     }

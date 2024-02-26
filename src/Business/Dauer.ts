@@ -23,7 +23,7 @@ export class ZeitraumDB {
 export class Zeitraum extends ZeitraumDB  {
    
     public DauerRaw(): number {
-        const mResult = Zeitraum.CalcDauer(this.Von, this.Bis);
+        const mResult = Zeitraum.StaticCalcDauer(this.Von, this.Bis);
         if (mResult >= this.MaxDauer)
             return mResult;
         return this.MaxDauer;
@@ -33,7 +33,7 @@ export class Zeitraum extends ZeitraumDB  {
         return Zeitraum.FormatDauer(this.DauerRaw());
     }
 
-    public static CalcDauer(aVonZeitpunkt: Date, aBisZeitpunkt: Date): number {
+    public static StaticCalcDauer(aVonZeitpunkt: Date, aBisZeitpunkt: Date): number {
         const mDauer =
             Math.floor((
                 Date.UTC(
@@ -79,6 +79,6 @@ export class Zeitraum extends ZeitraumDB  {
         this.MaxDatum.setUTCHours(this.MaxDatum.getUTCHours() + aMaxDauer.Stunden);
         this.MaxDatum.setUTCMinutes(this.MaxDatum.getUTCMinutes() + aMaxDauer.Minuten);
         this.MaxDatum.setUTCSeconds(this.MaxDatum.getUTCSeconds() + aMaxDauer.Sekunden);
-        this.MaxDauer = Zeitraum.CalcDauer(this.Von, this.MaxDatum);
+        this.MaxDauer = Zeitraum.StaticCalcDauer(this.Von, this.MaxDatum);
     }
 }

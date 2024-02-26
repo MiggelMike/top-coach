@@ -1,5 +1,5 @@
 <!-- <app-toolbar></app-toolbar> -->
-<mat-icon  (click)="back()">arrow_back</mat-icon>
+<img src="../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/Go back.png" (click)="back()">
     <div fxLayout="row wrap" fxLayoutAlign="center center">
         <h4>Bodyweight</h4>
     </div>
@@ -15,7 +15,6 @@
                 <ng-container *ngFor="let bw of BodyweightList, index as i">
                     <!-- Zeilen-Hintergrundfarbe -> [ngClass]="{'HG-01': i % 2 === 0}" -->
                     <div class="row-start-left-gap-3 pad-right-5 height-80" [ngClass]="{'HG-01': i % 2 === 0}">
-                            <!-- <mat-form-field class="align-right width-100 pd-l-5"> -->
                                 <div class="column-center">
                                     <mat-label>Bodyweight {{GewichtsEinheit}}</mat-label>
                                     <input class="align-right pd-l-5 width-100" 
@@ -25,9 +24,7 @@
                                         [ngModel]="bw.WeightTxt" 
                                         type="text">
                                 </div>
-                            <!-- </mat-form-field> -->
 
-                            <!-- <mat-form-field class="align-items-right">  -->
                                 <div class="column-center">
                                     <mat-label>Choose a date</mat-label>
                                     <input matInput 
@@ -46,7 +43,6 @@
                                         </ngx-mat-datepicker-actions>
                                     </ngx-mat-datetime-picker>
                                 <ngx-mat-datepicker-toggle matSuffix [for]="pickerWithActions"></ngx-mat-datepicker-toggle>
-                            <!-- </mat-form-field> -->
                             <a class="ref-button"  (click)="DeleteBodyweight(bw)">Delete</a>
                         </div>
                         

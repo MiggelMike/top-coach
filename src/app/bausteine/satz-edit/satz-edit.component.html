@@ -52,7 +52,7 @@
                     mask="9999"
                     [ngModel]="satz.WdhAusgefuehrtText" 
                     [disabled]="Disabled(satz)"
-                    (click)="onClickWdhAusgefuehrt($event)" 
+                    (click)="onSelect($event)" 
                     (focusout)="SetWdhAusgefuehrt($event)" 
                     (mousedown)="MouseDown(satz,$event)"
                     (mouseup)="MouseUp($event)"
@@ -62,18 +62,19 @@
         </div>
 
            <!-- Timer -->
-           <div class="rep-column">
-            <div [ngClass]="{'invisible': isVisible() === false}" class="align-right label">{{satz.WdhVonVorgabe}}</div> 
+           <div class="timer-column">
+            <!-- <div [ngClass]="{'invisible': isVisible() === false}" class="align-right label">{{satz.WdhVonVorgabe}}</div>  -->
+            <a [ngClass]="['link-button-font', 'height-10']" mat-flat-button matTooltip="Start timer" matTooltipPosition="above" (click)="StartTimer(satz)" [disabled]="TimerDisabled(satz)">{{StartTimerText}}</a>
             <input matInput 
                     class="align-right tc-font-size-smaller rep-column"
-                    matTooltip="Hold to open details"
+                    matTooltip="Timer seconds"
                     matTooltipPosition="above"
                     [matTooltipDisabled]="false"
                     mask="999999"
-                    [ngModel]="satz.WdhAusgefuehrtText" 
+                    [ngModel]="satz.TimerSeconds" 
                     [disabled]="Disabled(satz)"
-                    (click)="onClickWdhAusgefuehrt($event)" 
-                    (focusout)="SetWdhAusgefuehrt($event)" 
+                    (click)="onSelect($event)" 
+                    (focusout)="SetTimerSeconds($event)" 
                     (mousedown)="MouseDown(satz,$event)"
                     (mouseup)="MouseUp($event)"
                     (touchstart)="MouseDown(satz,$event)"

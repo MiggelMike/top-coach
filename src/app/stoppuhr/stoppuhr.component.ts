@@ -95,7 +95,7 @@ export class StoppuhrComponent implements OnInit {
 		// Letzter Satz in letzter Übung?
 		// if (this.isLetzterSatzInUebung)
 		// 	return Zeitraum.FormatDauer(0);
-		const mDauerSec: number = Zeitraum.CalcDauer(this.StartZeitpunkt, new Date());
+		const mDauerSec: number = Zeitraum.StaticCalcDauer(this.StartZeitpunkt, new Date());
 
 		// Letzter Satz, aber nicht letzte Übung?
 		if (this.isLetzterSatzInUebung && !this.isLetzteUebungInSession) {

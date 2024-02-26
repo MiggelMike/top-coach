@@ -24,7 +24,7 @@ export class PlateCalcComponent implements OnInit {
 
 	//#region GewichtAusgefuehrt
 	private fGewichtAusgefuehrt: number = 0;
-	get GewichtAusgefuehrt(): number{
+	get GewichtAusgefuehrt(): number {
 		return Number(this.fGewichtAusgefuehrt);
 	}
 	set GewichtAusgefuehrt(aValue: number) {
@@ -32,11 +32,11 @@ export class PlateCalcComponent implements OnInit {
 	}
 	//#endregion
 
-
 	public SetForAllSets: boolean;
 	public HantelForAllSets: boolean;
 	public RepRangeForAllSets: boolean;
 	public DoneRepsForAllSets: boolean;
+	public TimerSecondsForAllSets: boolean;
 
 	public get SatzNr(): string {
 		if (this.Uebung && this.Satz) {
@@ -68,7 +68,7 @@ export class PlateCalcComponent implements OnInit {
 
 	public get JustTheBar(): boolean {
 		if (this.Hantel === undefined) return false;
-		return (this.GewichtAusgefuehrt > 0) && (this.Hantel.Gewicht === this.GewichtAusgefuehrt);
+		return this.GewichtAusgefuehrt > 0 && this.Hantel.Gewicht === this.GewichtAusgefuehrt;
 	}
 
 	private SetsAreEqual(aSatz1: Satz, aSatz2: Satz): boolean {
@@ -78,8 +78,7 @@ export class PlateCalcComponent implements OnInit {
 	}
 
 	get DoneRepsText(): string {
-		if (this.isAMRAP)
-			return 'AMRAP';
+		if (this.isAMRAP) return 'AMRAP';
 		return 'Reps';
 	}
 
@@ -92,17 +91,18 @@ export class PlateCalcComponent implements OnInit {
 		if (this.Uebung && this.Satz && mChecked) {
 			if (this.Satz.SatzTyp === SatzTyp.Aufwaermen) {
 				this.Uebung.AufwaermSatzListe.forEach((sz) => {
-					if (this.SetsAreEqual(sz, this.Satz) === false) sz.GewichtAusgefuehrt = this.Satz.GewichtAusgefuehrt;
+					if (this.SetsAreEqual(sz, this.Satz) === false)
+						sz.GewichtAusgefuehrt = this.Satz.GewichtAusgefuehrt;
 				});
-			}
-			else if (this.Satz.SatzTyp === SatzTyp.Training) {
+			} else if (this.Satz.SatzTyp === SatzTyp.Training) {
 				this.Uebung.ArbeitsSatzListe.forEach((sz) => {
-					if (this.SetsAreEqual(sz, this.Satz) === false) sz.GewichtAusgefuehrt = this.Satz.GewichtAusgefuehrt;
+					if (this.SetsAreEqual(sz, this.Satz) === false)
+						sz.GewichtAusgefuehrt = this.Satz.GewichtAusgefuehrt;
 				});
-			}
-			else if (this.Satz.SatzTyp === SatzTyp.Abkuehlen) {
+			} else if (this.Satz.SatzTyp === SatzTyp.Abkuehlen) {
 				this.Uebung.AbwaermSatzListe.forEach((sz) => {
-					if (this.SetsAreEqual(sz, this.Satz) === false) sz.GewichtAusgefuehrt = this.Satz.GewichtAusgefuehrt;
+					if (this.SetsAreEqual(sz, this.Satz) === false)
+						sz.GewichtAusgefuehrt = this.Satz.GewichtAusgefuehrt;
 				});
 			}
 		}
@@ -125,6 +125,12 @@ export class PlateCalcComponent implements OnInit {
 		this.DoDoneRepsAllSets(this.DoneRepsForAllSets);
 	}
 
+	public SetTimerSeconds(aEvent: any) {
+		this.Satz.TimerSeconds = Number(aEvent.target.value);
+		this.DoTimerSecondsAllSets(this.DoneRepsForAllSets);
+	}
+
+
 	public DoHantelAllSets(aEvent: any) {
 		const mChecked = aEvent.checked;
 		if (this.Uebung && this.Satz && mChecked) {
@@ -132,13 +138,11 @@ export class PlateCalcComponent implements OnInit {
 				this.Uebung.AufwaermSatzListe.forEach((sz) => {
 					if (this.SetsAreEqual(sz, this.Satz) === false) sz.FkHantel = this.Satz.FkHantel;
 				});
-			}
-			else if (this.Satz.SatzTyp === SatzTyp.Training) {
+			} else if (this.Satz.SatzTyp === SatzTyp.Training) {
 				this.Uebung.ArbeitsSatzListe.forEach((sz) => {
 					if (this.SetsAreEqual(sz, this.Satz) === false) sz.FkHantel = this.Satz.FkHantel;
 				});
-			}
-			else if (this.Satz.SatzTyp === SatzTyp.Abkuehlen) {
+			} else if (this.Satz.SatzTyp === SatzTyp.Abkuehlen) {
 				this.Uebung.AbwaermSatzListe.forEach((sz) => {
 					if (this.SetsAreEqual(sz, this.Satz) === false) sz.FkHantel = this.Satz.FkHantel;
 				});
@@ -161,16 +165,14 @@ export class PlateCalcComponent implements OnInit {
 						sz.WdhBisVorgabe = this.Satz.WdhBisVorgabe;
 					}
 				});
-			}
-			else if (this.Satz.SatzTyp === SatzTyp.Training) {
+			} else if (this.Satz.SatzTyp === SatzTyp.Training) {
 				this.Uebung.ArbeitsSatzListe.forEach((sz) => {
 					if (this.SetsAreEqual(sz, this.Satz) === false) {
 						sz.WdhVonVorgabe = this.Satz.WdhVonVorgabe;
 						sz.WdhBisVorgabe = this.Satz.WdhBisVorgabe;
 					}
 				});
-			}
-			else if (this.Satz.SatzTyp === SatzTyp.Abkuehlen) {
+			} else if (this.Satz.SatzTyp === SatzTyp.Abkuehlen) {
 				this.Uebung.AbwaermSatzListe.forEach((sz) => {
 					if (this.SetsAreEqual(sz, this.Satz) === false) {
 						sz.WdhVonVorgabe = this.Satz.WdhVonVorgabe;
@@ -184,29 +186,52 @@ export class PlateCalcComponent implements OnInit {
 	public DoDoneRepsAllSets($event: any) {
 		const mChecked = $event.checked;
 		if (this.Uebung && this.Satz && mChecked) {
-		  if (this.Satz.SatzTyp === SatzTyp.Aufwaermen) {
-			this.Uebung.AufwaermSatzListe.forEach((sz) => {
-			  if (this.SetsAreEqual(sz, this.Satz) === false) {
-				sz.WdhAusgefuehrt = this.Satz.WdhAusgefuehrt;
-			  }
-			});
-		  }
-		  else if (this.Satz.SatzTyp === SatzTyp.Training) {
-			this.Uebung.ArbeitsSatzListe.forEach((sz) => {
-			  if (this.SetsAreEqual(sz, this.Satz) === false) {
-				sz.WdhAusgefuehrt = this.Satz.WdhAusgefuehrt;
-			  }
-			});
-		  }
-		  else if (this.Satz.SatzTyp === SatzTyp.Abkuehlen) {
-			this.Uebung.AbwaermSatzListe.forEach((sz) => {
-			  if (this.SetsAreEqual(sz, this.Satz) === false) {
-				sz.WdhAusgefuehrt = this.Satz.WdhAusgefuehrt;
-			  }
-			});
-		  }
+			if (this.Satz.SatzTyp === SatzTyp.Aufwaermen) {
+				this.Uebung.AufwaermSatzListe.forEach((sz) => {
+					if (this.SetsAreEqual(sz, this.Satz) === false) {
+						sz.WdhAusgefuehrt = this.Satz.WdhAusgefuehrt;
+					}
+				});
+			} else if (this.Satz.SatzTyp === SatzTyp.Training) {
+				this.Uebung.ArbeitsSatzListe.forEach((sz) => {
+					if (this.SetsAreEqual(sz, this.Satz) === false) {
+						sz.WdhAusgefuehrt = this.Satz.WdhAusgefuehrt;
+					}
+				});
+			} else if (this.Satz.SatzTyp === SatzTyp.Abkuehlen) {
+				this.Uebung.AbwaermSatzListe.forEach((sz) => {
+					if (this.SetsAreEqual(sz, this.Satz) === false) {
+						sz.WdhAusgefuehrt = this.Satz.WdhAusgefuehrt;
+					}
+				});
 			}
 		}
+	}
+
+	public DoTimerSecondsAllSets($event: any) {
+		const mChecked = $event.checked;
+		if (this.Uebung && this.Satz && mChecked) {
+			if (this.Satz.SatzTyp === SatzTyp.Aufwaermen) {
+				this.Uebung.AufwaermSatzListe.forEach((sz) => {
+					if (this.SetsAreEqual(sz, this.Satz) === false) {
+						sz.TimerSeconds = this.Satz.TimerSeconds;
+					}
+				});
+			} else if (this.Satz.SatzTyp === SatzTyp.Training) {
+				this.Uebung.ArbeitsSatzListe.forEach((sz) => {
+					if (this.SetsAreEqual(sz, this.Satz) === false) {
+						sz.TimerSeconds = this.Satz.TimerSeconds;
+					}
+				});
+			} else if (this.Satz.SatzTyp === SatzTyp.Abkuehlen) {
+				this.Uebung.AbwaermSatzListe.forEach((sz) => {
+					if (this.SetsAreEqual(sz, this.Satz) === false) {
+						sz.TimerSeconds = this.Satz.TimerSeconds;
+					}
+				});
+			}
+		}
+	}
 
 	onClickWeightVorgabe(aEvent: any) {
 		aEvent.target.select();
@@ -313,21 +338,19 @@ export class PlateCalcComponent implements OnInit {
 		if (this.overlayRef != null) this.overlayRef.close();
 
 		if (this.fPlateCalcOverlayConfig.onFormCloseFn !== undefined) {
-			this.fPlateCalcOverlayConfig.onFormCloseFn(
-				{
-					satz: this.fPlateCalcOverlayConfig.satz,
-					fertig: this.fPlateCalcOverlayConfig.satzDone,
-					sess: this.fPlateCalcOverlayConfig.sess,
-					uebung: this.fPlateCalcOverlayConfig.uebung,
-					programm: this.fPlateCalcOverlayConfig.programm,
-					dbModul: this.fPlateCalcOverlayConfig.dbModul,
-					dialogService: this.fPlateCalcOverlayConfig.dialogService,
-					gewichtEinheitsText: this.fPlateCalcOverlayConfig.gewichtEinheitsText,
-					stoppUhrFn: this.fPlateCalcOverlayConfig.stoppUhrFn,
-					stoppUhrService: this.fPlateCalcOverlayConfig.stoppUhrService,
-					rowNumber: this.fPlateCalcOverlayConfig.rowNumber
-				}
-			);
+			this.fPlateCalcOverlayConfig.onFormCloseFn({
+				satz: this.fPlateCalcOverlayConfig.satz,
+				fertig: this.fPlateCalcOverlayConfig.satzDone,
+				sess: this.fPlateCalcOverlayConfig.sess,
+				uebung: this.fPlateCalcOverlayConfig.uebung,
+				programm: this.fPlateCalcOverlayConfig.programm,
+				dbModul: this.fPlateCalcOverlayConfig.dbModul,
+				dialogService: this.fPlateCalcOverlayConfig.dialogService,
+				gewichtEinheitsText: this.fPlateCalcOverlayConfig.gewichtEinheitsText,
+				stoppUhrFn: this.fPlateCalcOverlayConfig.stoppUhrFn,
+				stoppUhrService: this.fPlateCalcOverlayConfig.stoppUhrService,
+				rowNumber: this.fPlateCalcOverlayConfig.rowNumber,
+			});
 		}
 		this.overlayRef = null;
 	}
