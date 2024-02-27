@@ -1,25 +1,43 @@
 
-<ng-container *ngIf="SelectMode === false">
+<div class="header-box">
+    <ng-container *ngIf="SelectMode === false">
+            <app-toolbar></app-toolbar>
+    </ng-container>
+
     
-        <app-toolbar></app-toolbar>
+    <div class="column-center">
+        <div class="row-center height-40" >
+            <ng-container *ngIf="SelectMode === false; else elseBlock">
+                <h4>Exercises</h4>
+            </ng-container>
+            
+            <ng-template #elseBlock>
+                <h4>Select one or more exercises</h4>
+            </ng-template>
+        </div>
 
-</ng-container>
-
-<div class="column-center">
-    <div fxLayout="row wrap"  fxFlex="100%" >
-        <ng-container *ngIf="SelectMode === false; else elseBlock">
-            <h4>Exercises</h4>
-        </ng-container>
-
-        <ng-template #elseBlock>
-            <h4>Select one or more exercises</h4>
-        </ng-template>
-    </div>
-
-    <ng-container *ngIf="UebungListeSortedByName">
-        <div class="row-center pad-5"> 
+        <div class="row-center height-30"> 
             <a class='link-button-font' mat-flat-button (click)="NewExercise()">New exercise</a>
         </div>
+    </div>
+
+    <!-- <div class="row-center">
+        <div class="column-center width-600">
+            <div class="row-center">
+                <a class='link-button-font' (click)="AdditionalSession()">Additional session</a>
+            </div>
+            <ng-container  *ngIf="AktuellesProgramm">
+                <h4>{{AktuellesProgramm.Name}}</h4>
+            </ng-container>
+        </div>
+    </div> -->
+</div>
+
+
+
+<div id="main-panel" class="column-center">
+
+    <ng-container *ngIf="UebungListeSortedByName">
     
         <div class="column-center">
             <ng-container *ngFor="let uebung of UebungListeSortedByName, index as i">

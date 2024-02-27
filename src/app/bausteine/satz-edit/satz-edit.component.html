@@ -23,7 +23,9 @@
 
         <!-- Ausgefuehrtes-Gewicht -->
         <div class="weight-column">
-            <div [ngClass]="{'invisible': isVisible() === false}" class="align-right label">{{satz.GewichtVorgabeText}}</div> 
+            <div class="row-start-left height-20">
+                <div [ngClass]="{'invisible': isVisible() === false}"  class="align-right label">{{satz.GewichtVorgabeText}}</div> 
+            </div>
             <input  matInput 
                     mask="9999.00"
                     matTooltip="Hold to open details"
@@ -43,7 +45,9 @@
 
         <!-- Ausgefuerte Wdh. -->
         <div class="rep-column">
-            <div [ngClass]="{'invisible': isVisible() === false}" class="align-right label">{{satz.WdhVonVorgabe}}</div> 
+            <div class="row-start-left height-20">
+                <div [ngClass]="{'invisible': isVisible() === false}" class="align-right label">{{satz.WdhVonVorgabe}}</div> 
+            </div>
             <input matInput 
                     class="align-right tc-font-size-smaller rep-column"
                     matTooltip="Hold to open details"
@@ -64,7 +68,7 @@
            <!-- Timer -->
            <div class="timer-column">
             <!-- <div [ngClass]="{'invisible': isVisible() === false}" class="align-right label">{{satz.WdhVonVorgabe}}</div>  -->
-            <a [ngClass]="['link-button-font', 'height-10']" mat-flat-button matTooltip="Start timer" matTooltipPosition="above" (click)="StartTimer(satz)" [disabled]="TimerDisabled(satz)">{{StartTimerText}}</a>
+            <a class="link-button-font height-20" [ngClass]="{'invisible': isVisible() === false}" mat-flat-button matTooltip="Start timer" matTooltipPosition="above" (click)="StartTimer(satz)" [disabled]="TimerDisabled(satz)">{{StartTimerText}}</a>
             <input matInput 
                     class="align-right tc-font-size-smaller rep-column"
                     matTooltip="Timer seconds"
@@ -83,16 +87,15 @@
         </div>
         
         <!-- AMRAP  -->
-        <div class="column-start-left ml-10 center-item" [ngClass]="{'mg-top-18': isVisible() === true}" >
-            <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP" 
-            ></mat-checkbox>
+        <div class="column-start-left ml-10 center-item height-40 mg-top-25" >
+            <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP"></mat-checkbox>
         </div>
 
         <ng-container *ngIf="isVisible() === true; then running"></ng-container>
 
         <ng-template #running>
             <!-- Satz Fertig-Flag -->
-            <div class="ml-5 center-item pad-top-12" fxFlex="25px">
+            <div class="ml-5 center-item mg-top-25" fxFlex="25px">
                 <mat-checkbox [(ngModel)]="SatzFertig"
                 (change)="onClickSatzFertig(satz, $event)"
                 ></mat-checkbox>
