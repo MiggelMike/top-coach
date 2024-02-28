@@ -467,6 +467,12 @@ div.herz:after {
 	flex-direction: row;
 }
 
+.row-center-gap-3 {
+	@extend .row-center;
+	row-gap: 3px;
+}
+
+
 .row-center-gap-5 {
 	@extend .row-center;
 	row-gap: 5px;
@@ -689,6 +695,10 @@ div.herz:after {
 	padding: 5px;
 }
 
+.pad-top-5 {
+	padding-top: 5px;
+}
+
 .pad-top-12 {
 	padding-top: 12px;
 }
@@ -696,6 +706,11 @@ div.herz:after {
 .pad-top-20 {
 	padding-top: 20px;
 }
+
+.pad-top-30 {
+	padding-top: 30px;
+}
+
 
 
 
