@@ -1,14 +1,19 @@
-<app-toolbar></app-toolbar>
-<div class="column-center">
-    <h4>Musclegroups</h4>
-</div>
+<div class="header-box">
 
-<div class="column-center">
-    <a class='link-button-font btn btn-link' mat-flat-button (click)="NeueMuskelGruppe()">New Musclegroup</a>
+    <app-toolbar></app-toolbar>
+    
+    <div class="column-center">
+        <h4>Musclegroups</h4>
+    </div>
+    
+    <div class="column-center">
+        <a class='link-button-font btn btn-link' mat-flat-button (click)="NeueMuskelGruppe()">New Musclegroup</a>
+    </div>
 </div>
+    
 
 <ng-container *ngIf="MuskelGruppenListe">
-    <div class="column-center mg-top-5">
+    <div id="main-panel" class="column-center mg-top-5">
         <ng-container *ngFor="let mg of MuskelGruppenListe, index as i">
             <!-- Zeilen-Hintergrundfarbe -> [ngClass]="{'HG-01': i % 2 === 0}" -->
             <div class="row-center height-40" [ngClass]="{'HG-01': i % 2 === 0}">
