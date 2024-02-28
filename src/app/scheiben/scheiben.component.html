@@ -1,51 +1,60 @@
-<img src="../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/Go back.png" (click)="back()">
+<div class="header-box">
+    <div class="row-center mg-top-5">
+        <div class="colum-center width-300">
+            <img src="../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/Go back.png" (click)="back()">
+        </div>
+    </div>
+    
+    <div class="row-center">
+        <div class="colum-center">
+            <h4>Plates</h4>
+        </div>
+    </div>                
 
-<div class="column-center">
-    <h4>Plates</h4>
-    <a class='link-button-font mg-bottom-3' mat-flat-button (click)="NeueScheibe()" >New Plate</a>
+    <div class="row-center">
+        <div class="colum-center">
+            <a class='link-button-font mg-bottom-3' mat-flat-button (click)="NeueScheibe()" >New Plate</a>
+        </div>
+    </div>        
+</div>    
 
+<div id="main-panel">
     <ng-container *ngIf="HantelscheibenListe">
         <ng-container *ngFor="let sch of HantelscheibenListe, index as i">
-                <div class="row-start-left-gap-3 height-65"  [ngClass]="{'HG-01': i % 2 === 0}">
-                    <div class="colum-start-left">
+            <div class="row-center">
+                <div class="colum-center">
+                    <div class="row-start-left-gap-3 height-65  width-300" [ngClass]="{'HG-01': i % 2 === 0}">
+
                         <div class="colum-start-left">
-                            <mat-label>Diameter</mat-label>
+                            <div class="colum-start-left">
+                                <mat-label>Diameter</mat-label>
+                            </div>
+                            <input matInput class="align-right width-75" mask="99" (focusout)="SetDiameter(sch,$event)"
+                                [ngModel]="sch.Durchmesser" type="text">
                         </div>
-                        <input matInput 
-                        class="align-right width-75"
-                        mask="99" 
-                        (focusout)="SetDiameter(sch,$event)"
-                        [ngModel]="sch.Durchmesser" type="text">
+
+                        <div class="colum-start-left">
+                            <div class="colum-start-left">
+                                <mat-label>Weight</mat-label>
+                            </div>
+
+                            <input matInput class="align-right width-75" mask="999.00"
+                                (focusout)="SetWeight(sch,$event)" [ngModel]="GetWeightText(sch)" type="text">
+                        </div>
+
+                        <div class="colum-start-left">
+                            <div class="colum-start-left">
+                                <mat-label>Count</mat-label>
+                            </div>
+
+                            <input matInput class="align-right width-75" mask="9999" (focusout)="SetAnzahl(sch,$event)"
+                                [ngModel]="sch.Anzahl" type="text">
+                        </div>
+
+                        <!-- <a id="Delete" class="ref-button" (click)="Delete(sch)">Delete</a> -->
                     </div>
-                        
-                    <div class="colum-start-left">
-                        <div class="colum-start-left">
-                            <mat-label>Weight</mat-label>
-                        </div>
-
-                        <input matInput 
-                        class="align-right width-75"
-                        mask="999.00" 
-                        (focusout)="SetWeight(sch,$event)"
-                        [ngModel]="GetWeightText(sch)" type="text">
-                    </div>                        
-
-                    <div class="colum-start-left">
-                        <div class="colum-start-left">
-                            <mat-label>Count</mat-label>
-                        </div>
-
-                        <input matInput 
-                        class="align-right width-75"
-                        mask="9999" 
-                        (focusout)="SetAnzahl(sch,$event)"
-                        [ngModel]="sch.Anzahl" type="text">
-                    </div>                
-                
-                <!-- <a id="Delete" class="ref-button" (click)="Delete(sch)">Delete</a> -->
+                </div>
             </div>
-    </ng-container>
-    
+        </ng-container>
     </ng-container>
 </div>
-
