@@ -113,7 +113,7 @@
                                                         <ng-container *ngIf='aktuellerDiaTyp === diaTyp().line; then linechart; else barchart'></ng-container>
                                                         
                                                         <ng-template #linechart>
-                                                            <div class="pad-10 height-500">
+                                                            <div class="pad-10 height-400">
                                                                 <ngx-charts-line-chart
                                                                     #LineChart (window:resize)="onResize(ChartContainer)" 
                                                                     height="100vh"   
@@ -125,7 +125,7 @@
                                                             </div>
                                                         </ng-template>
                                                         <ng-template #barchart>
-                                                            <div class="pad-10 height-500">
+                                                            <div class="pad-10 height-400">
                                                                 <ngx-charts-bar-vertical #BarChart (window:resize)="onResize(ChartContainer)"
                                                                     [height]="100"
                                                                     [results]="mChartData.BarChartListe" [xAxisLabel]=""
