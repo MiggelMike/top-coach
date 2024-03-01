@@ -158,10 +158,10 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 		//
 		switch (this.Session.Kategorie02) {
 			case SessionStatus.Wartet:
-				// this.Session.GestartedWann = new Date();
-				// this.Session.Datum = this.Session.GestartedWann;
-				// this.Session.Kategorie02 = SessionStatus.Laeuft;
-				// this.EvalStart();
+				this.Session.GestartedWann = new Date();
+				this.Session.Datum = this.Session.GestartedWann;
+				this.Session.Kategorie02 = SessionStatus.Laeuft;
+				this.EvalStart();
 				break;
 				
 			case SessionStatus.Pause:
@@ -182,16 +182,20 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 				if (mSuchSession) {
 					mSuchSession.GestartedWann = mSavedSession.GestartedWann;
 				}
+
+				const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
+				mSessionCopyPara.Komplett = true;
+				mSessionCopyPara.CopySessionID = true;
+				mSessionCopyPara.CopyUebungID = true;
+				mSessionCopyPara.CopySatzID = true;
+				this.cmpSession = Session.StaticCopy(this.Session, mSessionCopyPara);
+				this.cmpSessionSettings = Session.StaticCopy(this.Session, mSessionCopyPara);
+				this.BackButtonVisible = true;
+				this.ready = true;
+
+				if(this.Session.Kategorie02 === SessionStatus.Laeuft)
+					this.doStats();
 			});
-		const mSessionCopyPara: SessionCopyPara = new SessionCopyPara();
-		mSessionCopyPara.Komplett = true;
-		mSessionCopyPara.CopySessionID = true;
-		mSessionCopyPara.CopyUebungID = true;
-		mSessionCopyPara.CopySatzID = true;
-		this.cmpSession = Session.StaticCopy(this.Session, mSessionCopyPara);
-		this.cmpSessionSettings = Session.StaticCopy(this.Session, mSessionCopyPara);
-		this.BackButtonVisible = true;
-		this.ready = true;
 	}
 
 	DoWorker() {
@@ -222,7 +226,8 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 			|| this.fSessionStatsOverlayComponent !== undefined && this.fSessionStatsOverlayComponent.overlayRef === null) {
 			this.fSessionOverlayConfig = {
 				session: this.Session,
-				panelClass: 'cc-overlay'
+				panelClass: 'cc-overlay',
+				top: 400
 			} as SessionOverlayConfig;
 
 			this.fSessionStatsOverlayComponent = this.fSessionOverlayServiceService.open(this.fSessionOverlayConfig);

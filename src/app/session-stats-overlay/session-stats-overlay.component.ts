@@ -44,13 +44,13 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit , ID
 
 		this.fPopupPosition = {
 			left: -1000,
-			top: -1000
+			top: 400
 		}
 
 
 		this.fAnchorPosition = {
 			left: 10,
-			top: 120
+			top: 400
 		};
         
 		this.fAnchorMouseOffset = {
@@ -93,6 +93,8 @@ export class SessionStatsOverlayComponent  implements AfterViewInit, OnInit , ID
 
     ngOnInit(): void { 
 		this.showDuration = true;
+		// this.overlayRef.offsetTop = 400;
+
     }
     
 	ngAfterViewInit() { }

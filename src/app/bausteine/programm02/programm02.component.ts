@@ -16,7 +16,6 @@ import { Observable, min, of } from "rxjs";
 import { Uebung } from "src/Business/Uebung/Uebung";
 import { UebungService } from "src/app/services/uebung.service";
 import { Router } from "@angular/router";
-import {CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Satz } from "src/Business/Satz/Satz";
 import { IProgramModul, ProgramModulTyp } from "src/app/app.module";
 

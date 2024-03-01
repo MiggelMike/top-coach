@@ -6,7 +6,9 @@ import { Overlay, OverlayConfig, OverlayRef  } from '@angular/cdk/overlay';
 import { ComponentPortal, PortalInjector } from '@angular/cdk/portal';
 
 
-export class SessionOverlayRef extends BaseOverlayRef {}
+export class SessionOverlayRef extends BaseOverlayRef {
+
+}
 
 
 export interface SessionOverlayConfig {
@@ -88,10 +90,10 @@ export class SessionOverlayServiceService {
         const positionStrategy = this.overlay
             .position()
             .global()
-            .top("100px")
+            // .top("400px")
             // .left(s);
              .centerHorizontally()
-            //  .centerVertically();
+            .centerVertically();
 
         const overlayConfig = new OverlayConfig({
             hasBackdrop: aConfig.hasBackdrop,

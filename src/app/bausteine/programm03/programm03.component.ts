@@ -115,9 +115,6 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISa
 		} //if
 	}
 
-	ngAfterViewInit() {
-	}
-
 	public DoStatsFn() {
 		this.DoStats.emit(this.Info);
 	}
@@ -289,6 +286,31 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISa
 		};
 
 		this.fDialogService.JaNein(mDialogData);
+	}
+
+	ngAfterViewInit() {
+	}
+
+	ExpandCheckDone: boolean = false;
+	ngDoCheck() {
+		if ((this.ExpandCheckDone === false) && (this.panUebung !== undefined) && (this.panUebung.length > 0)) {
+			let mFoundExpanded = false;
+			const mPanUebungListe = this.panUebung.toArray();
+			for (let index = 0; index < this.session.UebungsListe.length; index++) {
+				const mUebungPtr: Uebung = this.session.UebungsListe[index];
+				if (this.AlleFertig(mUebungPtr) === false) {
+					mPanUebungListe[index].expanded = true;
+					mFoundExpanded = true;
+					break;
+				}
+			}
+
+			if ((this.ExpandCheckDone === false) && (mFoundExpanded === false) && (this.panUebung !== undefined) && (this.panUebung.length > 0)) {
+				this.panUebung.first.expanded = true
+			}
+			
+			this.ExpandCheckDone = true;
+		}
 	}
 
 	public CopyExcercise(aUebung: Uebung, aEvent: Event) {
