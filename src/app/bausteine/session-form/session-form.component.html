@@ -1,5 +1,5 @@
 <div class="column-center">
-        <div class="column-start-left width-600 header">
+        <div class="column-start-left header">
             <div class="row-start-left">
                 <ng-container *ngIf="BackButtonVisible === true">
                     <img src="../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/Go back.png" (click)="back()">
@@ -71,7 +71,7 @@
             
     </div>
 
-    <div class="width-600" [ngClass]="{'main-panel-history': ModulTyp !== programModul.HistoryView,'main-panel-history-view': ModulTyp === programModul.HistoryView}">
+    <div [ngClass]="{'main-panel-history': ModulTyp !== programModul.HistoryView,'main-panel-history-view': ModulTyp === programModul.HistoryView}">
         <app-programm03 #appProgramm03
             [session]="Session" 
             [cmpSession]="cmpSession" 

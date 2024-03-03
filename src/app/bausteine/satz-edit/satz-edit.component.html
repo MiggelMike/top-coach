@@ -101,11 +101,11 @@
             </div>
         </ng-template>
 
-        <div class="ml-10 center-item" [ngClass]="{'mg-top-20': programModulArt === programModul.EditWorkout || programModulArt === programModul.RunningSession || programModulArt === programModul.HistoryView}" layout-align="center center">
+        <div class="ml-5 center-item width-45" [ngClass]="{'mg-top-20': programModulArt === programModul.EditWorkout || programModulArt === programModul.RunningSession || programModulArt === programModul.HistoryView || programModulArt === programModul.SelectWorkoutEdit}" layout-align="center center">
             <a [ngClass]="['link-button-font']" mat-flat-button (click)="DeleteSet()">Delete</a>
         </div>
 
-        <div class="center-item" [ngClass]="{'mg-top-20': programModulArt === programModul.EditWorkout || programModulArt === programModul.RunningSession || programModulArt === programModul.HistoryView }" layout-align="center center">
+        <div class="center-item width-45" [ngClass]="{'mg-top-20': programModulArt === programModul.EditWorkout || programModulArt === programModul.RunningSession || programModulArt === programModul.HistoryView  || programModulArt === programModul.SelectWorkoutEdit }" layout-align="center center">
             <a [ngClass]="['link-button-font']" mat-flat-button (click)="CopySet()">Copy</a>
         </div>
     </div>
