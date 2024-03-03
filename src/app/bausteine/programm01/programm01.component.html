@@ -8,28 +8,28 @@
                     (opened) = "panelOpened()"
                     (closed) = "panelClosed()">
                     <mat-expansion-panel-header  class="disable_ripple" (click)="$event.stopPropagation()">
-                        <div fxLayout="row wrap" fxLayoutGap="2x" fxLayoutAlign="center center">
+                        <div class="row-start-left-gap-3 wrap">
 
-                            <div fxLayout="column" fxFlex="200px">{{programm.Name}}</div>
+                            <div class="column-start-left width-200">{{programm.Name}}</div>
                             <!-- Soll ein Work-Out gewaehlt werden? -->
                             <ng-container *ngIf="ModulTyp === programModul.SelectWorkout; then AuswahlBlock"></ng-container>
 
                             <ng-template #AuswahlBlock>
-                                <div fxLayout="column" fxFlex="75px">
+                                <div class="column-start-left width-75">
                                     <a [ngClass]="['link-button-font']" 
                                     [disabled] = "SelectBtnDisabled"
                                     mat-button (click)="SelectThisWorkoutClick(programm,$event)"><span class="tc-font-size-small">Select</span></a>
                                 </div>
 
-                                <div fxLayout="column" fxFlex="75px">                            
+                                <div class="column-start-left width-75">                                                             
                                     <a [ngClass]="['link-button-font']"  (click)="EditThisWorkoutClick($event)"><span class="tc-font-size-small">Edit</span></a>
                                 </div>
 
-                                <div fxLayout="column" fxFlex="75px">                            
+                                <div class="column-start-left width-75">                                                             
                                     <a [ngClass]="['link-button-font']"  (click)="DeleteProgramm($event,programm)" ><span class="tc-font-size-small">Delete</span></a>
                                 </div>
 
-                                <div fxLayout="column" fxFlex="auto">                            
+                                <div class="column-start-left">                                                             
                                     <a [ngClass]="['link-button-font']"  (click)="CopyProgramm($event,programm)" ><span class="tc-font-size-small">Copy</span></a>
                                 </div>
 
