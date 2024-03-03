@@ -6,3 +6,18 @@
     padding: 5px;
 }
 
+.header {
+    // padding-left: 3px;
+    // padding-top: 3px;
+    width: 100%;
+    position: fixed;
+    top: 30px;
+    z-index: 1000; 
+    background-color: white;
+}
+
+.main-panel {
+    position: relative; 
+    z-index: 1;
+    top: 20px; 
+} 

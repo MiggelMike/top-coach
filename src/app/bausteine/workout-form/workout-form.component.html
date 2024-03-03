@@ -1,35 +1,38 @@
     <!-- <app-toolbar></app-toolbar> -->
     <ng-container *ngIf="programm">
-        <div id="header">
-            <div>
-                <img src="../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/Go back.png" (click)="back()">
-                <div class="row-start-left-gap-3 mg-bottom-5">
-                    <div class="column-start-left">
-                        <span>Workout name</span>
+        
+            <div id="header">
+                <div class="column-center">
+                    <div class="row-start-left-gap-3 mg-bottom-5">
+                        <div class="column-start-left">
+                            <img src="../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/Go back.png" (click)="back()">
+                        </div>
+                        <div class="column-start-left">
+                            <span>Workout name</span>
+                        </div>
+                        <div class="column-start-left">
+                            <input  matInput 
+                                        [matTooltipDisabled]="true"
+                                        class="width-350"
+                                        [(ngModel)]="programm.Name" 
+                                        type="text">
+                        </div>                                    
                     </div>
-                    <div class="column-start-left">
-                        <input  matInput 
-                                    [matTooltipDisabled]="true"
-                                    class="width-350"
-                                    [(ngModel)]="programm.Name" 
-                                    type="text">
-                    </div>                                    
+                </div>                    
+            </div>        
+                
+            <div id="main-panel">
+                <div class="column-center">
+                        <app-programm02 
+                            [programm]="programm" 
+                            [SessionListe]="programm.SessionListe" 
+                            [showButtons]="true" 
+                            [showSaveButtons]="true" 
+                            [ModulTyp]="ModulTyp"
+                            [bearbeitbar]="true"
+                            (ProgrammSavedEvent)="CopyProgramm($event)">
+                        </app-programm02>
                 </div>
             </div>
-        </div>        
-            
-        <div id="main-panel">
-                <!-- <ng-container *ngIf="programm.SessionListe"> -->
-                    <app-programm02 
-                        [programm]="programm" 
-                        [SessionListe]="programm.SessionListe" 
-                        [showButtons]="true" 
-                        [showSaveButtons]="true" 
-                        [ModulTyp]="ModulTyp"
-                        [bearbeitbar]="true"
-                        (ProgrammSavedEvent)="CopyProgramm($event)">
-                    </app-programm02>
-                <!-- </ng-container> -->
-        </div>
-    </ng-container>
+</ng-container>
 
