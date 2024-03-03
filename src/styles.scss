@@ -187,8 +187,33 @@ body {
 	height: 100%;
 }
 
+.width-20 {
+	min-width: 20px !important;
+	max-width: 20px !important;
+	width: 20x !important;
+}
+
+
+.width-25 {
+	min-width: 25px !important;
+	max-width: 25px !important;
+	width: 25x !important;
+}
+
 .width-30 {
 	width: 30px !important;
+}
+
+.width-40 {
+	width: 40px;
+}
+
+.width-45 {
+	width: 45px;
+}
+
+.width-50 {
+	width: 50px;
 }
 
 .width-65 {
@@ -259,8 +284,7 @@ body {
 }
 
 .width-600 {
-	width: 600px !important;
-	min-width: 600px !important;
+	width: 600px;
 }
 
 .width-700 {
@@ -510,6 +534,7 @@ div.herz:after {
 }
 
 .row-start-left {
+	@extend .wrap; 
 	display: flex;
 	justify-content:flex-start;
 	align-items:center;
@@ -520,6 +545,16 @@ div.herz:after {
 	@extend .row-start-left;
 	column-gap: 3px;
 }
+
+
+.row-start-right {
+	@extend .wrap; 
+	display: flex;
+	justify-content:flex-start;
+	align-items:center;
+	flex-direction: row-reverse;
+}
+
 
 
 .link-button-font {

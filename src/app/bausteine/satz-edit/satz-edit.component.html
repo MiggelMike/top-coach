@@ -23,7 +23,7 @@
 
         <!-- Ausgefuehrtes-Gewicht -->
         <div class="weight-column">
-            <div class="row-start-left height-20">
+            <div class="row-start-right height-20">
                 <div [ngClass]="{'invisible': isVisible() === false}"  class="align-right label">{{satz.GewichtVorgabeText}}</div> 
             </div>
             <input  matInput 
@@ -45,7 +45,7 @@
 
         <!-- Ausgefuerte Wdh. -->
         <div class="rep-column">
-            <div class="row-start-left height-20">
+            <div class="row-start-right height-20">
                 <div [ngClass]="{'invisible': isVisible() === false}" class="align-right label">{{satz.WdhVonVorgabe}}</div> 
             </div>
             <input matInput 
@@ -66,24 +66,23 @@
         </div>
 
            <!-- Timer -->
-           <div class="timer-column">
-            <!-- <div [ngClass]="{'invisible': isVisible() === false}" class="align-right label">{{satz.WdhVonVorgabe}}</div>  -->
-            <a class="link-button-font height-20" [ngClass]="{'invisible': isVisible() === false}" mat-flat-button matTooltip="Start timer" matTooltipPosition="above" (click)="StartTimer(satz)" [disabled]="TimerDisabled(satz)">{{StartTimerText}}</a>
-            <input matInput 
-                    class="align-right tc-font-size-smaller rep-column"
-                    matTooltip="Timer seconds"
-                    matTooltipPosition="above"
-                    [matTooltipDisabled]="false"
-                    mask="999999"
-                    [ngModel]="satz.TimerSeconds" 
-                    [disabled]="Disabled(satz)"
-                    (click)="onSelect($event)" 
-                    (focusout)="SetTimerSeconds($event)" 
-                    (mousedown)="MouseDown(satz,$event)"
-                    (mouseup)="MouseUp($event)"
-                    (touchstart)="MouseDown(satz,$event)"
-                    (touchend)="MouseUp($event)"
-                    type="text">
+           <div class="column-start-left width-45">
+                <a mat-button id="timer-column-button" class="HG-01" [ngClass]="{'invisible': isVisible() === false}" matTooltip="Start timer" matTooltipPosition="above" (click)="StartTimer(satz)" [disabled]="TimerDisabled(satz)">{{StartTimerText}}</a>
+                <input matInput 
+                        class="align-right tc-font-size-smaller timer-column"
+                        matTooltip="Timer seconds"
+                        matTooltipPosition="above"
+                        [matTooltipDisabled]="false"
+                        mask="999999"
+                        [ngModel]="satz.TimerSeconds" 
+                        [disabled]="Disabled(satz)"
+                        (click)="onSelect($event)" 
+                        (focusout)="SetTimerSeconds($event)" 
+                        (mousedown)="MouseDown(satz,$event)"
+                        (mouseup)="MouseUp($event)"
+                        (touchstart)="MouseDown(satz,$event)"
+                        (touchend)="MouseUp($event)"
+                        type="text">
         </div>
         
         <!-- AMRAP  -->

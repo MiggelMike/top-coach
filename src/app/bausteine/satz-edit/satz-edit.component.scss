@@ -1,8 +1,7 @@
 
 .weight-column {
-    width: 75px;
+    width: 65px;
     text-align: right;
-   
 }
 
 .label {
@@ -16,14 +15,17 @@
     padding-top: 24px;
 }
 
-.rep-column-titel {
-    width: 75px;
+.rep-column-base {
+    width: 50px;
     text-align: right;
 }
 
+.rep-column-titel {
+    @extend .rep-column-base;
+}
+
 .rep-column {
-    width: 75px;
-    text-align: right;
+    @extend .rep-column-base;
 }
 
 .amrap-column-titel {
@@ -44,13 +46,26 @@
     width: 15px;
 }
 
+.timer-column-base {
+    max-width: 50px;
+    width: 50px;
+}
+
 .timer-column-titel {
-    width: 80px;
+    @extend .timer-column-base;
+    text-align: right;
+}
+
+
+#timer-column-button {
+    max-width: 45px;
+    width: 45px;    
+    height: 20px;
 }
 
 .timer-column {
-    width: 75px;
-    text-align: right;
+    @extend .timer-column-base;
+    text-align: right;    
 }
 
 

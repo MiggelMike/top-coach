@@ -563,7 +563,7 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
 
     get StartTimerText(): string{
         if (this.SatzTimerStatus === SatzStatus.Pause)
-            return 'Paused';
+            return 'Psd';
         else if (this.SatzTimerStatus === SatzStatus.Laeuft)
             return 'Stop';
         return 'Start';
