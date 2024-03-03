@@ -71,7 +71,7 @@
             
     </div>
 
-    <div class="width-600" style="position: relative; top: 0px; z-index: 1;">
+    <div class="width-600" [ngClass]="{'main-panel-history': ModulTyp !== programModul.HistoryView,'main-panel-history-view': ModulTyp === programModul.HistoryView}">
         <app-programm03 #appProgramm03
             [session]="Session" 
             [cmpSession]="cmpSession" 

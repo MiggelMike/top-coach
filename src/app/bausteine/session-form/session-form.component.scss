@@ -7,6 +7,17 @@
     height: 80px !important;
 }
 
+.main-panel {
+    position: relative; 
+    z-index: 1;
+    top: 0px; 
+} 
+
+.main-panel-history-view {
+    @extend .main-panel;
+    top: 75px; 
+} 
+
 // #footer {
     // top: 150px;
     // z-index: 2000;
