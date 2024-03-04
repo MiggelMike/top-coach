@@ -1,5 +1,5 @@
 <ng-container *ngIf="session" >
-    <div [ngClass]="{'width-450': programmModulArt  === programModul.SelectWorkout}" >
+    <!-- <div [ngClass]="{'width-450': programmModulArt  === programModul.SelectWorkout}" > -->
         <mat-accordion multi="true">
             <mat-expansion-panel #ExpansionPanel [expanded]="true">
 
@@ -18,9 +18,9 @@
                 </ng-container>
                 <!-- Nur Lesen -->
                 <ng-template #NurLesenBlock>
-                    <div fxLayout="row" fxLayout.lt-sm="row" fxLayoutAlign="flex-start">
+                    <div class="row-start-left-gap-3">
                         <ng-container *ngFor="let satz of satzListe, index as i">
-                            <app-satz-simple [satz]="satz"></app-satz-simple>
+                                <app-satz-simple [satz]="satz"></app-satz-simple>
                         </ng-container>
                     </div>
                 </ng-template>
@@ -28,6 +28,7 @@
                 <ng-template #BearbeitbarBlock>
                     <div fxLayout="column" fxLayout.lt-sm="column" fxLayoutAlign="flex-start">
                         <ng-container *ngFor="let satz of satzListe, index as i">
+                            
                             <app-satz-edit #AppSatzEdit 
                                     [rowNum]="i" 
                                     [programm]="programm" 
@@ -43,5 +44,5 @@
                 </ng-template>
             </mat-expansion-panel>
         </mat-accordion>
-    </div>
+    <!-- </div> -->
 </ng-container>

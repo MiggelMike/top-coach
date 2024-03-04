@@ -1,86 +1,55 @@
 <!-- "programm" wird in Eltern-Komponente gesetzt. -->
 <ng-container *ngIf="programm">
-    <div class="colum-center">
-        <div>
+    <div class="colum-center width-320">
             <mat-accordion #accordion="matAccordion" multi="true">
                 <mat-expansion-panel  #panProgramm='matExpansionPanel' [expanded]="false" 
                     class="HG-01"
                     (opened) = "panelOpened()"
                     (closed) = "panelClosed()">
-                    <mat-expansion-panel-header  class="disable_ripple" (click)="$event.stopPropagation()">
-                        <div class="row-start-left-gap-3 wrap">
-
-                            <div class="column-start-left width-200">{{programm.Name}}</div>
+                    <mat-expansion-panel-header   [collapsedHeight]="'90px'" [expandedHeight]="'90px'"  class="disable_ripple" (click)="$event.stopPropagation()">
+                        <mat-panel-title>
+                            <div class="row-start-left-gap-3 wrap">
+                                <div class="column-start-left">
+                                    <span> {{programm.Name}}</span>
+                                 </div>
+                            </div>
                             <!-- Soll ein Work-Out gewaehlt werden? -->
                             <ng-container *ngIf="ModulTyp === programModul.SelectWorkout; then AuswahlBlock"></ng-container>
-
                             <ng-template #AuswahlBlock>
-                                <div class="column-start-left width-75">
-                                    <a [ngClass]="['link-button-font']" 
-                                    [disabled] = "SelectBtnDisabled"
-                                    mat-button (click)="SelectThisWorkoutClick(programm,$event)"><span class="tc-font-size-small">Select</span></a>
-                                </div>
-
-                                <div class="column-start-left width-75">                                                             
-                                    <a [ngClass]="['link-button-font']"  (click)="EditThisWorkoutClick($event)"><span class="tc-font-size-small">Edit</span></a>
-                                </div>
-
-                                <div class="column-start-left width-75">                                                             
-                                    <a [ngClass]="['link-button-font']"  (click)="DeleteProgramm($event,programm)" ><span class="tc-font-size-small">Delete</span></a>
-                                </div>
-
-                                <div class="column-start-left">                                                             
-                                    <a [ngClass]="['link-button-font']"  (click)="CopyProgramm($event,programm)" ><span class="tc-font-size-small">Copy</span></a>
-                                </div>
-
-                                <!-- <ng-container *ngIf="programm.ProgrammTyp === programmTyp.Custom; then Custom else NotCustom"></ng-container>
-
-                                <ng-template #Custom>
-                                    <div fxLayout="column" fxFlex="75px">
-                                        <a [ngClass]="['link-button-font', 'HG-01']" 
+                                    <div class="row-start-left-gap-3 wrap">
+                                    <div class="column-start-left width-65">
+                                        <a [ngClass]="['link-button-font']" 
                                         [disabled] = "SelectBtnDisabled"
                                         mat-button (click)="SelectThisWorkoutClick(programm,$event)"><span class="tc-font-size-small">Select</span></a>
                                     </div>
-    
-                                    <div fxLayout="column" fxFlex="75px">                            
-                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-button (click)="EditThisWorkoutClick($event)"><span class="tc-font-size-small">Edit</span></a>
+
+                                    <div class="column-start-left width-65">                                                             
+                                        <a [ngClass]="['link-button-font']"  (click)="EditThisWorkoutClick($event)"><span class="tc-font-size-small">Edit</span></a>
                                     </div>
 
-                                    <div fxLayout="column" fxFlex="auto">                            
-                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-button (click)="DeleteProgramm($event,programm)" ><span class="tc-font-size-small">Delete</span></a>
+                                    <div class="column-start-left width-65">                                                             
+                                        <a [ngClass]="['link-button-font']"  (click)="DeleteProgramm($event,programm)" ><span class="tc-font-size-small">Delete</span></a>
                                     </div>
+                                    
+                                    <div class="column-start-left">                                                             
+                                        <a [ngClass]="['link-button-font']"  (click)="CopyProgramm($event,programm)" ><span class="tc-font-size-small">Copy</span></a>
+                                    </div>
+                                </div>
                                 </ng-template>
-
-                                <ng-template #NotCustom>
-                                    <div fxLayout="column" fxFlex="75px">
-                                        <a [ngClass]="['link-button-font', 'HG-01']" 
-                                        [disabled] = "SelectBtnDisabled"
-                                        mat-button (click)="SelectThisWorkoutClick(programm,$event)"><span class="tc-font-size-small">Select</span></a>
-                                    </div> 
-
-                                    <div fxLayout="column" fxFlex="auto">                            
-                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-button (click)="EditThisWorkoutClick($event)"><span class="tc-font-size-small">Edit</span></a>
-                                    </div>
-                                </ng-template> -->
-                            </ng-template>
-
-                        </div>
+                        </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <div class="card-body">
-                        <!-- Daten an Sub-Komponente durchreichen -->
-                        <ng-container *ngIf="programm.Expanded === true" >
-                            <ng-container *ngIf="programm && programm.SessionListe">
-                                <app-programm02 [programm]="programm" 
-                                                [SessionListe]="programm.SessionListe" 
-                                                [bearbeitbar]="false" 
-                                                [StartButtonVisible] ="false"
-                                                [showSaveButtons] ="showSaveButtons">
-                                </app-programm02>
-                            </ng-container>
+                    
+                    <ng-container *ngIf="programm.Expanded === true" >
+                        <ng-container *ngIf="programm && programm.SessionListe">
+                            <app-programm02 [programm]="programm" 
+                                            [SessionListe]="programm.SessionListe" 
+                                            [bearbeitbar]="false" 
+                                            [StartButtonVisible] ="false"
+                                            [showSaveButtons] ="showSaveButtons">
+                            </app-programm02>
                         </ng-container>
-                    </div>
+                    </ng-container>
                 </mat-expansion-panel>
             </mat-accordion>
-        </div>
     </div>
 </ng-container>

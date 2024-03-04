@@ -256,6 +256,12 @@ body {
 	width: 300px !important;
 }
 
+.width-320 {
+	min-width: 320px !important;
+	width: 320px !important;
+}
+
+
 .width-350 {
 	min-width: 350px !important;
 	width: 350px !important;
@@ -965,6 +971,12 @@ input[type=text]:focus  {
 mat-expansion-panel-header:hover {
 		background-color: transparent;
 	}
+
+	mat-panel-title,
+	mat-panel-description,
+	span {
+	  display: block;
+	}	
 
 // .mat-calendar  {
 // 	background-color: #bdd2e9;

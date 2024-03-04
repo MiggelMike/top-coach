@@ -1,7 +1,7 @@
 <div class="header-box">
     <app-toolbar></app-toolbar>
     <div class="row-center">
-        <div class="column-center width-600">
+        <div class="column-center">
             <div class="row-center">
                 <a class='link-button-font' (click)="AdditionalSession()">Additional session</a>
             </div>
@@ -14,49 +14,51 @@
 
 
 <div id="main-panel" class="column-center">
-    <div class="width-600">
+    <div>
         <ng-container  *ngIf="AktuellesProgramm">
             <div class="colum-center">
                 <ng-container *ngIf="SessionListe && (SessionListe.length > 0)">
                         <div  cdkDropList (cdkDropListDropped)="drop($event)">
                             <ng-container *ngFor="let sess of SortedSessionListe, index as i">
-                                    <mat-accordion #accUebung='matAccordion' multi="true" class="width-100-Prozent">
+                                    <mat-accordion #accUebung='matAccordion' multi="true">
                                         <mat-expansion-panel class="mg-bottom-3">
-                                            <mat-expansion-panel-header class="disable_ripple">
-                                                <div  class='row-start-left-gap-3 HG-01'> 
-                                                    <ng-container *ngIf="sess.Kategorie02 === sessionStatus.Laeuft || sess.Kategorie02 === sessionStatus.Pause; then MitReset else OhneReset"></ng-container>
+                                            <mat-expansion-panel-header class="disable_ripple" [collapsedHeight]="'70px'" [expandedHeight]="'70px'" >
+                                                <mat-panel-title>
+                                                    <div  class='row-start-left-gap-3 HG-01'> 
+                                                        <div class="column-start-left">
+                                                            <input class="tc-font-size-smaller" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
+                                                        </div>
+                                                    </div>
 
-                                                    <ng-template #MitReset>
-                                                        <div class="column-start-left width-350">
-                                                            <input class="tc-font-size-smaller width-350" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
-                                                        </div>
-                                                        <div class="column-start-left">
-                                                            <a [ngClass]="['link-button-font']"  (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
-                                                        </div>
-                
-                                                        <div class="column-start-left">
-                                                            <a [ngClass]="['link-button-font']"  (click)="DeleteSession($event, sess, i+1)">Delete</a>
-                                                        </div>
-                
-                                                        <div class="center-item" layout-align="center center">
-                                                            <a [ngClass]="['link-button-font', 'HG-01']" (click)="resetSession($event, sess)">Reset</a>
-                                                        </div>
-                                                    </ng-template>
+                                                    
+                                                    <div  class='row-start-left-gap-3 HG-01'> 
+                                                        <ng-container *ngIf="sess.Kategorie02 === sessionStatus.Laeuft || sess.Kategorie02 === sessionStatus.Pause; then MitReset else OhneReset"></ng-container>
+                                                        <ng-template #MitReset>
+                                                            <div class="column-start-left">
+                                                                <a [ngClass]="['link-button-font']"  (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
+                                                            </div>
+                    
+                                                            <div class="column-start-left">
+                                                                <a [ngClass]="['link-button-font']"  (click)="DeleteSession($event, sess, i+1)">Delete</a>
+                                                            </div>
+                    
+                                                            <div class="center-item" layout-align="center center">
+                                                                <a [ngClass]="['link-button-font', 'HG-01']" (click)="resetSession($event, sess)">Reset</a>
+                                                            </div>
+                                                        </ng-template>
 
-                                                    <ng-template #OhneReset>
-                                                        <div class="column-start-left width-350">
-                                                            <input class="tc-font-size-smaller width-350" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
-                                                        </div>
-                                                        <div class="column-start-left">
-                                                            <a [ngClass]="['link-button-font']"  (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
-                                                        </div>
-                
-                                                        <div class="column-start-left">
-                                                            <a [ngClass]="['link-button-font']"  (click)="DeleteSession($event, sess, i+1)">Delete</a>
-                                                        </div>
-                                                    </ng-template>
+                                                        <ng-template #OhneReset>
+                                                            <div class="column-start-left">
+                                                                <a [ngClass]="['link-button-font']"  (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
+                                                            </div>
+                    
+                                                            <div class="column-start-left">
+                                                                <a [ngClass]="['link-button-font']"  (click)="DeleteSession($event, sess, i+1)">Delete</a>
+                                                            </div>
+                                                        </ng-template>
+                                                    </div>
+                                                </mat-panel-title>
 
-                                                </div>
                                             </mat-expansion-panel-header>
 
                                             <ng-container *ngFor="let SessUeb of sess.UebungsListe, index as UebungIndex">
