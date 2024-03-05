@@ -58,7 +58,7 @@
 
                         <ng-container *ngIf="programm && programm.SessionListe">
                             <ng-container *ngFor="let sess of programm.SessionListe, index as i">
-                                <div  class='mg-top-1'>
+                                <div  class='mg-bottom-2'>
                                     <mat-accordion #accSession="matAccordion" multi="true">
                                         <mat-expansion-panel 
                                             [expanded]="false"
@@ -67,93 +67,10 @@
                                             (closed) = "panelSessClosed(sess)" 
                                             class="HG-01">
                                             <mat-expansion-panel-header  class="disable_ripple" mat-tooltip-panel-below  matTooltip="Hold and drag">
-                                                <input class="tc-font-size-smaller" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
+                                                <input class="tc-font-size-smaller width-100-Prozent mr-5" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
                                             </mat-expansion-panel-header>
-            
-                                            <div [id]="'collapseSession' + i" aria-labelledby="headingOne">
-                                                <div class="card-body">
-                                                    <div cdkDropList (cdkDropListDropped)="dropUebung($event, sess)">
-                                                        <ng-container *ngFor="let SessUeb of  sess.UebungsListe, index as j; let isOdd=odd">
-                                                            <mat-accordion #accUebung='matAccordion' multi="true">
-                                                                <mat-expansion-panel 
-                                                                    #panUebung='matExpansionPanel' 
-                                                                    [expanded]="false"
-                                                                    (closed)="PanelUebungClosed(SessUeb)" 
-                                                                    (opened)="PanelUebungOpened(j,SessUeb)">
-                                                                    <mat-expansion-panel-header class="disable_ripple" mat-tooltip-panel-below  matTooltip="Hold and drag" >
-                                                                        <div fxLayout="row wrap" fxLayoutGap="2px" fxLayout.lt-sm="row wrap" fxFlex="auto">
-                                                                            <div layout-align="start center" fxFlex="0 0 35%">
-                                                                                <span class="tc-font-size-smaller font-bold">#{{j+1}} {{SessUeb.Name}}</span>
-                                                                            </div>
-                                                                            
-                                                                            <div class="row-start-left">
-                                                                                <div class="column-center">Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} - Reps {{SessUeb.SummeWDH()}}</div>
-                                                                                
-                                                                                <ng-container *ngIf="SessUeb.AlleSaetzeStatus() === saetzeStatus.AlleFertig">
-                                                                                    <div class="column-center mg-left-10 mg-bottom-10">
-                                                                                        <img   src="./../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/Apply.png"/>
-                                                                                    </div>
-                                                                                </ng-container>
-                                
-                                                                            </div>
-                                                                            
-                                                                        </div>
-                                                                    </mat-expansion-panel-header>
-                                            
-                                                                    <div class="card-body">
-                                                                        <ng-container *ngIf="SessUeb.Expanded === true" >
-                                                                            <div fxLayout="column" fxLayoutGap="2px" fxFlex="auto">
-                                                                                <ng-container *ngIf="satzTypVisible(SessUeb, satzTyp.Aufwaermen)">
-                                                                                    <app-sess-uebung 
-                                                                                        [panUebung1]="panUebung"
-                                                                                        [rowNum]="j" 
-                                                                                        [satzArt]="satzTyp.Aufwaermen"
-                                                                                        [satzListe]="SessUeb.AufwaermSatzListe"
-                                                                                        [session]="sess"
-                                                                                        [programm]="programm"
-                                                                                        [programmModulArt]="programModul.SelectWorkout"
-                                                                                        [sessUebung]="SessUeb" 
-                                                                                        [bearbeitbar]="false">
-                                                                                    </app-sess-uebung>
-                                                                                </ng-container>
-                                                
-                                                                                <ng-container *ngIf="SessUeb.ArbeitsSatzListe">
-                                                                                    <app-sess-uebung 
-                                                                                        [panUebung1]="panUebung" 
-                                                                                        [rowNum]="j" 
-                                                                                        [satzArt]="satzTyp.Training"
-                                                                                        [satzListe]="SessUeb.ArbeitsSatzListe"
-                                                                                        [session]="sess"
-                                                                                        [programm]="programm"
-                                                                                        [programmModulArt]="programModul.SelectWorkout"
-                                                                                        [sessUebung]="SessUeb" 
-                                                                                        [bearbeitbar]="false">
-                                                                                    </app-sess-uebung>
-                                                                                </ng-container>
-                                                
-                                                                                <ng-container *ngIf="satzTypVisible(SessUeb, satzTyp.Abkuehlen)">
-                                                                                    <app-sess-uebung 
-                                                                                        [panUebung1]="panUebung"
-                                                                                        [rowNum]="j"
-                                                                                        [satzArt]="satzTyp.Abkuehlen"
-                                                                                        [satzListe]="SessUeb.AbwaermSatzListe"
-                                                                                        [programmModulArt]="programModul.SelectWorkout"
-                                                                                        [programm]="programm"
-                                                                                        [bearbeitbar]="false"
-                                                                                        [sessUebung]="SessUeb">
-                                                                                    </app-sess-uebung>
-                                                                                </ng-container>
-                                                                            </div>
-                                                                        </ng-container>    
-                                                                    </div>
-                                                                </mat-expansion-panel>
-                                                            </mat-accordion>
-                                                        </ng-container>
-                                                    </div> 
-                                                </div>
-                                            </div>
-            
-                                            <div class="row-center-gap-5 mg-top-5">
+
+                                            <div class="row-center-gap-5">
                                                 <div class="center-item">
                                                     <a [ngClass]="['link-button-font']" (click)="CopySession(sess)">Copy Session</a>
                                                 </div>
@@ -170,6 +87,87 @@
                                                     <a [ngClass]="['link-button-font']" (click)="PasteExcercise(sess)">Paste Exercise</a>
                                                 </div>
                                             </div>
+            
+                                            <div [id]="'collapseSession' + i" aria-labelledby="headingOne">
+                                                <div class="card-body">
+                                                    <div cdkDropList (cdkDropListDropped)="dropUebung($event, sess)">
+                                                        <ng-container *ngFor="let SessUeb of  sess.UebungsListe, index as j; let isOdd=odd">
+                                                            <div class="row-start-left-gap-3">
+                                                                <span class="tc-font-size-smaller font-bold">#{{j+1}} {{SessUeb.Name}}</span>
+                                                            </div>
+                                                            <!-- <div class="row-start-left">
+                                                                <div class="column-center">Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} - Reps {{SessUeb.SummeWDH()}}</div>
+                                                                
+                                                                <ng-container *ngIf="SessUeb.AlleSaetzeStatus() === saetzeStatus.AlleFertig">
+                                                                    <div class="column-center mg-left-10 mg-bottom-10">
+                                                                        <img   src="./../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/Apply.png"/>
+                                                                    </div>
+                                                                </ng-container>
+                
+                                                            </div> -->
+
+                                                            <ng-container *ngIf="SessUeb.AufwaermSatzListe.length > 0">
+                                                                <div class="row-start-left-gap-3">
+                                                                    <ng-container *ngFor="let satz of SessUeb.AufwaermSatzListe, index as satzIndex">
+                                                                        <div class="colum-center">
+                                                                            <div class="column-center font-size-xsmall mg-right-3 kreisHellRot" >
+                                                                                {{satz.WdhAusgefuehrtText}}
+                                                                                <ng-container *ngIf="satz.AMRAP">+</ng-container>
+                                                                            </div>
+                                                                            
+                                                                            <div class="font-size-xsmall column-center">
+                                                                                <mat-label>
+                                                                                    {{satz.GewichtAusgefuehrtText}}
+                                                                                </mat-label>  
+                                                                            </div>
+                                                                        </div>
+                                                                    </ng-container>
+                                                                </div>
+                                                            </ng-container>
+
+                                                            <ng-container *ngIf="SessUeb.ArbeitsSatzListe.length > 0">
+                                                                <div class="row-start-left-gap-3">
+                                                                    <ng-container *ngFor="let satz of SessUeb.ArbeitsSatzListe, index as satzIndex">
+                                                                        <div class="colum-center">
+                                                                            <div class="column-center font-size-xsmall mg-right-3 kreisRot" >
+                                                                                {{satz.WdhAusgefuehrtText}}
+                                                                                <ng-container *ngIf="satz.AMRAP">+</ng-container>
+                                                                            </div>
+                                                                            
+                                                                            <div class="font-size-xsmall column-center">
+                                                                                <mat-label>
+                                                                                    {{satz.GewichtAusgefuehrtText}}
+                                                                                </mat-label>  
+                                                                            </div>
+                                                                        </div>
+                                                                    </ng-container>
+                                                                </div>
+                                                            </ng-container>
+
+                                                            <ng-container *ngIf="SessUeb.AbwaermSatzListe.length > 0">
+                                                                <div class="row-start-left-gap-3">
+                                                                    <ng-container *ngFor="let satz of SessUeb.AbwaermSatzListe, index as satzIndex">
+                                                                        <div class="colum-center">
+                                                                            <div class="column-center font-size-xsmall mg-right-3 kreisHellBlau" >
+                                                                                {{satz.WdhAusgefuehrtText}}
+                                                                                <ng-container *ngIf="satz.AMRAP">+</ng-container>
+                                                                            </div>
+                                                                            
+                                                                            <div class="font-size-xsmall column-center">
+                                                                                <mat-label>
+                                                                                    {{satz.GewichtAusgefuehrtText}}
+                                                                                </mat-label>  
+                                                                            </div>
+                                                                        </div>
+                                                                    </ng-container>
+                                                                </div>
+                                                            </ng-container>
+                                                        </ng-container>
+                                                    </div> 
+                                                </div>
+                                            </div>
+            
+                                      
                                         </mat-expansion-panel>
                                     </mat-accordion>
                                 </div>
