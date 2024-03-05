@@ -48,27 +48,25 @@
             <ng-template #Sessions>
                 <!-- *ngIf="isLoggedIn; then loggedIn; else loggedOut" -->
                 <div cdkDropList (cdkDropListDropped)="drop($event)" >
-                    <div class="column-center">
+                    <div class="column-center  width-100-Prozent">
                         <div *ngFor="let sess of SessionListe, index as i" cdkDrag [cdkDragDisabled]="true">
-                            <div class="row-start-left-gap-3 wrap height-55 mg-bottom-10">
+                            <div class="row-start-left-gap-3 wrap height-100 mg-bottom-10 width-300">
                                 <div class="column-start-left">
                                     <div class="row-start-left">
                                         <mat-label class="tc-font-size-smaller" [ngClass]="{'NoSessionName': NoSessionName(sess) === true }" >{{SessProgrammName(sess)}}</mat-label>
                                     </div>
                                     <div class="row-start-left">
-                                        <input class="tc-font-size-smaller" disabled="true" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()">
+                                        <input class="tc-font-size-smaller width-235" disabled="true" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()">
                                     </div>
-                                </div>
-                                <div class="column-start-left">
+
                                     <div class="row-start-left">
                                         <mat-label class="tc-font-size-smaller">Started at</mat-label>
                                     </div>
                                     <div class="row-start-left">
-                                        <input class="tc-font-size-smaller width-125" disabled="true" matInput [ngModel]="GestartedWann(sess)" type="text" (click)="$event.stopPropagation()">
+                                        <input class="tc-font-size-smaller width-235" disabled="true" matInput [ngModel]="GestartedWann(sess)" type="text" (click)="$event.stopPropagation()">
                                     </div>                                        
-                                </div>
-                                
-                                <div class="column-center pad-top-20">
+                                </div>                                        
+                                <div class="column-center ml-20 width-20">
                                     <a [ngClass]="['ml-5','link-button-font', 'HG-01']"  mat-flat-button (click)="ViewSession($event,sess)">View</a>
                                 </div>
                             </div>
