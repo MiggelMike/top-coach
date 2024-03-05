@@ -66,12 +66,50 @@
                                                     <span class="font-14-label">#{{UebungIndex+1}} {{SessUeb.Name}}</span>
                                                     <div class="column-center tc-font-size-smaller">  --- Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} - Reps {{SessUeb.SummeWDH()}}</div>
                                                 </div>
+
+                                                <ng-container *ngIf="SessUeb.AufwaermSatzListe.length > 0">
+                                                    <div class="row-start-left-gap-3">
+                                                        <ng-container *ngFor="let satz of SessUeb.AufwaermSatzListe, index as satzIndex">
+                                                            <div class="colum-center">
+                                                                <div class="column-center font-size-xsmall mg-right-3 kreisHellRot" >
+                                                                    {{satz.WdhAusgefuehrtText}}
+                                                                    <ng-container *ngIf="satz.AMRAP">+</ng-container>
+                                                                </div>
+                                                                
+                                                                <div class="font-size-xsmall column-center">
+                                                                    <mat-label>
+                                                                        {{satz.GewichtAusgefuehrtText}}
+                                                                    </mat-label>  
+                                                                </div>
+                                                            </div>
+                                                        </ng-container>
+                                                    </div>
+                                                </ng-container>
         
                                                 <ng-container *ngIf="SessUeb.ArbeitsSatzListe.length > 0">
                                                     <div class="row-start-left-gap-3">
                                                         <ng-container *ngFor="let satz of SessUeb.ArbeitsSatzListe, index as satzIndex">
                                                             <div class="colum-center">
                                                                 <div class="column-center font-size-xsmall mg-right-3"  [ngClass]="{ 'kreisGruen': satz.Status === satzStatus.Fertig, 'kreisRot': satz.Status !== satzStatus.Fertig}" >
+                                                                    {{satz.WdhAusgefuehrtText}}
+                                                                    <ng-container *ngIf="satz.AMRAP">+</ng-container>
+                                                                </div>
+                                                                
+                                                                <div class="font-size-xsmall column-center">
+                                                                    <mat-label>
+                                                                        {{satz.GewichtAusgefuehrtText}}
+                                                                    </mat-label>  
+                                                                </div>
+                                                            </div>
+                                                        </ng-container>
+                                                    </div>
+                                                </ng-container>
+
+                                                <ng-container *ngIf="SessUeb.AbwaermSatzListe.length > 0">
+                                                    <div class="row-start-left-gap-3">
+                                                        <ng-container *ngFor="let satz of SessUeb.AbwaermSatzListe, index as satzIndex">
+                                                            <div class="colum-center">
+                                                                <div class="column-center font-size-xsmall mg-right-3 kreisHellBlau" >
                                                                     {{satz.WdhAusgefuehrtText}}
                                                                     <ng-container *ngIf="satz.AMRAP">+</ng-container>
                                                                 </div>
