@@ -36,7 +36,10 @@ export class SessUebungComponent implements OnInit, ISatzTyp, IProgramModul {
         private fDialogService: DialogeService,
         private fGlobalService: GlobalService
     ) {
+        const x = 0;
+        const y = x;
     }
+
     get programModul(): typeof ProgramModulTyp {
         return ProgramModulTyp;
     }
@@ -45,6 +48,7 @@ export class SessUebungComponent implements OnInit, ISatzTyp, IProgramModul {
     }
 
     ngOnInit(): void {
+        const x = 0;
         // this.satzListe = this.sessUebung.ArbeitsSatzListe;
     }
     

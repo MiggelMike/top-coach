@@ -7,7 +7,6 @@ import { DialogData, cLoadingDefaultHeight } from 'src/app/dialoge/hinweis/hinwe
 import { Router } from '@angular/router';
 import { IProgramModul, ProgramModulTyp } from 'src/app/app.module';
 import { NoAutoCreateItem } from 'src/Business/NoAutoCreate';
-import { AppRoutingModule } from 'src/app/app-routing.module';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 
 

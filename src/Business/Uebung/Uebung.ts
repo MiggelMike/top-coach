@@ -767,24 +767,28 @@ export class Uebung  {
         return undefined;
     }
 
-    public static StaticAlleSaetzeStatus(aUebung: Uebung): SaetzeStatus {
-        if (aUebung.SatzListe.length <= 0) {
+    public AlleSaetzeStatus(): SaetzeStatus {
+        if (this.SatzListe.length <= 0) {
             return SaetzeStatus.KeinerVorhanden;
         } else {
             let mAnzFertig: number = 0;
-            aUebung.ArbeitsSatzListe.forEach((s) => {
+            this.ArbeitsSatzListe.forEach((s) => {
                 if (s.Status === SatzStatus.Fertig)
                     mAnzFertig++;
             });
 
-            if (mAnzFertig >= aUebung.ArbeitsSatzListe.length) {
+            if (mAnzFertig >= this.ArbeitsSatzListe.length) {
                 return SaetzeStatus.AlleFertig;
             }
         }
 
-        aUebung.ArbeitsSaetzeStatus = SaetzeStatus.NichtAlleFertig;
+        this.ArbeitsSaetzeStatus = SaetzeStatus.NichtAlleFertig;
         return SaetzeStatus.NichtAlleFertig;
         
+    }
+
+    public static StaticAlleSaetzeStatus(aUebung: Uebung): SaetzeStatus {
+        return aUebung.AlleSaetzeStatus();
     }
 
     public static StaticArbeitsSaetzeStatus(aUebung: Uebung): SaetzeStatus

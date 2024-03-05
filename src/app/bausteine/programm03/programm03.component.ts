@@ -115,6 +115,15 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISa
 		} //if
 	}
 
+	private async CheckUebungSatzliste(aUebung: Uebung): Promise<Uebung> {
+		// if (aUebung.SatzListe === undefined || aUebung.SatzListe.length <= 0) {
+		// 	aUebung.SatzListe = [];
+		// 	await this.LadeUebungsSaetze(aUebung);
+		// }
+		return aUebung;
+	}
+
+
 	public DoStatsFn() {
 		this.DoStats.emit(this.Info);
 	}
@@ -208,14 +217,6 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISa
 			}
 			return [];
 		});
-	}
-
-	private async CheckUebungSatzliste(aUebung: Uebung): Promise<Uebung> {
-		// if (aUebung.SatzListe === undefined || aUebung.SatzListe.length <= 0) {
-		// 	aUebung.SatzListe = [];
-		// 	await this.LadeUebungsSaetze(aUebung);
-		// }
-		return aUebung;
 	}
 
 	async accCheckUebungPanels(aUebung?: Uebung) {
