@@ -5,7 +5,7 @@ import { GlobalService } from 'src/app/services/global.service';
 import { MatAccordion, MatExpansionPanel } from '@angular/material/expansion';
 import { HistorySession, ISession, Session } from './../../../Business/Session/Session';
 import { IProgrammKategorie, ITrainingsProgramm, ProgrammKategorie } from "src/Business/TrainingsProgramm/TrainingsProgramm";
-import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, Output, EventEmitter, ChangeDetectionStrategy  } from "@angular/core";
+import { Component, OnInit, Input, ViewChildren, ViewChild, QueryList, Output, EventEmitter, ChangeDetectionStrategy, ViewEncapsulation  } from "@angular/core";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DialogData } from "./../../dialoge/hinweis/hinweis.component";
 import { LOCALE_ID, Inject } from '@angular/core';
@@ -20,6 +20,7 @@ import { ISatzTyp, Satz, SatzTyp } from 'src/Business/Satz/Satz';
 	selector: 'app-programm03',
 	templateUrl: './programm03.component.html',
 	styleUrls: ['./programm03.component.scss'],
+	// encapsulation: ViewEncapsulation.None
 	// changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISaetzeStatus, IProgrammKategorie {

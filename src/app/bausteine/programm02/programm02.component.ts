@@ -7,7 +7,7 @@ import { UebungsKategorie02 } from "./../../../Business/Uebung/Uebung";
 import { DexieSvcService, onDeleteFn, ProgrammParaDB, SatzParaDB, SessionCopyPara, UebungParaDB } from "./../../services/dexie-svc.service";
 import { Session } from "./../../../Business/Session/Session";
 import { ITrainingsProgramm, TrainingsProgramm } from "src/Business/TrainingsProgramm/TrainingsProgramm";
-import { Output, EventEmitter, Component, OnInit, Input, ViewChildren, QueryList } from "@angular/core";
+import { Output, EventEmitter, Component, OnInit, Input, ViewChildren, QueryList, ViewEncapsulation } from "@angular/core";
 import { MatAccordion, MatExpansionPanel } from "@angular/material/expansion";
 import { DialogeService } from "./../../services/dialoge.service";
 import { cLoadingDefaultHeight, DialogData } from "./../../dialoge/hinweis/hinweis.component";
@@ -23,6 +23,7 @@ import { IProgramModul, ProgramModulTyp } from "src/app/app.module";
 	selector: "app-programm02",
 	templateUrl: "./programm02.component.html",
 	styleUrls: ["./programm02.component.scss"],
+	// encapsulation: ViewEncapsulation.None
 })
 export class Programm02Component implements OnInit, IProgramModul {
 	@Input() programm: ITrainingsProgramm = null;

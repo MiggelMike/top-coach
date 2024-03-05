@@ -1,5 +1,5 @@
 <ng-container *ngIf="session">
-    <div class="colum-center">        
+    <div class="colum-center width-100-Prozent">        
         <div id="programm03">
             <!-- <div id="header" class="colum-center width-600">
                 <ng-container *ngIf='ModulTyp === programModul.HistoryView'>  
@@ -20,18 +20,18 @@
             </div> -->
 
 
-            <div class="colum-center" [ngClass]="{'top-70': ModulTyp === programModul.RunningSession}">        
+            <div class="colum-center width-100-Prozent" [ngClass]="{'top-70': ModulTyp === programModul.RunningSession}">        
                 <div cdkDropList (cdkDropListDropped)="drop($event)">
                     <ng-container *ngFor="let SessUeb of  UebungsListe, index as i; let isOdd=odd">
                         <div  cdkDrag [cdkDragDisabled]="ModulTyp === programModul.History">
                             <mat-accordion #accUebung='matAccordion' multi="true">
-                                <mat-expansion-panel 
+                                <mat-expansion-panel  id="my-component-name-style-container"
                                     #panUebung='matExpansionPanel' 
                                     [expanded]="false"
                                     [disabled]="checkingSets"
                                     (closed)="PanelUebungClosed(SessUeb)" 
                                     (opened)="PanelUebungOpened(i,SessUeb)">
-                                    <mat-expansion-panel-header class="disable_ripple" [matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag" >
+                                    <mat-expansion-panel-header class="disable_ripple"  [collapsedHeight]="'auto'" [expandedHeight]="'auto'"  [matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag" >
                                         <div fxLayout="row wrap" fxLayoutGap="2px" fxLayout.lt-sm="row wrap" fxFlex="auto">
                                             <div layout-align="start center" fxFlex="0 0 35%">
                                                 <span class="tc-font-size-smaller font-bold">#{{i+1}} {{SessUeb.Name}}</span>

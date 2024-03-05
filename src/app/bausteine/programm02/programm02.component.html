@@ -1,4 +1,4 @@
-<div class="colum-center">
+<div class="colum-center width-100-Prozent">
     <ng-container *ngIf="SessionListe">
         
         <ng-container *ngIf="ModulTyp !== programModul.History && ModulTyp !== programModul.SelectWorkout">
@@ -16,7 +16,7 @@
                 <div *ngFor="let sess of SortedSessionListe, index as i" cdkDrag [cdkDragDisabled]="ModulTyp === programModul.History">
                     <div  class='mg-top-1'>
                         <mat-accordion #accSession="matAccordion" multi="true">
-                            <mat-expansion-panel 
+                            <mat-expansion-panel
                                 [expanded]="false"
                                 #panSession='matExpansionPanel'                            
                                 (opened) = "panelOpened(sess)"
