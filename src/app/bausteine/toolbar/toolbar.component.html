@@ -1,12 +1,27 @@
 <ng-container *ngIf="isVisible">
     <mat-toolbar>
-        <mat-toolbar-row>
-                <div>
-                    <a mat-button (click)="NavCheckFn? NavCheckFn('',Data) : NavHome()"  [ngClass]="{ 'font-bold': getActiveItem === activeItem.Home}">Upcoming sessions</a>
-                    <a mat-button (click)="NavCheckFn? NavCheckFn('/programmwaehlen',Data) : NavProgrammWaehlen()" [ngClass]="{ 'font-bold': getActiveItem === activeItem.Programmwaehlen}">Select Workout</a>
-                    <a mat-button (click)="NavCheckFn? NavCheckFn('/app-history',Data) : NavHistory()" [ngClass]="{ 'font-bold': getActiveItem === activeItem.History}">History</a>
-                    <a mat-button (click)="NavCheckFn? NavCheckFn('/settings',Data) : NavSettings()" [ngClass]="{ 'font-bold': getActiveItem === activeItem.Settings}">Settings</a>
-                </div>
-        </mat-toolbar-row>
+
+        <div class="row-start-left-gap-3 wrap mg-top-5 mg-bottom-5">
+            <div class="colum-center">
+                <a mat-button (click)="NavCheckFn? NavCheckFn('',Data) : NavHome()"
+                    [ngClass]="{ 'font-bold': getActiveItem === activeItem.Home}">Upcoming sessions</a>
+            </div>
+
+            <div class="colum-center">
+                <a mat-button (click)="NavCheckFn? NavCheckFn('/programmwaehlen',Data) : NavProgrammWaehlen()"
+                    [ngClass]="{ 'font-bold': getActiveItem === activeItem.Programmwaehlen}">Select Workout</a>
+            </div>
+
+            <div class="colum-center">
+                <a mat-button (click)="NavCheckFn? NavCheckFn('/app-history',Data) : NavHistory()"
+                [ngClass]="{ 'font-bold': getActiveItem === activeItem.History}">History</a>
+            </div>
+
+            <div class="colum-center">
+                <a mat-button (click)="NavCheckFn? NavCheckFn('/settings',Data) : NavSettings()"
+                [ngClass]="{ 'font-bold': getActiveItem === activeItem.Settings}">Settings</a>
+            </div>            
+        </div>
+
     </mat-toolbar>
 </ng-container>

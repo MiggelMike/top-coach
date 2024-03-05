@@ -537,6 +537,10 @@ div.herz:after {
 	align-items: center;
 }
 
+.column {
+	flex-direction: column;
+}
+
 .column-center {
 	@extend .center-item;
 	flex-direction: column;
