@@ -1,6 +1,6 @@
     <!-- <app-toolbar></app-toolbar> -->
     <ng-container *ngIf="programm">
-        
+        <div class="#workout-form-main">
             <div id="header">
                 <div class="column-center">
                     <div class="row-start-left-gap-3 mg-bottom-5">
@@ -13,7 +13,7 @@
                         <div class="column-start-left">
                             <input  matInput 
                                         [matTooltipDisabled]="true"
-                                        class="width-350"
+                                        
                                         [(ngModel)]="programm.Name" 
                                         type="text">
                         </div>                                    
@@ -22,7 +22,6 @@
             </div>        
                 
             <div id="main-panel">
-                <div class="column-center">
                         <app-programm02 
                             [programm]="programm" 
                             [SessionListe]="programm.SessionListe" 
@@ -32,7 +31,7 @@
                             [bearbeitbar]="true"
                             (ProgrammSavedEvent)="CopyProgramm($event)">
                         </app-programm02>
-                </div>
             </div>
+        </div>            
 </ng-container>
 

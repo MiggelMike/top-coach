@@ -26,11 +26,11 @@
                                     <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="flex-start center">
                                         <ng-container *ngIf="ModulTyp === programModul.History">
                                                 <mat-label>{{ProgrammName(sess)}}</mat-label>
-                                                <input class="tc-font-size-smaller width-300" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
+                                                <input class="tc-font-size-smaller" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
                                         </ng-container>
 
                                         <ng-container *ngIf="ModulTyp !== programModul.History">
-                                                <input class="tc-font-size-smaller width-400" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
+                                                <input class="tc-font-size-smaller" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
                                         </ng-container>
 
                                         <ng-container *ngIf="ModulTyp === programModul.History">
