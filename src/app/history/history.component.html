@@ -2,8 +2,8 @@
     <app-toolbar></app-toolbar>
     <div id="historyHeader">
         <div class="column-center">
-            <div class="row-center">
-                <mat-form-field appearance="outline">
+            <div class="row-center wrap">
+                <mat-form-field class="width-235" appearance="outline">
                     <mat-label>Select Date Range</mat-label>
                     <mat-date-range-input [rangePicker]="picker" [formGroup]="range">
                     <input  matStartDate 
@@ -121,10 +121,10 @@
                                                         <ng-container *ngIf='aktuellerDiaTyp === diaTyp().line; then linechart; else barchart'></ng-container>
                                                         
                                                         <ng-template #linechart>
-                                                            <div class="pad-10 height-150">
+                                                            <div class="pad-10 height-200">
                                                                 <ngx-charts-line-chart
                                                                     #LineChart (window:resize)="onResize(ChartContainer)" 
-                                                                    height="100"   
+                                                                    height="200"   
                                                                     [results]="mChartData.LineChartListe" [xAxisLabel]="'Date'" [legendTitle]="'Exercises'" [yAxisLabel]="'Weight'"
                                                                     [legend]="false" [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
                                                                     [customColors]="mChartData.colors"
@@ -133,9 +133,9 @@
                                                             </div>
                                                         </ng-template>
                                                         <ng-template #barchart>
-                                                            <div class="pad-10 height-150">
+                                                            <div class="pad-10 height-200">
                                                                 <ngx-charts-bar-vertical #BarChart (window:resize)="onResize(ChartContainer)"
-                                                                    [height]="100"
+                                                                    [height]="200"
                                                                     [results]="mChartData.BarChartListe" [xAxisLabel]=""
                                                                     [legendTitle]="" [yAxisLabel]="'Weight'" [legend]="false"
                                                                     [showXAxisLabel]="false" [showYAxisLabel]="false" [xAxis]="true" [yAxis]="true"
