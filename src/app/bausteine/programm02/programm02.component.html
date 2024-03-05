@@ -22,20 +22,46 @@
                                 (opened) = "panelOpened(sess)"
                                 (closed) = "panelClosed(sess)" 
                                 class="HG-01">
-                                <mat-expansion-panel-header  class="disable_ripple" [matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag">
-                                    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap"  fxLayoutAlign="flex-start center">
+                                <mat-expansion-panel-header  class="disable_ripple"  [collapsedHeight]="'auto'" [expandedHeight]="'auto'" [matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag">
+                                    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap mg-bottom-10"  fxLayoutAlign="flex-start center">
                                         <ng-container *ngIf="ModulTyp === programModul.History">
                                                 <mat-label>{{ProgrammName(sess)}}</mat-label>
-                                                <input class="tc-font-size-smaller" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
+                                                <input class="tc-font-size-smaller width-100-Prozent mr-20" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
                                         </ng-container>
 
                                         <ng-container *ngIf="ModulTyp !== programModul.History">
-                                                <input class="tc-font-size-smaller" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
+                                                <input class="tc-font-size-smaller width-100-Prozent mr-20" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
                                         </ng-container>
 
                                         <ng-container *ngIf="ModulTyp === programModul.History">
-                                            <div class="ml-10" fxLayout="column" fxFlex="135px" >
+                                            <div class="ml-10 mr-20" fxLayout="column" fxFlex="135px" >
                                                 <span> {{GestartedWann(sess)}}</span>
+                                            </div>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="
+                                            ModulTyp === programModul.EditWorkout 
+                                            || ModulTyp === programModul.HistoryView 
+                                            || ModulTyp === programModul.RunningSession 
+                                            || ModulTyp === programModul.SelectWorkoutEdit
+                                            || ModulTyp === programModul.CreateWorkout"
+                                            >
+                                            <div class="row-center-gap-3 wrap mg-top-5 mr-20">
+                                                <div class="center-item">
+                                                    <a [ngClass]="['link-button-font']" (click)="CopySession(sess)">Copy Session</a>
+                                                </div>
+                                        
+                                                <div class="center-item">
+                                                    <a [ngClass]="['link-button-font']" (click)="DeleteSession($event, sess,i)">Delete Session</a>
+                                                </div>
+                                        
+                                                <div class="center-item">
+                                                    <a [ngClass]="['link-button-font']" (click)="AddExercise(sess)">Add exercise</a>
+                                                </div>
+                                        
+                                                <div class="center-item">
+                                                    <a [ngClass]="['link-button-font']" (click)="PasteExcercise(sess)">Paste Exercise</a>
+                                                </div>
                                             </div>
                                         </ng-container>
 
@@ -73,31 +99,7 @@
                                     </div>
                                 </ng-container>
 
-                                <ng-container *ngIf="
-                                    ModulTyp === programModul.EditWorkout 
-                                    || ModulTyp === programModul.HistoryView 
-                                    || ModulTyp === programModul.RunningSession 
-                                    || ModulTyp === programModul.SelectWorkoutEdit
-                                    || ModulTyp === programModul.CreateWorkout"
-                                    >
-                                    <div class="row-center-gap-5 mg-top-5">
-                                        <div class="center-item">
-                                            <a [ngClass]="['link-button-font']" (click)="CopySession(sess)">Copy Session</a>
-                                        </div>
                                 
-                                        <div class="center-item">
-                                            <a [ngClass]="['link-button-font']" (click)="DeleteSession($event, sess,i)">Delete Session</a>
-                                        </div>
-                                
-                                        <div class="center-item">
-                                            <a [ngClass]="['link-button-font']" (click)="AddExercise(sess)">Add exercise</a>
-                                        </div>
-                                
-                                        <div class="center-item">
-                                            <a [ngClass]="['link-button-font']" (click)="PasteExcercise(sess)">Paste Exercise</a>
-                                        </div>
-                                    </div>
-                                </ng-container>
                             </mat-expansion-panel>
                         </mat-accordion>
                     </div>

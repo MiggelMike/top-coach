@@ -35,3 +35,13 @@
     @extend .programm03Body;
     top:70px;
 }
+
+mat-expansion-panel {
+    width: 100%;
+  }
+
+  mat-panel-title,
+mat-panel-description,
+span {
+  display: block;
+}

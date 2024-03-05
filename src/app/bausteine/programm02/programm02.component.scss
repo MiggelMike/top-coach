@@ -19,6 +19,11 @@
 .main-panel {
     position: relative; 
     z-index: 1;
-    top: 20px; 
+    top: 40px; 
 } 
 
+mat-panel-title,
+mat-panel-description,
+span {
+  display: block;
+}
