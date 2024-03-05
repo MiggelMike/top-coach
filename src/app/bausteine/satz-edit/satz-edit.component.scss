@@ -25,6 +25,16 @@
     @extend .rep-column-base;
 }
 
+.satz-fertig-column {
+    height: 100%;
+    width:30px;
+}
+
+.amrap-column {
+    height: 100%;
+    width:30px;
+}
+
 .amrap-column-titel {
     width: 32px;
     text-align: right;
