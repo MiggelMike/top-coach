@@ -2,3 +2,13 @@
     top: 100px !important;
     position: relative;
 }
+
+mat-expansion-panel-header:hover {
+    background-color: transparent;
+}
+
+mat-panel-title,
+mat-panel-description,
+span {
+  display: block;
+}
