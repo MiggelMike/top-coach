@@ -7,11 +7,15 @@
         </div>
     </div>
     <!-- 2. Zeile -->
-    <div class="row-start-left-gap-3 height-60 mg-bottom-5">
+    <div class="row-start-left-gap-3 height-60 mg-bottom-5" [ngClass]="{'height-80': isVisible() === false}">
 
         <div class="weight-column">
             <div class="row-start-right width-100-Prozent">
                 <div class="column align-right width-100-Prozent">Weight</div>
+            </div>
+
+            <div [ngClass]="{'invisible': isVisible() === false}" class="row-start-right">
+                <div   class="align-right label">{{satz.GewichtVorgabeText}}</div> 
             </div>
 
             <div class="row-start-right width-100-Prozent">
@@ -34,9 +38,9 @@
                 <div class="column-start-left rep-column-titel align-right width-100-Prozent" matTooltip="Reps">RP.</div>
             </div>
         
-            <!-- <div class="row-start-right">
-                <div [ngClass]="{'invisible': isVisible() === false}" class="align-right label  width-100-Prozent">{{satz.WdhVonVorgabe}}</div>
-            </div> -->
+            <div [ngClass]="{'invisible': isVisible() === false}" class="row-start-right">
+                <div class="align-right label  width-100-Prozent">{{satz.WdhVonVorgabe}}</div>
+            </div>
         
             <div class="row-start-right width-100-Prozent">
                 <div class="column-start-left align-right width-100-Prozent">
