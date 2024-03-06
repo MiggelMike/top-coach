@@ -15,8 +15,8 @@
             </div>
 
             <div ngif="isVisible() === true">
-                <div class="row-start-right">
-                    <div class="align-right label">{{satz.GewichtVorgabeText}}</div>
+                <div class="row-start-right height-25">
+                    <div class="height-25 align-right label">{{satz.GewichtVorgabeText}}</div>
                 </div>
             </div>
 
@@ -41,8 +41,8 @@
             </div>
         
             <div ngif="isVisible() === true">
-                <div class="row-start-right">
-                    <div class="align-right label  width-100-Prozent">{{satz.WdhVonVorgabe}}</div>
+                <div class="row-start-right height-25">
+                    <div class="height-25 align-right label  width-100-Prozent">{{satz.WdhVonVorgabe}}</div>
                 </div>
             </div>
         
@@ -57,6 +57,25 @@
             </div>
         </div>
 
+        <div id="timer-column">
+            <div class="row-start-right">Timer</div>
+            <div class="row-start-left-gap-3 height-25">
+                <div id="timer-column-button">
+                    <a class="height-25" mat-button matTooltip="Start timer" matTooltipPosition="above" (click)="StartTimer(satz)"
+                        [disabled]="TimerDisabled(satz)">{{StartTimerText}}</a>
+                </div>
+            </div>
+
+            <div class="row-start-left-gap-3">
+                <div class="column-start-left">
+                    <input matInput id="timer-input" class="align-right tc-font-size-smaller" matTooltip="Timer seconds"
+                        matTooltipPosition="above" [matTooltipDisabled]="false" mask="999999" [ngModel]="satz.TimerSeconds"
+                        [disabled]="Disabled(satz)" (click)="onSelect($event)" (focusout)="SetTimerSeconds($event)"
+                        (mousedown)="MouseDown(satz,$event)" (mouseup)="MouseUp($event)" (touchstart)="MouseDown(satz,$event)"
+                        (touchend)="MouseUp($event)" type="text">
+                </div>
+            </div>
+        </div>
     </div>
     <!-- 3. Zeile -->
     <div class="row-start-left-gap-3 height-60">

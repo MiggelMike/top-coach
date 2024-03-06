@@ -64,18 +64,18 @@
 
 #timer-column-button {
     @extend .timer-column-base;
-    height: 100%;    
+    // height: 100%;    
 }
 
 #timer-column {
     text-align: right;    
-    height: 100%;
+    // height: 100%;
 }
 
 #timer-input {
     @extend .timer-column-base;
     text-align: right;    
-    height: 100%;
+    // height: 100%;
 }
 
 
