@@ -79,26 +79,16 @@
     </div>
     <!-- 3. Zeile -->
     <div class="row-start-left-gap-3 height-60">
-        <!-- Timer -->
-        <div id="timer-column">
-            <div class="row-start-right">
-                <span>Timer</span>
-            </div>
-            <div class="row-start-left-gap-3">
-                <div class="column-start-left">
-                    <div  id="timer-column-button">
-                        <a mat-button matTooltip="Start timer" matTooltipPosition="above"
-                        (click)="StartTimer(satz)" [disabled]="TimerDisabled(satz)">{{StartTimerText}}</a>
-                    </div>
-                </div>
-                <div class="column-start-left">
-                    <input matInput id="timer-input" class="align-right tc-font-size-smaller" matTooltip="Timer seconds"
-                        matTooltipPosition="above" [matTooltipDisabled]="false" mask="999999" [ngModel]="satz.TimerSeconds"
-                        [disabled]="Disabled(satz)" (click)="onSelect($event)" (focusout)="SetTimerSeconds($event)"
-                        (mousedown)="MouseDown(satz,$event)" (mouseup)="MouseUp($event)" (touchstart)="MouseDown(satz,$event)"
-                        (touchend)="MouseUp($event)" type="text">
-                </div>
-            </div>
+        <!-- AMRAP  -->
+        <span>AMRAP</span> <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP"></mat-checkbox>
+        <span>OK</span> <mat-checkbox [(ngModel)]="SatzFertig"(change)="onClickSatzFertig(satz, $event)"></mat-checkbox>
+
+        <div class="center-item width-45" >
+            <a [ngClass]="['link-button-font']"  (click)="DeleteSet()">Delete</a>
+        </div>
+
+        <div class="center-item width-45">
+            <a [ngClass]="['link-button-font']"  (click)="CopySet()">Copy</a>
         </div>
     </div>
 </div>
