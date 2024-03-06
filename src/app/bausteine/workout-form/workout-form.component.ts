@@ -97,9 +97,13 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
         this.fDialogService.JaNein(mDialogData);
     }
 
+    private doneLeave: boolean = false;
     leave() {
         //if (TrainingsProgramm.StaticIsEqual(this.programm,this.cmpProgramm) === true) {
+        if (this.doneLeave === false) {
+            this.doneLeave = true;
             this.location.back();
+        }
         //} else {
            // this.CancelChanges();
         //}//
