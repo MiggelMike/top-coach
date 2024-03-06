@@ -1,17 +1,13 @@
-<div class="colum-center">
-    <div class="row-start-left-gap-3 height-80">
-        <!-- Spalten-Titel -->
-        <div class="column-start-left width-25">
-            <div class="row-start-left width-100-Prozent">
-                <div class="column-start-left align-right width-100-Prozent">#</div>
-            </div>
-
-            <div class="row-start-left width-100-Prozent">
-                <div class="column-start-left align-right width-100-Prozent">
-                    <mat-label>{{rowNum+1}}</mat-label>
-                </div>
-            </div>
+<div class="colum-center pad-left-5">
+    <!-- 1. Zeile -->
+    <div class="ml-5 row-start-left-gap-3 height-40">
+        <div class="column-start-left">Set #</div>
+        <div class="column-start-left">
+            <mat-label>{{rowNum+1}}</mat-label>
         </div>
+    </div>
+    <!-- 2. Zeile -->
+    <div class="row-start-left-gap-3 height-60 mg-bottom-5">
 
         <div class="weight-column">
             <div class="row-start-right width-100-Prozent">
@@ -38,11 +34,11 @@
                 <div class="column-start-left rep-column-titel align-right width-100-Prozent" matTooltip="Reps">RP.</div>
             </div>
         
-            <div class="row-start-right">
+            <!-- <div class="row-start-right">
                 <div [ngClass]="{'invisible': isVisible() === false}" class="align-right label  width-100-Prozent">{{satz.WdhVonVorgabe}}</div>
-            </div>
+            </div> -->
         
-            <div class="row-start-right  height-20  width-100-Prozent">
+            <div class="row-start-right width-100-Prozent">
                 <div class="column-start-left align-right width-100-Prozent">
                     <input matInput class="align-right tc-font-size-smaller width-100-Prozent" matTooltip="Hold to open details"
                         matTooltipPosition="above" [matTooltipDisabled]="false" mask="9999" [ngModel]="satz.WdhAusgefuehrtText"
@@ -53,23 +49,23 @@
             </div>
         </div>
 
+    </div>
+    <!-- 3. Zeile -->
+    <div class="row-start-left-gap-3 height-60">
         <!-- Timer -->
-        <div class="timer-column">
-            <div class="row-start-right width-100-Prozent">
-                <div class="column align-right width-100-Prozent">Timer</div>
-            </div>
-
-            <div class="row-start-right width-100-Prozent">
-                <div class="column-start-center width-100-Prozent">
-                    <a mat-button id="timer-column-button" class="HG-01" [ngClass]="{'invisible': isVisible() === false}"
-                        matTooltip="Start timer" matTooltipPosition="above" (click)="StartTimer(satz)"
-                        [disabled]="TimerDisabled(satz)">{{StartTimerText}}</a>
-                </div>
-            </div>
-
-            <div class="row-start-right height-20 width-100-Prozent">
+        <div id="timer-column" class="width-100-Prozent">
+            <!-- <div class="row-start-right">
+                <span>Timer</span>
+            </div> -->
+            <div class="row-start-left-gap-3">
                 <div class="column-start-left">
-                    <input matInput class="align-right tc-font-size-smaller timer-column" matTooltip="Timer seconds"
+                    <div  id="timer-column-button">
+                        <a mat-button class="HG-01" matTooltip="Start timer" matTooltipPosition="above"
+                        (click)="StartTimer(satz)" [disabled]="TimerDisabled(satz)">{{StartTimerText}}</a>
+                    </div>
+                </div>
+                <div class="column-start-left">
+                    <input matInput id="timer-input" class="align-right tc-font-size-smaller" matTooltip="Timer seconds"
                         matTooltipPosition="above" [matTooltipDisabled]="false" mask="999999" [ngModel]="satz.TimerSeconds"
                         [disabled]="Disabled(satz)" (click)="onSelect($event)" (focusout)="SetTimerSeconds($event)"
                         (mousedown)="MouseDown(satz,$event)" (mouseup)="MouseUp($event)" (touchstart)="MouseDown(satz,$event)"
@@ -78,48 +74,6 @@
             </div>
         </div>
     </div>
-
-    <div class="row-start-left-gap-3 height-80">
-        <div class="column-start-left width-25">
-            <div class="row-start-left width-100-Prozent">
-                <div class="column-start-left align-right width-100-Prozent"></div>
-            </div>
-
-            <div class="row-start-left width-100-Prozent">
-                <div class="column-start-left align-right width-100-Prozent"></div>
-            </div>
-        </div>
-        <!-- AMRAP  -->
-        <div class="amrap-column">
-            <div class="row-start-right width-100-Prozent">
-                <div class="colum-center  width-100-Prozent">
-                    <div class="ml-5 center-item align-right width-100-Prozent">AR.</div>
-                </div>
-            </div>
-
-            <div class="row-start-right width-100-Prozent">
-                <div class="colum-center width-100-Prozent">
-                    <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP"></mat-checkbox>
-                </div>
-            </div>
-        </div>
-
-        <!-- <ng-container *ngIf="isVisible() === true; then running"></ng-container> -->
-
-        <!-- <ng-template #running> -->
-            <!-- Satz Fertig-Flag -->
-            <div class="satz-fertig-column">
-                <div class="row-start-right width-100-Prozent">
-                    <div class="colum-center width-100-Prozent">
-                        <div class="ml-5 center-item align-right width-100-Prozent">OK</div>
-                    </div>
-                </div>
-                <div class="row-start-right width-100-Prozent">
-                    <div class="column-start-left width-100-Prozent">
-                        <mat-checkbox class="mr-5" [(ngModel)]="SatzFertig" (change)="onClickSatzFertig(satz, $event)"></mat-checkbox>
-                    </div>
-                </div>
-            </div>
-        <!-- </ng-template> -->
-    </div>
 </div>
+
+  

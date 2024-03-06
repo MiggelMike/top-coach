@@ -1,7 +1,9 @@
+.column-width {
+    width: 65px;
+}
 
 .weight-column {
-    width: 65px;
-    height: 100%;
+    @extend .column-width;
     text-align: right;
 }
 
@@ -12,8 +14,7 @@
 
 
 .rep-column-base {
-    width: 50px;
-    height: 100%;
+    @extend .column-width;
     text-align: right;
 }
 
@@ -26,12 +27,10 @@
 }
 
 .satz-fertig-column {
-    height: 100%;
     width:30px;
 }
 
 .amrap-column {
-    height: 100%;
     width:30px;
 }
 
@@ -54,8 +53,7 @@
 }
 
 .timer-column-base {
-    max-width: 50px;
-    width: 50px;
+    @extend .column-width;
 }
 
 .timer-column-titel {
@@ -65,15 +63,21 @@
 
 
 #timer-column-button {
-    width: 100%;    
-    height: 20px;
+    @extend .timer-column-base;
+    height: 100%;    
 }
 
-.timer-column {
+#timer-column {
+    text-align: right;    
+    height: 100%;
+}
+
+#timer-input {
     @extend .timer-column-base;
     text-align: right;    
     height: 100%;
 }
+
 
 
 .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
