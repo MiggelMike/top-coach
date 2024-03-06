@@ -14,8 +14,10 @@
                 <div class="column align-right width-100-Prozent">Weight</div>
             </div>
 
-            <div [ngClass]="{'invisible': isVisible() === false}" class="row-start-right">
-                <div   class="align-right label">{{satz.GewichtVorgabeText}}</div> 
+            <div ngif="isVisible() === true">
+                <div class="row-start-right">
+                    <div class="align-right label">{{satz.GewichtVorgabeText}}</div>
+                </div>
             </div>
 
             <div class="row-start-right width-100-Prozent">
@@ -38,8 +40,10 @@
                 <div class="column-start-left rep-column-titel align-right width-100-Prozent" matTooltip="Reps">RP.</div>
             </div>
         
-            <div [ngClass]="{'invisible': isVisible() === false}" class="row-start-right">
-                <div class="align-right label  width-100-Prozent">{{satz.WdhVonVorgabe}}</div>
+            <div ngif="isVisible() === true">
+                <div class="row-start-right">
+                    <div class="align-right label  width-100-Prozent">{{satz.WdhVonVorgabe}}</div>
+                </div>
             </div>
         
             <div class="row-start-right width-100-Prozent">
