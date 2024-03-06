@@ -1,9 +1,8 @@
 <div class="colum-center pad-left-5">
     <!-- 1. Zeile -->
     <div class="ml-5 row-start-left-gap-3 height-40">
-        <div class="column-start-left">Set #</div>
-        <div class="column-start-left">
-            <mat-label>{{rowNum+1}}</mat-label>
+        <div class="column-center border-radius-10 width-100-Prozent mr-10" [ngClass]="{'hg-color-warm-up': satz.SatzTyp === satzTyp.Aufwaermen,'hg-color-work': satz.SatzTyp === satzTyp.Training, 'hg-color-cool-down': satz.SatzTyp === satzTyp.Abkuehlen}">
+            <mat-label>Set #{{rowNum+1}}</mat-label>
         </div>
     </div>
     <!-- 2. Zeile -->
@@ -22,9 +21,6 @@
 
             <div class="row-start-right width-100-Prozent">
                 <div class="column-start-left align-right width-100-Prozent">
-
-                    <div [ngClass]="{'invisible': isVisible() === false}" class="align-right label">
-                        {{satz.GewichtVorgabeText}}</div>
                         <input matInput mask="9999.00" matTooltip="Hold to open details" matTooltipPosition="above"
                         [matTooltipDisabled]="false" class="align-right tc-font-size-smaller weight-column"
                         [ngModel]="satz.GewichtAusgefuehrtText" (ngModelChange)="CalcPlates($event)"

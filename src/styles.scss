@@ -396,6 +396,18 @@ body {
 	border-color: transparent;
 }
 
+.hg-color-warm-up {
+	background-color: rgb(255, 255, 141);
+}
+
+.hg-color-work {
+	background-color: rgb(252, 120, 120);
+}
+
+.hg-color-cool-down {
+	background-color: lightblue;
+}
+
 .kreis {
 	--diameter: 44px;
 	width: var(--diameter);
@@ -406,17 +418,17 @@ body {
 
 div.kreisRot {
 	@extend .kreis; 
-	background-color: red;
+	@extend .hg-color-work; 
 }
 
 div.kreisHellRot {
 	@extend .kreis; 
-	background-color: rgb(248, 142, 142);
+	@extend .hg-color-warm-up
 }
 
 div.kreisHellBlau {
 	@extend .kreis; 
-	background-color: lightblue;
+	@extend .hg-color-cool-down;
 }
 
 
