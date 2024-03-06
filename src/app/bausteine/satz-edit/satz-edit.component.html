@@ -53,14 +53,14 @@
     <!-- 3. Zeile -->
     <div class="row-start-left-gap-3 height-60">
         <!-- Timer -->
-        <div id="timer-column" class="width-100-Prozent">
-            <!-- <div class="row-start-right">
+        <div id="timer-column">
+            <div class="row-start-right">
                 <span>Timer</span>
-            </div> -->
+            </div>
             <div class="row-start-left-gap-3">
                 <div class="column-start-left">
                     <div  id="timer-column-button">
-                        <a mat-button class="HG-01" matTooltip="Start timer" matTooltipPosition="above"
+                        <a mat-button matTooltip="Start timer" matTooltipPosition="above"
                         (click)="StartTimer(satz)" [disabled]="TimerDisabled(satz)">{{StartTimerText}}</a>
                     </div>
                 </div>
