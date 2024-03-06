@@ -122,10 +122,18 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 		}
 
 		this.fDbModul.LadeDiaUebungen()
-			.then((mData) => this.DiaUebungSettingsListe = mData);
+			.then((mData) => {
+				this.DiaUebungSettingsListe = mData;
+				this.Draw(true);
+			});
 		
 		this.aktuellerDiaTyp = DexieSvcService.AppRec.DiaChartTyp;
 	}
+
+	trackDia(index, hero) {
+        return hero ? hero.id : undefined;
+
+    }
 
 	diaTyp(): typeof DiaTyp {
 		return DiaTyp;
@@ -207,12 +215,12 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 		this.Draw(true);
 	}
 
-	ChartSettingsVisible: boolean = false;
+	ChartSettingsVisible: boolean = true;
 	
 	get ChartSettingsText(): string {
 		if (this.ChartSettingsVisible === true)
-			return 'Close chart settings';
-		return 'Open chart settings';
+			return 'Close history settings';
+		return 'Open history settings';
 	}
 
 	CloseChartSettings() {

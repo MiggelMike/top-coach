@@ -15,7 +15,7 @@ export interface SessionOverlayConfig {
     panelClass?: string;
     hasBackdrop?: boolean;
     backdropClass?: string;
-    width?: number;
+    width?: string;
     height?: number;
     session?: Session,
     left?: number; 
@@ -88,11 +88,10 @@ export class SessionOverlayServiceService {
         // const s = aConfig.left.toString() + 'px';
         const s = (window.outerWidth - aConfig.left).toString()  + 'px';
         const positionStrategy = this.overlay
+        
             .position()
             .global()
-            // .top("400px")
-            // .left(s);
-             .centerHorizontally()
+            .centerHorizontally()
             .centerVertically();
 
         const overlayConfig = new OverlayConfig({

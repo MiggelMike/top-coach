@@ -1,6 +1,21 @@
 <div class="header-box">
     <app-toolbar></app-toolbar>
     <div id="historyHeader">
+        <div class="row-start-right height-20">
+            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button
+                (click)="OpenChartSettings()">{{ChartSettingsText}}</a>
+        </div>
+    </div>
+</div>
+
+<div cdkDropListGroup class="column-center pad-left-5 pad-right-5 pad-bottom-5"  [ngClass]="{'invisible': ChartSettingsVisible === false}">
+    <div cdkDrag id="chart-settings" class="cc-overlay" matTooltip="Drag me" [matTooltipPosition]="'above'!">
+        <div class="row-center-gap-10">
+            <div class="column-center">                
+                <a [ngClass]="['link-button-font', 'HG-01', 'font-14-data']" mat-flat-button (click)="CloseChartSettings()">Close history settings</a>
+            </div>
+        </div>
+
         <div class="column-center">
             <div class="row-center wrap">
                 <mat-form-field class="width-235" appearance="outline">
@@ -21,28 +36,40 @@
                 </mat-form-field>
                 
                 
-                <mat-radio-group #AuswahlRadio class="tp-radio-group" [(ngModel)]="Auswahl" (change)="AuswahlChanged($event)" >
-                    <div class="row-start-left-gap-3 height-30">
-                        <mat-radio-button class="tp-radio-button" [value]="0">Sessions</mat-radio-button>
-                    </div>
-                    <div class="row-start-left-gap-3 height-30">
-                        <mat-radio-button class="tp-radio-button" [value]="1">Charts</mat-radio-button>
-                    </div>
-                </mat-radio-group>
 
-                <ng-container *ngIf="Auswahl === 1">
-                    <div class="column-center width-200">
-                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="OpenChartSettings()">{{ChartSettingsText}}</a>
-                    </div>
+            </div>
+        </div> 
+
+        <div class="row-center-gap-10">
+            <mat-radio-group #AuswahlRadio class="tp-radio-group" [(ngModel)]="Auswahl" (change)="AuswahlChanged($event)" >
+                    <mat-radio-button class="tp-radio-button" [value]="0">Sessions</mat-radio-button>
+                    <mat-radio-button class="tp-radio-button" [value]="1">Charts</mat-radio-button>
+            </mat-radio-group>
+
+
+            <mat-radio-group #ChartType class="tp-radio-group" [(ngModel)]="aktuellerDiaTyp" (change)="ChartChanged($event)">
+                <mat-radio-button class="tp-radio-button" [value]="0" >Line</mat-radio-button>
+                <mat-radio-button class="tp-radio-button" [value]="1" >Bar</mat-radio-button>
+            </mat-radio-group>
+
+
+        </div>
+
+        <div class="column-center">
+            <div class="row-center wrap width-300">
+                <ng-container *ngFor="let DiaUebung of DiaUebungsListe">
+                        <div class="column-center height-20">
+                            <mat-checkbox class="width-150" (change)="onClickDiaUebung(DiaUebung, $event.checked)">{{DiaUebung.UebungName}}</mat-checkbox>
+                        </div>
                 </ng-container>
             </div>
-
-        </div>        
-    </div>
+        </div>
+    </div> 
 </div>
 
 <div id="History-Panel">
     <div id="History-Sub-Panel">
+
         <div id='history-sessions'>
             <ng-container *ngIf="(Auswahl === 0); then Sessions; else Charts"></ng-container>  
             <ng-template #Sessions>
@@ -96,39 +123,7 @@
                 </div>
             </ng-template>
             <ng-template #Charts>
-                <div cdkDropListGroup  [ngClass]="{'invisible': ChartSettingsVisible === false}">
-                    <div cdkDrag id="chart-settings" class="cc-overlay" matTooltip="Drag me" [matTooltipPosition]="'above'!">
-                        <div class="row-center-gap-10">
-                            <div class="column-center font-14-data">
-                                <span>Chart settings</span>
-                            </div>
-                        </div>
-
-                        <div class="row-center-gap-10">
-                            <mat-radio-group #ChartType class="tp-radio-group" [(ngModel)]="aktuellerDiaTyp" (change)="ChartChanged($event)">
-                                <mat-radio-button class="tp-radio-button" [value]="0" >Line</mat-radio-button>
-                                <mat-radio-button class="tp-radio-button" [value]="1" >Bar</mat-radio-button>
-                            </mat-radio-group>
-                        </div>
-
-
-                        <div class="row-start-left-gap-3 wrap">
-                            <ng-container *ngFor="let DiaUebung of DiaUebungsListe">
-                                <div class="column-start-left width-100">
-                                    <ng-container *ngIf="DiaUebung.Relevant">
-                                        <mat-checkbox [(ngModel)]="DiaUebung.Visible"
-                                        (change)="onClickDiaUebung(DiaUebung, $event.checked)">{{DiaUebung.UebungName}}</mat-checkbox>
-                                    </ng-container>
-                                    
-                                </div>
-                            </ng-container>
-                        </div>
-
-                        <div class="row-center">
-                            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="CloseChartSettings()">Close</a>
-                        </div>
-                    </div> 
-                </div>
+          
                     <div class="scroll-Vert">
                         <div #ChartContainer class="width-100-Prozent">
                             <ng-container *ngIf="(ChartData.length !== undefined && ChartData.length > 0)">
