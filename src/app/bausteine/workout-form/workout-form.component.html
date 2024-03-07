@@ -21,7 +21,8 @@
                 </div>                    
             </div>        
                 
-            <div id="main-panel">
+            <div class="column-center">            
+            <div id="main-panel"   >
                         <app-programm02 
                             [programm]="programm" 
                             [SessionListe]="programm.SessionListe" 
@@ -31,6 +32,7 @@
                             [bearbeitbar]="true"
                             (ProgrammSavedEvent)="CopyProgramm($event)">
                         </app-programm02>
+            </div>
             </div>
         </div>            
 </ng-container>

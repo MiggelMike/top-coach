@@ -366,71 +366,15 @@ export class Session implements ISession {
             }
         }
 
-        return isEqual(mSession, mCmpSession);
-
-        // mCmpSession.UebungsListe.forEach(u => {
-        //     u.Expanded = false;
-        //     u.ArbeitsSaetzeStatus = u.getArbeitsSaetzeStatus();
-        // });
-
-        // mSession.UebungsListe.forEach(u => {
-        //     u.Expanded = false;
-        //     u.ArbeitsSaetzeStatus = u.getArbeitsSaetzeStatus();
-        // });
-
-        // // let xmResult: boolean = isEqual(mSession, mCmpSession);
-
-        // const mCmpSessionUebungsListe = mCmpSession.UebungsListe;
-        // mCmpSession.UebungsListe = [];
-        // const mSessionUebungsListe = mSession.UebungsListe;
-        // mSession.UebungsListe = [];
-        // let mResult: Boolean = isEqual(mSession, mCmpSession);
-        // if (mResult === true) {
-        //     if (mCmpSessionUebungsListe.length !== mSessionUebungsListe.length)
+        // let mSession1 = Object.keys(mSession.SessionDB);
+        // for (let index = 0; index < mSession1.length; index++) {
+        //     const mItem1 = mSession1[index];
+        //     if (!isEqual(mSession.SessionDB[mItem1], mCmpSession.SessionDB[mItem1]))
         //         return false;
-                
-        //     mCmpSessionUebungsListe.forEach(u => {
-        //         u.Expanded = false;
-        //         u.ArbeitsSaetzeStatus = u.getArbeitsSaetzeStatus();
-        //     });
-
-        //     mSessionUebungsListe.forEach(u => {
-        //         u.Expanded = false;
-        //         u.ArbeitsSaetzeStatus = u.getArbeitsSaetzeStatus();
-        //     });
-
-        //     for (let index = 0; index < mSessionUebungsListe.length; index++) {
-        //         const mPtrUebung = mSessionUebungsListe[index];
-        //         const mPtrCmpUebung = mCmpSessionUebungsListe[index];
-        //         const mPtrUebungSatzListe: Array<Satz> = mPtrUebung.SatzListe;
-        //         const mPtrCmpUebungSatzListe: Array<Satz> = mPtrCmpUebung.SatzListe;
-
-        //         if (mPtrUebung.SatzListe.length !== mPtrCmpUebung.SatzListe.length)
-        //             return false;
-                    
-        //         mPtrUebung.SatzListe = [];
-        //         mPtrCmpUebung.SatzListe = [];
-
-        //         mResult = mPtrUebung.isEqual(mPtrCmpUebung);
-        //         mPtrUebung.SatzListe = mPtrUebungSatzListe;
-        //         mPtrCmpUebung.SatzListe = mPtrCmpUebungSatzListe;
-
-        //         if (mResult === false)
-        //             return false;
-                
-        //         for (let index1 = 0; index1 < mPtrUebung.SatzListe.length; index1++) {
-        //             const mPtrSatz = mPtrUebung.SatzListe[index1];
-        //             const mPtrCmpSatz = mPtrCmpUebung.SatzListe[index1];
-        //             mPtrCmpSatz.BodyWeight = mPtrSatz.BodyWeight;
-        //             mResult = mPtrSatz.isEqual(mPtrCmpSatz);
-
-        //             if (mResult === false)
-        //                 return false;
-        //         }
-        //     }
         // }
-        
-        // return mResult as boolean;
+
+        mCmpSession.SessionDB.Expanded = mSession.SessionDB.Expanded;
+        return isEqual(mSession.SessionDB, mCmpSession.SessionDB);
     }
 
     public CalcDauer(): void {
