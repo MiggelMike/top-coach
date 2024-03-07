@@ -11,6 +11,12 @@
                     <mat-icon>pan_tool</mat-icon>
                 </ng-container>
 
+                <div class="colum-center">
+                    <ng-container *ngIf="ModulTyp === programModul.HistoryView">
+                        <span class="font-14-data">History</span>
+                    </ng-container>
+                </div>
+
                 <div class="column-start-left  mg-top-5">
                     <ng-container *ngIf="Programm !== undefined && Programm.Name !== undefined">
                         <span class="font-14-data">{{Programm.Name}}</span>

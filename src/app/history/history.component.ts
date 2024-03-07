@@ -225,7 +225,7 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 	}
 
 	get HistorySettingsText(): string {
-		if (this.HistorySettingsVisible === true)
+		if (this.ChartSettingsVisible === true)
 			return 'Close history settings';
 		return 'Open history settings';
 	}

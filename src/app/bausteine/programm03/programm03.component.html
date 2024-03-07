@@ -31,32 +31,32 @@
                                     [disabled]="checkingSets"
                                     (closed)="PanelUebungClosed(SessUeb)" 
                                     (opened)="PanelUebungOpened(i,SessUeb)">
-                                    <mat-expansion-panel-header class="disable_ripple"  [collapsedHeight]="'auto'" [expandedHeight]="'auto'"  [matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag" >
+                                    <mat-expansion-panel-header class="disable_ripple width-280"  [collapsedHeight]="'auto'" [expandedHeight]="'auto'"[matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag" >
                                         <div fxLayout="row wrap" fxLayoutGap="2px" fxLayout.lt-sm="row wrap" fxFlex="auto">
                                             <div layout-align="start center" fxFlex="0 0 35%">
                                                 <span class="tc-font-size-smaller font-bold">#{{i+1}} {{SessUeb.Name}}</span>
                                             </div>
                                             
                                             <div class="row-start-left">
-                                                <ng-container *ngIf="ModulTyp === programModul.RunningSession || ModulTyp === programModul.EditWorkout || ModulTyp === programModul.SelectWorkoutEdit ; then RunningOrEdit"></ng-container>
-                                                
-                                                <ng-template #RunningOrEdit>
+                                                <ng-container *ngIf="ModulTyp === programModul.RunningSession || ModulTyp === programModul.EditWorkout || ModulTyp === programModul.SelectWorkoutEdit">
                                                     <div class="column-center"><a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="60px" (click)="DoSettings(SessUeb, $event)">Settings</a></div>
                                                     <div class="column-center"><a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="85px" (click)="CopyExcercise(SessUeb, $event)">Copy exercise</a></div>
                                                     <div class="column-center"><a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteExercise(i+1,SessUeb,$event)">Delete Exercise</a></div>
-                                                </ng-template>
+                                                </ng-container>
+                                                
+                                                <div class="row-start-left">
+                                                    <div class="column-center">Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} - Reps {{SessUeb.SummeWDH()}}</div>
+                                                    <ng-container *ngIf="AlleFertig(SessUeb)">
+                                                        <div class="column-center mg-left-10 mg-bottom-10">
+                                                            <img   src="./../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/Apply.png"/>
+                                                        </div>
+                                                    </ng-container>
+                                                </div>
 
-                                                <ng-container *ngIf="ModulTyp === programModul.SelectWorkoutEdit && programm.ProgrammKategorie !== programmKategorie.Vorlage">
+                                                <ng-container *ngIf="ModulTyp === programModul.SelectWorkoutEdit && programm.ProgrammKategorie !== programmKategorie.Vorlage || ModulTyp === programModul.HistoryView">
                                                     <div class="column-center"><a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteExercise(i+1,SessUeb,$event)">Delete Exercise</a></div>
                                                 </ng-container>
-
-                                                <div class="column-center">Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} - Reps {{SessUeb.SummeWDH()}}</div>
                                                 
-                                                <ng-container *ngIf="AlleFertig(SessUeb)">
-                                                    <div class="column-center mg-left-10 mg-bottom-10">
-                                                        <img   src="./../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/Apply.png"/>
-                                                    </div>
-                                                </ng-container>
 
                                             </div>
                                             

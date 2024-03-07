@@ -68,6 +68,7 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISa
 	// };
 
 	ngOnInit() {
+		const s =  DexieSvcService.ModulTyp;
 		this.ModulTyp = DexieSvcService.ModulTyp;
 	}
 
