@@ -124,16 +124,10 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 		this.fDbModul.LadeDiaUebungen()
 			.then((mData) => {
 				this.DiaUebungSettingsListe = mData;
-				this.Draw(true);
 			});
 		
 		this.aktuellerDiaTyp = DexieSvcService.AppRec.DiaChartTyp;
 	}
-
-	trackDia(index, hero) {
-        return hero ? hero.id : undefined;
-
-    }
 
 	diaTyp(): typeof DiaTyp {
 		return DiaTyp;
@@ -141,6 +135,7 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 
 
 	ngOnDestroy() {
+		this.Save();
 	}
 
 	ngAfterViewInit() {
@@ -205,7 +200,7 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 		return aDia.UebungName + ' | ' + aBarPoint.name + ' | ' + aBarPoint.value;
 	}
 
-	onClose() {
+	onCalendarClose() {
 		//new Date(dateString);
 
 		// const s1 = this.toDate.toDateString();
@@ -215,22 +210,35 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 		this.Draw(true);
 	}
 
-	ChartSettingsVisible: boolean = true;
+	//#region History-Settings
+	HistorySettingsVisible: boolean = false;
 	
-	get ChartSettingsText(): string {
+	OpenHistorySettings() {
+		this.HistorySettingsVisible = !this.HistorySettingsVisible;		
+		
+		if (this.HistorySettingsVisible === false)
+			this.Save();
+	}
+
+	// CloseHistorySettings() {
+	// 	this.HistorySettingsVisible = false;
+	// 	this.Save();
+	// }
+
+	get HistorySettingsText(): string {
 		if (this.ChartSettingsVisible === true)
 			return 'Close history settings';
 		return 'Open history settings';
 	}
-
+	//#endregion
+	//#region Chart-Settings
+	ChartSettingsVisible: boolean = false;
+	
 	CloseChartSettings() {
 		this.ChartSettingsVisible = false;
-		this.Save();
 	}
 
-	OpenChartSettings() {
-		this.ChartSettingsVisible = !this.ChartSettingsVisible;		
-	}
+	//#endregion
 
 	public Draw(aDialogOn: boolean): void {
 		// if (this.Auswahl === 0)
@@ -564,6 +572,8 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 
 	AuswahlChanged(event:any ) {
 		this.Auswahl = event.value;
+		this.ChartSettingsVisible = !this.ChartSettingsVisible;
+		this.Draw(true);
 	}
 	
 	ngDoCheck() {
