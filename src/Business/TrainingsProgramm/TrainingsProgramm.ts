@@ -136,9 +136,18 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
             }
         }
 
+        const mSessionListPtr1 = mCmpProgramm1.SessionListe;
         mCmpProgramm1.SessionListe = [];
+
+        const mSessionListPtr2 = mCmpProgramm2.SessionListe;
         mCmpProgramm2.SessionListe = [];
-        return isEqual(mCmpProgramm1, mCmpProgramm2);
+
+        try {
+            return isEqual(mCmpProgramm1, mCmpProgramm2);
+        } finally {
+            mCmpProgramm1.SessionListe = mSessionListPtr1;
+            mCmpProgramm2.SessionListe = mSessionListPtr2;
+        }
     }
 
     NummeriereSessions() {
