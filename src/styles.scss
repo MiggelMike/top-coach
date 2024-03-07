@@ -402,7 +402,7 @@ body {
 }
 
 .hg-color-warm-up {
-	background-color: rgb(255, 255, 141);
+	background-color: rgb(247, 247, 194);
 }
 
 .hg-color-work {
@@ -442,7 +442,7 @@ div.kreisRot {
 	@extend .hg-color-work; 
 }
 
-div.kreisHellRot {
+div.kreisHellGelb {
 	@extend .kreis; 
 	@extend .hg-color-warm-up
 }

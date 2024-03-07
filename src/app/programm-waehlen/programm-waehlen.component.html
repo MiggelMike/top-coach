@@ -62,7 +62,7 @@
                                             #panSession='matExpansionPanel'                            
                                             (opened) = "panelSessOpened(sess)"
                                             (closed) = "panelSessClosed(sess)" 
-                                            class="HG-01">
+                                            class="HG-01  pad-left-3">
                                             <mat-expansion-panel-header  class="disable_ripple" mat-tooltip-panel-below  matTooltip="Hold and drag">
                                                 <input class="tc-font-size-smaller width-100-Prozent mr-5" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
                                             </mat-expansion-panel-header>

@@ -70,16 +70,20 @@
                                                 <ng-container *ngIf="SessUeb.AufwaermSatzListe.length > 0">
                                                     <div class="row-start-left-gap-3">
                                                         <ng-container *ngFor="let satz of SessUeb.AufwaermSatzListe, index as satzIndex">
-                                                            <div class="colum-center height-50">
-                                                                <div class="column-center font-size-xsmall mg-right-3 kreisHellRot" >
-                                                                    {{satz.WdhAusgefuehrtText}}
-                                                                    <ng-container *ngIf="satz.AMRAP">+</ng-container>
-                                                                </div>
-                                                                
-                                                                <div class="font-size-xsmall column-center">
-                                                                    <mat-label>
-                                                                        {{satz.GewichtAusgefuehrtText}}
-                                                                    </mat-label>  
+                                                            <div class="row-start-left-gap-3">
+                                                                <div class="colum-center">
+                                                                    <div class="row-center font-size-xsmall kreisHellGelb">
+                                                                        <span>{{satz.WdhAusgefuehrtText}}</span>
+                                                                        <ng-container *ngIf="satz.AMRAP">+</ng-container>
+                                                                    </div>
+
+                                                                    <div class="ok-img-box"  [ngClass]="{'invisible': satz.Status !== satzStatus.Fertig}" >
+                                                                        <img class="ok-img" src="../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/OK.png">
+                                                                    </div>
+
+                                                                    <div class="row-center height-10">
+                                                                        <mat-label class="font-size-xsmall">{{satz.GewichtAusgefuehrtText}}</mat-label>  
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </ng-container>
@@ -95,7 +99,6 @@
                                                                         <span>{{satz.WdhAusgefuehrtText}}</span>
                                                                         <ng-container *ngIf="satz.AMRAP">+</ng-container>
                                                                     </div>
-                                                                    <!-- </ng-container> -->
 
                                                                     <div class="ok-img-box"  [ngClass]="{'invisible': satz.Status !== satzStatus.Fertig}" >
                                                                         <img class="ok-img" src="../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/OK.png">
@@ -105,10 +108,6 @@
                                                                         <mat-label class="font-size-xsmall">{{satz.GewichtAusgefuehrtText}}</mat-label>  
                                                                     </div>
                                                                 </div>
-                                                                
-
-                                                                     
-                                                                <!-- <ng-container *ngIf="satz.Status === satzStatus.Fertig"> -->
                                                             </div>
                                                         </ng-container>
                                                     </div>
@@ -117,16 +116,20 @@
                                                 <ng-container *ngIf="SessUeb.AbwaermSatzListe.length > 0">
                                                     <div class="row-start-left-gap-3">
                                                         <ng-container *ngFor="let satz of SessUeb.AbwaermSatzListe, index as satzIndex">
-                                                            <div class="colum-center height-60">
-                                                                <div class="column-center font-size-xsmall mg-right-3 kreisHellBlau" >
-                                                                    {{satz.WdhAusgefuehrtText}}
-                                                                    <ng-container *ngIf="satz.AMRAP">+</ng-container>
-                                                                </div>
-                                                                
-                                                                <div class="font-size-xsmall column-center">
-                                                                    <mat-label>
-                                                                        {{satz.GewichtAusgefuehrtText}}
-                                                                    </mat-label>  
+                                                            <div class="row-start-left-gap-3">
+                                                                <div class="colum-center">
+                                                                    <div class="row-center font-size-xsmall kreisHellBlau">
+                                                                        <span>{{satz.WdhAusgefuehrtText}}</span>
+                                                                        <ng-container *ngIf="satz.AMRAP">+</ng-container>
+                                                                    </div>
+
+                                                                    <div class="ok-img-box"  [ngClass]="{'invisible': satz.Status !== satzStatus.Fertig}" >
+                                                                        <img class="ok-img" src="../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/OK.png">
+                                                                    </div>
+
+                                                                    <div class="row-center height-10">
+                                                                        <mat-label class="font-size-xsmall">{{satz.GewichtAusgefuehrtText}}</mat-label>  
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </ng-container>
