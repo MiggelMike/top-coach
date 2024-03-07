@@ -1,26 +1,37 @@
 <ng-container *ngIf="session">
     <div class="colum-center width-100-Prozent">        
         <div id="programm03">
-            <!-- <div id="header" class="colum-center width-600">
-                <ng-container *ngIf='ModulTyp === programModul.HistoryView'>  
-                    <span class="font-14-data">{{ProgrammName}}</span> <span> --- History</span>
-                </ng-container>
-                
-                <ng-container *ngIf="ModulTyp !== programModul.History && ModulTyp !== programModul.AnstehendeSessions && ModulTyp !== programModul.EditWorkout && ModulTyp !== programModul.SelectWorkout && ModulTyp !== programModul.SelectWorkoutEdit" >
-                    <div class="row-start-left mg-bottom-5">
-                        <input class="tc-font-size-smaller font-bold width-100-Prozent" matInput [(ngModel)]="session.Name" maxlength="30" type="text">
+            
+            <!-- <ng-container *ngIf='ModulTyp === programModul.HistoryView'>  
+                <div class="column-start-left">
+                    <span>{{ProgrammName}}</span>
+                </div>
+                <div class="column-start-left">
+                    <span>{{session.Name}}</span>
+                </div>
+            </ng-container> -->
+            <div class="colum-center width-280" [ngClass]="{'header-programm20': ModulTyp === programModul.RunningSession, 'header-programm65': ModulTyp === programModul.HistoryView}"  >
+                <ng-container *ngIf="ModulTyp === programModul.HistoryView">                    
+                    <div class="row-start-left-gap-3">
+                        <div class="column-start-left">
+                            <span class="tc-font-size-smaller width-100-Prozent">{{session.Name}}</span>
+                        </div> 
+                        <div class="column-start-left">
+                            <span class="tc-font-size-smaller width-100-Prozent">{{GestartedWannText}}</span>
+                        </div>
                     </div>
                 </ng-container>  
                         
-                <ng-container *ngIf="StatsButtonVisible">
+                <!-- <ng-container *ngIf="StatsButtonVisible">
                     <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DoStatsFn()">Info</a>
-                </ng-container>
+                </ng-container> -->
                 
                 <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
-            </div> -->
+            </div> 
 
 
-            <div class="colum-center width-100-Prozent" [ngClass]="{'top-70': ModulTyp === programModul.RunningSession}">        
+            <!-- <div class="colum-center width-100-Prozent programm40Body"  >         -->
+            <div class="colum-center width-100-Prozent" [ngClass]="{'Running-Session-Body': ModulTyp === programModul.RunningSession, 'History-Session-Body': ModulTyp === programModul.HistoryView}" >        
                 <div cdkDropList (cdkDropListDropped)="drop($event)">
                     <ng-container *ngFor="let SessUeb of  UebungsListe, index as i; let isOdd=odd">
                         <div  cdkDrag [cdkDragDisabled]="ModulTyp === programModul.History">

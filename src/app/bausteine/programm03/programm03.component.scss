@@ -15,15 +15,24 @@
     background-color: white;
     padding-left: 5px;
     padding-right: 5px;
-    width: 100% !important  
+    width: 100% !important;
 }
 
-#header {
-    // position: fixed; 
-    height: 75px !important; 
-    // top: 100px; 
+.header-programm03 {
+    position: fixed; 
     z-index: 1000;
+    top: 69px;
     background-color: white;
+}
+
+.header-programm65 {
+    @extend .header-programm03;
+    height: 65px !important; 
+}
+
+.header-programm20 {
+    @extend .header-programm03;
+    height: 20px !important; 
 }
 
 .programm03Body {
@@ -31,10 +40,23 @@
     z-index: 1;
 }
 
-.top-70 {
+.programm100Body {
     @extend .programm03Body;
-    top:70px;
+    top: 100px;
 }
+
+.Running-Session-Body {
+    @extend .programm03Body;
+    top: 70px;
+}
+
+.History-Session-Body {
+    @extend .programm03Body;
+    top: 34px;
+}
+
+
+
 
 mat-expansion-panel {
     width: 100%;

@@ -14,6 +14,7 @@ import { ExerciseSettingsComponent } from 'src/app/exercise-settings/exercise-se
 import { ExerciseOverlayConfig, ExerciseSettingSvcService } from 'src/app/services/exercise-setting-svc.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ISatzTyp, Satz, SatzTyp } from 'src/Business/Satz/Satz';
+import { DateFormatTyp } from 'src/Business/Datum';
 
 
 @Component({
@@ -70,6 +71,10 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISa
 	ngOnInit() {
 		const s =  DexieSvcService.ModulTyp;
 		this.ModulTyp = DexieSvcService.ModulTyp;
+	}
+
+	get GestartedWannText(): string {
+		return this.session.GestartedWannText(DateFormatTyp.KomplettOhneSekunden);
 	}
 
 	get ProgrammName(): string {
