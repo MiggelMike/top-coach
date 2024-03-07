@@ -2200,7 +2200,7 @@ export class DexieSvcService extends Dexie {
 		return DexieSvcService.SatzTable.bulkPut(mSaetzeDB);
 	}
 
-	public async UebungSpeichern(aUebung: Uebung): Promise<number> {
+	public async UebungSpeichern(aUebung: Uebung): Promise<Uebung> {
 		aUebung.FkAltProgress = aUebung.FkProgress;
 		aUebung.AltWeightProgress = aUebung.WeightProgress;
 		aUebung.FkOrgProgress = aUebung.FkProgress;
@@ -2213,7 +2213,7 @@ export class DexieSvcService extends Dexie {
 		aUebung.SatzListe = [];
 		return await DexieSvcService.UebungTable.put(aUebung.UebungDB)
 			.then(async (mUebungID) => {
-				if (mSatzListe !== undefined) {
+				if (mSatzListe !== undefined && mSatzListe.length > 0) {
 					for (let index = 0; index < mSatzListe.length; index++) {
 						const mSatz = mSatzListe[index];
 						mSatz.UebungID = mUebungID;
@@ -2223,14 +2223,15 @@ export class DexieSvcService extends Dexie {
 						mSatz.GewichtDiff = mGewichtDiff;
 						// mSatz.Datum = mSatz.Status === SatzStatus.Fertig ? aUebung.Datum : undefined;
 						mSatz.Datum = aUebung.Datum;
-						await this.SatzSpeichern(mSatz).then(
-							(mSatzID) => {
+						await this.SatzSpeichern(mSatz)
+							.then((mSatzID) => {
 								aUebung.SatzListe.push(mSatz);
 							});
 					}
+					return aUebung;
 					// this.SaetzeSpeichern(mSatzListe);
 				}
-				return aUebung.ID;
+				else return aUebung;
 			})
 	}
 
@@ -2238,15 +2239,25 @@ export class DexieSvcService extends Dexie {
 		if (aSession.Datum === undefined || aSession.Datum === null)
 			aSession.Datum = new Date;
 		
-		return await DexieSvcService.SessionTable.put(aSession.SessionDB).then((mID) => {
-			aSession.ID = mID;
-			aSession.UebungsListe.forEach(async (mUebung: Uebung) => {
-				mUebung.SessionID = aSession.ID;
-				mUebung.FK_Programm = aSession.FK_Programm;
-				if ((mUebung.Datum === undefined) || (mUebung.Datum === null))
-					mUebung.Datum = aSession.Datum;
-				await this.UebungSpeichern(mUebung);
-			});
+		return await DexieSvcService.SessionTable.put(aSession.SessionDB)
+			.then(async(mID) => {
+				const mUebungsListe: Array<Uebung> = [];
+				aSession.ID = mID;
+				for (let index = 0; index < aSession.UebungsListe.length; index++) {
+					const mUebungPtr: Uebung = aSession.UebungsListe[index];
+					
+					mUebungPtr.SessionID = aSession.ID;
+					mUebungPtr.FK_Programm = aSession.FK_Programm;
+					if ((mUebungPtr.Datum === undefined) || (mUebungPtr.Datum === null))
+						mUebungPtr.Datum = aSession.Datum;
+					
+					await this.UebungSpeichern(mUebungPtr)
+						.then((mSavedUebung) => {
+							mUebungsListe.push(mSavedUebung);
+						});
+				};
+				
+			aSession.UebungsListe = mUebungsListe;
 			return aSession;
 		});
 	}
