@@ -3,6 +3,7 @@ import { DexieSvcService, ProgramCopyPara, SessionCopyPara } from './../../app/s
 import { Satz } from '../Satz/Satz';
 import { SessionStatus } from '../SessionDB';
 import { ProgramModulTyp } from 'src/app/app.module';
+import { Uebung } from '../Uebung/Uebung';
 
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual');
@@ -87,11 +88,52 @@ export abstract class TrainingsProgramm implements ITrainingsProgramm {
 
         for (let index = 0; index < mCmpProgramm1.SessionListe.length; index++) {
             const mSessionPtr1: Session = mCmpProgramm1.SessionListe[index];
-            const mSessionPtr2: Session = mCmpProgramm2.SessionListe[index];
+            const mUebungsListe1: Array<Uebung> = mSessionPtr1.UebungsListe;
+            mSessionPtr1.UebungsListe = [];
 
-            if (mSessionPtr1.isEqual(mSessionPtr2) === false)
+            const mSessionPtr2: Session = mCmpProgramm2.SessionListe[index];
+            const mUebungsListe2: Array<Uebung> = mSessionPtr2.UebungsListe;
+            mSessionPtr2.UebungsListe = [];
+
+            try {
+                if (mSessionPtr1.isEqual(mSessionPtr2) === false)
+                    return false;
+            } finally {
+                mSessionPtr1.UebungsListe = mUebungsListe1;
+                mSessionPtr2.UebungsListe = mUebungsListe2;
+            }
+
+            if (mSessionPtr1.UebungsListe.length != mSessionPtr2.UebungsListe.length)
                 return false;
             
+            for (let mUebungIndex = 0; mUebungIndex < mSessionPtr1.UebungsListe.length; mUebungIndex++) {
+                const mUebungPtr1 = mSessionPtr1.UebungsListe[mUebungIndex];
+                const mSatzListe1: Array<Satz> = mUebungPtr1.SatzListe;
+                mUebungPtr1.SatzListe = [];
+
+                const mUebungPtr2 = mSessionPtr2.UebungsListe[mUebungIndex];
+                const mSatzListe2: Array<Satz> = mUebungPtr2.SatzListe;
+                mUebungPtr2.SatzListe = [];
+                
+                try {
+                    if (mUebungPtr1.isEqual(mUebungPtr2) === false)
+                        return false;
+                } finally {
+                    mUebungPtr1.SatzListe = mSatzListe1;
+                    mUebungPtr2.SatzListe = mSatzListe2;
+                }
+                
+                if (mUebungPtr1.SatzListe.length != mUebungPtr2.SatzListe.length)
+                    return false;
+
+                for (let mSatzIndex = 0; mSatzIndex < mUebungPtr1.SatzListe.length; mSatzIndex++) {
+                    const mSatzPtr1: Satz = mUebungPtr1.SatzListe[mSatzIndex];
+                    const mSatzPtr2: Satz = mUebungPtr2.SatzListe[mSatzIndex];
+                    
+                    if (mSatzPtr1.isEqual(mSatzPtr2) === false)
+                        return false;
+                }
+            }
         }
 
         mCmpProgramm1.SessionListe = [];
