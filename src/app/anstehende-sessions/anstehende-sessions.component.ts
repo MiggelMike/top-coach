@@ -35,6 +35,8 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul,  ISat
 		return SatzStatus;
 	}
 
+	
+
 	drop(event: any) {
 		const mEvent = event as CdkDragDrop<Session[]>;
 		this.SortedSessionListe[event.previousIndex].ListenIndex = mEvent.currentIndex;

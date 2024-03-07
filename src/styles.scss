@@ -53,6 +53,11 @@ body {
 	text-align: right;
 }
 
+.align-center {
+	text-align: right;
+}
+
+
 .height-8 {
 	min-height: 8px !important; 
 	height: 8px !important;
@@ -408,6 +413,22 @@ body {
 	background-color: lightblue;
 }
 
+.ok-img-box {
+	@extend .column-center;
+	@extend .height-10;
+	margin-top: -8px;
+}
+
+.ok-img {
+	max-width: 15px !important;
+    width: 15px;
+	max-height: 15px !important;
+    height: 15px;
+    position: relative;
+    top: -3px;
+    left: 20px;
+}
+
 .kreis {
 	--diameter: 44px;
 	width: var(--diameter);
@@ -546,7 +567,6 @@ div.herz:after {
 	justify-content: right;
 	align-items: right;
 }
-
 
 .center-item {
 	display: flex;
