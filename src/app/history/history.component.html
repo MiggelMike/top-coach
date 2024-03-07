@@ -8,11 +8,11 @@
     </div>
 </div>
 
-<div cdkDropListGroup class="column-center pad-left-5 pad-right-5 pad-bottom-5"  [ngClass]="{'invisible': HistorySettingsVisible === false}">
+<div cdkDropListGroup class="column-center pad-left-5 pad-right-5 pad-bottom-5"  [ngClass]="{'invisible': HistorySettingsVisible === false}" style="height: auto;">
     <div cdkDrag id="chart-settings" class="cc-overlay" matTooltip="Drag me" [matTooltipPosition]="'above'!">
         <div class="row-center-gap-10">
             <div class="column-center">                
-                <a [ngClass]="['link-button-font', 'HG-01', 'font-14-data']" mat-flat-button (click)="CloseChartSettings()">Close history settings</a>
+                <a [ngClass]="['link-button-font', 'HG-01', 'font-14-data']" mat-flat-button (click)="CloseHistorySettings()">Close history settings</a>
             </div>
         </div>
 
@@ -47,7 +47,7 @@
             </mat-radio-group>
         </div>
 
-        <div class="column-center" [ngClass]="{'invisible': ChartSettingsVisible === false}">
+        <div *ngIf="ChartSettingsVisible === true" class="column-center">
             <div class="row-center-gap-10">
                 <mat-radio-group #ChartType class="tp-radio-group" [(ngModel)]="aktuellerDiaTyp"
                     (change)="ChartChanged($event)">

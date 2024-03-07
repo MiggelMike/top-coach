@@ -220,13 +220,12 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 			this.Save();
 	}
 
-	// CloseHistorySettings() {
-	// 	this.HistorySettingsVisible = false;
-	// 	this.Save();
-	// }
+	CloseHistorySettings() {
+		this.HistorySettingsVisible = false;
+	}
 
 	get HistorySettingsText(): string {
-		if (this.ChartSettingsVisible === true)
+		if (this.HistorySettingsVisible === true)
 			return 'Close history settings';
 		return 'Open history settings';
 	}
