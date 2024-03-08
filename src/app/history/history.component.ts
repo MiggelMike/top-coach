@@ -143,6 +143,10 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 
 	}
 
+	get MediaWidth(): number {
+		return window.innerWidth;
+	}
+
 	checkAktivDia(aDiaTyp: DiaTyp): boolean{
 		return (this.aktuellerDiaTyp === aDiaTyp);
 	}

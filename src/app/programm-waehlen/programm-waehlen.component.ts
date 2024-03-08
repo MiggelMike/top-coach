@@ -17,6 +17,7 @@ import { UebungService } from '../services/uebung.service';
 import { GlobalService } from '../services/global.service';
 import { ISatzTyp, SatzTyp } from 'src/Business/Satz/Satz';
 import { MatExpansionPanel } from '@angular/material/expansion';
+import { relativeTimeThreshold } from 'moment';
 
 @Component({
     selector: "app-programm-waehlen",
@@ -279,7 +280,17 @@ export class ProgrammWaehlenComponent implements OnInit, IProgramModul, ISatzTyp
                     this.SelectWorkout(aSelectedProgram);
                 }
             });
-        }
+    }
+    
+    get programPanelHeaderHeight(): string {
+        if (window.innerWidth <= 280)
+            return '165px';
+        return '80px';
+    }
+
+    get MediaWidth(): number {
+        return window.innerWidth;
+    }
 
     EditThisWorkoutClick(aProgram: ITrainingsProgramm, $event): void {
         $event.stopPropagation();

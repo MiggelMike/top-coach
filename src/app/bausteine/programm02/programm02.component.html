@@ -2,12 +2,22 @@
     <ng-container *ngIf="SessionListe">
         
         <ng-container *ngIf="ModulTyp !== programModul.History && ModulTyp !== programModul.SelectWorkout">
-            <div class="row-start-left-gap-3 wr header">
-                <a class='link-button-font' (click)="toggleSessions()">{{ToggleButtonText}}</a>
-                <a class='link-button-font' (click)="AddSession()">Add Session</a>
-                <a class='link-button-font' (click)="PasteSession()">Paste Session</a>
-                <a class='link-button-font' (click)="SaveChanges()">Save</a>
-                <a class='link-button-font' (click)="CancelChanges()">Cancel</a>
+            <div class="row-start-left-gap-3 wrap" [ngClass]="{'header-schmal': MediaWidth <= 280, 'header-breit': MediaWidth > 280}">
+                <div class="colum-center">
+                    <a class='link-button-font' (click)="toggleSessions()">{{ToggleButtonText}}</a>
+                </div>
+                <div class="colum-center">
+                    <a class='link-button-font' (click)="AddSession()">Add Session</a>
+                </div>
+                <div class="colum-center">
+                    <a class='link-button-font' (click)="PasteSession()">Paste Session</a>
+                </div>
+                <div class="colum-center">
+                    <a class='link-button-font' (click)="SaveChanges()">Save</a>
+                </div>
+                <div class="colum-center">
+                    <a class='link-button-font' (click)="CancelChanges()">Cancel</a>
+                </div>
             </div>
         </ng-container>
                 

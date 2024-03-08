@@ -1,14 +1,30 @@
-#main-panel {
-    top: 100px !important;
-    position: relative;
-}
-
 mat-expansion-panel-header:hover {
-    background-color: transparent;
+  background-color: transparent;
 }
 
 mat-panel-title,
 mat-panel-description,
+
 span {
   display: block;
+}
+
+.main-panel {
+  position: relative;
+}
+
+.main-panel-breit {
+  @extend .main-panel; 
+  top: 80px !important;
+}
+
+.main-panel-mittel {
+  @extend .main-panel; 
+  top: 115px !important;
+}
+
+
+.main-panel-schmal {
+  @extend .main-panel; 
+  top: 153px !important;
 }

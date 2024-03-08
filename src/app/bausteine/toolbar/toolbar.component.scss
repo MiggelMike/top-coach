@@ -1,4 +1,9 @@
-// #tool-bar {
-//     top: 0;
-//     // [ngClass]="['link-button-font', 'HG-01']"
-// }
+#toolbar-Panel {
+	height: auto;
+}
+
+@media screen and (max-device-width: 280) {
+	#toolbar-Panel {
+		height: 200px;
+	}
+}

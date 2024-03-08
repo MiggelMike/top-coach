@@ -42,7 +42,7 @@
                                     [disabled]="checkingSets"
                                     (closed)="PanelUebungClosed(SessUeb)" 
                                     (opened)="PanelUebungOpened(i,SessUeb)">
-                                    <mat-expansion-panel-header class="disable_ripple width-280"  [collapsedHeight]="'auto'" [expandedHeight]="'auto'"[matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag" >
+                                    <mat-expansion-panel-header class="disable_ripple width-280 pad-left-5"  [collapsedHeight]="'auto'" [expandedHeight]="'auto'"[matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag" >
                                         <div fxLayout="row wrap" fxLayoutGap="2px" fxLayout.lt-sm="row wrap" fxFlex="auto">
                                             <div layout-align="start center" fxFlex="0 0 35%">
                                                 <span class="tc-font-size-smaller font-bold">#{{i+1}} {{SessUeb.Name}}</span>

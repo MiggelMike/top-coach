@@ -1,5 +1,6 @@
 import { Router } from '@angular/router';
 import { Component, OnInit, Input } from '@angular/core';
+import { GlobalService } from 'src/app/services/global.service';
 
 interface INavCheck {
     (aNavPath: string, aPara?:any): void;
@@ -40,7 +41,7 @@ export class ToolbarComponent implements OnInit, IActiveItem {
     get getActiveItem():ActiveItem {
         return ToolbarComponent.activeItem;
     }
-    
+
     //#region Home
     NavHome() {
         ToolbarComponent.StaticNavHome(this.router);

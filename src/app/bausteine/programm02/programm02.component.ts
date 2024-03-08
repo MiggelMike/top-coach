@@ -50,7 +50,10 @@ export class Programm02Component implements OnInit, IProgramModul {
 	public ClickData: Programm02Component;
 	ViewInitDone: boolean = false;
 	private SessionListObserver: Observable<Array<ISession>>;
-	
+
+	get MediaWidth():number {
+		return window.innerWidth;
+	}
 
 	drop(event: any) {
 		//const mEvent = event as CdkDragDrop<ISession[]>;

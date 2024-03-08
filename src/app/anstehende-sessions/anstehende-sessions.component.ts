@@ -9,6 +9,7 @@ import { ISessionStatus, SessionStatus } from 'src/Business/SessionDB';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Router } from '@angular/router';
 import { ISatzStatus, SatzStatus } from 'src/Business/Satz/Satz';
+import { GlobalService } from '../services/global.service';
 
 @Component({
 	selector: 'app-anstehende-sessions',
@@ -197,6 +198,19 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul,  ISat
 	get GewichtsEinheit(): string {
 		return DexieSvcService.GewichtsEinheitText;
 	}
+
+	get Toolbar_1_row(): boolean {
+		return GlobalService.calcToolbarRrows() === 1;
+	}	
+
+	get Toolbar_2_rows(): boolean {
+		return GlobalService.calcToolbarRrows() === 2;
+	}
+
+	get Toolbar_3_rows(): boolean {
+		return GlobalService.calcToolbarRrows() === 3;
+	}    
+
 
 	public AdditionalSession(): void{
 		const mNewSession: Session = new Session();

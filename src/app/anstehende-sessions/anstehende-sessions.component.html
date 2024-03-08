@@ -13,7 +13,7 @@
 </div>
 
 
-<div id="main-panel" class="column-center">
+<div class="column-center" [ngClass]="{'main-panel-schmal': Toolbar_3_rows === true, 'main-panel-mittel': Toolbar_2_rows, 'main-panel-breit': Toolbar_1_row }" >
         <ng-container  *ngIf="AktuellesProgramm">
             <div class="colum-center">
                 <ng-container *ngIf="SessionListe && (SessionListe.length > 0)">

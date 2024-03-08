@@ -1,25 +1,45 @@
 // @import '../../../styles.scss';
 
-#header {
+.header {
     padding-top: 5px !important;
     position: fixed;
-    top: -5px;
     z-index: 1000; 
     background-color: white;
     max-height: 40px;
     width: 100%;
 }
 
+.header-schmal {
+    @extend .header;
+    top: -1px;
+}
+
+.header-breit {
+    @extend .header;
+    top: -5px;
+}
+
+
 .header-line {
     max-width: 400px;
 }
 
-#main-panel {
+.main-panel {
     position: relative; 
     z-index: 1;
-    top: 15px; 
     max-width: 380px;
 } 
+
+.main-panel-schmal {
+    @extend .main-panel;
+    top: 53px;
+    width:100%;
+}
+ 
+.main-panel-breit {
+    @extend .main-panel;
+    top: 15px;
+}
 
 #workout-form-main {
 

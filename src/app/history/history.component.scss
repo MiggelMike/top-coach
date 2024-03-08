@@ -1,51 +1,57 @@
-#History-Panel{
-    width:  100% !important;
-    overflow-y: hidden !important;
-    padding-left: 5px;
-    padding-right: 5px;
-    position: relative;
-    top: 70px;
-    z-index: 1;
+.History-Panel {
+	width: 100% !important;
+	overflow-y: hidden !important;
+	padding-left: 5px;
+	padding-right: 5px;
+	position: relative;
+	z-index: 1;
+}
+
+.History-Panel-schmal {
+	@extend .History-Panel;
+	top: 109px;
+}
+
+.History-Panel-breit {
+	@extend .History-Panel;
+	top: 59px;
 }
 
 #History-Sub-Panel {
-    height: 100%;
-    width: 100%;
-    padding-left: 10px;
-    padding-right: 10px;
+	height: 100%;
+	width: 100%;
 }
 
-#historyHeader{
-    position:relative;
-    background-color: white;
+#historyHeader {
+	position: relative;
+	background-color: white;
 }
 
-#history-sessions{
-    height: 100%;
-    width: 100%;
-    overflow-y: scroll;
+#history-sessions {
+	height: 100%;
+	width: 100%;
+	overflow-y: scroll;
 }
 
 .NoSessionName {
-    color: lightgray;
+	color: lightgray;
 }
 
 #chart-settings {
-    overflow-y: hidden !important;
-    position: fixed;
-    width: 80%;
-    top: 100px;
-    z-index: 1000;
+	overflow-y: hidden !important;
+	position: fixed;
+	width: 80%;
+	top: 100px;
+	z-index: 1000;
 }
-
 
 // @media screen and (orientation: portrait){
 //     @media screen and  (max-device-height: 2560){
 //         #History-Panel {
 //             height: 2400px;
 //         }
-//     }   
-    
+//     }
+
 //     @media screen and (max-device-height: 1366px),  (max-device-height: 1368px){
 //         #History-Panel {
 //             height: 1200px;
@@ -54,20 +60,20 @@
 //         // #History-Sub-Panel {
 //         //     height: 2250px;
 //         // }
-//     }   
-    
+//     }
+
 //     @media screen and (max-device-height: 1180px){
 //         #History-Panel {
 //             height: 1000px;
 //         }
-//     }   
+//     }
 
 //     @media screen and (max-device-height: 1138px){
 //         #History-Panel {
 //             height: 1000px;
 //         }
-//     }       
-    
+//     }
+
 //     @media screen and (max-device-height: 1024px){
 //         #History-Panel{
 //             height: 900px;
@@ -84,7 +90,7 @@
 //         #History-Panel{
 //             height: 600px;
 //         }
-//     }    
+//     }
 //     @media screen and (max-device-height: 720px){
 //         #History-Panel{
 //             height: 600x;
@@ -94,67 +100,67 @@
 //         #History-Panel{
 //             height: 500x;
 //         }
-//     }    
-// }   
+//     }
+// }
 
 // @media screen and (orientation: landscape){
 //     @media screen and (max-device-height: 1600px){
 //         #History-Panel {
 //             height: 1450px;
 //         }
-//     }   
+//     }
 
 //     @media screen and (max-device-height: 1024px){
 //         #History-Panel {
 //             height: 930px;
 //         }
-//     }   
+//     }
 
 //     @media screen and (max-device-height: 912px){
 //         #History-Panel {
 //             height: 820px;
 //         }
-//     } 
+//     }
 
 //     @media screen and (max-device-height: 820px){
 //         #History-Panel {
 //             height: 725px;
 //         }
-//     }    
+//     }
 
 //     @media screen and (max-device-height: 800px){
 //         #History-Panel {
 //             height: 700px;
 //         }
-//     }     
-    
+//     }
+
 //     @media screen and (max-device-height: 768px){
 //         #History-Panel {
 //             height: 675px;
 //         }
-//     } 
+//     }
 
 //     @media screen and (max-device-height: 712px){
 //         #History-Panel {
 //             height: 620px;
 //         }
-//     }     
-    
+//     }
+
 //     @media screen and (max-device-height: 600px){
 //         #History-Panel {
 //             height: 500px;
 //         }
-//     } 
+//     }
 
 //     @media screen and (max-device-height: 412px){
 //         #History-Panel {
 //             height: 315px;
 //         }
-//     }    
+//     }
 
 //     @media screen and (max-device-height: 360px){
 //         #History-Panel {
 //             height: 270px;
 //         }
-//     }    
+//     }
 // }

@@ -1,7 +1,3 @@
-#main-panel {
-    top: 120px !important;
-    position: relative;
-}
 
 .row-height {
     height: 38px;
@@ -11,4 +7,23 @@ mat-panel-title,
 mat-panel-description,
 span {
   display: block;
+}
+
+.main-panel {
+  position: relative;
+}
+
+.main-panel-breit {
+  @extend .main-panel; 
+  top: 102px !important;
+}
+
+.main-panel-mittel {
+  @extend .main-panel; 
+  top: 139px !important;
+}
+
+.main-panel-schmal {
+  @extend .main-panel; 
+  top: 175px !important;
 }

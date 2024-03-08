@@ -9,14 +9,14 @@
         </div>
     </div>
 </div>
-<div id="main-panel" class="column-center">
+<div [ngClass]="{'main-panel-schmal': MediaWidth <= 280, 'main-panel-breit': MediaWidth > 280}" class="column-center">
     <ng-container *ngIf="ViewInitDone === true">
         <ng-container *ngFor="let programm of ProgrammListe">
             <div class="colum-center">
                 <mat-accordion #accordion="matAccordion" multi="true">
                     <mat-expansion-panel #panProgramm='matExpansionPanel' [expanded]="false" class="HG-01"
                         (opened)="panelOpened(programm)" (closed)="panelClosed(programm)">
-                        <mat-expansion-panel-header [collapsedHeight]="'90px'" [expandedHeight]="'90px'"
+                        <mat-expansion-panel-header [collapsedHeight]="programPanelHeaderHeight" [expandedHeight]="programPanelHeaderHeight"
                             class="disable_ripple" (click)="$event.stopPropagation()">
                             <mat-panel-title>
                                 <div class="row-start-left-gap-3 wrap">

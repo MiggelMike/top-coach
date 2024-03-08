@@ -64,6 +64,10 @@ export class GlobalService {
     public Observers: Array<any> = new Array<any>();
     public Comp03PanelUebungObserver: MyObserver = null;
     public DatabaseName: string = 'ConceptCoach';
+    public static MediaWidth: number = window.innerWidth;
+    public static MediaHeight: number = window.innerHeight;
+    public static Toolbar_2_rows_width: number = 477;
+    public static Toolbar_3_rows_width: number = 318;
     
     private readonly cAktuellesTrainingsProgramm: string = 'AktuellesTrainingsProgramm';
     private readonly cTrainingsHistorie: string = 'TrainingsHistorie';
@@ -72,6 +76,27 @@ export class GlobalService {
         public fDbModule: DexieSvcService) {}
 
    
+        // if (orientation === "landscape-primary") {
+        //     console.log("That looks good.");
+        //   } else if (orientation === "landscape-secondary") {
+        //     console.log("Mmmh... the screen is upside down!");
+        //   } else if (orientation === "portrait-secondary" || orientation === "portrait-primary") {
+        //     console.log("Mmmh... you should rotate your device to landscape");
+        //   } else if (orientation === undefined) {
+        //     console.log("The orientation API isn't supported in this browser :(");
+        //   }
+    
+    static calcToolbarRrows(): number {
+        if (window.innerWidth <= GlobalService.Toolbar_3_rows_width)
+            return 3;
+        if (window.innerWidth <= GlobalService.Toolbar_2_rows_width)
+            return 2;
+        return 1;
+    }
+    
+
+        
+    
     Init(): void {
         this.Sportler = new Sportler();
       //  this.StandardVorlagen = this.aTrainingServiceModule.trainingsProgrammSvc.ErzeugeStandardVorlagen();

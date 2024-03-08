@@ -50,6 +50,9 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
         this.ModulTyp = DexieSvcService.ModulTyp;
     }
 
+    get MediaWidth(): number{
+        return window.innerWidth;
+    }
     
     public back() {
 		if (TrainingsProgramm.StaticIsEqual(this.programm,this.cmpProgramm) === true) this.leave();
