@@ -10,7 +10,7 @@
                     <span>{{session.Name}}</span>
                 </div>
             </ng-container> -->
-            <div class="colum-center width-280" [ngClass]="{'header-programm20': ModulTyp === programModul.RunningSession, 'header-programm65': ModulTyp === programModul.HistoryView}"  >
+            <div class="colum-center width-280" [ngClass]="{'header-RunningSession': ModulTyp === programModul.RunningSession, 'header-HistoryView': ModulTyp === programModul.HistoryView}"  >
                 <ng-container *ngIf="ModulTyp === programModul.HistoryView">                    
                     <div class="row-start-left-gap-3">
                         <div class="column-start-left">

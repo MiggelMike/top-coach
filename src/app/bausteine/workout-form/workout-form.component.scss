@@ -1,3 +1,5 @@
+// @import '../../../styles.scss';
+
 #header {
     padding-top: 5px !important;
     position: fixed;
@@ -8,11 +10,15 @@
     width: 100%;
 }
 
+.header-line {
+    max-width: 400px;
+}
+
 #main-panel {
     position: relative; 
     z-index: 1;
     top: 15px; 
-    // width: 100%;
+    max-width: 380px;
 } 
 
 #workout-form-main {
