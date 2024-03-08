@@ -26,7 +26,7 @@
                     <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DoStatsFn()">Info</a>
                 </ng-container> -->
                 
-                <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
+                <a class="link-button-font HG-01" [ngClass]="{'toggle-sessions-HistoryView':  ModulTyp === programModul.HistoryView}" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
             </div> 
 
 
