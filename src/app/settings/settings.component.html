@@ -2,7 +2,7 @@
         <app-toolbar></app-toolbar>
 </div>    
 
-<div id="main-panel" class="column-center" >
+<div [ngClass]="{'main-panel-schmal': Toolbar_3_rows === true, 'main-panel-mittel': Toolbar_2_rows, 'main-panel-breit': Toolbar_1_row }" class="column-center">        
     <!-- <div class="row-center">
         <h4>Settings and core data</h4>
     </div> -->

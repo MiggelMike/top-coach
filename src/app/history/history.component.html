@@ -67,7 +67,7 @@
     </div> 
 </div>
 
-<div [ngClass]="{'History-Panel-schmal': MediaWidth <= 280, 'History-Panel-breit': MediaWidth > 280}" >
+<div [ngClass]="{'History-Panel-schmal': Toolbar_3_rows === true, 'History-Panel-mittel': Toolbar_2_rows, 'History-Panel-breit': Toolbar_1_row }" >    
     <div id="History-Sub-Panel">
         <div id='history-sessions'>
             <ng-container *ngIf="(Auswahl === 0); then Sessions; else Charts"></ng-container>  

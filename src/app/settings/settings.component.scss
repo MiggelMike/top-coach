@@ -14,8 +14,23 @@
     width:100%;
 }
 
-#main-panel {
+.main-panel {
     top:30px;
     position: relative; 
     z-index: 1;
+}
+
+.main-panel-schmal {
+    @extend .main-panel;
+    top:126px;
+}
+
+.main-panel-mittel {
+    @extend .main-panel;
+    top:90px;
+}
+
+.main-panel-breit {
+    @extend .main-panel;
+    top:57px;
 }

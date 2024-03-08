@@ -288,9 +288,19 @@ export class ProgrammWaehlenComponent implements OnInit, IProgramModul, ISatzTyp
         return '80px';
     }
 
-    get MediaWidth(): number {
-        return window.innerWidth;
-    }
+
+    get Toolbar_1_row(): boolean {
+		return GlobalService.calcToolbarRrows() === 1;
+	}	
+
+	get Toolbar_2_rows(): boolean {
+		return GlobalService.calcToolbarRrows() === 2;
+	}
+
+	get Toolbar_3_rows(): boolean {
+		return GlobalService.calcToolbarRrows() === 3;
+	}    
+
 
     EditThisWorkoutClick(aProgram: ITrainingsProgramm, $event): void {
         $event.stopPropagation();

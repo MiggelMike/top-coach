@@ -18,6 +18,7 @@ import { Router } from '@angular/router';
 import { MatRadioGroup } from '@angular/material/radio';
 import {ChangeDetectionStrategy } from '@angular/core';
 import { DiaTyp, IDiaTyp } from 'src/Business/Coach/Coach';
+import { GlobalService } from '../services/global.service';
 // import {  MatExpansionPanelHeader, MatExpansionPanel } from '@angular/material/expansion';
 // import { Session } from 'inspector';
 var cloneDeep = require('lodash.clonedeep');
@@ -143,9 +144,18 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 
 	}
 
-	get MediaWidth(): number {
-		return window.innerWidth;
+    get Toolbar_1_row(): boolean {
+		return GlobalService.calcToolbarRrows() === 1;
+	}	
+
+	get Toolbar_2_rows(): boolean {
+		return GlobalService.calcToolbarRrows() === 2;
 	}
+
+	get Toolbar_3_rows(): boolean {
+		return GlobalService.calcToolbarRrows() === 3;
+	}    
+
 
 	checkAktivDia(aDiaTyp: DiaTyp): boolean{
 		return (this.aktuellerDiaTyp === aDiaTyp);

@@ -12,6 +12,12 @@
 	top: 109px;
 }
 
+.History-Panel-mittel {
+	@extend .History-Panel;
+	top: 97px;
+}
+
+
 .History-Panel-breit {
 	@extend .History-Panel;
 	top: 59px;

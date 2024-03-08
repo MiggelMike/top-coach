@@ -9,7 +9,7 @@
         </div>
     </div>
 </div>
-<div [ngClass]="{'main-panel-schmal': MediaWidth <= 280, 'main-panel-breit': MediaWidth > 280}" class="column-center">
+<div [ngClass]="{'main-panel-schmal': Toolbar_3_rows === true, 'main-panel-mittel': Toolbar_2_rows === true, 'main-panel-breit': Toolbar_1_row === true }" class="column-center">
     <ng-container *ngIf="ViewInitDone === true">
         <ng-container *ngFor="let programm of ProgrammListe">
             <div class="colum-center">
