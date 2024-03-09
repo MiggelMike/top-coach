@@ -42,6 +42,7 @@ export class EditExerciseComponent implements OnInit {
 		const mNavigation = this.router.getCurrentNavigation();
 		if (mNavigation) {
 			const mState = mNavigation.extras.state as { ueb: Uebung; };
+			
 			this.Uebung = mState.ueb.Copy();
 			this.CmpUebung = mState.ueb.Copy();
 		}
@@ -95,7 +96,14 @@ export class EditExerciseComponent implements OnInit {
 				const mCancelDialogData = new DialogData();
 				mCancelDialogData.textZeilen.push("Changes will be lost!");
 				mCancelDialogData.textZeilen.push("Are you shure?");
-				mCancelDialogData.OkFn = (): void => { () => this.fDialog.close(); };
+				mCancelDialogData.OkFn = (): void => {
+					const mIndex = this.UebungEditData.fUebungListe.indexOf(this.Uebung);
+					
+					if (mIndex > -1) 
+						this.UebungEditData.fUebungListe[mIndex] = this.CmpUebung;
+						
+					this.fDialog.close();
+				};
 				this.fDialogService.JaNein(mCancelDialogData);
 			}
 

@@ -6,6 +6,7 @@ import { MuscleGroupKategorie02 } from '../MuscleGroup/MuscleGroup';
 import { VorgabeWeightLimit } from '../Progress/Progress';
 import { Satz, SatzTyp, LiftTyp, SatzPausen, SatzStatus } from './../Satz/Satz';
 import { formatNumber } from '@angular/common';
+import { Console } from 'console';
 
 var cloneDeep = require('lodash.clonedeep');
 var isEqual = require('lodash.isEqual')
@@ -919,13 +920,14 @@ export class Uebung  {
         return this.ArbeitsSatzListe[aSatzIndex].WdhBisVorgabe;
     }
 
-    public Copy(aFailDatum: Date = cMinDatum): Uebung {
+    public Copy(): Uebung {
         const mTmpSatzListe: Array<Satz> = [];
-        if(this.SatzListe !== undefined)
+
+        if (this.SatzListe !== undefined)
             this.SatzListe.forEach((sz) => mTmpSatzListe.push(sz.Copy()));
+        
         const mUebung: Uebung = cloneDeep(this);
         mUebung.SatzListe = mTmpSatzListe;
-        mUebung.FailDatum = aFailDatum;
         return mUebung;
 
     }
@@ -984,6 +986,16 @@ export class Uebung  {
     }
 
     public isEqual(aOtherExercise: Uebung): Boolean {
+        var keys = Object.keys(this.UebungDB);
+
+        for (var i = 0; i < keys.length; i++) {
+            var val1 = this[keys[i]];
+            var val2 = aOtherExercise.UebungDB[keys[i]];
+            if (val1 !== val2)
+                console.log(keys[i]);
+        }
+
+
         return isEqual(this,aOtherExercise);
     }
 
