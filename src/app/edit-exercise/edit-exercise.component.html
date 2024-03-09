@@ -17,7 +17,7 @@
             <div  class="row-start-left">
                 <div class="colum-center">
                     <div  class="row-start-left-gap-3">
-                        <mat-label>Name</mat-label>
+                        <mat-label class="blue-bold">Name</mat-label>
                     </div>
                     <input matInput [(ngModel)]="Uebung.Name" maxlength="30" type="text">
                 </div>
@@ -27,7 +27,7 @@
                 <ng-container *ngIf="Uebung.EquipmentTyp === 'Barbell'; then Barbell else NoBarbell"></ng-container>
                 <ng-template #Barbell>
                     <div class="colum-center width-200">
-                        <mat-label>Equipment type</mat-label>
+                        <mat-label class="font-bold">Equipment type</mat-label>
                         <mat-select [(ngModel)]="Uebung.EquipmentTyp" class="input-standards">
                             <mat-option [value]=""></mat-option>
                             <mat-option *ngFor="let equip of EquipmentListe" [value]="equip"> {{ equip }}</mat-option>
@@ -35,7 +35,7 @@
                     </div>
 
                     <div class="colum-center width-200">
-                        <mat-label>Barbell</mat-label>
+                        <mat-label class="font-bold">Barbell</mat-label>
                         <mat-select [(ngModel)]="Uebung.FkHantel"  class="input-standards">
                             <mat-option [value]="0"></mat-option>
                             <mat-option *ngFor="let h of HantelListe" [value]="h.ID"> {{ h.Name }}</mat-option>
@@ -45,7 +45,7 @@
 
                 <ng-template #NoBarbell>
                     <div class="colum-center width-200">
-                        <mat-label>Equipment type</mat-label>
+                        <mat-label class="font-bold">Equipment type</mat-label>
                         <mat-select [(ngModel)]="Uebung.EquipmentTyp" class="input-standards">
                             <mat-option [value]=""></mat-option>
                             <mat-option *ngFor="let equip of EquipmentListe" [value]="equip"> {{ equip }}</mat-option>
@@ -54,31 +54,31 @@
                 </ng-template>
             </div>
 
-                <mat-label>Involved Muscle #1</mat-label>
+                <mat-label class="font-bold">Involved Muscle #1</mat-label>
                 <mat-select [(ngModel)]="Uebung.FkMuskel01"  class="input-standards">
                     <mat-option [value]="0"></mat-option>
                     <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
                 </mat-select>
             
-                <mat-label>Involved Muscle #2</mat-label>
+                <mat-label class="font-bold">Involved Muscle #2</mat-label>
                 <mat-select [(ngModel)]="Uebung.FkMuskel02" class="input-standards">
                     <mat-option [value]="0"></mat-option>
                     <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
                 </mat-select>
             
-                <mat-label>Involved Muscle #3</mat-label>
+                <mat-label class="font-bold">Involved Muscle #3</mat-label>
                 <mat-select [(ngModel)]="Uebung.FkMuskel03" class="input-standards">
                     <mat-option [value]="0"></mat-option>
                     <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
                 </mat-select>
             
-                <mat-label>Involved Muscle #4</mat-label>
+                <mat-label class="font-bold">Involved Muscle #4</mat-label>
                 <mat-select [(ngModel)]="Uebung.FkMuskel04" class="input-standards">
                     <mat-option [value]="0"></mat-option>
                     <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
                 </mat-select>
             
-                <mat-label>Involved Muscle #5</mat-label>
+                <mat-label class="font-bold">Involved Muscle #5</mat-label>
                 <mat-select [(ngModel)]="Uebung.FkMuskel05" class="input-standards">
                     <mat-option [value]="0"></mat-option>
                     <mat-option *ngFor="let mu of MuskelListe" [value]="mu.ID"> {{ mu.Name }}</mat-option>
