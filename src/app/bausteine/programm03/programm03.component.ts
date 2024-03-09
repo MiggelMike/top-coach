@@ -345,8 +345,12 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISa
 			cmpUebungSettings: mCmpUebung,
 			programm: this.programm,
 			session: this.session,
-			left: (aEvent as PointerEvent).pageX - (aEvent as PointerEvent).offsetX,
-			top: (aEvent as PointerEvent).clientY - (aEvent as PointerEvent).offsetY,
+			width: window.innerWidth - 20,
+			left: 10,
+			top: 50,
+
+			// left: (aEvent as PointerEvent).pageX - (aEvent as PointerEvent).offsetX,
+			// top: (aEvent as PointerEvent).clientY - (aEvent as PointerEvent).offsetY,
 			sofortSpeichern: this.SofortSpeichern,
 		} as ExerciseOverlayConfig;
 

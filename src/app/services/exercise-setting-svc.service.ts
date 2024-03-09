@@ -31,7 +31,7 @@ export const cExerciseOverlayData = new InjectionToken<ExerciseOverlayConfig>("E
 const DEFAULT_CONFIG: ExerciseOverlayConfig = {
 	hasBackdrop: false,
 	height: 400,
-	width: 250,
+	width: window.innerWidth - 20,
 	backdropClass: "dark-backdrop",
 	uebung: null,
 	programm: null,

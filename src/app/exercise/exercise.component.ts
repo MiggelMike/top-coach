@@ -6,6 +6,7 @@ import { Router } from "@angular/router";
 import { DialogData } from "../dialoge/hinweis/hinweis.component";
 import { Location } from '@angular/common'
 import { UebungService } from "../services/uebung.service";
+import { GlobalService } from "../services/global.service";
 
 @Component({
 	selector: "app-exercise",
@@ -31,6 +32,20 @@ export class ExerciseComponent implements OnInit {
 			this.SelectedExerciseList = mState.SelectedExerciseList;
 		}
 	}
+
+	
+    get Toolbar_1_row(): boolean {
+		return GlobalService.calcToolbarRrows() === 1;
+	}	
+
+	get Toolbar_2_rows(): boolean {
+		return GlobalService.calcToolbarRrows() === 2;
+	}
+
+	get Toolbar_3_rows(): boolean {
+		return GlobalService.calcToolbarRrows() === 3;
+	}    
+
 
 	ngOnInit(): void {}
 

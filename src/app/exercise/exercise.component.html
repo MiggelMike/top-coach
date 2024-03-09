@@ -17,15 +17,14 @@
         </div>
 
         <div class="row-center height-30"> 
-            <a class='link-button-font' mat-flat-button (click)="NewExercise()">New exercise</a>
+            <a class='link-button-font ref-button' mat-flat-button (click)="NewExercise()">New exercise</a>
         </div>
     </div>
 </div>
 
 
 
-<div id="main-panel" class="column-center">
-
+<div class="column-center" [ngClass]="{'main-panel-schmal': Toolbar_3_rows === true, 'main-panel-mittel': Toolbar_2_rows, 'main-panel-breit': Toolbar_1_row }" >        
     <ng-container *ngIf="UebungListeSortedByName">
     
         <div class="column-center">
@@ -37,12 +36,12 @@
                         </div>
                     </ng-container>
 
-                    <div id="exerciseName" class="column-center">
+                    <div class="column-center" [ngClass]="{'exerciseName-schmal': Toolbar_3_rows === true, 'exerciseName': Toolbar_3_rows === false }">
                         <a class='exercise-button' (click)="EditExercise(uebung)">{{uebung.Name}}</a>
                     </div>
 
                     <div id="deleteExerciseButton" class="column-center">
-                        <a class="ref-button"  (click)="DeleteExercise(uebung)">Delete</a>
+                        <a class="ref-button width-50"  (click)="DeleteExercise(uebung)">Delete</a>
                     </div>
                 </div>
             </ng-container>

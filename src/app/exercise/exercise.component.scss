@@ -3,16 +3,41 @@
     background-color: transparent;
 }
 
-#exerciseName {
-    width: 250px;
-    background-color: transparent;
+.exerciseName {
+     background-color: transparent;
+     width: 200px;
 }
+
+.exerciseName-schmal {
+    @extend .exerciseName;
+    width: 170px;
+}
+
+.exerciseName-mittel {
+    @extend .exerciseName;
+}
+
+
 
 .exercise-button {
 	background-color: transparent;
 }    
 
-#main-panel {
-    top: 135px !important;
+.main-panel {
     position: relative;
+}
+
+.main-panel-schmal {
+    @extend .main-panel;
+    top: 184px !important;
+}
+
+.main-panel-mittel {
+    @extend .main-panel;
+    top: 140px !important;
+}
+
+.main-panel-breit {
+    @extend .main-panel;
+    top: 109px !important;
 }
