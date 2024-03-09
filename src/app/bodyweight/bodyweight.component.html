@@ -1,7 +1,7 @@
 <!-- <app-toolbar></app-toolbar> -->
 <div class="header-box">
     <div class="row-center mg-top-5">
-        <div class="colum-center width-360">
+        <div class="colum-center width-280">
             <img src="../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/Previous.png" (click)="back()">
             <div fxLayout="row wrap" fxLayoutAlign="center center">
                 <h4>Bodyweight</h4>
@@ -14,48 +14,47 @@
     </div>
 </div>
     
-    
-<div id="main-panel" class="colum-center">
+<!-- <div class="colum-center" [ngClass]="{'main-panel-schmal': Toolbar_3_rows === true, 'main-panel-mittel': Toolbar_2_rows, 'main-panel-breit': Toolbar_1_row }" ></div>     -->
+<div class="colum-center main-panel" >
     <ng-container *ngIf="BodyweightList">
-        <div class="row-start-left-gap-2">
             <div class="column-center">
                 <ng-container *ngFor="let bw of BodyweightList, index as i">
                     <!-- Zeilen-Hintergrundfarbe -> [ngClass]="{'HG-01': i % 2 === 0}" -->
-                    <div class="row-start-left-gap-3 pad-right-5 height-80" [ngClass]="{'HG-01': i % 2 === 0}">
-                        <div class="column-center">
-                                    <mat-label>Bodyweight {{GewichtsEinheit}}</mat-label>
-                                    <input class="align-right pd-l-5 width-100" 
-                                        matInput 
-                                        mask="999.00" 
-                                        (focusout)="SetBodyweight($event, bw)" 
-                                        [ngModel]="bw.WeightTxt" 
-                                        type="text">
-                                    </div>
-                                    
-                                    <div class="column-center">
-                                        <mat-label>Choose a date</mat-label>
-                                        <input matInput 
-                                        type="text"
-                                        [ngxMatDatetimePicker]="pickerWithActions" 
-                                        [(ngModel)]="bw.Datum" 
-                                        class="width-150 align-items-right" 
-                                        disabled="false">
-                                    </div>
-                                    <ngx-mat-datetime-picker #pickerWithActions
-                                    [showSeconds]="true"
-                                    [hideTime]="false">
-                                    <ngx-mat-datepicker-actions>
-                                        <button mat-button ngxMatDatepickerCancel>Cancel</button>
-                                        <button mat-raised-button color="primary" ngxMatDatepickerApply>Apply</button>
-                                    </ngx-mat-datepicker-actions>
-                                </ngx-mat-datetime-picker>
-                                <ngx-mat-datepicker-toggle matSuffix [for]="pickerWithActions"></ngx-mat-datepicker-toggle>
-                                <a class="ref-button"  (click)="DeleteBodyweight(bw)">Delete</a>
+                    <div class="row-start-left-gap-3 height-80 width-300" [ngClass]="{'HG-01': i % 2 === 0}">
+                        <div class="column-center width-60" [ngClass]="{'body-weight-column': Toolbar_3_rows === true}">
+                            <div class="row-start-right width-100-Prozent">
+                                <mat-label [ngClass]="{'tc-font-size-smaller': Toolbar_3_rows === true}">BW {{GewichtsEinheit}}</mat-label>
                             </div>
+                            <div class="row-start-right width-100-Prozent">
+                                <input class="align-right pd-l-5 width-100-Prozent"  mask="999.00"
+                                    (focusout)="SetBodyweight($event, bw)" [ngModel]="bw.WeightTxt" type="text">
+                            </div>
+                        </div>
+                
+                        <div class="column-center width-150">
+                            <div class="row-start-right width-100-Prozent">
+                                <mat-label [ngClass]="{'tc-font-size-smaller': Toolbar_3_rows === true}">Choose a date</mat-label>
+                            </div>
+                            <div class="row-start-right width-100-Prozent">
+                                <input matInput type="text" [ngxMatDatetimePicker]="pickerWithActions" [(ngModel)]="bw.Datum"
+                                    class="width-100-Prozent align-right" [ngClass]="{'tc-font-size-smaller': Toolbar_3_rows === true}"
+                                    disabled="false">
+                            </div>
+                        </div>
                         
-                        </ng-container>
+                        <div class="column-center width-30">
+                            <ngx-mat-datetime-picker #pickerWithActions [showSeconds]="true" [hideTime]="false">
+                                <ngx-mat-datepicker-actions>
+                                    <button mat-button ngxMatDatepickerCancel>Cancel</button>
+                                    <button mat-raised-button color="primary" ngxMatDatepickerApply>Apply</button>
+                                </ngx-mat-datepicker-actions>
+                            </ngx-mat-datetime-picker>
+                            <ngx-mat-datepicker-toggle matSuffix [for]="pickerWithActions"></ngx-mat-datepicker-toggle>
+                        </div>
+                        <a class="ref-button" [ngClass]="{'tc-font-size-smaller': Toolbar_3_rows === true}" (click)="DeleteBodyweight(bw)">Delete</a>
                     </div>
-        </div>
+                </ng-container>
+            </div>
     </ng-container>
 </div>
 

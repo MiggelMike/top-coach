@@ -5,6 +5,7 @@ import { Location } from "@angular/common";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { DialogeService } from '../services/dialoge.service';
 import { GewichtsEinheit } from 'src/Business/Coach/Coach';
+import { GlobalService } from '../services/global.service';
 
 @Component({
 	selector: 'app-bodyweight',
@@ -30,7 +31,20 @@ export class BodyweightComponent implements OnInit {
         this.BodyweightList.push(aBodyWeight.Copy());
       })
     });
-  }
+	}
+	
+	get Toolbar_1_row(): boolean {
+		return GlobalService.calcToolbarRrows() === 1;
+	}	
+
+	get Toolbar_2_rows(): boolean {
+		return GlobalService.calcToolbarRrows() === 2;
+	}
+
+	get Toolbar_3_rows(): boolean {
+		return GlobalService.calcToolbarRrows() === 3;
+	}    
+
 
 SetDatum(aBodyWeight: BodyWeight, aEvent: any) {
 	aBodyWeight.Datum = aEvent.target.value;
