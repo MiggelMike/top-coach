@@ -535,6 +535,16 @@ div.herz:after {
 	font-size: 14px;
 }
 
+.font-20-data {
+	@extend .blue-bold;
+	font-size: 20px;
+}
+
+.font-35-data {
+	@extend .blue-bold;
+	font-size: 35px;
+}
+
 .tc-font-size-small {
 	font-size: 14px;
 }

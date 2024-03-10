@@ -274,7 +274,7 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
 
         const mChecked = aEvent.checked;
         if (DexieSvcService.ModulTyp === ProgramModulTyp.History || DexieSvcService.ModulTyp === ProgramModulTyp.HistoryView)
-        return;
+            return;
     
         if (this.fStoppUhrService.StoppuhrComponent) {
             this.fStoppUhrService.StoppuhrComponent.close();

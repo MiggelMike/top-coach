@@ -211,20 +211,20 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISa
 		this.accCheckUebungPanels(aUebung);
 	}
 
-	private async LadeUebungsSaetze(aUebung: Uebung, aSatzParaDB?: SatzParaDB): Promise<Array<Satz>> {
-		return await this.fDbModule.LadeUebungsSaetze(aUebung.ID, aSatzParaDB).then(async (aSatzliste) => {
-			if (aSatzliste.length > 0) {
-				// aUebung.SatzListe = aSatzliste;
-				aSatzliste.forEach((aSatz) => {
-					if (aUebung.SatzListe.find((aCmpSatz) => aSatz.ID === aCmpSatz.ID) === undefined)
-						aUebung.SatzListe.push(aSatz);
-				});
-				return aUebung.SatzListe;
-				// return await this.LadeUebungsSaetze(aUebung, mSatzParaDB);
-			}
-			return [];
-		});
-	}
+	// private async LadeUebungsSaetze(aUebung: Uebung, aSatzParaDB?: SatzParaDB): Promise<Array<Satz>> {
+	// 	return await this.fDbModule.LadeUebungsSaetze(aUebung.ID, aSatzParaDB).then(async (aSatzliste) => {
+	// 		if (aSatzliste.length > 0) {
+	// 			// aUebung.SatzListe = aSatzliste;
+	// 			aSatzliste.forEach((aSatz) => {
+	// 				if (aUebung.SatzListe.find((aCmpSatz) => aSatz.ID === aCmpSatz.ID) === undefined)
+	// 					aUebung.SatzListe.push(aSatz);
+	// 			});
+	// 			return aUebung.SatzListe;
+	// 			// return await this.LadeUebungsSaetze(aUebung, mSatzParaDB);
+	// 		}
+	// 		return [];
+	// 	});
+	// }
 
 	async accCheckUebungPanels(aUebung?: Uebung) {
 		if (!this.panUebung) return;
