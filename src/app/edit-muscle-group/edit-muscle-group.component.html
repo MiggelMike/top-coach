@@ -1,28 +1,31 @@
-<img src="../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/Previous.png" (click)="back()">
-<div class="column-center"> 
-    <div id="EditMusclePanel"> 
-        <h4>New/edit muscle</h4>
-        <div class="row-start-left-gap-3"> 
-            <mat-label>Name</mat-label>
-            <input 
-                #Name
-                matInput 
-                [(ngModel)]="Muskelgruppe.Name"
-                maxlength="30"
-                type="text"
-            >
+<div class="column-center">
+    <div class="header-box width-280  pad-5">
+        <div class="row-start-left mg-bottom-10 mg-top-5">
+            <img src="../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/Previous.png"
+                (click)="back()">
         </div>
 
-        <div class="column-center"> 
-        <md-input-container class="width-100-Prozent mg-top-5">
-            <textarea id="EditMuscleDescripton" [(ngModel)]="Muskelgruppe.Bemerkung" mdInput placeholder="Notes" rows="10" maxlength="1000" class="input-standards width-100-Prozent height-200"  ></textarea>
-        </md-input-container>
+        <div class="row-start-left height-30">
+            <h4>New/edit muscle</h4>
+        </div>
+
+        <div class="row-start-left-gap-3">
+            <mat-label>Name</mat-label>
+            <input #Name matInput [(ngModel)]="Muskelgruppe.Name" maxlength="30" type="text">
+        </div>
+    </div>
+    
+    <div class="main-panel colum-center width-280 pad-5">
+        <div class="row-start-left">
+            <md-input-container class="width-100-Prozent mg-top-5">
+                <textarea id="EditMuscleDescripton" [(ngModel)]="Muskelgruppe.Bemerkung" mdInput placeholder="Notes"
+                    rows="10" maxlength="1000" class="input-standards width-100-Prozent height-200"></textarea>
+            </md-input-container>
         </div>
 
         <div class="row-center-gap-10 pad-5">
             <a class='link-button-font' mat-flat-button (click)="SaveChanges()">Save</a>
             <a class='link-button-font' mat-flat-button (click)="CancelChanges()">Cancel</a>
-        </div>  
-
+        </div>
     </div>
 </div>
