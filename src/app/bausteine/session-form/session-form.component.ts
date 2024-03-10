@@ -27,7 +27,6 @@ import { BodyWeight } from 'src/Business/Bodyweight/Bodyweight';
 	styleUrls: ["./session-form.component.scss"],
 })
 export class SessionFormComponent implements OnInit, IProgramModul, ISessionStatus {
-	private worker: Worker;
 	public ready: boolean = false;
 	public Session: Session;
 	public BackButtonVisible: boolean = false;
@@ -245,10 +244,6 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 		if (this.fSessionStatsOverlayComponent) this.fSessionStatsOverlayComponent.close();
 	}
 
-	private CloseExerciseSettings(): Promise<void> {
-		this.fExerciseSettingSvcService.close();
-		return null;
-	}
 
 	async back() {
 		if (this.fExerciseSettingSvcService)

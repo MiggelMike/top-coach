@@ -363,6 +363,8 @@ export class Session implements ISession {
                 const mPtrSatz = mPtrUebung.SatzListe[index1];
                 const mPtrCmpSatz = mPtrCmpUebung.SatzListe[index1];
                 mPtrCmpSatz.BodyWeight = mPtrSatz.BodyWeight;
+                if (mPtrSatz.isEqual(mPtrCmpSatz) === false)
+                    return false;
             }
         }
 
