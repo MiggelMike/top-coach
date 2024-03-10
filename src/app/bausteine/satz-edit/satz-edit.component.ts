@@ -475,6 +475,9 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
             
     }
 
+    get timerLaeuft(): boolean {
+        return this.SatzTimerStatus === SatzStatus.Laeuft;
+    }
 
     private DoStoppUhr(aUebung: Uebung, aSatz: Satz, aRowNumber: number, aSession: ISession, aStoppUhrService: StoppuhrSvcService, aNextTimeWeight: number, aNaechsteUebungPauseSec: number, aAufwaermArbeitsSatzPauseSec: number, aHeaderText: string): void {
         const mStoppUhrOverlayConfig: StoppUhrOverlayConfig = 
@@ -563,7 +566,7 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
 
     get StartTimerText(): string{
         if (this.SatzTimerStatus === SatzStatus.Pause)
-            return 'Psd';
+            return 'Paused';
         else if (this.SatzTimerStatus === SatzStatus.Laeuft)
             return 'Stop';
         return 'Start';

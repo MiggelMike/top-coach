@@ -22,13 +22,13 @@
             <div class="row-start-right width-100-Prozent">
                 <div class="column-start-left align-right width-100-Prozent">
                         <input matInput mask="9999.00" matTooltip="Hold to open details" matTooltipPosition="above"
-                        [matTooltipDisabled]="false" class="align-right tc-font-size-smaller weight-column"
-                        [ngModel]="satz.GewichtAusgefuehrtText" (ngModelChange)="CalcPlates($event)"
-                        (focusout)="SetWeightAusgefuehrt($event)" (mousedown)="MouseDown(satz,$event)"
-                        (mouseup)="MouseUp($event)" (touchstart)="MouseDown(satz,$event)" (touchend)="MouseUp($event)"
-                        [disabled]="Disabled(satz)" type="text">
-                    </div>
+                            [matTooltipDisabled]="false" class="align-right tc-font-size-smaller weight-column"
+                            [ngModel]="satz.GewichtAusgefuehrtText" (ngModelChange)="CalcPlates($event)"
+                            (focusout)="SetWeightAusgefuehrt($event)" (mousedown)="MouseDown(satz,$event)"
+                            (mouseup)="MouseUp($event)" (touchstart)="MouseDown(satz,$event)" (touchend)="MouseUp($event)"
+                            [disabled]="Disabled(satz)" type="text">
                 </div>
+            </div>
         </div>
 
         <div class="rep-column">
@@ -64,11 +64,21 @@
 
             <div class="row-start-left-gap-3">
                 <div class="column-start-left">
-                    <input matInput id="timer-input" class="align-right tc-font-size-smaller" matTooltip="Timer seconds"
-                        matTooltipPosition="above" [matTooltipDisabled]="false" mask="999999" [ngModel]="satz.TimerSeconds"
-                        [disabled]="Disabled(satz)" (click)="onSelect($event)" (focusout)="SetTimerSeconds($event)"
-                        (mousedown)="MouseDown(satz,$event)" (mouseup)="MouseUp($event)" (touchstart)="MouseDown(satz,$event)"
-                        (touchend)="MouseUp($event)" type="text">
+                    <ng-container *ngIf="timerLaeuft === true; then runningSet else notRunningSet"></ng-container>
+                    <ng-template #runningSet>
+                        <input name="runningSet" matInput id="timer-input" class="align-right tc-font-size-smaller" matTooltip="Timer seconds"
+                            matTooltipPosition="above" [matTooltipDisabled]="false" mask="999999" [ngModel]="satz.TimerSeconds"
+                            [disabled]="Disabled(satz)" (click)="onSelect($event)" (focusout)="SetTimerSeconds($event)"
+                            (mousedown)="MouseDown(satz,$event)" (mouseup)="MouseUp($event)" (touchstart)="MouseDown(satz,$event)"
+                            (touchend)="MouseUp($event)" type="text">
+                    </ng-template>
+                    <ng-template #notRunningSet>
+                        <input notRunningSet matInput id="timer-input" class="align-right tc-font-size-smaller" matTooltip="Timer seconds"
+                            matTooltipPosition="above" [matTooltipDisabled]="false" mask="999999" [ngModel]="satz.TimerSeconds"
+                            [disabled]="Disabled(satz)" (click)="onSelect($event)" (focusout)="SetTimerSeconds($event)"
+                            (mousedown)="MouseDown(satz,$event)" (mouseup)="MouseUp($event)" (touchstart)="MouseDown(satz,$event)"
+                            (touchend)="MouseUp($event)" type="text">
+                    </ng-template>
                 </div>
             </div>
         </div>
