@@ -15,6 +15,7 @@ import { ExerciseOverlayConfig, ExerciseSettingSvcService } from 'src/app/servic
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ISatzTyp, Satz, SatzTyp } from 'src/Business/Satz/Satz';
 import { DateFormatTyp } from 'src/Business/Datum';
+import { StoppuhrSvcService } from 'src/app/services/stoppuhr-svc.service';
 
 
 @Component({
@@ -86,6 +87,7 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISa
 		@Inject(LOCALE_ID) localID: string,
 		private fGlobalService: GlobalService,
 		private fDialogService: DialogeService,
+		public fStoppUhrService: StoppuhrSvcService,
 		private fExerciseSettingSvcService: ExerciseSettingSvcService,
 		private fDbModule: DexieSvcService
 	) {
@@ -168,6 +170,12 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISa
 
 	ngOnDestroy() {
 		if (this.fGlobalService.Comp03PanelUebungObserver != null) this.fGlobalService.Comp03PanelUebungObserver = null;
+                if (   (this.fStoppUhrService !== undefined)
+                    && (this.fStoppUhrService.StoppuhrComponent !== undefined)
+                    && (this.fStoppUhrService.close !== undefined)
+                ) {
+                    this.fStoppUhrService.close();
+                }
 	}
 
 	async toggleUebungen() {

@@ -10,6 +10,7 @@ import { IProgramModul, ProgramModulTyp } from "./../../app.module";
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { SatzEditComponent } from '../satz-edit/satz-edit.component';
 import { DexieSvcService } from 'src/app/services/dexie-svc.service';
+import { StoppuhrSvcService } from 'src/app/services/stoppuhr-svc.service';
 
 @Component({
     selector: "app-sess-uebung",
@@ -27,7 +28,7 @@ export class SessUebungComponent implements OnInit, ISatzTyp, IProgramModul {
     @Input() panUebung1: MatExpansionPanel;
     @Input() bearbeitbar: Boolean;
     @Input() DeletedSatzList: Array<Satz> = [];
-    // satzListe: Array<Satz> = [];
+    @Input() StoppUhrService: StoppuhrSvcService;
     @ViewChildren("AppSatzEdit") SatzEditList: QueryList<SatzEditComponent>;
     @ViewChild("ExpansionPanel") ExpansionPanel:MatExpansionPanel;
     
@@ -52,15 +53,15 @@ export class SessUebungComponent implements OnInit, ISatzTyp, IProgramModul {
     }
     
     ngOnDestroy() {
-        this.SatzEditList.forEach(
-            (sz) => {
-                if (   (sz.fStoppUhrService !== undefined)
-                    && (sz.fStoppUhrService.StoppuhrComponent !== undefined)
-                    && (sz.fStoppUhrService.close !== undefined)
-                ) {
-                    sz.fStoppUhrService.close();
-                }
-            });
+        // this.SatzEditList.forEach(
+        //     (sz) => {
+        //         if (   (sz.StoppUhrService !== undefined)
+        //             && (sz.StoppUhrService.StoppuhrComponent !== undefined)
+        //             && (sz.StoppUhrService.close !== undefined)
+        //         ) {
+        //             sz.StoppUhrService.close();
+        //         }
+        //     });
     }
 
 

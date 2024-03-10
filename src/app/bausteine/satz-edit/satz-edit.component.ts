@@ -32,6 +32,7 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
     @Input() rowNum: number;
     @Input() SatzTyp:SatzTyp;
     @Input() DeletedSatzList: Array<Satz> = [];
+    @Input() StoppUhrService: StoppuhrSvcService;
 
     get programModulArt(): ProgramModulTyp {
         return DexieSvcService.ModulTyp;
@@ -51,7 +52,6 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
 
     constructor(
         private fDialogService: DialogeService,
-        public fStoppUhrService: StoppuhrSvcService,
         private fGlobalService: GlobalService,
         private fPlateCalcSvcService: PlateCalcSvcService,
         private fDbModule: DexieSvcService
@@ -200,7 +200,7 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
             this.fDialogService,
             this.AppData.GewichtsEinheitText,
             this.DoStoppUhr,
-            this.fStoppUhrService,
+            this.StoppUhrService,
             this.rowNum,
             false // Kein AMRAP 
         ); 
@@ -276,8 +276,8 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
         if (DexieSvcService.ModulTyp === ProgramModulTyp.History || DexieSvcService.ModulTyp === ProgramModulTyp.HistoryView)
             return;
     
-        if (this.fStoppUhrService.StoppuhrComponent) {
-            this.fStoppUhrService.StoppuhrComponent.close();
+        if (this.StoppUhrService.StoppuhrComponent) {
+            this.StoppUhrService.StoppuhrComponent.close();
             this.StoppuhrComponent = undefined;
         }
             
@@ -299,7 +299,7 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
                 this.fDialogService,
                 this.AppData.GewichtsEinheitText,
                 this.DoStoppUhr,
-                this.fStoppUhrService,
+                this.StoppUhrService,
                 this.rowNum,
                 true, // AMRAP
                 mChecked,
@@ -317,7 +317,7 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
             mClickSatzFertigPara.dialogService = this.fDialogService;
             mClickSatzFertigPara.gewichtEinheitsText = this.AppData.GewichtsEinheitText;
             mClickSatzFertigPara.stoppUhrFn = this.DoStoppUhr;
-            mClickSatzFertigPara.stoppUhrService = this.fStoppUhrService;
+            mClickSatzFertigPara.stoppUhrService = this.StoppUhrService;
             mClickSatzFertigPara.rowNumber = this.rowNum;
             this.DoClickSatzFertig(mClickSatzFertigPara);
         }
