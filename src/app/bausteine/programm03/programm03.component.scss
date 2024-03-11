@@ -59,6 +59,21 @@
     margin-left:-5px;
 }
 
+#UebungName {
+    // background-color: lightblue;
+    background-image: linear-gradient(lightblue,white,lightblue);
+    
+
+    border-radius: 5px; 
+    border-width: 1px;
+    font-size: 14px;
+    color: blue;
+    width: 100%;
+    height: 25px;
+    padding-top: 4px;
+    padding-left: 4px;
+}
+
 
 
 mat-expansion-panel {

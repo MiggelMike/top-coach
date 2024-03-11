@@ -1,8 +1,6 @@
 <ng-container *ngIf="session" >
-    <!-- <div [ngClass]="{'width-450': programmModulArt  === programModul.SelectWorkout}" > -->
         <mat-accordion multi="true">
             <mat-expansion-panel #ExpansionPanel [expanded]="true">
-
                 <mat-expansion-panel-header  class="disable_ripple">
                     <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutGap="2px" fxLayoutAlign="flex-start center"  >
                         <span class="Satz-Typ-Text">{{satzArt}}</span>
@@ -45,5 +43,4 @@
                 </ng-template>
             </mat-expansion-panel>
         </mat-accordion>
-    <!-- </div> -->
 </ng-container>

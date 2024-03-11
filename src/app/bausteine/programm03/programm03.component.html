@@ -1,15 +1,7 @@
 <ng-container *ngIf="session">
     <div class="colum-center width-100-Prozent">        
         <div id="programm03">
-            
-            <!-- <ng-container *ngIf='ModulTyp === programModul.HistoryView'>  
-                <div class="column-start-left">
-                    <span>{{ProgrammName}}</span>
-                </div>
-                <div class="column-start-left">
-                    <span>{{session.Name}}</span>
-                </div>
-            </ng-container> -->
+           
             <div class="colum-center width-280" [ngClass]="{'header-RunningSession': ModulTyp === programModul.RunningSession, 'header-HistoryView': ModulTyp === programModul.HistoryView}"  >
                 <ng-container *ngIf="ModulTyp === programModul.HistoryView">                    
                     <div class="row-start-left-gap-3">
@@ -22,15 +14,9 @@
                     </div>
                 </ng-container>  
                         
-                <!-- <ng-container *ngIf="StatsButtonVisible">
-                    <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DoStatsFn()">Info</a>
-                </ng-container> -->
-                
                 <a class="link-button-font HG-01" [ngClass]="{'toggle-sessions-HistoryView':  ModulTyp === programModul.HistoryView}" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
             </div> 
 
-
-            <!-- <div class="colum-center width-100-Prozent programm40Body"  >         -->
             <div class="colum-center width-100-Prozent" [ngClass]="{'Running-Session-Body': ModulTyp === programModul.RunningSession, 'History-Session-Body': ModulTyp === programModul.HistoryView}" >        
                 <div cdkDropList (cdkDropListDropped)="drop($event)">
                     <ng-container *ngFor="let SessUeb of  UebungsListe, index as i; let isOdd=odd">
@@ -45,7 +31,7 @@
                                     <mat-expansion-panel-header class="disable_ripple width-280 pad-left-5"  [collapsedHeight]="'auto'" [expandedHeight]="'auto'"[matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag" >
                                         <div fxLayout="row wrap" fxLayoutGap="2px" fxLayout.lt-sm="row wrap" fxFlex="auto">
                                             <div layout-align="start center" fxFlex="0 0 35%">
-                                                <span class="tc-font-size-smaller font-bold">#{{i+1}} {{SessUeb.Name}}</span>
+                                                <div id="UebungName" class="colum-center">#{{i+1}} {{SessUeb.Name}}</div>
                                             </div>
                                             
                                             <div class="row-start-left">
