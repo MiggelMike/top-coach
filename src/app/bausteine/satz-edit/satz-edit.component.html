@@ -6,10 +6,10 @@
         </div>
     </div>
     <!-- 2. Zeile -->
-    <div class="row-start-left-gap-3 height-60 mg-bottom-5" [ngClass]="{'height-80': isVisible() === false}">
+    <div class="row-start-left-gap-3 mg-bottom-5  height-80">
 
-        <div class="weight-column">
-            <div class="row-start-right width-100-Prozent">
+        <div class="weight-column height-100-Prozent">
+            <div class="row-start-right width-100-Prozent height-25">
                 <div class="column align-right width-100-Prozent">Weight</div>
             </div>
 
@@ -31,33 +31,33 @@
             </div>
         </div>
 
-        <div class="rep-column">
-            <div class="row-start-right  width-100-Prozent">
+        <div class="rep-column height-100-Prozent">
+            <div class="row-start-right height-25  width-100-Prozent">
                 <div class="column-start-left rep-column-titel align-right width-100-Prozent" matTooltip="Reps">RP.</div>
             </div>
         
             <div ngif="isVisible() === true">
-                <div class="row-start-right height-25">
+                <div class="row-start-right">
                     <div class="height-25 align-right label  width-100-Prozent">{{satz.WdhVonVorgabe}}</div>
                 </div>
             </div>
         
             <div class="row-start-right width-100-Prozent">
-                <div class="column-start-left align-right width-100-Prozent">
+                <!-- <div class="column-start-left align-right width-100-Prozent"> -->
                     <input matInput class="align-right tc-font-size-smaller width-100-Prozent" matTooltip="Hold to open details"
                         matTooltipPosition="above" [matTooltipDisabled]="false" mask="9999" [ngModel]="satz.WdhAusgefuehrtText"
                         [disabled]="Disabled(satz)" (click)="onSelect($event)" (focusout)="SetWdhAusgefuehrt($event)"
                         (mousedown)="MouseDown(satz,$event)" (mouseup)="MouseUp($event)" (touchstart)="MouseDown(satz,$event)"
                         (touchend)="MouseUp($event)" type="text">
-                </div>                    
+                <!-- </div>                     -->
             </div>
         </div>
 
-        <div id="timer-column">
-            <div class="row-start-right">Timer</div>
+        <div id="timer-column height-100-Prozent">
+            <div class="row-start-right pad-top-5 height-25">Timer</div>
             <div class="row-start-left-gap-3 height-25">
                 <div id="timer-column-button">
-                    <a class="height-25" mat-button matTooltip="Start timer" matTooltipPosition="above" (click)="StartTimer(satz)"
+                    <a mat-button matTooltip="Start timer" matTooltipPosition="above" (click)="StartTimer(satz)"
                         [disabled]="TimerDisabled(satz)">{{StartTimerText}}</a>
                 </div>
             </div>
@@ -82,9 +82,9 @@
                 </div>
             </div>
         </div>
-    </div>
+    <!-- </div> -->
     <!-- 3. Zeile -->
-    <div class="row-start-left-gap-3 height-60">
+    <!-- <div class="row-start-left-gap-3 height-60"> -->
         <!-- AMRAP  -->
         <span>AMRAP</span> <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP"></mat-checkbox>
         <span>OK</span> <mat-checkbox [(ngModel)]="SatzFertig"(change)="onClickSatzFertig(satz, $event)"></mat-checkbox>
