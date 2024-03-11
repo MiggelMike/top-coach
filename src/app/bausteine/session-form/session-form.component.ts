@@ -439,50 +439,51 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 		this.Session.StarteDauerTimer();
 	}
 
-	private DoAfterDone(aSessionForm: SessionFormComponent) {
-		const mIndex = DexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
-		if (mIndex > -1) DexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
+	// private DoAfterDone(aSessionForm: SessionFormComponent) {
+	// 	const mIndex = DexieSvcService.AktuellesProgramm.SessionListe.findIndex((s) => s.ID === aSessionForm.Session.ID);
+	// 	if (mIndex > -1) DexieSvcService.AktuellesProgramm.SessionListe.splice(mIndex, 1);
 		
-		DexieSvcService.AktuellesProgramm.SessionListe = this.Programm.SessionListe;
-		DexieSvcService.AktuellesProgramm.NummeriereSessions();
-		this.SaveChangesPrim().then(() => {
-			this.fDbModule.LadeAktuellesProgramm()
-				.then(async (aProgramm) => {
-					DexieSvcService.AktuellesProgramm = aProgramm;
-					DexieSvcService.CmpAktuellesProgramm = aProgramm;
-					const mSessionParaDB: SessionParaDB = new SessionParaDB();
-					mSessionParaDB.UebungenBeachten = true;
-					this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
-						.then((aSessionListe) => {
-							if (aSessionListe.length > 0) {
-								DexieSvcService.AktuellesProgramm.SessionListe = aSessionListe;
-								aSessionListe.forEach(async (mPtrSession) => {
-									if (mPtrSession.Kategorie02 === SessionStatus.Wartet) {
-										const mUebungParaDB = new UebungParaDB();
-										mUebungParaDB.SaetzeBeachten = true;
-										await this.fDbModule.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
-											(aUebungsListe) => {
-												if (aUebungsListe.length > 0)
-													mPtrSession.UebungsListe = aUebungsListe;
-											});
-									}
+	// 	DexieSvcService.AktuellesProgramm.SessionListe = this.Programm.SessionListe;
+	// 	DexieSvcService.AktuellesProgramm.NummeriereSessions();
+		
+	// 	this.SaveChangesPrim().then(() => {
+	// 		this.fDbModule.LadeAktuellesProgramm()
+	// 			.then(async (aProgramm) => {
+	// 				DexieSvcService.AktuellesProgramm = aProgramm;
+	// 				DexieSvcService.CmpAktuellesProgramm = aProgramm;
+	// 				const mSessionParaDB: SessionParaDB = new SessionParaDB();
+	// 				mSessionParaDB.UebungenBeachten = true;
+	// 				this.fDbModule.LadeUpcomingSessions(this.Programm.id, mSessionParaDB)
+	// 					.then((aSessionListe) => {
+	// 						if (aSessionListe.length > 0) {
+	// 							DexieSvcService.AktuellesProgramm.SessionListe = aSessionListe;
+	// 							aSessionListe.forEach(async (mPtrSession) => {
+	// 								if (mPtrSession.Kategorie02 === SessionStatus.Wartet) {
+	// 									const mUebungParaDB = new UebungParaDB();
+	// 									mUebungParaDB.SaetzeBeachten = true;
+	// 									await this.fDbModule.LadeSessionUebungen(mPtrSession.ID, mUebungParaDB).then(
+	// 										(aUebungsListe) => {
+	// 											if (aUebungsListe.length > 0)
+	// 												mPtrSession.UebungsListe = aUebungsListe;
+	// 										});
+	// 								}
 								
-									Session.StaticCheckMembers(mPtrSession);
-									mPtrSession.PruefeGewichtsEinheit(DexieSvcService.AppRec.GewichtsEinheit);
-									this.fSavingDialog.fDialog.closeAll();
-									// this.router.navigate(['/']);
-									this.leave();
-								});
-							} else {
-								this.fSavingDialog.fDialog.closeAll();
-								this.leave();
-								// this.router.navigate(['/']);
-								// this.location.back();
-							}
-						});
-				});
-		})
-	}
+	// 								Session.StaticCheckMembers(mPtrSession);
+	// 								mPtrSession.PruefeGewichtsEinheit(DexieSvcService.AppRec.GewichtsEinheit);
+	// 								this.fSavingDialog.fDialog.closeAll();
+	// 								// this.router.navigate(['/']);
+	// 								this.leave();
+	// 							});
+	// 						} else {
+	// 							this.fSavingDialog.fDialog.closeAll();
+	// 							this.leave();
+	// 							// this.router.navigate(['/']);
+	// 							// this.location.back();
+	// 						}
+	// 					});
+	// 			});
+	// 	})
+	// }
 
 	private SaetzePruefen(aQuellSatzListe: Array<Satz>, aZielSatzListe: Array<Satz>) {
 		// Prüfe nur soviel Sätze wie in aZielSatzListe vorhanden sind 
@@ -702,7 +703,6 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 										//this.location.back();
 										// this.router.navigate(['/']);
 										this.leave();
-
 									});
 									
 							});
