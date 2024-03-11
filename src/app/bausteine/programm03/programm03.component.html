@@ -2,7 +2,9 @@
     <div class="colum-center width-100-Prozent">        
         <div id="programm03">
            
-            <div class="colum-center width-280" [ngClass]="{'header-RunningSession': ModulTyp === programModul.RunningSession, 'header-HistoryView': ModulTyp === programModul.HistoryView}"  >
+            <div 
+                 
+                 [ngClass]="{'header-RunningSession': ModulTyp === programModul.RunningSession, 'header-HistoryView': ModulTyp === programModul.HistoryView}" >
                 <ng-container *ngIf="ModulTyp === programModul.HistoryView">                    
                     <div class="row-start-left-gap-3">
                         <div class="column-start-left">

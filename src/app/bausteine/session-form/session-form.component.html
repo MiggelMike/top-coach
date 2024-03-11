@@ -84,7 +84,7 @@
             
     </div>
 
-    <div [ngClass]="{'main-panel-history': ModulTyp !== programModul.HistoryView,'main-panel-history-view': ModulTyp === programModul.HistoryView}">
+    <div [ngClass]="{'main-panel': ModulTyp !== programModul.HistoryView,'main-panel-history-view': ModulTyp === programModul.HistoryView}">
         <app-programm03 #appProgramm03
             [session]="Session" 
             [cmpSession]="cmpSession" 

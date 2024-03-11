@@ -7,17 +7,31 @@
     background-color: white;
     max-height: 80px !important;
     height: 74px !important;
+    padding-left: 25px;
 }
 
 .header-line {
    width:100%;
-   max-width:283px;
+//    max-width:283px;
 }
+
+.header-line-mittel {
+    width:100%;
+    max-width:283px;
+ }
+
+ .header-line-schmal {
+    width:100%;
+    max-width:283px;
+ }
+
+ 
 
 .main-panel {
     position: relative; 
     z-index: 1;
     top: 0px; 
+    width:100%;
 } 
 
 .main-panel-history-view {
