@@ -10,7 +10,6 @@ import { DexieSvcService, cMinDatum, ProgrammParaDB, SessionParaDB, UebungParaDB
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { cLoadingDefaultHeight, DialogData } from "src/app/dialoge/hinweis/hinweis.component";
-import { Location } from "@angular/common";
 import { GlobalService } from "src/app/services/global.service";
 import { Uebung, UebungsKategorie02 } from "src/Business/Uebung/Uebung";
 import { UebungWaehlenData } from "src/app/uebung-waehlen/uebung-waehlen.component";
@@ -261,7 +260,7 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 			const mDialogData = new DialogData();
 			mDialogData.textZeilen.push("Save changes?");
 			mDialogData.ShowAbbruch = true;
-		
+			
 			mDialogData.OkFn = () => {
 				this.SaveChangesPrim().then(() => this.leave());
 			}
@@ -272,6 +271,24 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 	
 			this.fDialogService.JaNein(mDialogData);
 		}
+
+		// if (this.fSessionStatsOverlayComponent.sess.Kategorie02 === SessionStatus.Laeuft) {
+		// 	const mIndex = DexieSvcService.AktuellesProgramm.SessionListe.findIndex((mSuchSession) => { return mSuchSession.ID === this.Session.ID });
+
+		// 	const mPausenZeit: Date = new Date();
+			
+		// 	if (mIndex > -1) {
+		// 		DexieSvcService.AktuellesProgramm.SessionListe[mIndex].AddPause(mPausenZeit);
+		// 		DexieSvcService.AktuellesProgramm.SessionListe[mIndex].CalcDauer();
+		// 	}
+
+		// 	this.fSessionStatsOverlayComponent.sess.AddPause(mPausenZeit);
+		// 	this.fSessionStatsOverlayComponent.sess.CalcDauer();
+		// 	this.Session.AddPause(mPausenZeit);
+		// 	this.Session.CalcDauer();
+		// 	this.cmpSession.AddPause(mPausenZeit);
+		// 	this.cmpSession.CalcDauer();
+		// }
 	}
 
 	AddExercise() {
@@ -326,7 +343,7 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 
 		if (this.ModulTyp === ProgramModulTyp.HistoryView)
 			ToolbarComponent.StaticNavHistory(this.router);
-		else
+		else 
 			ToolbarComponent.StaticNavHome(this.router);
 	}
 

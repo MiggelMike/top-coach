@@ -22,7 +22,7 @@ export interface ISession extends ISessionDB {
     SessionDB: SessionDB;
     StarteDauerTimer(): void;
     SetSessionFertig();
-    AddPause(): void;
+    AddPause(aDatum?: Date): void;
     CalcDauer(): void;
     CalcPause(): number;
     addUebung(aUebung: Uebung);
@@ -380,7 +380,7 @@ export class Session implements ISession {
     }
 
     public CalcDauer(): void {
-        if ((this.Kategorie02 === SessionStatus.Fertig) || (this.Kategorie02 === SessionStatus.FertigTimeOut)) {
+        if ((this.Kategorie02 === SessionStatus.Fertig) || (this.Kategorie02 === SessionStatus.FertigTimeOut) || (this.Kategorie02 === SessionStatus.Pause)) {
             clearInterval(this.DauerTimer);
             return;
         }
@@ -421,10 +421,15 @@ export class Session implements ISession {
         this.Kategorie02 = SessionStatus.Fertig;
     }
 
-    public AddPause(): void {
+    public AddPause(aDatum?: Date): void {
         clearInterval(this.DauerTimer);
         this.Kategorie02 = SessionStatus.Pause;
-        const mJetzt = new Date();
+        let mJetzt: Date;
+        if (aDatum !== undefined) 
+            mJetzt = aDatum
+        else
+            mJetzt = new Date();
+
         this.PausenListe.push(new Pause(mJetzt, mJetzt));
     }
 
