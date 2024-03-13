@@ -27,6 +27,7 @@
 
 .header-HistoryView {
     @extend .header-programm03;
+    width: 100%;
     height: 65px !important; 
 }
 
@@ -58,7 +59,7 @@
 
 .History-Session-Body {
     @extend .programm03Body;
-    top: 34px;
+    top: 41px;
 }
 
 .toggle-sessions-HistoryView {

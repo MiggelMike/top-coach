@@ -670,6 +670,15 @@ div.herz:after {
 	column-gap: 3px;
 }
 
+.row-start-left-gap-5 {
+	@extend .row-start-left;
+	column-gap: 5px;
+}
+
+.row-start-left-gap-7 {
+	@extend .row-start-left;
+	column-gap: 7px;
+}
 
 .row-start-right {
 	@extend .wrap; 

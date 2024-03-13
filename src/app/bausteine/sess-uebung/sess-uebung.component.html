@@ -2,12 +2,18 @@
         <mat-accordion multi="true">
             <mat-expansion-panel #ExpansionPanel [expanded]="true">
                 <mat-expansion-panel-header  class="disable_ripple">
-                    <div fxLayout="row wrap" fxLayout.lt-sm="row wrap" fxLayoutGap="2px" fxLayoutAlign="flex-start center"  >
-                        <span class="Satz-Typ-Text">{{satzArt}}</span>
+                    <div class="row-start-left-gap-7 wrap" >
+                        <div class="colum-center mr-10">
+                            <span class="Satz-Typ-Text">{{satzArt}}</span>
+                        </div>
 
                         <ng-container *ngIf='bearbeitbar'>
-                            <a [ngClass]="['link-button-font','HG-01']" mat-flat-button (click)="AddSet($event)">Add Set</a>
-                            <a [ngClass]="['link-button-font','HG-01']" mat-flat-button (click)="PasteSet($event)">Paste Set</a>
+                            <div class="colum-center">
+                                <span class="material-symbols-outlined" (click)="AddSet($event)">add_ad</span>
+                            </div>
+                            <div class="colum-center">
+                                <span class="material-symbols-outlined" (click)="PasteSet($event)">view_kanban</span>
+                            </div>
                         </ng-container>
                     </div>
                 </mat-expansion-panel-header>
