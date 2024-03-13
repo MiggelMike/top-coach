@@ -120,6 +120,12 @@ body {
 	height: 65px !important;
 }
 
+.height-68 {
+	min-height: 68px !important;
+	height: 68px !important;
+}
+
+
 .height-70 {
 	min-height: 70px !important;
 	height: 70px !important;
@@ -617,6 +623,13 @@ div.herz:after {
 	@extend .center-item;
 	flex-direction: column;
 }
+
+.column-center-flexend {
+	@extend .column-center;
+	align-self: flex-end;
+	// flex-direction: column-reverse;
+}
+
 
 .row-center {
 	@extend .center-item;
