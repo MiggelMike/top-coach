@@ -56,27 +56,31 @@
                     <ng-container *ngIf="Session.Kategorie02 !== sessionStatus.Fertig && Session.Kategorie02 !== sessionStatus.FertigTimeOut; then ShowStartButton else dontShowStartButton;"></ng-container>
 
                     <ng-template #ShowStartButton>
+                        <ng-container *ngIf="Session.Kategorie02 === sessionStatus.Laeuft || Session.Kategorie02 === sessionStatus.Pause">
+                            <span class="material-symbols-outlined"  (click)="StartButtonClick()">check_circle</span>
+                        </ng-container>
+
+                        <ng-container *ngIf="Session.Kategorie02 === sessionStatus.Wartet">
+                            <span class="material-symbols-outlined"  (click)="StartButtonClick()">play_circle</span>
+                        </ng-container>
+
+
                         <div class="center-item" layout-align="center center">
-                            <a class='link-button-font' (click)="StartButtonClick()">{{StartButtonText()}}</a>
-                        </div>
-                        <div class="center-item" layout-align="center center">
-                            <a [ngClass]="'link-button-font'" (click)="AddExercise()">Add exercise</a>
+                            <div matTooltip="Copy set" matTooltipPosition="above" class="material-symbols-outlined" (click)="AddExercise()">add_ad</div>
                         </div>
 
                         <div class="center-item" layout-align="center center">
-                            <a [ngClass]="'link-button-font'" (click)="PasteExcercise()">Paste
-                                Exercise</a>
+                            <span class="material-symbols-outlined" (click)="PasteExcercise()">view_kanban</span>
                         </div>
                     </ng-template>
 
                     <ng-template #dontShowStartButton>
                         <div class="center-item" layout-align="center center">
-                            <a [ngClass]="'link-button-font'" (click)="AddExercise()">Add exercise</a>
+                            <div matTooltip="Copy set" matTooltipPosition="above" class="material-symbols-outlined" (click)="AddExercise()">add_ad</div>
                         </div>
 
                         <div class="center-item" layout-align="center center">
-                            <a [ngClass]="'link-button-font'" (click)="PasteExcercise()">Paste
-                                Exercise</a>
+                            <span class="material-symbols-outlined" (click)="PasteExcercise()">view_kanban</span>
                         </div>
                     </ng-template>
                 </ng-container>
