@@ -45,9 +45,15 @@
     top: 100px;
 }
 
+.session-header {
+    position: relative;
+    top: 53px;
+}
+
+
 .Running-Session-Body {
     @extend .programm03Body;
-    top: 76px;
+    top: 50px;
 }
 
 .History-Session-Body {

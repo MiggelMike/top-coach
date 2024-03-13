@@ -3,7 +3,7 @@
             <div class="row-start-left-gap-3 header-line">
                 <ng-container *ngIf="BackButtonVisible === true">
                     <div class="column-start-left">
-                        <img src="../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/Previous.png" (click)="back()">
+                        <span class="material-symbols-outlined" (click)="back()">arrow_back</span>
                     </div>
                 </ng-container>
 
@@ -32,7 +32,7 @@
                 </div>
 
                 <div class="center-item mg-top-5" layout-align="center center">
-                    <a ngClass="link-button-font" (click)="doStats()">Info</a>
+                    <span class="material-symbols-outlined" (click)="doStats()">info</span>
                 </div>
 
                 <ng-container *ngIf="PauseButtonVisible()">
@@ -41,13 +41,13 @@
                     <ng-template #pauseBlock>
 
                         <div class="center-item" layout-align="center center">
-                            <a class='link-button-font' (click)="SetPause()">Pause</a>
+                            <span class="material-symbols-outlined" (click)="SetPause()">pause_circle</span>
                         </div>
                     </ng-template>
 
                     <ng-template #unpauseBlock>
                         <div class="center-item">
-                            <a class='link-button-font' (click)="GoAhead()">Go ahead</a>
+                            <span class="material-symbols-outlined"  (click)="GoAhead()">play_circle</span>
                         </div>
                     </ng-template>
                 </ng-container>

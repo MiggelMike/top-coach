@@ -75,6 +75,18 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
                        
     }
 
+    get Toolbar_1_row(): boolean {
+		return GlobalService.calcToolbarRrows() === 1;
+	}	
+
+	get Toolbar_2_rows(): boolean {
+		return window.innerWidth <= 361;
+	}
+
+	get Toolbar_3_rows(): boolean {
+		return  window.innerWidth <= 363;
+	} 
+
     get programModul(): typeof ProgramModulTyp {
         return ProgramModulTyp;
     }

@@ -78,9 +78,18 @@
     // height: 100%;
 }
 
+input[name="notRunningSet"] {
+    @extend .column-width;
+    // font-size: 14px;
+    margin-top: 1px;    
+}
+
+
 input[name="runningSet"] {
-    font-size: 24px;
+    @extend .column-width;    
+    // font-size: 14px;
     font-weight: bold;
+    margin-top: 1px;
 }
 
 

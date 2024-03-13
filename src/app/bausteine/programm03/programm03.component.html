@@ -4,7 +4,7 @@
            
             <div 
                  
-                 [ngClass]="{'header-RunningSession': ModulTyp === programModul.RunningSession, 'header-HistoryView': ModulTyp === programModul.HistoryView}" >
+                 [ngClass]="{'session-header': ModulTyp === programModul.RunningSession, 'header-HistoryView': ModulTyp === programModul.HistoryView}" >
                 <ng-container *ngIf="ModulTyp === programModul.HistoryView">                    
                     <div class="row-start-left-gap-3">
                         <div class="column-start-left">
@@ -30,17 +30,20 @@
                                     [disabled]="checkingSets"
                                     (closed)="PanelUebungClosed(SessUeb)" 
                                     (opened)="PanelUebungOpened(i,SessUeb)">
-                                    <mat-expansion-panel-header class="disable_ripple width-280 pad-left-5"  [collapsedHeight]="'auto'" [expandedHeight]="'auto'"[matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag" >
-                                        <div fxLayout="row wrap" fxLayoutGap="2px" fxLayout.lt-sm="row wrap" fxFlex="auto">
-                                            <div layout-align="start center" fxFlex="0 0 35%">
+                                    <mat-expansion-panel-header class="disable_ripple pad-left-5"  [collapsedHeight]="'auto'" [expandedHeight]="'auto'"[matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag" >
+                                        <div class="row-start-left-gap-3 width-100-Prozent">
+                                            <div class="row-start-left width-100-Prozent">
                                                 <div id="UebungName" class="colum-center">#{{i+1}} {{SessUeb.Name}}</div>
                                             </div>
                                             
-                                            <div class="row-start-left">
-                                                <ng-container *ngIf="ModulTyp === programModul.RunningSession || ModulTyp === programModul.EditWorkout || ModulTyp === programModul.SelectWorkoutEdit">
-                                                    <div class="column-center"><a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="60px" (click)="DoSettings(SessUeb, $event)">Settings</a></div>
-                                                    <div class="column-center"><a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button fxFlex="85px" (click)="CopyExcercise(SessUeb, $event)">Copy exercise</a></div>
-                                                    <div class="column-center"><a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteExercise(i+1,SessUeb,$event)">Delete Exercise</a></div>
+                                            <div class="row-start-left  mg-top-5">
+                                                <ng-container
+                                                    *ngIf="ModulTyp === programModul.RunningSession || ModulTyp === programModul.EditWorkout || ModulTyp === programModul.SelectWorkoutEdit">
+                                                    <div class="row-start-left-gap-3">
+                                                        <span class="material-symbols-outlined" (click)="DoSettings(SessUeb, $event)">settings</span>
+                                                        <span class="material-symbols-outlined" (click)="CopyExcercise(SessUeb, $event)">add_ad</span>
+                                                        <div class="material-symbols-outlined" (click)="DeleteExercise(i+1,SessUeb,$event)">delete</div>
+                                                    </div>
                                                 </ng-container>
                                                 
                                                 <div class="row-start-left">
