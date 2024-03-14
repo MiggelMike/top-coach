@@ -2,7 +2,7 @@ import { ToolbarComponent } from './../toolbar/toolbar.component';
 import { HistorySession, NoResetTyp, Session  } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from './../../../Business/TrainingsProgramm/TrainingsProgramm';
 import { UebungService } from "./../../services/uebung.service";
-import { ISessionStatus, SessionStatus } from "./../../../Business/SessionDB";
+import { ISessionStatus, Pause, SessionStatus } from "./../../../Business/SessionDB";
 import { SessionStatsOverlayComponent } from "./../../session-stats-overlay/session-stats-overlay.component";
 import { SessionOverlayServiceService, SessionOverlayConfig } from "./../../services/session-overlay-service.service";
 import { DialogeService } from "./../../services/dialoge.service";
@@ -253,42 +253,59 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 		// if (this.Session.isEqual(this.cmpSession)) this.leave();
 		else this.DoClose();
 	}
+
+	private DoCheckRunningOnLeaving():boolean {
+		if ((this.fSessionStatsOverlayComponent != undefined)
+			&& (this.fSessionStatsOverlayComponent.sess.Kategorie02 === SessionStatus.Laeuft)) {
+			this.fSessionStatsOverlayComponent.sess.AddPause(new Date());
+			this.fSessionStatsOverlayComponent.sess.CalcDauer();
+			return true;
+		}
+		return false;
+	}
 	
 	private DoClose() {
-		if (this.Session.isEqual(this.cmpSession)) this.leave();
+		
+		if (this.Session.isEqual(this.cmpSession)) {
+			if (this.DoCheckRunningOnLeaving() === true)
+				this.SaveChangesPrim().then(() => this.leave());
+			else
+				this.leave();
+		}
 		else {
 			const mDialogData = new DialogData();
 			mDialogData.textZeilen.push("Save changes?");
 			mDialogData.ShowAbbruch = true;
 			
 			mDialogData.OkFn = () => {
+				this.DoCheckRunningOnLeaving();
 				this.SaveChangesPrim().then(() => this.leave());
 			}
 	
 			mDialogData.CancelFn = (): void => {
-				this.leave();
+				if (this.DoCheckRunningOnLeaving() === false)
+					this.leave();
+				else {
+					const mSessCopyPara: SessionCopyPara = new SessionCopyPara();
+					mSessCopyPara.CopySatzID = true;
+					mSessCopyPara.CopySessionID = true;
+					mSessCopyPara.CopyUebungID = true;
+					mSessCopyPara.Komplett = true;
+					const mTmpSession: Session = Session.StaticCopy(this.Session, mSessCopyPara);
+					this.cmpSession.PausenListe = this.fSessionStatsOverlayComponent.sess.PausenListe;
+					this.Session = Session.StaticCopy(this.cmpSession, mSessCopyPara);
+					this.Session.Kategorie02 = this.fSessionStatsOverlayComponent.sess.Kategorie02;
+					this.SaveChangesPrim().then(() => {
+						this.Session = Session.StaticCopy(mTmpSession, mSessCopyPara);
+						this.leave();
+					});
+				}
+
 			}
 	
 			this.fDialogService.JaNein(mDialogData);
 		}
 
-		// if (this.fSessionStatsOverlayComponent.sess.Kategorie02 === SessionStatus.Laeuft) {
-		// 	const mIndex = DexieSvcService.AktuellesProgramm.SessionListe.findIndex((mSuchSession) => { return mSuchSession.ID === this.Session.ID });
-
-		// 	const mPausenZeit: Date = new Date();
-			
-		// 	if (mIndex > -1) {
-		// 		DexieSvcService.AktuellesProgramm.SessionListe[mIndex].AddPause(mPausenZeit);
-		// 		DexieSvcService.AktuellesProgramm.SessionListe[mIndex].CalcDauer();
-		// 	}
-
-		// 	this.fSessionStatsOverlayComponent.sess.AddPause(mPausenZeit);
-		// 	this.fSessionStatsOverlayComponent.sess.CalcDauer();
-		// 	this.Session.AddPause(mPausenZeit);
-		// 	this.Session.CalcDauer();
-		// 	this.cmpSession.AddPause(mPausenZeit);
-		// 	this.cmpSession.CalcDauer();
-		// }
 	}
 
 	AddExercise() {

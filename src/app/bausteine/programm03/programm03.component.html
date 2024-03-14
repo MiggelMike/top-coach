@@ -56,7 +56,7 @@
                                                 </div>
 
                                                 <ng-container *ngIf="ModulTyp === programModul.SelectWorkoutEdit && programm.ProgrammKategorie !== programmKategorie.Vorlage || ModulTyp === programModul.HistoryView">
-                                                    <div class="column-center"><a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteExercise(i+1,SessUeb,$event)">Delete Exercise</a></div>
+                                                    <div class="material-symbols-outlined mg-left-10" (click)="DeleteExercise(i+1,SessUeb,$event)">delete</div>
                                                 </ng-container>
                                                 
 
