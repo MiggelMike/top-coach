@@ -30,6 +30,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 	@Input() SessionListe: Array<ISession> = [];
 	@Output() ProgrammSavedEvent = new EventEmitter<ITrainingsProgramm>();
 	@Output() OnLeaveFn = new EventEmitter();
+	@Output() IsExpandedFn = new EventEmitter<Boolean>();
 	@Input() showButtons: Boolean = false;
 	@Input() showSaveButtons: Boolean = false;
 	@Input() SofortSpeichern: Boolean = false;
@@ -44,7 +45,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 	@ViewChildren("panSession") panUebung: QueryList<MatExpansionPanel>;
 	
 	private CmpSessionListe: Array<ISession> = [];
-	private isExpanded: Boolean = true;
+	public isExpanded: Boolean = true;
 	private DelSessionListe: Array<ISession> = [];
 	public ToggleButtonText: string;
 	public ClickData: Programm02Component;
@@ -291,6 +292,7 @@ export class Programm02Component implements OnInit, IProgramModul {
 			this.isExpanded = true;
 			this.ToggleButtonText = "Close all Sessions";
 		}
+		this.IsExpandedFn.emit(this.isExpanded);
 	}
 
 	public accCheckSessionPanels() {

@@ -5,6 +5,7 @@ import { DexieSvcService } from '../services/dexie-svc.service';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { GlobalService } from '../services/global.service';
+let root = document.querySelector(":root");
 
 @Component({
     selector: "app-settings",
@@ -83,6 +84,12 @@ export class SettingsComponent implements OnInit {
         }
 
         this.fDialogService.JaNein(mDialogData);
+    }
+
+
+    Appearance(aEvent: any) {
+        aEvent.preventDefault();
+        root.classList.toggle('dark');        
     }
 
 

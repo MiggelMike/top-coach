@@ -6,6 +6,13 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor() {
-  }
+  public static isLightTheme: boolean = false;
+    constructor() {
+        document.body.setAttribute(
+            'data-theme',
+            AppComponent.isLightTheme ? 'light' : 'dark'
+        );
+        const a = 0;
+      
+    }
 }

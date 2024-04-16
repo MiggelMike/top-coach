@@ -1,45 +1,153 @@
 /* You can add global styles to this file, and also import other style files */
-@use '@angular/material' as mat;
-
-
-@include mat.core();
+// @use 'sass:map';
+// @use '@angular/material' as mat;
+// @include mat.core();
 @import "./../node_modules/bootstrap/dist/css/bootstrap.css"; 
-@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+// @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+// @import "~@angular/material/prebuilt-themes/pink-bluegrey.css";
 
 
-$my-primary: mat.define-palette(mat.$pink-palette);
-$my-accent: mat.define-palette(mat.$pink-palette);
 
-$my-theme: mat.define-light-theme((
- color: (
-   primary: $my-primary,
-   accent: $my-accent,
- ),
- typography: mat.define-typography-config(),
- density: 0,
-));
+// $my-primary: mat.define-palette(mat.$pink-palette);
+ //$my-accent: mat.define-palette(mat.$pink-palette);
 
-@include mat.all-component-themes($my-theme);
+// $my-theme: mat.define-light-theme((
+//  color: (
+//    primary: $my-primary,
+//    accent: $my-accent,
+//  ),
+//  typography: mat.define-typography-config(),
+//  density: 0,
+// ));
+
+
+// $dark-theme: mat.define-dark-theme((
+//  color: (
+//    primary: mat.define-palette(mat.$pink-palette),
+//    accent: mat.define-palette(mat.$blue-grey-palette),
+//  ),
+//   // Only include `typography` and `density` in the default dark theme.
+//   typography: mat.define-typography-config(),
+//   density: 0,
+// ));
+
+// Define a light theme
+// $light-theme: mat.define-light-theme((
+//  color: (
+//    primary: mat.define-palette(mat.$indigo-palette),
+//    accent: mat.define-palette(mat.$pink-palette),
+//  ),
+// ));
+
+// Apply the dark theme by default
+// @include mat.core-theme($dark-theme);
+// @include mat.button-theme($dark-theme);
+
+
+// // Apply the light theme only when the user prefers light themes.
+// @media (prefers-color-scheme: dark) {
+//  // Use the `-color` mixins to only apply color styles without reapplying the same
+//  // typography and density styles.
+//  @include mat.core-color($dark-theme);
+//  @include mat.button-color($dark-theme);
+// }
+
+// $my-theme:$dark-theme;
+// $background: map.get($my-theme, background);
+// $background-color: map-get($background, background);
+
+[data-theme="light"] {
+	--label-color: black;
+	--header-background-color: #ffffff;
+	--header-border-color: #e5e8ea;
+	--header-menu-item-color: #231f20;
+	--header-theme-switch-background-color: #cccccc;
+	--header-theme-switch-before-background-color: #ffffff;
+	--header-theme-switch-checked-background-color: #2196f3;
+	--main-content-background-color: #ffffff;
+	--main-content-text-color: #231f20;
+	--input-text-color: #231f20;
+	--input-background-color: white;
+	--HG-01: transparent;
+	--HG-02: transparent;
+	--link-button-font-color: rgb(127, 127, 248);
+	--cc-overlay-border-color: darkgray;
+	--box-shadow-ex: 3px 3px 1px 1px rgba(0, 0, 0, 0.2);	
+	--mat-expansion-header-background-color: rgb(236, 234, 234);	
+	--mat-toolbar-panel-background-color: rgb(236, 234, 234);	
+	--mat-toolbar-panel-color: var(--label-color);
+  }
+
+  [data-theme="dark"] {
+	--label-color: lightgray;
+	--header-background-color: #2c3c93;
+	--header-border-color: #e5e8ea;
+	--header-menu-item-color: #ffffff;
+	--header-theme-switch-background-color: #cccccc;
+	--header-theme-switch-before-background-color: #ffffff;
+	--header-theme-switch-checked-background-color: #2196f3;
+	--main-content-background-color: #231f20;
+	--main-content-text-color: #ffffff;
+	--input-text-color: black;
+	--input-background-color: white;
+	--HG-01: transparent;
+	--HG-02: transparent;
+	--link-button-font-color: rgb(196, 196, 247);
+	--cc-overlay-border-color: lightgray;
+	--box-shadow-ex: 3px 3px 1px 1px rgba(133, 133, 133, 0.2);	
+	--mat-expansion-header-background-color: rgb(56, 56, 56);	
+	--mat-toolbar-panel-background-color: rgb(56, 56, 56);	
+	--mat-toolbar-panel-color: var(--label-color);
+  }
+
+
+
+//   @mixin mat-toolbar-color($config-or-theme) {
+// 	$config: mat-get-color-config($config-or-theme);
+// 	$primary: map-get($config, primary);
+// 	$accent: map-get($config, accent);
+// 	$warn: map-get($config, warn);
+// 	$background: map-get($config, background);
+// 	$foreground: map-get($config, foreground);
+   
+// 	.mat-toolbar {
+// 	  background: var(--main-content-background-color);// mat-color($background, app-bar);
+// 	  color: mat-color($foreground, text);
+   
+// 	  &.mat-primary {
+// 		@include _mat-toolbar-color($primary);
+// 	  }
+   
+// 	  &.mat-accent {
+// 		@include _mat-toolbar-color($accent);
+// 	  }
+   
+// 	  &.mat-warn {
+// 		@include _mat-toolbar-color($warn);
+// 	  }
+   
+// 	  @include _mat-toolbar-form-field-overrides;
+// 	}
+//   }
+
+//   $background-color:  var(--main-content-background-color);
+		
+// @include mat.all-component-themes($my-theme);
+		
+// :root {
+// 	background-color: $background-color; //#0c001d;
+// 	color: white;
+//   }
+
 
 html,
 body {
 	height: 100%;
-}
-
-body {
+	background-color: var(--main-content-background-color);
 	margin: 0;
 	font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-html,
-body {
-	height: 100%;
-}
-
-body {
-	margin: 0;
-	font-family: Roboto, "Helvetica Neue", sans-serif;
-}
 
 .invisible{
 	display:none;
@@ -538,7 +646,7 @@ div.herz:after {
 .font-14-label {
 	font-size: 14px;
 	font-weight: bold;
-    color: black;
+    color: var(--input-text-color);
 }
 
 .blue-bold {
@@ -694,16 +802,16 @@ div.herz:after {
 	padding: 5px;
 	font-size: smaller;
 	//   color: #819FF7;
-	color: #a9bcf5;
+	color: var(--link-button-font-color); //#a9bcf5;
 }
 
 
 .HG-01 {
-	background-color: rgb(252, 252, 252);
+	background-color: var(--input-background-color);
 }
 
 .HG-02 {
-	background-color: white;
+	background-color: var(--HG-02);
 }
 
 
@@ -952,12 +1060,12 @@ textarea:focus {
 
 .ref-button {
 	font-size: smaller;
-	color: #a9bcf5;
+	color: var(link-button-font-color);// #a9bcf5;
 	background-color: transparent;
 }
 
   .box-shadow-ex {
-    box-shadow: 3px 3px 1px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--box-shadow-ex);
   }
 
   .mat-expansion-panel:not([class*='mat-elevation-z']) {
@@ -969,7 +1077,7 @@ textarea:focus {
 }
 
 .input-HG {
-background-color:#fbfbfb
+ background-color: var(--input-background-color); //$my-theme.color.accent// #fbfbfb
 // #f7f4fa;
 
 }
@@ -984,7 +1092,7 @@ background-color:#fbfbfb
 	border-style: none;
 	border-color: rgb(248, 244, 244);
 	padding: 3px;
-	color: black;
+	color: var(--input-text-color);
 }
 
 input[type=text]  {
@@ -1012,11 +1120,11 @@ input[type=text]:focus  {
 	padding: 10px;	
 	border-style: inset;
 	border-radius: 10px;
-	border-color:  rgba(0, 0, 0, 0.2);
+	border-color:  var(--cc-overlay-border-color);
 	border-width: 1px;
 	border-bottom: none;
 	border-right: none;
-	background-color: white;
+	background-color: var(--main-content-background-color);
 	max-width: 350px;
   }
 
@@ -1065,7 +1173,7 @@ input[type=text]:focus  {
 	@extend .colors-textarea; 
 	@extend .width-100-Prozent;
 	overflow: auto;
-	color: black;
+	color: var(--input-text-color);
 	resize: none;
 	height: 140px !important;
 	max-height: 140px !important;
@@ -1080,7 +1188,7 @@ input[type=text]:focus  {
 }
 
 .mat-calendar-body-cell-content {
-	color: black;
+	color: var(--input-text-color);
 }
 
 
@@ -1088,7 +1196,7 @@ input[type=text]:focus  {
     border-radius: 4px;
     padding: 0.75em 0.75em 0 0.75em;
     border: 1px solid #f94747;
-	background: none;
+	// background: none;
   }
 
   .header-box {
@@ -1096,7 +1204,7 @@ input[type=text]:focus  {
 	 top:0;   
 	 width: 100%;  
 	 z-index: 1000;
-	 background-color: white;  
+	background-color: var(--main-content-background-color);
 	//  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
   }
 
@@ -1117,15 +1225,22 @@ input[type=text]:focus  {
 	background: transparent !important;
 	}
 
-mat-expansion-panel-header:hover {
-		background-color: transparent;
-	}
+mat-expansion-panel-header {
+		background-color: var(--mat-expansion-header-background-color);
+}
 
-	mat-panel-title,
-	mat-panel-description,
-	span {
-	  display: block;
-	}	
+
+mat-expansion-panel-header:hover {
+		background-color: var(--mat-expansion-header-background-color);
+}
+
+mat-panel-title,
+mat-panel-description,
+span {
+	display: block;
+}	
+
+
 
 // .mat-calendar  {
 // 	background-color: #bdd2e9;

@@ -4,7 +4,12 @@
         <ng-container *ngIf="ModulTyp !== programModul.History && ModulTyp !== programModul.SelectWorkout">
             <div class="row-start-left-gap-3 wrap" [ngClass]="{'header-schmal': MediaWidth <= 280, 'header-breit': MediaWidth > 280}">
                 <div class="colum-center">
-                    <a class='link-button-font' (click)="toggleSessions()">{{ToggleButtonText}}</a>
+                    <<ng-container *ngIf="isExpanded === true">
+                        <span class="material-symbols-outlined" (click)="toggleSessions()">open_in_full</span>
+                    </ng-container>
+                    <<ng-container *ngIf="isExpanded === false">
+                        <span class="material-symbols-outlined" (click)="toggleSessions()">close_fullscreen</span>
+                    </ng-container>
                 </div>
                 <div class="colum-center">
                     <a class='link-button-font' (click)="AddSession()">Add Session</a>

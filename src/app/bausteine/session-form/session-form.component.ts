@@ -1,3 +1,4 @@
+import { Programm03Component } from './../programm03/programm03.component';
 import { ToolbarComponent } from './../toolbar/toolbar.component';
 import { HistorySession, NoResetTyp, Session  } from './../../../Business/Session/Session';
 import { ITrainingsProgramm } from './../../../Business/TrainingsProgramm/TrainingsProgramm';
@@ -7,7 +8,7 @@ import { SessionStatsOverlayComponent } from "./../../session-stats-overlay/sess
 import { SessionOverlayServiceService, SessionOverlayConfig } from "./../../services/session-overlay-service.service";
 import { DialogeService } from "./../../services/dialoge.service";
 import { DexieSvcService, cMinDatum, ProgrammParaDB, SessionParaDB, UebungParaDB, SessionCopyPara, ProgramCopyPara } from "./../../services/dexie-svc.service";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { cLoadingDefaultHeight, DialogData } from "src/app/dialoge/hinweis/hinweis.component";
 import { GlobalService } from "src/app/services/global.service";
@@ -40,7 +41,7 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 	public DeletedSatzList: Array<Satz> = [];
 	public fExerciseSettingSvcService: ExerciseSettingSvcService;
 	public fExerciseSettingsComponent: ExerciseSettingsComponent;
-
+	@ViewChild('appProgramm03') appProgramm03: Programm03Component;
 
 	constructor(
 		private router: Router,
@@ -132,6 +133,31 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 
 	get programModul(): typeof ProgramModulTyp {
 		return ProgramModulTyp;
+	}
+
+	UebungenExpanded: Boolean = true;
+
+	UebungenExpandedFn(aProgramm03: Programm03Component) {
+		this.UebungenExpanded = !this.UebungenExpanded;
+
+		if (aProgramm03 === undefined)
+			return;
+		
+		if (aProgramm03.isExpanded) {
+			aProgramm03.accUebung.forEach((acc) => acc.closeAll());
+			aProgramm03.isExpanded = false;
+			aProgramm03.ToggleButtonText = 'Open all exercises';
+			aProgramm03.SessUeb.Expanded = false;
+		} else {
+			aProgramm03.accUebung.forEach((acc) => acc.openAll());
+			aProgramm03.isExpanded = true;
+			aProgramm03.ToggleButtonText = 'Close all exercises';
+			
+			if (aProgramm03.SessUeb !== undefined) {
+				aProgramm03.SessUeb.Expanded = true;
+			}
+		}
+
 	}
 	
 

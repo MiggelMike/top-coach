@@ -1,3 +1,4 @@
+import { Session } from './../../../Business/Session/Session';
 import { ProgramCopyPara } from './../../services/dexie-svc.service';
 import { DexieSvcService, ProgrammParaDB } from 'src/app/services/dexie-svc.service';
 import { Router } from '@angular/router';
@@ -7,7 +8,6 @@ import { DialogeService } from 'src/app/services/dialoge.service';
 import { DialogData } from 'src/app/dialoge/hinweis/hinweis.component';
 import { IProgramModul, ProgramModulTyp } from 'src/app/app.module';
 import { Location } from "@angular/common";
-import { promises } from 'dns';
 
 
 @Component({
@@ -44,6 +44,12 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
             DexieSvcService.VerfuegbareProgramme.push(aProgramm);
             // TrainingsProgramm.SortByName(DexieSvcService.VerfuegbareProgramme);
         }
+    }
+
+    SessionAreExpanded: Boolean = false;
+
+    IsExpanded(aIsExpanded: Boolean) {
+        this.SessionAreExpanded = aIsExpanded;
     }
 
     ngOnInit() { 

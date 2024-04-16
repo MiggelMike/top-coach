@@ -44,6 +44,7 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISa
 	@Output() DoStats = new EventEmitter<any>();
 	@Output() DoCheckSettings = new EventEmitter<ExerciseSettingSvcService>();
 	@Output() AddDeletedExercise = new EventEmitter<Uebung>();
+	@Output() ExpandUebungenFn = new EventEmitter<Programm03Component>();
 
 	@ViewChildren('accUebung') accUebung: QueryList<MatAccordion>;
 	@ViewChildren('panUebung') panUebung: QueryList<MatExpansionPanel>;
@@ -55,7 +56,7 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISa
 	private fExerciseSettingsComponent: ExerciseSettingsComponent;
 	public checkingSets: boolean = false;
 	private worker: Worker;
-	private isExpanded: Boolean = true;
+	public isExpanded: Boolean = true;
 	public ToggleButtonText = 'Close all excercises';
 	public LocaleID: string;
 	AppData: any;
@@ -179,20 +180,8 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISa
 	}
 
 	async toggleUebungen() {
-		if (this.isExpanded) {
-			this.accUebung.forEach((acc) => acc.closeAll());
-			this.isExpanded = false;
-			this.ToggleButtonText = 'Open all exercises';
-			this.SessUeb.Expanded = false;
-		} else {
-			this.accUebung.forEach((acc) => acc.openAll());
-			// for (let index = 0; index < this.session.UebungsListe.length; index++) {
-			//     this.CheckUebungSatzliste(this.session.UebungsListe[index]);
-			// }
-			this.isExpanded = true;
-			this.ToggleButtonText = 'Close all exercises';
-			if (this.SessUeb !== undefined) this.SessUeb.Expanded = true;
-		}
+		if (this.ExpandUebungenFn !== undefined)
+			this.ExpandUebungenFn.emit(this);
 	}
 
 	async PanelUebungOpened(aMatExpansionPanelIndex: number, aUebung: Uebung) {

@@ -1,9 +1,13 @@
 #toolbar-Panel {
 	height: auto;
+	background:  var(--mat-toolbar-panel-background-color);
+	color:   var(--mat-toolbar-panel-color);
 }
+
 
 @media screen and (max-device-width: 280) {
 	#toolbar-Panel {
 		height: 200px;
 	}
 }
+

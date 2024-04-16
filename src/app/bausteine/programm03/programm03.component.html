@@ -16,7 +16,13 @@
                     </div>
                 </ng-container>  
                         
-                <a class="link-button-font HG-01" [ngClass]="{'toggle-sessions-HistoryView':  ModulTyp === programModul.HistoryView}" mat-flat-button (click)="toggleUebungen()">{{ToggleButtonText}}</a>
+                <!-- <ng-container *ngIf="isExpanded === false">
+                    <span class="material-symbols-outlined" [ngClass]="{'toggle-sessions-HistoryView':  ModulTyp === programModul.HistoryView}" (click)="toggleUebungen()">open_in_full</span>
+                </ng-container>
+                <ng-container *ngIf="isExpanded === true">
+                    <span class="material-symbols-outlined" [ngClass]="{'toggle-sessions-HistoryView':  ModulTyp === programModul.HistoryView}"(click)="toggleUebungen()">close_fullscreen</span>
+                </ng-container> -->
+
             </div> 
 
             <div class="colum-center width-100-Prozent" [ngClass]="{'Running-Session-Body': ModulTyp === programModul.RunningSession, 'History-Session-Body': ModulTyp === programModul.HistoryView}" >        

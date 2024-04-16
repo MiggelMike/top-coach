@@ -10,7 +10,7 @@
     position: fixed; 
     top: 0px; 
     z-index: 1000;
-    background-color: white;
+    background-color: inherit;
     width:100%;
 }
 
@@ -34,3 +34,5 @@
     @extend .main-panel;
     top:57px;
 }
+
+

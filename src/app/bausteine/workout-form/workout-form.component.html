@@ -13,7 +13,6 @@
                         <div class="column-start-left">
                             <input  matInput 
                                         [matTooltipDisabled]="true"
-                                        
                                         [(ngModel)]="programm.Name" 
                                         type="text">
                         </div>                                    
@@ -30,6 +29,7 @@
                             [showSaveButtons]="true" 
                             [ModulTyp]="ModulTyp"
                             [bearbeitbar]="true"
+                            (IsExpandedFn) = "IsExpanded";
                             (ProgrammSavedEvent)="CopyProgramm($event)">
                         </app-programm02>
             </div>

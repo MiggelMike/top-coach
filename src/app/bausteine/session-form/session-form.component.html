@@ -84,6 +84,13 @@
                         </div>
                     </ng-template>
                 </ng-container>
+
+                <ng-container *ngIf="UebungenExpanded === false">
+                    <span class="material-symbols-outlined"  (click)="UebungenExpandedFn(appProgramm03)">open_in_full</span>
+                </ng-container>
+                <ng-container *ngIf="UebungenExpanded === true">
+                    <span class="material-symbols-outlined" (click)="UebungenExpandedFn(appProgramm03)">close_fullscreen</span>
+                </ng-container>
             </div>
             
     </div>
@@ -100,6 +107,7 @@
             [StatsButtonVisible]="true"
             (AddDeletedExercise)="AddDeletedExercise($event)"
             (DoStats)="doStats()"
+            (ExpandUebungenFn)="UebungenExpandedFn($event)"
             (DoCheckSettings)="doCheckSettings($event)"
             [DeletedSatzList]="DeletedSatzList">
         </app-programm03>
