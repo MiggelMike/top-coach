@@ -21,18 +21,18 @@
             </div>        
                 
             <div class="column-center">            
-            <div [ngClass]="{'main-panel-schmal': MediaWidth <= 280, 'main-panel-breit': MediaWidth > 280}">
-                        <app-programm02 
-                            [programm]="programm" 
-                            [SessionListe]="programm.SessionListe" 
-                            [showButtons]="true" 
-                            [showSaveButtons]="true" 
-                            [ModulTyp]="ModulTyp"
-                            [bearbeitbar]="true"
-                            (IsExpandedFn) = "IsExpanded";
-                            (ProgrammSavedEvent)="CopyProgramm($event)">
-                        </app-programm02>
-            </div>
+                <div [ngClass]="{'main-panel-schmal': MediaWidth <= 280, 'main-panel-breit': MediaWidth > 280}">
+                            <app-programm02 
+                                [programm]="programm" 
+                                [SessionListe]="programm.SessionListe" 
+                                [showButtons]="true" 
+                                [showSaveButtons]="true" 
+                                [ModulTyp]="ModulTyp"
+                                [bearbeitbar]="true"
+                                (IsExpandedFn) = "IsExpanded";
+                                (ProgrammSavedEvent)="CopyProgramm($event)">
+                            </app-programm02>
+                </div>
             </div>
         </div>
 </ng-container>

@@ -80,7 +80,7 @@
 
   [data-theme="dark"] {
 	--label-color: lightgray;
-	--header-background-color: #2c3c93;
+	--header-background-color: #1d1d1d;
 	--header-border-color: #e5e8ea;
 	--header-menu-item-color: #ffffff;
 	--header-theme-switch-background-color: #cccccc;
@@ -89,7 +89,7 @@
 	--main-content-background-color: #231f20;
 	--main-content-text-color: #ffffff;
 	--input-text-color: black;
-	--input-background-color: white;
+	--input-background-color: lightgray;
 	--HG-01: transparent;
 	--HG-02: transparent;
 	--link-button-font-color: rgb(196, 196, 247);
@@ -646,7 +646,7 @@ div.herz:after {
 .font-14-label {
 	font-size: 14px;
 	font-weight: bold;
-    color: var(--input-text-color);
+    color: var(--label-color);
 }
 
 .blue-bold {
@@ -669,13 +669,46 @@ div.herz:after {
 	font-size: 35px;
 }
 
-.tc-font-size-small {
+.label-font-color {
+	color: var(--label-color);
+}
+
+.font-size-standard {
+	font-size: 16px;
+}
+
+.font-size-small {
 	font-size: 14px;
 }
 
-.tc-font-size-smaller {
+.font-size-smaller {
 	font-size: 10px;
 }
+
+.font-size-large {
+	font-size: 26px;
+}
+
+.label-font-size-standard {
+	@extend .label-font-color;
+	@extend .font-size-standard;
+}
+
+.label-font-size-small {
+	@extend .label-font-color;
+	@extend .font-size-small;
+}
+
+.label-font-size-smaller {
+	@extend .label-font-color;
+	@extend .font-size-smaller;
+}
+
+.label-font-size-large {
+	@extend .label-font-color;
+	@extend .font-size-large;
+}
+
 
 .font-bold {
 	font-weight: bold;
@@ -1093,6 +1126,7 @@ textarea:focus {
 	border-color: rgb(248, 244, 244);
 	padding: 3px;
 	color: var(--input-text-color);
+	background-color: var(--input-background-color);
 }
 
 input[type=text]  {
@@ -1225,13 +1259,10 @@ input[type=text]:focus  {
 	background: transparent !important;
 	}
 
-mat-expansion-panel-header {
-		background-color: var(--mat-expansion-header-background-color);
-}
-
-
-mat-expansion-panel-header:hover {
-		background-color: var(--mat-expansion-header-background-color);
+.mat-expansion-panel.mat-expanded,
+.mat-expansion-panel:not(.mat-expanded),
+.mat-expansion-panel-header-title {
+  background-color: var(--mat-expansion-header-background-color);
 }
 
 mat-panel-title,

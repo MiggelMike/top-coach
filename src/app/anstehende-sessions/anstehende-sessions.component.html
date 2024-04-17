@@ -23,14 +23,14 @@
                                         <mat-expansion-panel class="mg-bottom-3 pad-left-3">
                                             <mat-expansion-panel-header class="disable_ripple" [collapsedHeight]="'70px'" [expandedHeight]="'70px'" >
                                                 <mat-panel-title>
-                                                    <div  class='row-start-left-gap-3 HG-01'> 
+                                                    <div  class='row-start-left-gap-3'> 
                                                         <div class="column-start-left">
                                                             <input class="tc-font-size-smaller" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
                                                         </div>
                                                     </div>
 
                                                     
-                                                    <div  class='row-start-left-gap-3 HG-01'> 
+                                                    <div  class='row-start-left-gap-3'> 
                                                         <ng-container *ngIf="sess.Kategorie02 === sessionStatus.Laeuft || sess.Kategorie02 === sessionStatus.Pause; then MitReset else OhneReset"></ng-container>
                                                         <ng-template #MitReset>
                                                             <div class="column-start-left">
@@ -42,7 +42,7 @@
                                                             </div>
                     
                                                             <div class="center-item" layout-align="center center">
-                                                                <a [ngClass]="['link-button-font', 'HG-01']" (click)="resetSession($event, sess)">Reset</a>
+                                                                <a [ngClass]="['link-button-font']" (click)="resetSession($event, sess)">Reset</a>
                                                             </div>
                                                         </ng-template>
 
@@ -64,7 +64,7 @@
 
                                                 <div class="row-start-left-gap-3">
                                                     <span class="font-14-label">#{{UebungIndex+1}} {{SessUeb.Name}}</span>
-                                                    <div class="column-center tc-font-size-smaller">  --- Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} - Reps {{SessUeb.SummeWDH()}}</div>
+                                                    <div class="column-center label-font-size-smaller">  --- Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} - Reps {{SessUeb.SummeWDH()}}</div>
                                                 </div>
 
                                                 <ng-container *ngIf="SessUeb.AufwaermSatzListe.length > 0">

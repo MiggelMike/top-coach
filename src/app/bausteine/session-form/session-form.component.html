@@ -32,7 +32,7 @@
                 </div>
 
                 <div class="center-item mg-top-5" layout-align="center center">
-                    <span class="material-symbols-outlined" (click)="doStats()">info</span>
+                    <span class="material-symbols-outlined label-font-size-large" (click)="doStats()">info</span>
                 </div>
 
                 <ng-container *ngIf="PauseButtonVisible()">
@@ -41,13 +41,13 @@
                     <ng-template #pauseBlock>
 
                         <div class="center-item" layout-align="center center">
-                            <span class="material-symbols-outlined" (click)="SetPause()">pause_circle</span>
+                            <span class="material-symbols-outlined label-font-size-large" (click)="SetPause()">pause_circle</span>
                         </div>
                     </ng-template>
 
                     <ng-template #unpauseBlock>
                         <div class="center-item">
-                            <span class="material-symbols-outlined"  (click)="GoAhead()">play_circle</span>
+                            <span class="material-symbols-outlined label-font-size-large"  (click)="GoAhead()">play_circle</span>
                         </div>
                     </ng-template>
                 </ng-container>
@@ -57,39 +57,39 @@
 
                     <ng-template #ShowStartButton>
                         <ng-container *ngIf="Session.Kategorie02 === sessionStatus.Laeuft || Session.Kategorie02 === sessionStatus.Pause">
-                            <span class="material-symbols-outlined"  (click)="StartButtonClick()">check_circle</span>
+                            <span class="material-symbols-outlined label-font-size-large"  (click)="StartButtonClick()">check_circle</span>
                         </ng-container>
 
                         <ng-container *ngIf="Session.Kategorie02 === sessionStatus.Wartet">
-                            <span class="material-symbols-outlined"  (click)="StartButtonClick()">play_circle</span>
+                            <span class="material-symbols-outlined label-font-size-large"  (click)="StartButtonClick()">play_circle</span>
                         </ng-container>
 
 
                         <div class="center-item" layout-align="center center">
-                            <div matTooltip="Copy set" matTooltipPosition="above" class="material-symbols-outlined" (click)="AddExercise()">add_ad</div>
+                            <div matTooltip="Copy set" matTooltipPosition="above" class="material-symbols-outlined label-font-size-large" (click)="AddExercise()">add_ad</div>
                         </div>
 
                         <div class="center-item" layout-align="center center">
-                            <span class="material-symbols-outlined" (click)="PasteExcercise()">view_kanban</span>
+                            <span class="material-symbols-outlined label-font-size-large" (click)="PasteExcercise()">view_kanban</span>
                         </div>
                     </ng-template>
 
                     <ng-template #dontShowStartButton>
                         <div class="center-item" layout-align="center center">
-                            <div matTooltip="Copy set" matTooltipPosition="above" class="material-symbols-outlined" (click)="AddExercise()">add_ad</div>
+                            <div matTooltip="Copy set" matTooltipPosition="above" class="material-symbols-outlined label-font-size-large" (click)="AddExercise()">add_ad</div>
                         </div>
 
                         <div class="center-item" layout-align="center center">
-                            <span class="material-symbols-outlined" (click)="PasteExcercise()">view_kanban</span>
+                            <span class="material-symbols-outlined label-font-size-large" (click)="PasteExcercise()">view_kanban</span>
                         </div>
                     </ng-template>
                 </ng-container>
 
                 <ng-container *ngIf="UebungenExpanded === false">
-                    <span class="material-symbols-outlined"  (click)="UebungenExpandedFn(appProgramm03)">open_in_full</span>
+                    <span class="material-symbols-outlined label-font-size-large"  (click)="UebungenExpandedFn(appProgramm03)">open_in_full</span>
                 </ng-container>
                 <ng-container *ngIf="UebungenExpanded === true">
-                    <span class="material-symbols-outlined" (click)="UebungenExpandedFn(appProgramm03)">close_fullscreen</span>
+                    <span class="material-symbols-outlined label-font-size-large" (click)="UebungenExpandedFn(appProgramm03)">close_fullscreen</span>
                 </ng-container>
             </div>
             
