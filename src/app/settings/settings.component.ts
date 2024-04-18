@@ -5,6 +5,7 @@ import { DexieSvcService } from '../services/dexie-svc.service';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
 import { GlobalService } from '../services/global.service';
+import { AppComponent } from '../app.component';
 let root = document.querySelector(":root");
 
 @Component({
@@ -89,7 +90,7 @@ export class SettingsComponent implements OnInit {
 
     Appearance(aEvent: any) {
         aEvent.preventDefault();
-        root.classList.toggle('dark');        
+        AppComponent.isLightTheme = !AppComponent.isLightTheme;
     }
 
 

@@ -58,6 +58,7 @@
 
 [data-theme="light"] {
 	--label-color: black;
+	--checkbox-border-color: var(--label-color);
 	--header-background-color: #ffffff;
 	--header-border-color: #e5e8ea;
 	--header-menu-item-color: #231f20;
@@ -80,6 +81,7 @@
 
   [data-theme="dark"] {
 	--label-color: lightgray;
+	--checkbox-border-color: var(--label-color);
 	--header-background-color: #1d1d1d;
 	--header-border-color: #e5e8ea;
 	--header-menu-item-color: #ffffff;
@@ -1295,7 +1297,7 @@ span {
   
 
 .mdc-checkbox__background {
-    border-color: var(--label-color) !important;
+    border-color: var(--checkbox-border-color) !important;
 }
 
 
