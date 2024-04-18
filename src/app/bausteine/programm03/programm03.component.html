@@ -8,10 +8,10 @@
                 <ng-container *ngIf="ModulTyp === programModul.HistoryView">                    
                     <div class="row-start-left-gap-3">
                         <div class="column-start-left">
-                            <span class="tc-font-size-smaller width-100-Prozent">{{session.Name}}</span>
+                            <span class="font-size-smaller width-100-Prozent">{{session.Name}}</span>
                         </div> 
                         <div class="column-start-left">
-                            <span class="tc-font-size-smaller width-100-Prozent">{{GestartedWannText}}</span>
+                            <span class="font-size-smaller width-100-Prozent">{{GestartedWannText}}</span>
                         </div>
                     </div>
                 </ng-container>  
@@ -46,14 +46,14 @@
                                                 <ng-container
                                                     *ngIf="ModulTyp === programModul.RunningSession || ModulTyp === programModul.EditWorkout || ModulTyp === programModul.SelectWorkoutEdit">
                                                     <div class="row-start-left-gap-3">
-                                                        <span class="material-symbols-outlined" (click)="DoSettings(SessUeb, $event)">settings</span>
-                                                        <span class="material-symbols-outlined" (click)="CopyExcercise(SessUeb, $event)">add_ad</span>
-                                                        <div class="material-symbols-outlined" (click)="DeleteExercise(i+1,SessUeb,$event)">delete</div>
+                                                        <span class="material-symbols-outlined label-font-size-large" (click)="DoSettings(SessUeb, $event)">settings</span>
+                                                        <span class="material-symbols-outlined label-font-size-large" (click)="CopyExcercise(SessUeb, $event)">add_ad</span>
+                                                        <div class="material-symbols-outlined label-font-size-large" (click)="DeleteExercise(i+1,SessUeb,$event)">delete</div>
                                                     </div>
                                                 </ng-container>
                                                 
                                                 <div class="row-start-left">
-                                                    <div class="column-center">Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} - Reps {{SessUeb.SummeWDH()}}</div>
+                                                    <div class="column-center label-font-size-smaller">Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} - Reps {{SessUeb.SummeWDH()}}</div>
                                                     <ng-container *ngIf="AlleFertig(SessUeb)">
                                                         <div class="column-center mg-left-10 mg-bottom-10">
                                                             <img   src="./../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/Apply.png"/>
@@ -62,7 +62,7 @@
                                                 </div>
 
                                                 <ng-container *ngIf="ModulTyp === programModul.SelectWorkoutEdit && programm.ProgrammKategorie !== programmKategorie.Vorlage || ModulTyp === programModul.HistoryView">
-                                                    <div class="material-symbols-outlined mg-left-10" (click)="DeleteExercise(i+1,SessUeb,$event)">delete</div>
+                                                    <div class="material-symbols-outlined mg-left-10 label-font-size-large" (click)="DeleteExercise(i+1,SessUeb,$event)">delete</div>
                                                 </ng-container>
                                                 
 

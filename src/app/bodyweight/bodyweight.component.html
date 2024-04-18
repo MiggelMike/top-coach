@@ -23,7 +23,7 @@
                     <div class="row-start-left-gap-3 height-80 width-300" [ngClass]="{'HG-01': i % 2 === 0}">
                         <div class="column-center width-60" [ngClass]="{'body-weight-column': Toolbar_3_rows === true}">
                             <div class="row-start-right width-100-Prozent">
-                                <mat-label [ngClass]="{'tc-font-size-smaller': Toolbar_3_rows === true}">BW {{GewichtsEinheit}}</mat-label>
+                                <mat-label [ngClass]="{'font-size-smaller': Toolbar_3_rows === true}">BW {{GewichtsEinheit}}</mat-label>
                             </div>
                             <div class="row-start-right width-100-Prozent">
                                 <input class="align-right pd-l-5 width-100-Prozent"  mask="999.00"
@@ -33,11 +33,11 @@
                 
                         <div class="column-center width-150">
                             <div class="row-start-right width-100-Prozent">
-                                <mat-label [ngClass]="{'tc-font-size-smaller': Toolbar_3_rows === true}">Choose a date</mat-label>
+                                <mat-label [ngClass]="{'font-size-smaller': Toolbar_3_rows === true}">Choose a date</mat-label>
                             </div>
                             <div class="row-start-right width-100-Prozent">
                                 <input matInput type="text" [ngxMatDatetimePicker]="pickerWithActions" [(ngModel)]="bw.Datum"
-                                    class="width-100-Prozent align-right" [ngClass]="{'tc-font-size-smaller': Toolbar_3_rows === true}"
+                                    class="width-100-Prozent align-right" [ngClass]="{'sfont-size-smaller': Toolbar_3_rows === true}"
                                     disabled="false">
                             </div>
                         </div>
@@ -51,7 +51,7 @@
                             </ngx-mat-datetime-picker>
                             <ngx-mat-datepicker-toggle matSuffix [for]="pickerWithActions"></ngx-mat-datepicker-toggle>
                         </div>
-                        <a class="ref-button" [ngClass]="{'tc-font-size-smaller': Toolbar_3_rows === true}" (click)="DeleteBodyweight(bw)">Delete</a>
+                        <a class="ref-button" [ngClass]="{'font-size-smaller': Toolbar_3_rows === true}" (click)="DeleteBodyweight(bw)">Delete</a>
                     </div>
                 </ng-container>
             </div>

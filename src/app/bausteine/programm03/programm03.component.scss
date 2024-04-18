@@ -12,7 +12,7 @@
 }
 
 #programm03 {
-    background-color: white;
+    background-color: transparent;
     padding-left: 5px;
     padding-right: 5px;
     width: 100% !important;
@@ -64,7 +64,8 @@
 
 
 #UebungName {
-    background: lightgrey;
+//    background: lightgrey;
+    background: rgb(227, 252, 234);
     border-radius: 5px; 
     border-width: 1px;
     font-size: 14px;
@@ -92,3 +93,8 @@ div.mat-expansion-panel-body {
     padding-left: 1px;
     padding-right: 1px;
   }
+
+//   :host ::ng-deep mat-checkbox-frame { 
+//     border-color: grey 
+// }
+

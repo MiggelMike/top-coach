@@ -10,19 +10,19 @@
 
         <div class="weight-column height-100-Prozent">
             <div class="row-start-right width-100-Prozent height-25">
-                <div class="column align-right width-100-Prozent">Weight</div>
+                <div class="column align-right width-100-Prozent label-font-size-smaller">Weight</div>
             </div>
 
             <div ngif="isVisible() === true">
                 <div class="row-start-right height-25">
-                    <div class="height-25 align-right label">{{satz.GewichtVorgabeText}}</div>
+                    <div class="height-25 align-right label-font-size-smaller">{{satz.GewichtVorgabeText}}</div>
                 </div>
             </div>
 
             <div class="row-start-right width-100-Prozent">
                 <div class="column-start-left align-right width-100-Prozent">
                         <input matInput mask="9999.00" matTooltip="Hold to open details" matTooltipPosition="above"
-                            [matTooltipDisabled]="false" class="align-right tc-font-size-smaller weight-column"
+                            [matTooltipDisabled]="false" class="align-right label-font-size-smaller weight-column"
                             [ngModel]="satz.GewichtAusgefuehrtText" (ngModelChange)="CalcPlates($event)"
                             (focusout)="SetWeightAusgefuehrt($event)" (mousedown)="MouseDown(satz,$event)"
                             (mouseup)="MouseUp($event)" (touchstart)="MouseDown(satz,$event)" (touchend)="MouseUp($event)"
@@ -33,17 +33,17 @@
 
         <div class="rep-column height-100-Prozent">
             <div class="row-start-right height-25  width-100-Prozent">
-                <div class="column-start-left rep-column-titel align-right width-100-Prozent" matTooltip="Reps">RP.</div>
+                <div class="column-start-left rep-column-titel align-right width-100-Prozent label-font-size-smaller" matTooltip="Reps">RP.</div>
             </div>
         
             <div ngif="isVisible() === true">
                 <div class="row-start-right">
-                    <div class="height-25 align-right label  width-100-Prozent">{{satz.WdhVonVorgabe}}</div>
+                    <div class="height-25 align-right width-100-Prozent label-font-size-smaller">{{satz.WdhVonVorgabe}}</div>
                 </div>
             </div>
         
             <div class="row-start-right width-100-Prozent">
-                    <input matInput class="align-right tc-font-size-smaller width-100-Prozent" matTooltip="Hold to open details"
+                    <input matInput class="align-right label-font-size-smaller width-100-Prozent" matTooltip="Hold to open details"
                         matTooltipPosition="above" [matTooltipDisabled]="false" mask="9999" [ngModel]="satz.WdhAusgefuehrtText"
                         [disabled]="Disabled(satz)" (click)="onSelect($event)" (focusout)="SetWdhAusgefuehrt($event)"
                         (mousedown)="MouseDown(satz,$event)" (mouseup)="MouseUp($event)" (touchstart)="MouseDown(satz,$event)"
@@ -52,27 +52,27 @@
         </div>
 
         <div id="timer-column height-100-Prozent">
-            <div class="row-start-right mg-top-3 height-25">Timer</div>
+            <div class="row-start-right mg-top-3 height-25 label-font-size-smaller">Timer</div>
             <div class="row-start-right height-25">
                 <!-- <div id="timer-column-button"> -->
-                    <mat-label class="height-100-Prozent" mat-button matTooltip="Start timer" matTooltipPosition="above" (click)="StartTimer(satz)">{{StartTimerText}}</mat-label>
+                    <mat-label class="height-100-Prozent label-font-size-smaller" mat-button matTooltip="Start timer" matTooltipPosition="above" (click)="StartTimer(satz)">{{StartTimerText}}</mat-label>
                     <!-- <a mat-button matTooltip="Start timer" matTooltipPosition="above" (click)="StartTimer(satz)"
                         [disabled]="TimerDisabled(satz)">{{StartTimerText}}</a> -->
                 <!-- </div> -->
             </div>
 
-            <div class="row-start-left-gap-3">
+            <div class="row-start-left-gap-3 mg-top-1">
                 <div class="column-start-left">
                     <ng-container *ngIf="timerLaeuft === true; then runningSet else notRunningSet"></ng-container>
                     <ng-template #runningSet>
-                        <input name="runningSet" matInput id="timer-input" class="align-right tc-font-size-smaller" matTooltip="Timer seconds"
+                        <input name="runningSet" matInput id="timer-input" class="align-right label-font-size-smaller" matTooltip="Timer seconds"
                             matTooltipPosition="above" [matTooltipDisabled]="false" mask="999999" [ngModel]="satz.TimerSeconds"
                             [disabled]="Disabled(satz)" (click)="onSelect($event)" (focusout)="SetTimerSeconds($event)"
                             (mousedown)="MouseDown(satz,$event)" (mouseup)="MouseUp($event)" (touchstart)="MouseDown(satz,$event)"
                             (touchend)="MouseUp($event)" type="text">
                     </ng-template>
                     <ng-template #notRunningSet>
-                        <input name="notRunningSet" matInput class="align-right tc-font-size-smaller" matTooltip="Timer seconds"
+                        <input name="notRunningSet" matInput class="align-right label-font-size-smaller" matTooltip="Timer seconds"
                             matTooltipPosition="above" [matTooltipDisabled]="false" mask="999999" [ngModel]="satz.TimerSeconds"
                             [disabled]="Disabled(satz)" (click)="onSelect($event)" (focusout)="SetTimerSeconds($event)"
                             (mousedown)="MouseDown(satz,$event)" (mouseup)="MouseUp($event)" (touchstart)="MouseDown(satz,$event)"
@@ -83,21 +83,21 @@
         </div>
         <!-- AMRAP  -->
         <div class="column-center width-25">
-            <span class="mg-left-5">AR.</span> 
-            <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP"></mat-checkbox>
+            <span class="label-font-size-smaller mg-left-5">AR.</span> 
+            <mat-checkbox style="--mdc-theme-secondary:#ff0000" [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP"></mat-checkbox>
         </div>
 
         <div class="column-center width-25">
-            <span>OK</span> 
+            <span class="label-font-size-smaller">OK</span> 
             <mat-checkbox [(ngModel)]="SatzFertig"(change)="onClickSatzFertig(satz, $event)"></mat-checkbox>
         </div>
 
         <div class="column-center width-25 column-center-flexend height-68">
-            <div matTooltip="Copy set" matTooltipPosition="above" class="material-symbols-outlined" (click)="CopySet()">add_ad</div>
+            <div matTooltip="Copy set" matTooltipPosition="above" class="label-font-size-large material-symbols-outlined" (click)="CopySet()">add_ad</div>
         </div>
 
         <div class="column-center width-25 height-100-Prozent column-center-flexend height-68">    
-            <div class="material-symbols-outlined" (click)="DeleteSet()">delete</div>
+            <div class="label-font-size-large material-symbols-outlined" (click)="DeleteSet()">delete</div>
         </div>
     </div>
 </div>

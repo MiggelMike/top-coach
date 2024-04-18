@@ -64,7 +64,7 @@
                                             (closed) = "panelSessClosed(sess)" 
                                             class="HG-01  pad-left-3">
                                             <mat-expansion-panel-header  class="disable_ripple" mat-tooltip-panel-below  matTooltip="Hold and drag">
-                                                <input class="tc-font-size-smaller width-100-Prozent mr-5" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
+                                                <input class="font-size-smaller width-100-Prozent mr-5" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
                                             </mat-expansion-panel-header>
 
                                             <div class="row-center-gap-5">
@@ -90,7 +90,7 @@
                                                     <div cdkDropList (cdkDropListDropped)="dropUebung($event, sess)">
                                                         <ng-container *ngFor="let SessUeb of  sess.UebungsListe, index as j; let isOdd=odd">
                                                             <div class="row-start-left-gap-3">
-                                                                <span class="tc-font-size-smaller font-bold">#{{j+1}} {{SessUeb.Name}}</span>
+                                                                <span class="font-size-smaller font-bold">#{{j+1}} {{SessUeb.Name}}</span>
                                                             </div>
 
                                                             <ng-container *ngIf="SessUeb.AufwaermSatzListe.length > 0">

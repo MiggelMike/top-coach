@@ -651,7 +651,7 @@ div.herz:after {
 
 .blue-bold {
 	font-weight: bold;
-	color: blue;
+	color: rgb(137, 182, 241);
 }
 
 .font-14-data {
@@ -686,8 +686,13 @@ div.herz:after {
 }
 
 .font-size-large {
+	font-size: 22px;
+}
+
+.font-size-larger {
 	font-size: 26px;
 }
+
 
 .label-font-size-standard {
 	@extend .label-font-color;
@@ -1270,6 +1275,28 @@ mat-panel-description,
 span {
 	display: block;
 }	
+
+// :host ::ng-deep .mat-checkbox-frame { 
+//     border-color: grey 
+// }
+
+// ::ng-deep .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+// .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background,
+// .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control[data-interminate]:enabled ~ .mdc-checkbox__background { 
+//   border-color:green;
+//   background-color: yellow;
+// } 
+
+// :host ::ng-deep .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background, .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
+// 	border-color:yellow !important;
+// 	background-color: red !important;
+//   }
+
+  
+
+.mdc-checkbox__background {
+    border-color: var(--label-color) !important;
+}
 
 
 

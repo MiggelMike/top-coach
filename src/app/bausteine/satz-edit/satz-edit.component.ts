@@ -19,6 +19,7 @@ import { ISessionStatus, SessionStatus } from 'src/Business/SessionDB';
 import { Zeitraum } from 'src/Business/Dauer';
 import { Datum } from 'src/Business/Datum';
 
+
 @Component({
     selector: "app-satz-edit",
     templateUrl: "./satz-edit.component.html",
@@ -85,8 +86,8 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
 
 	get Toolbar_3_rows(): boolean {
 		return  window.innerWidth <= 363;
-	} 
-
+    } 
+    
     get programModul(): typeof ProgramModulTyp {
         return ProgramModulTyp;
     }
@@ -624,3 +625,4 @@ class ClickSatzFertigPara {
     stoppUhrService: StoppuhrSvcService;
     rowNumber: number;
 }
+

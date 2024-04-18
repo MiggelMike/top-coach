@@ -7,10 +7,7 @@
     text-align: right;
 }
 
-.label {
-    font-size: small;
-    color: gray;
-}
+
 
 
 .rep-column-base {
@@ -94,7 +91,14 @@ input[name="runningSet"] {
 
 
 
-.mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
-    color: rgba(0, 0, 0, 0.87);
-    text-align: right;
-  }
+// .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
+//     color: rgba(0, 0, 0, 0.87);
+//     text-align: right;
+//   }
+
+//   ::ng-deep .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+//   .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background,
+//   .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control[data-interminate]:enabled ~ .mdc-checkbox__background { 
+//     border-color:green;
+//     background-color: yellow;
+//  } 
