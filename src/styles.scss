@@ -1300,7 +1300,9 @@ span {
     border-color: var(--checkbox-border-color) !important;
 }
 
-
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+	border-color: blue;
+  }
 
 // .mat-calendar  {
 // 	background-color: #bdd2e9;

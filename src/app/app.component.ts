@@ -8,11 +8,14 @@ import { Component } from '@angular/core';
 export class AppComponent {
   public static isLightTheme: boolean = false;
     constructor() {
-        document.body.setAttribute(
-            'data-theme',
-            AppComponent.isLightTheme ? 'light' : 'dark'
-        );
-        const a = 0;
-      
+        AppComponent.DoTheme(false);
     }
+  
+    public static DoTheme(aValue: boolean) {
+      AppComponent.isLightTheme = aValue;
+      document.body.setAttribute(
+        'data-theme',
+        AppComponent.isLightTheme ? 'light' : 'dark'
+    );
+  }
 }

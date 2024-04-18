@@ -72,7 +72,27 @@ export class SettingsComponent implements OnInit {
         this.fDbModule.AppDataSpeichern(this.AppData);
 
     }
-    //#endregion    
+    //#endregion
+
+    //#region Light
+    get Light(): boolean {
+        return AppComponent.isLightTheme;
+    }
+
+    set Light(aValue: boolean) {
+        AppComponent.DoTheme(aValue);
+    }
+    //#endregion
+
+    //#region Light
+    get Dark(): boolean {
+        return !AppComponent.isLightTheme;
+    }
+
+    set Dark(aValue: boolean) {
+        AppComponent.DoTheme(!aValue);
+    }
+    //#endregion
 
     ResetDatabase() {
         const mDialogData = new DialogData();
@@ -85,12 +105,6 @@ export class SettingsComponent implements OnInit {
         }
 
         this.fDialogService.JaNein(mDialogData);
-    }
-
-
-    Appearance(aEvent: any) {
-        aEvent.preventDefault();
-        AppComponent.isLightTheme = !AppComponent.isLightTheme;
     }
 
 

@@ -10,7 +10,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatButtonModule } from "@angular/material/button";
 import { ToolBarModule } from '../bausteine/toolbar/tool-bar-module/tool-bar-module.module';
-
+import { MatRadioModule } from '@angular/material/radio';
 
 
 @NgModule({
@@ -29,7 +29,8 @@ import { ToolBarModule } from '../bausteine/toolbar/tool-bar-module/tool-bar-mod
     MatSelectModule,
     MatInputModule,
     ReactiveFormsModule,
-    ToolBarModule
+    ToolBarModule,
+    MatRadioModule
   ]
 })
 export class SettingsModule { }

@@ -3,29 +3,41 @@
 </div>    
 
 <div [ngClass]="{'main-panel-schmal': Toolbar_3_rows === true, 'main-panel-mittel': Toolbar_2_rows, 'main-panel-breit': Toolbar_1_row }" class="column-center">        
-    <p><a class="label-font-size-standard"  (click)="NavExercise()">Exercises</a></p>
-    <p><a class="label-font-size-standard"  (click)="NavMuscleGroups()">Musclegroups</a></p>
-    <p><a class="label-font-size-standard"  (click)="NavScheiben()">Plates</a></p>
-    <p><a class="label-font-size-standard"  (click)="NavBarbells()">Barbells</a></p>
-    <p><a class="label-font-size-standard"  (click)="NavWeightIncrement()">Progression schemas</a></p>
-    <p><a class="label-font-size-standard"  (click)="NavBodyweight()">Bodyweight</a></p>
+    <p><a class="label-font-size-standard" (click)="NavExercise()">Exercises</a></p>
+    <p><a class="label-font-size-standard" (click)="NavMuscleGroups()">Musclegroups</a></p>
+    <p><a class="label-font-size-standard" (click)="NavScheiben()">Plates</a></p>
+    <p><a class="label-font-size-standard" (click)="NavBarbells()">Barbells</a></p>
+    <p><a class="label-font-size-standard" (click)="NavWeightIncrement()">Progression schemas</a></p>
+    <p><a class="label-font-size-standard" (click)="NavBodyweight()">Bodyweight</a></p>
     <p><a class="label-font-size-standard" (click)="ResetDatabase()">Reset database</a></p>
-    <p><a class="label-font-size-standard" (click)="Appearance($event)">Appearance</a></p>
 
-        <div class="column-center WeightUnit">
-            <div fxLayout="row wrap" fxLayoutAlign="center center">
-                <mat-label class="label-font-size-standard">Weight unit</mat-label>
-            </div>
-            
-            <div class="row-center width-150">
-                
-                <div class="center-item" layout-align="center center" fxFlex="75px">
-                    <mat-checkbox [(ngModel)]="KG"><mat-label class="label-font-size-standard">KG</mat-label></mat-checkbox>
-                </div>
-                <div class="center-item" layout-align="center center" fxFlex="75px">
-                    <mat-checkbox [(ngModel)]="LBS"><mat-label class="label-font-size-standard">LBS</mat-label></mat-checkbox>
-                </div>
-            </div>    
+    <div class="column-center frame-box">
+        <div fxLayout="row wrap" fxLayoutAlign="center center">
+            <mat-label class="label-font-size-standard">Weight unit</mat-label>
         </div>
+        
+        <div class="row-center">
+            <div class="center-item" layout-align="center center" fxFlex="75px">
+                <mat-checkbox [(ngModel)]="KG"><mat-label class="label-font-size-standard">KG</mat-label></mat-checkbox>
+            </div>
+            <div class="center-item" layout-align="center center" fxFlex="75px">
+                <mat-checkbox [(ngModel)]="LBS"><mat-label class="label-font-size-standard">LBS</mat-label></mat-checkbox>
+            </div>
+        </div>    
+    </div>
 
+    <div class="column-center frame-box  mg-top-5">
+        <div fxLayout="row wrap" fxLayoutAlign="center center">
+            <mat-label class="label-font-size-standard">Appearance</mat-label>
+        </div>
+        
+        <div class="row-center">
+            <div class="center-item" layout-align="center center" fxFlex="75px">
+                <mat-checkbox [(ngModel)]="Light"><mat-label class="label-font-size-standard">Light</mat-label></mat-checkbox>
+            </div>
+            <div class="center-item" layout-align="center center" fxFlex="75px">
+                <mat-checkbox [(ngModel)]="Dark"><mat-label class="label-font-size-standard">Dark</mat-label></mat-checkbox>
+            </div>
+        </div>    
+    </div>    
 </div>
