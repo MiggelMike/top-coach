@@ -1,5 +1,5 @@
 import { AppData, GewichtsEinheit } from 'src/Business/Coach/Coach';
-import { cWeightDigits, cMinDatum, cNumberFormat, cWeightFormat } from './../../app/services/dexie-svc.service';
+import { cWeightDigits, cMinDatum, cNumberFormat, cWeightFormat, DexieSvcService } from './../../app/services/dexie-svc.service';
 import { ProgressGroup, WeightProgress } from 'src/Business/Progress/Progress';
 import { Zeitraum } from './../Dauer';
 import { MuscleGroupKategorie02 } from '../MuscleGroup/MuscleGroup';
@@ -1045,6 +1045,7 @@ export class Uebung  {
     }
 
     public static StaticKopiere(
+        aDbModule: DexieSvcService,
         aUebung: Uebung,
         aKategorie02: UebungsKategorie02
     ): Uebung {

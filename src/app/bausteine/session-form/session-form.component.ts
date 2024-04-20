@@ -341,7 +341,10 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 			(aUebungWaehlenData: UebungWaehlenData) => {
 				aUebungWaehlenData.fUebungsListe.forEach((mUebung) => {
 					if (mUebung.Selected) {
-						const mNeueSessionUebung = Uebung.StaticKopiere(mUebung, UebungsKategorie02.Session);
+						const mNeueSessionUebung = Uebung.StaticKopiere(
+							this.fDbModule,
+							mUebung,
+							UebungsKategorie02.Session);
 						mNeueSessionUebung.ID = undefined;
 						mNeueSessionUebung.FkUebung = mUebung.ID;
 						mNeueSessionUebung.SessionID = aUebungWaehlenData.fSession.ID;
@@ -640,7 +643,11 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 						mNeueSession.UebungsListe = [];
 						const mNeueUebungsListe: Array<Uebung> = mNeueSession.UebungsListe.concat(mVorderesSegment, mHinteresSegment);
 						mNeueUebungsListe.forEach((mUebung) => {
-							const mNeueUebung = Uebung.StaticKopiere(mUebung, UebungsKategorie02.Session);
+							const mNeueUebung = Uebung.StaticKopiere(
+								this.fDbModule,
+								mUebung,
+								UebungsKategorie02.Session
+							);
 							mNeueUebung.ID = undefined;
 							mNeueUebung.SessionID = mNeueSession.ID;
 						});

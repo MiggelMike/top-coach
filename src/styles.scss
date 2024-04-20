@@ -687,6 +687,10 @@ div.herz:after {
 	font-size: 10px;
 }
 
+.font-size-smallest {
+	font-size: 9px;
+}
+
 .font-size-large {
 	font-size: 22px;
 }
@@ -710,6 +714,12 @@ div.herz:after {
 	@extend .label-font-color;
 	@extend .font-size-smaller;
 }
+
+.label-font-size-smallest {
+	@extend .label-font-color;
+	@extend .font-size-smallest;
+}
+
 
 .label-font-size-large {
 	@extend .label-font-color;

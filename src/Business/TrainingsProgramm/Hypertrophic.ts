@@ -8,13 +8,16 @@ import { DexieSvcService } from "src/app/services/dexie-svc.service";
 
 
 export class HypertrophicProgramm extends TrainingsProgramm {
-	constructor(aProgrammKategorie: ProgrammKategorie, public override pDbModule: DexieSvcService) {
-		super(ProgrammTyp.HypertrophicSpecific, aProgrammKategorie, pDbModule);
+	constructor(aProgrammKategorie: ProgrammKategorie, private pDbModule: DexieSvcService) {
+		super();
+		this.ProgrammTyp = ProgrammTyp.HypertrophicSpecific;
+		this.ProgrammKategorie = aProgrammKategorie;
+		//super(ProgrammTyp.HypertrophicSpecific, aProgrammKategorie, pDbModule);
 		this.MaxSessions = 18;
 	}
 
-	public PreCopy(): ITrainingsProgramm {
-		return new HypertrophicProgramm(this.ProgrammKategorie, this.pDbModule);
+	public PreCopy(aDbModule: DexieSvcService): ITrainingsProgramm {
+		return new HypertrophicProgramm(this.ProgrammKategorie, aDbModule);
 	}
 
 	public override DeserializeProgramm(aJsonData: Object): ITrainingsProgramm {
@@ -62,7 +65,11 @@ export class HypertrophicProgramm extends TrainingsProgramm {
 		let mAkuelleAnzahlWdh = mAnzahlWdh[mAnzahlWdhIndex];
 
 		for (let index = 0; index < aUebungsNamenListe.length; index++) {
-			const mPtrUebung: Uebung = Uebung.StaticKopiere(this.pDbModule.SucheUebungPerName(aUebungsNamenListe[index]), UebungsKategorie02.Session);
+			const mPtrUebung: Uebung = Uebung.StaticKopiere(
+				this.pDbModule,
+				this.pDbModule.SucheUebungPerName(aUebungsNamenListe[index]),
+				UebungsKategorie02.Session
+			);
 			mPtrUebung.GewichtSteigerung = 1;
 			mPtrUebung.GewichtReduzierung = 1;
 
@@ -90,7 +97,7 @@ export class HypertrophicProgramm extends TrainingsProgramm {
 	}
 
 	public static ErzeugeHypertrophicVorlage(aDbModule: DexieSvcService): ITrainingsProgramm {
-		const mHyperTrophicVorlage: ITrainingsProgramm = new HypertrophicProgramm(ProgrammKategorie.Vorlage, aDbModule);
+		const mHyperTrophicVorlage: ITrainingsProgramm = new HypertrophicProgramm(ProgrammKategorie.Vorlage,aDbModule);
 		mHyperTrophicVorlage.Name = "Hypertrophic - Standard";
 		const mSessions: Array<ISession> = new Array<ISession>();
 		mHyperTrophicVorlage.Init(mSessions);

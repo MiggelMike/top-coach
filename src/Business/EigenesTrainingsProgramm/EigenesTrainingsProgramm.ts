@@ -3,7 +3,7 @@ import { TrainingsProgramm, ITrainingsProgramm } from '../TrainingsProgramm/Trai
 import { deserialize } from '@peerlancers/json-serialization';
 
 export class EigenesTrainingsProgramm extends TrainingsProgramm implements ITrainingsProgramm {
-    protected InitSession(aSessionNr: number): ISession[] {
+    protected override InitSession(aSessionNr: number): ISession[] {
         throw new Error('Method not implemented.');
     }
 

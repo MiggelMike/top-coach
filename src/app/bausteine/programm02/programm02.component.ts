@@ -247,7 +247,11 @@ export class Programm02Component implements OnInit, IProgramModul {
 	private SelectUebungDelegate(aUebungWaehlenData: UebungWaehlenData) {
 		aUebungWaehlenData.fUebungsListe.forEach((mUebung) => {
 			if (mUebung.Selected) {
-				aUebungWaehlenData.fSession.addUebung(Uebung.StaticKopiere(mUebung, UebungsKategorie02.Session));
+				aUebungWaehlenData.fSession.addUebung(
+					Uebung.StaticKopiere(
+						this.fDbModule,
+						mUebung,
+						UebungsKategorie02.Session));
 			}
 		});
 		aUebungWaehlenData.fMatDialog.close();

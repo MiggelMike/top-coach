@@ -154,7 +154,12 @@ export class ProgrammWaehlenComponent implements OnInit, IProgramModul, ISatzTyp
 	private SelectUebungDelegate(aUebungWaehlenData: UebungWaehlenData) {
 		aUebungWaehlenData.fUebungsListe.forEach((mUebung) => {
 			if (mUebung.Selected) {
-				aUebungWaehlenData.fSession.addUebung(Uebung.StaticKopiere(mUebung, UebungsKategorie02.Session));
+                aUebungWaehlenData.fSession.addUebung(
+                    Uebung.StaticKopiere(
+                        this.fDbModul,
+                        mUebung,
+                        UebungsKategorie02.Session)
+                );
 			}
 		});
 		aUebungWaehlenData.fMatDialog.close();
@@ -371,11 +376,9 @@ export class ProgrammWaehlenComponent implements OnInit, IProgramModul, ISatzTyp
     }
 
     createWorkOut() {
-        const mNeuesProgram: ITrainingsProgramm = new EigenesTrainingsProgramm(
-            ProgrammTyp.Custom,
-            ProgrammKategorie.Vorlage,
-            this.fDbModul
-        );
+        const mNeuesProgram: ITrainingsProgramm = new EigenesTrainingsProgramm();
+        mNeuesProgram.ProgrammTyp = ProgrammTyp.Custom;
+        mNeuesProgram.ProgrammKategorie = ProgrammKategorie.Vorlage;
 
         TrainingsProgramm.createWorkOut(this.fDbModul, mNeuesProgram);
     }

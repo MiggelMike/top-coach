@@ -1,6 +1,6 @@
 import { DexieSvcService } from './dexie-svc.service';
 import { MyObserver } from './../../Observers/MyObservers';
-import { ITrainingsProgramm, ProgrammTyp, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
+import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Injectable } from '@angular/core';
 import { Sportler, ISportler } from '../../Business/Sportler/Sportler';
 import { ISession } from '../../Business/Session/Session';
@@ -93,9 +93,7 @@ export class GlobalService {
             return 2;
         return 1;
     }
-    
 
-        
     
     Init(): void {
         this.Sportler = new Sportler();

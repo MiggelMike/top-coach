@@ -25,8 +25,11 @@ import { deserialize } from '@peerlancers/json-serialization';
 import { Progress } from '../Progress/Progress';
 
 export class GzclpProgramm extends TrainingsProgramm {
-	constructor(aProgrammKategorie: ProgrammKategorie, public override pDbModule: DexieSvcService) {
-		super(ProgrammTyp.Gzclp, aProgrammKategorie, pDbModule);
+	constructor(aProgrammKategorie: ProgrammKategorie, public pDbModule: DexieSvcService) {
+		super();
+		this.ProgrammKategorie = aProgrammKategorie;
+		this.ProgrammTyp = ProgrammTyp.Gzclp;
+		// super(ProgrammTyp.Gzclp, aProgrammKategorie, pDbModule);
 		this.MaxSessions = 4;
 	}
 
@@ -113,7 +116,11 @@ export class GzclpProgramm extends TrainingsProgramm {
 
 	private ErzeugeSessions(aT1Uebung: string, aT2Uebung: string, aT3Uebung: string, aNeueSession: Session): void {
 		// T1-Lift
-		let mUebung: Uebung = Uebung.StaticKopiere(this.pDbModule.SucheUebungPerName(aT1Uebung), UebungsKategorie02.Session);
+		let mUebung: Uebung = Uebung.StaticKopiere(
+			this.pDbModule,
+			this.pDbModule.SucheUebungPerName(aT1Uebung),
+			UebungsKategorie02.Session
+		);
 		mUebung.GewichtSteigerung = 1;
 		mUebung.GewichtReduzierung = 1;
 
@@ -140,7 +147,11 @@ export class GzclpProgramm extends TrainingsProgramm {
 		aNeueSession.addUebung(mUebung);
 
 		// T2-Lift
-		mUebung = Uebung.StaticKopiere(this.pDbModule.SucheUebungPerName(aT2Uebung), UebungsKategorie02.Session);
+		mUebung = Uebung.StaticKopiere(
+			this.pDbModule,
+			this.pDbModule.SucheUebungPerName(aT2Uebung),
+			UebungsKategorie02.Session
+		);
 		mUebung.GewichtSteigerung = 1;
 		mUebung.GewichtReduzierung = 1;
 
@@ -166,7 +177,11 @@ export class GzclpProgramm extends TrainingsProgramm {
 		aNeueSession.addUebung(mUebung);
 
 		// T3-Lift
-		mUebung = Uebung.StaticKopiere(this.pDbModule.SucheUebungPerName(aT3Uebung), UebungsKategorie02.Session);
+		mUebung = Uebung.StaticKopiere(
+			this.pDbModule,
+			this.pDbModule.SucheUebungPerName(aT3Uebung),
+			UebungsKategorie02.Session
+		);
 		mUebung.GewichtSteigerung = 1;
 		mUebung.GewichtReduzierung = 1;
 		

@@ -10,7 +10,7 @@ import { Hantel, HantelTyp } from './../../Business/Hantel/Hantel';
 import { Equipment, EquipmentOrigin, EquipmentTyp } from './../../Business/Equipment/Equipment';
 import { SessionDB, SessionStatus } from './../../Business/SessionDB';
 import { Session, ISession } from 'src/Business/Session/Session';
-import { ITrainingsProgramm, TrainingsProgramm, ProgrammTyp, ProgrammKategorie } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
+import { ITrainingsProgramm, TrainingsProgramm, ProgrammTyp, ProgrammKategorie, TrainingsProgrammDB } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { DialogeService } from './dialoge.service';
 import { Satz, SatzStatus, GewichtDiff, SatzTyp, SatzDB } from './../../Business/Satz/Satz';
 import { GzclpProgramm } from 'src/Business/TrainingsProgramm/Gzclp';
@@ -26,6 +26,7 @@ import { ProgramModulTyp } from '../app.module';
 import { Router } from '@angular/router';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { error } from 'console';
+import { GlobalService } from './global.service';
 var cloneDeep = require('lodash.clonedeep');
 
 
@@ -241,7 +242,7 @@ export class DexieSvcService extends Dexie {
 	public static AppDataTable: Dexie.Table<AppData, number>;
 	private static UebungTable: Dexie.Table<UebungDB, number>;
 	private static SatzTable: Dexie.Table<SatzDB, number>;
-	private static ProgrammTable: Dexie.Table<ITrainingsProgramm, number>;
+	private static ProgrammTable: Dexie.Table<TrainingsProgrammDB, number>;
 	private static SessionTable: Dexie.Table<SessionDB, number>;
 	private static MuskelGruppeTable: Dexie.Table<MuscleGroup, number>;
 	public static AppRec: AppData;
@@ -253,6 +254,18 @@ export class DexieSvcService extends Dexie {
 	private get HantelTable(): Dexie.Table<Hantel, number> {
 		return this.table(this.cHantel);
 	};
+
+	    
+    static CreateTrainingsProgramm(aProgrammTyp: ProgrammTyp): ITrainingsProgramm {
+        switch (aProgrammTyp) {
+            case ProgrammTyp.Gzclp:
+                return new GzclpProgramm(ProgrammKategorie.Vorlage,null);
+            case ProgrammTyp.HypertrophicSpecific:
+                return new HypertrophicProgramm(ProgrammKategorie.Vorlage,null);
+            default: return new TrainingsProgramm();
+        }
+    }
+        
 
 	RefreshAktuellesProgramm: boolean = false;
 	// Siehe Anstehende-Sessions
@@ -659,8 +672,8 @@ export class DexieSvcService extends Dexie {
 		if (DexieSvcService.ModulTyp === null)
 			DexieSvcService.ModulTyp = ProgramModulTyp.Kein;
 		// 
-		        //    Dexie.delete("ConceptCoach");
-		this.version(46).stores({
+		      //      Dexie.delete("ConceptCoach");
+		this.version(47).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
 			Programm: "++id,&[Name+ProgrammKategorie],FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
@@ -1550,7 +1563,7 @@ export class DexieSvcService extends Dexie {
 	private InitProgramm() {
 		if (DexieSvcService.ProgrammTable === undefined) {
 			DexieSvcService.ProgrammTable = this.table(this.cProgramm);
-			DexieSvcService.ProgrammTable.mapToClass(TrainingsProgramm);
+			DexieSvcService.ProgrammTable.mapToClass(TrainingsProgrammDB);
 		}
 	}
 
@@ -2142,6 +2155,13 @@ export class DexieSvcService extends Dexie {
 		};
 
 		return this.LadeProgrammeEx(mProgrammPara).then((aProgramme) => {
+			// const mResult: Array<ITrainingsProgramm> = [];
+			// for (let index = 0; index < aProgramme.length; index++) {
+				// const mPtrProgrammDB = aProgramme[index];
+				// const mPtrProgramm: ITrainingsProgramm = DexieSvcService.CreateTrainingsProgramm(mPtrProgrammDB.ProgrammTyp);
+				// mPtrProgramm.TrainingsProgrammDB = mPtrProgrammDB;
+				// mResult.push(mPtrProgramm);
+			// }
 			DexieSvcService.VerfuegbareProgramme = aProgramme;
 			return aProgramme;
 		});
@@ -2156,10 +2176,15 @@ export class DexieSvcService extends Dexie {
 			.and(aProgrammPara.And === undefined ? () => { return 1 === 1 } : (aProgramm) => aProgrammPara.And(aProgramm))
 			.limit(aProgrammPara.Limit === undefined ? cMaxLimnit : aProgrammPara.Limit)
 			.sortBy(aProgrammPara.SortBy === undefined ? '' : aProgrammPara.SortBy)
-			.then(aProgrammPara.Then === undefined ? async (aProgramme: Array<ITrainingsProgramm>) => {
+			.then(aProgrammPara.Then === undefined ? async (aProgramme: Array<TrainingsProgrammDB>) => {
+				const result: Array<TrainingsProgramm> = []; 
 				for (let index = 0; index < aProgramme.length; index++) {
+					const mPtrProgramm = new TrainingsProgramm(); 
+					mPtrProgramm.TrainingsProgrammDB = aProgramme[index];
+					result.push(mPtrProgramm); 
+
 					if (aProgrammPara.SessionBeachten !== undefined && aProgrammPara.SessionBeachten === true) {
-						const mPtrProgramm = aProgramme[index];
+						const mPtrProgrammDB = aProgramme[index];
 						let mSessionParaDB: SessionParaDB;
 						
 						if (aProgrammPara.SessionParaDB !== undefined) {
@@ -2169,11 +2194,11 @@ export class DexieSvcService extends Dexie {
 							mSessionParaDB = new SessionParaDB();
 							mSessionParaDB.WhereClause = "FK_Programm";
 							mSessionParaDB.anyOf = () => {
-								return mPtrProgramm.id as any;
+								return mPtrProgrammDB.id as any;
 							};
 						}
 					
-						await this.LadeProgrammSessionsEx(mSessionParaDB, aProgramme[index])
+						await this.LadeProgrammSessionsEx(mSessionParaDB, mPtrProgramm)
 							.then((aSessionListe: Array<Session>) => {
 								mPtrProgramm.SessionListe = aSessionListe;
 							});
@@ -2183,7 +2208,7 @@ export class DexieSvcService extends Dexie {
 				}
 				if (aProgrammPara.OnProgrammAfterLoadFn !== undefined) aProgrammPara.OnProgrammAfterLoadFn(aProgramme);
 
-				return aProgramme;
+				return result;
 			
 			} : (aProgramme: Array<ITrainingsProgramm>) => aProgrammPara.Then(aProgramme));
 	}
@@ -2263,7 +2288,7 @@ export class DexieSvcService extends Dexie {
 	}
 
 	public async ProgrammSpeichern(aTrainingsProgramm: ITrainingsProgramm, aProgrammExtraParaDB?: ProgrammParaDB): Promise<ITrainingsProgramm> {
-		return await DexieSvcService.ProgrammTable.put(aTrainingsProgramm)
+		return await DexieSvcService.ProgrammTable.put(aTrainingsProgramm.TrainingsProgrammDB)
 			.then(async (mID) => {
 				aTrainingsProgramm.id = mID;
 				const mSessionListe: Array<Session> = aTrainingsProgramm.SessionListe as Array<Session>;
@@ -2278,7 +2303,7 @@ export class DexieSvcService extends Dexie {
 						});
 				}
 
-				return aTrainingsProgramm;
+				 return aTrainingsProgramm;
 				
 				//  aTrainingsProgramm.SessionListe = [];
 
