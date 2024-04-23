@@ -13,14 +13,14 @@
   }
   
 
-.mat-calendar-body-selected {
-	background-color: white;
-	color:  var(--mat-datepicker-calendar-text-font);;
-  }
+// .mat-calendar-body-selected {
+// 	background-color: white;
+// 	color:  var(--mat-datepicker-calendar-text-font);;
+//   }
 
-.mat-calendar-body-in-range::before {
-	background: #cccccc;
-  }
+// .mat-calendar-body-in-range::before {
+// 	background: #cccccc;
+//   }
 
   :host ::ng-deep .mat-calendar .mat-mdc-button:not(:disabled){
 	color:  var(--mat-datepicker-calendar-text-font);
@@ -31,7 +31,15 @@
   }
 
 
-  :host ::ng-deep .mat-calendar .mat-calendar-header  .mat-calendar-period-button .mdc-button .mat-mdc-button .mat-unthemed .mat-mdc-button-base {
-    color: yellow;
-    //   var(--mat-datepicker-calendar-text-font);
+//   :host ::ng-deep .mat-calendar .mat-calendar-header  .mat-calendar-period-button .mdc-button .mat-mdc-button .mat-unthemed .mat-mdc-button-base {
+//     color: yellow;
+//     //   var(--mat-datepicker-calendar-text-font);
+//   }
+
+  .von-bis-label {
+    color:  var(--label-color);
+  }
+
+  .von-bis-wert {
+    color:  var(--mat-datepicker-calendar-date-text-color);
   }

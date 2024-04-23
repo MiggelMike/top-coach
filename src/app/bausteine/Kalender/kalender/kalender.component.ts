@@ -1,43 +1,47 @@
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatRangeDateSelectionModel, DefaultMatCalendarRangeStrategy, DateRange, MAT_DATE_RANGE_SELECTION_STRATEGY } from '@angular/material/datepicker';
+import { DateFormatTyp, Datum } from 'src/Business/Datum';
 
 @Component({
-  selector: 'app-kalender',
-  templateUrl: './kalender.component.html',
-  styleUrls: ['./kalender.component.scss'],
+	selector: 'app-kalender',
+	templateUrl: './kalender.component.html',
+	styleUrls: ['./kalender.component.scss'],
+	// providers: [
+	//   {
+	//     provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
+	//     useClass: DefaultMatCalendarRangeStrategy
+	//   },
+	//   DefaultMatCalendarRangeStrategy,
+	//   MatRangeDateSelectionModel
+	// ]
 })
 export class KalenderComponent implements OnInit {
-  
   dateRange: DateRange<Date>;
 
-  constructor(
-    @Inject(LOCALE_ID) private readonly selectionModel: MatRangeDateSelectionModel<Date>,
-		@Inject(LOCALE_ID) private readonly selectionStrategy: DefaultMatCalendarRangeStrategy<Date>,
+  get von(): string {
+    return Datum.StaticFormatDate(this.dateRange.start, DateFormatTyp.Datum);
+  }
+  
+  get bis(): string {
+    return Datum.StaticFormatDate(this.dateRange.end, DateFormatTyp.Datum);
+  }
+  
 
-  ) { 
-
-    const fiveDaysAgo = new Date();
+	constructor(
+		public  readonly selectionModel: MatRangeDateSelectionModel<Date>,
+		public  readonly selectionStrategy: DefaultMatCalendarRangeStrategy<Date>
+	) {
+		const fiveDaysAgo = new Date();
 		fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
 		this.dateRange = new DateRange(fiveDaysAgo, new Date());
-  }
+	}
 
-  rangeChanged(selectedDate: Date) {
+	rangeChanged(selectedDate: Date) {
 		const selection = this.selectionModel.selection,
-		  newSelection = this.selectionStrategy.selectionFinished(
-			selectedDate,
-			selection
-		  );
-	
+		newSelection = this.selectionStrategy.selectionFinished(selectedDate, selection);
 		this.selectionModel.updateSelection(newSelection, this);
 		this.dateRange = new DateRange<Date>(newSelection.start, newSelection.end);
-	
-		// if (this.selectionModel.isComplete()) {
-		//   console.log("new selection", newSelection);
-		// }
-	  }
+	}
 
-
-
-  ngOnInit() {}
-
+	ngOnInit() {}
 }

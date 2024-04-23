@@ -55,6 +55,7 @@
 // $background: map.get($my-theme, background);
 // $background-color: map-get($background, background);
 
+
 [data-theme="light"] {
 	--label-color: black;
 	--mat-datepicker-calendar-text-font: var(--label-color);
@@ -64,6 +65,7 @@
 	--mat-datepicker-calendar-period-button-icon-color: var(--label-color);
 	--mat-datepicker-calendar-header-text-color: var(--label-color);
 	--mat-datepicker-calendar-header-divider-color: var(--label-color);
+	--mat-datepicker-calendar-date-in-range-state-background-color: rgb(173, 156, 233);
 	--checkbox-border-color: var(--label-color);
 	--header-background-color: #ffffff;
 	--header-border-color: #e5e8ea;
@@ -94,6 +96,7 @@
 	--mat-datepicker-calendar-period-button-icon-color:  var(--label-color);
 	--mat-datepicker-calendar-header-text-color: var(--label-color);
 	--mat-datepicker-calendar-header-divider-color: var(--label-color);
+	--mat-datepicker-calendar-date-in-range-state-background-color: rgb(173, 156, 233);
 	--checkbox-border-color: var(--label-color);
 	--header-background-color: #1d1d1d;
 	--header-border-color: #e5e8ea;
@@ -821,8 +824,16 @@ div.herz:after {
 
 .row-center-gap-10 {
 	@extend .row-center;
-	row-gap: 10px;
+	column-gap: 10px;
+	// row-gap: 10px;
 }
+
+.row-center-gap-5 {
+	@extend .row-center;
+	column-gap: 5px;
+	// row-gap: 10px;
+}
+
 
 .wrap {
 	flex-wrap: wrap;
