@@ -30,7 +30,7 @@
 
 #historyHeader {
 	position: relative;
-	background-color: white;
+	background-color: var(--header-background-color);
 }
 
 #history-sessions {
@@ -51,8 +51,61 @@
 	z-index: 1000;
 }
 
-// @media screen and (orientation: portrait){
-//     @media screen and  (max-device-height: 2560){
+:host ::ng-deep .mat-radio-container{
+	height: 10px;
+	width: 10px;
+	color: yellow;
+  }
+  :host ::ng-deep .mat-radio-outer-circle{
+	height: 10px;
+	width: 10px;
+	color: yellow;
+  }
+  :host ::ng-deep .mat-radio-inner-circle{
+	height: 10px;
+	width: 10px;
+	color: yellow;
+  }
+  :host ::ng-deep .mat-radio-button .mat-radio-ripple{
+	height: 20px; /*double of your required circle radius*/
+	width: 20px;  /*double of your required circle radius*/
+	left: calc(50% - 10px); /*'10px'-same as your required circle radius*/
+	top: calc(50% - 10px); /*'10px'-same as your required circle radius*/
+	color: yellow;
+  }  
+
+  .tp-radio-group {
+	color: yellow;
+  }
+
+ .tp-radio-button {
+	color: yellow;
+ }
+
+ .tp-selected-value {
+	color: yellow;
+
+ }
+
+ 
+// ::ng-deep .mat-form-field-label {
+// 	color: red;
+//   }
+
+//   ::ng-deep .mat-form-field .mat-input-element{
+// 	color: blue;
+//   }
+
+//   ::ng-deep .mat-date-range-input {
+// 	color: blue;
+//   }
+  
+//   ::ng-deep .mat-date-range-input-separator {
+// 	color: blue;
+//   }
+
+
+
 //         #History-Panel {
 //             height: 2400px;
 //         }

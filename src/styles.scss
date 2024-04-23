@@ -7,7 +7,6 @@
 // @import "~@angular/material/prebuilt-themes/pink-bluegrey.css";
 
 
-
 // $my-primary: mat.define-palette(mat.$pink-palette);
  //$my-accent: mat.define-palette(mat.$pink-palette);
 
@@ -58,6 +57,13 @@
 
 [data-theme="light"] {
 	--label-color: black;
+	--mat-datepicker-calendar-text-font: var(--label-color);
+	--mdc-text-button-label-text-color: var(--label-color);
+	--mat-datepicker-calendar-body-label-text-color:var(--label-color);
+	--mat-datepicker-calendar-date-text-color:  var(--label-color);
+	--mat-datepicker-calendar-period-button-icon-color: var(--label-color);
+	--mat-datepicker-calendar-header-text-color: var(--label-color);
+	--mat-datepicker-calendar-header-divider-color: var(--label-color);
 	--checkbox-border-color: var(--label-color);
 	--header-background-color: #ffffff;
 	--header-border-color: #e5e8ea;
@@ -81,6 +87,13 @@
 
   [data-theme="dark"] {
 	--label-color: lightgray;
+	--mat-datepicker-calendar-text-font: var(--label-color);
+	--mdc-text-button-label-text-color: var(--label-color);
+	--mat-datepicker-calendar-body-label-text-color:var(--label-color);
+	--mat-datepicker-calendar-date-text-color:  #baff3b;
+	--mat-datepicker-calendar-period-button-icon-color:  var(--label-color);
+	--mat-datepicker-calendar-header-text-color: var(--label-color);
+	--mat-datepicker-calendar-header-divider-color: var(--label-color);
 	--checkbox-border-color: var(--label-color);
 	--header-background-color: #1d1d1d;
 	--header-border-color: #e5e8ea;
@@ -1310,9 +1323,42 @@ span {
     border-color: var(--checkbox-border-color) !important;
 }
 
-.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
-	border-color: blue;
+
+::ng-deep .mat-radio-button {
+	color: yellow;
   }
+
+
+
+//   ::ng-deep .mat-calendar-body-in-range .mat-calendar-body-cell-content {
+// 	border: 3px solid orange;
+// 	border-radius: 0;
+// 	border-left-width: 0;
+// 	border-right-width: 0;
+// 	color: #fff;	
+// 	background-color: white;
+//   }
+  
+//   ::ng-deep .mat-calendar-body-range-end > .mat-calendar-body-selected {
+// 	background-color: white;
+// 	color: #fff;	
+// 	border: 3px solid orange;
+// 	border-top-left-radius: 0;
+// 	border-bottom-left-radius: 0;
+// 	border-left-width: 0;
+// 	border-top-right-radius: 50%;
+// 	border-bottom-right-radius: 50%;
+//   }
+//   ::ng-deep .mat-calendar-body-range-start > .mat-calendar-body-selected {
+// 	color: #fff;	
+// 	background-color: white;
+// 	border: 3px solid orange;
+// 	border-top-right-radius: 0;
+// 	border-bottom-right-radius: 0;
+// 	border-top-left-radius: 50%;
+// 	border-bottom-left-radius: 50%;
+// 	border-right-width: 0;
+//   }
 
 // .mat-calendar  {
 // 	background-color: #bdd2e9;

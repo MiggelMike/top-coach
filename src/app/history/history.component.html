@@ -3,7 +3,7 @@
     <div id="historyHeader">
         <div class="row-center">
 
-            <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="OpenHistorySettings()">{{HistorySettingsText}}</a>
+            <a [ngClass]="['link-button-font']" mat-flat-button (click)="OpenHistorySettings()">{{HistorySettingsText}}</a>
         </div>
     </div>
 </div>
@@ -12,15 +12,16 @@
     <div cdkDrag id="chart-settings" class="cc-overlay" matTooltip="Drag me" [matTooltipPosition]="'above'!">
         <div class="row-center-gap-10">
             <div class="column-center">                
-                <a [ngClass]="['link-button-font', 'HG-01', 'font-14-data']" mat-flat-button (click)="CloseHistorySettings()">Close history settings</a>
+                <a [ngClass]="['link-button-font', 'font-14-data']" mat-flat-button (click)="CloseHistorySettings()">Close history settings</a>
             </div>
         </div>
+        <app-kalender></app-kalender>
 
-        <div class="column-center">
-            <div class="row-center wrap">
-                <mat-form-field class="width-235" appearance="outline">
-                    <mat-label>Select Date Range</mat-label>
-                    <mat-date-range-input [rangePicker]="picker" [formGroup]="range">
+        <div class="column-center label-font-size-standard">
+            <!-- <div class="row-center wrap label-font-size-standard">
+                <mat-form-field class="width-235 label-font-size-standard" appearance="outline">
+                    <mat-label class="label-font-size-standard">Select Date Range</mat-label>
+                    <mat-date-range-input class="label-font-size-standard" [rangePicker]="picker" [formGroup]="range">
                     <input  matStartDate 
                             placeholder="Start Date" 
                             formControlName="start" 
@@ -31,19 +32,19 @@
                         formControlName="end"
                         [(ngModel)]="toDate">
                     </mat-date-range-input>
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker-toggle class="label-font-size-standard" matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-date-range-picker #picker (closed)="onCalendarClose()"></mat-date-range-picker>
                 </mat-form-field>
                 
                 
 
-            </div>
+            </div> -->
         </div> 
 
-        <div class="row-center-gap-10">
-            <mat-radio-group #AuswahlRadio class="tp-radio-group" [(ngModel)]="Auswahl" (change)="AuswahlChanged($event)" >
-                    <mat-radio-button class="tp-radio-button" [value]="0">Sessions</mat-radio-button>
-                    <mat-radio-button class="tp-radio-button" [value]="1">Charts</mat-radio-button>
+        <div class="row-center-gap-10" >
+            <mat-radio-group class="tp-radio-group" #AuswahlRadio  [(ngModel)]="Auswahl" (change)="AuswahlChanged($event)" >
+                    <mat-radio-button class="tp-radio-button"  [value]="0">Sessions</mat-radio-button>
+                    <mat-radio-button  [value]="1">Charts</mat-radio-button>
             </mat-radio-group>
         </div>
 
@@ -51,8 +52,8 @@
             <div class="row-center-gap-10">
                 <mat-radio-group #ChartType class="tp-radio-group" [(ngModel)]="aktuellerDiaTyp"
                     (change)="ChartChanged($event)">
-                    <mat-radio-button class="tp-radio-button" [value]="0">Line</mat-radio-button>
-                    <mat-radio-button class="tp-radio-button" [value]="1">Bar</mat-radio-button>
+                    <mat-radio-button  [value]="0">Line</mat-radio-button>
+                    <mat-radio-button  [value]="1">Bar</mat-radio-button>
                 </mat-radio-group>
             </div>
             <div class="row-center wrap width-300">
@@ -83,25 +84,25 @@
                                             <div class="column-start-left width-100-Prozent">
                                                 <div class="row-start-left">
                                                     <div class="column-start-left">
-                                                        <mat-label class="font-size-smaller"
+                                                        <mat-label class="label-font-size-smaller"
                                                             [ngClass]="{'NoSessionName': NoSessionName(sess) === true }">{{SessProgrammName(sess)}}</mat-label>
                                                     </div>
                                                 </div>
                                                 <div class="row-start-left">
                                                     <div class="column-start-left width-100-Prozent" >
-                                                        <input class="font-size-smaller width-100-Prozent mr-5" disabled="true" matInput [(ngModel)]="sess.Name"
+                                                        <input class="label-font-size-smaller width-100-Prozent mr-5" disabled="true" matInput [(ngModel)]="sess.Name"
                                                             type="text" (click)="$event.stopPropagation()">
                                                     </div>
                                                 </div>
                                 
                                                 <div class="row-start-left">
                                                     <div class="column-start-left">
-                                                        <mat-label class="font-size-smaller">Started at</mat-label>
+                                                        <mat-label class="label-font-size-smaller">Started at</mat-label>
                                                     </div>
                                                 </div>
                                                 <div class="row-start-left">
                                                     <div class="column-start-left width-100-Prozent">
-                                                        <input class="font-size-smaller width-100-Prozent width-100-Prozent mr-5" disabled="true" matInput
+                                                        <input class="label-font-size-smaller width-100-Prozent width-100-Prozent mr-5" disabled="true" matInput
                                                             [ngModel]="GestartedWann(sess)" type="text" (click)="$event.stopPropagation()">
                                                     </div>
                                                 </div>

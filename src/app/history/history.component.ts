@@ -19,6 +19,8 @@ import { MatRadioGroup } from '@angular/material/radio';
 import {ChangeDetectionStrategy } from '@angular/core';
 import { DiaTyp, IDiaTyp } from 'src/Business/Coach/Coach';
 import { GlobalService } from '../services/global.service';
+
+// import { MatRangeDateSelectionModel, DefaultMatCalendarRangeStrategy, DateRange } from '@angular/material/datepicker';
 // import {  MatExpansionPanelHeader, MatExpansionPanel } from '@angular/material/expansion';
 // import { Session } from 'inspector';
 var cloneDeep = require('lodash.clonedeep');
@@ -92,7 +94,6 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 		start: new FormControl(),
 		end: new FormControl()
 	});
-	
 
 	constructor(
 		private fDbModul: DexieSvcService,
@@ -101,6 +102,8 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 		private router: Router
 	) {
 		DexieSvcService.ModulTyp = ProgramModulTyp.History;
+
+
 
 		this.toDate = new Date();
 		this.fromDate = Datum.StaticAddDays(this.toDate, -90);

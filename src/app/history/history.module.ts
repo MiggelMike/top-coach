@@ -1,3 +1,4 @@
+import { KalenderModule } from './../bausteine/Kalender/kalender/kalender.module';
 import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -49,6 +50,12 @@ import { MatTableModule } from '@angular/material/table';
 import { ReactiveFormsModule } from '@angular/forms';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
+import {
+  DateRange,
+  DefaultMatCalendarRangeStrategy,
+  MAT_DATE_RANGE_SELECTION_STRATEGY,
+  MatRangeDateSelectionModel
+} from "@angular/material/datepicker";
 
 
 const routes: Routes = [{ path: 'history', component: HistoryComponent }];
@@ -56,6 +63,7 @@ const routes: Routes = [{ path: 'history', component: HistoryComponent }];
 @NgModule({
   declarations: [HistoryComponent],
   imports: [
+    KalenderModule,
     CommonModule,
     FormsModule,
     RouterModule.forChild(routes),
@@ -124,11 +132,16 @@ const routes: Routes = [{ path: 'history', component: HistoryComponent }];
     DragDropModule,
     NgxMaskDirective,
     NgxMaskPipe
-
+  
     
 
     
   ],
+  providers: [
+    {
+      provide: { MAT_DATE_RANGE_SELECTION_STRATEGY, MatRangeDateSelectionModel, DateRange },     
+      useClass: DefaultMatCalendarRangeStrategy
+    }],
   exports: [RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
 })
