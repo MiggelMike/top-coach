@@ -57,7 +57,9 @@
 
 
 [data-theme="light"] {
-	--label-color: black;
+	--first-color: black; 
+	--second-color: rgb(0, 48, 66); 
+	--label-color: var(--first-color);
 	--mat-datepicker-calendar-text-font: var(--label-color);
 	--mdc-text-button-label-text-color: var(--label-color);
 	--mat-datepicker-calendar-body-label-text-color:var(--label-color);
@@ -67,7 +69,7 @@
 	--mat-datepicker-calendar-header-divider-color: var(--label-color);
 	--mat-datepicker-calendar-date-in-range-state-background-color: rgb(173, 156, 233);
 	--checkbox-border-color: var(--label-color);
-	--header-background-color: #ffffff;
+	--header-background-color: //#ffffff;
 	--header-border-color: #e5e8ea;
 	--header-menu-item-color: #231f20;
 	--header-theme-switch-background-color: #cccccc;
@@ -75,8 +77,9 @@
 	--header-theme-switch-checked-background-color: #2196f3;
 	--main-content-background-color: #ffffff;
 	--main-content-text-color: #231f20;
-	--input-text-color: #231f20;
-	--input-background-color: white;
+	--input-text-color: black;
+	// --input-background-color: white;
+	--input-background-color: var(--second-color);	
 	--HG-01: transparent;
 	--HG-02: transparent;
 	--link-button-font-color: rgb(127, 127, 248);
@@ -85,10 +88,14 @@
 	--mat-expansion-header-background-color: rgb(236, 234, 234);	
 	--mat-toolbar-panel-background-color: rgb(236, 234, 234);	
 	--mat-toolbar-panel-color: var(--label-color);
+	--mat-expansion-container-background-color: var(--second-color);
   }
 
   [data-theme="dark"] {
-	--label-color: lightgray;
+	--first-color: rgb(255, 103, 103); 
+	--second-color: rgb(0, 48, 66); 	
+	--value-color: rgb(140, 255, 125); 	
+	--label-color: var(--first-color);
 	--mat-datepicker-calendar-text-font: var(--label-color);
 	--mdc-text-button-label-text-color: var(--label-color);
 	--mat-datepicker-calendar-body-label-text-color:var(--label-color);
@@ -106,8 +113,8 @@
 	--header-theme-switch-checked-background-color: #2196f3;
 	--main-content-background-color: #231f20;
 	--main-content-text-color: #ffffff;
-	--input-text-color: black;
-	--input-background-color: lightgray;
+	--input-text-color: #80ec88;
+	--input-background-color: var(--second-color); //lightgray;
 	--HG-01: transparent;
 	--HG-02: transparent;
 	--link-button-font-color: rgb(196, 196, 247);
@@ -116,8 +123,17 @@
 	--mat-expansion-header-background-color: rgb(56, 56, 56);	
 	--mat-toolbar-panel-background-color: rgb(56, 56, 56);	
 	--mat-toolbar-panel-color: var(--label-color);
+	--mdc-filled-button-container-color: rgb(102, 94, 94);	
+	--mat-expansion-container-background-color: var(--second-color);
   }
 
+  .mat-mdc-checkbox label {
+	  color: var(--first-color);
+}
+
+.mat-expansion-panel-header{
+	color: var(--first-color);
+}
 
 
 //   @mixin mat-toolbar-color($config-or-theme) {
@@ -1175,7 +1191,7 @@ input[type=text]  {
 }
 
 input[type=text]:focus  {
-	color: blue;
+	color: var(--input-text-color);
 	outline: none;
   }
 
@@ -1312,6 +1328,8 @@ span {
 	display: block;
 }	
 
+
+
 // :host ::ng-deep .mat-checkbox-frame { 
 //     border-color: grey 
 // }
@@ -1328,16 +1346,31 @@ span {
 // 	background-color: red !important;
 //   }
 
-  
+.mat-mdc-radio-button.mat-accent {
+    --mdc-radio-unselected-pressed-icon-color: #ffc107;
+    --mdc-radio-selected-pressed-icon-color: #ff4081;
+}
+
+.mat-mdc-radio-button .mdc-form-field {
+    color: var(--mat-datepicker-calendar-text-font);
+}  
+
+:host ::ng-deep .mat-calendar .mat-mdc-button:not(:disabled){
+	color:  var(--mat-datepicker-calendar-text-font);
+  }
+
+  :host ::ng-deep  .mat-calendar .mat-mdc-button:disabled{
+	color:  var(--mat-datepicker-calendar-text-font);
+  }
 
 .mdc-checkbox__background {
     border-color: var(--checkbox-border-color) !important;
 }
 
 
-::ng-deep .mat-radio-button {
-	color: yellow;
-  }
+// ::ng-deep .mat-radio-button {
+// 	color: yellow;
+//   }
 
 
 

@@ -65,11 +65,11 @@
 
 #UebungName {
 //    background: lightgrey;
-    background: rgb(227, 252, 234);
+    background: var(--input-background-color);
     border-radius: 5px; 
     border-width: 1px;
     font-size: 14px;
-    color: blue;
+    color:  var(--input-text-color);
     width: 100%;
     height: 25px;
     padding-top: 4px;

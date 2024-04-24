@@ -15,9 +15,10 @@
                 <a [ngClass]="['link-button-font', 'font-14-data']" mat-flat-button (click)="CloseHistorySettings()">Close history settings</a>
             </div>
         </div>
+        
         <app-kalender></app-kalender>
 
-        <div class="column-center label-font-size-standard">
+        <!-- <div class="column-center label-font-size-standard"> -->
             <!-- <div class="row-center wrap label-font-size-standard">
                 <mat-form-field class="width-235 label-font-size-standard" appearance="outline">
                     <mat-label class="label-font-size-standard">Select Date Range</mat-label>
@@ -39,7 +40,7 @@
                 
 
             </div> -->
-        </div> 
+        <!-- </div>  -->
 
         <div class="row-center-gap-10" >
             <mat-radio-group class="tp-radio-group" #AuswahlRadio  [(ngModel)]="Auswahl" (change)="AuswahlChanged($event)" >
@@ -49,6 +50,7 @@
         </div>
 
         <div *ngIf="ChartSettingsVisible === true" class="column-center">
+
             <div class="row-center-gap-10">
                 <mat-radio-group #ChartType class="tp-radio-group" [(ngModel)]="aktuellerDiaTyp"
                     (change)="ChartChanged($event)">

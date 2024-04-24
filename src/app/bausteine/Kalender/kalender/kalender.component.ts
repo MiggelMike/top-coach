@@ -19,10 +19,14 @@ export class KalenderComponent implements OnInit {
   dateRange: DateRange<Date>;
 
   get von(): string {
+    if (this.dateRange.start === null)
+      return '?';
     return Datum.StaticFormatDate(this.dateRange.start, DateFormatTyp.Datum);
   }
   
   get bis(): string {
+    if (this.dateRange.end === null)
+      return '?';
     return Datum.StaticFormatDate(this.dateRange.end, DateFormatTyp.Datum);
   }
   
