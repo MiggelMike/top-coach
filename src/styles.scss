@@ -89,6 +89,10 @@
 	--mat-toolbar-panel-background-color: rgb(236, 234, 234);	
 	--mat-toolbar-panel-color: var(--label-color);
 	--mat-expansion-container-background-color: var(--second-color);
+	--mdc-radio-selected-icon-color:var(--first-color);
+	--mdc-radio-unselected-icon-color: var(--first-color);
+	// --mdc-filled-button-label-text-color: var(--first-color);
+	// --mdc-filled-button-container-color:  var(--second-color);	
   }
 
   [data-theme="dark"] {
@@ -123,8 +127,11 @@
 	--mat-expansion-header-background-color: rgb(56, 56, 56);	
 	--mat-toolbar-panel-background-color: rgb(56, 56, 56);	
 	--mat-toolbar-panel-color: var(--label-color);
-	--mdc-filled-button-container-color: rgb(102, 94, 94);	
 	--mat-expansion-container-background-color: var(--second-color);
+	--mdc-radio-selected-icon-color:var(--first-color);
+	--mdc-radio-unselected-icon-color: var(--first-color);
+	// --mdc-filled-button-label-text-color: var(--first-color);
+	// --mdc-filled-button-container-color:  var(--second-color);	
   }
 
   .mat-mdc-checkbox label {
@@ -133,6 +140,11 @@
 
 .mat-expansion-panel-header{
 	color: var(--first-color);
+}
+
+.mat-mdc-unelevated-button.mat-unthemed {
+    --mdc-filled-button-container-color: var(--second-color);
+    --mdc-filled-button-label-text-color: var(--first-color);
 }
 
 
@@ -1347,12 +1359,13 @@ span {
 //   }
 
 .mat-mdc-radio-button.mat-accent {
-    --mdc-radio-unselected-pressed-icon-color: #ffc107;
-    --mdc-radio-selected-pressed-icon-color: #ff4081;
+    // --mdc-radio-unselected-pressed-icon-color: #ffc107;
+    // --mdc-radio-selected-pressed-icon-color: #ff4081;
+	--mdc-radio-unselected-icon-color: var(--first-color);
 }
 
 .mat-mdc-radio-button .mdc-form-field {
-    color: var(--mat-datepicker-calendar-text-font);
+    color: var(--first-color);
 }  
 
 :host ::ng-deep .mat-calendar .mat-mdc-button:not(:disabled){
