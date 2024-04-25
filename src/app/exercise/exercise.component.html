@@ -17,7 +17,7 @@
         </div>
 
         <div class="row-center height-30"> 
-            <a class='link-button-font ref-button' mat-flat-button (click)="NewExercise()">New exercise</a>
+            <a class='ref-button'  (click)="NewExercise()">New exercise</a>
         </div>
     </div>
 </div>
@@ -26,10 +26,9 @@
 
 <div class="column-center" [ngClass]="{'main-panel-schmal': Toolbar_3_rows === true, 'main-panel-mittel': Toolbar_2_rows, 'main-panel-breit': Toolbar_1_row }" >        
     <ng-container *ngIf="UebungListeSortedByName">
-    
-        <div class="column-center">
+        <div class="column-center mg-top-5">
             <ng-container *ngFor="let uebung of UebungListeSortedByName, index as i">
-                <div class="row-start-left height-40" [ngClass]="{'HG-01': i % 2 === 0}">
+                <div class="row-start-left height-40" [ngClass]="{'alternate-color': i % 2 === 0}">
                     <ng-container *ngIf="SelectMode">
                         <div class="column-center">
                             <mat-checkbox class="mg-5" [(ngModel)]="uebung.Selected"></mat-checkbox>

@@ -57,8 +57,12 @@
 
 
 [data-theme="light"] {
-	--first-color: black; 
+	--first-color:  rgb(193 146 255);; 
 	--second-color: rgb(0, 48, 66); 
+	--value-color: black;
+	--first-background-color: azure;
+	--second-background-color: rgb(254 246 255);
+	--alternate-color: rgb(237, 226, 245);
 	--label-color: var(--first-color);
 	--mat-datepicker-calendar-text-font: var(--label-color);
 	--mdc-text-button-label-text-color: var(--label-color);
@@ -69,37 +73,40 @@
 	--mat-datepicker-calendar-header-divider-color: var(--label-color);
 	--mat-datepicker-calendar-date-in-range-state-background-color: rgb(173, 156, 233);
 	--checkbox-border-color: var(--label-color);
-	--header-background-color: //#ffffff;
-	--header-border-color: #e5e8ea;
+	--header-background-color: var(--first-background-color); //#ffffff;
+	--header-border-color: var(--first-background-color);
 	--header-menu-item-color: #231f20;
 	--header-theme-switch-background-color: #cccccc;
 	--header-theme-switch-before-background-color: #ffffff;
 	--header-theme-switch-checked-background-color: #2196f3;
-	--main-content-background-color: #ffffff;
+	--main-content-background-color: var(--first-background-color);
 	--main-content-text-color: #231f20;
-	--input-text-color: black;
-	// --input-background-color: white;
-	--input-background-color: var(--second-color);	
+	--input-text-color:  #402289;
+	--input-background-color: rgb(238 233 253);
 	--HG-01: transparent;
 	--HG-02: transparent;
 	--link-button-font-color: rgb(127, 127, 248);
 	--cc-overlay-border-color: darkgray;
 	--box-shadow-ex: 3px 3px 1px 1px rgba(0, 0, 0, 0.2);	
-	--mat-expansion-header-background-color: rgb(236, 234, 234);	
-	--mat-toolbar-panel-background-color: rgb(236, 234, 234);	
+	--mat-expansion-header-background-color: var(--second-background-color);
+	--mat-toolbar-panel-background-color: var(--second-background-color);
 	--mat-toolbar-panel-color: var(--label-color);
 	--mat-expansion-container-background-color: var(--second-color);
 	--mdc-radio-selected-icon-color:var(--first-color);
 	--mdc-radio-unselected-icon-color: var(--first-color);
-	// --mdc-filled-button-label-text-color: var(--first-color);
-	// --mdc-filled-button-container-color:  var(--second-color);	
+	//--mdc-filled-button-label-text-color: var(--first-color);
+	--mdc-filled-button-container-color:  var(--first-background-color);	
+	--mat-select-panel-background-color: var(--input-background-color);	
+	--mat-option-label-text-color: var(--first-color);
   }
 
   [data-theme="dark"] {
 	--first-color: rgb(255, 103, 103); 
-	--second-color: rgb(0, 48, 66); 	
+	--second-color: rgb(255, 103, 103); //rgb(0, 48, 66); 	
 	--value-color: rgb(140, 255, 125); 	
-	--label-color: var(--first-color);
+	--first-background-color: #1d1d1d;
+	--alternate-color: #3d3636;
+	--label-color: rgb(247, 143, 143);
 	--mat-datepicker-calendar-text-font: var(--label-color);
 	--mdc-text-button-label-text-color: var(--label-color);
 	--mat-datepicker-calendar-body-label-text-color:var(--label-color);
@@ -109,7 +116,7 @@
 	--mat-datepicker-calendar-header-divider-color: var(--label-color);
 	--mat-datepicker-calendar-date-in-range-state-background-color: rgb(173, 156, 233);
 	--checkbox-border-color: var(--label-color);
-	--header-background-color: #1d1d1d;
+	--header-background-color: var(--first-background-color);
 	--header-border-color: #e5e8ea;
 	--header-menu-item-color: #ffffff;
 	--header-theme-switch-background-color: #cccccc;
@@ -118,7 +125,7 @@
 	--main-content-background-color: #231f20;
 	--main-content-text-color: #ffffff;
 	--input-text-color: #80ec88;
-	--input-background-color: var(--second-color); //lightgray;
+	--input-background-color: var(--first-background-color);	
 	--HG-01: transparent;
 	--HG-02: transparent;
 	--link-button-font-color: rgb(196, 196, 247);
@@ -130,8 +137,16 @@
 	--mat-expansion-container-background-color: var(--second-color);
 	--mdc-radio-selected-icon-color:var(--first-color);
 	--mdc-radio-unselected-icon-color: var(--first-color);
-	// --mdc-filled-button-label-text-color: var(--first-color);
-	// --mdc-filled-button-container-color:  var(--second-color);	
+	//--mdc-filled-button-label-text-color: var(--first-color);
+	--mdc-filled-button-container-color:  var(--first-background-color);	
+	// --mat-select-panel-text-color: var(--first-color);	
+	--mat-option-label-text-color: var(--first-color);	
+	--mat-select-panel-background-color: var(--input-background-color);	
+
+  }
+
+  .alternate-color {
+	background-color: var(--alternate-color);
   }
 
   .mat-mdc-checkbox label {
@@ -143,8 +158,17 @@
 }
 
 .mat-mdc-unelevated-button.mat-unthemed {
-    --mdc-filled-button-container-color: var(--second-color);
+    --mdc-filled-button-container-color: var(--first-background-color);
     --mdc-filled-button-label-text-color: var(--first-color);
+}
+
+
+::ng-deep .mat-mdc-unelevated-button:not(:disabled) {
+    background-color: var(--first-background-color);
+}
+
+.mat-mdc-radio-button .mdc-radio .mdc-radio__native-control:enabled:checked+.mdc-radio__background .mdc-radio__outer-circle {
+    border-color: var(--first-color);
 }
 
 
@@ -773,6 +797,7 @@ div.herz:after {
 
 .font-bold {
 	font-weight: bold;
+	color: var(--first-color);
 }
 
 .font-size-smaller {
@@ -784,7 +809,7 @@ div.herz:after {
 }
 
 .Satz-Typ-Text {
-	color: lightgray;
+	color: var(--second-color);
 	font-size: smaller;
 }
 
@@ -909,7 +934,7 @@ div.herz:after {
 
 
 .HG-01 {
-	background-color: var(--input-background-color);
+	background-color: var(--HG-01);
 }
 
 .HG-02 {
@@ -1260,6 +1285,7 @@ input[type=text]:focus  {
 	height: 100% !important;
 	width: 100% !important;	
 	padding: 10px;
+	background-color: var(--main-content-background-color);
 }
 
 #editExerciseHeader {
@@ -1270,6 +1296,7 @@ input[type=text]:focus  {
 #editExerciseBackIcon {
 	@extend .row-start-left;
 	@extend .width-100-Prozent;
+	color: var(--first-color);
 }
 
 #editExerciseDescription {
@@ -1307,7 +1334,8 @@ input[type=text]:focus  {
 	 top:0;   
 	 width: 100%;  
 	 z-index: 1000;
-	background-color: var(--main-content-background-color);
+	// background-color: var(--main-content-background-color);
+	background-color: var(--header-background-color);
 	//  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
   }
 
@@ -1361,6 +1389,7 @@ span {
 .mat-mdc-radio-button.mat-accent {
     // --mdc-radio-unselected-pressed-icon-color: #ffc107;
     // --mdc-radio-selected-pressed-icon-color: #ff4081;
+	--mdc-radio-selected-icon-color: var(--first-color);
 	--mdc-radio-unselected-icon-color: var(--first-color);
 }
 
