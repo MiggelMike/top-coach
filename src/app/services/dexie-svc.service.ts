@@ -672,7 +672,7 @@ export class DexieSvcService extends Dexie {
 		if (DexieSvcService.ModulTyp === null)
 			DexieSvcService.ModulTyp = ProgramModulTyp.Kein;
 		// 
-		      //      Dexie.delete("ConceptCoach");
+		            // Dexie.delete("ConceptCoach");
 		this.version(48).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
@@ -696,11 +696,14 @@ export class DexieSvcService extends Dexie {
 
 	public DoTheme(aValue: boolean) {
 		DexieSvcService.AppRec.isLightTheme = aValue;
-		document.body.setAttribute(
-			'data-theme',
-			DexieSvcService.AppRec.isLightTheme ? 'light' : 'dark'
-		);
-		this.SetAppData(DexieSvcService.AppRec);
+		this.SetAppData(DexieSvcService.AppRec)
+		.then((aAppData) => { 
+				document.body.setAttribute(
+					'data-theme',
+					DexieSvcService.AppRec.isLightTheme ? 'light' : 'dark'
+				);
+
+			});
 	}
   
 
@@ -2187,9 +2190,9 @@ export class DexieSvcService extends Dexie {
 			.limit(aProgrammPara.Limit === undefined ? cMaxLimnit : aProgrammPara.Limit)
 			.sortBy(aProgrammPara.SortBy === undefined ? '' : aProgrammPara.SortBy)
 			.then(aProgrammPara.Then === undefined ? async (aProgramme: Array<TrainingsProgrammDB>) => {
-				const result: Array<TrainingsProgramm> = []; 
+				const result: Array<ITrainingsProgramm> = []; 
 				for (let index = 0; index < aProgramme.length; index++) {
-					const mPtrProgramm = new TrainingsProgramm(); 
+					const mPtrProgramm: ITrainingsProgramm = new TrainingsProgramm(); 
 					mPtrProgramm.TrainingsProgrammDB = aProgramme[index];
 					result.push(mPtrProgramm); 
 

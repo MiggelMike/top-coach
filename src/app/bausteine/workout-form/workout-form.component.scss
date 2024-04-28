@@ -2,38 +2,21 @@
 
 .header {
     padding-top: 5px !important;
-    position: fixed;
     z-index: 1000; 
     background-color:  black;
-    //background-color: var(--input-background-color);// white;
+    background-color: transparent;
     max-height: 40px;
     width: 100%;
-}
-
-.header-schmal {
-    @extend .header;
-    top: -1px;
-}
-
-.header-breit {
-    @extend .header;
-    top: -5px;
-}
-
-
-.header-line {
     max-width: 400px;
 }
 
 .main-panel {
-    position: relative; 
-    z-index: 1;
     max-width: 380px;
 } 
 
 .main-panel-schmal {
     @extend .main-panel;
-    top: 53px;
+    top: 58px;
     width:100%;
 
 }
