@@ -5,7 +5,7 @@
                 <div class="column-center">
                     <div class="row-start-left-gap-3 width-100-Prozent">
                         <div class="column-start-left">
-                            <span class="material-symbols-outlined" (click)="back()">arrow_back</span>
+                            <span class="material-symbols-outlined label-font-size-large" (click)="back()">arrow_back</span>
                         </div>
                         <div class="column-start-left">
                             <span>Workout name</span>
@@ -22,52 +22,27 @@
             <div class="column-center main-panel-schmal">     
 
                 <ng-container *ngIf="programm.SessionListe">
-                    <!-- <ng-container *ngIf="ModulTyp !== programModul.History && ModulTyp !== programModul.SelectWorkout">
-                        <div class="row-start-left-gap-3 wrap" [ngClass]="{'header-schmal': MediaWidth <= 280, 'header-breit': MediaWidth > 280}">
-                            <div class="colum-center">
-                                <ng-container *ngIf="isExpanded === true">
-                                    <span class="material-symbols-outlined" (click)="toggleSessions()">open_in_full</span>
-                                </ng-container>
-                                <ng-container *ngIf="isExpanded === false">
-                                    <span class="material-symbols-outlined" (click)="toggleSessions()">close_fullscreen</span>
-                                </ng-container>
-                            </div>
-                            <div class="colum-center">
-                                <a class='link-button-font' (click)="AddSession()">Add Session</a>
-                            </div>
-                            <div class="colum-center">
-                                <a class='link-button-font' (click)="PasteSession()">Paste Session</a>
-                            </div>
-                            <div class="colum-center">
-                                <a class='link-button-font' (click)="SaveChanges()">Save</a>
-                            </div>
-                            <div class="colum-center">
-                                <a class='link-button-font' (click)="CancelChanges()">Cancel</a>
-                            </div>
-                        </div>
-                    </ng-container> -->
-                            
                     <div [ngClass]="{'main-panel': ModulTyp !== programModul.History}">
                         <div class="row-start-left-gap-3 wrap" [ngClass]="{'header-schmal': MediaWidth <= 280, 'header-breit': MediaWidth > 280}">
                             <div class="colum-center">
                                 <ng-container *ngIf="isExpanded === true">
-                                    <span class="material-symbols-outlined" (click)="toggleSessions()">open_in_full</span>
+                                    <span class="material-symbols-outlined label-font-size-large" (click)="toggleSessions()">open_in_full</span>
                                 </ng-container>
                                 <ng-container *ngIf="isExpanded === false">
-                                    <span class="material-symbols-outlined" (click)="toggleSessions()">close_fullscreen</span>
+                                    <span class="material-symbols-outlined label-font-size-large" (click)="toggleSessions()">close_fullscreen</span>
                                 </ng-container>
                             </div>
                             <div class="colum-center">
-                                <a class='link-button-font' (click)="AddSession()">Add Session</a>
+                                <span class="material-symbols-outlined label-font-size-large" (click)="AddSession()">add_ad</span>
                             </div>
                             <div class="colum-center">
-                                <a class='link-button-font' (click)="PasteSession()">Paste Session</a>
+                                <span class="material-symbols-outlined label-font-size-large" (click)="PasteSession()">view_kanban</span>
                             </div>
                             <div class="colum-center">
-                                <a class='link-button-font' (click)="SaveChanges()">Save</a>
+                                <span class="material-symbols-outlined label-font-size-large" (click)="SaveChanges()">save</span>
                             </div>
                             <div class="colum-center">
-                                <a class='link-button-font' (click)="CancelChanges()">Cancel</a>
+                                <span class="material-symbols-outlined label-font-size-large" (click)="CancelChanges()">cancel</span>
                             </div>
                         </div>
                         <div cdkDropList (cdkDropListDropped)="drop($event)">
