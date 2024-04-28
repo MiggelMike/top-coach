@@ -1,9 +1,8 @@
     <!-- <app-toolbar></app-toolbar> -->
     <ng-container *ngIf="programm">
-        <div id="workout-form-main">
-            
-                <div class="column-center">
-                    <div class="row-start-left-gap-3 width-100-Prozent">
+            <div class="column-center">     
+                <div class="main-panel-schmal">     
+                    <div class="row-start-left-gap-3">
                         <div class="column-start-left">
                             <span class="material-symbols-outlined label-font-size-large" (click)="back()">arrow_back</span>
                         </div>
@@ -17,109 +16,108 @@
                                         type="text">
                         </div>                                    
                     </div>
-                </div>                    
-                
-            <div class="column-center main-panel-schmal">     
 
-                <ng-container *ngIf="programm.SessionListe">
-                    <div [ngClass]="{'main-panel': ModulTyp !== programModul.History}">
-                        <div class="row-start-left-gap-3 wrap" [ngClass]="{'header-schmal': MediaWidth <= 280, 'header-breit': MediaWidth > 280}">
+                    <ng-container *ngIf="programm.SessionListe">
+                        <div  [ngClass]="{'main-panel': ModulTyp !== programModul.History}">
                             <div class="colum-center">
-                                <ng-container *ngIf="isExpanded === true">
-                                    <span class="material-symbols-outlined label-font-size-large" (click)="toggleSessions()">open_in_full</span>
-                                </ng-container>
-                                <ng-container *ngIf="isExpanded === false">
-                                    <span class="material-symbols-outlined label-font-size-large" (click)="toggleSessions()">close_fullscreen</span>
-                                </ng-container>
-                            </div>
-                            <div class="colum-center">
-                                <span class="material-symbols-outlined label-font-size-large" (click)="AddSession()">add_ad</span>
-                            </div>
-                            <div class="colum-center">
-                                <span class="material-symbols-outlined label-font-size-large" (click)="PasteSession()">view_kanban</span>
-                            </div>
-                            <div class="colum-center">
-                                <span class="material-symbols-outlined label-font-size-large" (click)="SaveChanges()">save</span>
-                            </div>
-                            <div class="colum-center">
-                                <span class="material-symbols-outlined label-font-size-large" (click)="CancelChanges()">cancel</span>
-                            </div>
-                        </div>
-                        <div cdkDropList (cdkDropListDropped)="drop($event)">
-                            <div *ngFor="let sess of SortedSessionListe, index as i" cdkDrag [cdkDragDisabled]="ModulTyp === programModul.History">
-                                <div  class='mg-top-1'>
-                                    <mat-accordion #accSession="matAccordion" multi="true">
-                                        <mat-expansion-panel
-                                            #panSession='matExpansionPanel'                            
-                                            [expanded]="false"
-                                            (opened) = "panelOpened(sess)"
-                                            (closed) = "panelClosed(sess)" 
-                                            class="HG-01">
-                                            <mat-expansion-panel-header  class="disable_ripple"  [collapsedHeight]="'auto'" [expandedHeight]="'auto'" [matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag">
-                                                <div fxLayout="row wrap" fxLayout.lt-sm="row wrap mg-bottom-10"  fxLayoutAlign="flex-start center">
-                                                    <input class="font-size-smaller width-100-Prozent mr-20" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
-                        
-                                                    <div class="row-center-gap-3 wrap mg-top-5 mr-20">
-                                                        <div class="center-item">
-                                                            <a [ngClass]="['link-button-font']" (click)="CopySession(sess)">Copy Session</a>
-                                                        </div>
-                                                
-                                                        <div class="center-item">
-                                                            <a [ngClass]="['link-button-font']" (click)="DeleteSession($event, sess,i)">Delete Session</a>
-                                                        </div>
-                                                
-                                                        <div class="center-item">
-                                                            <a [ngClass]="['link-button-font']" (click)="AddExercise(sess)">Add exercise</a>
-                                                        </div>
-                                                
-                                                        <div class="center-item">
-                                                            <a [ngClass]="['link-button-font']" (click)="PasteExcercise(sess)">Paste Exercise</a>
-                                                        </div>
-                                                    </div>
-            
-                                                    <!-- <ng-container *ngIf='StartButtonVisible'>
-                                                        <div class="center-item" layout-align="center center" fxFlex="auto">
-                                                            <a [ngClass]="['ml-5','link-button-font', 'HG-01']" 
-                                                            mat-flat-button
-                                                                (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
-                                                        </div>
-            
-                                                        <ng-container *ngIf="sess.IstAusVorgabe === false && ModulTyp !== programModul.History">
-                                                            <div class="center-item" layout-align="center center" fxFlex="0 0 auto">
-                                                                <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteSession($event,sess, i+1)">Delete</a>
+                                <div class="row-start-left-gap-3 wrap">
+                                    <div class="colum-center">
+                                        <ng-container *ngIf="isExpanded === true">
+                                            <span class="material-symbols-outlined label-font-size-large" (click)="toggleSessions()">open_in_full</span>
+                                        </ng-container>
+                                        <ng-container *ngIf="isExpanded === false">
+                                            <span class="material-symbols-outlined label-font-size-large" (click)="toggleSessions()">close_fullscreen</span>
+                                        </ng-container>
+                                    </div>
+                                    <div class="colum-center">
+                                        <span class="material-symbols-outlined label-font-size-large" (click)="AddSession()">add_ad</span>
+                                    </div>
+                                    <div class="colum-center">
+                                        <span class="material-symbols-outlined label-font-size-large" (click)="PasteSession()">view_kanban</span>
+                                    </div>
+                                    <div class="colum-center">
+                                        <span class="material-symbols-outlined label-font-size-large" (click)="SaveChanges()">save</span>
+                                    </div>
+                                    <div class="colum-center">
+                                        <span class="material-symbols-outlined label-font-size-large" (click)="CancelChanges()">cancel</span>
+                                    </div>
+                                </div>
+                                <div cdkDropList (cdkDropListDropped)="drop($event)">
+                                    <div *ngFor="let sess of SortedSessionListe, index as i" cdkDrag [cdkDragDisabled]="ModulTyp === programModul.History">
+                                        <div  class='mg-top-1'>
+                                            <mat-accordion #accSession="matAccordion" multi="true">
+                                                <mat-expansion-panel
+                                                    #panSession='matExpansionPanel'                            
+                                                    [expanded]="false"
+                                                    (opened) = "panelOpened(sess)"
+                                                    (closed) = "panelClosed(sess)" 
+                                                    class="HG-01">
+                                                    <mat-expansion-panel-header  class="disable_ripple"  [collapsedHeight]="'auto'" [expandedHeight]="'auto'" [matTooltipDisabled]="ModulTyp === programModul.History" mat-tooltip-panel-below  matTooltip="Hold and drag">
+                                                        <div fxLayout="row wrap" fxLayout.lt-sm="row wrap mg-bottom-10"  fxLayoutAlign="flex-start center">
+                                                            <input class="font-size-smaller width-100-Prozent mr-20" matInput [(ngModel)]="sess.Name" type="text" (click)="$event.stopPropagation()" (focusout)="DoSessionName(sess, $event)">
+                                
+                                                            <div class="row-center-gap-3 wrap mg-top-5 mr-20">
+                                                                <div class="center-item">
+                                                                    <a [ngClass]="['link-button-font']" (click)="CopySession(sess)">Copy Session</a>
+                                                                </div>
+                                                        
+                                                                <div class="center-item">
+                                                                    <a [ngClass]="['link-button-font']" (click)="DeleteSession($event, sess,i)">Delete Session</a>
+                                                                </div>
+                                                        
+                                                                <div class="center-item">
+                                                                    <a [ngClass]="['link-button-font']" (click)="AddExercise(sess)">Add exercise</a>
+                                                                </div>
+                                                        
+                                                                <div class="center-item">
+                                                                    <a [ngClass]="['link-button-font']" (click)="PasteExcercise(sess)">Paste Exercise</a>
+                                                                </div>
                                                             </div>
-                                                        </ng-container>
+                    
+                                                            <!-- <ng-container *ngIf='StartButtonVisible'>
+                                                                <div class="center-item" layout-align="center center" fxFlex="auto">
+                                                                    <a [ngClass]="['ml-5','link-button-font', 'HG-01']" 
+                                                                    mat-flat-button
+                                                                        (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
+                                                                </div>
+                    
+                                                                <ng-container *ngIf="sess.IstAusVorgabe === false && ModulTyp !== programModul.History">
+                                                                    <div class="center-item" layout-align="center center" fxFlex="0 0 auto">
+                                                                        <a [ngClass]="['link-button-font', 'HG-01']" mat-flat-button (click)="DeleteSession($event,sess, i+1)">Delete</a>
+                                                                    </div>
+                                                                </ng-container>
+                                                            
+                                                            </ng-container> -->
+                                                        </div>
+                                                    </mat-expansion-panel-header>
+                    
+                                                    <ng-container *ngIf="sess.UebungsListe.length > 0">
+                                                        <div [id]="'collapseSession' + i" aria-labelledby="headingOne">
+                                                            <div class="card-body">
+                                                                <!-- session an Sub-Komponente durchreichen -->
+                                                                <!-- <app-programm03 
+                                                                    [session]="sess" 
+                                                                    [cmpSession]="sess" 
+                                                                    [programm]="programm"
+                                                                    [cmpSettingsSession]="sess" 
+                                                                    [bearbeitbar]="bearbeitbar" 
+                                                                    [SofortSpeichern]="SofortSpeichern"
+                                                                    [DeletedSatzList]="DeletedSatzList">
+                                                                </app-programm03> -->
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                    
                                                     
-                                                    </ng-container> -->
-                                                </div>
-                                            </mat-expansion-panel-header>
-            
-                                            <ng-container *ngIf="sess.UebungsListe.length > 0">
-                                                <div [id]="'collapseSession' + i" aria-labelledby="headingOne">
-                                                    <div class="card-body">
-                                                        <!-- session an Sub-Komponente durchreichen -->
-                                                        <!-- <app-programm03 
-                                                            [session]="sess" 
-                                                            [cmpSession]="sess" 
-                                                            [programm]="programm"
-                                                            [cmpSettingsSession]="sess" 
-                                                            [bearbeitbar]="bearbeitbar" 
-                                                            [SofortSpeichern]="SofortSpeichern"
-                                                            [DeletedSatzList]="DeletedSatzList">
-                                                        </app-programm03> -->
-                                                    </div>
-                                                </div>
-                                            </ng-container>
-            
-                                            
-                                        </mat-expansion-panel>
-                                    </mat-accordion>
+                                                </mat-expansion-panel>
+                                            </mat-accordion>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </ng-container>
+                    </ng-container>
+                </div>
             </div>
-        </div>
 </ng-container>
 
