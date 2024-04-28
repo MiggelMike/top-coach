@@ -32,6 +32,7 @@ export class AppData {
     public id: number;
     public SprachID: number = null;
     public DiaChartTyp: DiaTyp = DiaTyp.line;
+    public isLightTheme: boolean = false;
     GewichtsEinheit: GewichtsEinheit = GewichtsEinheit.KG;
     
     private fMaxHistorySessions: number = 10;

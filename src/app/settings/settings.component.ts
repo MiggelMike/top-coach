@@ -76,21 +76,21 @@ export class SettingsComponent implements OnInit {
 
     //#region Light
     get Light(): boolean {
-        return AppComponent.isLightTheme;
+            return this.AppData.isLightTheme;
     }
 
     set Light(aValue: boolean) {
-        AppComponent.DoTheme(aValue);
+        this.fDbModule.DoTheme(aValue);
     }
     //#endregion
 
     //#region Light
     get Dark(): boolean {
-        return !AppComponent.isLightTheme;
+        return !this.AppData.isLightTheme;
     }
 
     set Dark(aValue: boolean) {
-        AppComponent.DoTheme(!aValue);
+        this.fDbModule.DoTheme(!aValue);
     }
     //#endregion
 

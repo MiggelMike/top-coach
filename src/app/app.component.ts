@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DexieSvcService } from './services/dexie-svc.service';
 
 @Component({
   selector: 'app-root',
@@ -6,16 +7,4 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  public static isLightTheme: boolean = false;
-    constructor() {
-        AppComponent.DoTheme(false);
-    }
-  
-    public static DoTheme(aValue: boolean) {
-      AppComponent.isLightTheme = aValue;
-      document.body.setAttribute(
-        'data-theme',
-        AppComponent.isLightTheme ? 'light' : 'dark'
-    );
-  }
 }

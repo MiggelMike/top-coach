@@ -673,7 +673,7 @@ export class DexieSvcService extends Dexie {
 			DexieSvcService.ModulTyp = ProgramModulTyp.Kein;
 		// 
 		      //      Dexie.delete("ConceptCoach");
-		this.version(47).stores({
+		this.version(48).stores({
 			AppData: "++id",
 			UebungDB: "++ID,Name,Typ,Kategorie02,FkMuskel01,FkMuskel02,FkMuskel03,FkMuskel04,FkMuskel05,SessionID,FkUebung,FkProgress,FK_Programm,[FK_Programm+FkUebung+FkProgress+ProgressGroup+ArbeitsSaetzeStatus],Datum,WeightInitDate,FailDatum",
 			Programm: "++id,&[Name+ProgrammKategorie],FkVorlageProgramm,ProgrammKategorie,[FkVorlageProgramm+ProgrammKategorie]",
@@ -693,6 +693,16 @@ export class DexieSvcService extends Dexie {
 
 		this.InitDatenbank();
 	}
+
+	public DoTheme(aValue: boolean) {
+		DexieSvcService.AppRec.isLightTheme = aValue;
+		document.body.setAttribute(
+			'data-theme',
+			DexieSvcService.AppRec.isLightTheme ? 'light' : 'dark'
+		);
+		this.SetAppData(DexieSvcService.AppRec);
+	}
+  
 
 	static CalcPosAfterDragAndDrop(aListe: Array<any>, aEvent: CdkDragDrop<any>):boolean {
 		if (aEvent.currentIndex === aEvent.previousIndex)
@@ -2465,6 +2475,10 @@ export class DexieSvcService extends Dexie {
 
 		await this.LadeAppData().then((aAppRec) => {
 			DexieSvcService.AppRec = aAppRec;
+			if (DexieSvcService.AppRec.isLightTheme === undefined)
+				this.DoTheme(false);
+			else
+				this.DoTheme(DexieSvcService.AppRec.isLightTheme === true);
 		});
 
 	}

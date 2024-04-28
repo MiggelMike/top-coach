@@ -49,6 +49,7 @@
 	--mdc-checkbox-selected-hover-icon-color: transparent;
 	// --mat-datepicker-calendar-text-font: var(--label-color);
 	--mdc-text-button-label-text-color: var(--label-color);
+	--mdc-checkbox-selected-checkmark-color: var(--first-color);
   }
 
   [data-theme="dark"] {
@@ -98,6 +99,7 @@
 	--mdc-checkbox-selected-focus-icon-color: var(--first-color);
 	--mdc-checkbox-unselected-icon-color: transparent;
 	--mdc-checkbox-selected-hover-icon-color: transparent;
+	--mdc-checkbox-selected-checkmark-color: var(--first-color);
 	// --mat-datepicker-calendar-text-font: var(--label-color);
   }
 
