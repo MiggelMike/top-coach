@@ -1,60 +1,67 @@
 <!-- <app-toolbar></app-toolbar> -->
-<div class="header-box">
-    <div class="row-center mg-top-5">
-        <div class="colum-center width-280">
-            <span class="material-symbols-outlined label-font-size-large" (click)="back()">arrow_back</span>
-            <div fxLayout="row wrap" fxLayoutAlign="center center">
-                <h4 class="label-font-size-large">Bodyweight</h4>
-            </div>
+<div class="colum-center">
+    <div class="form-body">
+        <div class="row-center mg-top-5 width-100-Prozent">
+                <div id="header" class="colum-center">
+                    <div class="row-start-left-gap-3 height-40 wrap">
+                        <div class="column-start-left">
+                            <span class="material-symbols-outlined label-font-size-large" (click)="back()">arrow_back</span>
+                        </div>
+                        <div class="column-start-left">
+                            <h4 class="label-font-size-large mg-top-10">Bodyweight</h4>
+                        </div>
+                    </div>
+                    
+                    <div class="row-center height-20 wrap">
+                        <div class="colum-center">
+                            <a class='link-button-font HG-01 label-font-size-large' mat-flat-button (click)="NewBodyweight()">New bodyweight</a>
+                        </div>
+                    </div>
+                </div>
+        </div>
             
-            <div fxLayout="row wrap" fxLayoutAlign="center center">
-                <a class='link-button-font HG-01 label-font-size-large' mat-flat-button (click)="NewBodyweight()">New bodyweight</a>
-            </div>
+        <!-- <div class="colum-center" [ngClass]="{'main-panel-schmal': Toolbar_3_rows === true, 'main-panel-mittel': Toolbar_2_rows, 'main-panel-breit': Toolbar_1_row }" ></div>     -->
+        <div class="main-panel" >
+            <ng-container *ngIf="BodyweightList">
+                    <div class="column-center">
+                        <ng-container *ngFor="let bw of BodyweightList, index as i">
+                            <div class="row-start-left-gap-3 height-70">
+                                <div class="column-center width-60 base-body-weight-column" [ngClass]="{'body-weight-column': Toolbar_3_rows === true}">
+                                    <div class="row-start-right width-100-Prozent">
+                                        <mat-label class="label-font-size-small" [ngClass]="{'font-size-smaller': Toolbar_3_rows === true}">BW {{GewichtsEinheit}}</mat-label>
+                                    </div>
+                                    <div class="row-start-right width-100-Prozent">
+                                        <input class="align-right pd-l-5 width-100-Prozent"  mask="999.00"
+                                            (focusout)="SetBodyweight($event, bw)" [ngModel]="bw.WeightTxt" type="text">
+                                    </div>
+                                </div>
+                        
+                                <div class="column-center width-150">
+                                    <div class="row-start-right width-100-Prozent">
+                                        <mat-label class="label-font-size-small" [ngClass]="{'font-size-smaller': Toolbar_3_rows === true}">Choose a date</mat-label>
+                                    </div>
+                                    <div class="row-start-right width-100-Prozent">
+                                        <input matInput type="text" [ngxMatDatetimePicker]="pickerWithActions" [(ngModel)]="bw.Datum"
+                                            class="width-100-Prozent align-right" [ngClass]="{'sfont-size-smaller': Toolbar_3_rows === true}"
+                                            disabled="false">
+                                    </div>
+                                </div>
+                                
+                                <div class="column-center width-30 mg-top-20">
+                                    <ngx-mat-datetime-picker class="label-font-size-large" #pickerWithActions [showSeconds]="true" [hideTime]="false">
+                                        <ngx-mat-datepicker-actions>
+                                            <button mat-button ngxMatDatepickerCancel>Cancel</button>
+                                            <button mat-raised-button color="primary" ngxMatDatepickerApply>Apply</button>
+                                        </ngx-mat-datepicker-actions>
+                                    </ngx-mat-datetime-picker>
+                                    <ngx-mat-datepicker-toggle matSuffix [for]="pickerWithActions"></ngx-mat-datepicker-toggle>
+                                </div>
+                                <span class="material-symbols-outlined label-font-size-large mg-top-20" (click)="DeleteBodyweight(bw)">delete</span>
+                            </div>
+                        </ng-container>
+                    </div>
+            </ng-container>
         </div>
     </div>
 </div>
-    
-<!-- <div class="colum-center" [ngClass]="{'main-panel-schmal': Toolbar_3_rows === true, 'main-panel-mittel': Toolbar_2_rows, 'main-panel-breit': Toolbar_1_row }" ></div>     -->
-<div class="colum-center main-panel" >
-    <ng-container *ngIf="BodyweightList">
-            <div class="column-center">
-                <ng-container *ngFor="let bw of BodyweightList, index as i">
-                    <div class="row-start-left-gap-3 height-50 width-300">
-                        <div class="column-center width-60 base-body-weight-column" [ngClass]="{'body-weight-column': Toolbar_3_rows === true}">
-                            <div class="row-start-right width-100-Prozent">
-                                <mat-label [ngClass]="{'font-size-smaller': Toolbar_3_rows === true}">BW {{GewichtsEinheit}}</mat-label>
-                            </div>
-                            <div class="row-start-right width-100-Prozent">
-                                <input class="align-right pd-l-5 width-100-Prozent"  mask="999.00"
-                                    (focusout)="SetBodyweight($event, bw)" [ngModel]="bw.WeightTxt" type="text">
-                            </div>
-                        </div>
-                
-                        <div class="column-center width-150">
-                            <div class="row-start-right width-100-Prozent">
-                                <mat-label [ngClass]="{'font-size-smaller': Toolbar_3_rows === true}">Choose a date</mat-label>
-                            </div>
-                            <div class="row-start-right width-100-Prozent">
-                                <input matInput type="text" [ngxMatDatetimePicker]="pickerWithActions" [(ngModel)]="bw.Datum"
-                                    class="width-100-Prozent align-right" [ngClass]="{'sfont-size-smaller': Toolbar_3_rows === true}"
-                                    disabled="false">
-                            </div>
-                        </div>
-                        
-                        <div class="column-center width-30 mg-top-20">
-                            <ngx-mat-datetime-picker class="label-font-size-large" #pickerWithActions [showSeconds]="true" [hideTime]="false">
-                                <ngx-mat-datepicker-actions>
-                                    <button mat-button ngxMatDatepickerCancel>Cancel</button>
-                                    <button mat-raised-button color="primary" ngxMatDatepickerApply>Apply</button>
-                                </ngx-mat-datepicker-actions>
-                            </ngx-mat-datetime-picker>
-                            <ngx-mat-datepicker-toggle matSuffix [for]="pickerWithActions"></ngx-mat-datepicker-toggle>
-                        </div>
-                        <span class="material-symbols-outlined label-font-size-large mg-top-20" (click)="DeleteBodyweight(bw)">delete</span>
-                    </div>
-                </ng-container>
-            </div>
-    </ng-container>
-</div>
-
     

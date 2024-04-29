@@ -13,8 +13,8 @@
  }
 
  .main-panel {
-    top: 135px !important;
     position: relative;
+	top: 21px;
 }
 
 
@@ -30,4 +30,14 @@
 
   .body-weight-column {
 	width: 44px;
+  }
+
+  #form-body {
+	width: 100%;
+	max-width: var(--max-width);
+  }
+
+  #header {
+	width: 100%;
+	max-width: 250px;
   }
