@@ -104,6 +104,7 @@
 	--mdc-checkbox-unselected-icon-color: transparent;
 	--mdc-checkbox-selected-hover-icon-color: transparent;
 	--mdc-checkbox-selected-checkmark-color: var(--first-color);
+
 	// --mat-datepicker-calendar-text-font: var(--label-color);
   }
 
@@ -111,6 +112,13 @@
     --mdc-text-button-label-text-color: var(--label-color);
 }
 
+
+.mat-mdc-dialog-container {
+	color: var(--label-color);
+    --mdc-dialog-container-color: var(--first-background-color);
+    --mdc-dialog-subhead-color: rgba(0, 0, 0, 0.87);
+    --mdc-dialog-supporting-text-color: rgba(0, 0, 0, 0.6);
+}
   
   ::ng-deep .mdc-checkbox .mdc-checkbox__native-control:enabled~.mdc-checkbox__background .mdc-checkbox__checkmark {
     color: var(--mdc-checkbox-selected-checkmark-color);
