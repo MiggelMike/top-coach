@@ -20,7 +20,7 @@
 
 .History-Panel-breit {
 	@extend .History-Panel;
-	top: 59px;
+	top: 63px;
 }
 
 #History-Sub-Panel {
@@ -31,6 +31,7 @@
 #historyHeader {
 	position: relative;
 	background-color: var(--header-background-color);
+	// background-color: var(--first-background-color);
 }
 
 #history-sessions {

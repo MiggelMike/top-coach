@@ -7,7 +7,7 @@
     background-color: var(--header-background-color);
     max-height: 80px !important;
     height: 74px !important;
-    padding-left: 25px;
+    // padding-left: 25px;
 }
 
 .header-line {
@@ -35,7 +35,7 @@
 
 .main-panel-history-view {
     @extend .main-panel;
-    top: 75px; 
+    top: 52px; 
 } 
 
 #form-body{

@@ -118,6 +118,10 @@ button:not(:disabled), [type=button]:not(:disabled), [type=reset]:not(:disabled)
     color: var(--first-color);
 }
 
+.mat-mdc-card {
+    --mdc-elevated-card-container-color:  var(--second-background-color);
+ }
+
 
 .mat-mdc-dialog-container {
 	color: var(--label-color);
@@ -178,45 +182,6 @@ button:not(:disabled), [type=button]:not(:disabled), [type=reset]:not(:disabled)
 .mat-mdc-radio-button .mdc-radio .mdc-radio__native-control:enabled:checked+.mdc-radio__background .mdc-radio__outer-circle {
     border-color: var(--first-color);
 }
-
-
-//   @mixin mat-toolbar-color($config-or-theme) {
-// 	$config: mat-get-color-config($config-or-theme);
-// 	$primary: map-get($config, primary);
-// 	$accent: map-get($config, accent);
-// 	$warn: map-get($config, warn);
-// 	$background: map-get($config, background);
-// 	$foreground: map-get($config, foreground);
-   
-// 	.mat-toolbar {
-// 	  background: var(--main-content-background-color);// mat-color($background, app-bar);
-// 	  color: mat-color($foreground, text);
-   
-// 	  &.mat-primary {
-// 		@include _mat-toolbar-color($primary);
-// 	  }
-   
-// 	  &.mat-accent {
-// 		@include _mat-toolbar-color($accent);
-// 	  }
-   
-// 	  &.mat-warn {
-// 		@include _mat-toolbar-color($warn);
-// 	  }
-   
-// 	  @include _mat-toolbar-form-field-overrides;
-// 	}
-//   }
-
-//   $background-color:  var(--main-content-background-color);
-		
-// @include mat.all-component-themes($my-theme);
-		
-// :root {
-// 	background-color: $background-color; //#0c001d;
-// 	color: white;
-//   }
-
 
 html,
 body {
@@ -842,7 +807,14 @@ div.herz:after {
 	flex-direction: column;
 }
 
-@mixin column-start-left {
+.column {
+	// background-color: var(--second-background-color);
+	background-color: transparent;
+	flex-direction: column;
+}
+
+.column-start-left {
+	@extend .column;
 	@extend .align-items-left;
 }
 
@@ -857,9 +829,6 @@ div.herz:after {
 	align-items: center;
 }
 
-.column {
-	flex-direction: column;
-}
 
 .column-center {
 	@extend .center-item;
@@ -872,8 +841,8 @@ div.herz:after {
 	// flex-direction: column-reverse;
 }
 
-
 .row-center {
+	@extend .background-color-transparent;
 	@extend .center-item;
 	flex-direction: row;
 }
@@ -908,6 +877,7 @@ div.herz:after {
 }
 
 .row-start-left {
+	@extend .background-color-transparent;
 	@extend .wrap; 
 	display: flex;
 	justify-content:flex-start;
@@ -931,6 +901,7 @@ div.herz:after {
 }
 
 .row-start-right {
+	@extend .background-color-transparent;
 	@extend .wrap; 
 	display: flex;
 	justify-content:flex-start;
