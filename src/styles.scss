@@ -61,6 +61,7 @@
 	--second-color: rgb(255, 103, 103); //rgb(0, 48, 66); 	
 	--value-color: rgb(140, 255, 125); 	
 	--first-background-color: #1d1d1d;
+	--second-background-color: #464646;
 	--alternate-color: #3d3636;
 	--input-disabled-color: rgb(121 117 117);
 	--label-color: rgb(247, 143, 143);
@@ -82,7 +83,7 @@
 	--main-content-background-color: #231f20;
 	--main-content-text-color: #ffffff;
 	--input-text-color: #80ec88;
-	--input-background-color: var(--first-background-color);	
+	--input-background-color: var(--second-background-color);	
 	--HG-01: transparent;
 	--HG-02: transparent;
 	--link-button-font-color: rgb(196, 196, 247);
@@ -110,6 +111,11 @@
 
   .mat-mdc-button.mat-unthemed {
     --mdc-text-button-label-text-color: var(--label-color);
+}
+
+button:not(:disabled), [type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled) {
+    cursor: pointer;
+    color: var(--first-color);
 }
 
 
