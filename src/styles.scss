@@ -5,7 +5,7 @@
 }
 
 [data-theme="light"] {
-	--first-color:  rgb(193 146 255); 
+	--first-color:  rgb(193, 146,255); 
 	--second-color: rgb(0, 48, 66); 
 	--value-color: black;
 	--first-background-color: azure;
@@ -35,8 +35,8 @@
 	--HG-01: transparent;
 	--HG-02: transparent;
 	--link-button-font-color: rgb(127, 127, 248);
-	--cc-overlay-border-color: darkgray;
-	--box-shadow-ex: 3px 3px 1px 1px rgba(0, 0, 0, 0.2);	
+	--cc-overlay-border-color: rgb(226 215 247);
+	--box-shadow-ex: 3px 3px 1px 1px rgb(214, 187, 250);	
 	--mat-expansion-header-background-color: var(--second-background-color);
 	--mat-toolbar-panel-background-color: var(--second-background-color);
 	--mat-toolbar-panel-color: var(--label-color);
@@ -87,7 +87,7 @@
 	--HG-01: transparent;
 	--HG-02: transparent;
 	--link-button-font-color: rgb(196, 196, 247);
-	--cc-overlay-border-color: lightgray;
+	--cc-overlay-border-color: --cc-overlay-border-color: var(--label-color);
 	--box-shadow-ex: 3px 3px 1px 1px rgba(133, 133, 133, 0.2);	
 	--mat-expansion-header-background-color: rgb(56, 56, 56);	
 	--mat-toolbar-panel-background-color: rgb(56, 56, 56);	
