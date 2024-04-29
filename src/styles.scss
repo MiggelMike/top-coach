@@ -113,6 +113,14 @@
     --mdc-text-button-label-text-color: var(--label-color);
 }
 
+
+.mat-datepicker-content {
+    display: block;
+    border-radius: 4px;
+    background-color: var(--second-background-color);
+    color: var(--first-color);
+}
+
 button:not(:disabled), [type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled) {
     cursor: pointer;
     color: var(--first-color);
