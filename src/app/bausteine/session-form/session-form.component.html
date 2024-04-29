@@ -1,4 +1,5 @@
 <div class="column-center ml-10 mr-10">
+    <div id="form-body" class="colum-center">
         <div class="column-center header">
             <div class="row-start-left-gap-3 header-line">
                 <ng-container *ngIf="BackButtonVisible === true">
@@ -93,24 +94,24 @@
                 </ng-container>
             </div>
             
-    </div>
+        </div>
 
-    <div [ngClass]="{'main-panel': ModulTyp !== programModul.HistoryView,'main-panel-history-view': ModulTyp === programModul.HistoryView}">
-        <app-programm03 #appProgramm03
-            [session]="Session" 
-            [cmpSession]="cmpSession" 
-            [cmpSettingsSession]="cmpSession" 
-            [bearbeitbar]="true" 
-            [ShowStats]="true" 
-            [programm]="Programm" 
-            [ModulTyp]="ModulTyp"
-            [StatsButtonVisible]="true"
-            (AddDeletedExercise)="AddDeletedExercise($event)"
-            (DoStats)="doStats()"
-            (ExpandUebungenFn)="UebungenExpandedFn($event)"
-            (DoCheckSettings)="doCheckSettings($event)"
-            [DeletedSatzList]="DeletedSatzList">
-        </app-programm03>
-    
+        <div [ngClass]="{'main-panel': ModulTyp !== programModul.HistoryView,'main-panel-history-view': ModulTyp === programModul.HistoryView}">
+            <app-programm03 #appProgramm03
+                [session]="Session" 
+                [cmpSession]="cmpSession" 
+                [cmpSettingsSession]="cmpSession" 
+                [bearbeitbar]="true" 
+                [ShowStats]="true" 
+                [programm]="Programm" 
+                [ModulTyp]="ModulTyp"
+                [StatsButtonVisible]="true"
+                (AddDeletedExercise)="AddDeletedExercise($event)"
+                (DoStats)="doStats()"
+                (ExpandUebungenFn)="UebungenExpandedFn($event)"
+                (DoCheckSettings)="doCheckSettings($event)"
+                [DeletedSatzList]="DeletedSatzList">
+            </app-programm03>
+        </div>
     </div>
 </div>

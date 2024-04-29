@@ -30,6 +30,7 @@
     z-index: 1;
     top: 10px; 
     width:100%;
+    max-width: var(--max-width);
 } 
 
 .main-panel-history-view {
@@ -37,6 +38,10 @@
     top: 75px; 
 } 
 
+#form-body{
+    width: 100%;
+    max-width: var(--max-width);
+}
 // #footer {
     // top: 150px;
     // z-index: 2000;

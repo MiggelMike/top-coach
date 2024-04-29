@@ -1,5 +1,9 @@
 @import "./../node_modules/bootstrap/dist/css/bootstrap.css"; 
 
+:root {
+	--max-width: 380px;
+}
+
 [data-theme="light"] {
 	--first-color:  rgb(193 146 255); 
 	--second-color: rgb(0, 48, 66); 
@@ -484,8 +488,15 @@ body {
 	width: 360px !important;
 }
 
+.width-380 {
+	min-width: 380px !important;
+	max-width: 380px !important;
+	width: 380px !important;
+}
+
 .width-400 {
 	min-width: 400px!important;
+	max-width: 400px!important;
 	width: 400px !important;
 }
 
