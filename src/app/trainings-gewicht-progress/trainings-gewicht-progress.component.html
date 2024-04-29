@@ -15,7 +15,7 @@
 <div id="main-panel" class="column-center">
     <ng-container *ngIf="ProgressListe">
             <ng-container *ngFor="let progress of ProgressListe, index as i">
-                <div class="row-start-left height-40 pad-right-5"  [ngClass]="{'HG-01': i % 2 === 0}">
+                <div class="row-start-left height-40 pad-right-5"  [ngClass]="{'alternate-color': i % 2 === 0}">
                         <div class="column-center width-300">
                             <a class="ref-button" (click)="EditProgress(progress)">{{progress.Name}}</a>
                         </div>
