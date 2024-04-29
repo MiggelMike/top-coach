@@ -142,7 +142,14 @@
 
   .alternate-color {
 	background-color: var(--alternate-color);
+	
   }
+
+  .alternate-row {
+	@extend .alternate-color;
+	border-radius: 5px;
+  }
+
 
   .mat-mdc-checkbox label {
 	  color: var(--first-color);
@@ -1243,6 +1250,10 @@ input[type=text]:focus  {
   input:disabled  {
 	color: var(--input-disabled-color);
   }
+
+  .border-radius-5 {
+	border-radius: 5px;
+}
 
 
 .border-radius-10 {

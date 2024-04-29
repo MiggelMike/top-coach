@@ -28,7 +28,7 @@
     <ng-container *ngIf="UebungListeSortedByName">
         <div class="column-center mg-top-5">
             <ng-container *ngFor="let uebung of UebungListeSortedByName, index as i">
-                <div class="row-start-left height-40" [ngClass]="{'alternate-color': i % 2 === 0}">
+                <div class="row-start-left height-40" [ngClass]="{'alternate-row': i % 2 === 0}">
                     <ng-container *ngIf="SelectMode">
                         <div class="column-center">
                             <mat-checkbox class="mg-5" [(ngModel)]="uebung.Selected"></mat-checkbox>
