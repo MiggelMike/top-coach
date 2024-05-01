@@ -15,6 +15,7 @@ import { GlobalService } from '../services/global.service';
 export class BodyweightComponent implements OnInit {
 	DateTimeFormat: string = cDateTimeFormat;
 	BodyweightList: Array<BodyWeight> = [];
+	currentBodyweight: BodyWeight = null;
 
 	minDate: Date = new Date();
 	maxDate: Date = new Date();
@@ -46,8 +47,12 @@ export class BodyweightComponent implements OnInit {
 
 	CalendarVisible: boolean = false;
 
-	ToogleCalendar() {
+	ToogleCalendar(aBodyWeight: BodyWeight) {
 		this.CalendarVisible = !this.CalendarVisible;
+		if (this.CalendarVisible === true)
+			this.currentBodyweight = aBodyWeight;
+		else
+			this.currentBodyweight = null;
 	}
 
 	CloseCalendar() {
@@ -56,6 +61,12 @@ export class BodyweightComponent implements OnInit {
 
 	SetDatum(aBodyWeight: BodyWeight, aEvent: any) {
 		aBodyWeight.Datum = aEvent.target.value;
+	}
+
+	TakeCalendarDate(aPara:any) {
+		if (this.currentBodyweight !== null)
+			this.currentBodyweight.Datum = aPara.fromDate;
+		this.CloseCalendar();	
 	}
 
 	get GewichtsEinheit(): string {
