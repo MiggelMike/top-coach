@@ -13,8 +13,8 @@ import { GlobalService } from '../services/global.service';
 	styleUrls: ['./bodyweight.component.scss'],
 })
 export class BodyweightComponent implements OnInit {
-  DateTimeFormat: string = cDateTimeFormat;
-  BodyweightList: Array<BodyWeight> = [];
+	DateTimeFormat: string = cDateTimeFormat;
+	BodyweightList: Array<BodyWeight> = [];
 
 	minDate: Date = new Date();
 	maxDate: Date = new Date();
@@ -23,19 +23,18 @@ export class BodyweightComponent implements OnInit {
 	enableMeridian: Boolean = true;
 	disableMinute: Boolean = false;
 	hideTime: Boolean = false;
-	
 
-  constructor(private fDbModul: DexieSvcService,public fDialogService: DialogeService, private location: Location) {
-    this.fDbModul.LadeBodyweight().then((aBodyweights) => {
-      aBodyweights.forEach((aBodyWeight) => {
-        this.BodyweightList.push(aBodyWeight.Copy());
-      })
-    });
+	constructor(private fDbModul: DexieSvcService, public fDialogService: DialogeService, private location: Location) {
+		this.fDbModul.LadeBodyweight().then((aBodyweights) => {
+			aBodyweights.forEach((aBodyWeight) => {
+				this.BodyweightList.push(aBodyWeight.Copy());
+			});
+		});
 	}
-	
+
 	get Toolbar_1_row(): boolean {
 		return GlobalService.calcToolbarRrows() === 1;
-	}	
+	}
 
 	get Toolbar_2_rows(): boolean {
 		return GlobalService.calcToolbarRrows() === 2;
@@ -43,54 +42,56 @@ export class BodyweightComponent implements OnInit {
 
 	get Toolbar_3_rows(): boolean {
 		return GlobalService.calcToolbarRrows() === 3;
-	}    
+	}
 
 	CalendarVisible: boolean = false;
 
 	ToogleCalendar() {
-		this.CalendarVisible = !this.CalendarVisible;	
+		this.CalendarVisible = !this.CalendarVisible;
 	}
 
-SetDatum(aBodyWeight: BodyWeight, aEvent: any) {
-	aBodyWeight.Datum = aEvent.target.value;
+	CloseCalendar() {
+		this.CalendarVisible = false;
 	}
-	
+
+	SetDatum(aBodyWeight: BodyWeight, aEvent: any) {
+		aBodyWeight.Datum = aEvent.target.value;
+	}
+
 	get GewichtsEinheit(): string {
-		if(DexieSvcService.GewichtsEinheit === GewichtsEinheit.KG)
-			return ` (${GewichtsEinheit[GewichtsEinheit.KG]})`;
+		if (DexieSvcService.GewichtsEinheit === GewichtsEinheit.KG) return ` (${GewichtsEinheit[GewichtsEinheit.KG]})`;
 		return ` (${GewichtsEinheit[GewichtsEinheit.LBS]})`;
 	}
-	
-  ngOnInit(): void { }
-  
-  NewBodyweight() {
-    const mBodyweight: BodyWeight = new BodyWeight();
-	  mBodyweight.Datum = new Date();
-	  mBodyweight.GewichtsEinheit = DexieSvcService.GewichtsEinheit;
-    this.BodyweightList.unshift(mBodyweight);
-  }
 
-  DeleteBodyweight(aBw: BodyWeight) {
-	  const mDialogData = new DialogData();
-	  mDialogData.textZeilen.push("Delete Record?");
-	  mDialogData.ShowAbbruch = false;
-	  mDialogData.OkFn = (): void => {
-		  const mIndex = this.BodyweightList.indexOf(aBw);
-		  this.BodyweightList.splice(mIndex, 1);
-		  if (mIndex > -1)
-		  	this.fDbModul.DeleteBodyweight(aBw.ID);
-	  }
-	this.fDialogService.JaNein(mDialogData);		  
+	ngOnInit(): void {}
+
+	NewBodyweight() {
+		this.CalendarVisible = false;
+		const mBodyweight: BodyWeight = new BodyWeight();
+		mBodyweight.Datum = new Date();
+		mBodyweight.GewichtsEinheit = DexieSvcService.GewichtsEinheit;
+		this.BodyweightList.unshift(mBodyweight);
 	}
-	
+
+	DeleteBodyweight(aBw: BodyWeight) {
+		const mDialogData = new DialogData();
+		mDialogData.textZeilen.push('Delete Record?');
+		mDialogData.ShowAbbruch = false;
+		mDialogData.OkFn = (): void => {
+			const mIndex = this.BodyweightList.indexOf(aBw);
+			this.BodyweightList.splice(mIndex, 1);
+			if (mIndex > -1) this.fDbModul.DeleteBodyweight(aBw.ID);
+		};
+		this.fDialogService.JaNein(mDialogData);
+	}
+
 	back() {
 		this.fDbModul.BodyweightListeSpeichern(this.BodyweightList);
 		this.location.back();
 	}
 
-  ngOnDestroy() {
-  }
-  
+	ngOnDestroy() {}
+
 	SetBodyweight(aEvent: any, aBw: BodyWeight) {
 		aEvent.stopPropagation();
 		aBw.Weight = Number(aEvent.target.value);

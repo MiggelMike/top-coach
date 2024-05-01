@@ -24,6 +24,21 @@
         <div class="main-panel" >
             <ng-container *ngIf="BodyweightList">
                     <div class="column-center">
+                        <ng-container *ngIf="CalendarVisible === true">
+                            <div cdkDropListGroup class="column-center pad-left-5 pad-right-5 pad-bottom-5">
+                                <div class="row-center">
+                                    <div cdkDrag class="cc-overlay" matTooltip="Drag me" [matTooltipPosition]="'above'!">
+                                        <div class="row-center-gap-10">
+                                            <div class="column-center">                
+                                                <a [ngClass]="['link-button-font', 'font-14-data']" mat-flat-button (click)="CloseCalendar()">Close calendar</a>
+                                            </div>
+                                        </div>
+                                        <app-kalender></app-kalender>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+
                         <ng-container *ngFor="let bw of BodyweightList, index as i">
                             <div class="row-start-left-gap-3 height-70">
                                 <div class="column-center width-60 base-body-weight-column" [ngClass]="{'body-weight-column': Toolbar_3_rows === true}">
@@ -47,11 +62,11 @@
                                     </div>
                                 </div>
                                 
-                                
-                                
-                                <div cdkDropListGroup class="column-center pad-left-5 pad-right-5 pad-bottom-5"  [ngClass]="{'invisible': CalendarVisible === false}">
-                                    <app-kalender></app-kalender>
+                                <div class="column-center mg-top-20">
+                                    <span class="material-symbols-outlined label-font-size-large" (click)="ToogleCalendar()">calendar_month</span>
                                 </div>
+        
+                              
                                 <!-- <ngx-mat-datetime-picker class="label-font-size-large" #pickerWithActions [showSeconds]="true" [hideTime]="false">
                                     <ngx-mat-datepicker-actions>
                                         <button mat-button ngxMatDatepickerCancel>Cancel</button>
@@ -60,13 +75,10 @@
                                 </ngx-mat-datetime-picker>
                                 <ngx-mat-datepicker-toggle matSuffix [for]="pickerWithActions"></ngx-mat-datepicker-toggle> -->
                                 
-                                <div class="column-center mg-top-20">
-                                    <span class="material-symbols-outlined label-font-size-large" (click)="ToogleCalendar()">calendar_month</span>
-                                </div>
-
-                                <!-- <div class="column-center width-30 mg-top-20">
+ 
+                                <div class="column-center width-30 mg-top-20">
                                     <span class="material-symbols-outlined label-font-size-large" (click)="DeleteBodyweight(bw)">delete</span>
-                                </div> -->
+                                </div> 
                             </div>
                         </ng-container>
                     </div>
