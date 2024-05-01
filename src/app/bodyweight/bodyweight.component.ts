@@ -45,6 +45,11 @@ export class BodyweightComponent implements OnInit {
 		return GlobalService.calcToolbarRrows() === 3;
 	}    
 
+	CalendarVisible: boolean = false;
+
+	ToogleCalendar() {
+		this.CalendarVisible = !this.CalendarVisible;	
+	}
 
 SetDatum(aBodyWeight: BodyWeight, aEvent: any) {
 	aBodyWeight.Datum = aEvent.target.value;

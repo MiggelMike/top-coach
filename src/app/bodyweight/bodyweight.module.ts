@@ -26,11 +26,23 @@ import { NgxMatDatetimePickerModule, NgxMatTimepickerModule, NgxMatNativeDateMod
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import {
+  DateRange,
+  DefaultMatCalendarRangeStrategy,
+  MAT_DATE_RANGE_SELECTION_STRATEGY,
+  MatRangeDateSelectionModel
+} from "@angular/material/datepicker";
+import { KalenderModule } from '../bausteine/Kalender/kalender/kalender.module';
+
 @NgModule({
   declarations: [BodyweightComponent],
   exports: [BodyweightComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   providers: [
+      {
+        provide: { MAT_DATE_RANGE_SELECTION_STRATEGY, MatRangeDateSelectionModel, DateRange },     
+        useClass: DefaultMatCalendarRangeStrategy
+      },
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } }
     ,{ provide: MAT_DATE_LOCALE, useValue: 'de-DE' }
 		,{ provide: LOCALE_ID, useValue: 'de-DE' }
@@ -41,6 +53,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     DatePipe
   ],
   imports: [
+    KalenderModule,
     BrowserAnimationsModule,
     DatePipe,
     FormsModule,

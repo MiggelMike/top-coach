@@ -36,30 +36,37 @@
                                     </div>
                                 </div>
                         
-                                <div class="column-center width-150">
-                                    <div class="row-start-right width-100-Prozent">
+                                <div class="column-center">
+                                    <div class="row-start-left">
                                         <mat-label class="label-font-size-small" [ngClass]="{'font-size-smaller': Toolbar_3_rows === true}">Choose a date</mat-label>
                                     </div>
-                                    <!-- <div class="row-start-right width-100-Prozent">
-                                        <input matInput type="text" [ngxMatDatetimePicker]="pickerWithActions" [(ngModel)]="bw.Datum"
-                                            class="width-100-Prozent align-right" [ngClass]="{'sfont-size-smaller': Toolbar_3_rows === true}"
+                                    <div class="row-start-right">
+                                        <input matInput type="text" [(ngModel)]="bw.Datum"
+                                            class="width-100-Prozent align-right" [ngClass]="{'font-size-smaller': Toolbar_3_rows === true}"
                                             disabled="false">
-                                    </div> -->
+                                    </div>
                                 </div>
                                 
-                                <div class="column-center width-30 mg-top-20">
+                                
+                                
+                                <div cdkDropListGroup class="column-center pad-left-5 pad-right-5 pad-bottom-5"  [ngClass]="{'invisible': CalendarVisible === false}">
+                                    <app-kalender></app-kalender>
+                                </div>
+                                <!-- <ngx-mat-datetime-picker class="label-font-size-large" #pickerWithActions [showSeconds]="true" [hideTime]="false">
+                                    <ngx-mat-datepicker-actions>
+                                        <button mat-button ngxMatDatepickerCancel>Cancel</button>
+                                        <button mat-raised-button color="primary" ngxMatDatepickerApply>Apply</button>
+                                    </ngx-mat-datepicker-actions>
+                                </ngx-mat-datetime-picker>
+                                <ngx-mat-datepicker-toggle matSuffix [for]="pickerWithActions"></ngx-mat-datepicker-toggle> -->
+                                
+                                <div class="column-center mg-top-20">
+                                    <span class="material-symbols-outlined label-font-size-large" (click)="ToogleCalendar()">calendar_month</span>
+                                </div>
 
-                                    <!-- <ngx-mat-datetime-picker class="label-font-size-large" #pickerWithActions [showSeconds]="true" [hideTime]="false">
-                                        <ngx-mat-datepicker-actions>
-                                            <button mat-button ngxMatDatepickerCancel>Cancel</button>
-                                            <button mat-raised-button color="primary" ngxMatDatepickerApply>Apply</button>
-                                        </ngx-mat-datepicker-actions>
-                                    </ngx-mat-datetime-picker>
-                                    <ngx-mat-datepicker-toggle matSuffix [for]="pickerWithActions"></ngx-mat-datepicker-toggle> -->
-                                </div>
-                                <div class="column-center width-30 mg-top-20">
+                                <!-- <div class="column-center width-30 mg-top-20">
                                     <span class="material-symbols-outlined label-font-size-large" (click)="DeleteBodyweight(bw)">delete</span>
-                                </div>
+                                </div> -->
                             </div>
                         </ng-container>
                     </div>

@@ -36,6 +36,7 @@
 .main-panel-history-view {
     @extend .main-panel;
     top: 52px; 
+    background-color: var(--main-content-background-color);
 } 
 
 #form-body{

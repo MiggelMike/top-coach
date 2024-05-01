@@ -2,6 +2,7 @@
 
 :root {
 	--max-width: 380px;
+	--header-background-color:  var(--main-content-background-color);
 }
 
 [data-theme="light"] {
@@ -22,8 +23,8 @@
 	--mat-datepicker-calendar-header-divider-color: var(--label-color);
 	--mat-datepicker-calendar-date-in-range-state-background-color: rgb(173, 156, 233);
 	--checkbox-border-color: var(--label-color);
-	--header-background-color: var(--first-background-color); //#ffffff;
 	--header-border-color: var(--first-background-color);
+	--header-background-color:  var(--main-content-background-color);
 	--header-menu-item-color: #231f20;
 	--header-theme-switch-background-color: #cccccc;
 	--header-theme-switch-before-background-color: #ffffff;
@@ -37,7 +38,6 @@
 	--link-button-font-color: rgb(127, 127, 248);
 	--cc-overlay-border-color: rgb(226 215 247);
 	--box-shadow-ex: 3px 3px 1px 1px rgb(214, 187, 250);	
-	--mat-expansion-header-background-color: var(--second-background-color);
 	--mat-toolbar-panel-background-color: var(--second-background-color);
 	--mat-toolbar-panel-color: var(--label-color);
 	--mat-expansion-container-background-color: var(--second-color);
@@ -113,6 +113,23 @@
     --mdc-text-button-label-text-color: var(--label-color);
 }
 
+div {
+//	background-color: var(--first-background-color);
+	// background-color: var(--second-background-color);
+	
+background-color: transparent;
+}
+
+h4 {
+	color: var(--first-color) !important;
+	background-color: transparent;
+}
+
+a {
+	color: var(--label-color) !important;
+	background-color: transparent;
+}
+
 
 .mat-datepicker-content {
     display: block;
@@ -159,12 +176,13 @@ button:not(:disabled), [type=button]:not(:disabled), [type=reset]:not(:disabled)
 }
 
   .alternate-color {
-	background-color: var(--alternate-color);
+	background-color: var(--alternate-color) !important;
 	
   }
 
   .alternate-row {
 	@extend .alternate-color;
+	//background-color: var(--alternate-color);
 	border-radius: 5px;
   }
 
@@ -885,7 +903,7 @@ div.herz:after {
 }
 
 .row-start-left {
-	@extend .background-color-transparent;
+	// @extend .background-color-transparent;
 	@extend .wrap; 
 	display: flex;
 	justify-content:flex-start;
@@ -1338,8 +1356,8 @@ input[type=text]:focus  {
 	 top:0;   
 	 width: 100%;  
 	 z-index: 1000;
-	// background-color: var(--main-content-background-color);
-	background-color: var(--header-background-color);
+	background-color: var(--main-content-background-color);
+	// background-color: transparent;
 	//  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
   }
 

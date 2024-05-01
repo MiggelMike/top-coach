@@ -7,7 +7,7 @@
     </div>
     
     <div class="column-center">
-        <a class='link-button-font btn btn-link' mat-flat-button (click)="NeueMuskelGruppe()">New Musclegroup</a>
+        <a  (click)="NeueMuskelGruppe()">New Musclegroup</a>
     </div>
 </div>
     
@@ -16,12 +16,12 @@
     <div id="main-panel" class="column-center mg-top-5">
         <ng-container *ngFor="let mg of MuskelGruppenListe, index as i">
             <!-- Zeilen-Hintergrundfarbe -> [ngClass]="{'HG-01': i % 2 === 0}" -->
-            <div class="row-center height-40" [ngClass]="{'HG-01': i % 2 === 0}">
+            <div class="row-center height-40" [ngClass]="{'alternate-row': i % 2 === 0}">
                     <div id="muscleGroupName" class="column-center">
-                        <a class="HG-Transparent"  (click)="EditMuskelGruppe(mg)">{{mg.Name}}</a>
+                        <a class="label-font-size-small"  (click)="EditMuskelGruppe(mg)">{{mg.Name}}</a>
                     </div>
                     <div class="column-center width-65">
-                        <a class="ref-button" (click)="DeleteMuskel(mg)">Delete</a>
+                        <span class="material-symbols-outlined label-font-size-large" (click)="DeleteMuskel(mg)">delete</span>
                     </div>
             </div>
         </ng-container>
