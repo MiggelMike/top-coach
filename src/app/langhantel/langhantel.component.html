@@ -1,16 +1,14 @@
 
 <div class="header-box">
-    <div class="row-center mg-top-5">
-        <div class="colum-center width-280">
-            <span class="material-symbols-outlined" (click)="back()">arrow_back</span>
+    <div class="row-center-gap-5 mg-top-5">
+        <div class="colum-center">
+            <span class="material-symbols-outlined label-font-size-large" (click)="back()">arrow_back</span>
+        </div>
+        <div class="colum-center mg-top-15">
+            <h4>Barbells</h4>
         </div>
     </div>
     
-    <div class="row-center">
-        <div class="colum-center">
-            <h4>Barbells</h4>
-        </div>
-    </div>                
     
     <div class="row-center">
         <div class="colum-center">
@@ -26,27 +24,27 @@
                 <div class="row-center-gap-5 height-65 pad-left-5">
                         <div class="colum-start-left width-100">
                             <div class="colum-start-left width-100-Prozent">
-                                <mat-label>Name</mat-label>
+                                <mat-label class="label-font-size-small">Name</mat-label>
                             </div>
                             <input class="width-100-Prozent" matInput [(ngModel)]="Hantel.Name" maxlength="50" type="text">
                         </div>
                     
                         <div class="colum-start-left width-40">
-                            <div class="row-start-right width-100-Prozent">ø</div>
+                            <div class="row-start-right width-100-Prozent label-font-size-small">ø</div>
                     
                             <input matInput class="align-right width-100-Prozent" mask="99" (focusout)="SetDiameter(Hantel,$event)"
                                 [ngModel]="Hantel.Durchmesser" type="text">
                         </div>
                         
                         <div class="colum-start-left">
-                                <div class="row-start-right width-100-Prozent">Weight</div>
+                                <div class="row-start-right width-100-Prozent label-font-size-small">Weight</div>
                     
                             <input matInput mask="999.00" class="align-right width-75" [ngModel]="Hantel.GewichtText"
                                 (focusout)="SetGewicht(Hantel,$event)" type="text">
                         </div>
                     
                         <div class="colum-center height-65 pad-top-30">
-                            <a id="Delete" class="ref-button" (click)="Delete(Hantel)">Delete</a>
+                            <span class="material-symbols-outlined label-font-size-large" (click)="Delete(Hantel)">delete</span>
                         </div> 
                     </div>
             </ng-container>
