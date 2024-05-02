@@ -48,9 +48,8 @@
                                 (focusout)="SetAnzahl(sch,$event)" [ngModel]="sch.Anzahl" type="text">
                         </div>
 
-                        <div class="colum-center">
-                            <a id="Delete" class="ref-button mg-l-10" (click)="Delete(sch)"
-                                style="width:max-content;">Delete</a>
+                        <div class="colum-center mg-top-20">
+                            <span class="material-symbols-outlined label-font-size-large" (click)="Delete(sch)">delete</span>
                         </div>
 
                     </div>
