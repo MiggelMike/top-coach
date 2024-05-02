@@ -1,4 +1,3 @@
-import { BodyWeight } from 'src/Business/Bodyweight/Bodyweight';
 import { AppData } from './../../Business/Coach/Coach';
 import { SessionOverlayConfig } from './../services/session-overlay-service.service';
 import { ElementRef, ViewEncapsulation  } from '@angular/core';

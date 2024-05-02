@@ -1,5 +1,5 @@
 import { cDateTimeFormat, DexieSvcService } from '../services/dexie-svc.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { BodyWeight } from '../../Business/Bodyweight/Bodyweight';
 import { Location } from "@angular/common";
 import { DialogData } from '../dialoge/hinweis/hinweis.component';
@@ -16,7 +16,8 @@ export class BodyweightComponent implements OnInit {
 	DateTimeFormat: string = cDateTimeFormat;
 	BodyweightList: Array<BodyWeight> = [];
 	currentBodyweight: BodyWeight = null;
-
+	@ViewChild('calendar') calendar: ElementRef;
+  
 	minDate: Date = new Date();
 	maxDate: Date = new Date();
 	disabled: Boolean = false;
@@ -33,6 +34,19 @@ export class BodyweightComponent implements OnInit {
 		});
 	}
 
+	CalendarDone: boolean = false;
+	ngAfterViewChecked() {
+		if ((this.CalendarVisible === true) && (this.CalendarDone === false)) {
+			this.CalendarDone = true;
+			this.left = (window.innerWidth - this.calendar.nativeElement.clientWidth) / 2 + window.pageXOffset;
+			
+			if (this.mouseY - window.pageYOffset + this.calendar.nativeElement.clientHeight > window.innerHeight)
+				this.top = this.mouseY - this.calendar.nativeElement.clientHeight;
+			else
+				this.top = this.mouseY;	
+		}
+	}
+
 	get Toolbar_1_row(): boolean {
 		return GlobalService.calcToolbarRrows() === 1;
 	}
@@ -46,13 +60,21 @@ export class BodyweightComponent implements OnInit {
 	}
 
 	CalendarVisible: boolean = false;
+	left: number = 50; 
+	top: number = 200; 
+	mouseX: number = 0;
+	mouseY: number = 0;
 
-	ToogleCalendar(aBodyWeight: BodyWeight) {
+	ToogleCalendar(aEvent:any, aCalendar:any, aBodyWeight: BodyWeight) {
 		this.CalendarVisible = !this.CalendarVisible;
 		if (this.CalendarVisible === true)
 			this.currentBodyweight = aBodyWeight;
 		else
 			this.currentBodyweight = null;
+
+		this.mouseX = aEvent.clientX;
+		this.mouseY = aEvent.layerY;
+		this.CalendarDone = !this.CalendarVisible;
 	}
 
 	CloseCalendar() {
@@ -108,3 +130,4 @@ export class BodyweightComponent implements OnInit {
 		aBw.Weight = Number(aEvent.target.value);
 	}
 }
+

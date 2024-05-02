@@ -34,7 +34,7 @@ export class KalenderComponent implements OnInit {
       return '?';
     return Datum.StaticFormatDate(this.dateRange.end, DateFormatTyp.Datum);
   }
-  
+	
 	Ok() {
 		if (this.OkFn != undefined)
 			this.OkFn.emit(

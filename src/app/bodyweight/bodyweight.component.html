@@ -25,7 +25,7 @@
             <ng-container *ngIf="BodyweightList">
                     <div class="column-center">
                         <ng-container *ngIf="CalendarVisible === true">
-                            <div cdkDropListGroup class="column-center pad-left-5 pad-right-5 pad-bottom-5">
+                            <div #calendar cdkDropListGroup class="column-center pad-left-5 pad-right-5 pad-bottom-5" style="position:absolute;" [style.top.px]="top" [style.left.px]="left">
                                 <div class="row-center">
                                     <div cdkDrag class="cc-overlay" matTooltip="Drag me" [matTooltipPosition]="'above'!">
                                         <div class="row-center-gap-10">
@@ -68,7 +68,7 @@
                                 </div>
                                 
                                 <div class="column-center mg-top-20">
-                                    <span class="material-symbols-outlined label-font-size-large" (click)="ToogleCalendar(bw)">calendar_month</span>
+                                    <span class="material-symbols-outlined label-font-size-large"   (click)="ToogleCalendar($event, calendar, bw)">calendar_month</span>
                                 </div>
         
                               

@@ -1,23 +1,26 @@
-<mat-calendar [selected]="dateRange" (selectedChange)="rangeChanged($event)"></mat-calendar>
-<div class="row-center-gap-5">
-    <div *ngIf="fromDateVisible === true" class="colum-center">
-        <span class="von-bis-label">From</span>
+<div id="calendar">
+    <mat-calendar [selected]="dateRange" (selectedChange)="rangeChanged($event)"></mat-calendar>
+    <div class="row-center-gap-5">
+        <div *ngIf="fromDateVisible === true" class="colum-center">
+            <span class="von-bis-label">From</span>
+        </div>
+        
+        <div *ngIf="fromDateVisible === true" class="colum-center">
+            <span class="von-bis-wert">{{von}}</span>
+        </div>
+        
+        <div *ngIf="toDateVisible" class="colum-center">
+            <span class="von-bis-label">To</span>
+        </div>
+        
+        <div *ngIf="toDateVisible === true" class="colum-center">
+            <span class="von-bis-wert">{{bis}}</span>
+        </div>
+        
     </div>
+    <div *ngIf="OkButtonVisible === true" class="row-center">
+        <span class="material-symbols-outlined label-font-size-large" (click)="Ok()">done</span>
+    </div>
+</div>
     
-    <div *ngIf="fromDateVisible === true" class="colum-center">
-        <span class="von-bis-wert">{{von}}</span>
-    </div>
-
-    <div *ngIf="toDateVisible" class="colum-center">
-        <span class="von-bis-label">To</span>
-    </div>
-
-    <div *ngIf="toDateVisible === true" class="colum-center">
-        <span class="von-bis-wert">{{bis}}</span>
-    </div>
-
-</div>
-<div *ngIf="OkButtonVisible === true" class="row-center">
-    <span class="material-symbols-outlined label-font-size-large" (click)="Ok()">done</span>
-</div>
-
+    
