@@ -33,6 +33,7 @@ import {
   MatRangeDateSelectionModel
 } from "@angular/material/datepicker";
 import { KalenderModule } from '../bausteine/Kalender/kalender/kalender.module';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [BodyweightComponent],
@@ -53,6 +54,7 @@ import { KalenderModule } from '../bausteine/Kalender/kalender/kalender.module';
     DatePipe
   ],
   imports: [
+    DragDropModule,
     KalenderModule,
     BrowserAnimationsModule,
     DatePipe,
