@@ -16,11 +16,11 @@
     <div id="main-panel" class="column-center mg-top-5">
         <ng-container *ngFor="let mg of MuskelGruppenListe, index as i">
             <!-- Zeilen-Hintergrundfarbe -> [ngClass]="{'HG-01': i % 2 === 0}" -->
-            <div class="row-center height-40" [ngClass]="{'alternate-row': i % 2 === 0}">
-                    <div id="muscleGroupName" class="column-center">
+            <div class="row-center height-40 grid-row" [ngClass]="{'alternate-row': i % 2 === 0}">
+                    <div id="muscleGroupName" class="column-center width-90-Prozent">
                         <a class="label-font-size-small"  (click)="EditMuskelGruppe(mg)">{{mg.Name}}</a>
                     </div>
-                    <div class="column-center width-65">
+                    <div class="column-center">
                         <span class="material-symbols-outlined label-font-size-large" (click)="DeleteMuskel(mg)">delete</span>
                     </div>
             </div>

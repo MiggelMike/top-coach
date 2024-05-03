@@ -867,6 +867,11 @@ div.herz:after {
 	// flex-direction: column-reverse;
 }
 
+.grid-row {
+	width: 100%;
+	max-width: var(--max-width);
+}
+
 .row-center {
 	@extend .background-color-transparent;
 	@extend .center-item;
