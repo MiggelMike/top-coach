@@ -29,35 +29,33 @@
                                                         </div>
                                                     </div>
 
-                                                    
-                                                    <div  class='row-start-left-gap-3'> 
-                                                        <ng-container *ngIf="sess.Kategorie02 === sessionStatus.Laeuft || sess.Kategorie02 === sessionStatus.Pause; then MitReset else OhneReset"></ng-container>
-                                                        <ng-template #MitReset>
+                                                    <div class='row-start-left-gap-3'>
+                                                        <ng-container *ngIf="sess.Kategorie02 === sessionStatus.Pause">
+                                                            <div  class="column-start-left">
+                                                                <span class="material-symbols-outlined label-font-size-large"
+                                                                (click)="startSession($event,sess)">arrow_forward</span>
+                                                            </div>
                                                             <div class="column-start-left">
-                                                                <a [ngClass]="['link-button-font']"  (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
+                                                                <span class="material-symbols-outlined label-font-size-large"
+                                                                (click)="resetSession($event, sess)">restart_alt</span>
                                                             </div>
-                    
-                                                            <div class="column-start-left">
-                                                                <a [ngClass]="['link-button-font']"  (click)="DeleteSession($event, sess, i+1)">Delete</a>
-                                                            </div>
-                    
-                                                            <div class="center-item" layout-align="center center">
-                                                                <a [ngClass]="['link-button-font']" (click)="resetSession($event, sess)">Reset</a>
-                                                            </div>
-                                                        </ng-template>
+                                                        </ng-container>
 
-                                                        <ng-template #OhneReset>
-                                                            <div class="column-start-left">
-                                                                <a [ngClass]="['link-button-font']"  (click)="startSession($event,sess)">{{StartButtonText(sess)}}</a>
+                                                        <ng-container *ngIf="sess.Kategorie02 === sessionStatus.Wartet">
+                                                            <div  class="column-start-left">
+                                                                <span class="material-symbols-outlined label-font-size-large"
+                                                                (click)="startSession($event,sess)">start</span>
                                                             </div>
-                    
+                                                        </ng-container>
+
+                                                         <ng-container *ngIf="true">
                                                             <div class="column-start-left">
-                                                                <a [ngClass]="['link-button-font']"  (click)="DeleteSession($event, sess, i+1)">Delete</a>
+                                                                <span class="material-symbols-outlined label-font-size-large"
+                                                                    (click)="DeleteSession($event, sess, i+1)">delete</span>
                                                             </div>
-                                                        </ng-template>
+                                                        </ng-container>
                                                     </div>
                                                 </mat-panel-title>
-
                                             </mat-expansion-panel-header>
 
                                             <div  *ngFor="let SessUeb of sess.UebungsListe, index as UebungIndex">
