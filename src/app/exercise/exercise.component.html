@@ -28,20 +28,28 @@
     <ng-container *ngIf="UebungListeSortedByName">
         <div class="column-center mg-top-5">
             <ng-container *ngFor="let uebung of UebungListeSortedByName, index as i">
-                <div class="row-start-left height-40" [ngClass]="{'alternate-row': i % 2 === 0}">
+                <div class="row-start-left height-40 grid-row" [ngClass]="{'alternate-row': i % 2 === 0}">
                     <ng-container *ngIf="SelectMode">
                         <div class="column-center">
                             <mat-checkbox class="mg-5" [(ngModel)]="uebung.Selected"></mat-checkbox>
                         </div>
                     </ng-container>
 
-                    <div class="column-center" [ngClass]="{'exerciseName-schmal': Toolbar_3_rows === true, 'exerciseName': Toolbar_3_rows === false }">
-                        <a class='exercise-button' (click)="EditExercise(uebung)">{{uebung.Name}}</a>
-                    </div>
+                    <ng-container *ngIf="true">
+                        <div class="column-center" [ngClass]="{'exerciseName-schmal': Toolbar_3_rows === true, 'exerciseName': Toolbar_3_rows === false }">
+                            <a class='exercise-button' (click)="EditExercise(uebung)">{{uebung.Name}}</a>
+                        </div>
+                    </ng-container>
 
-                    <div id="deleteExerciseButton" class="column-center">
+                    <ng-container *ngIf="true">
+                        <div class="column-start-left">
+                            <span class="material-symbols-outlined label-font-size-large"
+                                (click)="DeleteExercise(uebung)">delete</span>
+                        </div>
+                    </ng-container>                    
+                    <!-- <div id="deleteExerciseButton" class="column-center">
                         <a class="ref-button width-50"  (click)="DeleteExercise(uebung)">Delete</a>
-                    </div>
+                    </div> -->
                 </div>
             </ng-container>
             
