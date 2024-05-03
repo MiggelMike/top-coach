@@ -15,13 +15,15 @@
 <div id="main-panel" class="column-center">
     <ng-container *ngIf="ProgressListe">
             <ng-container *ngFor="let progress of ProgressListe, index as i">
-                <div class="row-start-left height-40 pad-right-5"  [ngClass]="{'alternate-row': i % 2 === 0}">
-                        <div class="column-center width-300">
+                <div class="row-center-gap-5 height-40 progress-row"  [ngClass]="{'alternate-row': i % 2 === 0}">
+                        <div class="column-center width-90-Prozent">
                             <a class="ref-button" (click)="EditProgress(progress)">{{progress.Name}}</a>
                         </div>
 
                         <div class="column-center mg-right-5">
-                            <a class="ref-button" (click)="DeleteProgress(progress)">Delete</a>
+                            <div class="column-start-left">
+                                <span class="material-symbols-outlined label-font-size-large" (click)="DeleteProgress(progress)">delete</span>
+                            </div>
                         </div>
                 </div>
             </ng-container> 
