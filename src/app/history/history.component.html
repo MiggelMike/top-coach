@@ -1,9 +1,12 @@
 <div class="header-box">
     <app-toolbar></app-toolbar>
     <div id="historyHeader">
-        <div class="row-center">
-
-            <a [ngClass]="['link-button-font']" mat-flat-button (click)="OpenHistorySettings()">{{HistorySettingsText}}</a>
+        <div class="row-center-gap-5">
+            <span class="label-font-size-small">from</span>
+            <span class="label-font-size-small date-text">{{fromDateFormated}}</span>
+            <span class="label-font-size-small">to</span>
+            <span class="label-font-size-small date-text">{{toDateFormated}}</span>
+            <span class="material-symbols-outlined label-font-size-large ml-10" (click)="OpenHistorySettings()">settings</span>
         </div>
     </div>
 </div>
@@ -12,14 +15,15 @@
     <div cdkDrag id="chart-settings" class="cc-overlay" matTooltip="Drag me" [matTooltipPosition]="'above'!">
         <div class="row-center-gap-10">
             <div class="column-center">                
-                <a [ngClass]="['link-button-font', 'font-14-data']" mat-flat-button (click)="CloseHistorySettings()">Close history settings</a>
+                <a [ngClass]="['link-button-font', 'font-14-data']"  (click)="CloseHistorySettings()">Close history settings</a>
             </div>
         </div>
         
-        <app-kalender
+        <app-kalender #calendar
         [fromDateVisible]="true"
         [toDateVisible]="true"
         [OkButtonVisible]="true"
+        (OkFn)="TakeCalendarDate($event)"
         ></app-kalender>
 
         <!-- <div class="column-center label-font-size-standard"> -->

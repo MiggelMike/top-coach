@@ -17,6 +17,8 @@ import { DateFormatTyp, Datum } from 'src/Business/Datum';
 })
 export class KalenderComponent implements OnInit {
 	dateRange: DateRange<Date>;
+	@Input() fromDate: Date = null;
+	@Input() toDate: Date = null;
 	@Input() fromDateVisible: boolean = false;
 	@Input() toDateVisible: boolean = false;
 	@Input() OkButtonVisible: boolean = false;
@@ -47,15 +49,15 @@ export class KalenderComponent implements OnInit {
 		public  readonly selectionModel: MatRangeDateSelectionModel<Date>,
 		public  readonly selectionStrategy: DefaultMatCalendarRangeStrategy<Date>
 	) {
-		if ((this.fromDateVisible === true) && (this.toDateVisible === true)){
-			const fiveDaysAgo = new Date();
-			fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
-			this.dateRange = new DateRange(fiveDaysAgo, new Date());
-		}
-		else {
-			const mToday = new Date()
-			this.dateRange = new DateRange(mToday, mToday);
-		}
+		const mToday = new Date()
+		
+		if (this.fromDate === null)
+			this.fromDate = mToday;
+
+		if (this.toDate === null)
+			this.toDate = mToday;
+
+    	this.dateRange = new DateRange(this.fromDate, this.toDate);
 	}
 
 	rangeChanged(aSelectedDate: Date) {

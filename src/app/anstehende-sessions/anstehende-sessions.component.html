@@ -30,7 +30,7 @@
                                                     </div>
 
                                                     <div class='row-start-left-gap-3'>
-                                                        <ng-container *ngIf="sess.Kategorie02 === sessionStatus.Pause">
+                                                        <ng-container *ngIf="sess.Kategorie02 === sessionStatus.Pause || sess.Kategorie02 === sessionStatus.Laeuft">
                                                             <div  class="column-start-left">
                                                                 <span class="material-symbols-outlined label-font-size-large"
                                                                 (click)="startSession($event,sess)">arrow_forward</span>

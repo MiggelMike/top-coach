@@ -3,7 +3,7 @@
 import { cDeutschKuezel as cDeutschKuerzel, cDeutschDateInputMask, cEnglishDateInputMask } from './../Sprache/Sprache';
 import { DexieSvcService } from './../services/dexie-svc.service';
 import { DiaDatum, DiaUebung, DiaUebungSettings } from './../../Business/Diagramm/Diagramm';
-import { Component, ContentChild, Inject, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ContentChild, ElementRef, Inject, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { IProgramModul, ProgramModulTyp } from './../../app/app.module';
 import { DialogeService } from '../services/dialoge.service';
 import { DialogData, cLoadingDefaultHeight } from '../dialoge/hinweis/hinweis.component';
@@ -19,6 +19,8 @@ import { MatRadioGroup } from '@angular/material/radio';
 import {ChangeDetectionStrategy } from '@angular/core';
 import { DiaTyp, IDiaTyp } from 'src/Business/Coach/Coach';
 import { GlobalService } from '../services/global.service';
+import { KalenderComponent } from '../bausteine/Kalender/kalender/kalender.component';
+import { DateRange } from '@angular/material/datepicker';
 
 // import { MatRangeDateSelectionModel, DefaultMatCalendarRangeStrategy, DateRange } from '@angular/material/datepicker';
 // import {  MatExpansionPanelHeader, MatExpansionPanel } from '@angular/material/expansion';
@@ -29,24 +31,25 @@ var cloneDeep = require('lodash.clonedeep');
 	selector: 'app-history',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	templateUrl: './history.component.html',
-	styleUrls: ['./history.component.scss']
+	styleUrls: ['./history.component.scss'],
 })
 export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 	public get SessionListe(): Array<HistorySession> {
 		const l = DexieSvcService.HistorySessions.filter((sess) => {
-			return (sess.GestartedWann.valueOf() >= this.fromDate.valueOf() && sess.GestartedWann.valueOf() <= this.toDate.valueOf())
+			return (
+				sess.GestartedWann.valueOf() >= this.fromDate.valueOf() &&
+				sess.GestartedWann.valueOf() <= this.toDate.valueOf()
+			);
 		});
 		return l;
 	}
-	
+
 	// public DiaTyp: string = 'line';
 	private fDiaUebungsListe: Array<DiaUebung> = [];
 	get DiaUebungsListe(): Array<DiaUebung> {
 		return this.fDiaUebungsListe.sort((u1, u2) => {
-			if (u1.UebungName > u2.UebungName)
-				return 1;
-			if (u1.UebungName < u2.UebungName)
-				return -1;
+			if (u1.UebungName > u2.UebungName) return 1;
+			if (u1.UebungName < u2.UebungName) return -1;
 			return 0;
 		});
 	}
@@ -69,13 +72,19 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 	ViewInitDone: boolean = false;
 	//#region fromDate
 	fromDate: Date;
+	get fromDateFormated():string {
+		return Datum.StaticFormatDate(this.fromDate, DateFormatTyp.Datum);
+	}
 	//#endregion
 	//#region toData
 	toDate: Date;
+	get toDateFormated():string {
+		return Datum.StaticFormatDate(this.toDate, DateFormatTyp.Datum);
+	}
 	//#endregion
 
 	ChartData: Array<ChartData> = [];
-	CmpAuswahl:number = 0;
+	CmpAuswahl: number = 0;
 	Auswahl: number = 0;
 	BarChartDataHelperList: Array<ChartData> = [];
 	aktuellerDiaTyp: DiaTyp;
@@ -87,12 +96,13 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 	@ViewChild('matTabChart') matTabChart: MatTab;
 	@ViewChild('ChartContainer') ChartContainer: any;
 	@ViewChild('ChartType') ChartType: MatRadioGroup;
+	@ViewChild('calendar') calendar:  KalenderComponent;
 
 	@Input() placeholderTime: string;
 
 	range = new FormGroup({
 		start: new FormControl(),
-		end: new FormControl()
+		end: new FormControl(),
 	});
 
 	constructor(
@@ -102,8 +112,6 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 		private router: Router
 	) {
 		DexieSvcService.ModulTyp = ProgramModulTyp.History;
-
-
 
 		this.toDate = new Date();
 		this.fromDate = Datum.StaticAddDays(this.toDate, -90);
@@ -115,7 +123,7 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 		this.CreatingChartsDialogData.hasBackDrop = false;
 		this.CreatingChartsDialogData.height = '150px';
 		this.CreatingChartsDialogData.textZeilen[0] = 'Creating charts';
-		
+
 		if (DexieSvcService.HistoryWirdGeladen === true) {
 			const mDialogData: DialogData = new DialogData();
 			mDialogData.height = cLoadingDefaultHeight;
@@ -125,11 +133,10 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 			this.fDbModul.fDialogHistoryService.Loading(mDialogData);
 		}
 
-		this.fDbModul.LadeDiaUebungen()
-			.then((mData) => {
-				this.DiaUebungSettingsListe = mData;
-			});
-		
+		this.fDbModul.LadeDiaUebungen().then((mData) => {
+			this.DiaUebungSettingsListe = mData;
+		});
+
 		this.aktuellerDiaTyp = DexieSvcService.AppRec.DiaChartTyp;
 	}
 
@@ -137,19 +144,20 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 		return DiaTyp;
 	}
 
-
 	ngOnDestroy() {
 		this.Save();
 	}
 
 	ngAfterViewInit() {
 		this.ViewInitDone = true;
-
+		this.calendar.toDate = this.toDate; 
+		this.calendar.fromDate = this.fromDate; 
+		this.calendar.dateRange = new DateRange(this.fromDate, this.toDate);
 	}
 
-    get Toolbar_1_row(): boolean {
+	get Toolbar_1_row(): boolean {
 		return GlobalService.calcToolbarRrows() === 1;
-	}	
+	}
 
 	get Toolbar_2_rows(): boolean {
 		return GlobalService.calcToolbarRrows() === 2;
@@ -157,26 +165,29 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 
 	get Toolbar_3_rows(): boolean {
 		return GlobalService.calcToolbarRrows() === 3;
-	}    
-
-
-	checkAktivDia(aDiaTyp: DiaTyp): boolean{
-		return (this.aktuellerDiaTyp === aDiaTyp);
 	}
-	
+
+	checkAktivDia(aDiaTyp: DiaTyp): boolean {
+		return this.aktuellerDiaTyp === aDiaTyp;
+	}
+
 	get programModul(): typeof ProgramModulTyp {
 		return ProgramModulTyp;
 	}
 
 	get DateInputMask(): string {
-		return DexieSvcService.AktuellSprache.Kuerzel === cDeutschKuerzel ? cDeutschDateInputMask : cEnglishDateInputMask;
+		return DexieSvcService.AktuellSprache.Kuerzel === cDeutschKuerzel
+			? cDeutschDateInputMask
+			: cEnglishDateInputMask;
 	}
 
 	ViewSession(aEvent: Event, aSession: ISession) {
 		aEvent.stopPropagation();
-		this.router.navigate(["sessionFormComponent"], { state: { programm: undefined, sess: aSession, ModulTyp: ProgramModulTyp.HistoryView } });
+		this.router.navigate(['sessionFormComponent'], {
+			state: { programm: undefined, sess: aSession, ModulTyp: ProgramModulTyp.HistoryView },
+		});
 	}
-		
+
 	GestartedWann(aSess: ISession): string {
 		return Datum.StaticFormatDate(aSess.GestartedWann, DateFormatTyp.KomplettOhneSekunden);
 	}
@@ -190,25 +201,22 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 	}
 
 	NoSessionName(aSess: HistorySession): boolean {
-		return (aSess.ProgrammName === undefined || aSess.ProgrammName.trim() === '');
+		return aSess.ProgrammName === undefined || aSess.ProgrammName.trim() === '';
 	}
 
 	SessProgrammName(aSess: HistorySession): string {
-		if (this.NoSessionName(aSess))
-			return '?';
+		if (this.NoSessionName(aSess)) return '?';
 		return aSess.ProgrammName;
 	}
 
 	onClickDiaUebung(aDiaUebung: DiaUebung, aChecked: boolean) {
 		aDiaUebung.Visible = aChecked;
-		const mDiaUebungSetting = (this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
-			if (mPtrDiaUebungSetting.UebungID === aDiaUebung.UebungID)
-				return true;
+		const mDiaUebungSetting = this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
+			if (mPtrDiaUebungSetting.UebungID === aDiaUebung.UebungID) return true;
 			return false;
-		}));
+		});
 
-		if (mDiaUebungSetting !== undefined)
-			mDiaUebungSetting.Visible = aChecked;
+		if (mDiaUebungSetting !== undefined) mDiaUebungSetting.Visible = aChecked;
 
 		this.Draw(true);
 	}
@@ -217,24 +225,23 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 		return aDia.UebungName + ' | ' + aBarPoint.name + ' | ' + aBarPoint.value;
 	}
 
-	onCalendarClose() {
-		//new Date(dateString);
-
-		// const s1 = this.toDate.toDateString();
-		// const s2 = this.fromDate.toDateString();
-		// DexieSvcService.HistoryBisDatum = this.toDate;
-		// DexieSvcService.HistoryVonDatum = this.fromDate;
+	TakeCalendarDate(aPara: any) {
+		this.fromDate = aPara.fromDate;
+		this.toDate = aPara.toDate;
+		this.CloseHistorySettings();          
 		this.Draw(true);
 	}
 
 	//#region History-Settings
 	HistorySettingsVisible: boolean = false;
-	
+
 	OpenHistorySettings() {
-		this.HistorySettingsVisible = !this.HistorySettingsVisible;		
-		
-		if (this.HistorySettingsVisible === false)
-			this.Save();
+		this.calendar.toDate = this.toDate; 
+		this.calendar.fromDate = this.fromDate; 
+
+		this.HistorySettingsVisible = !this.HistorySettingsVisible;
+
+		if (this.HistorySettingsVisible === false) this.Save();
 	}
 
 	CloseHistorySettings() {
@@ -242,14 +249,13 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 	}
 
 	get HistorySettingsText(): string {
-		if (this.HistorySettingsVisible === true)
-			return 'Close history settings';
+		if (this.HistorySettingsVisible === true) return 'Close history settings';
 		return 'Open history settings';
 	}
 	//#endregion
 	//#region Chart-Settings
 	ChartSettingsVisible: boolean = false;
-	
+
 	CloseChartSettings() {
 		this.ChartSettingsVisible = false;
 	}
@@ -263,72 +269,68 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 			const mDialogData: DialogData = new DialogData();
 			mDialogData.height = cLoadingDefaultHeight;
 			mDialogData.width = '200px';
-			mDialogData.textZeilen.push('Processing charts'); 
+			mDialogData.textZeilen.push('Processing charts');
 			mDialogData.ShowOk = false;
 			this.fDbModul.fDialogHistoryService.Loading(mDialogData);
-		}		
+		}
 
-		if (aDialogOn)
-			this.fLoadingDialog.Loading(this.CreatingChartsDialogData);
+		if (aDialogOn) this.fLoadingDialog.Loading(this.CreatingChartsDialogData);
 
 		this.Diagramme = [];
 		this.ChartData = [];
 		this.fDiaUebungsListe = [];
 		let mUebungsNamen = [];
-		
+
 		let mVonDatum: Date = this.fromDate; // DexieSvcService.HistoryVonDatum;
-		mVonDatum.setHours(0,0,0,0);
+		mVonDatum.setHours(0, 0, 0, 0);
 
 		let mBisDatum: Date = this.toDate; // DexieSvcService.HistoryBisDatum;
-		mBisDatum.setHours(23,59,59,999);
+		mBisDatum.setHours(23, 59, 59, 999);
 		try {
 			const t = DexieSvcService.DiagrammDatenListe;
-			const aDiagrammData: Array<DiaDatum> = DexieSvcService.DiagrammDatenListe.filter(
-				(mDiaData) => {
-					return (mDiaData.Datum.valueOf() >= mVonDatum.valueOf() && mDiaData.Datum.valueOf() <= mBisDatum.valueOf());
-				});
-			
+			const aDiagrammData: Array<DiaDatum> = DexieSvcService.DiagrammDatenListe.filter((mDiaData) => {
+				return (
+					mDiaData.Datum.valueOf() >= mVonDatum.valueOf() && mDiaData.Datum.valueOf() <= mBisDatum.valueOf()
+				);
+			});
+
 			//this.fDbModul.LadeDiagrammData(mVonDatum, mBisDatum, this.SessionListe, aDiagrammData);
 			for (let index = 0; index < aDiagrammData.length; index++) {
 				const mPtrDiaDatum: DiaDatum = aDiagrammData[index];
-					
+
 				mPtrDiaDatum.DiaUebungsListe.forEach((mPtrDiaUebung) => {
 					if (mUebungsNamen.indexOf(mPtrDiaUebung.UebungName) === -1) {
 						mUebungsNamen.push(mPtrDiaUebung.UebungName);
 						this.DiaUebungsListe.push(mPtrDiaUebung);
 
-						const mDiaUebungSetting = (this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
-							if (mPtrDiaUebungSetting.UebungID === mPtrDiaUebung.UebungID)
-								return true;
+						const mDiaUebungSetting = this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
+							if (mPtrDiaUebungSetting.UebungID === mPtrDiaUebung.UebungID) return true;
 							return false;
-						}));
-						if (mDiaUebungSetting !== undefined)
-							mPtrDiaUebung.Visible = mDiaUebungSetting.Visible;
+						});
+						if (mDiaUebungSetting !== undefined) mPtrDiaUebung.Visible = mDiaUebungSetting.Visible;
 					}
 				});
 			} // for
 
 			const mVisibleDiaUebungListe: Array<DiaUebung> = this.DiaUebungsListe.filter((mFilterDiaUebung) => {
-				return (mFilterDiaUebung.Visible === true);
+				return mFilterDiaUebung.Visible === true;
 			});
 
 			const mCharTypes = ['line', 'bar'];
 			for (let index = 0; index < mCharTypes.length; index++) {
 				const mDiaTyp: any = mCharTypes[index];
-				// Jede sichtbare Übung prüfen 
+				// Jede sichtbare Übung prüfen
 				for (let mIndexDiaUebung = 0; mIndexDiaUebung < mVisibleDiaUebungListe.length; mIndexDiaUebung++) {
 					const mPtrDiaUebung = mVisibleDiaUebungListe[mIndexDiaUebung];
-					const mDiaUebungSetting = (this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
-						if (mPtrDiaUebungSetting.UebungID === mPtrDiaUebung.UebungID)
-							return true;
+					const mDiaUebungSetting = this.DiaUebungSettingsListe.find((mPtrDiaUebungSetting) => {
+						if (mPtrDiaUebungSetting.UebungID === mPtrDiaUebung.UebungID) return true;
 						return false;
-					}));
+					});
 
 					if (mDiaUebungSetting === undefined) {
 						if (mPtrDiaUebung.ID === undefined)
-							this.fDbModul.InsertEineDiaUebung(mPtrDiaUebung)
-								.then((aID) => mPtrDiaUebung.ID = aID);
-					
+							this.fDbModul.InsertEineDiaUebung(mPtrDiaUebung).then((aID) => (mPtrDiaUebung.ID = aID));
+
 						this.DiaUebungSettingsListe.push(mPtrDiaUebung);
 					}
 
@@ -337,24 +339,23 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 					for (let mIndexDiagrammData = 0; mIndexDiagrammData < aDiagrammData.length; mIndexDiagrammData++) {
 						const mPtrDiaDatum: DiaDatum = aDiagrammData[mIndexDiagrammData];
 						let mMaxWeight: number = 0;
-						// In der Übungsliste des Datums nach der Übung suchen 
-						// Ist die Übung gleich der zu prüfenden Übung und ist MaxWeight größer als das bisher ermittelte mMaxWeight? 
+						// In der Übungsliste des Datums nach der Übung suchen
+						// Ist die Übung gleich der zu prüfenden Übung und ist MaxWeight größer als das bisher ermittelte mMaxWeight?
 						const mPtrDatumUebung: DiaUebung = mPtrDiaDatum.DiaUebungsListe.find((mSuchDatumUebung) => {
 							return (
-								mSuchDatumUebung.Visible === true
-								&& mSuchDatumUebung.UebungID === mPtrDiaUebung.UebungID
-								&& mSuchDatumUebung.MaxWeight > mMaxWeight
+								mSuchDatumUebung.Visible === true &&
+								mSuchDatumUebung.UebungID === mPtrDiaUebung.UebungID &&
+								mSuchDatumUebung.MaxWeight > mMaxWeight
 							);
 						});
 
-						if (mPtrDatumUebung === undefined)
-							continue;
+						if (mPtrDatumUebung === undefined) continue;
 
 						mMaxWeight = mPtrDatumUebung.MaxWeight;
 						let mWorkChartData: ChartData = this.ChartData.find((mChartData) => {
-							return (mChartData.UebungName === mPtrDiaUebung.UebungName);
+							return mChartData.UebungName === mPtrDiaUebung.UebungName;
 						});
-											
+
 						if (mWorkChartData === undefined) {
 							mWorkChartData = new ChartData();
 							mWorkChartData.UebungName = mPtrDiaUebung.UebungName;
@@ -366,30 +367,36 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 						// Die verschiedenen Chart-Typen prüfen.
 						switch (mDiaTyp) {
 							case 'line': {
-								let mLineChartData: LineChartData = mWorkChartData.LineChartListe.find((mSuchChartData) => {
-									return (mSuchChartData.name === mPtrDiaUebung.UebungName)
-								});
+								let mLineChartData: LineChartData = mWorkChartData.LineChartListe.find(
+									(mSuchChartData) => {
+										return mSuchChartData.name === mPtrDiaUebung.UebungName;
+									}
+								);
 
 								if (mLineChartData === undefined) {
 									mLineChartData = new LineChartData();
 									mLineChartData.name = mPtrDiaUebung.UebungName;
 									mWorkChartData.ActiveDiaType = 'line';
 									mWorkChartData.LineChartListe.push(mLineChartData);
-									mWorkChartData.colors.push({ "name": mPtrDiaUebung.UebungName, "value": "#63B8FF" });
+									mWorkChartData.colors.push({ name: mPtrDiaUebung.UebungName, value: '#63B8FF' });
 								}
 
 								mSeriesPoint = mLineChartData.series.find((mSuchPoint) => {
-									return (mSuchPoint.name === mPtrDiaDatum.Datum.toDateString())
+									return mSuchPoint.name === mPtrDiaDatum.Datum.toDateString();
 								});
-									
+
 								if (mSeriesPoint === undefined) {
 									mSeriesPoint = { name: mPtrDiaDatum.Datum.toDateString(), value: 0 };
 									mLineChartData.series.push(mSeriesPoint);
 								}
 
-								if (mLineChartData.series.find((mSuch) => {
-									return (mSuch.value > mMaxWeight && mSuch.name === mPtrDiaDatum.Datum.toDateString());
-								}) === undefined) {
+								if (
+									mLineChartData.series.find((mSuch) => {
+										return (
+											mSuch.value > mMaxWeight && mSuch.name === mPtrDiaDatum.Datum.toDateString()
+										);
+									}) === undefined
+								) {
 									mSeriesPoint.value = mMaxWeight;
 								}
 
@@ -397,42 +404,48 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 							} // <-- case line
 							case 'bar': {
 								let mBarPoint: BarPoint = mWorkChartData.BarChartListe.find((mBarPoint) => {
-									return (mBarPoint.name === mPtrDiaDatum.Datum.toDateString());
+									return mBarPoint.name === mPtrDiaDatum.Datum.toDateString();
 								});
 
 								if (mBarPoint === undefined) {
 									mBarPoint = new BarPoint();
 									mBarPoint.name = mPtrDiaDatum.Datum.toDateString();
 									mBarPoint.value = 0;
-									mWorkChartData.colors.push({ "name": mPtrDiaDatum.Datum.toDateString(), "value": "#63B8FF" });
+									mWorkChartData.colors.push({
+										name: mPtrDiaDatum.Datum.toDateString(),
+										value: '#63B8FF',
+									});
 									mWorkChartData.BarChartListe.push(mBarPoint);
 								}
 
-								if (mWorkChartData.BarChartListe.find((mBarPoint) => {
-									return (mBarPoint.value > mMaxWeight && mBarPoint.name === mPtrDiaDatum.Datum.toDateString());
-								}) === undefined) {
+								if (
+									mWorkChartData.BarChartListe.find((mBarPoint) => {
+										return (
+											mBarPoint.value > mMaxWeight &&
+											mBarPoint.name === mPtrDiaDatum.Datum.toDateString()
+										);
+									}) === undefined
+								) {
 									mBarPoint.value = mMaxWeight;
 								}
 								break;
 							} // bar
-						}//switch
+						} //switch
 					} // for
 				}
-			}//for
+			} //for
 
 			// if (this.ChartType !== undefined) {
 			// 	if(this.ChartType.value === DiaTyp.bar)
 			// 		this.ChartData.forEach((mChar) => mChar.ActiveDiaType = 'bar');
-				
+
 			// }
 
-			this.ChartData = this.ChartData.sort((c1, c2) => { 
-				if (c1.UebungName > c2.UebungName) 
-					return 1;
-	
-				if (c1.UebungName < c2.UebungName) 
-					return -1;
-	
+			this.ChartData = this.ChartData.sort((c1, c2) => {
+				if (c1.UebungName > c2.UebungName) return 1;
+
+				if (c1.UebungName < c2.UebungName) return -1;
+
 				return 0;
 			});
 			this.fLoadingDialog.fDialog.closeAll();
@@ -444,46 +457,43 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 
 	OnBarChartExpanded(aChartHelper: ChartData) {
 		let mSuchChartHelper: ChartData = this.BarChartDataHelperList.find((mBarChartHelper) => {
-			return (mBarChartHelper.UebungName === aChartHelper.UebungName);
+			return mBarChartHelper.UebungName === aChartHelper.UebungName;
 		});
 
 		if (mSuchChartHelper === undefined) {
 			mSuchChartHelper = aChartHelper.Copy();
 			this.BarChartDataHelperList.push(mSuchChartHelper);
 		}
-		 	
+
 		mSuchChartHelper.expanded = true;
 	}
 
-	
 	OnBarChartClosed(aChartHelper: ChartData) {
 		let mSuchChartHelper: ChartData = this.BarChartDataHelperList.find((mBarChartHelper) => {
-			return (mBarChartHelper.UebungName === aChartHelper.UebungName);
+			return mBarChartHelper.UebungName === aChartHelper.UebungName;
 		});
 
 		if (mSuchChartHelper === undefined) {
 			mSuchChartHelper = aChartHelper.Copy();
 			this.BarChartDataHelperList.push(mSuchChartHelper);
 		}
-		 	
+
 		mSuchChartHelper.expanded = false;
 	}
 
-
-	BarChartExpanded(aChartHelper: ChartData): boolean{
+	BarChartExpanded(aChartHelper: ChartData): boolean {
 		const mSuchChartHelper: ChartData = this.BarChartDataHelperList.find((mBarChartHelper) => {
-			return (mBarChartHelper.UebungName === aChartHelper.UebungName);
+			return mBarChartHelper.UebungName === aChartHelper.UebungName;
 		});
 
-		if (mSuchChartHelper !== undefined)
-			return (mSuchChartHelper.expanded);
+		if (mSuchChartHelper !== undefined) return mSuchChartHelper.expanded;
 
 		return true;
 	}
-	
+
 	Save() {
 		this.fDbModul.InsertDiaUebungen(this.DiaUebungSettingsListe);
-		DexieSvcService.AppRec.DiaChartTyp = this.aktuellerDiaTyp; 
+		DexieSvcService.AppRec.DiaChartTyp = this.aktuellerDiaTyp;
 		this.fDbModul.AppDataSpeichern(DexieSvcService.AppRec);
 	}
 
@@ -491,18 +501,15 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 		aEvent.stopPropagation();
 	}
 
-	DiaTypChanged(aChartData:ChartData, aEvent: any) {
-		if (aEvent.index === 0)
-			aChartData.ActiveDiaType = 'line';
-		else
-			aChartData.ActiveDiaType = 'bar';
+	DiaTypChanged(aChartData: ChartData, aEvent: any) {
+		if (aEvent.index === 0) aChartData.ActiveDiaType = 'line';
+		else aChartData.ActiveDiaType = 'bar';
 	}
 
-	isLeapYear(year:number):boolean {
+	isLeapYear(year: number): boolean {
 		return new Date(year, 1, 29).getDate() === 29;
 	}
 
-	
 	FromDateChanged(aEvent: any) {
 		aEvent.stopPropagation();
 		this.fromDate = new Date(aEvent.target.value);
@@ -520,22 +527,23 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 		mDialogData.ShowAbbruch = false;
 		mDialogData.ShowOk = true;
 		mDialogData.hasBackDrop = false;
-		mDialogData.OkFn = () => {this.fLoadingDialog.fDialog.closeAll() }
+		mDialogData.OkFn = () => {
+			this.fLoadingDialog.fDialog.closeAll();
+		};
 
 		let s: string = aEvent.target.value;
-		if (s.trim() === "")
-			return;
-		
+		if (s.trim() === '') return;
+
 		let mDelimiter = '/';
-		let mMonthColumnIndex = 0;	
-		let mDayColumnIndex = 1;	
+		let mMonthColumnIndex = 0;
+		let mDayColumnIndex = 1;
 		if (DexieSvcService.AktuellSprache.Kuerzel === cDeutschKuerzel) {
 			mDelimiter = '.';
-			mMonthColumnIndex = 1;	
-			mDayColumnIndex = 0;	
+			mMonthColumnIndex = 1;
+			mDayColumnIndex = 0;
 		}
 
-		const mSplittedDateText: Array<string>  = s.split(mDelimiter);
+		const mSplittedDateText: Array<string> = s.split(mDelimiter);
 		if (mSplittedDateText.length !== 3) {
 			mDialogData.textZeilen[0] = aEvent.target.value + ' is no valid date';
 			this.fLoadingDialog.Hinweis(mDialogData);
@@ -543,14 +551,14 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 		}
 
 		const mYear = Number(mSplittedDateText[2]);
-		if (isNaN(mYear)||(mYear > 2100)||(mYear < 2000)) {
+		if (isNaN(mYear) || mYear > 2100 || mYear < 2000) {
 			mDialogData.textZeilen[0] = mSplittedDateText[2] + ' is no valid year';
 			this.fLoadingDialog.Hinweis(mDialogData);
 			return;
 		}
 
 		const mMonth = Number(mSplittedDateText[mMonthColumnIndex]);
-		if (isNaN(mMonth)||(mMonth > 12)||(mMonth < 1) ) {
+		if (isNaN(mMonth) || mMonth > 12 || mMonth < 1) {
 			mDialogData.textZeilen[0] = mSplittedDateText[mMonthColumnIndex] + ' is no valid month';
 			this.fLoadingDialog.Hinweis(mDialogData);
 			return;
@@ -558,20 +566,24 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 
 		let mDayInMonth = 30;
 		switch (mMonth) {
-			case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+			case 1:
+			case 3:
+			case 5:
+			case 7:
+			case 8:
+			case 10:
+			case 12:
 				mDayInMonth = 31;
 				break;
 			case 2: {
-				if (this.isLeapYear(mYear))
-					mDayInMonth = 29;
-				else
-					mDayInMonth = 28;
+				if (this.isLeapYear(mYear)) mDayInMonth = 29;
+				else mDayInMonth = 28;
 				break;
 			}
-		}//switch
+		} //switch
 
 		const mDay = Number(mSplittedDateText[mDayColumnIndex]);
-		if (isNaN(mDay)||(mDay < 1)||(mDay > mDayInMonth)) {
+		if (isNaN(mDay) || mDay < 1 || mDay > mDayInMonth) {
 			mDialogData.textZeilen[0] = mSplittedDateText[mDayColumnIndex] + ' is no valid day';
 			this.fLoadingDialog.Hinweis(mDialogData);
 		}
@@ -586,33 +598,27 @@ export class HistoryComponent implements OnInit, IProgramModul, IDiaTyp {
 		this.Draw(true);
 	}
 
-	AuswahlChanged(event:any ) {
+	AuswahlChanged(event: any) {
 		this.Auswahl = event.value;
 		this.ChartSettingsVisible = !this.ChartSettingsVisible;
 		this.Draw(true);
 	}
-	
+
 	ngDoCheck() {
-		if  (this.CmpAuswahl != this.Auswahl && this.ChartType != undefined) {
+		if (this.CmpAuswahl != this.Auswahl && this.ChartType != undefined) {
 			if (this.Auswahl === 1) {
 				this.ChartType.value = this.aktuellerDiaTyp;
 				this.Draw(true);
 			}
 			this.CmpAuswahl = this.Auswahl;
-			
 		}
 	}
 
-	onResize(event:any) {
-	}
+	onResize(event: any) {}
 
+	CalcChartSize(aChartContainer: any) {}
 
-	
-	CalcChartSize(aChartContainer: any) {
-	}
-
-	ngOnInit(): void {
-	}
+	ngOnInit(): void {}
 }
 
 class LineChartData {
