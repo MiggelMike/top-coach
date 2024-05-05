@@ -61,7 +61,7 @@
                 <!-- </div> -->
             </div>
 
-            <div class="row-start-left-gap-3 mg-top-1">
+            <div class="row-start-left-gap-7 mg-top-1">
                 <div class="column-start-left">
                     <ng-container *ngIf="timerLaeuft === true; then runningSet else notRunningSet"></ng-container>
                     <ng-template #runningSet>
@@ -82,21 +82,21 @@
             </div>
         </div>
         <!-- AMRAP  -->
-        <div class="column-center width-25">
+        <div class="column-center width-25 mg-left-7">
             <span class="label-font-size-smaller mg-left-5">AR.</span> 
             <mat-checkbox style="--mdc-theme-secondary:#ff0000" [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP"></mat-checkbox>
         </div>
 
-        <div class="column-center width-25">
+        <div class="column-center width-25 mg-left-7">
             <span class="label-font-size-smaller">OK</span> 
             <mat-checkbox [(ngModel)]="SatzFertig"(change)="onClickSatzFertig(satz, $event)"></mat-checkbox>
         </div>
 
-        <div class="column-center width-25 column-center-flexend height-68">
-            <div matTooltip="Copy set" matTooltipPosition="above" class="label-font-size-large material-symbols-outlined" (click)="CopySet()">add_ad</div>
+        <div class="column-center width-25 column-center-flexend height-68 mg-left-7">
+            <div matTooltip="Copy set" matTooltipPosition="above" class="label-font-size-large material-symbols-outlined" (click)="CopySet()">content_copy</div>
         </div>
 
-        <div class="column-center width-25 height-100-Prozent column-center-flexend height-68">    
+        <div class="column-center width-25 height-100-Prozent column-center-flexend height-68 mg-left-7">    
             <div class="label-font-size-large material-symbols-outlined" (click)="DeleteSet()">delete</div>
         </div>
     </div>
