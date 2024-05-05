@@ -14,6 +14,7 @@ import { GlobalService } from 'src/app/services/global.service';
 import { Uebung, UebungsKategorie02 } from 'src/Business/Uebung/Uebung';
 import { UebungWaehlenData } from 'src/app/uebung-waehlen/uebung-waehlen.component';
 import { ISessionDB, SessionStatus } from 'src/Business/SessionDB';
+import { Satz } from 'src/Business/Satz/Satz';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
     ToggleButtonText: string;
     IsExpandedFn: any;
     private DelSessionListe: Array<ISession> = [];
+    public DelSatzListe: Array<Satz> = [];
 
     constructor(
         private router: Router,
@@ -83,11 +85,16 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
     
 	public SaveChanges():void {
 		//this.ClickData.programm.SessionListe;// = this.SessionListe;
-		this.DelSessionListe.forEach((s) => 
+		this.DelSessionListe.forEach((s) =>
 			this.fDbModule.DeleteSession(s as Session)
 		);
-
 		this.DelSessionListe = [];
+
+		this.DelSatzListe.forEach((s) =>
+			this.fDbModule.DeleteSatz(s)
+		);
+		this.DelSatzListe = [];
+
 			
         // const mProgrammExtraParaDB: ProgrammParaDB = new ProgrammParaDB();
 		// mProgrammExtraParaDB.OnAfterSaveFn = (aProgram: TrainingsProgramm) => { 
@@ -307,7 +314,18 @@ export class WorkoutFormComponent implements OnInit, IProgramModul  {
         mProgrammExtraParaDB.OnAfterSaveFn = (aProgram: TrainingsProgramm) => {
             this.CopyProgramm(aProgram)
             aOkFn();
-        };
+		};
+
+		this.DelSessionListe.forEach((s) =>
+			this.fDbModule.DeleteSession(s as Session)
+		);
+		this.DelSessionListe = [];
+
+		this.DelSatzListe.forEach((s) =>
+			this.fDbModule.DeleteSatz(s)
+		);
+		this.DelSatzListe = [];
+		
         return this.fDbModule.ProgrammSpeichern(this.programm, mProgrammExtraParaDB);
     }
 

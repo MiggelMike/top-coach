@@ -61,8 +61,8 @@
                                             <div  *ngFor="let SessUeb of sess.UebungsListe, index as UebungIndex">
 
                                                 <div class="row-start-left-gap-3">
-                                                    <span class="font-14-label">#{{UebungIndex+1}} {{SessUeb.Name}}</span>
-                                                    <div class="column-center label-font-size-smaller">  --- Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} - Reps {{SessUeb.SummeWDH()}}</div>
+                                                    <span class="Uebung-Name">#{{UebungIndex+1}} {{SessUeb.Name}}</span>
+                                                    <div class="column-center label-font-size-smaller"> Weight {{SessUeb.LiftedWeightText}} {{GewichtsEinheit}} - Reps {{SessUeb.SummeWDH()}}</div>
                                                 </div>
 
                                                 <ng-container *ngIf="SessUeb.AufwaermSatzListe.length > 0">

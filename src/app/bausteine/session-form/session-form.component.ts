@@ -427,6 +427,13 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 		}
 		else this.Session.UebungsListe;
 
+
+		this.DeletedSatzList.forEach((s) =>
+			this.fDbModule.DeleteSatz(s)
+		);
+		this.DeletedSatzList = [];
+
+
 		for (let index = 0; index < this.Session.UebungsListe.length; index++) {
 			const mPtrUebung = this.Session.UebungsListe[index];
 			mPtrUebung.ArbeitsSaetzeStatus = Uebung.StaticArbeitsSaetzeStatus(mPtrUebung);

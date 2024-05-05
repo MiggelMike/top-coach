@@ -54,6 +54,7 @@ export class SessUebungComponent implements OnInit, ISatzTyp, IProgramModul {
     }
     
     ngOnDestroy() {
+        //this.DeletedSatzList
         // this.SatzEditList.forEach(
         //     (sz) => {
         //         if (   (sz.StoppUhrService !== undefined)
