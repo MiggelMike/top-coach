@@ -48,19 +48,19 @@
 
                 <div class="card-body pad-left-5 pad-right-5">
                     <div class="row-start-left">
-                        <mat-label class="font-14-label">Progression schema</mat-label>
+                        <mat-label class="label-font-size-small">Progression schema</mat-label>
                     </div>
 
                     <div class="row-start-left mg-bottom-10">
                         <mat-select [(ngModel)]="SessUeb.FkProgress" (selectionChange)="onChangeProgressSchema($event)">
                             <mat-option [value]="0"></mat-option>
-                            <mat-option *ngFor="let progress of ProgressListe" [value]="progress.ID"> {{
+                            <mat-option class="label-font-size-small" *ngFor="let progress of ProgressListe" [value]="progress.ID"> {{
                                 progress.Name }}</mat-option>
                         </mat-select>
                     </div>
 
                     <div class="row-start-left mg-bottom-10">
-                        <mat-label class="font-14-label">Progression group</mat-label>
+                        <mat-label class="label-font-size-small">Progression group</mat-label>
                         <mat-select [(ngModel)]="SessUeb.ProgressGroup">
                             <mat-option *ngFor="let pg of ProgressGroupListe" [value]="pg"> {{ pg }}
                             </mat-option>
@@ -68,19 +68,19 @@
                     </div>
 
                     <div class="row-start-left mg-bottom-10">
-                        <mat-label class="font-14-label">Weight progression</mat-label>
+                        <mat-label class="label-font-size-small">Weight progression</mat-label>
                         <input matInput mask="999.000" class="align-right" [ngModel]="SessUeb.GewichtSteigerung"
                             (focusout)="SetGewichtSteigerung($event)" type="text">
                     </div>
 
                     <div class="row-start-left mg-bottom-10">
-                        <mat-label class="font-14-label">Weight reduction</mat-label>
+                        <mat-label class="label-font-size-small">Weight reduction</mat-label>
                         <input matInput mask="999.000" class="align-right" [ngModel]="SessUeb.GewichtReduzierung"
                             (focusout)="SetGewichtReduzierung($event)" type="text">
                     </div>
 
                     <div class="row-start-left">
-                        <mat-label class="font-14-label">Fail count</mat-label>
+                        <mat-label class="label-font-size-small">Fail count</mat-label>
                         <input matInput mask="999" class="align-right" [ngModel]="SessUeb.MaxFailCount"
                             (focusout)="SetFailCount($event)" type="text">
                     </div>

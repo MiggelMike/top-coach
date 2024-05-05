@@ -53,7 +53,8 @@
 	--mdc-checkbox-selected-hover-icon-color: transparent;
 	// --mat-datepicker-calendar-text-font: var(--label-color);
 	--mdc-text-button-label-text-color: var(--label-color);
-	--mdc-checkbox-selected-checkmark-color: var(--first-color);
+	--mdc-checkbox-selected-checkmark-color: var(--label-color);
+	--mat-select-enabled-trigger-text-color: : var(--first-color);	
   }
 
   [data-theme="dark"] {
@@ -105,19 +106,19 @@
 	--mdc-checkbox-unselected-icon-color: transparent;
 	--mdc-checkbox-selected-hover-icon-color: transparent;
 	--mdc-checkbox-selected-checkmark-color: var(--first-color);
-
+	--mat-select-enabled-trigger-text-color: : var(--label-color);
 	// --mat-datepicker-calendar-text-font: var(--label-color);
   }
 
-  .mat-mdc-button.mat-unthemed {
-    --mdc-text-button-label-text-color: var(--label-color);
+.mat-mdc-button.mat-unthemed {
+	--mdc-text-button-label-text-color: var(--label-color);
 }
 
+
+.ngx-charts text { fill: var(--first-color); }
+
 div {
-//	background-color: var(--first-background-color);
-	// background-color: var(--second-background-color);
-	
-background-color: transparent;
+	background-color: transparent;
 }
 
 h4 {
