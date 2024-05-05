@@ -35,6 +35,7 @@ export class SessUebungComponent implements OnInit, ISatzTyp, IProgramModul {
 
     constructor(
         private fDialogService: DialogeService,
+        private fCopyService: DialogeService,
         private fGlobalService: GlobalService
     ) {
     }
@@ -93,6 +94,12 @@ export class SessUebungComponent implements OnInit, ISatzTyp, IProgramModul {
                 break;
         } //switch        
         this.sessUebung.SatzListe.push(mSatz);
+
+        const mDialogData = new DialogData();
+        mDialogData.ShowOk = false;
+        mDialogData.textZeilen.push(`Appended set`);
+        this.fCopyService.Hinweis(mDialogData);
+        setTimeout(() => this.fCopyService.fDialog.closeAll(), 750);
     }
 
     public AddSet(aEvent: Event) {

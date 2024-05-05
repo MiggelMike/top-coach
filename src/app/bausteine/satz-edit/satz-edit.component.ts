@@ -53,6 +53,7 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
 
     constructor(
         private fDialogService: DialogeService,
+        private fCopyService: DialogeService,
         private fGlobalService: GlobalService,
         private fPlateCalcSvcService: PlateCalcSvcService,
         private fDbModule: DexieSvcService
@@ -575,6 +576,11 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
     public CopySet() {
         this.fGlobalService.SatzKopie = this.satz.Copy();
         this.fGlobalService.SatzKopie.ID = undefined;
+        const mDialogData = new DialogData();
+        mDialogData.ShowOk = false;
+        mDialogData.textZeilen.push(`Copied set to memory`);
+        this.fCopyService.Hinweis(mDialogData);
+        setTimeout(() => this.fCopyService.fDialog.closeAll(), 750);
     }
 
     get StartTimerText(): string{
