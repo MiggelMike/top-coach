@@ -1,15 +1,15 @@
 <div #anchorRef cdkDrag cdkDragRootElement=".cdk-overlay-pane">
     <div class="pad-10">
-        <div class="column-center">
+        <div class="column-center grid-row">
             <!-- Session-Name -->
             
-            <div class="row-start-left-gap-3 width-100-Prozent">
+            <div class="row-start-left-gap-3 grid-row">
                 <input  class="label-font-size-small input" name="SessionName" matInput [(ngModel)]="sess.Name" maxlength="30" type="text" disabled="true">
             </div>
             
 
             <!-- GestartedWann -->
-            <div class="row-start-left-gap-3 width-100-Prozent mg-top-10">
+            <div class="row-start-left-gap-3 grid-row mg-top-10">
                 <div class="column-start-left">
                     <div class="column-start-left">
                         <mat-label class="label-font-size-small">Start</mat-label>
@@ -21,7 +21,7 @@
             </div>
                 
 
-            <div class="row-start-left-gap-3 width-100-Prozent mg-top-10">                
+            <div class="row-start-left-gap-3 grid-row mg-top-10">                
                 <!-- Bodyweight -->
                     <div class="column-start-left">
                         <div class="column-start-left">
@@ -60,7 +60,7 @@
         </div>
     </div>
 
-    <div class="row-center">
+    <div class="row-center  grid-row">
         <a mat-button (click)="close()"><span class="label-font-size-small">close</span></a>
     </div>
 </div>
