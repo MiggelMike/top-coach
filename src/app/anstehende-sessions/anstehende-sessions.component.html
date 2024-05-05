@@ -70,7 +70,7 @@
                                                         <ng-container *ngFor="let satz of SessUeb.AufwaermSatzListe, index as satzIndex">
                                                             <div class="row-start-left-gap-3">
                                                                 <div class="colum-center">
-                                                                    <div class="row-center font-size-xsmall kreisHellGelb">
+                                                                    <div class="row-center label-font-size-smallest kreis-warm-up">
                                                                         <span>{{satz.WdhAusgefuehrtText}}</span>
                                                                         <ng-container *ngIf="satz.AMRAP">+</ng-container>
                                                                     </div>
@@ -80,7 +80,7 @@
                                                                     </div>
 
                                                                     <div class="row-center height-10">
-                                                                        <mat-label class=".label-font-size-smallest">{{satz.GewichtAusgefuehrtText}}</mat-label>  
+                                                                        <mat-label class="label-font-size-smallest">{{satz.GewichtAusgefuehrtText}}</mat-label>  
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -93,7 +93,7 @@
                                                         <ng-container *ngFor="let satz of SessUeb.ArbeitsSatzListe, index as satzIndex">
                                                             <div class="row-start-left-gap-3">
                                                                 <div class="colum-center">
-                                                                    <div class="row-center font-size-xsmall kreisRot">
+                                                                    <div class="row-center label-font-size-smallest kreisRot">
                                                                         <span>{{satz.WdhAusgefuehrtText}}</span>
                                                                         <ng-container *ngIf="satz.AMRAP">+</ng-container>
                                                                     </div>
@@ -116,7 +116,7 @@
                                                         <ng-container *ngFor="let satz of SessUeb.AbwaermSatzListe, index as satzIndex">
                                                             <div class="row-start-left-gap-3">
                                                                 <div class="colum-center">
-                                                                    <div class="row-center font-size-xsmall kreisHellBlau">
+                                                                    <div class="row-center font-size-xsmall kreis-hellblau">
                                                                         <span>{{satz.WdhAusgefuehrtText}}</span>
                                                                         <ng-container *ngIf="satz.AMRAP">+</ng-container>
                                                                     </div>

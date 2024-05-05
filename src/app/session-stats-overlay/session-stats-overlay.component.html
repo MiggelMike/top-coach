@@ -1,13 +1,10 @@
 <div #anchorRef cdkDrag cdkDragRootElement=".cdk-overlay-pane">
-    <div class="font-14-label pad-10">
+    <div class="pad-10">
         <div class="column-center">
             <!-- Session-Name -->
             
             <div class="row-start-left-gap-3 width-100-Prozent">
-                <div class="column-start-left">
-                    <mat-label class="font-14-label">Session name</mat-label>
-                </div>
-                <input  class="font-14-data input" name="SessionName" matInput [(ngModel)]="sess.Name" maxlength="30" type="text">
+                <input  class="label-font-size-small input" name="SessionName" matInput [(ngModel)]="sess.Name" maxlength="30" type="text" disabled="true">
             </div>
             
 
@@ -15,10 +12,10 @@
             <div class="row-start-left-gap-3 width-100-Prozent mg-top-10">
                 <div class="column-start-left">
                     <div class="column-start-left">
-                        <mat-label class="font-14-label">Start</mat-label>
+                        <mat-label class="label-font-size-small">Start</mat-label>
                     </div>
             
-                    <input matInput type="text" [disabled]="true" class="font-14-data"
+                    <input matInput type="text" [disabled]="true" class="label-font-size-small"
                         [ngModel]="sess.GestartedWannText(dateFormatTyp.KomplettOhneSekunden)">
                 </div>
             </div>
@@ -28,7 +25,7 @@
                 <!-- Bodyweight -->
                     <div class="column-start-left">
                         <div class="column-start-left">
-                            <mat-label class="font-14-label">Bodyweight ({{GewichtsEinheit}})</mat-label>
+                            <mat-label class="label-font-size-small">Bodyweight ({{GewichtsEinheit}})</mat-label>
                         </div>
 
                         <input matInput 
@@ -42,11 +39,11 @@
                 <!-- Lifted-Weight -->
                     <div class="column-start-left">    
                         <div class="column-start-left">
-                            <mat-label class="font-14-label">Weight lifted ({{GewichtsEinheit}})</mat-label>
+                            <mat-label class="label-font-size-small">Weight lifted ({{GewichtsEinheit}})</mat-label>
                         </div>                    
 
                         <input  matInput type="text"  [disabled]="true" 
-                        class="align-right font-14-data" 
+                        class="align-right label-font-size-small" 
                         [ngModel]="sess.LiftedWeightText"
                         mask="999.000">
                     </div>
@@ -54,16 +51,16 @@
                 <!-- Duration -->
                     <div class="column-start-left">
                         <div class="column-start-left">
-                            <mat-label class="font-14-label">Duration</mat-label>
+                            <mat-label class="label-font-size-small">Duration</mat-label>
                         </div>
 
-                        <input  matInput type="text"  [disabled]="true" class="align-right font-14-data" value="{{sess.DauerFormatted}}">
+                        <input  matInput type="text"  [disabled]="true" class="align-right label-font-size-small" value="{{sess.DauerFormatted}}">
                     </div>
             </div>
         </div>
     </div>
 
     <div class="row-center">
-        <a mat-button (click)="close()"><span class="label-font-size-standard">close</span></a>
+        <a mat-button (click)="close()"><span class="label-font-size-small">close</span></a>
     </div>
 </div>

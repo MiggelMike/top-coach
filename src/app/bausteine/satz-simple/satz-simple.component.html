@@ -1,12 +1,12 @@
 <div class="colum-center">
-    <div class="column-center font-size-xsmall mg-right-3"  [ngClass]="{ 'kreisGruen': satz.Status === satzStatus.Fertig, 'kreisRot': satz.Status !== satzStatus.Fertig}" >
+    <div class="column-center label-font-size-smaller mg-right-3"  [ngClass]="{ 'kreis-gruen': satz.Status === satzStatus.Fertig, 'kreisRot': satz.Status !== satzStatus.Fertig}" >
         {{satz.WdhAusgefuehrtText}}
         <ng-container *ngIf="satz.AMRAP">+</ng-container>
     </div>
     <img src="../../../assets/icons/24x24 Free Application Icons/24x24_free_application_icons_icons_pack_120732/png/24x24/OK.png">
     
-    <div class="font-size-xsmall column-center">
-        <mat-label>
+    <div class="column-center">
+        <mat-label class="label-font-size-smaller">
             {{satz.GewichtAusgefuehrtText}}
         </mat-label>  
     </div>

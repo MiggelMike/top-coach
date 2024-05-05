@@ -64,7 +64,7 @@
     --first-background-color: #1d1d1d;
     --second-background-color: #464646;
     --alternate-color: #3d3636;
-    --input-disabled-color: rgb(121 117 117);
+    --input-disabled-color: darkgray;
     --label-color: darkgray;
     --mat-datepicker-calendar-text-font: var(--label-color);
     --mdc-text-button-label-text-color: var(--label-color);
@@ -81,7 +81,8 @@
     --header-theme-switch-background-color: #cccccc;
     --header-theme-switch-before-background-color: #ffffff;
     --header-theme-switch-checked-background-color: #2196f3;
-    --main-content-background-color: #231f20;
+    // --main-content-background-color: #231f20;
+	--main-content-background-color: var(--first-background-color);
     --main-content-text-color: #ffffff;
     --input-text-color: lightgray;
     --input-background-color: var(--second-background-color);
@@ -615,7 +616,7 @@ body {
 }
 
 .hg-color-warm-up {
-	background-color: rgb(247, 247, 194);
+	background-color: #fbb6b1
 }
 
 .hg-color-work {
@@ -655,18 +656,18 @@ div.kreisRot {
 	@extend .hg-color-work; 
 }
 
-div.kreisHellGelb {
+div.kreis-warm-up {
 	@extend .kreis; 
 	@extend .hg-color-warm-up
 }
 
-div.kreisHellBlau {
+div.kreis-hellblau {
 	@extend .kreis; 
 	@extend .hg-color-cool-down;
 }
 
 
-div.kreisGruen {
+div.kreis-gruen {
 	@extend .kreis; 
 	background-color: lightgreen;
 }
