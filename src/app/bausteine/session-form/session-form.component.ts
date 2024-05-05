@@ -252,7 +252,7 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 				session: this.Session,
 				panelClass: 'cc-overlay',
 				top: 400,
-				width: '225px'
+				width: '90%'
 			} as SessionOverlayConfig;
 
 			this.fSessionStatsOverlayComponent = this.fSessionOverlayServiceService.open(this.fSessionOverlayConfig);

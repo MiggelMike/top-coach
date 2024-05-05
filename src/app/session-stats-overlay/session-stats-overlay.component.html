@@ -1,16 +1,15 @@
 <div #anchorRef cdkDrag cdkDragRootElement=".cdk-overlay-pane">
     <div class="pad-10">
-        <div class="column-center grid-row">
+        <div class="column-center">
             <!-- Session-Name -->
-            
-            <div class="row-start-left-gap-3 grid-row">
+            <div class="row-start-left-gap-3 width-100-Prozent">
                 <input  class="label-font-size-small input" name="SessionName" matInput [(ngModel)]="sess.Name" maxlength="30" type="text" disabled="true">
             </div>
             
 
             <!-- GestartedWann -->
-            <div class="row-start-left-gap-3 grid-row mg-top-10">
-                <div class="column-start-left">
+            <div class="row-start-left-gap-3 mg-top-10 width-100-Prozent">
+                <div class="column-start-left width-100-Prozent">
                     <div class="column-start-left">
                         <mat-label class="label-font-size-small">Start</mat-label>
                     </div>
@@ -21,9 +20,9 @@
             </div>
                 
 
-            <div class="row-start-left-gap-3 grid-row mg-top-10">                
+            <div class="row-start-left-gap-3 mg-top-10">                
                 <!-- Bodyweight -->
-                    <div class="column-start-left">
+                    <div class="column-start-left width-100-Prozent">
                         <div class="column-start-left">
                             <mat-label class="label-font-size-small">Bodyweight ({{GewichtsEinheit}})</mat-label>
                         </div>
@@ -37,7 +36,7 @@
                                type="text">
                     </div>                               
                 <!-- Lifted-Weight -->
-                    <div class="column-start-left">    
+                    <div class="column-start-left width-100-Prozent">    
                         <div class="column-start-left">
                             <mat-label class="label-font-size-small">Weight lifted ({{GewichtsEinheit}})</mat-label>
                         </div>                    
@@ -49,7 +48,7 @@
                     </div>
 
                 <!-- Duration -->
-                    <div class="column-start-left">
+                    <div class="column-start-left width-100-Prozent">
                         <div class="column-start-left">
                             <mat-label class="label-font-size-small">Duration</mat-label>
                         </div>
@@ -60,7 +59,7 @@
         </div>
     </div>
 
-    <div class="row-center  grid-row">
+    <div class="row-center">
         <a mat-button (click)="close()"><span class="label-font-size-small">close</span></a>
     </div>
 </div>
