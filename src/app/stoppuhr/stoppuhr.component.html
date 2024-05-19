@@ -9,23 +9,23 @@
  
        <ng-container *ngIf="isLetzteUebungInSession === false && isLetzterSatzInUebung === false">
            <div fxLayout="row" fxFlex="100%">
-               <mat-label>Scheduled pause seconds if set was easy:  {{ScheduledPauseSecondsEasy}} ({{ScheduledPauseTimeEasy}})</mat-label> 
+               <mat-label class="label-font-size-smaller">Scheduled pause seconds if set was easy:  {{ScheduledPauseSecondsEasy}} ({{ScheduledPauseTimeEasy}})</mat-label> 
             </div>            
             
             <div fxLayout="row" fxFlex="100%">
-                <mat-label>Scheduled pause seconds if set was hard: {{ScheduledPauseSecondsHard}} ({{ScheduledPauseTimeHard}})</mat-label> 
+                <mat-label class="label-font-size-smaller">Scheduled pause seconds if set was hard: {{ScheduledPauseSecondsHard}} ({{ScheduledPauseTimeHard}})</mat-label> 
             </div>            
         </ng-container>
 
         <ng-container *ngIf="isLetzteUebungInSession === false && isLetzterSatzInUebung === true">
             <div fxLayout="row" fxFlex="100%">
-                <mat-label>Scheduled pause seconds between exercises:  {{ScheduledPauseBetweenExercises}} ({{ScheduledPauseTimerBetweenExercises}})</mat-label> 
+                <mat-label class="label-font-size-smaller">Scheduled pause seconds between exercises:  {{ScheduledPauseBetweenExercises}} ({{ScheduledPauseTimerBetweenExercises}})</mat-label> 
             </div>            
         </ng-container>
 
         <ng-container *ngIf="isLetzteUebungInSession === true && isLetzterSatzInUebung === true">
             <div fxLayout="row" fxFlex="100%">
-                <mat-label>Scheduled pause seconds if set was easy:  {{ScheduledPauseSecondsEasy}} ({{ScheduledPauseTimeEasy}})</mat-label> 
+                <mat-label  class="label-font-size-smaller">Scheduled pause seconds if set was easy:  {{ScheduledPauseSecondsEasy}} ({{ScheduledPauseTimeEasy}})</mat-label> 
             </div>            
         </ng-container>
 

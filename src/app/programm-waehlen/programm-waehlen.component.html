@@ -27,28 +27,20 @@
 
                                     <div class="row-start-left-gap-3 wrap">
                                         <div class="column-start-left width-65">
-                                            <a [ngClass]="['link-button-font']" [disabled]="SelectBtnDisabled"
-                                                mat-button (click)="SelectThisWorkoutClick(programm,$event)"><span
-                                                    class="tc-font-size-small">Select</span></a>
+                                            <span class="material-symbols-outlined label-font-size-large" (click)="SelectThisWorkoutClick(programm,$event)">done</span>
                                         </div>
 
                                         <div class="column-start-left width-65">
-                                            <a [ngClass]="['link-button-font']"
-                                                (click)="EditThisWorkoutClick(programm, $event)"><span
-                                                    class="tc-font-size-small">Edit</span></a>
+                                            <span class="material-symbols-outlined label-font-size-large" (click)="EditThisWorkoutClick(programm, $event)">edit</span>
                                         </div>
 
                                         <div class="column-start-left width-65">
-                                            <a [ngClass]="['link-button-font']"
-                                                (click)="DeleteProgramm($event,programm)"><span
-                                                    class="tc-font-size-small">Delete</span></a>
+                                            <span class="material-symbols-outlined label-font-size-large" (click)="DeleteProgramm($event,programm)">delete</span>
                                         </div>
 
                                         <div class="column-start-left">
-                                            <a [ngClass]="['link-button-font']"
-                                                (click)="CopyProgramm($event,programm)"><span
-                                                    class="tc-font-size-small">Copy</span></a>
-                                        </div>
+                                            <span class="material-symbols-outlined label-font-size-large" (click)="CopyProgramm($event,programm)">content_copy</span>
+                                        </div>                                        
                                     </div>
                             </mat-panel-title>
                         </mat-expansion-panel-header>

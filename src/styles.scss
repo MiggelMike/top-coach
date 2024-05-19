@@ -56,6 +56,7 @@
 	--mdc-text-button-label-text-color: var(--label-color);
 	--mdc-checkbox-selected-checkmark-color: var(--label-color);
 	--mat-select-enabled-trigger-text-color: : var(--first-color);	
+	--cc-dialog-container-elevation-shadow: var(--mdc-dialog-container-elevation-shadow);
   }
 
   [data-theme=dark] {
@@ -90,7 +91,7 @@
     --HG-01: transparent;
     --HG-02: transparent;
     --link-button-font-color: rgb(196, 196, 247);
-    --cc-overlay-border-color: --cc-overlay-border-color: var(--label-color);
+    --cc-overlay-border-color: var(--label-color);
     --box-shadow-ex: 3px 3px 1px 1px rgba(133, 133, 133, 0.2);
     --mat-expansion-header-background-color: rgb(56, 56, 56);
     --mat-toolbar-panel-background-color: rgb(56, 56, 56);
@@ -107,6 +108,8 @@
     --mdc-checkbox-selected-hover-icon-color: transparent;
     --mdc-checkbox-selected-checkmark-color: var(--first-color);
     --mat-select-enabled-trigger-text-color: : var(--label-color);
+	//--mdc-dialog-container-elevation-shadow:  0px 0px 5px 7px rgba(169, 169, 169, 0.2), 0px 0px 0px 0px rgba(169, 169, 169, 0.2), 0px 0px 0px 0px rgba(169, 169, 169, 0.2); 
+	--cc-dialog-container-elevation-shadow:   0px 0px 5px 7px rgba(169, 169, 169, 0.2), 0px 0px 0px 0px rgba(169, 169, 169, 0.2), 0px 0px 0px 0px rgba(169, 169, 169, 0.2); 
 }
 
 .Uebung-Name {
@@ -161,13 +164,6 @@ button:not(:disabled), [type=button]:not(:disabled), [type=reset]:not(:disabled)
  }
 
 
-.mat-mdc-dialog-container {
-	color: var(--label-color);
-    --mdc-dialog-container-color: var(--first-background-color);
-    --mdc-dialog-subhead-color: rgba(0, 0, 0, 0.87);
-    --mdc-dialog-supporting-text-color: rgba(0, 0, 0, 0.6);
-}
-  
   ::ng-deep .mdc-checkbox .mdc-checkbox__native-control:enabled~.mdc-checkbox__background .mdc-checkbox__checkmark {
     color: var(--mdc-checkbox-selected-checkmark-color);
     background-color: transparent;
@@ -1296,13 +1292,31 @@ input[type=text]:focus  {
 	max-width: 350px;
   }
 
+//   .cc-Dialog {
+//   	  padding: 10px;
+// 	   border-radius: 10px;
+// 	  color: var(--label-color);
+// 	  --mdc-dialog-container-elevation-shadow: var(--cc-dialog-container-elevation-shadow);
+// 	  --mdc-dialog-container-elevation:  var(--mdc-dialog-container-elevation-shadow);
+// 	  --mdc-dialog-container-color: var(--first-background-color);
+// 	  --mdc-dialog-subhead-color: rgba(0, 0, 0, 0.87);
+// 	  --mdc-dialog-supporting-text-color: rgba(0, 0, 0, 0.6);	  
+// }
 
 
-  .cc-Dialog {
-	padding: 10px;
-	border-radius: 10px;
-	// border-style: inset;
-  }
+  .cc-Dialog
+    .mat-mdc-dialog-container
+  	.mdc-dialog__container
+  	.mat-mdc-dialog-surface {
+		padding: 10px;
+ 		border-radius: 10px;
+		color: var(--label-color);
+		--mdc-dialog-container-elevation-shadow: var(--cc-dialog-container-elevation-shadow);
+		--mdc-dialog-container-elevation:  var(--mdc-dialog-container-elevation-shadow);
+		--mdc-dialog-container-color: var(--first-background-color);
+		--mdc-dialog-subhead-color: rgba(0, 0, 0, 0.87);
+		--mdc-dialog-supporting-text-color: rgba(0, 0, 0, 0.6);	  
+}
 
 //   .cdk-global-scrollblock {
 // 	overflow-y: hidden !important;    
