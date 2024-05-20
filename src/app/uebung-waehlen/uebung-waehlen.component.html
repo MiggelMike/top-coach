@@ -27,10 +27,13 @@
             </ng-container>
         </div>
 
-        <div id="UebungWaehlenFooter" class="row-center">
-            <a class="ref-button" mat-flat-button (click)="OkButtonClick()">Ok</a>
-            <a class="ref-button" mat-flat-button
-            (click)="CancelClickFn()">Cancel</a>
+        <div id="UebungWaehlenFooter" class="row-center-gap-10">
+            <div class="colum-center">
+                <span class="material-symbols-outlined label-font-size-large" (click)="OkButtonClick()">check</span>
+            </div>
+            <div class="colum-center">
+                <span class="material-symbols-outlined label-font-size-large" (click)="CancelClickFn()">close</span>
+            </div>
         </div>
     </ng-container>
 </div>
