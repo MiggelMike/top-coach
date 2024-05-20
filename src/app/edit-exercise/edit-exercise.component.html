@@ -90,8 +90,12 @@
             </div>
     
             <div class="row-center-gap-10 pad-5">
-                <a class='link-button-font' mat-flat-button (click)="SaveChanges()">Save</a>
-                <a class='link-button-font' mat-flat-button (click)="closeDialog()">Cancel</a>
+                <div class="colum-center">
+                    <span class="material-symbols-outlined label-font-size-large" (click)="SaveChanges()">check</span>
+                </div>
+                <div class="colum-center">
+                    <span class="material-symbols-outlined label-font-size-large" (click)="closeDialog()">close</span>
+                </div>
             </div>  
     </div>
 </div>
