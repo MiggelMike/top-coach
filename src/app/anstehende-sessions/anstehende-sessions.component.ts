@@ -103,6 +103,7 @@ export class AnstehendeSessionsComponent implements OnInit, IProgramModul,  ISat
 	resetSession(aEvent: Event,aSess: Session) {
 		aEvent.stopPropagation();
 		const mDialogData = new DialogData();
+		mDialogData.height = '200px';
 		mDialogData.textZeilen.push(`Reset Session?`);
 		mDialogData.OkFn = () => { 
 			aSess.Reset([

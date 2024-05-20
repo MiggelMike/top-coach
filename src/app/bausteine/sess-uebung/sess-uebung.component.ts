@@ -98,7 +98,8 @@ export class SessUebungComponent implements OnInit, ISatzTyp, IProgramModul {
 
         const mDialogData = new DialogData();
         mDialogData.ShowOk = false;
-        mDialogData.textZeilen.push(`Appended set`);
+        mDialogData.height = '150px';
+        mDialogData.textZeilen.push(`Appended set from clipboard`);
         this.fCopyService.Hinweis(mDialogData);
         setTimeout(() => this.fCopyService.fDialog.closeAll(), 750);
     }

@@ -357,8 +357,10 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 	}
 
 	PasteExcercise() {
+		const mDialoData = new DialogData();
+		mDialoData.height = '150px';
+
 		if (this.fGlobalService.SessUebungKopie === null) {
-			const mDialoData = new DialogData();
 			mDialoData.textZeilen.push("Nothing to paste!");
 			this.fDialogService.Hinweis(mDialoData);
 			return;
@@ -373,6 +375,10 @@ export class SessionFormComponent implements OnInit, IProgramModul, ISessionStat
 			sz.UebungID = undefined;
 		});
 		this.Session.addUebung(mSessUebung);
+
+		mDialoData.textZeilen.push("Copied execrcise from clipboard");
+		this.fDialogService.Hinweis(mDialoData);
+		setTimeout(() => this.fDialogService.fDialog.closeAll(), 750);
 	}
 
 	leave() {

@@ -578,7 +578,8 @@ export class SatzEditComponent implements OnInit, ISatzTyp, ISessionStatus, IPro
         this.fGlobalService.SatzKopie.ID = undefined;
         const mDialogData = new DialogData();
         mDialogData.ShowOk = false;
-        mDialogData.textZeilen.push(`Copied set to memory`);
+        mDialogData.textZeilen.push(`Copied set to clipboard`);
+        mDialogData.height = '150px';
         this.fCopyService.Hinweis(mDialogData);
         setTimeout(() => this.fCopyService.fDialog.closeAll(), 750);
     }

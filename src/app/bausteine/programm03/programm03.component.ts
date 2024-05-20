@@ -90,6 +90,7 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISa
 		private fDialogService: DialogeService,
 		public fStoppUhrService: StoppuhrSvcService,
 		private fExerciseSettingSvcService: ExerciseSettingSvcService,
+		private fCopyService: DialogeService,
 		private fDbModule: DexieSvcService
 	) {
 		this.LocaleID = localID;
@@ -321,6 +322,12 @@ export class Programm03Component implements OnInit, IProgramModul, ISatzTyp, ISa
 	public CopyExcercise(aUebung: Uebung, aEvent: Event) {
 		aEvent.stopPropagation();
 		this.fGlobalService.SessUebungKopie = aUebung.Copy();
+		const mDialogData = new DialogData();
+        mDialogData.ShowOk = false;
+		mDialogData.textZeilen.push(`Copied exercise to clipboard`);
+		mDialogData.height = '150px';
+        this.fCopyService.Hinweis(mDialogData);
+        setTimeout(() => this.fCopyService.fDialog.closeAll(), 750);
 	}
 
 	public DoSettings(aSessUeb: Uebung, aEvent: Event) {
