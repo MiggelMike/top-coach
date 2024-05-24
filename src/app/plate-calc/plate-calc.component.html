@@ -2,14 +2,16 @@
         <div class="column-center cc-overlay">
                 <div class="font-14-label">{{Uebung.Name}} {{SatzNr}}</div>
                 <div class="row-start-left">
-                    <div class="column-start-left">
-                        <div class="column-start-left">
-                            <mat-label>Weight</mat-label>
+                    <div class="column-start-left  width-200">
+                        <div class="row-start-right">
+                            <div class="column-start-right">
+                                <mat-label class="label-font-size-small">Weight</mat-label>
+                            </div>
                         </div>
 
                         <input  matInput 
                                 mask="9999.00"
-                                class="align-right width-200"
+                                class="align-right"
                                 [ngModel]="Satz.GewichtAusgefuehrtText" 
                                 (focusout)="SetWeightAusgefuehrt($event)"
                                 (ngModelChange)="CalcPlates($event)"
@@ -28,12 +30,13 @@
                 </div>
             
                 <div class="row-start-left">
-                    <div class="column-start-left">
-                        <div class="column-start-left">
-                            <mat-label>Barbell</mat-label>
+                    <div class="column-start-left width-200">
+                        <div class="row-start-right">
+                            <div class="column-start-right">
+                                <mat-label class="label-font-size-small">Barbell</mat-label>
+                            </div>
                         </div>
-
-                        <mat-select  class="input-standards width-200" 
+                        <mat-select  class="input-standards width-100-Prozent" 
                             [(ngModel)]="Satz.FkHantel"
                             (selectionChange)="CalcPlates()"
                             >
@@ -42,21 +45,16 @@
                         </mat-select>
                     </div>
 
-                    <div class="mg-top-20">
                         <mat-checkbox 
                             [(ngModel)]="HantelForAllSets" (click)="$event.stopPropagation()"
                             (change)="DoHantelAllSets($event)"
                             >All sets
                         </mat-checkbox>
-                    </div>
                 </div>
         
-                <mat-label class="font-14-label">Min target reps</mat-label>
+                <mat-label class="label-font-size-small">Min target reps</mat-label>
                 <div class="row-start-left">                
                     <div class="column-start-left">
-                        <div class="row-start-left">
-                            <mat-label>Reps</mat-label>
-                        </div>
                         <!-- Geplante Von-Vorgabe-Wdh. -->
                         <div class="row-start-left">
                             <div class="column-start-left">
@@ -72,38 +70,45 @@
                     </div>
                 </div>    
 
-            <span class="font-14-label">Done reps</span>
-            <div class="row-start-left">
-                <div class="column-start-left">
-                    <div class="row-start-left">
-                        <!-- Geplante Von-Vorgabe-Wdh. -->
-                        <mat-label [ngClass]="{'blink font-14-label': isAMRAP === true}">{{DoneRepsText}}</mat-label>
+                <div class="row-start-left">
+                    <div class="column-start-left">
+                        <ng-container *ngIf="isAMRAP === true" >
+                            <div class="row-start-left">
+                                <!-- Geplante Von-Vorgabe-Wdh. -->
+                                <mat-label [ngClass]="{'blink font-14-label': isAMRAP === true}">{{DoneRepsText}}</mat-label>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="isAMRAP === false" >
+                            <div class="row-start-right width-200">
+                                <div class="column-start-right">
+                                    <span class="label-font-size-small">Done reps</span>
+                                </div>
+                            </div>
+                        </ng-container>
+
+
+                        <ng-container>
+                            <div class="row-start-left">
+                                <div class="column-start-left">
+                                    <input matInput class="align-right width-200" (click)="onInitOnClick($event)"
+                                        [ngModel]="Satz.WdhAusgefuehrt" (focusout)="SetWdhAusgefuehrt($event)" type="text">
+                                </div>
+                    
+                                <div class="column-start-left">
+                                    <mat-checkbox [(ngModel)]="DoneRepsForAllSets" (click)="$event.stopPropagation()"
+                                        (change)="DoDoneRepsAllSets($event)">All sets
+                                    </mat-checkbox>
+                                </div>
+                            </div>
+                        </ng-container>
                     </div>
-                    <div class="row-start-left">
-            
-                        <div class="column-start-left">
-                            <input matInput class="align-right width-200" (click)="onInitOnClick($event)" [ngModel]="Satz.WdhAusgefuehrt"
-                                (focusout)="SetWdhAusgefuehrt($event)" type="text">
-                        </div>
-            
-                        <div class="column-start-left">
-                            <mat-checkbox [(ngModel)]="DoneRepsForAllSets" (click)="$event.stopPropagation()"
-                                (change)="DoDoneRepsAllSets($event)">All sets
-                            </mat-checkbox>
-                        </div>
-                    </div>
-                </div>
             </div>
 
-            <span class="font-14-label">Timer seconds</span>
+            <span class="label-font-size-small">Timer seconds</span>
             <div class="row-start-left">
                 <div class="column-start-left">
                     <div class="row-start-left">
-                        <!-- Geplante Dauer in Sekunden -->
-                        <mat-label>Timer seconds</mat-label>
-                    </div>
-                    <div class="row-start-left">
-            
                         <div class="column-start-left">
                             <input matInput class="align-right width-200" (click)="onInitOnClick($event)" [ngModel]="Satz.TimerSeconds"
                                 (focusout)="SetTimerSeconds($event)" type="text">
