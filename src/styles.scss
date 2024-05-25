@@ -868,13 +868,18 @@ div.herz:after {
 	align-items: center;
 }
 
+.column-align-top {
+	@extend .center-item;
+	align-items: start;
+}
+
 
 .column-center {
 	@extend .center-item;
 	flex-direction: column;
 }
 
-.column-center-flexend {
+.column-center-bottom {
 	@extend .column-center;
 	align-self: flex-end;
 	// flex-direction: column-reverse;
@@ -980,6 +985,22 @@ div.herz:after {
 	margin: 5px;
 }
 
+.mg-left-1 {
+	margin-left: 1px !important;
+}
+
+.mg-left-2 {
+	margin-left: 2px !important;
+}
+
+.mg-left-3 {
+	margin-left: 3px !important;
+}
+
+.mg-left-4 {
+	margin-left: 4px !important;
+}
+
 .mg-left-5 {
 	margin-left: 5px !important;
 }
@@ -1083,6 +1104,22 @@ div.herz:after {
 
 .mg-top-25 {
 	margin-top: 25px !important;
+}
+
+.mg-top-26 {
+	margin-top: 26px !important;
+}
+
+.mg-top-27 {
+	margin-top: 27px !important;
+}
+
+.mg-top-28 {
+	margin-top: 28px !important;
+}
+
+.mg-top-29 {
+	margin-top: 29px !important;
 }
 
 .mg-top-30 {
