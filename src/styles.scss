@@ -868,27 +868,30 @@ div.herz:after {
 	align-items: center;
 }
 
-.column-align-top {
+.flex-align-top {
 	@extend .center-item;
 	align-items: start;
 }
 
+.flex-align-bottom {
+	@extend .center-item;
+	align-items: flex-end;
+}
 
 .column-center {
 	@extend .center-item;
 	flex-direction: column;
 }
 
-.column-center-bottom {
-	@extend .column-center;
-	align-self: flex-end;
-	// flex-direction: column-reverse;
-}
 
 .grid-row {
 	width: 100%;
 	max-width: var(--max-width);
 }
+
+.row-align-bottom {
+	align-items: flex-end;
+} 
 
 .row-center {
 	@extend .background-color-transparent;
@@ -1227,6 +1230,9 @@ div.herz:after {
 	padding-top: 30px;
 }
 
+.pad-bottom-4 {
+	padding-bottom: 4px;
+}
 
 
 .pad-bottom-5 {

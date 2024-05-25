@@ -82,7 +82,7 @@
             </div>
         </div>
         
-        <div class="column-align-top height-100-Prozent mg-left-5 mg-top-1">
+        <div class="flex-align-top height-100-Prozent mg-left-5 mg-top-1">
             <!-- AMRAP  -->
             <div class="row-center height-100-Prozent ">
                 <div class="colum-center height-100-Prozent width-25">
@@ -97,19 +97,25 @@
             </div>
         
             <!-- OK  -->
-            <div class="row-center height-100-Prozent ">
+            <div class="row-center height-100-Prozent">
                 <div class="colum-center height-100-Prozent width-25">
         
-                    <div class="colum-center width-100-Prozent mg-left-4">
+                    <div class="center width-100-Prozent mg-left-4">
                         <span class="label-font-size-smaller">OK</span>
                     </div>
                     <div class="column-center width-100-Prozent height-100-Prozent mg-top-5">
-                        <mat-checkbox [(ngModel)]="SatzFertig"(change)="onClickSatzFertig(satz, $event)"></mat-checkbox>
+                        <mat-checkbox [(ngModel)]="SatzFertig" (change)="onClickSatzFertig(satz, $event)"></mat-checkbox>
                     </div>
                 </div>
             </div>
+        
+            <!-- Copy  -->
+            <div class="row-align-bottom height-100-Prozent">
+                <div class="flex-align-bottom height-100-Prozent width-25 pad-bottom-4">
+                    <span matTooltip="Copy set" matTooltipPosition="above" class="label-font-size-large material-symbols-outlined" (click)="CopySet()">content_copy</span>
+                </div>
+            </div>
         </div>
-    </div>
 </div>
 
   
