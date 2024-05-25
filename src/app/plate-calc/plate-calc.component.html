@@ -45,11 +45,14 @@
                         </mat-select>
                     </div>
 
-                        <mat-checkbox 
+                    <div class="column-start-left">
+
+                        <mat-checkbox class="mg-top-5"
                             [(ngModel)]="HantelForAllSets" (click)="$event.stopPropagation()"
                             (change)="DoHantelAllSets($event)"
                             >All sets
                         </mat-checkbox>
+                    </div>
                 </div>
         
                 <mat-label class="label-font-size-small">Min target reps</mat-label>
