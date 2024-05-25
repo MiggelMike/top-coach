@@ -86,16 +86,28 @@
             <!-- AMRAP  -->
             <div class="row-center height-100-Prozent ">
                 <div class="colum-center height-100-Prozent width-25">
-
+        
                     <div class="colum-center width-100-Prozent mg-left-4">
-                        <span class="label-font-size-smaller">AR.</span> 
+                        <span class="label-font-size-smaller">AR.</span>
                     </div>
                     <div class="column-center width-100-Prozent height-100-Prozent mg-top-5">
                         <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP"></mat-checkbox>
-                    </div>    
+                    </div>
                 </div>
             </div>
-
+        
+            <!-- OK  -->
+            <div class="row-center height-100-Prozent ">
+                <div class="colum-center height-100-Prozent width-25">
+        
+                    <div class="colum-center width-100-Prozent mg-left-4">
+                        <span class="label-font-size-smaller">OK</span>
+                    </div>
+                    <div class="column-center width-100-Prozent height-100-Prozent mg-top-5">
+                        <mat-checkbox [(ngModel)]="SatzFertig"(change)="onClickSatzFertig(satz, $event)"></mat-checkbox>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
