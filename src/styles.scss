@@ -57,6 +57,8 @@
 	--mdc-checkbox-selected-checkmark-color: var(--label-color);
 	--mat-select-enabled-trigger-text-color: : var(--first-color);	
 	--cc-dialog-container-elevation-shadow: var(--mdc-dialog-container-elevation-shadow);
+	--mat-option-selected-state-label-text-color: var(--value-color);	
+	--mat-select-enabled-trigger-text-color: var(--value-color);	
   }
 
   [data-theme=dark] {
@@ -110,6 +112,8 @@
     --mat-select-enabled-trigger-text-color: : var(--label-color);
 	//--mdc-dialog-container-elevation-shadow:  0px 0px 5px 7px rgba(169, 169, 169, 0.2), 0px 0px 0px 0px rgba(169, 169, 169, 0.2), 0px 0px 0px 0px rgba(169, 169, 169, 0.2); 
 	--cc-dialog-container-elevation-shadow:   0px 0px 5px 7px rgba(169, 169, 169, 0.2), 0px 0px 0px 0px rgba(169, 169, 169, 0.2), 0px 0px 0px 0px rgba(169, 169, 169, 0.2); 
+	--mat-option-selected-state-label-text-color: var(--value-color);
+	--mat-select-enabled-trigger-text-color: var(--first-color);	
 }
 
 .Uebung-Name {
@@ -1235,6 +1239,9 @@ textarea:focus {
 
 }
 
+mat-label{
+	color: var(--label-color);
+}
 
 .input-standards {
 	@extend .input-HG;

@@ -11,7 +11,7 @@
 
                         <input  matInput 
                                 mask="9999.00"
-                                class="align-right"
+                                class="align-right label-font-size-small"
                                 [ngModel]="Satz.GewichtAusgefuehrtText" 
                                 (focusout)="SetWeightAusgefuehrt($event)"
                                 (ngModelChange)="CalcPlates($event)"
@@ -147,7 +147,7 @@
             </ng-template>
             
             <div fxLayout="row" fxLayoutAlign="center center">
-                <a mat-button (click)="close()"><span class="tc-font-size-small">close</span></a>
+                <a mat-button (click)="close()"><span>close</span></a>
             </div>
      
     </div>        
