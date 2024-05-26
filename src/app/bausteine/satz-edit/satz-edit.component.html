@@ -52,14 +52,15 @@
         </div> 
         <!-- Timer -->
         <div id="timer-column">
-            <div class="row-start-right mg-top-3 height-25 label-font-size-smaller">Timer</div>
+            <div class="row-start-right height-25 label-font-size-smaller">Timer</div>
             <div class="row-start-right height-25">
                 <mat-label class="height-100-Prozent label-font-size-smaller" mat-button matTooltip="Start timer" matTooltipPosition="above" (click)="StartTimer(satz)">{{StartTimerText}}</mat-label>
             </div>
 
-            <div class="row-start-left-gap-7 mg-top-1">
+            <div class="row-start-left-gap-7">
                 <div class="column-start-left">
                     <ng-container *ngIf="timerLaeuft === true; then runningSet else notRunningSet"></ng-container>
+                    <ng-container>
                     <ng-template #runningSet>
                         <input name="runningSet" matInput id="timer-input" class="align-right label-font-size-smaller" matTooltip="Timer seconds"
                             matTooltipPosition="above" [matTooltipDisabled]="false" mask="999999" [ngModel]="satz.TimerSeconds"
@@ -67,6 +68,8 @@
                             (mousedown)="MouseDown(satz,$event)" (mouseup)="MouseUp($event)" (touchstart)="MouseDown(satz,$event)"
                             (touchend)="MouseUp($event)" type="text">
                     </ng-template>
+                    </ng-container>
+                    <ng-container>
                     <ng-template #notRunningSet>
                         <input name="notRunningSet" matInput class="align-right label-font-size-smaller" matTooltip="Timer seconds"
                             matTooltipPosition="above" [matTooltipDisabled]="false" mask="999999" [ngModel]="satz.TimerSeconds"
@@ -74,6 +77,7 @@
                             (mousedown)="MouseDown(satz,$event)" (mouseup)="MouseUp($event)" (touchstart)="MouseDown(satz,$event)"
                             (touchend)="MouseUp($event)" type="text">
                     </ng-template>
+                    </ng-container>
                 </div>
             </div>
         </div>
