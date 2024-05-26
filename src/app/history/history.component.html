@@ -11,49 +11,22 @@
     </div>
 </div>
 
-<div cdkDropListGroup class="column-center pad-left-5 pad-right-5 pad-bottom-5"  [ngClass]="{'invisible': HistorySettingsVisible === false}">
+<div cdkDropListGroup class="column-center pad-left-5 pad-right-5 pad-bottom-5"
+    [ngClass]="{'invisible': HistorySettingsVisible === false}">
     <div cdkDrag id="chart-settings" class="cc-overlay" matTooltip="Drag me" [matTooltipPosition]="'above'!">
         <div class="row-center-gap-10">
-            <div class="column-center">                
-                <a [ngClass]="['link-button-font', 'font-14-data']"  (click)="CloseHistorySettings()">Close history settings</a>
+            <div class="column-center">
+                <a [ngClass]="['link-button-font', 'font-14-data']" (click)="CloseHistorySettings()">Close history
+                    settings</a>
             </div>
         </div>
-        
-        <app-kalender #calendar
-        [fromDateVisible]="true"
-        [toDateVisible]="true"
-        [OkButtonVisible]="true"
-        (OkFn)="TakeCalendarDate($event)"
-        ></app-kalender>
 
-        <!-- <div class="column-center label-font-size-standard"> -->
-            <!-- <div class="row-center wrap label-font-size-standard">
-                <mat-form-field class="width-235 label-font-size-standard" appearance="outline">
-                    <mat-label class="label-font-size-standard">Select Date Range</mat-label>
-                    <mat-date-range-input class="label-font-size-standard" [rangePicker]="picker" [formGroup]="range">
-                    <input  matStartDate 
-                            placeholder="Start Date" 
-                            formControlName="start" 
-                            [(ngModel)]="fromDate"
-                            >
-                    <input matEndDate 
-                        placeholder="End Date" 
-                        formControlName="end"
-                        [(ngModel)]="toDate">
-                    </mat-date-range-input>
-                    <mat-datepicker-toggle class="label-font-size-standard" matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-date-range-picker #picker (closed)="onCalendarClose()"></mat-date-range-picker>
-                </mat-form-field>
-                
-                
 
-            </div> -->
-        <!-- </div>  -->
-
-        <div class="row-center-gap-10" >
-            <mat-radio-group class="tp-radio-group" #AuswahlRadio  [(ngModel)]="Auswahl" (change)="AuswahlChanged($event)" >
-                    <mat-radio-button class="tp-radio-button"  [value]="0">Sessions</mat-radio-button>
-                    <mat-radio-button  [value]="1">Charts</mat-radio-button>
+        <div class="row-center-gap-10">
+            <mat-radio-group class="tp-radio-group" #AuswahlRadio [(ngModel)]="Auswahl"
+                (change)="AuswahlChanged($event)">
+                <mat-radio-button class="tp-radio-button" [value]="0">Sessions</mat-radio-button>
+                <mat-radio-button [value]="1">Charts</mat-radio-button>
             </mat-radio-group>
         </div>
 
@@ -62,20 +35,25 @@
             <div class="row-center-gap-10">
                 <mat-radio-group #ChartType class="tp-radio-group" [(ngModel)]="aktuellerDiaTyp"
                     (change)="ChartChanged($event)">
-                    <mat-radio-button  [value]="0">Line</mat-radio-button>
-                    <mat-radio-button  [value]="1">Bar</mat-radio-button>
+                    <mat-radio-button [value]="0">Line</mat-radio-button>
+                    <mat-radio-button [value]="1">Bar</mat-radio-button>
                 </mat-radio-group>
             </div>
             <div class="row-center wrap width-300">
                 <ng-container *ngFor="let DiaUebung of DiaUebungsListe">
                     <div class="column-center height-20">
-                        <mat-checkbox class="width-150"
-                            (change)="onClickDiaUebung(DiaUebung, $event.checked)" [checked]= "DiaUebung.Visible" >{{DiaUebung.UebungName}}</mat-checkbox>
+                        <mat-checkbox class="width-150" (change)="onClickDiaUebung(DiaUebung, $event.checked)"
+                            [checked]="DiaUebung.Visible">{{DiaUebung.UebungName}}</mat-checkbox>
                     </div>
                 </ng-container>
             </div>
         </div>
-    </div> 
+
+        <!-- Kalender -->
+        <app-kalender #calendar [fromDateVisible]="true" [toDateVisible]="true" [OkButtonVisible]="true"
+        (OkFn)="TakeCalendarDate($event)"></app-kalender>
+
+    </div>
 </div>
 
 <div [ngClass]="{'History-Panel-schmal': Toolbar_3_rows === true, 'History-Panel-mittel': Toolbar_2_rows, 'History-Panel-breit': Toolbar_1_row }" >    
