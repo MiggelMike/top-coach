@@ -1,4 +1,4 @@
-<div class="colum-center pad-left-5"  [ngClass]="{'height-200': Toolbar_2_rows === true}">
+<div class="colum-center pad-left-5"  [ngClass]="{'height-170': Toolbar_2_rows === true}">
     <!-- 1. Zeile -->
     <div class="ml-5 row-start-left-gap-3 height-40">
         <div class="column-center border-radius-10 width-100-Prozent mr-10" [ngClass]="{'hg-color-warm-up': satz.SatzTyp === satzTyp.Aufwaermen,'hg-color-work': satz.SatzTyp === satzTyp.Training, 'hg-color-cool-down': satz.SatzTyp === satzTyp.Abkuehlen}">
@@ -6,9 +6,9 @@
         </div>
     </div>
     <!-- 2. Zeile -->
-    <div class="row-start-left-gap-3 mg-bottom-5 height-80" >
-
-        <div class="weight-column height-100-Prozent">
+    <div class="row-start-left-gap-3 mg-bottom-5 height-80 flex-align-stretch" >
+        <!-- Weight -->
+        <div class="weight-column">
             <div class="row-start-right width-100-Prozent height-25">
                 <div class="column align-right width-100-Prozent label-font-size-smaller">Weight</div>
             </div>
@@ -30,10 +30,10 @@
                 </div>
             </div>
         </div>
-
-        <div class="rep-column height-100-Prozent">
+        <!-- Reps -->
+        <div class="rep-column">
             <div class="row-start-right height-25  width-100-Prozent">
-                <div class="column-start-left rep-column-titel align-right width-100-Prozent label-font-size-smaller" matTooltip="Reps">RP.</div>
+                <div class="column-start-right rep-column-titel align-right width-100-Prozent label-font-size-smaller" matTooltip="Reps">RP.</div>
             </div>
         
             <div ngif="isVisible() === true">
@@ -49,16 +49,12 @@
                         (mousedown)="MouseDown(satz,$event)" (mouseup)="MouseUp($event)" (touchstart)="MouseDown(satz,$event)"
                         (touchend)="MouseUp($event)" type="text">
             </div>
-        </div>
-
-        <div id="timer-column height-100-Prozent">
+        </div> 
+        <!-- Timer -->
+        <div id="timer-column">
             <div class="row-start-right mg-top-3 height-25 label-font-size-smaller">Timer</div>
             <div class="row-start-right height-25">
-                <!-- <div id="timer-column-button"> -->
-                    <mat-label class="height-100-Prozent label-font-size-smaller" mat-button matTooltip="Start timer" matTooltipPosition="above" (click)="StartTimer(satz)">{{StartTimerText}}</mat-label>
-                    <!-- <a mat-button matTooltip="Start timer" matTooltipPosition="above" (click)="StartTimer(satz)"
-                        [disabled]="TimerDisabled(satz)">{{StartTimerText}}</a> -->
-                <!-- </div> -->
+                <mat-label class="height-100-Prozent label-font-size-smaller" mat-button matTooltip="Start timer" matTooltipPosition="above" (click)="StartTimer(satz)">{{StartTimerText}}</mat-label>
             </div>
 
             <div class="row-start-left-gap-7 mg-top-1">
@@ -81,47 +77,68 @@
                 </div>
             </div>
         </div>
-        
-        <div class="flex-align-top height-100-Prozent mg-left-5 mg-top-1">
-            <!-- AMRAP  -->
-            <div class="row-center height-100-Prozent ">
-                <div class="colum-center height-100-Prozent width-25">
-        
-                    <div class="colum-center width-100-Prozent mg-left-4">
-                        <span class="label-font-size-smaller">AR.</span>
-                    </div>
-                    <div class="column-center width-100-Prozent height-100-Prozent mg-top-5">
-                        <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP"></mat-checkbox>
-                    </div>
+        <!-- AMRAP -->
+        <div class="colum-center width-25 height-100-Prozent mg-left-4">
+            <!-- Leerzeile -->
+            <div class="row-start-right width-100-Prozent height-22"></div>
+            <div class="row-start-right width-100-Prozent height-22">
+                <div class="center width-100-Prozent mg-left-4">
+                    <span matTooltip="AMRAP" matTooltipPosition="above" class="label-font-size-smaller">AR.</span>
                 </div>
             </div>
-        
-            <!-- OK  -->
-            <div class="row-center height-100-Prozent">
-                <div class="colum-center height-100-Prozent width-25">
-                    <div class="center width-100-Prozent mg-left-4">
-                        <span class="label-font-size-smaller">OK</span>
-                    </div>
-                    <div class="column-center width-100-Prozent height-100-Prozent mg-top-5">
-                        <mat-checkbox [(ngModel)]="SatzFertig" (change)="onClickSatzFertig(satz, $event)"></mat-checkbox>
-                    </div>
-                </div>
-            </div>
-        
-            <!-- Copy  -->
-            <div class="row-align-bottom height-100-Prozent">
-                <div class="flex-align-bottom height-100-Prozent width-25 pad-bottom-4">
-                    <span matTooltip="Copy set" matTooltipPosition="above" class="label-font-size-large material-symbols-outlined" (click)="CopySet()">content_copy</span>
-                </div>
-            </div>
-
-              <!-- Delete  -->
-              <div class="row-align-bottom height-100-Prozent">
-                <div class="flex-align-bottom height-100-Prozent width-25 pad-bottom-4">
-                    <span matTooltip="Delete set" matTooltipPosition="above" class="label-font-size-large material-symbols-outlined"  (click)="DeleteSet()">delete</span>
+            <div class="row-start-right width-100-Prozent">
+                <div class="column-center width-100-Prozent height-100-Prozent mg-top-5">
+                    <mat-checkbox [disabled]="Disabled(satz)" [(ngModel)]="satz.AMRAP"></mat-checkbox>
                 </div>
             </div>
         </div>
+        <!-- OK -->
+        <div class="colum-center width-25 height-100-Prozent mg-left-4">
+            <!-- Leerzeile -->
+            <div class="row-start-right width-100-Prozent height-22"></div>
+            <div class="row-start-right width-100-Prozent height-22">
+                <div class="center width-100-Prozent mg-left-4">
+                    <span class="label-font-size-smaller">OK</span>
+                </div>
+            </div>
+            <div class="row-start-right width-100-Prozent">
+                <div class="column-center width-100-Prozent height-100-Prozent mg-top-5">
+                    <mat-checkbox [(ngModel)]="SatzFertig" (change)="onClickSatzFertig(satz, $event)"></mat-checkbox>
+                </div>
+            </div>
+        </div>
+         <!-- Copy -->
+         <div class="colum-center width-25 height-100-Prozent mg-left-4">
+            <!-- Leerzeile -->
+            <ng-container *ngIf="Toolbar_2_rows === false" >
+                <div class="row-start-right width-100-Prozent height-44"></div>
+            </ng-container>
+            <ng-container>
+
+                <div class="row-start-right width-100-Prozent mg-top-9">
+                    <div class="column-center width-100-Prozent height-100-Prozent">
+                        <span matTooltip="Copy set" matTooltipPosition="above" class="label-font-size-large material-symbols-outlined" (click)="CopySet()">content_copy</span>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+         <!-- Delete -->
+         <div class="colum-center width-25 height-100-Prozent">
+            <!-- Leerzeile -->
+            <ng-container *ngIf="Toolbar_2_rows === false" >
+                <div class="row-start-right width-100-Prozent height-44"></div>
+            </ng-container>
+            <ng-container>
+                <div class="row-start-right width-100-Prozent mg-top-9">
+                    <div class="column-center width-100-Prozent height-100-Prozent">
+                        <span matTooltip="Delete set" matTooltipPosition="above" class="label-font-size-large material-symbols-outlined"  (click)="DeleteSet()">delete</span>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>    
+
+        
 </div>
 
   

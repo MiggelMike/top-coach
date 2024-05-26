@@ -264,6 +264,12 @@ body {
 	height: 20px !important;
 }
 
+
+.height-22 {
+	min-height: 22px !important; 
+	height: 22px !important;
+}
+
 .height-25 {
 	min-height: 25px !important; 
 	height: 25px !important;
@@ -284,6 +290,12 @@ body {
 	min-height: 40px !important; 
 	height: 40px !important;
 }
+
+.height-44 {
+	min-height: 44px !important; 
+	height: 44px !important;	
+}
+
 
 .height-45 {
 	min-height: 45px !important; 
@@ -876,6 +888,11 @@ div.herz:after {
 .flex-align-bottom {
 	@extend .center-item;
 	align-items: flex-end;
+}
+
+.flex-align-stretch {
+	@extend .center-item;
+	align-items: stretch;
 }
 
 .flex-content-bottom {
