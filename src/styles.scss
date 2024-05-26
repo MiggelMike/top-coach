@@ -842,7 +842,7 @@ div.herz:after {
 .align-items-left {
 	display: flex;
 	justify-content: flex-start;
-	align-items: left;
+	align-items: flex-start;
 	flex-direction: column;
 }
 
@@ -876,6 +876,11 @@ div.herz:after {
 .flex-align-bottom {
 	@extend .center-item;
 	align-items: flex-end;
+}
+
+.flex-content-bottom {
+	@extend .center-item;
+	align-content: flex-end;
 }
 
 .column-center {

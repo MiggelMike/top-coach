@@ -1,131 +1,128 @@
 <div #anchorRef cdkDrag cdkDragRootElement=".cdk-overlay-pane">
-        <div class="column-center cc-overlay">
-                <div class="font-14-label">{{Uebung.Name}} {{SatzNr}}</div>
-                <div class="row-start-left">
-                    <div class="column-start-left  width-200">
-                        <div class="row-start-right">
-                            <div class="column-start-right">
-                                <mat-label class="label-font-size-small">Weight</mat-label>
-                            </div>
-                        </div>
-
-                        <input  matInput 
-                                mask="9999.00"
-                                class="align-right label-font-size-small"
-                                [ngModel]="Satz.GewichtAusgefuehrtText" 
-                                (focusout)="SetWeightAusgefuehrt($event)"
-                                (ngModelChange)="CalcPlates($event)"
-                                (click)="onClickWeightVorgabe($event)" 
-                                type="text">
-                    </div>
-                    
-                    <div class="mg-top-20" layout-align="end" layout-margin>
-                        <mat-checkbox 
-                        [(ngModel)]="SetForAllSets" (click)="$event.stopPropagation()"
-                        (change)="DoWeightAllSets($event)"
-
-                        >All sets
-                        </mat-checkbox>
-                    </div>
+    <div class="column-center cc-overlay" style="width:313px;">
+        <!-- Weight -->
+        <div class="row-start-left">
+            <div class="row-start-right width-200">
+                <div class="column-center">
+                    <mat-label>Weight</mat-label>
                 </div>
+            </div>
+
+            <div class="row-start-left width-100-Prozent">
+                <div class="column-center  width-200">
+                    <input matInput mask="9999.00" class="align-right label-font-size-small"
+                        [ngModel]="Satz.GewichtAusgefuehrtText" (focusout)="SetWeightAusgefuehrt($event)"
+                        (ngModelChange)="CalcPlates($event)" (click)="onClickWeightVorgabe($event)" type="text">
+                </div>
+
+                <div class="column-center">
+                    <mat-checkbox [(ngModel)]="SetForAllSets" (click)="$event.stopPropagation()"
+                        (change)="DoWeightAllSets($event)">All sets </mat-checkbox>
+                </div>
+            </div>
+        </div>
+        <!-- Barbell -->
+        <div class="row-start-left">
+            <div class="row-start-right width-200">
+                <div class="column-center">
+                    <mat-label>Barbell</mat-label>
+                </div>
+            </div>
+
+            <div class="row-start-left width-100-Prozent">
+                <div class="column-center  width-200">
+                    <mat-select class="input-standards width-100-Prozent" [(ngModel)]="Satz.FkHantel"
+                        (selectionChange)="CalcPlates()">
+                        <mat-option [value]="0"></mat-option>
+                        <mat-option *ngFor="let h of HantelListe" [value]="h.ID"> {{ h.Name }}</mat-option>
+                    </mat-select>
+                </div>
+
+                <div class="column-center">
+                    <mat-checkbox class="mg-top-5" [(ngModel)]="HantelForAllSets" (click)="$event.stopPropagation()"
+                        (change)="DoHantelAllSets($event)">All sets
+                    </mat-checkbox>
+                </div>
+            </div>
+        </div>
+        <!-- Geplante Von-Vorgabe-Wdh. -->
+        <div class="row-start-left">
+            <div class="row-start-right width-200">
+                <div class="column-center">
+                    <mat-label>Min target reps</mat-label>
+                </div>
+            </div>
+
+            <div class="row-start-left width-100-Prozent">
+                <div class="column-center  width-200">
+                    <input matInput class="align-right" mask="99999" (click)="onInitOnClick($event)"
+                        [ngModel]="Satz.WdhVonVorgabeText" (focusout)="SetVonWdhVorgabe($event)" type="text">
+                </div>
+
+                <div class="column-center">
+                    <mat-checkbox [(ngModel)]="RepRangeForAllSets" (click)="$event.stopPropagation()"
+                        (change)="DoRepRangelAllSets($event)">All sets
+                    </mat-checkbox>
+                </div>
+            </div>
+        </div>
+        <!-- Done-Reps -->
+        <div class="row-start-left">
+            <div class="row-start-right width-200">
+                <ng-container *ngIf="isAMRAP === true">
+                    <div class="column-center">
+                        <mat-label [ngClass]="{'blink font-14-label': isAMRAP === true}">{{DoneRepsText}}</mat-label>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="isAMRAP === false" >
+                    <div class="column-center">
+                        <span class="label-font-size-small">Done reps</span>
+                    </div>                    
+                </ng-container>
+            </div>
+
+            <ng-container>
+                <div class="row-start-left width-100-Prozent">
+                    <div class="column-center  width-200">
+                        <input matInput class="align-right width-200" (click)="onInitOnClick($event)"
+                            [ngModel]="Satz.WdhAusgefuehrt" (focusout)="SetWdhAusgefuehrt($event)" type="text">
             
-                <div class="row-start-left">
-                    <div class="column-start-left width-200">
-                        <div class="row-start-right">
-                            <div class="column-start-right">
-                                <mat-label class="label-font-size-small">Barbell</mat-label>
-                            </div>
-                        </div>
-                        <mat-select  class="input-standards width-100-Prozent" 
-                            [(ngModel)]="Satz.FkHantel"
-                            (selectionChange)="CalcPlates()"
-                            >
-                            <mat-option [value]="0"></mat-option>
-                            <mat-option *ngFor="let h of HantelListe" [value]="h.ID"> {{ h.Name }}</mat-option>
-                        </mat-select>
                     </div>
-
-                    <div class="column-start-left">
-
-                        <mat-checkbox class="mg-top-5"
-                            [(ngModel)]="HantelForAllSets" (click)="$event.stopPropagation()"
-                            (change)="DoHantelAllSets($event)"
-                            >All sets
+            
+                    <div class="column-center">
+                        <mat-checkbox [(ngModel)]="DoneRepsForAllSets" (click)="$event.stopPropagation()"
+                            (change)="DoDoneRepsAllSets($event)">All sets
                         </mat-checkbox>
                     </div>
                 </div>
+            </ng-container>
+        </div>
+         <!-- Timer seconds -->
+        <div class="row-start-left">
+            <div class="row-start-right width-200">
+                <div class="column-center">
+                    <mat-label>Timer seconds</mat-label>
+                </div>
+            </div>
         
-                <mat-label class="label-font-size-small">Min target reps</mat-label>
-                <div class="row-start-left">                
-                    <div class="column-start-left">
-                        <!-- Geplante Von-Vorgabe-Wdh. -->
-                        <div class="row-start-left">
-                            <div class="column-start-left">
-                                <input matInput class="align-right width-200" mask="99999" (click)="onInitOnClick($event)"
-                                    [ngModel]="Satz.WdhVonVorgabeText" (focusout)="SetVonWdhVorgabe($event)" type="text">
-                            </div>
-                            <div class="column-start-left">
-                                <mat-checkbox [(ngModel)]="RepRangeForAllSets" (click)="$event.stopPropagation()"
-                                    (change)="DoRepRangelAllSets($event)">All sets
-                                </mat-checkbox>
-                            </div>
-                        </div>
+            <ng-container>
+                <div class="row-start-left width-100-Prozent">
+                    <div class="column-center  width-200">
+                        <input matInput class="align-right width-200" (click)="onInitOnClick($event)"
+                            [ngModel]="Satz.TimerSeconds" (focusout)="SetTimerSeconds($event)" type="text">
                     </div>
-                </div>    
-
-                <div class="row-start-left">
-                    <div class="column-start-left">
-                        <ng-container *ngIf="isAMRAP === true" >
-                            <div class="row-start-left">
-                                <!-- Geplante Von-Vorgabe-Wdh. -->
-                                <mat-label [ngClass]="{'blink font-14-label': isAMRAP === true}">{{DoneRepsText}}</mat-label>
-                            </div>
-                        </ng-container>
-
-                        <ng-container *ngIf="isAMRAP === false" >
-                            <div class="row-start-right width-200">
-                                <div class="column-start-right">
-                                    <span class="label-font-size-small">Done reps</span>
-                                </div>
-                            </div>
-                        </ng-container>
-
-
-                        <ng-container>
-                            <div class="row-start-left">
-                                <div class="column-start-left">
-                                    <input matInput class="align-right width-200" (click)="onInitOnClick($event)"
-                                        [ngModel]="Satz.WdhAusgefuehrt" (focusout)="SetWdhAusgefuehrt($event)" type="text">
-                                </div>
-                    
-                                <div class="column-start-left">
-                                    <mat-checkbox [(ngModel)]="DoneRepsForAllSets" (click)="$event.stopPropagation()"
-                                        (change)="DoDoneRepsAllSets($event)">All sets
-                                    </mat-checkbox>
-                                </div>
-                            </div>
-                        </ng-container>
-                    </div>
-            </div>
-
-            <span class="label-font-size-small">Timer seconds</span>
-            <div class="row-start-left">
-                <div class="column-start-left">
-                    <div class="row-start-left">
-                        <div class="column-start-left">
-                            <input matInput class="align-right width-200" (click)="onInitOnClick($event)" [ngModel]="Satz.TimerSeconds"
-                                (focusout)="SetTimerSeconds($event)" type="text">
-                        </div>
-            
-                        <div class="column-start-left">
-                            <mat-checkbox [(ngModel)]="TimerSecondsForAllSets" (click)="$event.stopPropagation()"
-                                (change)="DoTimerSecondsAllSets($event)">All sets
-                            </mat-checkbox>
-                        </div>
+        
+                    <div class="column-center">
+                        <mat-checkbox [(ngModel)]="TimerSecondsForAllSets" (click)="$event.stopPropagation()"
+                            (change)="DoTimerSecondsAllSets($event)">All sets
+                        </mat-checkbox>
                     </div>
                 </div>
-            </div>
-
+            </ng-container>
+        </div>
+        <!-- Plate calc  -->
+        <div class="column-center">
             <ng-container *ngIf="PlateList.length > 0">
                 <div fxLayout="row" fxFlex="100%">
                     <mat-label>Plates per side</mat-label>
@@ -148,10 +145,11 @@
                     <mat-label>Can not determine plates!</mat-label>
                 </container>
             </ng-template>
-            
-            <div fxLayout="row" fxLayoutAlign="center center">
-                <a mat-button (click)="close()"><span>close</span></a>
-            </div>
-     
-    </div>        
+        </div>
+
+        <div class="row-center">
+            <a mat-button (click)="close()"><span>close</span></a>
+        </div>
+ 
+    </div>
 </div>
