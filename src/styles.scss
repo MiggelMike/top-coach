@@ -116,6 +116,7 @@
 	--mat-select-enabled-trigger-text-color: var(--first-color);	
 }
 
+ 
 .Uebung-Name {
 	//    background: lightgrey;
 		background: var(--input-background-color);
@@ -166,27 +167,6 @@ button:not(:disabled), [type=button]:not(:disabled), [type=reset]:not(:disabled)
 .mat-mdc-card {
     --mdc-elevated-card-container-color:  var(--second-background-color);
  }
-
-
-  ::ng-deep .mdc-checkbox .mdc-checkbox__native-control:enabled~.mdc-checkbox__background .mdc-checkbox__checkmark {
-    color: var(--mdc-checkbox-selected-checkmark-color);
-    background-color: transparent;
-}
-
-.mdc-checkbox .mdc-checkbox__native-control:enabled:not(:indeterminate):not([data-indeterminate=true])~.mdc-checkbox__background {
-    border-color: var(--mdc-checkbox-unselected-icon-color);
-    background-color: transparent;
-}
-
-::ng-deep .mdc-checkbox .mdc-checkbox__native-control:enabled:focus:checked~.mdc-checkbox__background, .mdc-checkbox .mdc-checkbox__native-control:enabled:focus:indeterminate~.mdc-checkbox__background {
-    border-color: var(--mdc-checkbox-selected-focus-icon-color);
-    background-color: transparent;
-}
-
-::ng-deep .mdc-checkbox:hover .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background, .mdc-checkbox:hover .mdc-checkbox__native-control:enabled:indeterminate~.mdc-checkbox__background, .mdc-checkbox:hover .mdc-checkbox__native-control[data-indeterminate=true]:enabled~.mdc-checkbox__background {
-    border-color: var(--mdc-checkbox-selected-hover-icon-color);
-    background-color: transparent;
-}
 
   .alternate-color {
 	background-color: var(--alternate-color) !important;
@@ -1439,6 +1419,8 @@ input[type=text]:focus  {
     margin-top: 5px;
 }
 
+
+
 .mat-expansion-panel {
     box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0), 0px 0px 0px 0px rgba(0, 0, 0, 0), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
 }
@@ -1512,9 +1494,12 @@ span {
 // 	background-color: red !important;
 //   }
 
+
+
 .mat-mdc-radio-button.mat-accent {
-    // --mdc-radio-unselected-pressed-icon-color: #ffc107;
+	// --mdc-radio-unselected-pressed-icon-color: #ffc107;
     // --mdc-radio-selected-pressed-icon-color: #ff4081;
+	//--mat-option-selected-state-label-text-color: transparent;
 	--mdc-radio-selected-icon-color: var(--first-color);
 	--mdc-radio-unselected-icon-color: var(--first-color);
 }
@@ -1533,6 +1518,8 @@ span {
 
 .mdc-checkbox__background {
     border-color: var(--checkbox-border-color) !important;
+	background-color: transparent !important;
+
 }
 
 
