@@ -4,7 +4,6 @@ import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/cor
 import { FormsModule } from '@angular/forms';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { MatExpansionModule } from "@angular/material/expansion";
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatRippleModule } from '@angular/material/core';
@@ -35,7 +34,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CommonModule,
     DecimalPipe,
     MatExpansionModule,
-    FlexLayoutModule,
     MatInputModule,
     MatFormFieldModule,
     MatRippleModule,

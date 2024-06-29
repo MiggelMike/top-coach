@@ -1,7 +1,7 @@
-import { DBModule } from './../../modules/db/db.module';
+import { DexieSvcService } from './dexie-svc.service';
 import { ITrainingsProgramm } from 'src/Business/TrainingsProgramm/TrainingsProgramm';
 import { Injectable } from '@angular/core';
-import { Observable, of, from } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: "root",
@@ -12,7 +12,7 @@ export class ProgrammWaehlenService {
     public ProgrammListe: Array<ITrainingsProgramm> = [];
 
     constructor(
-        private fDbModule: DBModule
+        private fDbModule: DexieSvcService
     ) {
     }
 
@@ -26,9 +26,9 @@ export class ProgrammWaehlenService {
 
     public LadeTrainingsProgramme(): Observable<ITrainingsProgramm[]> {
         const mResult = new Observable<ITrainingsProgramm[]>((observer) => {
-            this.fDbModule.LadeProgramme();
+            // this.fDbModule.LadeVerfuegbareProgramme();
             this.ProgrammWahlObserver = observer;
-            this.ProgrammListe = this.fDbModule.Programme;
+            this.ProgrammListe = DexieSvcService.VerfuegbareProgramme; //this.fDbModule.Programme;
             observer.next(this.ProgrammListe);
         });
         return mResult;

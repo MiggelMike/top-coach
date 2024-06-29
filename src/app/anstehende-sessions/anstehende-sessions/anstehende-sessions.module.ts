@@ -6,7 +6,6 @@ import { Programm01Module } from 'src/app/bausteine/programm01/programm01Md/prog
 import { CommonModule } from '@angular/common';
 import { ToolBarModule } from 'src/app/bausteine/toolbar/tool-bar-module/tool-bar-module.module';
 import { Programm02Module } from 'src/app/bausteine/programm02/programm02Md/programm02.module';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -41,7 +40,6 @@ const routes: Routes = [{ path: '', component: AnstehendeSessionsComponent }];
     Programm03Module,
     SessUebungModule,
     ToolBarModule,
-    FlexLayoutModule,
     MatExpansionModule,
     MatInputModule,
     MatFormFieldModule,

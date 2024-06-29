@@ -3,7 +3,6 @@ import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/cor
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -69,7 +68,6 @@ const routes: Routes = [{ path: 'SessionStatsOverlay', component: SessionStatsOv
     Programm02Module,
     Programm03Module,
     ToolBarModule,
-    FlexLayoutModule,
     MatExpansionModule,
     MatInputModule,
     MatFormFieldModule,

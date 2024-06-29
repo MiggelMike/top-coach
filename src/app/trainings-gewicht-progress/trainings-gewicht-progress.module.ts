@@ -10,7 +10,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from "@angular/material/icon";
 import { MatRippleModule } from '@angular/material/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { TrainingsGewichtProgressComponent } from './trainings-gewicht-progress.component';
 import { ToolBarModule } from '../bausteine/toolbar/tool-bar-module/tool-bar-module.module';
@@ -26,7 +25,6 @@ import { ToolBarModule } from '../bausteine/toolbar/tool-bar-module/tool-bar-mod
     MatInputModule,
     MatButtonModule,
     MatFormFieldModule,
-    FlexLayoutModule,
     MatCheckboxModule,
     MatTabsModule,
     MatExpansionModule,

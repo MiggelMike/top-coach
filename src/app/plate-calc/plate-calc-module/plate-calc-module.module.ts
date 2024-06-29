@@ -2,7 +2,6 @@ import { PlateCalcComponent } from '../plate-calc.component';
 import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -64,7 +63,6 @@ import { ToolBarModule } from 'src/app/bausteine/toolbar/tool-bar-module/tool-ba
     Programm02Module,
     Programm03Module,
     ToolBarModule,
-    FlexLayoutModule,
     MatExpansionModule,
     MatInputModule,
     MatFormFieldModule,

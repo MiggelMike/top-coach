@@ -2,7 +2,6 @@ import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA, LOCALE_ID } from '@
 import { FormsModule } from '@angular/forms';
 import { CommonModule, DATE_PIPE_DEFAULT_OPTIONS, DatePipe, DecimalPipe } from '@angular/common';
 import { MatExpansionModule } from "@angular/material/expansion";
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MAT_DATE_LOCALE, MatRippleModule } from '@angular/material/core';
@@ -22,7 +21,7 @@ import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { BodyweightComponent } from './bodyweight.component';
 import { ToolBarModule } from '../bausteine/toolbar/tool-bar-module/tool-bar-module.module';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { NgxMatDatetimePickerModule, NgxMatTimepickerModule, NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
+// import { NgxMatDatetimePickerModule, NgxMatTimepickerModule, NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -62,7 +61,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     CommonModule,
     DecimalPipe,
     MatExpansionModule,
-    FlexLayoutModule,
     MatInputModule,
     MatFormFieldModule,
     MatRippleModule,
@@ -81,11 +79,11 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatButtonModule,
     NgxMaskDirective,
     NgxMaskPipe,
-    ToolBarModule,
-    NgxMatDatetimePickerModule,
-    NgxMatTimepickerModule,
-    NgxMatNativeDateModule
+    ToolBarModule
     
+    // NgxMatDatetimePickerModule,
+    // NgxMatTimepickerModule,
+    // NgxMatNativeDateModule
   ]
 })
 export class BodyweightModule { }

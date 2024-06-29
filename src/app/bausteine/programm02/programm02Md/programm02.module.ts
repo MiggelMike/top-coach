@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from "@angular/common";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { Programm03Module } from '../../programm03/programm03Md/programm03.module';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatRippleModule } from '@angular/material/core';
@@ -23,7 +22,6 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     DatePipe,
     CommonModule,
     Programm03Module,
-    FlexLayoutModule,
     MatInputModule,
     MatFormFieldModule,
     MatRippleModule

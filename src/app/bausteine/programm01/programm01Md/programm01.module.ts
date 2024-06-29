@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { MatExpansionModule } from "@angular/material/expansion";
 import { Programm02Module } from '../../programm02/programm02Md/programm02.module';
 import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [Programm01Component],
@@ -13,8 +12,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     FormsModule,
     MatExpansionModule,
     CommonModule,
-    Programm02Module,
-    FlexLayoutModule,
+    Programm02Module
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })

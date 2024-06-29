@@ -1,4 +1,4 @@
-import { floatMask, repMask, Int2DigitMask } from './../app.module';
+// import { floatMask, repMask, Int2DigitMask } from './../app.module';
 import { ViewChild, Component, ElementRef, OnInit } from '@angular/core';
 import { DialogeService } from '../services/dialoge.service';
 import { DexieSvcService } from '../services/dexie-svc.service';
@@ -16,9 +16,9 @@ export class EditLanghantelComponent implements OnInit {
     Hantel: Hantel; 
     CmpHantel: Hantel;
     SelectedTyp: HantelTyp; 
-    public floatMask = floatMask;
-    public repMask = repMask;    
-    public Int2DigitMask = Int2DigitMask;
+    // public floatMask = floatMask;
+    // public repMask = repMask;    
+    // public Int2DigitMask = Int2DigitMask;
     public ClickData: EditLanghantelComponent;
     @ViewChild('Name') NameField: ElementRef;
 

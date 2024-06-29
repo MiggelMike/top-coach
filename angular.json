@@ -11,12 +11,18 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular-builders/custom-esbuild:application",
           "options": {
             "aot":true,
-            "outputPath": {
-              "base": "www"
-            },
+            "allowedCommonJsDependencies": [
+              "lodash.clonedeep",
+              "rfdc",
+              "lodash.isEqual",
+              "@peerlancers/json-serialization"
+           ],
+            "outputPath": "www",
+            "plugins": ["./esbuild/plugins.js"],
+
             "index": "src/index.html",
             "polyfills": [
               "src/polyfills.ts"

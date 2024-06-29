@@ -11,7 +11,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from "@angular/material/icon";
 import { MatRippleModule } from '@angular/material/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 
 
@@ -25,7 +24,6 @@ import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
     MatInputModule,
     MatButtonModule,
     MatFormFieldModule,
-    FlexLayoutModule,
     MatCheckboxModule,
     MatTabsModule,
     MatExpansionModule,

@@ -1,3 +1,7 @@
+import { EquipmentModule } from './equipment/equipment/equipment.module';
+import { TrainingsGewichtProgressModule } from './trainings-gewicht-progress/trainings-gewicht-progress.module';
+import { EditLanghantelModule } from './edit-langhantel/edit-langhantel/edit-langhantel.module';
+import { HinweisModule } from './dialoge/hinweis/hinweis.module';
 import { MuscleGroupsModule } from './muscle-groups/muscle-groups.module';
 import { EditMuscleGroupModule } from './edit-muscle-group/edit-muscle-group.module';
 import { BodyweightModule } from './bodyweight/bodyweight.module';
@@ -5,7 +9,6 @@ import { ScheibenModule } from './scheiben/scheiben.module';
 import { LanghantelModule } from '../app/langhantel/langhantel.module';
 import { ExerciseModule } from './exercise/exercise.module';
 import { SettingsModule } from './settings/settings.module';
-import { TrainingsGewichtProgressModule } from '../app/trainings-gewicht-progress/trainings-gewicht-progress.module';
 import { EditTrainingsGewichtProgressModule } from '../app/edit-trainings-gewicht-progress/edit-trainings-gewicht-progress.module';
 import { SessionStatsOverlayModule } from './session-stats-overlay/session-stats-overlay.module';
 import { HistoryModule } from './history/history.module';
@@ -42,7 +45,6 @@ import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatSelectModule } from "@angular/material/select";
 import { MatTabsModule } from "@angular/material/tabs";
 import { RouterModule } from '@angular/router';
-import { FlexLayoutModule } from "@angular/flex-layout";
 import { MatNativeDateModule } from "@angular/material/core";
 // import { Router, NavigationStart } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -135,7 +137,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { ReactiveFormsModule } from '@angular/forms';
 import { provideEnvironmentNgxMask, provideNgxMask } from 'ngx-mask'
 // import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+// import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 
 
 
@@ -258,7 +260,6 @@ export interface IProgramModul {
 		,MatSidenavModule
 		,MatSelectModule
 		,MatMenuModule
-		,FlexLayoutModule
 		,MatCheckboxModule
 		,MatRadioModule
 		,MatNativeDateModule
@@ -268,8 +269,6 @@ export interface IProgramModul {
 		,DexieSvcService
 		, EditExerciseModule
 		,ReactiveFormsModule
-		, NgxMatDatetimePickerModule
-		, NgxMatTimepickerModule
 		
 			 ,MatDatepickerModule
 		// ,ToolbarComponent
@@ -310,8 +309,12 @@ export interface IProgramModul {
 		, BodyweightModule
 		, TrainingsGewichtProgressModule
 		, EditTrainingsGewichtProgressModule
-		
-
+		, HinweisModule
+		, EditLanghantelModule
+		, StoppUhrModuleModule
+		, TrainingsGewichtProgressModule
+		, EquipmentModule
+		, ToolBarModule
 	],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
 	providers: [
@@ -368,9 +371,8 @@ export interface IProgramModul {
 		, DatePipe
 		, StoppUhrModuleModule
 		, PlateCalcModule
-		// , ToolBarModule
+		, ToolBarModule
 		// , AnstehendeSessionsModule
-		, FlexLayoutModule
 		, BrowserAnimationsModule
 		, NgxChartsModule
 		, MatTooltipModule

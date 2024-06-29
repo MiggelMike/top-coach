@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { DatePipe } from "@angular/common";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from "@angular/common";
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatCardModule } from "@angular/material/card";
 import {CdkDrag} from '@angular/cdk/drag-drop';
 
@@ -17,7 +16,6 @@ import {CdkDrag} from '@angular/cdk/drag-drop';
     CdkDrag,
     MatFormFieldModule,
     CommonModule,
-    FlexLayoutModule,
     DatePipe,
     MatCardModule,
            ]
